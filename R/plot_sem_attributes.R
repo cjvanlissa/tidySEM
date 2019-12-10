@@ -1,16 +1,22 @@
-x <- list(val = "a", edges = "test")
-class(x) <- "sem_graph"
-#attr(x, "edges") <- "bla"
-#x$edges <- "test"
-#edges(x) <- "duh"
-x <- prep
+#' @title Extract edges from sem_graph
+#' @description Provides access to the \code{edges} element of a
+#' \code{sem_graph} object. This can be used to return or assign to the
+#' \code{edges} element.
+#' @param x Object of class sem_graph.
+#' @return data.frame
+#' @rdname edges
+#' @export
 edges <- function(x) UseMethod("edges")
-edges.default <- function(x) x[["edges"]]
+
+#' @method edges sem_graph
+#' @export
+edges.sem_graph <- function(x) x[["edges"]]
 
 `edges<-` <- function(x, value){
   UseMethod("edges<-")
 }
 
+#' @rdname edges
 `edges<-.sem_graph` <- function(x, value)
 {
   if(!inherits(value, "data.frame")){
@@ -25,13 +31,25 @@ edges.default <- function(x) x[["edges"]]
   x
 }
 
+#' @title Extract nodes from sem_graph
+#' @description Provides access to the \code{nodes} element of a
+#' \code{sem_graph} object. This can be used to return or assign to the
+#' \code{nodes} element.
+#' @param x Object of class sem_graph.
+#' @return data.frame
+#' @rdname nodes
+#' @export
 nodes <- function(x) UseMethod("nodes")
-nodes.default <- function(x) x[["nodes"]]
+
+#' @method nodes sem_graph
+#' @export
+nodes.sem_graph <- function(x) x[["nodes"]]
 
 `nodes<-` <- function(x, value){
   UseMethod("nodes<-")
 }
 
+#' @rdname nodes
 `nodes<-.sem_graph` <- function(x, value)
 {
   if(!inherits(value, "data.frame")){
