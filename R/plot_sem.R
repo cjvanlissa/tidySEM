@@ -90,6 +90,7 @@ prepare_sem_graph <- function(nodes,
   out <- args
   out$nodes <- df_nodes[, c("node_id", "param", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
   out$edges <- df_edges
+  out$layout <- NULL
   class(out) <- "sem_graph"
   out
 }
@@ -331,6 +332,7 @@ match.call.defaults <- function(...) {
   match.call(sys.function(sys.parent()), call)
 }
 
+#' @importFrom ggplot2 geom_curve
 .plot_curves <- function(p, df, text_size, ...){
   an = 90
   #curvature = df$curvature#Flip curvature to mirror the curve
