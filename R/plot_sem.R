@@ -110,7 +110,8 @@ prepare_sem_graph <- function(nodes,
   #df_edges <- setNames(data.frame(t(mapply(function(from, to){c(df_nodes$node_xmax[from], df_nodes$node_xmin[to], df_nodes$y[from], df_nodes$y[to])}, from = edges[, 1], to = edges[, 2]))), c("edge_xmin", "edge_xmax", "edge_ymin", "edge_ymax"))
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
-
+  df_edges$curvature <- NA
+  df_edges$curvature[df_edges$connector == "curve"] <- .1
   out <- args
   out$nodes <- df_nodes[, c("node_id", "param", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
   out$edges <- df_edges
@@ -168,41 +169,18 @@ plot.sem_graph <- function(x, y, ...){
 
 
 # Make plot ---------------------------------------------------------------
-  #browser()
+  browser()
   p <- ggplot(NULL)
-  if(any(df_nodes$shape == "rect")){
-    p <- p + geom_rect(data = df_nodes[df_nodes$shape == "rect", ], aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax"), fill = "white", colour = "black")
+  if(any(df_edges$connector == "line")){
+    p <- .plot_lines(p, df_edges[df_edges$connector == "line", ], text_size)
   }
-  if(any(df_nodes$shape == "oval")){
-
-    p <- p + geom_ellipse(data = df_nodes[df_nodes$shape == "oval", ], aes_string(x0 = "x", y0 = "y", a = .5*ellipses_a, b = .5*ellipses_b, angle = 0), fill = "white", colour = "black")
+  if(any(df_edges$connector == "curve")){
+    p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve", ], text_size = text_size)
   }
-  p <- p + geom_text(data = df_nodes, aes_string(x = "x", y = "y", label = "label"), size = text_size) +
-    geom_segment(data = df_edges[!df_edges$arrow %in% c("none", "curve"), ], aes_string(x = "edge_xmin",
-                                      xend = "edge_xmax",
-                                      y = "edge_ymin",
-                                      yend = "edge_ymax"
-    ), arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df_edges[!df_edges$arrow == "none", ]$arrow, type = "closed"), arrow.fill = "black") +
-    geom_segment(data = df_edges[df_edges$arrow == "none", ], aes_string(x = "edge_xmin",
-                                                                   xend = "edge_xmax",
-                                                                   y = "edge_ymin",
-                                                                   yend = "edge_ymax"
-    )) +
-#
-# # Part segment, part curve ------------------------------------------------
-#     browser()
-#     geom_curve(data = df_edges[df_edges$arrow == "curve", ],
-#                aes_string(x = edge_xmin,
-#                    xend = edge_xmax,
-#                    y = edge_ymin,
-#                    yend = edge_ymax)) +
-   geom_label(data = df_edges[!df_edges$arrow == "curve", ],
-              aes_string(x = "text_x", y = "text_y", label = "label"), size = text_size, fill = "white", label.size = NA)+
+  p <- .plot_nodes(p, df = df_nodes, text_size = text_size)
 
-# # End part segment, part curve --------------------------------------------
-#
 
-    theme(axis.line = element_blank(),
+  p + theme(axis.line = element_blank(),
           axis.text.x = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
@@ -211,7 +189,7 @@ plot.sem_graph <- function(x, y, ...){
           panel.background = element_blank(), panel.border = element_blank(),
           panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
           plot.background = element_blank())
-  p
+
 }
 
 
@@ -377,3 +355,54 @@ match.call.defaults <- function(...) {
 
   match.call(sys.function(sys.parent()), call)
 }
+
+.plot_curves <- function(p, df, text_size, ...){
+  an = 90
+  #curvature = df$curvature#Flip curvature to mirror the curve
+  ncp = 1
+  df_curves <- data.frame(df, t(apply(df[, c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax", "curvature")], 1, function(x){unlist(calcControlPoints(x[[1]], x[[2]], x[[3]], x[[4]], angle = an, curvature = x[[5]], ncp = ncp))})))
+  for(cur in unique(df$curvature)){
+    p <- p + geom_curve(data = df_curves[df_curves$curvature == cur, ], aes_string(x = "edge_xmin", y = "edge_ymin", xend = "x", yend = "y"), curvature = cur,
+                        angle = an, linetype = 2) +
+      geom_curve(data = df_curves[df_curves$curvature == cur, ], aes_string(x = "x", y = "y", xend = "edge_xmax", yend = "edge_ymax"), curvature = cur,
+                 angle = an, linetype = 2)
+  }
+  p + geom_label(data = df_curves,
+               aes_string(x = "x", y = "y", label = "label"),
+               size = text_size, fill = "white", label.size = NA)
+
+}
+
+.plot_lines <- function(p, df, text_size, ...){
+  if(any(df$arrow != "none")){
+    p <- p + geom_segment(data = df[!df$arrow == "none", ],
+                          aes_string(
+                            x = "edge_xmin",
+                            xend = "edge_xmax",
+                            y = "edge_ymin",
+                            yend = "edge_ymax"),
+                          arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df$arrow[!df$arrow == "none"], type = "closed"), arrow.fill = "black")
+  }
+  if(any(df$arrow == "none")){
+    p <- p + geom_segment(data = df[df$arrow == "none", ],
+                          aes_string(
+                            x = "edge_xmin",
+                            xend = "edge_xmax",
+                            y = "edge_ymin",
+                            yend = "edge_ymax"))
+  }
+  p <- p + geom_label(data = df,
+                      aes_string(x = "text_x", y = "text_y", label = "label"),
+                      size = text_size, fill = "white", label.size = NA)
+}
+
+.plot_nodes <- function(p, df, text_size){
+  if(any(df$shape == "rect")){
+    p <- p + geom_rect(data = df[df$shape == "rect", ], aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax"), fill = "white", colour = "black")
+  }
+  if(any(df$shape == "oval")){
+    p <- p + geom_ellipse(data = df[df$shape == "oval", ], aes_string(x0 = "x", y0 = "y", a = .5*ellipses_a, b = .5*ellipses_b, angle = 0), fill = "white", colour = "black")
+  }
+  p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
+}
+
