@@ -27,8 +27,7 @@ significance asterisks to the "est" column, based on the "pval" column.
 Other Mplus functions: \code{\link{SBChisquare}},
   \code{\link{SB_chisq_Pvalues}}, \code{\link{conf_int}},
   \code{\link{corTable}}, \code{\link{param_label}},
-  \code{\link{printResultsTable}},
-  \code{\link{rbind_tables}}
+  \code{\link{rbind_tables}}, \code{\link{table_results}}
 }
 \author{
 Caspar J. van Lissa

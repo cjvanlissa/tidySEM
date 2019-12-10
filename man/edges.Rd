@@ -2,15 +2,17 @@
 % Please edit documentation in R/plot_sem_attributes.R
 \name{edges}
 \alias{edges}
-\alias{edges<-.sem_graph}
+\alias{edges<-}
 \title{Extract edges from sem_graph}
 \usage{
 edges(x)
 
-\method{edges}{sem_graph}(x) <- value
+edges(x) <- value
 }
 \arguments{
 \item{x}{Object of class sem_graph.}
+
+\item{value}{A valid value for \code{edges(x)}.}
 }
 \value{
 data.frame

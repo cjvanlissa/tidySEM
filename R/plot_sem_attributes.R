@@ -12,11 +12,15 @@ edges <- function(x) UseMethod("edges")
 #' @export
 edges.sem_graph <- function(x) x[["edges"]]
 
+#' @rdname edges
+#' @param value A valid value for \code{edges(x)}.
+#' @export
 `edges<-` <- function(x, value){
   UseMethod("edges<-")
 }
 
-#' @rdname edges
+#' @method edges<- sem_graph
+#' @export
 `edges<-.sem_graph` <- function(x, value)
 {
   if(!inherits(value, "data.frame")){
@@ -45,11 +49,15 @@ nodes <- function(x) UseMethod("nodes")
 #' @export
 nodes.sem_graph <- function(x) x[["nodes"]]
 
+#' @rdname nodes
+#' @param value A valid value for \code{nodes(x)}.
+#' @export
 `nodes<-` <- function(x, value){
   UseMethod("nodes<-")
 }
 
-#' @rdname nodes
+#' @method nodes<- sem_graph
+#' @export
 `nodes<-.sem_graph` <- function(x, value)
 {
   if(!inherits(value, "data.frame")){

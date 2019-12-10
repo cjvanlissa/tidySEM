@@ -1,23 +1,22 @@
-#' @title Print results of different types of analyses
-#' @description Takes an object, and prints the results as an APA table.
-#' @param x Object to be printed
-#' @param keepCols Character vector, indicating the columns to retain.
-#' Default: c("label", "est_sig", "confint").
-#' @param digits Integet. Number of digits to round to when formatting;
-#' Default: 2.
-#' @param ... Other arguments passed to and from other functions.
-#' @return data.frame
-#' @rdname printResults
-#' @export
-printResults <- function(x, keepCols = c("label",
-                                         "est_sig", "confint"), digits = 2, ...){
-  UseMethod("printResults", x)
-}
+# @title Print results of different types of analyses
+# @description Takes an object, and prints the results as an APA table.
+# @param x Object to be printed
+# @param columns Character vector, indicating the columns to retain.
+# Default: c("label", "est_sig", "confint").
+# @param digits Integet. Number of digits to round to when formatting;
+# Default: 2.
+# @param ... Other arguments passed to and from other functions.
+# @return data.frame
+# @rdname table_results
+# @export
+# table_results <- function(x, columns = c("label",
+#                                          "est_sig", "confint"), digits = 2, ...){
+#   UseMethod("table_results", x)
+# }
 
-#' @method printResults rma
+#' @method table_results rma
 #' @export
-printResults.rma <-  function(x, keepCols = c("label",
-                                              "est_sig", "confint"), digits = 2, ...){
+table_results.rma <-  function(x, standardized = TRUE, columns = c("label", "est_sig", "se", "pval", "ci"), digits = 2, ...){
 
   results <- do.call(cbind, x[c("b", "se", "zval", "pval", "ci.lb", "ci.ub")])
   results <- data.frame(label = rownames(results), results)
@@ -32,30 +31,25 @@ printResults.rma <-  function(x, keepCols = c("label",
 
   results[, value_columns] <- lapply(results[, value_columns],
                                      formatC, digits = digits, format = "f")
-  if (!is.null(keepCols))
-    results <- results[, keepCols]
+  if (!is.null(columns))
+    results <- results[, columns]
   rownames(results) <- NULL
   results
 }
 
-#' Print Mplus results table formatted for publication
+#' Print results table formatted for publication
 #'
-#' Takes an mplusModel object returned by \code{readModels}, and formats it as
-#' a publication-ready table.
-#' @param mplusModel An mplusModel object, as returned by \code{readModels}.
-#' @param parameters A character string corresponding to the name of an element
-#' of the $parameters list in \code{mplusModel}. Usually one of
-#' \code{c("unstandardized", "stdyx.standardized", "stdy.standardized")}.
-#' @param keepCols A character vector of columns to retain from the results
-#' section. Standard column names are
-#' \code{c("paramHeader", "param", "est", "se", "est_se", "pval")}. Special
-#' column names added by \code{printResultsTable} are:
-#' \code{c("est_sig", "confint", "label")}. These correspond to 1) the "est"
-#' column with significance asterisks appended; 2) a formatted confidence
-#' interval; 3) a label, obtained by concatenating the "paramHeader" and "param"
-#' columns.
-#' @param digits Number of digits to round to when formatting columns.
-#' \code{c("unstandardized", "stdyx.standardized", "stdy.standardized")}.
+#' Takes a model object, and formats it as a publication-ready table.
+#' @param x A model object for which a method exists.
+#' @param standardized Logical. Whether to return standardized parameters or
+#' not. Defaults to TRUE.
+#' @param columns A character vector of columns to retain from the results
+#' section. Defaults to \code{c("label", "est_sig", "se", "pval", "ci")}. These
+#' correspond to 1)
+#' the parameter label, 2) estimate column with significance asterisks appended
+#' (\* <.05, \*\* < .01, \*\*\* < .001); 3) standard error, 4) p-value, 5) a
+#' formatted confidence interval.
+#' @param digits Number of digits to round to when formatting numeric columns.
 #' @param ... Logical expressions used to filter the rows of results returned.
 #' @return A data.frame of formatted Mplus results.
 #' @author Caspar J. van Lissa
@@ -64,22 +58,27 @@ printResults.rma <-  function(x, keepCols = c("label",
 #' @export
 #' @examples
 #' #Make me!
-printResultsTable <- function(mplusModel, parameters = "unstandardized", keepCols = c("label", "est_sig", "confint"), digits = 2, ...){
-  args <- list(...)
+table_results <- function(x, standardized = TRUE, columns = c("label", "est_sig", "se", "pval", "ci"), digits = 2, ...){
+  UseMethod("table_results")
+}
 
-  results <- mplusModel$parameters[[parameters]]
+table_results.mplusModel <- function(x, standardized = TRUE, columns = c("label", "est_sig", "se", "pval", "ci"), digits = 2, ...){
+
+  args <- list(...)
+  parameters <- c("unstandardized", "stdyx.standardized")[(standardized+1)]
+  results <- x$parameters[[parameters]]
   value_columns <- c("est", "se", "est_se", "pval", "posterior_sd")
   value_columns <- value_columns[which(value_columns %in% names(results))]
   add_cis <- FALSE
-  if(!is.null(mplusModel$parameters[[paste0("ci.", parameters)]])){
-    if(dim(results)[1]==dim(mplusModel$parameters[[paste0("ci.", parameters)]])[1]){
+  if(!is.null(x$parameters[[paste0("ci.", parameters)]])){
+    if(dim(results)[1]==dim(x$parameters[[paste0("ci.", parameters)]])[1]){
       add_cis <- TRUE
-      results <- cbind(results, mplusModel$parameters[[paste0("ci.", parameters)]][, c("low2.5", "up2.5")])
+      results <- cbind(results, x$parameters[[paste0("ci.", parameters)]][, c("low2.5", "up2.5")])
     }
   }
 
-  if(!is.null(mplusModel$indirect[[parameters]])){
-    overall <- mplusModel$indirect[[parameters]]$overall
+  if(!is.null(x$indirect[[parameters]])){
+    overall <- x$indirect[[parameters]]$overall
     if(!is.null(overall)){
       paramHeader <- "Sum.of.indirect"
       param <- paste(overall$outcome, overall$pred, sep = ".")
@@ -87,13 +86,13 @@ printResultsTable <- function(mplusModel, parameters = "unstandardized", keepCol
       overall$outcome <- param
       names(overall)[c(1, 2)] <- c("paramHeader", "param")
       if(add_cis){
-        overall <- cbind(overall, mplusModel$indirect[[paste0("ci.", parameters)]]$overall[, c("low2.5", "up2.5")])
+        overall <- cbind(overall, x$indirect[[paste0("ci.", parameters)]]$overall[, c("low2.5", "up2.5")])
       }
       names(overall)[match(tolower(names(results)), tolower(names(overall)))] <- names(results)[na.omit(match(tolower(names(overall)), tolower(names(results))))]
       results <- rbind(results, overall[, match(names(results), names(overall))])
     }
 
-    specific <- mplusModel$indirect[[parameters]]$specific
+    specific <- x$indirect[[parameters]]$specific
     if(!is.null(specific)){
       paramHeader <- "Specific.indirect"
       param <- paste(specific$pred, specific$intervening, specific$outcome, sep = ".")
@@ -101,7 +100,7 @@ printResultsTable <- function(mplusModel, parameters = "unstandardized", keepCol
       specific$intervening <- param
       names(specific)[c(1, 2)] <- c("paramHeader", "param")
       if(add_cis){
-        specific <- cbind(specific, mplusModel$indirect[[paste0("ci.", parameters)]]$specific[, c("low2.5", "up2.5")])
+        specific <- cbind(specific, x$indirect[[paste0("ci.", parameters)]]$specific[, c("low2.5", "up2.5")])
       }
       names(specific)[match(tolower(names(results)), tolower(names(specific)))] <- names(results)[na.omit(match(tolower(names(specific)), tolower(names(results))))]
       results <- rbind(results, specific[, match(names(results), names(specific))])
@@ -147,7 +146,7 @@ printResultsTable <- function(mplusModel, parameters = "unstandardized", keepCol
 
   results[, value_columns] <- lapply(results[, value_columns], formatC, digits = digits, format = "f")
   results[constrained_rows, which(names(results) %in% c("se", "pval", "est_se", "confint"))] <- ""
-  if(!is.null(keepCols)) results <- results[ , keepCols]
+  if(!is.null(columns)) results <- results[ , columns]
   results
 }
 
@@ -166,6 +165,14 @@ printResultsTable <- function(mplusModel, parameters = "unstandardized", keepCol
 #' #Make me!
 est_sig <- function(mplusresults, digits){
   paste0(formatC(mplusresults$est, digits = digits, format = "f"), ifelse(mplusresults$pval<.05, "*", ""), ifelse(mplusresults$pval<.01, "*", ""), ifelse(mplusresults$pval<.001, "*", ""))
+}
+
+.est_sig <- function(val, sig, digits){
+  out <- formatC(val, digits = digits, format = "f")
+  out[which(sig<.05)] <- paste0(out[which(sig<.05)], "*")
+  out[which(sig<.01)] <- paste0(out[which(sig<.01)], "*")
+  out[which(sig<.001)] <- paste0(out[which(sig<.001)], "*")
+  out
 }
 
 #' Add confidence intervals to Mplus output

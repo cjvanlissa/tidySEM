@@ -18,6 +18,8 @@
 #' @param text_size Point size of text, Default: 4
 #' @param curvature Curvature of curved connectors. To flip connectors, use
 #' negative values. Default: .1
+#' @param distance Distance measure used to determine distance between nodes.
+#' Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
 #' @examples
 #' \dontrun{
@@ -37,7 +39,8 @@ prepare_sem_graph <- function(nodes,
                      spacing_x = 1,
                      spacing_y = 1,
                      text_size = 4,
-                     curvature = .1
+                     curvature = .1,
+                     distance = "euclidean"
                      ){
   args <- as.list(match.call())[-1]
   myfor <- formals(prepare_sem_graph)
@@ -78,16 +81,22 @@ prepare_sem_graph <- function(nodes,
     df_nodes[df_nodes$shape == "oval", c("node_ymin", "node_ymax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$y-.5*ellipses_b,
                                                                              df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_b)
   }
-
-  connect_cols <- .determine_connections(df_nodes, df_edges)
+  connect_cols <- switch(distance,
+                         "euclidean" = .determine_connections(df_nodes, df_edges, .euclidean_distance),
+                         "manhattan" = .determine_connections(df_nodes, df_edges, .euclidean_distance),
+                         "angle" = .determine_connections(df_nodes, df_edges, "angle"),
+                         stop("No valid distance function provided.", call. = FALSE)
+  )
 
   #df_edges <- setNames(data.frame(t(mapply(function(from, to){c(df_nodes$node_xmax[from], df_nodes$node_xmin[to], df_nodes$y[from], df_nodes$y[to])}, from = edges[, 1], to = edges[, 2]))), c("edge_xmin", "edge_xmax", "edge_ymin", "edge_ymax"))
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
-  df_edges$curvature <- NA
 
-  df_edges$curvature[df_edges$connector == "curve"] <- curvature
+  has_curve <- which(df_edges$curvature > 0)
+  df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0]
+
   out <- args
+  if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$param
   out$nodes <- df_nodes[, c("node_id", "param", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
   out$edges <- df_edges
   out$layout <- NULL
@@ -217,9 +226,9 @@ get_nodes.mplusObject <- function(x, ...){
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
 get_nodes.lavaan <- function(x, ...){
-  pars <- parameterTable(x)
+  pars <- table_results_lavaan(x)
   latent <- unique(pars$lhs[pars$op == "=~"])
-  nodes <- c(latent, unlist(lapply(lavInspect(x, "free"), rownames)))
+  nodes <- c(latent, pars$lhs[pars$free != 0])
   nodes <- data.frame(node_id = 1:length(unique(nodes)), param = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
   class(nodes) <- c("tidy_nodes", class(nodes))
   nodes
@@ -251,7 +260,7 @@ get_edges <- function(x, label = "est_sig", ...){
 #' @export
 get_edges.mplusObject <- function(x, label = "est_sig", ...){
   #par_spec <- x$tech1$parameterSpecification
-  estimate <- printResultsTable(x, ...)
+  estimate <- table_results(x, ...)
   estimate <- estimate[grepl("\\.(ON|WITH|BY)\\.", estimate$label), ]
   estimate$from <- estimate$to <- NA
   tmp <- do.call(rbind, strsplit(estimate$label, "\\."))
@@ -260,31 +269,35 @@ get_edges.mplusObject <- function(x, label = "est_sig", ...){
   tmp[tmp[, 2] == "WITH", 4] <- "none"
   tmp <- setNames(data.frame(tmp[, -2], label = estimate[[label]]), c("from", "to", "arrow", "label"))
   class(tmp) <- c("tidy_edges", class(tmp))
+  row.names(tmp) <- NULL
   tmp
 }
 
 
-#' @method get_edges lavaan.data.frame
+#' @method get_edges lavaan
 #' @export
-get_edges.lavaan.data.frame <- function(x, label = "est_sig", ...){
-
+get_edges.lavaan <- function(x, label = "est_sig", ..., standardized = TRUE){
+  pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~"))
   if(label == "est_sig"){
-    x$est_sig <- paste0(formatC(x$est.std, digits = 2, format = "f"), ifelse(x$pvalue<.05, "*", ""), ifelse(x$pvalue<.01, "*", ""), ifelse(x$pvalue<.001, "*", ""))
-    x$est_sig <- gsub("NA", "", x$est_sig)
+    if(standardized){
+      pars$est_sig <- .est_sig(pars$est.std, pars$pvalue, digits = 2)
+    } else {
+      pars$est_sig <- .est_sig(pars$est, pars$pvalue, digits = 2)
+    }
   }
-  estimate <- x
-  estimate <- estimate[grepl("^(~|~~|=~)$", estimate$op), ]
-  estimate$from <- estimate$to <- NA
-  estimate$arrow <- "last"
-  estimate$arrow[estimate$op == "~~"] <- "none"
-  estimate$arrow[estimate$op == "~"] <- "first"
-  #tmp <- do.call(rbind, strsplit(estimate$label, "\\."))
-  #tmp[tmp[, 2] == "ON", ] <- tmp[tmp[, 2] == "ON", 3:1]
-  #tmp <- cbind(tmp, "last")
-  #tmp[tmp[, 2] == "WITH", 4] <- "none"
-  tmp <- estimate[, c("lhs", "rhs", "arrow", label)]
+  pars <- pars[!(pars$op == "~~" & pars$lhs == pars$rhs), ]
+  pars$from <- pars$to <- NA
+  pars$arrow <- "last"
+  pars$arrow[pars$op == "~~"] <- "none"
+  pars$arrow[pars$op == "~"] <- "first"
+  tmp <- pars[, c("lhs", "rhs", "arrow", label)]
   tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
+  tmp$connector <- "line"
+  tmp$connector[pars$op == "~~"] <- "curve"
+  tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
+  tmp$curvature[tmp$connector == "curve"] <- .1
   class(tmp) <- c("tidy_edges", class(tmp))
+  row.names(tmp) <- NULL
   tmp
 }
 
@@ -317,8 +330,12 @@ get_layout <- function(mat = read.table("clipboard", sep = "\t", stringsAsFactor
   nodes_long
 }
 
-euclidean_distance <- function(p,q){
+.euclidean_distance <- function(p, q){
   sqrt(sum((p - q)^2))
+}
+
+.manhattan_distance <- function(p, q){
+  sum(abs(p-q))
 }
 
 match.call.defaults <- function(...) {
@@ -383,7 +400,7 @@ match.call.defaults <- function(...) {
   p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
 }
 
-.determine_connections <- function(df_nodes, df_edges){
+.determine_connections <- function(df_nodes, df_edges, dist_func){
   connector_sides <-
     cbind(c("left", "right", "bottom", "top")[rep(1:4, each = 4)],
           c("left", "right", "bottom", "top")[rep(1:4, 4)])
@@ -401,31 +418,64 @@ match.call.defaults <- function(...) {
   out[same_row & top_row & df_edges$connector == "curve", ] <- c("top", "top")
   incomplete <- is.na(out[,1])
   df_edges <- df_edges[incomplete, ]
-  out[incomplete, ] <- t(mapply(function(from, to) {
-    from_mat <-
-      as.matrix(rbind(
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, c("node_xmin", "node_xmax")]),
-                    y = unlist(df_nodes[df_nodes$node_id == from, "y"])),
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, "x"]),
-                    y = unlist(df_nodes[df_nodes$node_id == from, c("node_ymin", "node_ymax")]))
-      ))
 
-    to_mat <-
-      as.matrix(rbind(
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, c("node_xmin", "node_xmax")]),
-                    y = unlist(df_nodes[df_nodes$node_id == to, "y"])),
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, "x"]),
-                    y = unlist(df_nodes[df_nodes$node_id == to, c("node_ymin", "node_ymax")]))
-      ))
+  if(!is.function(dist_func)){
+    out[incomplete, ] <- t(mapply(function(from, to){
+      #from = 1; to = 4
+      fx <- df_nodes$x[df_nodes$node_id == from]
+      tx <- df_nodes$x[df_nodes$node_id == to]
+      fy <- df_nodes$y[df_nodes$node_id == from]
+      ty <- df_nodes$y[df_nodes$node_id == to]
+      if(!(fx == tx | fy == ty)){
+        dx <- tx-fx
+        dy <- ty-fy
+        angle <- atan2(dy,dx)*(180/pi)
+        if(angle < 45 & angle > -45){
+          return(c("right", "left"))
+        }
+        if(angle <= 135 & angle >= 45){
+          return(c("top", "bottom"))
+        }
+        if(angle < 225 & angle > 135){
+          return(c("left", "right"))
+        }
+        return(c("bottom", "top"))
+      } else {
+        if(fx == tx){
+          list(c("bottom", "top"), c("top", "bottom"))[[(((ty-fy)>0)+1)]]
+        } else {
+          list(c("left", "right"), c("right", "left"))[[(((tx-fx)>0)+1)]]
+        }
+      }
 
-    connector_sides[which.min(mapply(
-      function(from, to) {
-        euclidean_distance(from_mat[from, ], to_mat[to, ])
-      },
-      from = rep(1:4, each = 4),
-      to = rep(1:4, 4)
-    )), ]
+    }, from = df_edges$from, to = df_edges$to))
+  } else {
+    out[incomplete, ] <- t(mapply(function(from, to) {
+      from_mat <-
+        as.matrix(rbind(
+          expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, c("node_xmin", "node_xmax")]),
+                      y = unlist(df_nodes[df_nodes$node_id == from, "y"])),
+          expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, "x"]),
+                      y = unlist(df_nodes[df_nodes$node_id == from, c("node_ymin", "node_ymax")]))
+        ))
 
-  }, from = df_edges$from, to = df_edges$to))
+      to_mat <-
+        as.matrix(rbind(
+          expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, c("node_xmin", "node_xmax")]),
+                      y = unlist(df_nodes[df_nodes$node_id == to, "y"])),
+          expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, "x"]),
+                      y = unlist(df_nodes[df_nodes$node_id == to, c("node_ymin", "node_ymax")]))
+        ))
+
+      connector_sides[which.min(mapply(
+        function(from, to) {
+          do.call(dist_func, list(p = from_mat[from, ], q = to_mat[to, ]))
+        },
+        from = rep(1:4, each = 4),
+        to = rep(1:4, 4)
+      )), ]
+
+    }, from = df_edges$from, to = df_edges$to))
+  }
   out
 }

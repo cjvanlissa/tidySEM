@@ -2,15 +2,17 @@
 % Please edit documentation in R/plot_sem_attributes.R
 \name{nodes}
 \alias{nodes}
-\alias{nodes<-.sem_graph}
+\alias{nodes<-}
 \title{Extract nodes from sem_graph}
 \usage{
 nodes(x)
 
-\method{nodes}{sem_graph}(x) <- value
+nodes(x) <- value
 }
 \arguments{
 \item{x}{Object of class sem_graph.}
+
+\item{value}{A valid value for \code{nodes(x)}.}
 }
 \value{
 data.frame

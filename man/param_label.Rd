@@ -28,8 +28,7 @@ param_label(data)
 Other Mplus functions: \code{\link{SBChisquare}},
   \code{\link{SB_chisq_Pvalues}}, \code{\link{conf_int}},
   \code{\link{corTable}}, \code{\link{est_sig}},
-  \code{\link{printResultsTable}},
-  \code{\link{rbind_tables}}
+  \code{\link{rbind_tables}}, \code{\link{table_results}}
 }
 \author{
 Caspar J. van Lissa

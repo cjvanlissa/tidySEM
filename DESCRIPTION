@@ -16,14 +16,14 @@ LazyData: true
 RoxygenNote: 6.1.1
 Depends:
     R (>= 3.0.0),
-    ggplot2,
-    lavaan,
-    MplusAutomation
 Imports:
     methods,
     stats,
     utils,
-    ggforce
+    ggforce,
+    ggplot2,
+    lavaan,
+    MplusAutomation
 Suggests:
     testthat (>= 2.1.0),
     knitr,

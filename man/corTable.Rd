@@ -36,8 +36,7 @@ publication-ready correlation matrix.
 Other Mplus functions: \code{\link{SBChisquare}},
   \code{\link{SB_chisq_Pvalues}}, \code{\link{conf_int}},
   \code{\link{est_sig}}, \code{\link{param_label}},
-  \code{\link{printResultsTable}},
-  \code{\link{rbind_tables}}
+  \code{\link{rbind_tables}}, \code{\link{table_results}}
 }
 \author{
 Caspar J. van Lissa
