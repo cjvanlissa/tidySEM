@@ -6,7 +6,7 @@
 \usage{
 prepare_sem_graph(nodes, layout, edges = NULL, rect_width = 1.2,
   rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 1,
-  spacing_y = 1, text_size = 4)
+  spacing_y = 1, text_size = 4, curvature = 0.1)
 }
 \arguments{
 \item{nodes}{Object of class 'tidy_nodes'}
@@ -32,6 +32,9 @@ Default: 1}
 \item{spacing_y}{Spacing between rows of the graph, Default: 1}
 
 \item{text_size}{Point size of text, Default: 4}
+
+\item{curvature}{Curvature of curved connectors. To flip connectors, use
+negative values. Default: .1}
 }
 \value{
 Object of class 'sem_graph'
