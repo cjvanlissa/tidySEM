@@ -16,6 +16,8 @@
 #' @param spacing_x Spacing between columns of the graph, Default: 1
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
+#' @param curvature Curvature of curved connectors. To flip connectors, use
+#' negative values. Default: .1
 #' @return Object of class 'sem_graph'
 #' @examples
 #' \dontrun{
@@ -34,7 +36,8 @@ prepare_sem_graph <- function(nodes,
                      ellipses_b = 1,
                      spacing_x = 1,
                      spacing_y = 1,
-                     text_size = 4
+                     text_size = 4,
+                     curvature = .1
                      ){
   args <- as.list(match.call())[-1]
   myfor <- formals(prepare_sem_graph)
@@ -76,42 +79,14 @@ prepare_sem_graph <- function(nodes,
                                                                              df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_b)
   }
 
-  connector_sides <-
-    cbind(c("left", "right", "bottom", "top")[rep(1:4, each = 4)],
-          c("left", "right", "bottom", "top")[rep(1:4, 4)])
+  connect_cols <- .determine_connections(df_nodes, df_edges)
 
-  connect_cols <- t(mapply(function(from, to) {
-    from_mat <-
-      as.matrix(rbind(
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, c("node_xmin", "node_xmax")]),
-                    y = unlist(df_nodes[df_nodes$node_id == from, "y"])),
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, "x"]),
-                    y = unlist(df_nodes[df_nodes$node_id == from, c("node_ymin", "node_ymax")]))
-      ))
-
-    to_mat <-
-      as.matrix(rbind(
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, c("node_xmin", "node_xmax")]),
-                    y = unlist(df_nodes[df_nodes$node_id == to, "y"])),
-        expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, "x"]),
-                    y = unlist(df_nodes[df_nodes$node_id == to, c("node_ymin", "node_ymax")]))
-      ))
-
-
-    connector_sides[which.min(mapply(
-      function(from, to) {
-        euclidean_distance(from_mat[from, ], to_mat[to, ])
-      },
-      from = rep(1:4, each = 4),
-      to = rep(1:4, 4)
-    )), ]
-
-  }, from = df_edges$from, to = df_edges$to))
   #df_edges <- setNames(data.frame(t(mapply(function(from, to){c(df_nodes$node_xmax[from], df_nodes$node_xmin[to], df_nodes$y[from], df_nodes$y[to])}, from = edges[, 1], to = edges[, 2]))), c("edge_xmin", "edge_xmax", "edge_ymin", "edge_ymax"))
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
   df_edges$curvature <- NA
-  df_edges$curvature[df_edges$connector == "curve"] <- .1
+
+  df_edges$curvature[df_edges$connector == "curve"] <- curvature
   out <- args
   out$nodes <- df_nodes[, c("node_id", "param", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
   out$edges <- df_edges
@@ -169,7 +144,7 @@ plot.sem_graph <- function(x, y, ...){
 
 
 # Make plot ---------------------------------------------------------------
-  browser()
+
   p <- ggplot(NULL)
   if(any(df_edges$connector == "line")){
     p <- .plot_lines(p, df_edges[df_edges$connector == "line", ], text_size)
@@ -177,7 +152,7 @@ plot.sem_graph <- function(x, y, ...){
   if(any(df_edges$connector == "curve")){
     p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve", ], text_size = text_size)
   }
-  p <- .plot_nodes(p, df = df_nodes, text_size = text_size)
+  p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_a = ellipses_a, ellipses_b = ellipses_b)
 
 
   p + theme(axis.line = element_blank(),
@@ -396,7 +371,7 @@ match.call.defaults <- function(...) {
                       size = text_size, fill = "white", label.size = NA)
 }
 
-.plot_nodes <- function(p, df, text_size){
+.plot_nodes <- function(p, df, text_size, ellipses_a, ellipses_b){
   if(any(df$shape == "rect")){
     p <- p + geom_rect(data = df[df$shape == "rect", ], aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax"), fill = "white", colour = "black")
   }
@@ -406,3 +381,49 @@ match.call.defaults <- function(...) {
   p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
 }
 
+.determine_connections <- function(df_nodes, df_edges){
+  connector_sides <-
+    cbind(c("left", "right", "bottom", "top")[rep(1:4, each = 4)],
+          c("left", "right", "bottom", "top")[rep(1:4, 4)])
+  out <- matrix(nrow = nrow(df_edges), ncol = 2)
+  #df_nodes <- df_nodes[order(df_nodes$node_id), ]
+  same_column <- df_nodes$x[match(df_edges$from, df_nodes$node_id)] == df_nodes$x[match(df_edges$to, df_nodes$node_id)]
+  left_col <- df_nodes$x[match(df_edges$from, df_nodes$node_id)] == min(df_nodes$x)
+  right_col <- df_nodes$x[match(df_edges$from, df_nodes$node_id)] == max(df_nodes$x)
+  same_row <- df_nodes$y[match(df_edges$from, df_nodes$node_id)] == df_nodes$y[match(df_edges$to, df_nodes$node_id)]
+  bottom_row <- df_nodes$y[match(df_edges$from, df_nodes$node_id)] == min(df_nodes$y)
+  top_row <- df_nodes$y[match(df_edges$from, df_nodes$node_id)] == max(df_nodes$y)
+  out[same_column & left_col & df_edges$connector == "curve", ] <- c("left", "left")
+  out[same_column & right_col & df_edges$connector == "curve", ] <- c("right", "right")
+  out[same_row & bottom_row & df_edges$connector == "curve", ] <- c("bottom", "bottom")
+  out[same_row & top_row & df_edges$connector == "curve", ] <- c("top", "top")
+  incomplete <- is.na(out[,1])
+  df_edges <- df_edges[incomplete, ]
+  out[incomplete, ] <- t(mapply(function(from, to) {
+    from_mat <-
+      as.matrix(rbind(
+        expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, c("node_xmin", "node_xmax")]),
+                    y = unlist(df_nodes[df_nodes$node_id == from, "y"])),
+        expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, "x"]),
+                    y = unlist(df_nodes[df_nodes$node_id == from, c("node_ymin", "node_ymax")]))
+      ))
+
+    to_mat <-
+      as.matrix(rbind(
+        expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, c("node_xmin", "node_xmax")]),
+                    y = unlist(df_nodes[df_nodes$node_id == to, "y"])),
+        expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, "x"]),
+                    y = unlist(df_nodes[df_nodes$node_id == to, c("node_ymin", "node_ymax")]))
+      ))
+
+    connector_sides[which.min(mapply(
+      function(from, to) {
+        euclidean_distance(from_mat[from, ], to_mat[to, ])
+      },
+      from = rep(1:4, each = 4),
+      to = rep(1:4, 4)
+    )), ]
+
+  }, from = df_edges$from, to = df_edges$to))
+  out
+}
