@@ -175,7 +175,7 @@ plot.sem_graph <- function(x, y, ...){
   }
   if(any(df_nodes$shape == "oval")){
 
-    p <- p + geom_ellipse(data = df_nodes[df_nodes$shape == "oval", ], aes_string(x0 = "x", y0 = "y"), a = .5*ellipses_a, b = .5*ellipses_b, angle = 0, fill = "white", colour = "black")
+    p <- p + geom_ellipse(data = df_nodes[df_nodes$shape == "oval", ], aes_string(x0 = "x", y0 = "y", a = .5*ellipses_a, b = .5*ellipses_b, angle = 0), fill = "white", colour = "black")
   }
   p <- p + geom_text(data = df_nodes, aes_string(x = "x", y = "y", label = "label"), size = text_size) +
     geom_segment(data = df_edges[!df_edges$arrow %in% c("none", "curve"), ], aes_string(x = "edge_xmin",
