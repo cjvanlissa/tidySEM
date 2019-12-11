@@ -18,8 +18,12 @@
 #' @param text_size Point size of text, Default: 4
 #' @param curvature Curvature of curved connectors. To flip connectors, use
 #' negative values. Default: .1
-#' @param distance Distance measure used to determine distance between nodes.
-#' Default: "euclidean", but could be set to "manhattan".
+#' @param angle Angle used to connect nodes by the top and bottom. Defaults to
+#' NULL, which means Euclidean distance is used to determine the shortest
+#' distance between node sides. A numeric value between 0-180 can be provided,
+#' where 0 means that only nodes with the same x-coordinates are connected
+#' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+# Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
 #' @examples
 #' \dontrun{
@@ -36,11 +40,11 @@ prepare_sem_graph <- function(nodes,
                      rect_height = .8,
                      ellipses_a = 1,
                      ellipses_b = 1,
-                     spacing_x = 1,
-                     spacing_y = 1,
+                     spacing_x = 2,
+                     spacing_y = 2,
                      text_size = 4,
                      curvature = .1,
-                     distance = "euclidean"
+                     angle = NULL
                      ){
   args <- as.list(match.call())[-1]
   myfor <- formals(prepare_sem_graph)
@@ -81,12 +85,8 @@ prepare_sem_graph <- function(nodes,
     df_nodes[df_nodes$shape == "oval", c("node_ymin", "node_ymax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$y-.5*ellipses_b,
                                                                              df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_b)
   }
-  connect_cols <- switch(distance,
-                         "euclidean" = .determine_connections(df_nodes, df_edges, .euclidean_distance),
-                         "manhattan" = .determine_connections(df_nodes, df_edges, .euclidean_distance),
-                         "angle" = .determine_connections(df_nodes, df_edges, "angle"),
-                         stop("No valid distance function provided.", call. = FALSE)
-  )
+
+  connect_cols <- .determine_connections(df_nodes, df_edges, angle)
 
   #df_edges <- setNames(data.frame(t(mapply(function(from, to){c(df_nodes$node_xmax[from], df_nodes$node_xmin[to], df_nodes$y[from], df_nodes$y[to])}, from = edges[, 1], to = edges[, 2]))), c("edge_xmin", "edge_xmax", "edge_ymin", "edge_ymax"))
   df_edges$connect_from <- connect_cols[, 1]
@@ -400,7 +400,7 @@ match.call.defaults <- function(...) {
   p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
 }
 
-.determine_connections <- function(df_nodes, df_edges, dist_func){
+.determine_connections <- function(df_nodes, df_edges, angle){
   connector_sides <-
     cbind(c("left", "right", "bottom", "top")[rep(1:4, each = 4)],
           c("left", "right", "bottom", "top")[rep(1:4, 4)])
@@ -419,25 +419,26 @@ match.call.defaults <- function(...) {
   incomplete <- is.na(out[,1])
   df_edges <- df_edges[incomplete, ]
 
-  if(!is.function(dist_func)){
+  if(!is.null(angle)){
     out[incomplete, ] <- t(mapply(function(from, to){
-      #from = 1; to = 4
+      if(angle > 180) angle <- 180
       fx <- df_nodes$x[df_nodes$node_id == from]
       tx <- df_nodes$x[df_nodes$node_id == to]
       fy <- df_nodes$y[df_nodes$node_id == from]
       ty <- df_nodes$y[df_nodes$node_id == to]
       if(!(fx == tx | fy == ty)){
+
         dx <- tx-fx
         dy <- ty-fy
-        angle <- atan2(dy,dx)*(180/pi)
-        if(angle < 45 & angle > -45){
-          return(c("right", "left"))
+        an <- (atan2(dy,dx)*(180/pi)) %% 360
+        if(an > 90+.5*angle & an < 270-.5*angle){
+          return(c("left", "right"))
         }
-        if(angle <= 135 & angle >= 45){
+        if(an <= 90+(.5*angle) & an >= 90-(.5*angle)){
           return(c("top", "bottom"))
         }
-        if(angle < 225 & angle > 135){
-          return(c("left", "right"))
+        if(an <  90-.5*angle | an > 270+.5*angle){
+          return(c("right", "left"))
         }
         return(c("bottom", "top"))
       } else {
@@ -469,7 +470,7 @@ match.call.defaults <- function(...) {
 
       connector_sides[which.min(mapply(
         function(from, to) {
-          do.call(dist_func, list(p = from_mat[from, ], q = to_mat[to, ]))
+          do.call(.euclidean_distance, list(p = from_mat[from, ], q = to_mat[to, ]))
         },
         from = rep(1:4, each = 4),
         to = rep(1:4, 4)

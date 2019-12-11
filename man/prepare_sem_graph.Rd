@@ -5,9 +5,8 @@
 \title{Prepare to plot a SEM graph}
 \usage{
 prepare_sem_graph(nodes, layout, edges = NULL, rect_width = 1.2,
-  rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 1,
-  spacing_y = 1, text_size = 4, curvature = 0.1,
-  distance = "euclidean")
+  rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
+  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL)
 }
 \arguments{
 \item{nodes}{Object of class 'tidy_nodes'}
@@ -37,8 +36,11 @@ Default: 1}
 \item{curvature}{Curvature of curved connectors. To flip connectors, use
 negative values. Default: .1}
 
-\item{distance}{Distance measure used to determine distance between nodes.
-Default: "euclidean", but could be set to "manhattan".}
+\item{angle}{Angle used to connect nodes by the top and bottom. Defaults to
+NULL, which means Euclidean distance is used to determine the shortest
+distance between node sides. A numeric value between 0-180 can be provided,
+where 0 means that only nodes with the same x-coordinates are connected
+top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
 }
 \value{
 Object of class 'sem_graph'

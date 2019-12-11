@@ -8,15 +8,16 @@ fit <- cfa(HS.model, data=HolzingerSwineford1939)
 layout <- matrix(c("", "", "", "", "visual","","", "",  "textual","","", "",   "speed","", "","", "",
                    rep("", 17),
                    c(matrix(c(rep("", 9), paste0("x", 1:9)), 2, byrow = TRUE))[-1]), nrow = 3, byrow = TRUE)
+
+layout <- matrix(c("", "", "visual","","textual","","speed","", "",
+                   paste0("x", 1:9)), nrow = 2, byrow = TRUE)
+
 layout <- get_layout(layout)
 edg <- get_edges(fit)
-
 nod <- get_nodes(fit)
 
-p2 <- prepare_sem_graph(nodes = nod, layout = layout, edges = edg, distance = "euclidean")
-
-p2 <- prepare_sem_graph(nodes = nod, layout = layout, edges = edg, distance = "angle")
-edges(p2)$curvature[10:12] <- edges(p2)$curvature[10:12] *-1
+p2 <- prepare_sem_graph(nodes = nod, layout = layout, edges = edg, angle = 95)
+#edges(p2)$curvature[10:12] <- edges(p2)$curvature[10:12] *-1
 tmp <- plot(p2)
 
 test_that("Plot works for lavaan cfa", {

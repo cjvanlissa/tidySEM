@@ -39,10 +39,12 @@ df_edges <- data.frame(matrix(c(
   6, 8, "last", "-",
   7, 8, "last", "+"), ncol = 4, byrow = TRUE), stringsAsFactors = FALSE)
 names(df_edges) <- c("from", "to", "arrow", "label")
+df_edges$connector <- c(rep("line", 12))
 
 df_edges$from <- df_nodes$param[as.numeric(df_edges$from)]
 df_edges$to <- df_nodes$param[as.numeric(df_edges$to)]
-#df_edges$label[grepl("^ri", df_edges$from)] <- "1"
+df_edges$curvature <- c(rep(NA, 12))
+
 prep <- prepare_sem_graph(nodes = df_nodes, layout = layout, edges = df_edges)
 
 test_that("prepare_sem_graph correctly generates graph data", {
