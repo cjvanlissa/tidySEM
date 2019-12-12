@@ -51,7 +51,7 @@ table_results.rma <-  function(x, standardized = TRUE, all = FALSE, digits = 2, 
 #' @export
 #' @examples
 #' report_columns(c("label", "est_sig", "se", "pval", "confint", "group"))
-report_columns <- function(x){
+report_columns <- function(x = c("label", "est_sig", "se", "pval", "confint", "group", "level")){
   x <- list("report_columns" = x)
   do.call(options, x)
 }
