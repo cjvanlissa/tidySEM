@@ -280,9 +280,9 @@ get_edges.lavaan <- function(x, label = "est_sig", ..., standardized = TRUE){
   pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~"))
   if(label == "est_sig"){
     if(standardized){
-      pars$est_sig <- .est_sig(pars$est.std, pars$pvalue, digits = 2)
+      pars$est_sig <- est_sig(pars$est.std, pars$pvalue, digits = 2)
     } else {
-      pars$est_sig <- .est_sig(pars$est, pars$pvalue, digits = 2)
+      pars$est_sig <- est_sig(pars$est, pars$pvalue, digits = 2)
     }
   }
   pars <- pars[!(pars$op == "~~" & pars$lhs == pars$rhs), ]

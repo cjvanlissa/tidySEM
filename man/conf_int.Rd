@@ -2,39 +2,41 @@
 % Please edit documentation in R/printResults.R
 \name{conf_int}
 \alias{conf_int}
-\title{Add confidence intervals to Mplus output}
+\title{Format confidence intervals to object}
 \usage{
-conf_int(mplusresults, digits = 2)
+conf_int(x, digits = 2, se = NULL, lb = NULL, ub = NULL, ci = 95)
 }
 \arguments{
-\item{mplusresults}{An mplusModel object, as returned by \code{readModels}.}
+\item{x}{A model object for which a method exists.}
 
-\item{digits}{Integer. The number of digits to round the confidence interval
-to.}
+\item{digits}{Integer. The number of digits to round the condidence
+boundaries to.}
+
+\item{se}{Optional, numeric. Standard error of the parameters.}
+
+\item{lb}{Optional, numeric. Lower boundary of confidence intervals.}
+
+\item{ub}{Optional, numeric. Upper boundary of confidence intervals.}
+
+\item{ci}{Optional, numeric. What percentage CI to use (only used when
+computing CI from \code{se}, based on a normal distribution).}
 }
 \value{
 A character vector of formatted confidence intervals.
 }
 \description{
-Takes an mplusModel object returned by \code{readModels}, and constructs
-nicely formatted confidence intervals. The method depends on the output;
-if the results section already contains confidence/credible intervals, these
-are reported. If not, the confidence interval is constructed from the "est"
-and "se" columns.
+Takes a model object, and creates APA-formated confidence intervals.
 }
 \examples{
-data <- data.frame(est = c(1.325, 2.432), se = c(.05336, .00325))
-conf_int(data)
+conf_int(x = c(1.325, 2.432), se = c(.05336, .00325))
 }
 \seealso{
-\code{\link{readModels}}.
+table_results est_sig
 
-Other Mplus functions: \code{\link{SBChisquare}},
-  \code{\link{SB_chisq_Pvalues}}, \code{\link{corTable}},
-  \code{\link{est_sig}}, \code{\link{param_label}},
-  \code{\link{rbind_tables}}, \code{\link{table_results}}
+Other Reporting tools: \code{\link{est_sig}},
+  \code{\link{report_columns}}, \code{\link{table_results}}
 }
 \author{
 Caspar J. van Lissa
 }
-\concept{Mplus functions}
+\concept{Reporting tools}

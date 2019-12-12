@@ -35,9 +35,8 @@ SBChisquare(24, 78, 1.02, 65, 70, 1.28)
 model chi-square values.
 
 Other Mplus functions: \code{\link{SB_chisq_Pvalues}},
-  \code{\link{conf_int}}, \code{\link{corTable}},
-  \code{\link{est_sig}}, \code{\link{param_label}},
-  \code{\link{rbind_tables}}, \code{\link{table_results}}
+  \code{\link{param_label}}, \code{\link{rbind_tables}},
+  \code{\link{table_cor}}
 }
 \author{
 Caspar J. van Lissa

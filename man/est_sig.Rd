@@ -2,34 +2,33 @@
 % Please edit documentation in R/printResults.R
 \name{est_sig}
 \alias{est_sig}
-\title{Add significance asterisks to Mplus output}
+\title{Add significance asterisks to object}
 \usage{
-est_sig(mplusresults, digits)
+est_sig(x, digits = 2, sig = NULL)
 }
 \arguments{
-\item{mplusresults}{An mplusModel object, as returned by \code{readModels}.}
+\item{x}{A model object for which a method exists.}
 
-\item{digits}{Integer. The number of digits to round the "est" column to.}
+\item{digits}{Integer. The number of digits to round the estimate column to.}
+
+\item{sig}{Optional, a vector of p-values for the default method.}
 }
 \value{
-A character vector of formatted Mplus estimates.
+A character vector of formatted estimates.
 }
 \description{
-Takes an mplusModel object returned by \code{readModels}, and adds
-significance asterisks to the "est" column, based on the "pval" column.
+Takes a model object, and adds significance asterisks to the estimate column.
 }
 \examples{
-#Make me!
+est_sig(c(.222, .3333), sig = c(.054, .045))
 }
 \seealso{
-\code{\link{readModels}}.
+table_results
 
-Other Mplus functions: \code{\link{SBChisquare}},
-  \code{\link{SB_chisq_Pvalues}}, \code{\link{conf_int}},
-  \code{\link{corTable}}, \code{\link{param_label}},
-  \code{\link{rbind_tables}}, \code{\link{table_results}}
+Other Reporting tools: \code{\link{conf_int}},
+  \code{\link{report_columns}}, \code{\link{table_results}}
 }
 \author{
 Caspar J. van Lissa
 }
-\concept{Mplus functions}
+\concept{Reporting tools}
