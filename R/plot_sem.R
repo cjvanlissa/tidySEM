@@ -2,9 +2,14 @@
 #' @description Starting with nodes, a layout, and edges, prepare several data
 #' objects that can be rendered into a SEM graph. Using this function allows
 #' users to manually change the default graph specification before plotting it.
-#' @param nodes Object of class 'tidy_nodes'
-#' @param layout Object of class 'tidy_layout'
+#' @param layout A matrix with the layout of the graph, using the same names
+#' for nodes as in the \code{edges} argument, or an object of class
+#' 'tidy_layout', created with the \code{\link{get_layout()}} function.
 #' @param edges Object of class 'tidy_edges', Default: NULL
+#' @param nodes Object of class 'tidy_nodes', created with the
+#' \code{\link{get_nodes()}} function.
+#If this argument is NULL, the nodes are
+# inferred from the \code{layout} argument. The advantage of using
 #' @param rect_width Width of rectangles (used to display observed variables),
 #' Default: 1.2
 #' @param rect_height Height of rectangles (used to display observed variables),
@@ -33,9 +38,9 @@
 #' }
 #' @rdname prepare_sem_graph
 #' @export
-prepare_sem_graph <- function(nodes,
-                     layout,
+prepare_sem_graph <- function(layout,
                      edges = NULL,
+                     nodes = NULL,
                      rect_width = 1.2,
                      rect_height = .8,
                      ellipses_a = 1,
@@ -46,23 +51,35 @@ prepare_sem_graph <- function(nodes,
                      curvature = .1,
                      angle = NULL
                      ){
-  args <- as.list(match.call())[-1]
+  Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_sem_graph)
   for ( v in names(myfor)){
-    if (!(v %in% names(args)))
-      args <- append(args,myfor[v])
+    if (!(v %in% names(Args)))
+      Args <- append(Args,myfor[v])
   }
+
+# Extract nodes -----------------------------------------------------------
+
+  # pars <- table_results_lavaan(x)
+  # latent <- unique(pars$lhs[pars$op == "=~"])
+  # nodes <- c(latent, pars$lhs[pars$free != 0])
+  # nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
+  # class(nodes) <- c("tidy_nodes", class(nodes))
+  # nodes
+
+
+# Check if nodes exist in edges and layout --------------------------------
 
   df_edges <- edges
-  if(!all((df_edges$from %in% layout$param) & (df_edges$to %in% layout$param))){
+  if(!all((df_edges$from %in% layout$name) & (df_edges$to %in% layout$name))){
     warning("Some edges involve nodes not in layout. These were dropped.")
-    df_edges <- df_edges[(df_edges$from %in% layout$param) & (df_edges$to %in% layout$param), ]
+    df_edges <- df_edges[(df_edges$from %in% layout$name) & (df_edges$to %in% layout$name), ]
   }
 
-  df_nodes <- merge(layout, nodes, by = "param")
+  df_nodes <- merge(layout, nodes, by = "name")
 
-  df_edges$from <- df_nodes$node_id[match(df_edges$from, df_nodes$param)]
-  df_edges$to <- df_nodes$node_id[match(df_edges$to, df_nodes$param)]
+  df_edges$from <- df_nodes$node_id[match(df_edges$from, df_nodes$name)]
+  df_edges$to <- df_nodes$node_id[match(df_edges$to, df_nodes$name)]
 
 
   df_nodes$x <- df_nodes$x * spacing_x
@@ -95,9 +112,9 @@ prepare_sem_graph <- function(nodes,
   has_curve <- which(df_edges$curvature > 0)
   df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0]
 
-  out <- args
-  if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$param
-  out$nodes <- df_nodes[, c("node_id", "param", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
+  out <- Args
+  if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$name
+  out$nodes <- df_nodes[, c("node_id", "name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
   out$edges <- df_edges
   out$layout <- NULL
   class(out) <- "sem_graph"
@@ -189,6 +206,37 @@ matrix_to_nodes <- function(nodes, shape){
   nodes_long
 }
 
+#' @title Prepare graph data
+#' @description Extracts nodes and edges from a SEM model object, where nodes
+#' are defined as observed or latent variables, and edges
+#' are defined as regression paths and covariances between variables (nodes).
+#' @param x A model object of class 'mplusObject' or 'lavaan'.
+#' @param ... Additional parameters to be passed to and from other functions.
+#' @return An object of class 'graph_data'
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname prepare_graph
+#' @keywords tidy_graph
+#' @export
+prepare_graph <- function(x, ...){
+  UseMethod("get_nodes", x)
+}
+
+#' @method prepare_graph mplusObject
+#' @export
+prepare_graph.mplusObject <- function(x, ...){
+}
+
+#' @method prepare_graph mplusObject
+#' @export
+prepare_graph.lavaan <- function(x, ...){
+
+}
+
 #' @title Extract nodes from a SEM model object
 #' @description Attempts to extract nodes from a SEM model object, where nodes
 #' are defined as observed or latent variables.
@@ -217,7 +265,8 @@ get_nodes.mplusObject <- function(x, ...){
 
   nodes <- x$parameters$unstandardized$param
   nodes <- nodes[!grepl("\\$\\d+$", nodes)]
-  nodes <- data.frame(node_id = 1:length(unique(nodes)), param = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
+  nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
+  nodes$label <- nodes$name
   class(nodes) <- c("tidy_nodes", class(nodes))
   nodes
 }
@@ -226,10 +275,18 @@ get_nodes.mplusObject <- function(x, ...){
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
 get_nodes.lavaan <- function(x, ...){
-  pars <- table_results_lavaan(x)
+  pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~", "~1"), ...)
   latent <- unique(pars$lhs[pars$op == "=~"])
   nodes <- c(latent, pars$lhs[pars$free != 0])
-  nodes <- data.frame(node_id = 1:length(unique(nodes)), param = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
+  nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
+  if(FALSE){# any(pars$lhs %in% nodes$name & pars$op == "~1")
+    es <- est_sig(x = pars$est, sig = pars$pvalue)
+    pars[pars$lhs %in% nodes$name & pars$op == "~1", ]
+    match(nodes$name, pars$lhs)
+    nodes$label <- paste0(nodes$name, "\n", es)
+  } else {
+    nodes$label <- nodes$name
+  }
   class(nodes) <- c("tidy_nodes", class(nodes))
   nodes
 }
@@ -280,9 +337,9 @@ get_edges.lavaan <- function(x, label = "est_sig", ..., standardized = TRUE){
   pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~"))
   if(label == "est_sig"){
     if(standardized){
-      pars$est_sig <- est_sig(pars$est.std, pars$pvalue, digits = 2)
+      pars$est_sig <- est_sig(x = pars$est.std, sig = pars$pvalue, digits = 2)
     } else {
-      pars$est_sig <- est_sig(pars$est, pars$pvalue, digits = 2)
+      pars$est_sig <- est_sig(x = pars$est, sig = pars$pvalue, digits = 2)
     }
   }
   pars <- pars[!(pars$op == "~~" & pars$lhs == pars$rhs), ]
@@ -320,12 +377,12 @@ get_edges.lavaan <- function(x, label = "est_sig", ..., standardized = TRUE){
 get_layout <- function(mat = read.table("clipboard", sep = "\t", stringsAsFactors = FALSE)){
   mat <- as.matrix(mat)
   mat[is.na(mat)] <- ""
-  nodes_long <- setNames(as.data.frame.table(mat), c("y", "x", "param"))
+  nodes_long <- setNames(as.data.frame.table(mat), c("y", "x", "name"))
   nodes_long[1:2] <- lapply(nodes_long[1:2], as.numeric)
   nodes_long$y <- (max(nodes_long$y)+1)-nodes_long$y
-  nodes_long$param <- as.character(nodes_long$param)
+  nodes_long$name <- as.character(nodes_long$name)
   #nodes_long$shape <- as.vector(shape)
-  nodes_long <- nodes_long[!nodes_long$param == "", ]
+  nodes_long <- nodes_long[!nodes_long$name == "", ]
   class(nodes_long) <- c("tidy_layout", class(nodes_long))
   nodes_long
 }

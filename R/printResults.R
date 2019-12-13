@@ -55,6 +55,7 @@ report_columns <- function(x = c("label", "est_sig", "se", "pval", "confint", "g
   x <- list("report_columns" = x)
   do.call(options, x)
 }
+
 #' Print results table formatted for publication
 #'
 #' Takes a model object, and formats it as a publication-ready table.
@@ -89,8 +90,43 @@ table_results <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
 #' @export
 table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
 
-  args <- list(...)
-  parameters <- c("unstandardized", "stdyx.standardized")[(standardized+1)]
+  Args <- list(x = x)
+  get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
+  all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par)))})
+  if(length(all_res) == 1){
+    results <- all_res[[1]]
+  } else {
+    all_res[[2]][c("paramHeader", "param", "est_se", "Group", "betweenwithin", "label")] <- NULL
+    names(all_res[[2]])[-ncol(all_res[[2]])] <- paste0(names(all_res[[2]])[-ncol(all_res[[2]])], "_std")
+    results <- merge(all_res[[1]], all_res[[2]], by = "id", all.x = TRUE)
+    results["id"] <- NULL
+  }
+  results <- data.frame(mplus_to_lavaan_labels(results$paramHeader, results$param), results, stringsAsFactors = FALSE)
+  if(any(results$paramHeader == "New.Additional.Parameters")){
+    results$rhs[results$op == ":="] <- sapply(results$lhs[results$op == ":="], function(constr){
+      trimws(gsub("^.+?=(.+);", "\\1", x$input$model.constraint[grepl(paste0("(?<=\\s)", tolower(constr), "(?=[= ])"), tolower(x$input$model.constraint), perl = TRUE)]))
+    })
+  }
+  names(results) <- tolower(names(results))
+  if("betweenwithin" %in% names(results)) names(results)[names(results) == "betweenwithin"] <- "level"
+
+  if(!all){
+    keep_cols <- getOption("report_columns")
+    if(standardized){
+      keep_cols[na.omit(match(c("est_sig", "se", "pval", "confint"), keep_cols))] <- paste0(keep_cols[na.omit(match(c("est_sig", "se", "pval", "confint"), keep_cols))], "_std")
+    }
+    results <- results[, na.omit(match(keep_cols, names(results)))]
+  } else {
+    order_cols <- c("group", "betweenwithin", "label")
+    order_cols <- order_cols[order_cols %in% names(results)]
+    remaining_cols <- names(results)[(length(order_cols)+6):(ncol(results))]
+    remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
+    order_cols <- c(1:5, match(order_cols, names(results)), match(remaining_cols, names(results)))
+    results[, order_cols]
+  }
+}
+
+internal_table_mplusmodel <- function(x, parameters){
   results <- x$parameters[[parameters]]
   value_columns <- c("est", "se", "est_se", "pval", "posterior_sd")
   value_columns <- value_columns[which(value_columns %in% names(results))]
@@ -143,40 +179,31 @@ table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digit
     results$est_sig <- est_sig(results)
   }
   results$confint <- conf_int(results, digits)
-  if(FALSE){
-    filter_columns <- names(args)[which(names(args) %in% names(results))]
-    if(!is.null(filter_columns)){
-      atomic_filters <- which(sapply(args[filter_columns], length) == 1)
-      args[filter_columns][atomic_filters] <- toString(shQuote(args[filter_columns][atomic_filters]))
-      num_cols <- which(sapply(results[filter_columns], is.numeric))
-      num_filter <- NULL
-      if(length(num_cols > 0)){
-        num_filter <- sapply(filter_columns[num_cols], function(x){
-          paste(paste0("results[['", x, "']] >= ", args[[x]][1], " & ", "results[['", x, "']] <= ", args[[x]][2]), collapse = " & ")
-        })
-
-        row_filter <- paste(c(num_filter,
-                              sapply(filter_columns[-num_cols], function(x){
-                                paste0("results[['", x, "']] %in% ", args[x])
-                              })),
-                            collapse = " & ")
-      } else {
-        row_filter <- paste(sapply(filter_columns, function(x){
-          paste0("results[['", x, "']] %in% ", args[x])
-        }), collapse = " & ")
-
-      }
-      results <- results[eval(parse(text = row_filter)), ]
-    }
-  }
 
   results[, value_columns] <- lapply(results[, value_columns], formatC, digits = digits, format = "f")
   results[constrained_rows, which(names(results) %in% c("se", "pval", "est_se", "confint"))] <- ""
-  names(results) <- tolower(names(results))
-  if("betweenwithin" %in% names(results)) names(results)[names(results) == "betweenwithin"] <- "level"
-  if(!all) results <- results[ , na.omit(match(getOption("report_columns"), names(results)))]
+  results$id <- do.call(paste0, results[which(names(results) %in% c("paramHeader", "param", "Group", "betweenwithin"))])
   results
 }
+
+mplus_to_lavaan_labels <- function(paramHeader, param){
+  op <- paramHeader
+  op[grepl("^.+?\\.\\|$", op)] <- "=~"
+  op[op == "New.Additional.Parameters"] <- ":="
+  op[op == "Thresholds"] <- "|"
+  op[op %in% c("Residual.Variances", "Variances")] <- "~~"
+  op[grepl("^.+?\\.WITH$", op)] <- "~~"
+  op[op %in% c("Means", "Intercepts")] <- "~1"
+  op[grepl("^.+?\\.ON$", op)] <- "~"
+  op[grepl("^.+?\\.BY$", op)] <- "=~"
+
+  rhs <- lhs <- param
+  rhs[op == "~1"] <- ""
+  rhs[op %in% c("~", "=~")] <- sapply(strsplit(paramHeader[op %in% c("~", "=~")], "\\."), `[`, 1)
+  rhs[op == "~~"] <- param[op == "~~"]
+  cbind(lhs, op, rhs)
+}
+
 
 #' Add significance asterisks to object
 #'
@@ -289,6 +316,9 @@ conf_int.mplus.params <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL
 #' data <- data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B"))
 #' param_label(data)
 param_label <- function(mplusresults){
+  label_columns <- c("paramheader", "param", "pred", "intervening", "summary", "outcome", "group", "betweenwithin")
+  label_columns <- names(mplusresults)[which(tolower(names(mplusresults)) %in% label_columns)]
+  return(apply(mplusresults[label_columns], 1, paste0, collapse = "."))
   if(!is.null(mplusresults[["paramHeader"]])&!is.null(mplusresults[["param"]])){
     return(paste(mplusresults$paramHeader, mplusresults$param, sep = "."))
   }
