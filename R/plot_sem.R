@@ -51,7 +51,7 @@ prepare_sem_graph <- function(layout,
                      curvature = .1,
                      angle = NULL
                      ){
-  browser()
+
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_sem_graph)
   for ( v in names(myfor)){
@@ -79,8 +79,8 @@ prepare_sem_graph <- function(layout,
 
   df_nodes <- merge(layout, nodes, by = "name")
 
-  df_edges$from <- df_nodes$node_id[match(df_edges$from, df_nodes$name)]
-  df_edges$to <- df_nodes$node_id[match(df_edges$to, df_nodes$name)]
+  #df_edges$from <- df_nodes$node_id[match(df_edges$from, df_nodes$name)]
+  #df_edges$to <- df_nodes$node_id[match(df_edges$to, df_nodes$name)]
 
 
   df_nodes$x <- df_nodes$x * spacing_x
@@ -115,7 +115,7 @@ prepare_sem_graph <- function(layout,
 
   out <- Args
   if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$name
-  out$nodes <- df_nodes[, c("node_id", "name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")]
+  out$nodes <- df_nodes[, c("name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax", "group", "level")[na.omit(which(c("name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax", "group", "level") %in% names(df_nodes)))]]
   out$edges <- df_edges
   out$layout <- NULL
   class(out) <- "sem_graph"
@@ -144,21 +144,21 @@ plot.sem_graph <- function(x, y, ...){
     mapply(function(from, to, startpoint, endpoint){
       c(
         switch(startpoint,
-               right = df_nodes$node_xmax[which(df_nodes$node_id == from)],
-               left =  df_nodes$node_xmin[which(df_nodes$node_id == from)],
-               df_nodes$x[which(df_nodes$node_id == from)]),
+               right = df_nodes$node_xmax[which(df_nodes$name == from)],
+               left =  df_nodes$node_xmin[which(df_nodes$name == from)],
+               df_nodes$x[which(df_nodes$name == from)]),
         switch(startpoint,
-               top = df_nodes$node_ymax[which(df_nodes$node_id == from)],
-               bottom =  df_nodes$node_ymin[which(df_nodes$node_id == from)],
-               df_nodes$y[which(df_nodes$node_id == from)]),
+               top = df_nodes$node_ymax[which(df_nodes$name == from)],
+               bottom =  df_nodes$node_ymin[which(df_nodes$name == from)],
+               df_nodes$y[which(df_nodes$name == from)]),
         switch(endpoint,
-               right = df_nodes$node_xmax[which(df_nodes$node_id == to)],
-               left =  df_nodes$node_xmin[which(df_nodes$node_id == to)],
-               df_nodes$x[which(df_nodes$node_id == to)]),
+               right = df_nodes$node_xmax[which(df_nodes$name == to)],
+               left =  df_nodes$node_xmin[which(df_nodes$name == to)],
+               df_nodes$x[which(df_nodes$name == to)]),
         switch(endpoint,
-               top = df_nodes$node_ymax[which(df_nodes$node_id == to)],
-               bottom =  df_nodes$node_ymin[which(df_nodes$node_id == to)],
-               df_nodes$y[which(df_nodes$node_id == to)])
+               top = df_nodes$node_ymax[which(df_nodes$name == to)],
+               bottom =  df_nodes$node_ymin[which(df_nodes$name == to)],
+               df_nodes$y[which(df_nodes$name == to)])
       )},
       from = df_edges$from,
       to = df_edges$to,
@@ -182,6 +182,17 @@ plot.sem_graph <- function(x, y, ...){
   }
   p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_a = ellipses_a, ellipses_b = ellipses_b)
 
+  if("level" %in% names(df_nodes) & "level" %in% names(df_edges)){
+    if("group" %in% names(df_nodes) & "group" %in% names(df_edges)){
+      p <- p + facet_grid(level~group, scales = "free")
+    } else {
+      p <- p + facet_wrap(~level, scales = "free")
+    }
+  } else {
+    if("group" %in% names(df_nodes) & "group" %in% names(df_edges)){
+      p <- p + facet_wrap(~group, scales = "free")
+    }
+  }
 
   p + theme(axis.line = element_blank(),
           axis.text.x = element_blank(),
@@ -203,7 +214,7 @@ matrix_to_nodes <- function(nodes, shape){
   nodes_long$label <- as.character(nodes_long$label)
   nodes_long$shape <- as.vector(shape)
   nodes_long <- nodes_long[!nodes_long$label == "", ]
-  nodes_long$node_id <- 1:nrow(nodes_long)
+  #nodes_long$node_id <- 1:nrow(nodes_long)
   nodes_long
 }
 
@@ -287,10 +298,19 @@ get_nodes.lavaan <- function(x, ...){
 #' @method get_nodes tidy_results
 #' @export
 get_nodes.tidy_results <- function(x, ...){
+  if("group" %in% names(x)){
+    x_list <- lapply(unique(x$group), function(i){
+      tmp <- get_nodes(x = x[x$group == i, -which(names(x) == "group")])
+      tmp$group <- i
+      tmp
+    })
+    return(do.call(rbind, x_list))
+  }
   if("level" %in% names(x)){
     x_list <- lapply(unique(x$level), function(i){
       tmp <- get_nodes(x = x[x$level == i, -which(names(x) == "level")])
       tmp$name <- paste0(tmp$name, ".", i)
+      tmp$level <- i
       tmp
       })
     return(do.call(rbind, x_list))
@@ -298,7 +318,7 @@ get_nodes.tidy_results <- function(x, ...){
   latent <- unique(x$lhs[x$op == "=~"])
   obs <- unique(x$lhs[x$op %in% c("~~", "~", "~1")])
   nodes <- unique(c(latent, obs))
-  nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
+  nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
   if(FALSE){# any(x$lhs %in% nodes$name & x$op == "~1")
     es <- est_sig(x = x$est, sig = x$pvalue)
     x[x$lhs %in% nodes$name & x$op == "~1", ]
@@ -370,6 +390,7 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
       tmp <- do.call(get_edges, Args)
       tmp$from <- paste0(tmp$from, ".", i)
       tmp$to <- paste0(tmp$to, ".", i)
+      tmp$level <- i
       tmp
     })
     return(do.call(rbind, x_list))
@@ -416,6 +437,7 @@ get_layout <- function(mat = read.table("clipboard", sep = "\t", stringsAsFactor
   nodes_long$name <- as.character(nodes_long$name)
   #nodes_long$shape <- as.vector(shape)
   nodes_long <- nodes_long[!nodes_long$name == "", ]
+  row.names(nodes_long) <- NULL
   class(nodes_long) <- c("tidy_layout", class(nodes_long))
   nodes_long
 }
@@ -496,12 +518,12 @@ match.call.defaults <- function(...) {
           c("left", "right", "bottom", "top")[rep(1:4, 4)])
   out <- matrix(nrow = nrow(df_edges), ncol = 2)
   #df_nodes <- df_nodes[order(df_nodes$node_id), ]
-  same_column <- df_nodes$x[match(df_edges$from, df_nodes$node_id)] == df_nodes$x[match(df_edges$to, df_nodes$node_id)]
-  left_col <- df_nodes$x[match(df_edges$from, df_nodes$node_id)] == min(df_nodes$x)
-  right_col <- df_nodes$x[match(df_edges$from, df_nodes$node_id)] == max(df_nodes$x)
-  same_row <- df_nodes$y[match(df_edges$from, df_nodes$node_id)] == df_nodes$y[match(df_edges$to, df_nodes$node_id)]
-  bottom_row <- df_nodes$y[match(df_edges$from, df_nodes$node_id)] == min(df_nodes$y)
-  top_row <- df_nodes$y[match(df_edges$from, df_nodes$node_id)] == max(df_nodes$y)
+  same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
+  left_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == min(df_nodes$x)
+  right_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == max(df_nodes$x)
+  same_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == df_nodes$y[match(df_edges$to, df_nodes$name)]
+  bottom_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == min(df_nodes$y)
+  top_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == max(df_nodes$y)
   out[same_column & left_col & df_edges$connector == "curve", ] <- c("left", "left")
   out[same_column & right_col & df_edges$connector == "curve", ] <- c("right", "right")
   out[same_row & bottom_row & df_edges$connector == "curve", ] <- c("bottom", "bottom")
@@ -512,10 +534,10 @@ match.call.defaults <- function(...) {
   if(!is.null(angle)){
     out[incomplete, ] <- t(mapply(function(from, to){
       if(angle > 180) angle <- 180
-      fx <- df_nodes$x[df_nodes$node_id == from]
-      tx <- df_nodes$x[df_nodes$node_id == to]
-      fy <- df_nodes$y[df_nodes$node_id == from]
-      ty <- df_nodes$y[df_nodes$node_id == to]
+      fx <- df_nodes$x[df_nodes$name == from]
+      tx <- df_nodes$x[df_nodes$name == to]
+      fy <- df_nodes$y[df_nodes$name == from]
+      ty <- df_nodes$y[df_nodes$name == to]
       if(!(fx == tx | fy == ty)){
 
         dx <- tx-fx
@@ -544,18 +566,18 @@ match.call.defaults <- function(...) {
     out[incomplete, ] <- t(mapply(function(from, to) {
       from_mat <-
         as.matrix(rbind(
-          expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, c("node_xmin", "node_xmax")]),
-                      y = unlist(df_nodes[df_nodes$node_id == from, "y"])),
-          expand.grid(x = unlist(df_nodes[df_nodes$node_id == from, "x"]),
-                      y = unlist(df_nodes[df_nodes$node_id == from, c("node_ymin", "node_ymax")]))
+          expand.grid(x = unlist(df_nodes[df_nodes$name == from, c("node_xmin", "node_xmax")]),
+                      y = unlist(df_nodes[df_nodes$name == from, "y"])),
+          expand.grid(x = unlist(df_nodes[df_nodes$name == from, "x"]),
+                      y = unlist(df_nodes[df_nodes$name == from, c("node_ymin", "node_ymax")]))
         ))
 
       to_mat <-
         as.matrix(rbind(
-          expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, c("node_xmin", "node_xmax")]),
-                      y = unlist(df_nodes[df_nodes$node_id == to, "y"])),
-          expand.grid(x = unlist(df_nodes[df_nodes$node_id == to, "x"]),
-                      y = unlist(df_nodes[df_nodes$node_id == to, c("node_ymin", "node_ymax")]))
+          expand.grid(x = unlist(df_nodes[df_nodes$name == to, c("node_xmin", "node_xmax")]),
+                      y = unlist(df_nodes[df_nodes$name == to, "y"])),
+          expand.grid(x = unlist(df_nodes[df_nodes$name == to, "x"]),
+                      y = unlist(df_nodes[df_nodes$name == to, c("node_ymin", "node_ymax")]))
         ))
 
       connector_sides[which.min(mapply(
