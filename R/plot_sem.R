@@ -51,6 +51,7 @@ prepare_sem_graph <- function(layout,
                      curvature = .1,
                      angle = NULL
                      ){
+  browser()
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_sem_graph)
   for ( v in names(myfor)){
@@ -256,35 +257,52 @@ get_nodes <- function(x, ...){
   UseMethod("get_nodes", x)
 }
 
-#' @method get_nodes mplusObject
+#' @method get_nodes mplus.model
 #' @export
-get_nodes.mplusObject <- function(x, ...){
-  latent <- x$parameters$unstandardized$paramHeader
-  latent <- latent[grepl("\\.BY$", latent)]
-  latent <- unique(gsub("\\.BY$", "", latent))
-
-  nodes <- x$parameters$unstandardized$param
-  nodes <- nodes[!grepl("\\$\\d+$", nodes)]
-  nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
-  nodes$label <- nodes$name
-  class(nodes) <- c("tidy_nodes", class(nodes))
-  nodes
+get_nodes.mplus.model <- function(x, ...){
+  Args <- as.list(match.call()[-1])
+  Args$x <- table_results(x, all = TRUE)
+  do.call(get_nodes, Args)
+  # latent <- x$parameters$unstandardized$paramHeader
+  # latent <- latent[grepl("\\.BY$", latent)]
+  # latent <- unique(gsub("\\.BY$", "", latent))
+  #
+  # nodes <- x$parameters$unstandardized$param
+  # nodes <- nodes[!grepl("\\$\\d+$", nodes)]
+  # nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
+  # nodes$label <- nodes$name
+  # class(nodes) <- c("tidy_nodes", class(nodes))
+  # nodes
 }
 
 #' @method get_nodes lavaan
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
 get_nodes.lavaan <- function(x, ...){
-  #pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~", "~1"), ...)
-  pars <- table_results(x, all = TRUE)
-  pars <- pars[pars$op %in% c("~", "~~", "=~", "~1", "|"), ]
-  latent <- unique(pars$lhs[pars$op == "=~"])
-  nodes <- c(latent, pars$lhs)
+  Args <- as.list(match.call()[-1])
+  Args$x <- table_results(x, all = TRUE)
+  do.call(get_nodes, Args)
+}
+
+#' @method get_nodes tidy_results
+#' @export
+get_nodes.tidy_results <- function(x, ...){
+  if("level" %in% names(x)){
+    x_list <- lapply(unique(x$level), function(i){
+      tmp <- get_nodes(x = x[x$level == i, -which(names(x) == "level")])
+      tmp$name <- paste0(tmp$name, ".", i)
+      tmp
+      })
+    return(do.call(rbind, x_list))
+  }
+  latent <- unique(x$lhs[x$op == "=~"])
+  obs <- unique(x$lhs[x$op %in% c("~~", "~", "~1")])
+  nodes <- unique(c(latent, obs))
   nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
-  if(FALSE){# any(pars$lhs %in% nodes$name & pars$op == "~1")
-    es <- est_sig(x = pars$est, sig = pars$pvalue)
-    pars[pars$lhs %in% nodes$name & pars$op == "~1", ]
-    match(nodes$name, pars$lhs)
+  if(FALSE){# any(x$lhs %in% nodes$name & x$op == "~1")
+    es <- est_sig(x = x$est, sig = x$pvalue)
+    x[x$lhs %in% nodes$name & x$op == "~1", ]
+    match(nodes$name, x$lhs)
     nodes$label <- paste0(nodes$name, "\n", es)
   } else {
     nodes$label <- nodes$name
@@ -336,16 +354,35 @@ get_edges.mplusObject <- function(x, label = "est_sig", ...){
 #' @method get_edges lavaan
 #' @export
 get_edges.lavaan <- function(x, label = "est_sig_std", ...){
-  pars <- table_results(x, all = TRUE)#, retain_which = c("~", "~~", "=~"))
-  pars <- pars[pars$op %in% c("~", "~~", "=~") & !pars$lhs == pars$rhs, ]
-  pars$from <- pars$to <- NA
-  pars$arrow <- "last"
-  pars$arrow[pars$op == "~~"] <- "none"
-  pars$arrow[pars$op == "~"] <- "first"
-  tmp <- pars[, c("lhs", "rhs", "arrow", label)]
+    Args <- as.list(match.call()[-1])
+    Args$x <- table_results(x, all = TRUE)
+    do.call(get_edges, Args)
+  }
+
+
+#' @method get_edges tidy_results
+#' @export
+get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
+  Args <- as.list(match.call())[-1]
+  if("level" %in% names(x)){
+    x_list <- lapply(unique(x$level), function(i){
+      Args$x <- x[x$level == i, -which(names(x) == "level")]
+      tmp <- do.call(get_edges, Args)
+      tmp$from <- paste0(tmp$from, ".", i)
+      tmp$to <- paste0(tmp$to, ".", i)
+      tmp
+    })
+    return(do.call(rbind, x_list))
+  }
+  x <- x[x$op %in% c("~", "~~", "=~") & !x$lhs == x$rhs, ]
+  x$from <- x$to <- NA
+  x$arrow <- "last"
+  x$arrow[x$op == "~~"] <- "none"
+  x$arrow[x$op == "~"] <- "first"
+  tmp <- x[, c("lhs", "rhs", "arrow", label)]
   tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
   tmp$connector <- "line"
-  tmp$connector[pars$op == "~~"] <- "curve"
+  tmp$connector[x$op == "~~"] <- "curve"
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[tmp$connector == "curve"] <- .1
   class(tmp) <- c("tidy_edges", class(tmp))

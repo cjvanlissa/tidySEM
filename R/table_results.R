@@ -123,6 +123,7 @@ table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digit
     remaining_cols <- names(results)[(length(order_cols)+6):(ncol(results))]
     remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
     order_cols <- c(1:5, match(order_cols, names(results)), match(remaining_cols, names(results)))
+    class(results) <- c("tidy_results", class(results))
     results[, order_cols]
   }
 }
@@ -193,15 +194,17 @@ mplus_to_lavaan_labels <- function(paramHeader, param){
   op[op == "New.Additional.Parameters"] <- ":="
   op[op == "Thresholds"] <- "|"
   op[op %in% c("Residual.Variances", "Variances")] <- "~~"
-  op[grepl("^.+?\\.WITH$", op)] <- "~~"
+  with_statements <- grepl("^.+?\\.WITH$", op)
+  op[with_statements] <- "~~"
   op[op %in% c("Means", "Intercepts")] <- "~1"
   op[grepl("^.+?\\.ON$", op)] <- "~"
   op[grepl("^.+?\\.BY$", op)] <- "=~"
 
   rhs <- lhs <- param
   rhs[op == "~1"] <- ""
-  rhs[op %in% c("~", "=~")] <- sapply(strsplit(paramHeader[op %in% c("~", "=~")], "\\."), `[`, 1)
-  rhs[op == "~~"] <- param[op == "~~"]
+  lhs[op %in% c("~", "=~")] <- sapply(strsplit(paramHeader[op %in% c("~", "=~")], "\\."), `[`, 1)
+  lhs[with_statements] <- sapply(strsplit(paramHeader[with_statements], "\\."), `[`, 1)
+
   cbind(lhs, op, rhs)
 }
 
@@ -501,6 +504,7 @@ table_results.lavaan <- function(x, standardized = TRUE, all = FALSE, digits = 2
     remaining_cols <- names(results)[(length(order_cols)+3):(ncol(results))]
     remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
     order_cols <- c(1:3, match(order_cols, names(results)), match(remaining_cols, names(results)))
+    class(results) <- c("tidy_results", class(results))
     results[, order_cols]
 
   }
