@@ -5,8 +5,8 @@ df$x2 <- ordered(cut(df$x2, 4))
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '
-fit <- cfa(HS.model, data=df, meanstructure = T)
-partable(fit)
+fit <- cfa(HS.model, data=df, meanstructure = T, group = "school")
+
 layout <- matrix(c("", "", "", "", "visual","","", "",  "textual","","", "",   "speed","", "","", "",
                    rep("", 17),
                    c(matrix(c(rep("", 9), paste0("x", 1:9)), 2, byrow = TRUE))[-1]), nrow = 3, byrow = TRUE)

@@ -44,7 +44,7 @@ table_results.rma <-  function(x, standardized = TRUE, all = FALSE, digits = 2, 
 #' Sets a global option to control which columns table_results reports when
 #' \code{all = FALSE}.
 #' @param x A character vector with column names for
-#' \code{\link{table_results}}.
+#' \code{\link[tidySEM]{table_results}}.
 #' @author Caspar J. van Lissa
 #' @family Reporting tools
 #' @keywords reporting
@@ -91,8 +91,9 @@ table_results <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
 table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
 
   Args <- list(x = x)
+  digits <- force(digits)
   get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
-  all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par)))})
+  all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par, digits = digits)))})
   if(length(all_res) == 1){
     results <- all_res[[1]]
   } else {
@@ -113,11 +114,11 @@ table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digit
   if(!all){
     keep_cols <- getOption("report_columns")
     if(standardized){
-      keep_cols[na.omit(match(c("est_sig", "se", "pval", "confint"), keep_cols))] <- paste0(keep_cols[na.omit(match(c("est_sig", "se", "pval", "confint"), keep_cols))], "_std")
+      keep_cols[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), keep_cols))] <- paste0(keep_cols[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), keep_cols))], "_std")
     }
     results <- results[, na.omit(match(keep_cols, names(results)))]
   } else {
-    order_cols <- c("group", "betweenwithin", "label")
+    order_cols <- c("group", "level", "label")
     order_cols <- order_cols[order_cols %in% names(results)]
     remaining_cols <- names(results)[(length(order_cols)+6):(ncol(results))]
     remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
@@ -126,7 +127,7 @@ table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digit
   }
 }
 
-internal_table_mplusmodel <- function(x, parameters){
+internal_table_mplusmodel <- function(x, parameters, digits){
   results <- x$parameters[[parameters]]
   value_columns <- c("est", "se", "est_se", "pval", "posterior_sd")
   value_columns <- value_columns[which(value_columns %in% names(results))]
@@ -204,6 +205,22 @@ mplus_to_lavaan_labels <- function(paramHeader, param){
   cbind(lhs, op, rhs)
 }
 
+lavaan_labels <- function(x){
+  x$left <- x$mid <- ""
+  x$mid[x$op == "=~"] <- "BY"
+  x$mid[x$op == ":="] <- ":="
+  x$left[x$op == "|"] <- "Thresholds"
+  #x$rhs[x$op == "|"] <- paste0(".", x$rhs[x$op == "|"])
+  x$mid[x$op == "~~" & !(x$lhs == x$rhs)] <- "WITH"
+  x$left[x$op == "~1"] <- "Means"
+  x$mid[x$op == "~"] <- "ON"
+  x$left[x$op %in% c("~~", "~*~") & x$lhs == x$rhs] <- "Variances"
+  x$rhs[x$op %in% c("~~", "~*~") & x$lhs == x$rhs] <- ""
+
+  apply(x[c("left", "lhs", "mid", "rhs")], 1, function(i){
+    paste0(i[!i==""], collapse = ".")
+  })
+}
 
 #' Add significance asterisks to object
 #'
@@ -310,7 +327,7 @@ conf_int.mplus.params <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL
 #' @return A character vector of parameter labels.
 #' @author Caspar J. van Lissa
 #' @family Mplus functions
-#' @seealso \code{\link{readModels}}.
+#' @seealso \code{\link[MplusAutomation]{readModels}}.
 #' @export
 #' @examples
 #' data <- data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B"))
@@ -374,7 +391,7 @@ rbind_tables <- function(table_list){
 #' correlation matrices).
 #' @author Caspar J. van Lissa
 #' @family Mplus functions
-#' @seealso \code{\link{readModels}}.
+#' @seealso \code{\link[MplusAutomation]{readModels}}.
 #' @export
 #' @examples
 #' #Make me!
@@ -422,4 +439,70 @@ table_cor <- function(mplusModel, parameters = "stdyx.standardized", valueColumn
   correlations
 }
 
+
+#' @importFrom utils getFromNamespace
+#' @importFrom lavaan parametertable lavInspect standardizedsolution
+lav_getParameterLabels <-
+  getFromNamespace("getParameterLabels", "lavaan")
+
+#' @importFrom lavaan parameterEstimates lavInspect standardizedsolution
+#' @method table_results lavaan
+#' @export
+table_results.lavaan <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
+# <- function(x, standardize, retain_which = c("~", "~~", "=~")){
+
+  pars_unst <- parameterEstimates(x)
+  pars_unst$label <- lavaan_labels(pars_unst)
+
+  num_groups <- lavInspect(x, what = "ngroups")
+  if(num_groups > 1){
+    group_labels <- lavInspect(x, what = "group.label")
+    pars_unst$group <- group_labels[pars_unst$group]
+    pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$group)
+  }
+  if("level" %in% names(pars_unst)){
+    pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$level)
+  }
+  # Unst
+  pars_unst$confint <- conf_int(x = pars_unst$est, lb = pars_unst$ci.lower, ub = pars_unst$ci.upper)
+  pars_unst$est_sig <- est_sig(x = pars_unst$est, sig = pars_unst$pvalue)
+  value_columns <- c("est", "se", "pvalue")
+  value_columns <- value_columns[which(value_columns %in% names(pars_unst))]
+  pars_unst[, value_columns] <- lapply(pars_unst[, value_columns],
+                                     formatC, digits = digits, format = "f")
+  pars_unst[is.na(pars_unst$z), c("se", "pvalue")] <- ""
+  pars_unst[c("z", "ci.lower", "ci.upper")] <- NULL
+  # Std
+  pars_std <- standardizedsolution(x)
+  pars_std$est_sig <- est_sig(x = pars_std$est, sig = pars_std$pvalue)
+  pars_std$confint <- conf_int(x = pars_std$est, lb = pars_std$ci.lower, ub = pars_std$ci.upper)
+  value_columns <- c("est", "se", "pvalue")
+  value_columns <- value_columns[which(value_columns %in% names(pars_std))]
+  pars_std[, value_columns] <- lapply(pars_std[, value_columns],
+                                       formatC, digits = digits, format = "f")
+  pars_std[is.na(pars_std$z), c("se", "pvalue")] <- ""
+
+  pars_std[c("lhs", "op", "rhs", "group", "z", "ci.lower", "ci.upper")] <- NULL
+
+  names(pars_std)[na.omit(match(c("se", "pvalue", "est_sig", "confint"), names(pars_std)))] <- paste0(names(pars_std)[na.omit(match(c("se", "pvalue", "est_sig", "confint"), names(pars_std)))], "_std")
+  names(pars_std)[match("est.std", names(pars_std))] <- "est_std"
+
+  results <- cbind(pars_unst, pars_std)
+
+  if(!all){
+    keep_cols <- getOption("report_columns")
+    if(standardized){
+      keep_cols[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), keep_cols))] <- paste0(keep_cols[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), keep_cols))], "_std")
+    }
+    results <- results[, na.omit(match(keep_cols, names(results)))]
+  } else {
+    order_cols <- c("block", "group", "level", "label")
+    order_cols <- order_cols[order_cols %in% names(results)]
+    remaining_cols <- names(results)[(length(order_cols)+3):(ncol(results))]
+    remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
+    order_cols <- c(1:3, match(order_cols, names(results)), match(remaining_cols, names(results)))
+    results[, order_cols]
+
+  }
+}
 

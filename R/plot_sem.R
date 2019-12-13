@@ -4,10 +4,10 @@
 #' users to manually change the default graph specification before plotting it.
 #' @param layout A matrix with the layout of the graph, using the same names
 #' for nodes as in the \code{edges} argument, or an object of class
-#' 'tidy_layout', created with the \code{\link{get_layout()}} function.
+#' 'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.
 #' @param edges Object of class 'tidy_edges', Default: NULL
 #' @param nodes Object of class 'tidy_nodes', created with the
-#' \code{\link{get_nodes()}} function.
+#' \code{\link[tidySEM]{get_nodes}} function.
 #If this argument is NULL, the nodes are
 # inferred from the \code{layout} argument. The advantage of using
 #' @param rect_width Width of rectangles (used to display observed variables),
@@ -275,9 +275,11 @@ get_nodes.mplusObject <- function(x, ...){
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
 get_nodes.lavaan <- function(x, ...){
-  pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~", "~1"), ...)
+  #pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~", "~1"), ...)
+  pars <- table_results(x, all = TRUE)
+  pars <- pars[pars$op %in% c("~", "~~", "=~", "~1", "|"), ]
   latent <- unique(pars$lhs[pars$op == "=~"])
-  nodes <- c(latent, pars$lhs[pars$free != 0])
+  nodes <- c(latent, pars$lhs)
   nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
   if(FALSE){# any(pars$lhs %in% nodes$name & pars$op == "~1")
     es <- est_sig(x = pars$est, sig = pars$pvalue)
@@ -333,16 +335,9 @@ get_edges.mplusObject <- function(x, label = "est_sig", ...){
 
 #' @method get_edges lavaan
 #' @export
-get_edges.lavaan <- function(x, label = "est_sig", ..., standardized = TRUE){
-  pars <- table_results_lavaan(x, retain_which = c("~", "~~", "=~"))
-  if(label == "est_sig"){
-    if(standardized){
-      pars$est_sig <- est_sig(x = pars$est.std, sig = pars$pvalue, digits = 2)
-    } else {
-      pars$est_sig <- est_sig(x = pars$est, sig = pars$pvalue, digits = 2)
-    }
-  }
-  pars <- pars[!(pars$op == "~~" & pars$lhs == pars$rhs), ]
+get_edges.lavaan <- function(x, label = "est_sig_std", ...){
+  pars <- table_results(x, all = TRUE)#, retain_which = c("~", "~~", "=~"))
+  pars <- pars[pars$op %in% c("~", "~~", "=~") & !pars$lhs == pars$rhs, ]
   pars$from <- pars$to <- NA
   pars$arrow <- "last"
   pars$arrow[pars$op == "~~"] <- "none"
@@ -354,6 +349,7 @@ get_edges.lavaan <- function(x, label = "est_sig", ..., standardized = TRUE){
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[tmp$connector == "curve"] <- .1
   class(tmp) <- c("tidy_edges", class(tmp))
+  attr(tmp, "which_label") <- label
   row.names(tmp) <- NULL
   tmp
 }

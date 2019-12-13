@@ -4,16 +4,20 @@
 \alias{prepare_sem_graph}
 \title{Prepare to plot a SEM graph}
 \usage{
-prepare_sem_graph(nodes, layout, edges = NULL, rect_width = 1.2,
-  rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
-  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL)
+prepare_sem_graph(layout, edges = NULL, nodes = NULL,
+  rect_width = 1.2, rect_height = 0.8, ellipses_a = 1,
+  ellipses_b = 1, spacing_x = 2, spacing_y = 2, text_size = 4,
+  curvature = 0.1, angle = NULL)
 }
 \arguments{
-\item{nodes}{Object of class 'tidy_nodes'}
-
-\item{layout}{Object of class 'tidy_layout'}
+\item{layout}{A matrix with the layout of the graph, using the same names
+for nodes as in the \code{edges} argument, or an object of class
+'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.}
 
 \item{edges}{Object of class 'tidy_edges', Default: NULL}
+
+\item{nodes}{Object of class 'tidy_nodes', created with the
+\code{\link[tidySEM]{get_nodes}} function.}
 
 \item{rect_width}{Width of rectangles (used to display observed variables),
 Default: 1.2}

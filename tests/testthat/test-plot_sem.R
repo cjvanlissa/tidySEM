@@ -10,9 +10,9 @@ test_that("matrix correctly converts to tidy_layout", {
 })
 
 
-df_nodes <-  data.frame(node_id = 1:length(layout$param), param = layout$param, stringsAsFactors = FALSE)
+df_nodes <-  data.frame(node_id = 1:length(layout$name), name = layout$name, stringsAsFactors = FALSE)
 df_nodes$shape <- "oval"
-df_nodes$shape[grepl("(phys)", df_nodes$param)] <- "rect"
+df_nodes$shape[grepl("(phys)", df_nodes$name)] <- "rect"
 labels <- list("ne" = "Natural environment",
                "plea" = "Pleasantness",
                "dist" = "Disturbance",
@@ -22,8 +22,8 @@ labels <- list("ne" = "Natural environment",
                "stress" = "Stress",
                "dep" ="Depression"
 )
-df_nodes$label <- unlist(labels[match(df_nodes$param, names(labels))])
-#df_nodes$param <- df_nodes$node_id
+df_nodes$label <- unlist(labels[match(df_nodes$name, names(labels))])
+#df_nodes$name <- df_nodes$node_id
 df_edges <- data.frame(matrix(c(
   1, 6, "last", "+",
   2, 6, "last", "+",
@@ -41,8 +41,8 @@ df_edges <- data.frame(matrix(c(
 names(df_edges) <- c("from", "to", "arrow", "label")
 df_edges$connector <- c(rep("line", 12))
 
-df_edges$from <- df_nodes$param[as.numeric(df_edges$from)]
-df_edges$to <- df_nodes$param[as.numeric(df_edges$to)]
+df_edges$from <- df_nodes$name[as.numeric(df_edges$from)]
+df_edges$to <- df_nodes$name[as.numeric(df_edges$to)]
 df_edges$curvature <- c(rep(NA, 12))
 
 prep <- prepare_sem_graph(nodes = df_nodes, layout = layout, edges = df_edges)
@@ -60,3 +60,4 @@ p <- plot(prep)
 test_that("multiplication works", {
   expect_equal(2 * 2, 4)
 })
+
