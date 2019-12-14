@@ -453,14 +453,17 @@ lav_getParameterLabels <-
 #' @export
 table_results.lavaan <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
 # <- function(x, standardize, retain_which = c("~", "~~", "=~")){
-
   pars_unst <- parameterEstimates(x)
   pars_unst$label <- lavaan_labels(pars_unst)
 
   num_groups <- lavInspect(x, what = "ngroups")
   if(num_groups > 1){
     group_labels <- lavInspect(x, what = "group.label")
-    pars_unst$group <- group_labels[pars_unst$group]
+    if(!all(group_labels %in% unique(pars_unst$group))){
+      if(is.numeric(pars_unst$group)){
+        pars_unst$group <- group_labels[pars_unst$group]
+      }
+    }
     pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$group)
   }
   if("level" %in% names(pars_unst)){

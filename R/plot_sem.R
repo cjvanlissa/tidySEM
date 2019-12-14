@@ -77,7 +77,7 @@ prepare_sem_graph <- function(layout,
     df_edges <- df_edges[(df_edges$from %in% layout$name) & (df_edges$to %in% layout$name), ]
   }
 
-  df_nodes <- merge(layout, nodes, by = "name")
+  df_nodes <- merge(nodes, layout, by = "name")
 
   #df_edges$from <- df_nodes$node_id[match(df_edges$from, df_nodes$name)]
   #df_edges$to <- df_nodes$node_id[match(df_edges$to, df_nodes$name)]
@@ -129,7 +129,6 @@ prepare_sem_graph <- function(layout,
 #' @importFrom ggplot2 theme theme_bw unit
 #' @importFrom ggforce geom_ellipse
 plot.sem_graph <- function(x, y, ...){
-
   df_nodes <- x$nodes
   df_edges <- x$edges
   rect_width <- x$rect_width
@@ -140,32 +139,33 @@ plot.sem_graph <- function(x, y, ...){
   spacing_y <- x$spacing_y
   text_size <- x$text_size
 
-  connect_points <- setNames(data.frame(t(
-    mapply(function(from, to, startpoint, endpoint){
-      c(
-        switch(startpoint,
-               right = df_nodes$node_xmax[which(df_nodes$name == from)],
-               left =  df_nodes$node_xmin[which(df_nodes$name == from)],
-               df_nodes$x[which(df_nodes$name == from)]),
-        switch(startpoint,
-               top = df_nodes$node_ymax[which(df_nodes$name == from)],
-               bottom =  df_nodes$node_ymin[which(df_nodes$name == from)],
-               df_nodes$y[which(df_nodes$name == from)]),
-        switch(endpoint,
-               right = df_nodes$node_xmax[which(df_nodes$name == to)],
-               left =  df_nodes$node_xmin[which(df_nodes$name == to)],
-               df_nodes$x[which(df_nodes$name == to)]),
-        switch(endpoint,
-               top = df_nodes$node_ymax[which(df_nodes$name == to)],
-               bottom =  df_nodes$node_ymin[which(df_nodes$name == to)],
-               df_nodes$y[which(df_nodes$name == to)])
-      )},
-      from = df_edges$from,
-      to = df_edges$to,
-      startpoint = df_edges$connect_from,
-      endpoint = df_edges$connect_to
-    )
-  )), c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax"))
+  connect_points <- .connect_points(df_nodes, df_edges)
+  #   setNames(data.frame(t(
+  #   mapply(function(from, to, startpoint, endpoint){
+  #     c(
+  #       switch(startpoint,
+  #              right = df_nodes$node_xmax[which(df_nodes$name == from)],
+  #              left =  df_nodes$node_xmin[which(df_nodes$name == from)],
+  #              df_nodes$x[which(df_nodes$name == from)]),
+  #       switch(startpoint,
+  #              top = df_nodes$node_ymax[which(df_nodes$name == from)],
+  #              bottom =  df_nodes$node_ymin[which(df_nodes$name == from)],
+  #              df_nodes$y[which(df_nodes$name == from)]),
+  #       switch(endpoint,
+  #              right = df_nodes$node_xmax[which(df_nodes$name == to)],
+  #              left =  df_nodes$node_xmin[which(df_nodes$name == to)],
+  #              df_nodes$x[which(df_nodes$name == to)]),
+  #       switch(endpoint,
+  #              top = df_nodes$node_ymax[which(df_nodes$name == to)],
+  #              bottom =  df_nodes$node_ymin[which(df_nodes$name == to)],
+  #              df_nodes$y[which(df_nodes$name == to)])
+  #     )},
+  #     from = df_edges$from,
+  #     to = df_edges$to,
+  #     startpoint = df_edges$connect_from,
+  #     endpoint = df_edges$connect_to
+  #   )
+  # )), c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax"))
   df_edges <- cbind(df_edges, connect_points)
 
   df_edges <- cbind(df_edges, setNames(data.frame(t(apply(connect_points, 1, function(x){(x[1:2]+x[3:4])/2}))), c("text_x", "text_y")))
@@ -206,6 +206,48 @@ plot.sem_graph <- function(x, y, ...){
 
 }
 
+.connect_points <- function(df_nodes, df_edges){
+  if("group" %in% names(df_nodes)){
+    x_list <- lapply(unique(df_nodes$group), function(i){
+      .connect_points(df_nodes = df_nodes[df_nodes$group == i, -which(names(df_nodes) == "group")],
+                             df_edges = df_edges[df_edges$group == i, -which(names(df_edges) == "group")])
+    })
+    return(do.call(rbind, x_list))
+  }
+  if("level" %in% names(df_nodes)){
+    x_list <- lapply(unique(df_nodes$level), function(i){
+      .connect_points(df_nodes = df_nodes[df_nodes$level == i, -which(names(df_nodes) == "level")],
+                             df_edges = df_edges[df_edges$level == i, -which(names(df_edges) == "level")])
+    })
+    return(do.call(rbind, x_list))
+  }
+  setNames(data.frame(t(
+    mapply(function(from, to, startpoint, endpoint){
+      c(
+        switch(startpoint,
+               right = df_nodes$node_xmax[which(df_nodes$name == from)],
+               left =  df_nodes$node_xmin[which(df_nodes$name == from)],
+               df_nodes$x[which(df_nodes$name == from)]),
+        switch(startpoint,
+               top = df_nodes$node_ymax[which(df_nodes$name == from)],
+               bottom =  df_nodes$node_ymin[which(df_nodes$name == from)],
+               df_nodes$y[which(df_nodes$name == from)]),
+        switch(endpoint,
+               right = df_nodes$node_xmax[which(df_nodes$name == to)],
+               left =  df_nodes$node_xmin[which(df_nodes$name == to)],
+               df_nodes$x[which(df_nodes$name == to)]),
+        switch(endpoint,
+               top = df_nodes$node_ymax[which(df_nodes$name == to)],
+               bottom =  df_nodes$node_ymin[which(df_nodes$name == to)],
+               df_nodes$y[which(df_nodes$name == to)])
+      )},
+      from = df_edges$from,
+      to = df_edges$to,
+      startpoint = df_edges$connect_from,
+      endpoint = df_edges$connect_to
+    )
+  )), c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax"))
+}
 
 matrix_to_nodes <- function(nodes, shape){
   nodes_long <- setNames(as.data.frame.table(nodes), c("y", "x", "label"))
@@ -384,6 +426,15 @@ get_edges.lavaan <- function(x, label = "est_sig_std", ...){
 #' @export
 get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
   Args <- as.list(match.call())[-1]
+  if("group" %in% names(x)){
+    x_list <- lapply(unique(x$group), function(i){
+      Args$x <- x[x$group == i, -which(names(x) == "group")]
+      tmp <- do.call(get_edges, Args)
+      tmp$group <- i
+      tmp
+    })
+    return(do.call(rbind, x_list))
+  }
   if("level" %in% names(x)){
     x_list <- lapply(unique(x$level), function(i){
       Args$x <- x[x$level == i, -which(names(x) == "level")]
@@ -513,21 +564,47 @@ match.call.defaults <- function(...) {
 }
 
 .determine_connections <- function(df_nodes, df_edges, angle){
+  # Begin recursion
+  if("group" %in% names(df_nodes)){
+    x_list <- lapply(unique(df_nodes$group), function(i){
+      .determine_connections(df_nodes = df_nodes[df_nodes$group == i, -which(names(df_nodes) == "group")],
+                             df_edges = df_edges[df_edges$group == i, -which(names(df_edges) == "group")],
+      angle = angle)
+    })
+    return(do.call(rbind, x_list))
+  }
+  if("level" %in% names(df_nodes)){
+    x_list <- lapply(unique(df_nodes$level), function(i){
+      .determine_connections(df_nodes = df_nodes[df_nodes$level == i, -which(names(df_nodes) == "level")],
+                             df_edges = df_edges[df_edges$level == i, -which(names(df_edges) == "level")],
+                             angle = angle)
+    })
+    return(do.call(rbind, x_list))
+  }
+  # End recursion
   connector_sides <-
     cbind(c("left", "right", "bottom", "top")[rep(1:4, each = 4)],
           c("left", "right", "bottom", "top")[rep(1:4, 4)])
   out <- matrix(nrow = nrow(df_edges), ncol = 2)
   #df_nodes <- df_nodes[order(df_nodes$node_id), ]
+
+  # Instead of left and right col, split graph down the middle (and split 5 col like 3,2)
+  # Apply left-side connections to all same-col cors in left side of plot
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
-  left_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == min(df_nodes$x)
-  right_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == max(df_nodes$x)
+  #left_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == min(df_nodes$x)
+  #right_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == max(df_nodes$x)
+  midpoint_df <- mean(range(df_nodes$x))
+  left_half <- df_nodes$x[match(df_edges$from, df_nodes$name)] < midpoint_df
+  out[same_column & left_half & df_edges$connector == "curve", ] <- c("left", "left")
+  out[same_column & !left_half & df_edges$connector == "curve", ] <- c("right", "right")
+  # For rows
   same_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == df_nodes$y[match(df_edges$to, df_nodes$name)]
-  bottom_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == min(df_nodes$y)
-  top_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == max(df_nodes$y)
-  out[same_column & left_col & df_edges$connector == "curve", ] <- c("left", "left")
-  out[same_column & right_col & df_edges$connector == "curve", ] <- c("right", "right")
-  out[same_row & bottom_row & df_edges$connector == "curve", ] <- c("bottom", "bottom")
-  out[same_row & top_row & df_edges$connector == "curve", ] <- c("top", "top")
+  #bottom_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == min(df_nodes$y)
+  #top_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == max(df_nodes$y)
+  midpoint_df <- mean(range(df_nodes$y))
+  top_half <- df_nodes$y[match(df_edges$from, df_nodes$name)] > midpoint_df
+  out[same_row & !top_half & df_edges$connector == "curve", ] <- c("bottom", "bottom")
+  out[same_row & top_half & df_edges$connector == "curve", ] <- c("top", "top")
   incomplete <- is.na(out[,1])
   df_edges <- df_edges[incomplete, ]
 
