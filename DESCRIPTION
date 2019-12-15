@@ -20,7 +20,6 @@ Imports:
     methods,
     stats,
     utils,
-    ggforce,
     ggplot2,
     lavaan,
     MplusAutomation

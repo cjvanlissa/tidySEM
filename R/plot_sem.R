@@ -332,7 +332,6 @@ prepare_graph_model <- function(model, layout, ...) {
 #' @importFrom ggplot2 aes_string arrow element_blank facet_grid geom_label
 #' @importFrom ggplot2 geom_rect geom_segment geom_text geom_vline ggplot labs
 #' @importFrom ggplot2 theme theme_bw unit facet_wrap facet_grid
-#' @importFrom ggforce geom_ellipse
 #' @importFrom graphics plot
 #' @method plot sem_graph
 plot.sem_graph <- function(x, y, ...){
@@ -725,7 +724,7 @@ match.call.defaults <- function(...) {
     p <- p + geom_rect(data = df[df$shape == "rect", ], aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax"), fill = "white", colour = "black")
   }
   if(any(df$shape == "oval")){
-    p <- p + geom_ellipse(data = df[df$shape == "oval", ], aes_string(x0 = "x", y0 = "y", a = .5*ellipses_a, b = .5*ellipses_b, angle = 0), fill = "white", colour = "black")
+    p <- .oval_node(p, x = df[df$shape == "oval", ]$x, y = df[df$shape == "oval", ]$y, oval_width = ellipses_a, oval_height = ellipses_b, npoints = 360)
   }
   p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
 }

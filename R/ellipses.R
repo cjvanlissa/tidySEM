@@ -29,14 +29,15 @@
     nrow = npoints, ncol = 2, dimnames = list(NULL, c("x", "y"))
   )
   )
-  p + geom_path(data = df_ellipse, aes(x= x, y= y), linetype = 1, arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = "both", type = "closed"))
+  p + geom_path(data = df_ellipse, aes_string(x = "x", y = "y"), linetype = 1, arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = "both", type = "closed"))
 }
 
-.oval_node <- function(p, x, y, ellipsis_a, ellipsis_b, npoints = 80){
+#' @importFrom ggplot2 geom_path
+.oval_node <- function(p, x, y, oval_width, oval_height, npoints = 80){
   point_seq <- seq(0,2*pi,length.out = npoints)
 
   df_ellipse <- matrix(
-    c((.5*ellipsis_a) * cos(point_seq), (.5*ellipsis_b) * sin(point_seq)),
+    c((.5*oval_width) * cos(point_seq), (.5*oval_height) * sin(point_seq)),
     nrow = npoints, ncol = 2)
 
   df_ellipse <- mapply(function(x, y){
@@ -49,4 +50,4 @@
 }
 
 #p <- ggplot(data = NULL)
-#oval_node(p, x = c(0, 0), y = c(0, 3), ellipsis_a = 2, ellipsis_b = 1)
+#oval_node(p, x = c(0, 0), y = c(0, 3), oval_width = 2, oval_height = 1)
