@@ -4,6 +4,7 @@
 \alias{prepare_graph}
 \alias{prepare_graph.default}
 \alias{prepare_graph.lavaan}
+\alias{prepare_graph.mplus.model}
 \title{Prepare graph data}
 \usage{
 prepare_graph(...)
@@ -13,9 +14,9 @@ prepare_graph(...)
   ellipses_b = 1, spacing_x = 2, spacing_y = 2, text_size = 4,
   curvature = 0.1, angle = NULL, ...)
 
-\method{prepare_graph}{lavaan}(model, layout, rect_width = 1.2,
-  rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
-  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL, ...)
+\method{prepare_graph}{lavaan}(model, layout, ...)
+
+\method{prepare_graph}{mplus.model}(model, layout, ...)
 }
 \arguments{
 \item{...}{Additional arguments passed to and from functions.}
@@ -24,9 +25,9 @@ prepare_graph(...)
 least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 "label", "connector", "connect_from", "connect_to", "curvature")}.}
 
-\item{layout}{A matrix with the layout of the graph, using the same names
-for nodes as in the \code{edges} argument, or an object of class
-'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.}
+\item{layout}{An object of class \code{tidy_layout}, or a matrix with the
+layout of the graph that can be converted using
+\code{\link[tidySEM]{get_layout}}.}
 
 \item{nodes}{Optional, object of class 'tidy_nodes', created with the
 \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
@@ -61,7 +62,8 @@ distance between node sides. A numeric value between 0-180 can be provided,
 where 0 means that only nodes with the same x-coordinates are connected
 top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
 
-\item{model}{A model object for which a method exists (e.g.,
+\item{model}{Instead of the edges argument, it is also possible to use the
+model argument and pass an object for which a method exists (e.g.,
 \code{mplus.model} or \code{lavaan}).}
 }
 \value{
@@ -72,6 +74,8 @@ Prepare an object of class \code{sem_graph}, containing
 data objects that can be rendered into a SEM graph. Using this function
 allows
 users to manually change the default graph specification before plotting it.
+Input consists of (at least) a layout, and either nodes and edges, or
+a model object.
 }
 \examples{
 \dontrun{

@@ -1,33 +1,22 @@
 #' @title Render a graph
-#' @description Render a graph based on a model and layout.
-#' @param model A model object for which a method exists (e.g.,
-#' \code{mplus.model} or \code{lavaan}).
-#' @param layout An object of class \code{tidy_layout}, or a matrix with the
-#' layout of the graph that can be converted using
-#' \code{\link[tidySEM]{get_layout}}.
-#' @param rect_width Width of rectangles (used to display observed variables),
-#' Default: 1.2
-#' @param rect_height Height of rectangles (used to display observed variables),
-#' Default: 0.8
-#' @param ellipses_a Width of ellipses (used to display latent variables),
-#' Default: 1
-#' @param ellipses_b Height of ellipses (used to display latent variables),
-#' Default: 1
-#' @param spacing_x Spacing between columns of the graph, Default: 1
-#' @param spacing_y Spacing between rows of the graph, Default: 1
-#' @param text_size Point size of text, Default: 4
-#' @param curvature Curvature of curved connectors. To flip connectors, use
-#' negative values. Default: .1
-#' @param angle Angle used to connect nodes by the top and bottom. Defaults to
-#' NULL, which means Euclidean distance is used to determine the shortest
-#' distance between node sides. A numeric value between 0-180 can be provided,
-#' where 0 means that only nodes with the same x-coordinates are connected
-#' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+#' @description Render a graph based on a layout, and either nodes and edges, or
+#' a model object.
+#' @param ... Additional arguments passed to and from functions.
+#@usage ## Default S3 method:
+#graph(edges, layout, nodes = NULL,  rect_width = 1.2, rect_height = .8,
+#  ellipses_a = 1, ellipses_b = 1, spacing_x = 2, spacing_y = 2,
+#  text_size = 4, curvature = .1, angle = NULL, ...)
+#
+### Alternative interface:
+#graph(model, layout, ...)
 # Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
-#' @details Calls the functions \code{\link[tidySEM]{get_nodes}} and
-#' \code{\link[tidySEM]{get_edges}} on \code{model}, before calling
-#' \code{\link[tidySEM]{prepare_graph}} and \code{plot}.
+#' @details The default interface simply Runs the functions
+#' \code{\link[tidySEM]{prepare_graph}} and
+#' \code{plot}. The alternative interface first runs
+#' \code{\link[tidySEM]{get_nodes}} and \code{\link[tidySEM]{get_edges}} on
+#' the \code{model} argument.
+#'
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -37,44 +26,23 @@
 #' @rdname graph
 #' @keywords tidy_graph
 #' @export
-graph <- function(model,
-                  layout,
-                  rect_width = 1.2,
-                  rect_height = .8,
-                  ellipses_a = 1,
-                  ellipses_b = 1,
-                  spacing_x = 2,
-                  spacing_y = 2,
-                  text_size = 4,
-                  curvature = .1,
-                  angle = NULL){
-  Args <- list(x = model)
-  edges <- do.call(get_edges, Args)
-  nodes <- do.call(get_nodes, Args)
-  Args <- as.list(match.call()[-1])
-  Args$layout <- layout
-  Args$edges <- edges
-  Args$nodes <- nodes
-  Args[["model"]] <- NULL
-  prep <- do.call(prepare_graph, Args)
-  plot(prep)
+graph <- function(...){
+
+  UseMethod("graph")
 }
 
-#' @title Prepare graph data
-#' @description Prepare an object of class \code{sem_graph}, containing
-#' data objects that can be rendered into a SEM graph. Using this function
-#' allows
-#' users to manually change the default graph specification before plotting it.
-#' @param model A model object for which a method exists (e.g.,
-#' \code{mplus.model} or \code{lavaan}).
-#' @param layout A matrix with the layout of the graph, using the same names
-#' for nodes as in the \code{edges} argument, or an object of class
-#' 'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.
-# @param edges Object of class 'tidy_edges', Default: NULL
-# @param nodes Object of class 'tidy_nodes', created with the
-# \code{\link[tidySEM]{get_nodes}} function.
-#If this argument is NULL, the nodes are
-# inferred from the \code{layout} argument. The advantage of using
+#' @method graph default
+#' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
+#' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
+#' "label", "connector", "connect_from", "connect_to", "curvature")}.
+#' @param layout An object of class \code{tidy_layout}, or a matrix with the
+#' layout of the graph that can be converted using
+#' \code{\link[tidySEM]{get_layout}}.
+#' @param nodes Optional, object of class 'tidy_nodes', created with the
+#' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
+#' least) the column \code{c("name")}, and optionally, \code{c("shape",
+#' "label")}. If set to \code{NULL} (the default), nodes are inferred from the
+#' \code{layout} and \code{edges} arguments.
 #' @param rect_width Width of rectangles (used to display observed variables),
 #' Default: 1.2
 #' @param rect_height Height of rectangles (used to display observed variables),
@@ -93,7 +61,78 @@ graph <- function(model,
 #' distance between node sides. A numeric value between 0-180 can be provided,
 #' where 0 means that only nodes with the same x-coordinates are connected
 #' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+#' @rdname graph
+#' @export
+graph.default <- function(edges,
+                          layout,
+                          nodes = NULL,
+                         rect_width = 1.2,
+                         rect_height = .8,
+                         ellipses_a = 1,
+                         ellipses_b = 1,
+                         spacing_x = 2,
+                         spacing_y = 2,
+                         text_size = 4,
+                         curvature = .1,
+                         angle = NULL,
+                         ...){
+  Args <- as.list(match.call()[-1])
+  Args$layout <- force(layout)
+  Args$edges <- force(edges)
+  Args$nodes <- force(nodes)
+  Args[["model"]] <- NULL
+  prep <- do.call(prepare_graph, Args)
+  plot(prep)
+}
+
+#' @method graph lavaan
+#' @param model Instead of the edges argument, it is also possible to use the
+#' model argument and pass an object for which a method exists (e.g.,
+#' \code{mplus.model} or \code{lavaan}).
+#' @rdname graph
+#' @export
+graph.lavaan <- function(model,
+                         layout,
+                         ...){
+  Args <- as.list(match.call()[-1])
+  do.call(graph_model, Args)
+}
+
+#' @method graph mplus.model
+#' @rdname graph
+#' @export
+graph.mplus.model <- graph.lavaan
+
+graph_model <- function(model,
+                        layout,
+                        ...) {
+  Args <- list(x = model)
+  edges <- do.call(get_edges, Args)
+  nodes <- do.call(get_nodes, Args)
+  Args <- as.list(match.call()[-1])
+  Args$layout <- layout
+  Args$edges <- edges
+  Args$nodes <- nodes
+  Args[["model"]] <- NULL
+  do.call(graph.default, Args)
+}
+
+#' @title Prepare graph data
+#' @description Prepare an object of class \code{sem_graph}, containing
+#' data objects that can be rendered into a SEM graph. Using this function
+#' allows
+#' users to manually change the default graph specification before plotting it.
+#' Input consists of (at least) a layout, and either nodes and edges, or
+#' a model object.
 #' @param ... Additional arguments passed to and from functions.
+# @usage ## Default S3 method:
+# prepare_graph(edges, layout, nodes = NULL,  rect_width = 1.2,
+#   rect_height = .8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
+#   spacing_y = 2, text_size = 4, curvature = .1, angle = NULL, ...)
+#
+# ## Alternative interface:
+# prepare_graph(model, layout, ...)
+# Default: "euclidean", but could be set to "manhattan".
 # Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
 #' @examples
@@ -109,15 +148,36 @@ prepare_graph <- function(...){
 }
 
 #' @method prepare_graph default
-#' @rdname prepare_graph
 #' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
 #' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 #' "label", "connector", "connect_from", "connect_to", "curvature")}.
+#' @param layout An object of class \code{tidy_layout}, or a matrix with the
+#' layout of the graph that can be converted using
+#' \code{\link[tidySEM]{get_layout}}.
 #' @param nodes Optional, object of class 'tidy_nodes', created with the
 #' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
 #' least) the column \code{c("name")}, and optionally, \code{c("shape",
 #' "label")}. If set to \code{NULL} (the default), nodes are inferred from the
 #' \code{layout} and \code{edges} arguments.
+#' @param rect_width Width of rectangles (used to display observed variables),
+#' Default: 1.2
+#' @param rect_height Height of rectangles (used to display observed variables),
+#' Default: 0.8
+#' @param ellipses_a Width of ellipses (used to display latent variables),
+#' Default: 1
+#' @param ellipses_b Height of ellipses (used to display latent variables),
+#' Default: 1
+#' @param spacing_x Spacing between columns of the graph, Default: 1
+#' @param spacing_y Spacing between rows of the graph, Default: 1
+#' @param text_size Point size of text, Default: 4
+#' @param curvature Curvature of curved connectors. To flip connectors, use
+#' negative values. Default: .1
+#' @param angle Angle used to connect nodes by the top and bottom. Defaults to
+#' NULL, which means Euclidean distance is used to determine the shortest
+#' distance between node sides. A numeric value between 0-180 can be provided,
+#' where 0 means that only nodes with the same x-coordinates are connected
+#' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+#' @rdname prepare_graph
 #' @export
 prepare_graph.default <- function(edges,
                                  layout,
@@ -239,69 +299,32 @@ prepare_graph.default <- function(edges,
   out
 }
 
-# @method prepare_graph tidy_edges
-# @export
-#prepare_graph.tidy_edges <- prepare_graph.tidy_nodes
-
-# @method prepare_graph tidy_layout
-# @export
-#prepare_graph.tidy_layout <- prepare_graph.tidy_nodes
-
 #' @method prepare_graph lavaan
+#' @param model Instead of the edges argument, it is also possible to use the
+#' model argument and pass an object for which a method exists (e.g.,
+#' \code{mplus.model} or \code{lavaan}).
 #' @rdname prepare_graph
 #' @export
-prepare_graph.lavaan <- function(model,
-                                 layout,
-                                 rect_width = 1.2,
-                                 rect_height = .8,
-                                 ellipses_a = 1,
-                                 ellipses_b = 1,
-                                 spacing_x = 2,
-                                 spacing_y = 2,
-                                 text_size = 4,
-                                 curvature = .1,
-                                 angle = NULL,
-                                 ...
-){
-  Args <- list(x = model)
-  edges <- do.call(get_edges, Args)
-  nodes <- do.call(get_nodes, Args)
+prepare_graph.lavaan <- function(model, layout, ...){
   Args <- as.list(match.call()[-1])
-  Args[["model"]] <- NULL
-  Args[["layout"]] <- NULL
-  Args <- c(list(nodes = nodes,
-                 edges = edges,
-                 layout = layout), Args)
-
-  do.call(prepare_graph, Args)
+  do.call(prepare_graph_model, Args)
 }
 
 #' @method prepare_graph mplus.model
+#' @rdname prepare_graph
 #' @export
-prepare_graph.mplus.model <- function(model,
-                                      layout,
-                                      rect_width = 1.2,
-                                      rect_height = .8,
-                                      ellipses_a = 1,
-                                      ellipses_b = 1,
-                                      spacing_x = 2,
-                                      spacing_y = 2,
-                                      text_size = 4,
-                                      curvature = .1,
-                                      angle = NULL,
-                                      ...
-){
+prepare_graph.mplus.model <- prepare_graph.lavaan
+
+prepare_graph_model <- function(model, layout, ...) {
   Args <- list(x = model)
   edges <- do.call(get_edges, Args)
   nodes <- do.call(get_nodes, Args)
   Args <- as.list(match.call()[-1])
+  Args$layout <- layout
+  Args$edges <- edges
+  Args$nodes <- nodes
   Args[["model"]] <- NULL
-  Args[["layout"]] <- NULL
-  Args <- c(list(nodes = nodes,
-                 edges = edges,
-                 layout = layout), Args)
-
-  do.call(prepare_graph, Args)
+  do.call(prepare_graph.default, Args)
 }
 
 #' @export
@@ -425,16 +448,6 @@ get_nodes.mplus.model <- function(x, ...){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, all = TRUE)
   do.call(get_nodes, Args)
-  # latent <- x$parameters$unstandardized$paramHeader
-  # latent <- latent[grepl("\\.BY$", latent)]
-  # latent <- unique(gsub("\\.BY$", "", latent))
-  #
-  # nodes <- x$parameters$unstandardized$param
-  # nodes <- nodes[!grepl("\\$\\d+$", nodes)]
-  # nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
-  # nodes$label <- nodes$name
-  # class(nodes) <- c("tidy_nodes", class(nodes))
-  # nodes
 }
 
 #' @method get_nodes lavaan
@@ -504,22 +517,21 @@ get_edges <- function(x, label = "est_sig", ...){
   UseMethod("get_edges", x)
 }
 
-#' @method get_edges mplusObject
-#' @export
-get_edges.mplusObject <- function(x, label = "est_sig", ...){
-  #par_spec <- x$tech1$parameterSpecification
-  estimate <- table_results(x, ...)
-  estimate <- estimate[grepl("\\.(ON|WITH|BY)\\.", estimate$label), ]
-  estimate$from <- estimate$to <- NA
-  tmp <- do.call(rbind, strsplit(estimate$label, "\\."))
-  tmp[tmp[, 2] == "ON", ] <- tmp[tmp[, 2] == "ON", 3:1]
-  tmp <- cbind(tmp, "last")
-  tmp[tmp[, 2] == "WITH", 4] <- "none"
-  tmp <- setNames(data.frame(tmp[, -2], label = estimate[[label]]), c("from", "to", "arrow", "label"))
-  class(tmp) <- c("tidy_edges", class(tmp))
-  row.names(tmp) <- NULL
-  tmp
-}
+# #' @method get_edges mplusObject
+# #' @export
+# get_edges.mplusObject <- function(x, label = "est_sig", ...){
+#   estimate <- table_results(x, ...)
+#   estimate <- estimate[grepl("\\.(ON|WITH|BY)\\.", estimate$label), ]
+#   estimate$from <- estimate$to <- NA
+#   tmp <- do.call(rbind, strsplit(estimate$label, "\\."))
+#   tmp[tmp[, 2] == "ON", ] <- tmp[tmp[, 2] == "ON", 3:1]
+#   tmp <- cbind(tmp, "last")
+#   tmp[tmp[, 2] == "WITH", 4] <- "none"
+#   tmp <- setNames(data.frame(tmp[, -2], label = estimate[[label]]), c("from", "to", "arrow", "label"))
+#   class(tmp) <- c("tidy_edges", class(tmp))
+#   row.names(tmp) <- NULL
+#   tmp
+# }
 
 
 #' @method get_edges lavaan
@@ -528,7 +540,12 @@ get_edges.lavaan <- function(x, label = "est_sig_std", ...){
     Args <- as.list(match.call()[-1])
     Args$x <- table_results(x, all = TRUE)
     do.call(get_edges, Args)
-  }
+}
+
+#' @method get_edges mplus.object
+#' @export
+get_edges.mplus.object <- get_edges.lavaan
+
 
 
 #' @method get_edges tidy_results

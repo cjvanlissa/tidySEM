@@ -2,19 +2,37 @@
 % Please edit documentation in R/plot_sem.R
 \name{graph}
 \alias{graph}
+\alias{graph.default}
+\alias{graph.lavaan}
+\alias{graph.mplus.model}
 \title{Render a graph}
 \usage{
-graph(model, layout, rect_width = 1.2, rect_height = 0.8,
-  ellipses_a = 1, ellipses_b = 1, spacing_x = 2, spacing_y = 2,
-  text_size = 4, curvature = 0.1, angle = NULL)
+graph(...)
+
+\method{graph}{default}(edges, layout, nodes = NULL, rect_width = 1.2,
+  rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
+  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL, ...)
+
+\method{graph}{lavaan}(model, layout, ...)
+
+\method{graph}{mplus.model}(model, layout, ...)
 }
 \arguments{
-\item{model}{A model object for which a method exists (e.g.,
-\code{mplus.model} or \code{lavaan}).}
+\item{...}{Additional arguments passed to and from functions.}
+
+\item{edges}{Object of class 'tidy_edges', or a \code{data.frame} with  (at
+least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
+"label", "connector", "connect_from", "connect_to", "curvature")}.}
 
 \item{layout}{An object of class \code{tidy_layout}, or a matrix with the
 layout of the graph that can be converted using
 \code{\link[tidySEM]{get_layout}}.}
+
+\item{nodes}{Optional, object of class 'tidy_nodes', created with the
+\code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
+least) the column \code{c("name")}, and optionally, \code{c("shape",
+"label")}. If set to \code{NULL} (the default), nodes are inferred from the
+\code{layout} and \code{edges} arguments.}
 
 \item{rect_width}{Width of rectangles (used to display observed variables),
 Default: 1.2}
@@ -42,17 +60,24 @@ NULL, which means Euclidean distance is used to determine the shortest
 distance between node sides. A numeric value between 0-180 can be provided,
 where 0 means that only nodes with the same x-coordinates are connected
 top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
+
+\item{model}{Instead of the edges argument, it is also possible to use the
+model argument and pass an object for which a method exists (e.g.,
+\code{mplus.model} or \code{lavaan}).}
 }
 \value{
 Object of class 'sem_graph'
 }
 \description{
-Render a graph based on a model and layout.
+Render a graph based on a layout, and either nodes and edges, or
+a model object.
 }
 \details{
-Calls the functions \code{\link[tidySEM]{get_nodes}} and
-\code{\link[tidySEM]{get_edges}} on \code{model}, before calling
-\code{\link[tidySEM]{prepare_graph}} and \code{plot}.
+The default interface simply Runs the functions
+\code{\link[tidySEM]{prepare_graph}} and
+\code{plot}. The alternative interface first runs
+\code{\link[tidySEM]{get_nodes}} and \code{\link[tidySEM]{get_edges}} on
+the \code{model} argument.
 }
 \examples{
 \dontrun{
