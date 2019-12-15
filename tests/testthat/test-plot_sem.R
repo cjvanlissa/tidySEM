@@ -45,9 +45,9 @@ df_edges$from <- df_nodes$name[as.numeric(df_edges$from)]
 df_edges$to <- df_nodes$name[as.numeric(df_edges$to)]
 df_edges$curvature <- c(rep(NA, 12))
 
-prep <- prepare_sem_graph(nodes = df_nodes, layout = layout, edges = df_edges)
+prep <- prepare_graph(nodes = df_nodes, layout = layout, edges = df_edges)
 
-test_that("prepare_sem_graph correctly generates graph data", {
+test_that("prepare_graph correctly generates graph data", {
   expect_s3_class(prep, "sem_graph")
 })
 

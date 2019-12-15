@@ -1,15 +1,10 @@
-#' @title Prepare to plot a SEM graph
-#' @description Starting with nodes, a layout, and edges, prepare several data
-#' objects that can be rendered into a SEM graph. Using this function allows
-#' users to manually change the default graph specification before plotting it.
-#' @param layout A matrix with the layout of the graph, using the same names
-#' for nodes as in the \code{edges} argument, or an object of class
-#' 'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.
-#' @param edges Object of class 'tidy_edges', Default: NULL
-#' @param nodes Object of class 'tidy_nodes', created with the
-#' \code{\link[tidySEM]{get_nodes}} function.
-#If this argument is NULL, the nodes are
-# inferred from the \code{layout} argument. The advantage of using
+#' @title Render a graph
+#' @description Render a graph based on a model and layout.
+#' @param model A model object for which a method exists (e.g.,
+#' \code{mplus.model} or \code{lavaan}).
+#' @param layout An object of class \code{tidy_layout}, or a matrix with the
+#' layout of the graph that can be converted using
+#' \code{\link[tidySEM]{get_layout}}.
 #' @param rect_width Width of rectangles (used to display observed variables),
 #' Default: 1.2
 #' @param rect_height Height of rectangles (used to display observed variables),
@@ -30,58 +25,178 @@
 #' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
 # Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
+#' @details Calls the functions \code{\link[tidySEM]{get_nodes}} and
+#' \code{\link[tidySEM]{get_edges}} on \code{model}, before calling
+#' \code{\link[tidySEM]{prepare_graph}} and \code{plot}.
 #' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname prepare_sem_graph
+#' @rdname graph
+#' @keywords tidy_graph
 #' @export
-prepare_sem_graph <- function(layout,
-                     edges = NULL,
-                     nodes = NULL,
-                     rect_width = 1.2,
-                     rect_height = .8,
-                     ellipses_a = 1,
-                     ellipses_b = 1,
-                     spacing_x = 2,
-                     spacing_y = 2,
-                     text_size = 4,
-                     curvature = .1,
-                     angle = NULL
-                     ){
+graph <- function(model,
+                  layout,
+                  rect_width = 1.2,
+                  rect_height = .8,
+                  ellipses_a = 1,
+                  ellipses_b = 1,
+                  spacing_x = 2,
+                  spacing_y = 2,
+                  text_size = 4,
+                  curvature = .1,
+                  angle = NULL){
+  Args <- list(x = model)
+  edges <- do.call(get_edges, Args)
+  nodes <- do.call(get_nodes, Args)
+  Args <- as.list(match.call()[-1])
+  Args$layout <- layout
+  Args$edges <- edges
+  Args$nodes <- nodes
+  Args[["model"]] <- NULL
+  prep <- do.call(prepare_graph, Args)
+  plot(prep)
+}
 
+#' @title Prepare graph data
+#' @description Prepare an object of class \code{sem_graph}, containing
+#' data objects that can be rendered into a SEM graph. Using this function
+#' allows
+#' users to manually change the default graph specification before plotting it.
+#' @param model A model object for which a method exists (e.g.,
+#' \code{mplus.model} or \code{lavaan}).
+#' @param layout A matrix with the layout of the graph, using the same names
+#' for nodes as in the \code{edges} argument, or an object of class
+#' 'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.
+# @param edges Object of class 'tidy_edges', Default: NULL
+# @param nodes Object of class 'tidy_nodes', created with the
+# \code{\link[tidySEM]{get_nodes}} function.
+#If this argument is NULL, the nodes are
+# inferred from the \code{layout} argument. The advantage of using
+#' @param rect_width Width of rectangles (used to display observed variables),
+#' Default: 1.2
+#' @param rect_height Height of rectangles (used to display observed variables),
+#' Default: 0.8
+#' @param ellipses_a Width of ellipses (used to display latent variables),
+#' Default: 1
+#' @param ellipses_b Height of ellipses (used to display latent variables),
+#' Default: 1
+#' @param spacing_x Spacing between columns of the graph, Default: 1
+#' @param spacing_y Spacing between rows of the graph, Default: 1
+#' @param text_size Point size of text, Default: 4
+#' @param curvature Curvature of curved connectors. To flip connectors, use
+#' negative values. Default: .1
+#' @param angle Angle used to connect nodes by the top and bottom. Defaults to
+#' NULL, which means Euclidean distance is used to determine the shortest
+#' distance between node sides. A numeric value between 0-180 can be provided,
+#' where 0 means that only nodes with the same x-coordinates are connected
+#' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+#' @param ... Additional arguments passed to and from functions.
+# Default: "euclidean", but could be set to "manhattan".
+#' @return Object of class 'sem_graph'
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname prepare_graph
+#' @export
+prepare_graph <- function(...){
+  UseMethod("prepare_graph")
+}
+
+#' @method prepare_graph default
+#' @rdname prepare_graph
+#' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
+#' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
+#' "label", "connector", "connect_from", "connect_to", "curvature")}.
+#' @param nodes Optional, object of class 'tidy_nodes', created with the
+#' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
+#' least) the column \code{c("name")}, and optionally, \code{c("shape",
+#' "label")}. If set to \code{NULL} (the default), nodes are inferred from the
+#' \code{layout} and \code{edges} arguments.
+#' @export
+prepare_graph.default <- function(edges,
+                                 layout,
+                                 nodes = NULL,
+                                 rect_width = 1.2,
+                                 rect_height = .8,
+                                 ellipses_a = 1,
+                                 ellipses_b = 1,
+                                 spacing_x = 2,
+                                 spacing_y = 2,
+                                 text_size = 4,
+                                 curvature = .1,
+                                 angle = NULL,
+                                 ...
+){
   Args <- as.list(match.call())[-1]
-  myfor <- formals(prepare_sem_graph)
+  myfor <- formals(prepare_graph.default)
   for ( v in names(myfor)){
     if (!(v %in% names(Args)))
       Args <- append(Args,myfor[v])
   }
 
-# Extract nodes -----------------------------------------------------------
-
-  # pars <- table_results_lavaan(x)
-  # latent <- unique(pars$lhs[pars$op == "=~"])
-  # nodes <- c(latent, pars$lhs[pars$free != 0])
-  # nodes <- data.frame(node_id = 1:length(unique(nodes)), name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1])
-  # class(nodes) <- c("tidy_nodes", class(nodes))
-  # nodes
-
-
-# Check if nodes exist in edges and layout --------------------------------
+  # Check if nodes exist in edges and layout --------------------------------
 
   df_edges <- edges
+
+  if(!("from" %in% names(df_edges) & "to" %in% names(df_edges))){
+    stop("Argument 'edges' must have columns 'from' and 'to'.")
+  }
+
   if(!all((df_edges$from %in% layout$name) & (df_edges$to %in% layout$name))){
     warning("Some edges involve nodes not in layout. These were dropped.")
     df_edges <- df_edges[(df_edges$from %in% layout$name) & (df_edges$to %in% layout$name), ]
   }
 
+  # Infer nodes if argument is null -----------------------------------------
+
+  if(is.null(nodes)){
+    nodes <- data.frame(name = unique(c("", NA, unlist(layout), df_edges$from, df_edges$to))[-c(1:2)])
+    nodes$shape <- "rect"
+    nodes$label <- nodes$name
+  }
+
+  # Check edges df ----------------------------------------------------------
+
+  if(!"arrow" %in% names(df_edges)){
+    df_edges$arrow <- "last"
+  }
+  if(!"label" %in% names(df_edges)){
+    df_edges$label <- ""
+  }
+  if(!"connector" %in% names(df_edges)){
+    df_edges$connector <- "line"
+  }
+  if(!"connect_from" %in% names(df_edges)){
+    df_edges$connect_from <- "left"
+  }
+  if(!"connect_to" %in% names(df_edges)){
+    df_edges$connect_to <- "right"
+  }
+  if(!"curvature" %in% names(df_edges)){
+    df_edges$curvature <- NA
+  }
+
+  # Defaults for missing columns --------------------------------------------
+
+  if(!("name" %in% names(nodes) & "name" %in% names(layout))){
+    stop("Arguments 'nodes' and 'layout' must both have a 'name' column.")
+  }
   df_nodes <- merge(nodes, layout, by = "name")
 
-  #df_edges$from <- df_nodes$node_id[match(df_edges$from, df_nodes$name)]
-  #df_edges$to <- df_nodes$node_id[match(df_edges$to, df_nodes$name)]
+  if(!"label" %in% names(df_nodes)){
+    df_nodes$label <- df_nodes$name
+  }
+  if(!"shape" %in% names(df_nodes)){
+    df_nodes$shape <- "rect"
+  }
 
+# Compute x, y coordinates ------------------------------------------------
 
   df_nodes$x <- df_nodes$x * spacing_x
   df_nodes$y <- df_nodes$y * spacing_y
@@ -104,9 +219,10 @@ prepare_sem_graph <- function(layout,
                                                                              df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_b)
   }
 
+# Determine where best to connect nodes -----------------------------------
+
   connect_cols <- .determine_connections(df_nodes, df_edges, angle)
 
-  #df_edges <- setNames(data.frame(t(mapply(function(from, to){c(df_nodes$node_xmax[from], df_nodes$node_xmin[to], df_nodes$y[from], df_nodes$y[to])}, from = edges[, 1], to = edges[, 2]))), c("edge_xmin", "edge_xmax", "edge_ymin", "edge_ymax"))
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
 
@@ -114,6 +230,7 @@ prepare_sem_graph <- function(layout,
   df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0]
 
   out <- Args
+
   if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$name
   out$nodes <- df_nodes[, c("name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax", "group", "level")[na.omit(which(c("name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax", "group", "level") %in% names(df_nodes)))]]
   out$edges <- df_edges
@@ -122,12 +239,79 @@ prepare_sem_graph <- function(layout,
   out
 }
 
+# @method prepare_graph tidy_edges
+# @export
+#prepare_graph.tidy_edges <- prepare_graph.tidy_nodes
+
+# @method prepare_graph tidy_layout
+# @export
+#prepare_graph.tidy_layout <- prepare_graph.tidy_nodes
+
+#' @method prepare_graph lavaan
+#' @rdname prepare_graph
+#' @export
+prepare_graph.lavaan <- function(model,
+                                 layout,
+                                 rect_width = 1.2,
+                                 rect_height = .8,
+                                 ellipses_a = 1,
+                                 ellipses_b = 1,
+                                 spacing_x = 2,
+                                 spacing_y = 2,
+                                 text_size = 4,
+                                 curvature = .1,
+                                 angle = NULL,
+                                 ...
+){
+  Args <- list(x = model)
+  edges <- do.call(get_edges, Args)
+  nodes <- do.call(get_nodes, Args)
+  Args <- as.list(match.call()[-1])
+  Args[["model"]] <- NULL
+  Args[["layout"]] <- NULL
+  Args <- c(list(nodes = nodes,
+                 edges = edges,
+                 layout = layout), Args)
+
+  do.call(prepare_graph, Args)
+}
+
+#' @method prepare_graph mplus.model
+#' @export
+prepare_graph.mplus.model <- function(model,
+                                      layout,
+                                      rect_width = 1.2,
+                                      rect_height = .8,
+                                      ellipses_a = 1,
+                                      ellipses_b = 1,
+                                      spacing_x = 2,
+                                      spacing_y = 2,
+                                      text_size = 4,
+                                      curvature = .1,
+                                      angle = NULL,
+                                      ...
+){
+  Args <- list(x = model)
+  edges <- do.call(get_edges, Args)
+  nodes <- do.call(get_nodes, Args)
+  Args <- as.list(match.call()[-1])
+  Args[["model"]] <- NULL
+  Args[["layout"]] <- NULL
+  Args <- c(list(nodes = nodes,
+                 edges = edges,
+                 layout = layout), Args)
+
+  do.call(prepare_graph, Args)
+}
+
 #' @export
 #' @importFrom stats setNames
 #' @importFrom ggplot2 aes_string arrow element_blank facet_grid geom_label
 #' @importFrom ggplot2 geom_rect geom_segment geom_text geom_vline ggplot labs
-#' @importFrom ggplot2 theme theme_bw unit
+#' @importFrom ggplot2 theme theme_bw unit facet_wrap facet_grid
 #' @importFrom ggforce geom_ellipse
+#' @importFrom graphics plot
+#' @method plot sem_graph
 plot.sem_graph <- function(x, y, ...){
   df_nodes <- x$nodes
   df_edges <- x$edges
@@ -139,33 +323,8 @@ plot.sem_graph <- function(x, y, ...){
   spacing_y <- x$spacing_y
   text_size <- x$text_size
 
-  connect_points <- .connect_points2(df_nodes, df_edges)
-  #   setNames(data.frame(t(
-  #   mapply(function(from, to, startpoint, endpoint){
-  #     c(
-  #       switch(startpoint,
-  #              right = df_nodes$node_xmax[which(df_nodes$name == from)],
-  #              left =  df_nodes$node_xmin[which(df_nodes$name == from)],
-  #              df_nodes$x[which(df_nodes$name == from)]),
-  #       switch(startpoint,
-  #              top = df_nodes$node_ymax[which(df_nodes$name == from)],
-  #              bottom =  df_nodes$node_ymin[which(df_nodes$name == from)],
-  #              df_nodes$y[which(df_nodes$name == from)]),
-  #       switch(endpoint,
-  #              right = df_nodes$node_xmax[which(df_nodes$name == to)],
-  #              left =  df_nodes$node_xmin[which(df_nodes$name == to)],
-  #              df_nodes$x[which(df_nodes$name == to)]),
-  #       switch(endpoint,
-  #              top = df_nodes$node_ymax[which(df_nodes$name == to)],
-  #              bottom =  df_nodes$node_ymin[which(df_nodes$name == to)],
-  #              df_nodes$y[which(df_nodes$name == to)])
-  #     )},
-  #     from = df_edges$from,
-  #     to = df_edges$to,
-  #     startpoint = df_edges$connect_from,
-  #     endpoint = df_edges$connect_to
-  #   )
-  # )), c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax"))
+  connect_points <- .connect_points(df_nodes, df_edges)
+
   df_edges <- cbind(df_edges, connect_points)
 
   df_edges <- cbind(df_edges, setNames(data.frame(t(apply(connect_points, 1, function(x){(x[1:2]+x[3:4])/2}))), c("text_x", "text_y")))
@@ -180,6 +339,7 @@ plot.sem_graph <- function(x, y, ...){
   if(any(df_edges$connector == "curve")){
     p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve", ], text_size = text_size)
   }
+
   p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_a = ellipses_a, ellipses_b = ellipses_b)
 
   if("level" %in% names(df_nodes) & "level" %in% names(df_edges)){
@@ -206,7 +366,7 @@ plot.sem_graph <- function(x, y, ...){
 
 }
 
-.connect_points2 <- function(df_nodes, df_edges){
+.connect_points <- function(df_nodes, df_edges){
   node_id <- do.call(paste0, df_nodes[, na.omit(match(c("name", "group", "level"), names(df_nodes))), drop = FALSE])
 
   edge_id <- do.call(paste0, df_edges[, na.omit(match(c("from", "group", "level"), names(df_edges))), drop = FALSE])
@@ -228,51 +388,6 @@ plot.sem_graph <- function(x, y, ...){
   setNames(data.frame(cbind(from_loc, to_loc)), c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax"))
 }
 
-.connect_points <- function(df_nodes, df_edges){
-  Args <- list(FUN = .internal_connect_points,
-               from = df_edges$from,
-               to = df_edges$to,
-               startpoint = df_edges$connect_from,
-               endpoint = df_edges$connect_to,
-               this_group = "a",
-               this_lev = "a")
-  if("group" %in% names(df_edges)){
-    Args$this_group <- df_edges$group
-  } else {
-    df_edges$group <- "a"
-  }
-  if("level" %in% names(df_edges)){
-    Args$this_lev <- df_edges$level
-  } else {
-    df_edges$level <- "a"
-  }
-  connect_out <- do.call(mapply, Args)
-
-  setNames(data.frame(t(connect_out)), c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax"))
-}
-
-.internal_connect_points <- function(from, to, startpoint, endpoint, this_group, this_lev){
-    c(
-      switch(startpoint,
-             right = df_nodes$node_xmax[which(df_nodes$name == from)],
-             left =  df_nodes$node_xmin[which(df_nodes$name == from)],
-             df_nodes$x[which(df_nodes$name == from)]),
-      switch(startpoint,
-             top = df_nodes$node_ymax[which(df_nodes$name == from)],
-             bottom =  df_nodes$node_ymin[which(df_nodes$name == from)],
-             df_nodes$y[which(df_nodes$name == from)]),
-      switch(endpoint,
-             right = df_nodes$node_xmax[which(df_nodes$name == to)],
-             left =  df_nodes$node_xmin[which(df_nodes$name == to)],
-             df_nodes$x[which(df_nodes$name == to)]),
-      switch(endpoint,
-             top = df_nodes$node_ymax[which(df_nodes$name == to)],
-             bottom =  df_nodes$node_ymin[which(df_nodes$name == to)],
-             df_nodes$y[which(df_nodes$name == to)])
-    )
-}
-
-
 matrix_to_nodes <- function(nodes, shape){
   nodes_long <- setNames(as.data.frame.table(nodes), c("y", "x", "label"))
   nodes_long[1:2] <- lapply(nodes_long[1:2], as.numeric)
@@ -284,36 +399,6 @@ matrix_to_nodes <- function(nodes, shape){
   nodes_long
 }
 
-#' @title Prepare graph data
-#' @description Extracts nodes and edges from a SEM model object, where nodes
-#' are defined as observed or latent variables, and edges
-#' are defined as regression paths and covariances between variables (nodes).
-#' @param x A model object of class 'mplusObject' or 'lavaan'.
-#' @param ... Additional parameters to be passed to and from other functions.
-#' @return An object of class 'graph_data'
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname prepare_graph
-#' @keywords tidy_graph
-#' @export
-prepare_graph <- function(x, ...){
-  UseMethod("get_nodes", x)
-}
-
-#' @method prepare_graph mplusObject
-#' @export
-prepare_graph.mplusObject <- function(x, ...){
-}
-
-#' @method prepare_graph mplusObject
-#' @export
-prepare_graph.lavaan <- function(x, ...){
-
-}
 
 #' @title Extract nodes from a SEM model object
 #' @description Attempts to extract nodes from a SEM model object, where nodes
@@ -516,6 +601,47 @@ get_layout <- function(mat = read.table("clipboard", sep = "\t", stringsAsFactor
   class(nodes_long) <- c("tidy_layout", class(nodes_long))
   nodes_long
 }
+
+#' @title Generate graph layout
+#' @description Generate a tidy_layout for a SEM graph by specifying node names,
+#' and empty strings or \code{NA} values for spaces.
+#' @param ... Character arguments corresponding to layout elements. Use node
+#' names, empty strings (""), or NA values.
+#' @param rows Numeric, indicating the number of rows of the graph.
+#' @return Object of class 'tidy_layout'
+#' @examples
+#' layout("c", "",  "d",
+#'        "",  "e", "", rows = 2)
+#' @rdname layout
+#' @keywords tidy_graph
+#' @seealso get_layout
+#' @export
+layout <- function(..., rows = NULL){
+  Args <- as.list(match.call()[-1])
+  if("rows" %in% names(Args)){
+    Args$rows <- NULL
+  } else {
+    if(length(sapply(Args, is.numeric)) == 1){
+      Args[which(sapply(Args, is.numeric))] <- NULL
+    } else {
+      stop("Provide 'rows' argument.", call. = FALSE)
+    }
+  }
+  if(!(length(Args) %% rows == 0)){
+    stop("Number of arguments is not a multiple of rows = ", rows, call. = FALSE)
+  }
+  vec <- do.call(c, Args)
+  Args <- list(mat = do.call(matrix, list(
+    data = vec,
+    nrow = rows,
+    byrow = TRUE
+  )))
+  out <- do.call(get_layout, Args)
+  class(out) <- c("tidy_layout", class(out))
+  out
+}
+
+
 
 .euclidean_distance <- function(p, q){
   sqrt(sum((p - q)^2))

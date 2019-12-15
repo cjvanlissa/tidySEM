@@ -1,0 +1,99 @@
+---
+title: "Plotting graphs for structural equation models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plotting graphs for structural equation models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidySEM)
+```
+
+`tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programatic*, meaning that graphs are created mostly automatically from the output of an analysis. There is one important intentional exception to the programmatic workflow: **Users must create a layout matrix for the graph by hand.** This allows swift customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
+
+## Specifying a layout
+
+A simple layout for nodes (variables) `x` and `y` is generated as follows:
+
+```{r}
+layout("x", "y", rows = 1)
+```
+
+For a mediation model, one might specify a layout like this:
+
+```{r}
+layout("", "m", "",
+       "x", "", "y", rows = 2)
+```
+
+And for a CFA model, one might specify:
+
+```{r}
+layout("", "F", "",
+       "y1", "y2", "y3", rows = 2)
+```
+
+## Making a graph
+
+Let's make a graph for a classic `lavaan` tutorial example for CFA. First, we conduct the SEM analysis:
+
+```{r}
+library(lavaan)
+HS.model <- ' visual  =~ x1 + x2 + x3
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9 '
+fit <- cfa(HS.model, data=HolzingerSwineford1939)
+```
+
+Then, we specify the layout. We know the names of the nodes from the syntax above, but we can confirm which nodes are available by running `get_nodes()`:
+
+```{r}
+get_nodes(fit)
+```
+
+```{r}
+
+lay <- layout("", "", "visual","","textual","","speed","", "",
+              "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", rows = 2)
+graph(model = fit, layout = lay)
+```
+
+## Visual aspects
+
+The function `graph()` has several visual parameters that can be tuned to customize the graph. Access the documentation by running `?graph`. We will demonstrate the use of the `angle` parameter, which controls which sides of nodes (circles and squares) will be connected by edges (arrows). Currently, graph connects nodes within a 90 degree angle of each other top-to-bottom. In the graph, we can see that only nodes with the same x-coordinates are connected this way. By increasing `angle` to a large number (up to 180 degrees), we can ensure that all nodes are connected top to bottom:
+
+```{r, out.width="500px", out.height = "150px"}
+graph(fit, lay, angle = 170)
+```
+
+## Accessing the graph data before plotting
+
+One important feature of `tidySEM` graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. For example:
+
+```{r}
+graph_data <- prepare_graph(fit, lay, angle = 170)
+```
+
+
+## Workflow
+
+The workflow underlying graphing in `tidySEM` is as follows:
+
+1. Run an analysis, e.g., using `lavaan::sem()` or `MplusAutomation::mplusModeler()`, assing the output to an object, e.g., `fit`
+2. Examine the nodes and edges in the resulting object by running `get_nodes(fit)` and `get_edges(fit)`
+3. Specify a layout for the graph using `layout()`
+4. Prepare the plot data by running `prepare_graph(fit, layout)`. Store the resulting graph data in an object, e.g., `graph_data`
+5. Access the nodes and edges in `graph_data` using `nodes(graph_data)` and `edges(graph_data)`
+6. Modify the nodes and edges in `graph_data` using `nodes(graph_data) <- ...`and `edges(graph_data) <- ...`
+7. Plot the graph using `plot(graph_data)`.
+
+These functions ensure a high degree of transparancy and customizability. Objects returned by all functions are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the `tidyverse`.

@@ -2,22 +2,76 @@
 % Please edit documentation in R/plot_sem.R
 \name{prepare_graph}
 \alias{prepare_graph}
+\alias{prepare_graph.default}
+\alias{prepare_graph.lavaan}
 \title{Prepare graph data}
 \usage{
-prepare_graph(x, ...)
+prepare_graph(...)
+
+\method{prepare_graph}{default}(edges, layout, nodes = NULL,
+  rect_width = 1.2, rect_height = 0.8, ellipses_a = 1,
+  ellipses_b = 1, spacing_x = 2, spacing_y = 2, text_size = 4,
+  curvature = 0.1, angle = NULL, ...)
+
+\method{prepare_graph}{lavaan}(model, layout, rect_width = 1.2,
+  rect_height = 0.8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
+  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL, ...)
 }
 \arguments{
-\item{x}{A model object of class 'mplusObject' or 'lavaan'.}
+\item{...}{Additional arguments passed to and from functions.}
 
-\item{...}{Additional parameters to be passed to and from other functions.}
+\item{edges}{Object of class 'tidy_edges', or a \code{data.frame} with  (at
+least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
+"label", "connector", "connect_from", "connect_to", "curvature")}.}
+
+\item{layout}{A matrix with the layout of the graph, using the same names
+for nodes as in the \code{edges} argument, or an object of class
+'tidy_layout', created with the \code{\link[tidySEM]{get_layout}} function.}
+
+\item{nodes}{Optional, object of class 'tidy_nodes', created with the
+\code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
+least) the column \code{c("name")}, and optionally, \code{c("shape",
+"label")}. If set to \code{NULL} (the default), nodes are inferred from the
+\code{layout} and \code{edges} arguments.}
+
+\item{rect_width}{Width of rectangles (used to display observed variables),
+Default: 1.2}
+
+\item{rect_height}{Height of rectangles (used to display observed variables),
+Default: 0.8}
+
+\item{ellipses_a}{Width of ellipses (used to display latent variables),
+Default: 1}
+
+\item{ellipses_b}{Height of ellipses (used to display latent variables),
+Default: 1}
+
+\item{spacing_x}{Spacing between columns of the graph, Default: 1}
+
+\item{spacing_y}{Spacing between rows of the graph, Default: 1}
+
+\item{text_size}{Point size of text, Default: 4}
+
+\item{curvature}{Curvature of curved connectors. To flip connectors, use
+negative values. Default: .1}
+
+\item{angle}{Angle used to connect nodes by the top and bottom. Defaults to
+NULL, which means Euclidean distance is used to determine the shortest
+distance between node sides. A numeric value between 0-180 can be provided,
+where 0 means that only nodes with the same x-coordinates are connected
+top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
+
+\item{model}{A model object for which a method exists (e.g.,
+\code{mplus.model} or \code{lavaan}).}
 }
 \value{
-An object of class 'graph_data'
+Object of class 'sem_graph'
 }
 \description{
-Extracts nodes and edges from a SEM model object, where nodes
-are defined as observed or latent variables, and edges
-are defined as regression paths and covariances between variables (nodes).
+Prepare an object of class \code{sem_graph}, containing
+data objects that can be rendered into a SEM graph. Using this function
+allows
+users to manually change the default graph specification before plotting it.
 }
 \examples{
 \dontrun{
@@ -26,4 +80,3 @@ if(interactive()){
  }
 }
 }
-\keyword{tidy_graph}
