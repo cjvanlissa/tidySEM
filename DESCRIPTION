@@ -8,8 +8,8 @@ Authors@R:
              role = c("aut", "cre"),
              email = "c.j.vanlissa@uu.nl"))
 Maintainer: Caspar J. van Lissa <c.j.vanlissa@uu.nl>
-Description: Generate tidy SEM-syntax for lavaan or Mplus, using convenience 
-    functions for many typical elements of SEM-models.
+Description: A tidy workflow for running, reporting, and plotting structural
+    equation models in lavaan or Mplus.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

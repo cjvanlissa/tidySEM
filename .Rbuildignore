@@ -1,3 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^galo\.csv$
+^\.travis\.yml$
+^README\.Rmd$
+^doc$
+^Meta$
