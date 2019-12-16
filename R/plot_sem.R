@@ -37,7 +37,7 @@ graph <- function(...){
 #' "label", "connector", "connect_from", "connect_to", "curvature")}.
 #' @param layout An object of class \code{tidy_layout}, or a matrix with the
 #' layout of the graph that can be converted using
-#' \code{\link[tidySEM]{get_layout}}.
+#' \code{\link[tidySEM]{as.layout}}.
 #' @param nodes Optional, object of class 'tidy_nodes', created with the
 #' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
 #' least) the column \code{c("name")}, and optionally, \code{c("shape",
@@ -153,7 +153,7 @@ prepare_graph <- function(...){
 #' "label", "connector", "connect_from", "connect_to", "curvature")}.
 #' @param layout An object of class \code{tidy_layout}, or a matrix with the
 #' layout of the graph that can be converted using
-#' \code{\link[tidySEM]{get_layout}}.
+#' \code{\link[tidySEM]{as.layout}}.
 #' @param nodes Optional, object of class 'tidy_nodes', created with the
 #' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
 #' least) the column \code{c("name")}, and optionally, \code{c("shape",
@@ -203,7 +203,14 @@ prepare_graph.default <- function(edges,
   # Check if nodes exist in edges and layout --------------------------------
 
   df_edges <- edges
-
+  fac_vars <- sapply(df_edges, inherits, what = "factor")
+  if(any(fac_vars)){
+    df_edges[which(fac_vars)] <- lapply(df_edges[which(fac_vars)], as.character)
+  }
+  fac_vars <- sapply(layout, inherits, what = "factor")
+  if(any(fac_vars)){
+    layout[which(fac_vars)] <- lapply(layout[which(fac_vars)], as.character)
+  }
   if(!("from" %in% names(df_edges) & "to" %in% names(df_edges))){
     stop("Argument 'edges' must have columns 'from' and 'to'.")
   }
@@ -219,6 +226,10 @@ prepare_graph.default <- function(edges,
     nodes <- data.frame(name = unique(c("", NA, unlist(layout), df_edges$from, df_edges$to))[-c(1:2)])
     nodes$shape <- "rect"
     nodes$label <- nodes$name
+  }
+  fac_vars <- sapply(nodes, inherits, what = "factor")
+  if(any(fac_vars)){
+    nodes[which(fac_vars)] <- lapply(nodes[which(fac_vars)], as.character)
   }
 
   # Check edges df ----------------------------------------------------------
@@ -589,9 +600,10 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
 }
 
 
-#' @title Generate graph layout from a matrix
-#' @description Starting with a matrix, generate a tidy_layout for a SEM graph.
-#' @param mat Matrix. The default reads a selected matrix from the clipboard.
+#' @title Convert object to layout
+#' @description Convert an object to a tidy_layout for a SEM graph.
+#' @param x Object to convert to a tidy_layout. The default argument reads a
+#' selected matrix from the clipboard.
 #' To use this functionality, specify your layout in a spreadsheet program,
 #' select the block of cells, and copy it to the clipboard.
 #' @return Object of class 'tidy_layout'
@@ -601,11 +613,25 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname get_layout
+#' @rdname as.layout
 #' @keywords tidy_graph
 #' @export
-get_layout <- function(mat = read.table("clipboard", sep = "\t", stringsAsFactors = FALSE)){
-  mat <- as.matrix(mat)
+as.layout <- function(x){
+  UseMethod("as.layout")
+}
+
+#' @method as.layout data.frame
+#' @export
+as.layout.data.frame <- function(x){
+  Args <- as.list(match.call()[-1])
+  Args$x <- as.matrix(x)
+  do.call(as.layout, Args)
+}
+
+#' @method as.layout matrix
+#' @export
+as.layout.matrix <- function(x){
+  mat <- x
   mat[is.na(mat)] <- ""
   nodes_long <- setNames(as.data.frame.table(mat), c("y", "x", "name"))
   nodes_long[1:2] <- lapply(nodes_long[1:2], as.numeric)
@@ -626,13 +652,13 @@ get_layout <- function(mat = read.table("clipboard", sep = "\t", stringsAsFactor
 #' @param rows Numeric, indicating the number of rows of the graph.
 #' @return Object of class 'tidy_layout'
 #' @examples
-#' layout("c", "",  "d",
-#'        "",  "e", "", rows = 2)
+#' get_layout("c", "",  "d",
+#'            "",  "e", "", rows = 2)
 #' @rdname layout
 #' @keywords tidy_graph
-#' @seealso get_layout
+#' @seealso as.layout
 #' @export
-layout <- function(..., rows = NULL){
+get_layout <- function(..., rows = NULL){
   Args <- as.list(match.call()[-1])
   if("rows" %in% names(Args)){
     Args$rows <- NULL
@@ -647,12 +673,13 @@ layout <- function(..., rows = NULL){
     stop("Number of arguments is not a multiple of rows = ", rows, call. = FALSE)
   }
   vec <- do.call(c, Args)
-  Args <- list(mat = do.call(matrix, list(
+
+  Args <- list(x = do.call(matrix, list(
     data = vec,
     nrow = rows,
     byrow = TRUE
   )))
-  out <- do.call(get_layout, Args)
+  out <- do.call(as.layout, Args)
   class(out) <- c("tidy_layout", class(out))
   out
 }

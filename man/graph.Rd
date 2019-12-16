@@ -26,7 +26,7 @@ least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 
 \item{layout}{An object of class \code{tidy_layout}, or a matrix with the
 layout of the graph that can be converted using
-\code{\link[tidySEM]{get_layout}}.}
+\code{\link[tidySEM]{as.layout}}.}
 
 \item{nodes}{Optional, object of class 'tidy_nodes', created with the
 \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at

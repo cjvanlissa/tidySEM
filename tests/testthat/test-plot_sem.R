@@ -1,9 +1,8 @@
-layout <- matrix(c("ne", "", "plea", "", "dist", "", "saf", "", "coh",
-                      NA, NA, NA, NA, NA, NA, NA, NA, NA, "phys", "", "", "", "", "",
-                      "", "", "stress", NA, NA, NA, NA, NA, NA, NA, NA, NA, "", "",
-                      "", "", "dep", "", "", "", ""), nrow = 9)
-
-layout <- get_layout(layout)
+layout <- get_layout("ne", "phys", "",
+                     "plea", "", "",
+                     "dist", "", "dep",
+                     "saf", "", "",
+                     "coh", "stress", "", rows = 5)
 
 test_that("matrix correctly converts to tidy_layout", {
   expect_s3_class(layout, "tidy_layout")

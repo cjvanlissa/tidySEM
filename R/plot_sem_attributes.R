@@ -23,14 +23,14 @@ edges.sem_graph <- function(x) x[["edges"]]
 #' @export
 `edges<-.sem_graph` <- function(x, value)
 {
-  if(!inherits(value, "data.frame")){
-    value <- tryCatch({data.frame(value)}, error = function(e){
-      stop("Can only assign a data.frame to edges(). The value you are trying to assign to edges() is not a data.frame, and cannot be coerced to data.frame.", call. = FALSE)
-    })
-  }
-  if(!all(names(value) == c("from", "to", "arrow", "label", "connector", "connect_from", "connect_to", "curvature"))){
-    stop("The names of the data.frame you are trying to assign to edges() do not match the expected names, which are: from, to, arrow, label, connector, connect_from, connect_to, curvature", call. = FALSE)
-  }
+  # if(!inherits(value, "data.frame")){
+  #   value <- tryCatch({data.frame(value)}, error = function(e){
+  #     stop("Can only assign a data.frame to edges(). The value you are trying to assign to edges() is not a data.frame, and cannot be coerced to data.frame.", call. = FALSE)
+  #   })
+  # }
+  # if(!all(names(value) == c("from", "to", "arrow", "label", "connector", "connect_from", "connect_to", "curvature"))){
+  #   stop("The names of the data.frame you are trying to assign to edges() do not match the expected names, which are: from, to, arrow, label, connector, connect_from, connect_to, curvature", call. = FALSE)
+  # }
   x$edges <- value
   x
 }
@@ -60,14 +60,14 @@ nodes.sem_graph <- function(x) x[["nodes"]]
 #' @export
 `nodes<-.sem_graph` <- function(x, value)
 {
-  if(!inherits(value, "data.frame")){
-    value <- tryCatch({data.frame(value)}, error = function(e){
-      stop("Can only assign a data.frame to nodes(). The value you are trying to assign to nodes() is not a data.frame, and cannot be coerced to data.frame.", call. = FALSE)
-    })
-  }
-  if(!all(names(value) == c("node_id", "param", "shape", "label", "x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax"))){
-    stop("The names of the data.frame you are trying to assign to nodes() do not match the expected names, which are: node_id, param, shape, label, x, y, node_xmin, node_xmax, node_ymin, node_ymax", call. = FALSE)
-  }
+  # if(!inherits(value, "data.frame")){
+  #   value <- tryCatch({data.frame(value)}, error = function(e){
+  #     stop("Can only assign a data.frame to nodes(). The value you are trying to assign to nodes() is not a data.frame, and cannot be coerced to data.frame.", call. = FALSE)
+  #   })
+  # }
+  # if(!all(names(value) == c("node_id", "param", "shape", "label", "x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax"))){
+  #   stop("The names of the data.frame you are trying to assign to nodes() do not match the expected names, which are: node_id, param, shape, label, x, y, node_xmin, node_xmax, node_ymin, node_ymax", call. = FALSE)
+  # }
   x$nodes <- value
   x
 }

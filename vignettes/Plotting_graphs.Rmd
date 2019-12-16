@@ -20,31 +20,25 @@ library(tidySEM)
 
 `tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programatic*, meaning that graphs are created mostly automatically from the output of an analysis. There is one important intentional exception to the programmatic workflow: **Users must create a layout matrix for the graph by hand.** This allows swift customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
 
-## Specifying a layout
+## The tidySEM workflow
 
-A simple layout for nodes (variables) `x` and `y` is generated as follows:
+The workflow underlying graphing in `tidySEM` is as follows:
 
-```{r}
-layout("x", "y", rows = 1)
-```
+1. Run an analysis, e.g., using `lavaan::sem()` or `MplusAutomation::mplusModeler()`, assing the output to an object, e.g., `fit`
+2. Examine what nodes and edges can be extracted from the fit model object, by running `get_nodes(fit)` and `get_edges(fit)`
+3. Specify a layout for the graph using `get_layout()`
+4. *Optionally*, prepare graph data before plotting, by running `prepare_graph(fit, layout)`. Store the resulting graph data in an object, e.g., `graph_data`
+5. *Optionally*, access the nodes and edges in `graph_data` using `nodes(graph_data)` and `edges(graph_data)`
+6. *Optionally*, modify the nodes and edges in `graph_data` using `nodes(graph_data) <- ...`and `edges(graph_data) <- ...`
+7. Plot the graph using `plot(graph_data)`, or skip steps 4-6 and use the function `graph(model, layout)`.
 
-For a mediation model, one might specify a layout like this:
+This workflow ensures a high degree of transparancy and customizability. Objects returned by all functions are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the `tidyverse`.
 
-```{r}
-layout("", "m", "",
-       "x", "", "y", rows = 2)
-```
+## Example: Graphing a CFA
 
-And for a CFA model, one might specify:
+### Step 1: Run an analysis
 
-```{r}
-layout("", "F", "",
-       "y1", "y2", "y3", rows = 2)
-```
-
-## Making a graph
-
-Let's make a graph for a classic `lavaan` tutorial example for CFA. First, we conduct the SEM analysis:
+As an example, let's make a graph for a classic `lavaan` tutorial example for CFA. First, we conduct the SEM analysis:
 
 ```{r}
 library(lavaan)
@@ -54,46 +48,115 @@ HS.model <- ' visual  =~ x1 + x2 + x3
 fit <- cfa(HS.model, data=HolzingerSwineford1939)
 ```
 
-Then, we specify the layout. We know the names of the nodes from the syntax above, but we can confirm which nodes are available by running `get_nodes()`:
+### Step 2: Examine nodes and edges
+
+For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running `get_nodes()`:
 
 ```{r}
 get_nodes(fit)
 ```
 
-```{r}
+And for the edges:
 
-lay <- layout("", "", "visual","","textual","","speed","", "",
-              "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", rows = 2)
+```{r}
+get_edges(fit)
+```
+
+### Step 3: Specifying a layout
+
+We can specify a simple layout for two hypothetical nodes `x` and `y` is generated as follows:
+
+```{r}
+get_layout("x", "y", rows = 1)
+```
+
+For a mediation model, one might specify a layout like this:
+
+```{r}
+get_layout("", "m", "",
+           "x", "", "y", rows = 2)
+```
+
+For a three-item CFA model, one might specify:
+
+```{r}
+get_layout("", "F", "",
+           "y1", "y2", "y3", rows = 2)
+```
+
+And for the CFA model we estimated above:
+
+```{r}
+lay <- get_layout("", "", "visual","","textual","","speed","", "",
+                  "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", rows = 2)
+```
+
+At this point, we could simply plot the graph:
+
+```{r, out.width = "500px", out.height="150px"}
 graph(model = fit, layout = lay)
+```
+
+### Optional step 4: accessing the graph data before plotting
+
+One important feature of `tidySEM` graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. First, use `prepare_graph()` to assign the plot data to an object.
+
+```{r}
+graph_data <- prepare_graph(model = fit, layout = lay)
+```
+
+### Optional step 5: Access the nodes and edges
+
+The nodes and edges can be examined using `nodes(graph_data)` and `edges(graph_data)`:
+
+```{r}
+nodes(graph_data)
+edges(graph_data)
+```
+
+### Optional step 6: Modify the nodes and edges
+
+At this stage, we may want to improve the basic plot slightly. The functions `nodes(graph_data) <- ...` and `edges(graph_data) <- ...` can be used to modify the nodes and edges. These functions pair well with the general tidyverse workflow. For example, we might want to print node labels for latent variables in *Title Case* instead of just using the variable names:
+
+```{r}
+library(dplyr)
+library(stringr)
+nodes(graph_data) <- nodes(graph_data) %>%
+  mutate(label = str_to_title(label))
+```
+
+```{r echo = FALSE}
+# $label[1:3] <- str_to_title(nodes(graph_data)$label[1:3])
+graph_data <- prepare_graph(model = fit, layout = lay)
+```
+
+Now, for the edges, we see that the default edging algorithm has connected some nodes side-to-side (based on the smallest possible Euclidian distance). However, in this simple graph, it makes more sense to connect all nodes top-to-bottom - except for the latent variable covariances. We can use the same conditional replacement for the edges:
+
+```{r}
+edges(graph_data) %>%
+  mutate(connect_from = replace(connect_from, connector == "line", "bottom")) %>%
+  mutate(connect_to = replace(connect_to, connector == "line", "top")) -> edges(graph_data)
+```
+
+### Step 7: Plot the graph
+
+Finally, we can plot the resulting customized graph using `plot(graph_data)`:
+
+```{r}
+plot(graph_data)
 ```
 
 ## Visual aspects
 
-The function `graph()` has several visual parameters that can be tuned to customize the graph. Access the documentation by running `?graph`. We will demonstrate the use of the `angle` parameter, which controls which sides of nodes (circles and squares) will be connected by edges (arrows). Currently, graph connects nodes within a 90 degree angle of each other top-to-bottom. In the graph, we can see that only nodes with the same x-coordinates are connected this way. By increasing `angle` to a large number (up to 180 degrees), we can ensure that all nodes are connected top to bottom:
+The functions `graph()` and `prepare_graph()` have several visual parameters that can be tuned to customize the resulting image. Access the documentation by running `?graph`. We will demonstrate the use of the `angle` parameter, which controls which sides of nodes (circles and squares) will be connected by edges (arrows). Currently, graph connects nodes within a 90 degree angle of each other top-to-bottom. In the graph, we can see that only nodes with the same x-coordinates are connected this way. By increasing `angle` to a large number (up to 180 degrees), we can ensure that all nodes are connected top to bottom:
 
 ```{r, out.width="500px", out.height = "150px"}
-graph(fit, lay, angle = 170)
+graph(model = fit, layout = lay, angle = 170)
 ```
-
-## Accessing the graph data before plotting
-
-One important feature of `tidySEM` graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. For example:
 
 ```{r}
-graph_data <- prepare_graph(fit, lay, angle = 170)
+edg <- data.frame(from = "x",
+                  to = "y")
+graph(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
 
-
-## Workflow
-
-The workflow underlying graphing in `tidySEM` is as follows:
-
-1. Run an analysis, e.g., using `lavaan::sem()` or `MplusAutomation::mplusModeler()`, assing the output to an object, e.g., `fit`
-2. Examine the nodes and edges in the resulting object by running `get_nodes(fit)` and `get_edges(fit)`
-3. Specify a layout for the graph using `layout()`
-4. Prepare the plot data by running `prepare_graph(fit, layout)`. Store the resulting graph data in an object, e.g., `graph_data`
-5. Access the nodes and edges in `graph_data` using `nodes(graph_data)` and `edges(graph_data)`
-6. Modify the nodes and edges in `graph_data` using `nodes(graph_data) <- ...`and `edges(graph_data) <- ...`
-7. Plot the graph using `plot(graph_data)`.
-
-These functions ensure a high degree of transparancy and customizability. Objects returned by all functions are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the `tidyverse`.

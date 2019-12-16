@@ -7,10 +7,9 @@ HS.model <- ' visual  =~ x1 + x2 + x3
               speed   =~ x7 + x8 + x9 '
 fit <- cfa(HS.model, data=df, meanstructure = T)
 
-layout <- matrix(c("", "", "visual","","textual","","speed","", "",
-                   paste0("x", 1:9)), nrow = 2, byrow = TRUE)
+layout <- get_layout("", "", "visual","","textual","","speed","", "",
+                     paste0("x", 1:9), rows = 2)
 
-layout <- get_layout(layout)
 edg <- get_edges(fit)
 nod <- get_nodes(fit)
 
