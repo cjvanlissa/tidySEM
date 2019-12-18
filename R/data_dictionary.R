@@ -57,7 +57,7 @@ dictionary.character <- function(x, split = "_"){
   dict <- data.frame(name = x, do.call(rbind, split_items), stringsAsFactors = FALSE)
   names(dict)[c(2,3)] <- c("scale", "item")
   dict$type <- "observed"
-  dict$type[!observed] <- "indicator"
+  #dict$type[!observed] <- "indicator"
   dict$label <- dict$name
   class(dict) <- c("data_dict", class(dict))
   dict

@@ -5,3 +5,4 @@
 ^README\.Rmd$
 ^doc$
 ^Meta$
+^data_types\.md$
