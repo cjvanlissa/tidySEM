@@ -24,16 +24,6 @@ lgm.character <- function(y, loadings = 1:length(y), polynomials = 1, lv_name = 
   out
 }
 
-syntax_cfa_lavaan <- function(scales.list){
-  variables <- names(scales.list)
-  outlines <- do.call(c, list(sapply(variables, function(x){
-    # x <- variables[1]
-    c(paste0(x, " =~ NA*", scales.list[[x]][1], " + ",
-           paste(scales.list[[x]][-1], collapse = " + ")),
-           paste0(x, " ~~ 1*", x))
-  }, USE.NAMES = FALSE)))
-  outlines
-}
 
 syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE){
   if(all){
@@ -52,52 +42,6 @@ syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE){
   }
 }
 
-#' @importFrom methods hasArg
-syntax_cfa_mplus <- function(scales.list, fix_var = TRUE, fix_mean = TRUE, fix_first = FALSE, merge = TRUE, ...){
-  variables <- names(scales.list)
-  if(any(sapply(variables, nchar) > 8)){
-    warning(paste0("Latent variable names longer than 8 characters will be truncated, specifically: ", paste(variables[which(sapply(variables, nchar) > 8)], collapse = ", ")))
-    variables <- sapply(variables, substr, 1, 8)
-    if(any(duplicated(variables))) stop("Truncation led to identical latent variable names.")
-  }
-  if(any(sapply(unique(unlist(scales.list)), nchar) > 8)){
-    warning(paste0("Observed variable names longer than 8 characters will be truncated, specifically: ", paste(variables[which(sapply(variables, nchar) > 8)], collapse = ", ")))
-    scales.list <- lapply(scales.list, sapply, substr, start = 1, stop = 8)
-    if(any(duplicated(unlist(scales.list)))) stop("Truncation led to identical observed variable names.")
-  }
-  if(hasArg("standardize")){
-    if(standardize){
-      if(is.null(fix_first)) fix_first <- FALSE
-      if(is.null(fix_var)) fix_var <- TRUE
-      if(is.null(fix_mean)) fix_mean <- TRUE
-    } else {
-      if(is.null(fix_first)) fix_first <- TRUE
-      if(is.null(fix_var)) fix_var <- FALSE
-      if(is.null(fix_mean)) fix_mean <- FALSE
-    }
-  } else {
-    standardize = FALSE
-  }
-
-    outlines <- sapply(variables, function(x){
-      if(fix_first){
-        out <- paste0(x, " BY ", scales.list[[x]][1], "@1;\n")
-      } else {
-        out <- paste0(x, " BY ", scales.list[[x]][1], "*;\n")
-      }
-      if(length(scales.list[[x]]) > 1) out <- c(out, paste0(x, " BY ", scales.list[[x]][-1], ";\n"))
-      if(fix_mean) out <- c(out, paste0("[", x, "@0];\n"))
-      if(fix_var) out <- c(out, paste0(x, "@1;\n"))
-      out
-    })
-  #}
-  #browser()
-  if(merge){
-    paste(unlist(outlines), collapse = "\n")
-  } else {
-    outlines
-  }
-}
 
 syntax_cor_mplus <- function(x, y = NULL, all = TRUE){
   if(is.null(y)){
@@ -151,25 +95,3 @@ syntax_label <- function(x){
   x
 }
 
-syntax_categorical_cfa <- function(x, data, center_obs = TRUE, fix_scale = TRUE){
-  out <- ""
-  obs_vars <- unlist(x)
-  if(center_obs){
-    center_list <- unlist(x)
-    names(center_list) <- paste0("c", center_list)
-    out <- c(out,
-             gsub("^(c.{3}\\d@)1", "\\10", syntax_cfa_mplus(center_list, fix_mean = T, fix_var = T, fix_first = T, merge = F)))
-    indicators <- lapply(x, function(i) paste0("c", i))
-  } else {
-    indicators <- x
-  }
-  out <- c(out, syntax_cfa_mplus(indicators, fix_mean = T, fix_var = T, fix_first = F, merge = F))
-  if(fix_scale){
-    out <- c(out, paste0("{", unlist(x), "@1};\n"))
-  }
-  num_thresholds <- sapply(unlist(x), function(i){length(table(data[[i]]))})-1
-  out <- c(out, unlist(mapply(function(var, thres){
-    paste0("[", var, "$", 1:thres, "*];\n")
-  }, var = unlist(x), thres = num_thresholds, SIMPLIFY = FALSE)))
-  out
-}
