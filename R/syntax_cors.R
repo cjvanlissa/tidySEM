@@ -2,29 +2,38 @@
 
 #' @title Generate syntax for a measurement model
 #' @description Generate syntax for a measurement model for latent variables.
-#' @param x An object for which a method exists, including \code{data_dict}
-#' (generated using \code{\link[tidySEM]{dictionary}}, or \code{data.frame} (for
-#' which \code{\link[tidySEM]{dictionary}} will be run first).
-#' @param center Whether or not to mean-center the latent variables,
-#' Default: TRUE
-#' @param scale Whether to identify the model by fixing latent variable variance
-#' to 1 (\code{scale = TRUE}), or by fixing the first factor loading to 1
-#' (\code{scale = FALSE}).
+#' @param x Object for which a method exists. If \code{x} is an object of class
+#'  \code{sem_syntax} or \code{data_dict}, then correlations between all
+#'  observed and latent variables in the data dictionary of that object are
+#'  computed, by default. If
+#' \code{x} is a character vector, all elements of the vector are used.
+#' @param ... Optional additional character vectors of variables to be
+#' correlated. If \code{x} is an object of class \code{sem_syntax} or
+#' \code{data_dict}, then up to two vectors can be provided. If \code{x} is a
+#' vector, then one more optional vector can be provided.
+#' When no additional vectors of variable names are provided, only
+#' intercorrelations between elements of \code{x} are returned.
 #' @return An object of class \code{sem_syntax}.
 #' @examples
 #' dict <- dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
-#' measurement(dict)
-#' @rdname measurement
+#' cors(dict)
+#' cors(dict, c("bfi_1", "bfi_2"))
+#' @rdname cors
 #' @export
-cors <- function(x, y = x){
+cors <- function(x, ...){
   UseMethod("cors")
 }
 
 #' @method cors sem_syntax
 #' @export
-cors.sem_syntax <- function(x, y = x){
+cors.sem_syntax <- function(x, ...){
   out <- force(x)
-  Args <- list(x = x$data_dict$name[x$data_dict$type %in% c("observed", "latent")])
+dots <- list(...)
+  if(!length(dots)){
+    Args <- list(x = x$data_dict$name[x$data_dict$type %in% c("observed", "latent")])
+  } else {
+    Args <- check_dots_cors(dots)
+  }
   syntax <- do.call(switch(x$sem_software,
                            "lavaan" = cors_lavaan,
                            "mplus" = cors_mplus), Args)
@@ -32,14 +41,20 @@ cors.sem_syntax <- function(x, y = x){
   out
 }
 
+
 #' @method cors data_dict
 #' @export
-cors.data_dict <- function(x, y = x){
-  Args <- as.list(match.call()[-1])
+cors.data_dict <- function(x, ...){
+  dots <- list(...)
+  if(!length(dots)){
+    Args <- list(x = x$name[x$type %in% c("observed", "latent")])
+  } else {
+    Args <- check_dots_cors(dots)
+  }
   out <- list(data_dict = x,
               syntax = do.call(switch(getOption("sem_software"),
                                       "lavaan" = cors_lavaan,
-                                      "mplus" = cors_mplus), list(x = x$name)),
+                                      "mplus" = cors_mplus), Args),
               sem_software = getOption("sem_software"))
   class(out) <- c("sem_syntax", class(out))
   out
@@ -47,7 +62,7 @@ cors.data_dict <- function(x, y = x){
 
 #' @method cors data.frame
 #' @export
-cors.data.frame <- function(x, y = x){
+cors.data.frame <- function(x, ...){
   Args <- as.list(match.call()[-1])
   Args$x <- do.call(dictionary, Args[1])
   do.call(cors, Args)
@@ -55,25 +70,29 @@ cors.data.frame <- function(x, y = x){
 
 # cors_mplus(c("a", "b", "c"))
 # cors_mplus(c("a", "b", "c"), c("x", "y"))
-cors_mplus <- function(x, y = x){
-  m <- matrix(paste0(rep(y, each = length(x)), " WITH ", rep(x, length(x)), ";"), ncol = length(x))
-  m[lower.tri(m)]
+cors_mplus <- function(x, y = NULL){
+  if(is.null(y)){
+    m <- matrix(paste0(rep(x, each = length(x)), " WITH ", rep(x, length(x)), ";"), ncol = length(x))
+    m[lower.tri(m)]
+  } else {
+    paste0(rep(x, length(x)), " WITH ", rep(y, each = length(x)), ";")
+  }
 }
 
 # cors_lavaan(c("a", "b", "c"))
 # cors_lavaan(c("a", "b", "c"), c("x", "y"))
 #' @importFrom lavaan mplus2lavaan.modelSyntax
-cors_lavaan <- function(x, y = x){
+cors_lavaan <- function(x, y = NULL){
   Args <- as.list(match.call()[-1])
   out <- do.call(cors_mplus, Args)
   strsplit(mplus2lavaan.modelSyntax(paste0(out, collapse = "\n")), "\n")[[1]]
 }
 
 
-syntax_cor_lavaan(c("a", "b", "c"))
-syntax_cor_mplus(c("a", "b", "c"))
+#syntax_cor_lavaan(c("a", "b", "c"))
+#syntax_cor_mplus(c("a", "b", "c"))
 
-syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE){
+syntax_cor_lavaan <- function(x, y = NULL, all = TRUE, label = TRUE){
   if(all){
     cors <- expand.grid(x, " ~~ ", y)
     if(label){
@@ -91,3 +110,14 @@ syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE){
 }
 
 
+
+check_dots_cors <- function(dots){
+  if(length(dots) > 3){
+    stop("Tried to pass more than two additional arguments to function cors.sem_syntax(). Cors accepts an object, and up to two character vectors of variable names.", call. = FALSE)
+  }
+  if(!all(sapply(dots, inherits, what = "character"))){
+      stop("Cors accepts up to two character vectors of variable names as optional arguments. The optional arguments are not all character vectors.", call. = FALSE)
+    }
+  names(dots) <- c("x", "y")[1:length(dots)]
+  dots
+}
