@@ -37,8 +37,8 @@ table_results.MxModel <- function (x, standardized = TRUE, all = FALSE, digits =
   results$est_sig <- est_sig(results$est, sig = results$pvalue)
   results$confint <- conf_int(lb = results$lbound, ub = results$ubound)
   results[c("estimate", "Estimate")] <- NULL
-  names(results) <- tolower(names(results))
   names(results)[match("Std.Error", names(results))] <- "se"
+  names(results) <- tolower(names(results))
   if (!all) {
     keep_cols <- getOption("report_columns")
     results[, na.omit(match(keep_cols, names(results)))]
