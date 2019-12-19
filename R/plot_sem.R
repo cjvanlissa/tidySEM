@@ -710,7 +710,8 @@ match.call.defaults <- function(...) {
   an = 90
   #curvature = df$curvature#Flip curvature to mirror the curve
   ncp = 1
-  df_curves <- data.frame(df, t(apply(df[, c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax", "curvature")], 1, function(x){unlist(calcControlPoints(x[[1]], x[[2]], x[[3]], x[[4]], angle = an, curvature = x[[5]], ncp = ncp))})))
+  df_edges <- data.frame(lapply(df[, c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax", "curvature")], as.numeric))
+  df_curves <- data.frame(df, t(apply(df_edges, 1, function(x){unlist(calcControlPoints(x[[1]], x[[2]], x[[3]], x[[4]], angle = an, curvature = x[[5]], ncp = ncp))})))
   for(cur in unique(df$curvature)){
     p <- p + geom_curve(data = df_curves[df_curves$curvature == cur, ], aes_string(x = "edge_xmin", y = "edge_ymin", xend = "x", yend = "y"), curvature = cur,
                         angle = an, linetype = 2) +
