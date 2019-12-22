@@ -266,6 +266,28 @@ prepare_graph.default <- function(edges,
   if(!"shape" %in% names(df_nodes)){
     df_nodes$shape <- "rect"
   }
+  if("group" %in% names(df_edges) & !"group" %in% names(df_nodes)){
+    df_nodes <- do.call(rbind, lapply(unique(df_edges$group), function(this_group){
+      df_nodes$group <- this_group
+      df_nodes
+    }))
+  }
+  if("group" %in% names(df_nodes) & !"group" %in% names(df_edges)){
+    df_edges <- do.call(rbind, lapply(unique(df_nodes$group), function(this_group){
+      df_edges$group <- this_group
+      df_edges
+    }))
+  }
+
+# Order nodes and edges ---------------------------------------------------
+#df_edges$level <- rep(c("within", "between", "within"), each = 3)
+  if("group" %in% names(df_edges)){
+    if("level" %in% names(df_edges)){
+      df_edges <- df_edges[with(df_edges, order(group, level)), ]
+    } else {
+      df_edges <- df_edges[with(df_edges, order(group)), ]
+    }
+  }
 
 # Compute x, y coordinates ------------------------------------------------
 
@@ -293,7 +315,8 @@ prepare_graph.default <- function(edges,
 # Determine where best to connect nodes -----------------------------------
 
   connect_cols <- .determine_connections(df_nodes, df_edges, angle)
-
+  # assign by groups to prevent arrows from ending up in the wrong place
+  # Sort by group first, then by level
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
 
@@ -805,10 +828,12 @@ match.call.defaults <- function(...) {
   if(!is.null(angle)){
     out[incomplete, ] <- t(mapply(function(from, to){
       if(angle > 180) angle <- 180
+      if(angle < 0) angle <- 0
       fx <- df_nodes$x[df_nodes$name == from]
       tx <- df_nodes$x[df_nodes$name == to]
       fy <- df_nodes$y[df_nodes$name == from]
       ty <- df_nodes$y[df_nodes$name == to]
+
       if(!(fx == tx | fy == ty)){
 
         dx <- tx-fx
