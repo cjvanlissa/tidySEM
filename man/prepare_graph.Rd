@@ -10,9 +10,9 @@
 prepare_graph(...)
 
 \method{prepare_graph}{default}(edges, layout, nodes = NULL,
-  rect_width = 1.2, rect_height = 0.8, ellipses_a = 1,
-  ellipses_b = 1, spacing_x = 2, spacing_y = 2, text_size = 4,
-  curvature = 0.1, angle = NULL, ...)
+  rect_width = 1.2, rect_height = 0.8, ellipses_width = 1,
+  ellipses_height = 1, variance_diameter = 0.8, spacing_x = 2,
+  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL, ...)
 
 \method{prepare_graph}{lavaan}(model, layout, ...)
 
@@ -41,11 +41,14 @@ Default: 1.2}
 \item{rect_height}{Height of rectangles (used to display observed variables),
 Default: 0.8}
 
-\item{ellipses_a}{Width of ellipses (used to display latent variables),
+\item{ellipses_width}{Width of ellipses (used to display latent variables),
 Default: 1}
 
-\item{ellipses_b}{Height of ellipses (used to display latent variables),
+\item{ellipses_height}{Height of ellipses (used to display latent variables),
 Default: 1}
+
+\item{variance_diameter}{Diameter of variance circles,
+Default: .8}
 
 \item{spacing_x}{Spacing between columns of the graph, Default: 1}
 

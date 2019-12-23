@@ -4,7 +4,7 @@
 #' @param ... Additional arguments passed to and from functions.
 #@usage ## Default S3 method:
 #graph(edges, layout, nodes = NULL,  rect_width = 1.2, rect_height = .8,
-#  ellipses_a = 1, ellipses_b = 1, spacing_x = 2, spacing_y = 2,
+#  ellipses_width = 1, ellipses_height = 1, spacing_x = 2, spacing_y = 2,
 #  text_size = 4, curvature = .1, angle = NULL, ...)
 #
 ### Alternative interface:
@@ -47,10 +47,12 @@ graph <- function(...){
 #' Default: 1.2
 #' @param rect_height Height of rectangles (used to display observed variables),
 #' Default: 0.8
-#' @param ellipses_a Width of ellipses (used to display latent variables),
+#' @param ellipses_width Width of ellipses (used to display latent variables),
 #' Default: 1
-#' @param ellipses_b Height of ellipses (used to display latent variables),
+#' @param ellipses_height Height of ellipses (used to display latent variables),
 #' Default: 1
+#' @param variance_diameter Diameter of variance circles,
+#' Default: .8
 #' @param spacing_x Spacing between columns of the graph, Default: 1
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
@@ -68,8 +70,9 @@ graph.default <- function(edges,
                           nodes = NULL,
                          rect_width = 1.2,
                          rect_height = .8,
-                         ellipses_a = 1,
-                         ellipses_b = 1,
+                         ellipses_width = 1,
+                         ellipses_height = 1,
+                         variance_diameter = .8,
                          spacing_x = 2,
                          spacing_y = 2,
                          text_size = 4,
@@ -127,7 +130,7 @@ graph_model <- function(model,
 #' @param ... Additional arguments passed to and from functions.
 # @usage ## Default S3 method:
 # prepare_graph(edges, layout, nodes = NULL,  rect_width = 1.2,
-#   rect_height = .8, ellipses_a = 1, ellipses_b = 1, spacing_x = 2,
+#   rect_height = .8, ellipses_width = 1, ellipses_height = 1, spacing_x = 2,
 #   spacing_y = 2, text_size = 4, curvature = .1, angle = NULL, ...)
 #
 # ## Alternative interface:
@@ -163,10 +166,12 @@ prepare_graph <- function(...){
 #' Default: 1.2
 #' @param rect_height Height of rectangles (used to display observed variables),
 #' Default: 0.8
-#' @param ellipses_a Width of ellipses (used to display latent variables),
+#' @param ellipses_width Width of ellipses (used to display latent variables),
 #' Default: 1
-#' @param ellipses_b Height of ellipses (used to display latent variables),
+#' @param ellipses_height Height of ellipses (used to display latent variables),
 #' Default: 1
+#' @param variance_diameter Diameter of variance circles,
+#' Default: .8
 #' @param spacing_x Spacing between columns of the graph, Default: 1
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
@@ -184,8 +189,9 @@ prepare_graph.default <- function(edges,
                                  nodes = NULL,
                                  rect_width = 1.2,
                                  rect_height = .8,
-                                 ellipses_a = 1,
-                                 ellipses_b = 1,
+                                 ellipses_width = 1,
+                                 ellipses_height = 1,
+                                 variance_diameter = .8,
                                  spacing_x = 2,
                                  spacing_y = 2,
                                  text_size = 4,
@@ -306,10 +312,10 @@ prepare_graph.default <- function(edges,
   }
 
   if(any(df_nodes$shape == "oval")){
-    df_nodes[df_nodes$shape == "oval", c("node_xmin", "node_xmax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$x-.5*ellipses_a,
-                                                                             df_nodes[df_nodes$shape == "oval", ]$x+.5*ellipses_a)
-    df_nodes[df_nodes$shape == "oval", c("node_ymin", "node_ymax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$y-.5*ellipses_b,
-                                                                             df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_b)
+    df_nodes[df_nodes$shape == "oval", c("node_xmin", "node_xmax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$x-.5*ellipses_width,
+                                                                             df_nodes[df_nodes$shape == "oval", ]$x+.5*ellipses_width)
+    df_nodes[df_nodes$shape == "oval", c("node_ymin", "node_ymax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$y-.5*ellipses_height,
+                                                                             df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_height)
   }
 
 # Determine where best to connect nodes -----------------------------------
@@ -373,8 +379,9 @@ plot.sem_graph <- function(x, y, ...){
   df_edges <- x$edges
   rect_width <- x$rect_width
   rect_height <- x$rect_height
-  ellipses_a <- x$ellipses_a
-  ellipses_b <- x$ellipses_b
+  ellipses_width <- x$ellipses_width
+  ellipses_height <- x$ellipses_height
+  variance_diameter <- x$variance_diameter
   spacing_x <- x$spacing_x
   spacing_y <- x$spacing_y
   text_size <- x$text_size
@@ -388,20 +395,21 @@ plot.sem_graph <- function(x, y, ...){
 # Make plot ---------------------------------------------------------------
 
   p <- ggplot(NULL)
-  if(any(df_edges$connector == "line")){
-    p <- .plot_lines(p, df_edges[df_edges$connector == "line", ], text_size)
-  }
   if(any(df_edges$connector == "curve")){
     if(any(df_edges$from == df_edges$to)){
-      p <- .plot_variances(p, df = df_edges[df_edges$connector == "curve" & df_edges$from == df_edges$to, ], text_size = text_size)
+      p <- .plot_variances(p, df = df_edges[df_edges$connector == "curve" & df_edges$from == df_edges$to, ], text_size = text_size, diameter = variance_diameter)
     }
     if(any(!df_edges$from == df_edges$to)){
       p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve" & !df_edges$from == df_edges$to, ], text_size = text_size)
     }
 
   }
+  if(any(df_edges$connector == "line")){
+    p <- .plot_lines(p, df_edges[df_edges$connector == "line", ], text_size)
+  }
 
-  p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_a = ellipses_a, ellipses_b = ellipses_b)
+
+  p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_width = ellipses_width, ellipses_height = ellipses_height)
 
   if("level" %in% names(df_nodes) & "level" %in% names(df_edges)){
     if("group" %in% names(df_nodes) & "group" %in% names(df_edges)){
@@ -758,10 +766,8 @@ match.call.defaults <- function(...) {
 
 }
 
-.plot_variances <- function(p, df, text_size, ...) {
+.plot_variances <- function(p, df, text_size, diameter, ...) {
   npoints <- 20
-
-  diameter <- 1
   radius <- diameter / 2
   xlabel <- xcenter <- df$edge_xmin
   ylabel <- ycenter <- df$edge_ymin
@@ -845,12 +851,12 @@ match.call.defaults <- function(...) {
                       size = text_size, fill = "white", label.size = NA)
 }
 
-.plot_nodes <- function(p, df, text_size, ellipses_a, ellipses_b){
+.plot_nodes <- function(p, df, text_size, ellipses_width, ellipses_height){
   if(any(df$shape == "rect")){
     p <- p + geom_rect(data = df[df$shape == "rect", ], aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax"), fill = "white", colour = "black")
   }
   if(any(df$shape == "oval")){
-    p <- .oval_node(p, x = df[df$shape == "oval", ]$x, y = df[df$shape == "oval", ]$y, oval_width = ellipses_a, oval_height = ellipses_b, npoints = 360)
+    p <- .oval_node(p, x = df[df$shape == "oval", ]$x, y = df[df$shape == "oval", ]$y, oval_width = ellipses_width, oval_height = ellipses_height, npoints = 360)
   }
   p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
 }

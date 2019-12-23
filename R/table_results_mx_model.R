@@ -1,5 +1,6 @@
 #' @method table_results MxModel
 #' @export
+#' @importFrom stats pnorm
 table_results.MxModel <- function (x, standardized = TRUE, all = FALSE, digits = 2, ...)
 {
   Args <- list(x = x)
