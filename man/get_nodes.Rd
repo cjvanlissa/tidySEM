@@ -4,10 +4,15 @@
 \alias{get_nodes}
 \title{Extract nodes from a SEM model object}
 \usage{
-get_nodes(x, ...)
+get_nodes(x, label = "est_sig", ...)
 }
 \arguments{
 \item{x}{A model object of class 'mplusObject' or 'lavaan'.}
+
+\item{label}{Character, indicating which column to use for node labels. Nodes
+are labeled with mean values of the observed/latent variables they represent.
+Defaults to 'est_sig', which consists of the estimate value with significance
+asterisks.}
 
 \item{...}{Additional parameters to be passed to and from other functions.}
 }

@@ -378,7 +378,6 @@ plot.sem_graph <- function(x, y, ...){
   spacing_x <- x$spacing_x
   spacing_y <- x$spacing_y
   text_size <- x$text_size
-
   connect_points <- .connect_points(df_nodes, df_edges)
 
   df_edges <- cbind(df_edges, connect_points)
@@ -393,7 +392,13 @@ plot.sem_graph <- function(x, y, ...){
     p <- .plot_lines(p, df_edges[df_edges$connector == "line", ], text_size)
   }
   if(any(df_edges$connector == "curve")){
-    p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve", ], text_size = text_size)
+    if(any(df_edges$from == df_edges$to)){
+      p <- .plot_variances(p, df = df_edges[df_edges$connector == "curve" & df_edges$from == df_edges$to, ], text_size = text_size)
+    }
+    if(any(!df_edges$from == df_edges$to)){
+      p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve" & !df_edges$from == df_edges$to, ], text_size = text_size)
+    }
+
   }
 
   p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_a = ellipses_a, ellipses_b = ellipses_b)
@@ -460,6 +465,10 @@ matrix_to_nodes <- function(nodes, shape){
 #' @description Attempts to extract nodes from a SEM model object, where nodes
 #' are defined as observed or latent variables.
 #' @param x A model object of class 'mplusObject' or 'lavaan'.
+#' @param label Character, indicating which column to use for node labels. Nodes
+#' are labeled with mean values of the observed/latent variables they represent.
+#' Defaults to 'est_sig', which consists of the estimate value with significance
+#' asterisks.
 #' @param ... Additional parameters to be passed to and from other functions.
 #' @return An object of class 'tidy_nodes'
 #' @examples
@@ -471,13 +480,13 @@ matrix_to_nodes <- function(nodes, shape){
 #' @rdname get_nodes
 #' @keywords tidy_graph
 #' @export
-get_nodes <- function(x, ...){
+get_nodes <- function(x, label = "est_sig", ...){
   UseMethod("get_nodes", x)
 }
 
 #' @method get_nodes mplus.model
 #' @export
-get_nodes.mplus.model <- function(x, ...){
+get_nodes.mplus.model <- function(x, label = "est_sig", ...){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, all = TRUE)
   do.call(get_nodes, Args)
@@ -486,7 +495,7 @@ get_nodes.mplus.model <- function(x, ...){
 #' @method get_nodes lavaan
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
-get_nodes.lavaan <- function(x, ...){
+get_nodes.lavaan <- function(x, label = "est_sig", ...){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, all = TRUE)
   do.call(get_nodes, Args)
@@ -494,7 +503,7 @@ get_nodes.lavaan <- function(x, ...){
 
 #' @method get_nodes tidy_results
 #' @export
-get_nodes.tidy_results <- function(x, ...){
+get_nodes.tidy_results <- function(x, label = "est_sig", ...){
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
       tmp <- get_nodes(x = x[x$group == i, -which(names(x) == "group")])
@@ -516,11 +525,11 @@ get_nodes.tidy_results <- function(x, ...){
   obs <- unique(x$lhs[x$op %in% c("~~", "~", "~1")])
   nodes <- unique(c(latent, obs))
   nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
-  if(FALSE){# any(x$lhs %in% nodes$name & x$op == "~1")
-    es <- est_sig(x = x$est, sig = x$pvalue)
-    x[x$lhs %in% nodes$name & x$op == "~1", ]
-    match(nodes$name, x$lhs)
-    nodes$label <- paste0(nodes$name, "\n", es)
+
+  if(!is.null(label) & label %in% names(x)){
+    labelz <- x[x$op == "~1", ]
+    labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
+    nodes$label <- paste0(nodes$name, "\n", labelz)
   } else {
     nodes$label <- nodes$name
   }
@@ -605,15 +614,17 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
     })
     return(do.call(rbind, x_list))
   }
-  x <- x[x$op %in% c("~", "~~", "=~") & !x$lhs == x$rhs, ]
+  x <- x[x$op %in% c("~", "~~", "=~"), ]
   x$from <- x$to <- NA
   x$arrow <- "last"
-  x$arrow[x$op == "~~"] <- "none"
+  x$arrow[x$op == "~~"] <- "none" # Covariances
+  x$arrow[x$op == "~~" & x$lhs == x$rhs] <- "both" # Variances
   x$arrow[x$op == "~"] <- "first"
   tmp <- x[, c("lhs", "rhs", "arrow", label)]
   tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
   tmp$connector <- "line"
   tmp$connector[x$op == "~~"] <- "curve"
+  #tmp$connector[x$op == "~~" & x$lhs == x$rhs] <- "var"
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[tmp$connector == "curve"] <- .1
   class(tmp) <- c("tidy_edges", class(tmp))
@@ -745,6 +756,70 @@ match.call.defaults <- function(...) {
                aes_string(x = "x", y = "y", label = "label"),
                size = text_size, fill = "white", label.size = NA)
 
+}
+
+.plot_variances <- function(p, df, text_size, ...) {
+  npoints <- 20
+
+  diameter <- 1
+  radius <- diameter / 2
+  xlabel <- xcenter <- df$edge_xmin
+  ylabel <- ycenter <- df$edge_ymin
+  offset <- rep(1.5, length(xcenter))
+  ycenter[df$connect_from == "top"] <-
+    ycenter[df$connect_from == "top"] + radius
+  ylabel[df$connect_from == "top"] <-
+    ylabel[df$connect_from == "top"] + diameter
+  ycenter[df$connect_from == "bottom"] <-
+    ycenter[df$connect_from == "bottom"] - radius
+  ylabel[df$connect_from == "bottom"] <-
+    ylabel[df$connect_from == "bottom"] - diameter
+  offset[df$connect_from == "bottom"] <- .5
+  xcenter[df$connect_from == "left"] <-
+    xcenter[df$connect_from == "left"] + radius
+  xlabel[df$connect_from == "left"] <-
+    xlabel[df$connect_from == "left"] + diameter
+  offset[df$connect_from == "left"] <- 0
+  xcenter[df$connect_from == "right"] <-
+    xcenter[df$connect_from == "right"] - radius
+  xlabel[df$connect_from == "right"] <-
+    xlabel[df$connect_from == "right"] - diameter
+  offset[df$connect_from == "right"] <- 1
+
+  df_label <- data.frame(x = xlabel,
+                         y = ylabel,
+                         label = df$label)
+
+  df_ellipse <-
+    data.frame(do.call(rbind, lapply(1:length(xcenter), function(this_var) {
+      point_seq <-
+        seq((offset[[this_var]] * pi), (2 + offset[[this_var]]) * pi, length.out = npoints) %% (2 *
+                                                                                                  pi)
+      matrix(
+        c(
+          xcenter[[this_var]] + radius * cos(point_seq),
+          ycenter[[this_var]] + radius * sin(point_seq),
+          rep(this_var, npoints)
+        ),
+        nrow = npoints,
+        ncol = 3,
+        dimnames = list(NULL, c("x", "y", "var"))
+      )
+    })))
+
+  p + geom_path(
+    data = df_ellipse,
+    aes_string(x = "x", y = "y", group = "var"),
+    linetype = 1,
+    arrow = arrow(
+      angle = 25,
+      length = unit(.1, "inches"),
+      ends = "both",
+      type = "closed"
+    )
+  ) +
+    geom_label(data = df_label, aes_string(x = "x", y = "y", label = "label"),
+               size = text_size, fill = "white", label.size = NA)
 }
 
 .plot_lines <- function(p, df, text_size, ...){
