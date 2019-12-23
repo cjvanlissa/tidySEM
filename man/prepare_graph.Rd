@@ -12,7 +12,8 @@ prepare_graph(...)
 \method{prepare_graph}{default}(edges, layout, nodes = NULL,
   rect_width = 1.2, rect_height = 0.8, ellipses_width = 1,
   ellipses_height = 1, variance_diameter = 0.8, spacing_x = 2,
-  spacing_y = 2, text_size = 4, curvature = 0.1, angle = NULL, ...)
+  spacing_y = 2, text_size = 4, curvature = 0.3, angle = NULL,
+  fix_coord = TRUE, ...)
 
 \method{prepare_graph}{lavaan}(model, layout, ...)
 
@@ -57,13 +58,16 @@ Default: .8}
 \item{text_size}{Point size of text, Default: 4}
 
 \item{curvature}{Curvature of curved connectors. To flip connectors, use
-negative values. Default: .1}
+negative values. Default: .3}
 
 \item{angle}{Angle used to connect nodes by the top and bottom. Defaults to
 NULL, which means Euclidean distance is used to determine the shortest
 distance between node sides. A numeric value between 0-180 can be provided,
 where 0 means that only nodes with the same x-coordinates are connected
 top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
+
+\item{fix_coord}{Whether or not to fix the aspect ratio of the graph.
+Default: TRUE.}
 
 \item{model}{Instead of the edges argument, it is also possible to use the
 model argument and pass an object for which a method exists (e.g.,

@@ -57,12 +57,14 @@ graph <- function(...){
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
 #' @param curvature Curvature of curved connectors. To flip connectors, use
-#' negative values. Default: .1
+#' negative values. Default: .3
 #' @param angle Angle used to connect nodes by the top and bottom. Defaults to
 #' NULL, which means Euclidean distance is used to determine the shortest
 #' distance between node sides. A numeric value between 0-180 can be provided,
 #' where 0 means that only nodes with the same x-coordinates are connected
 #' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+#' @param fix_coord Whether or not to fix the aspect ratio of the graph.
+#' Default: TRUE.
 #' @rdname graph
 #' @export
 graph.default <- function(edges,
@@ -76,8 +78,9 @@ graph.default <- function(edges,
                          spacing_x = 2,
                          spacing_y = 2,
                          text_size = 4,
-                         curvature = .1,
+                         curvature = .3,
                          angle = NULL,
+                         fix_coord = TRUE,
                          ...){
   Args <- as.list(match.call()[-1])
   Args$layout <- force(layout)
@@ -131,7 +134,7 @@ graph_model <- function(model,
 # @usage ## Default S3 method:
 # prepare_graph(edges, layout, nodes = NULL,  rect_width = 1.2,
 #   rect_height = .8, ellipses_width = 1, ellipses_height = 1, spacing_x = 2,
-#   spacing_y = 2, text_size = 4, curvature = .1, angle = NULL, ...)
+#   spacing_y = 2, text_size = 4, curvature = .3, angle = NULL, ...)
 #
 # ## Alternative interface:
 # prepare_graph(model, layout, ...)
@@ -176,12 +179,14 @@ prepare_graph <- function(...){
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
 #' @param curvature Curvature of curved connectors. To flip connectors, use
-#' negative values. Default: .1
+#' negative values. Default: .3
 #' @param angle Angle used to connect nodes by the top and bottom. Defaults to
 #' NULL, which means Euclidean distance is used to determine the shortest
 #' distance between node sides. A numeric value between 0-180 can be provided,
 #' where 0 means that only nodes with the same x-coordinates are connected
 #' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
+#' @param fix_coord Whether or not to fix the aspect ratio of the graph.
+#' Default: TRUE.
 #' @rdname prepare_graph
 #' @export
 prepare_graph.default <- function(edges,
@@ -195,8 +200,9 @@ prepare_graph.default <- function(edges,
                                  spacing_x = 2,
                                  spacing_y = 2,
                                  text_size = 4,
-                                 curvature = .1,
+                                 curvature = .3,
                                  angle = NULL,
+                                 fix_coord = TRUE,
                                  ...
 ){
   Args <- as.list(match.call())[-1]
@@ -326,7 +332,7 @@ prepare_graph.default <- function(edges,
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
 
-  has_curve <- which(df_edges$curvature > 0)
+  has_curve <- which(df_edges$curvature > 0) # Check if this is correct, or should be is.null / is.na
   df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0]
 
   out <- Args
@@ -385,6 +391,7 @@ plot.sem_graph <- function(x, y, ...){
   spacing_x <- x$spacing_x
   spacing_y <- x$spacing_y
   text_size <- x$text_size
+  fix_coord <- x$fix_coord
   connect_points <- .connect_points(df_nodes, df_edges)
 
   df_edges <- cbind(df_edges, connect_points)
@@ -422,7 +429,9 @@ plot.sem_graph <- function(x, y, ...){
       p <- p + facet_wrap(~group, scales = "free")
     }
   }
-
+  if(fix_coord){
+    p <- p + coord_fixed(ratio = 1, xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
+  }
   p + theme(axis.line = element_blank(),
           axis.text.x = element_blank(),
           axis.text.y = element_blank(),
@@ -971,7 +980,46 @@ match.call.defaults <- function(...) {
 }
 
 #' @importFrom stats dist
-.plot_curves <- function(p, df, text_size, npoints = 101, ...) {
+.plot_curves <- function(p, df, text_size = 5, npoints = 101, ...) {
+  df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
+    this_row <- df[rownum, ]
+    A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
+    B = matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), nrow = 1)
+    M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
+                  mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
+    radius <- dist(rbind(A, B))
+    AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
+    N <- matrix(c(AB[2], -AB[1]), nrow=1)
+    C <- M + N * (0.86603 / this_row[["curvature"]])
+    radius <- dist(rbind(C, A))
+    angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
+    point_seq <- seq(angles[1], angles[2],length.out = npoints)
+    matrix(
+      c(C[1] + radius * cos(point_seq),
+        C[2] + radius * sin(point_seq),
+        rep(rownum, npoints)),
+      nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
+    )
+  })))
+  df_label <- df_curves[seq(ceiling(npoints/2), nrow(df_curves), by = npoints), ]
+  df_label$label <- df$label
+  p + geom_path(
+    data = df_curves,
+    aes_string(x = "x", y = "y", group = "id"),
+    linetype = 2
+  ) +
+    geom_label(
+      data = df_label,
+      aes_string(x = "x", y = "y", label = "label"),
+      size = text_size,
+      fill = "white",
+      label.size = NA
+    )
+}
+
+#' @importFrom stats dist
+.plot_curves3 <- function(p, df, text_size, npoints = 101, ...) {
+  browser()
   point_seq <- seq(pi, 2*pi,length.out = npoints) #%% (2*pi)
   df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
     this_row <- df[rownum, ]

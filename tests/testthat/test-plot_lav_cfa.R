@@ -16,6 +16,7 @@ nod <- get_nodes(fit)
 #nod$label[5] <- "bla"
 
 p2 <- prepare_graph(nodes = nod, layout = layout, edges = edg, angle = 95)
+
 #edges(p2)$curvature[10:12] <- edges(p2)$curvature[10:12] *-1
 tmp <- plot(p2)
 
