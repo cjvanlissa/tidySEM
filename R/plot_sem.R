@@ -748,7 +748,7 @@ match.call.defaults <- function(...) {
 }
 
 #' @importFrom ggplot2 geom_curve
-.plot_curves <- function(p, df, text_size, ...){
+.plot_curves2 <- function(p, df, text_size, ...){
   an = 90
   #curvature = df$curvature#Flip curvature to mirror the curve
   ncp = 1
@@ -968,4 +968,40 @@ match.call.defaults <- function(...) {
     }, from = df_edges$from, to = df_edges$to))
   }
   out
+}
+
+#' @importFrom stats dist
+.plot_curves <- function(p, df, text_size, npoints = 101, ...) {
+  point_seq <- seq(pi, 2*pi,length.out = npoints) #%% (2*pi)
+  df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
+    this_row <- df[rownum, ]
+    x <- c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])
+    y <- c(this_row[["edge_ymin"]], this_row[["edge_ymax"]])
+    Rx = dist(cbind(x, y))/2
+    Ry = this_row[["curvature"]] * Rx
+    Cx <- mean(x)
+    Cy <- mean(y)
+    angles <- atan2(y = y - Cy, x = x - Cx)
+    theta = angles[2]
+    matrix(
+      c(Rx * cos(point_seq)*cos(theta) - Ry * sin(point_seq) * sin(theta)+Cx,
+        Rx * cos(point_seq) * sin(theta) + Ry * sin(point_seq) * cos(theta)+Cy,
+        rep(rownum, npoints)),
+      nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
+    )
+  })))
+  df_label <- df_curves[seq(ceiling(npoints/2), nrow(df_curves), by = npoints), ]
+  df_label$label <- df$label
+  p + geom_path(
+    data = df_curves,
+    aes_string(x = "x", y = "y", group = "id"),
+    linetype = 2
+  ) +
+    geom_label(
+      data = df_label,
+      aes_string(x = "x", y = "y", label = "label"),
+      size = text_size,
+      fill = "white",
+      label.size = NA
+    )
 }
