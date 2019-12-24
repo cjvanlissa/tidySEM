@@ -5,7 +5,7 @@
 #@usage ## Default S3 method:
 #graph(edges, layout, nodes = NULL,  rect_width = 1.2, rect_height = .8,
 #  ellipses_width = 1, ellipses_height = 1, spacing_x = 2, spacing_y = 2,
-#  text_size = 4, curvature = .1, angle = NULL, ...)
+#  text_size = 4, curvature = 60, angle = NULL, ...)
 #
 ### Alternative interface:
 #graph(model, layout, ...)
@@ -56,8 +56,10 @@ graph <- function(...){
 #' @param spacing_x Spacing between columns of the graph, Default: 1
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
-#' @param curvature Curvature of curved connectors. To flip connectors, use
-#' negative values. Default: .3
+#' @param curvature Curvature of curved edges. The curve is a circle segment
+#' originating in a point that forms a triangle with the two connected points,
+#' with angles at the two connected points equal to \code{curvature}.
+#' To flip a curved connector, use a negative value for curvature. Default: 60
 #' @param angle Angle used to connect nodes by the top and bottom. Defaults to
 #' NULL, which means Euclidean distance is used to determine the shortest
 #' distance between node sides. A numeric value between 0-180 can be provided,
@@ -78,7 +80,7 @@ graph.default <- function(edges,
                          spacing_x = 2,
                          spacing_y = 2,
                          text_size = 4,
-                         curvature = .3,
+                         curvature = 60,
                          angle = NULL,
                          fix_coord = TRUE,
                          ...){
@@ -134,7 +136,7 @@ graph_model <- function(model,
 # @usage ## Default S3 method:
 # prepare_graph(edges, layout, nodes = NULL,  rect_width = 1.2,
 #   rect_height = .8, ellipses_width = 1, ellipses_height = 1, spacing_x = 2,
-#   spacing_y = 2, text_size = 4, curvature = .3, angle = NULL, ...)
+#   spacing_y = 2, text_size = 4, curvature = 60, angle = NULL, ...)
 #
 # ## Alternative interface:
 # prepare_graph(model, layout, ...)
@@ -178,8 +180,10 @@ prepare_graph <- function(...){
 #' @param spacing_x Spacing between columns of the graph, Default: 1
 #' @param spacing_y Spacing between rows of the graph, Default: 1
 #' @param text_size Point size of text, Default: 4
-#' @param curvature Curvature of curved connectors. To flip connectors, use
-#' negative values. Default: .3
+#' @param curvature Curvature of curved edges. The curve is a circle segment
+#' originating in a point that forms a triangle with the two connected points,
+#' with angles at the two connected points equal to \code{curvature}.
+#' To flip a curved connector, use a negative value for curvature. Default: 60
 #' @param angle Angle used to connect nodes by the top and bottom. Defaults to
 #' NULL, which means Euclidean distance is used to determine the shortest
 #' distance between node sides. A numeric value between 0-180 can be provided,
@@ -200,7 +204,7 @@ prepare_graph.default <- function(edges,
                                  spacing_x = 2,
                                  spacing_y = 2,
                                  text_size = 4,
-                                 curvature = .3,
+                                 curvature = 60,
                                  angle = NULL,
                                  fix_coord = TRUE,
                                  ...
@@ -263,6 +267,7 @@ prepare_graph.default <- function(edges,
   }
   if(!"curvature" %in% names(df_edges)){
     df_edges$curvature <- NA
+    if(any(df_edges$connector == "curve")) df_edges$curvature[df_edges$connector == "curve"] <- curvature
   }
 
   # Defaults for missing columns --------------------------------------------
@@ -332,8 +337,8 @@ prepare_graph.default <- function(edges,
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
 
-  has_curve <- which(df_edges$curvature > 0) # Check if this is correct, or should be is.null / is.na
-  df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] > 0]
+  has_curve <- which(!is.na(df_edges$curvature)) # Check if this is correct, or should be is.null / is.na
+  df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0]
 
   out <- Args
 
@@ -643,7 +648,7 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
   tmp$connector[x$op == "~~"] <- "curve"
   #tmp$connector[x$op == "~~" & x$lhs == x$rhs] <- "var"
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
-  tmp$curvature[tmp$connector == "curve"] <- .1
+  tmp$curvature[tmp$connector == "curve"] <- 60
   class(tmp) <- c("tidy_edges", class(tmp))
   attr(tmp, "which_label") <- label
   row.names(tmp) <- NULL
@@ -990,9 +995,15 @@ match.call.defaults <- function(...) {
     radius <- dist(rbind(A, B))
     AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
     N <- matrix(c(AB[2], -AB[1]), nrow=1)
-    C <- M + N * (0.86603 / this_row[["curvature"]])
+    #C <- M + N * sin((this_row[["curvature"]]/180)*pi)
+    C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
     radius <- dist(rbind(C, A))
-    angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
+
+    if(this_row[["curvature"]] > 0){
+      angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
+    } else {
+      angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
+    }
     point_seq <- seq(angles[1], angles[2],length.out = npoints)
     matrix(
       c(C[1] + radius * cos(point_seq),
