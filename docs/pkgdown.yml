@@ -1,0 +1,6 @@
+pandoc: 2.7.2
+pkgdown: 1.4.1
+pkgdown_sha: ~
+articles:
+  Plotting_graphs: Plotting_graphs.html
+

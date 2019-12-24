@@ -7,3 +7,4 @@
 ^Meta$
 ^data_types\.md$
 dev/
+^.*\.RData$
