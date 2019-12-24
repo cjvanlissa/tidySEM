@@ -291,7 +291,7 @@ conf_int <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL, ci = 95){
 #' @importFrom stats qnorm
 conf_int.default <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL, ci = 95){
   if(!is.null(se) & !is.null(lb) & !is.null(ub)) {
-    warning("Both se and lb/ub provided. Used lb/ub to construct confidence interval.", call. = FALSE)
+    message("Both se and lb/ub provided. Used lb/ub to construct confidence interval.", call. = FALSE)
     se <- NULL
   }
   if(!is.null(lb) & !is.null(ub)){

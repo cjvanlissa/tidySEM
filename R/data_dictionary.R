@@ -43,7 +43,7 @@ dictionary.character <- function(x, split = "_"){
   split_items <- strsplit(x, split)
   num_splits <- sapply(split_items, length)
   if(any(num_splits > 2)){
-    warning("Some variable names contained more than one splitting character. Ignored all but the last splitting character.", call. = FALSE)
+    message("Some variable names contained more than one splitting character. Ignored all but the last splitting character.", call. = FALSE)
     split_items[which(num_splits > 2)] <- lapply(split_items[which(num_splits > 2)], function(x){
       c(paste0(x[-length(x)], collapse = split), x[length(x)])
     })

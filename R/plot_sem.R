@@ -34,7 +34,7 @@ graph <- function(...){
 #' @method graph default
 #' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
 #' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
-#' "label", "connector", "connect_from", "connect_to", "curvature")}.
+#' "label", "connect_from", "connect_to", "curvature")}.
 #' @param layout An object of class \code{tidy_layout}, or a matrix with the
 #' layout of the graph that can be converted using
 #' \code{\link[tidySEM]{as.layout}}.
@@ -59,14 +59,15 @@ graph <- function(...){
 #' @param curvature Curvature of curved edges. The curve is a circle segment
 #' originating in a point that forms a triangle with the two connected points,
 #' with angles at the two connected points equal to \code{curvature}.
-#' To flip a curved connector, use a negative value for curvature. Default: 60
+#' To flip a curved edge, use a negative value for curvature. Default: 60
 #' @param angle Angle used to connect nodes by the top and bottom. Defaults to
 #' NULL, which means Euclidean distance is used to determine the shortest
 #' distance between node sides. A numeric value between 0-180 can be provided,
 #' where 0 means that only nodes with the same x-coordinates are connected
 #' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
 #' @param fix_coord Whether or not to fix the aspect ratio of the graph.
-#' Default: TRUE.
+#' Does not work with multi-group or multilevel models.
+#' Default: FALSE.
 #' @rdname graph
 #' @export
 graph.default <- function(edges,
@@ -82,7 +83,7 @@ graph.default <- function(edges,
                          text_size = 4,
                          curvature = 60,
                          angle = NULL,
-                         fix_coord = TRUE,
+                         fix_coord = FALSE,
                          ...){
   Args <- as.list(match.call()[-1])
   Args$layout <- force(layout)
@@ -158,7 +159,7 @@ prepare_graph <- function(...){
 #' @method prepare_graph default
 #' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
 #' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
-#' "label", "connector", "connect_from", "connect_to", "curvature")}.
+#' "label", "connect_from", "connect_to", "curvature")}.
 #' @param layout An object of class \code{tidy_layout}, or a matrix with the
 #' layout of the graph that can be converted using
 #' \code{\link[tidySEM]{as.layout}}.
@@ -183,14 +184,15 @@ prepare_graph <- function(...){
 #' @param curvature Curvature of curved edges. The curve is a circle segment
 #' originating in a point that forms a triangle with the two connected points,
 #' with angles at the two connected points equal to \code{curvature}.
-#' To flip a curved connector, use a negative value for curvature. Default: 60
+#' To flip a curved edge, use a negative value for curvature. Default: 60
 #' @param angle Angle used to connect nodes by the top and bottom. Defaults to
 #' NULL, which means Euclidean distance is used to determine the shortest
 #' distance between node sides. A numeric value between 0-180 can be provided,
 #' where 0 means that only nodes with the same x-coordinates are connected
 #' top-to-bottom, and 180 means that all nodes are connected top-to-bottom.
 #' @param fix_coord Whether or not to fix the aspect ratio of the graph.
-#' Default: TRUE.
+#' Does not work with multi-group or multilevel models.
+#' Default: FALSE.
 #' @rdname prepare_graph
 #' @export
 prepare_graph.default <- function(edges,
@@ -206,7 +208,7 @@ prepare_graph.default <- function(edges,
                                  text_size = 4,
                                  curvature = 60,
                                  angle = NULL,
-                                 fix_coord = TRUE,
+                                 fix_coord = FALSE,
                                  ...
 ){
   Args <- as.list(match.call())[-1]
@@ -232,7 +234,7 @@ prepare_graph.default <- function(edges,
   }
 
   if(!all((df_edges$from %in% layout$name) & (df_edges$to %in% layout$name))){
-    warning("Some edges involve nodes not in layout. These were dropped.")
+    message("Some edges involve nodes not in layout. These were dropped.")
     df_edges <- df_edges[(df_edges$from %in% layout$name) & (df_edges$to %in% layout$name), ]
   }
 
@@ -256,9 +258,6 @@ prepare_graph.default <- function(edges,
   if(!"label" %in% names(df_edges)){
     df_edges$label <- ""
   }
-  if(!"connector" %in% names(df_edges)){
-    df_edges$connector <- "line"
-  }
   if(!"connect_from" %in% names(df_edges)){
     df_edges$connect_from <- "left"
   }
@@ -267,7 +266,6 @@ prepare_graph.default <- function(edges,
   }
   if(!"curvature" %in% names(df_edges)){
     df_edges$curvature <- NA
-    if(any(df_edges$connector == "curve")) df_edges$curvature[df_edges$connector == "curve"] <- curvature
   }
 
   # Defaults for missing columns --------------------------------------------
@@ -297,7 +295,6 @@ prepare_graph.default <- function(edges,
   }
 
 # Order nodes and edges ---------------------------------------------------
-#df_edges$level <- rep(c("within", "between", "within"), each = 3)
   if("group" %in% names(df_edges)){
     if("level" %in% names(df_edges)){
       df_edges <- df_edges[with(df_edges, order(group, level)), ]
@@ -343,8 +340,14 @@ prepare_graph.default <- function(edges,
   out <- Args
 
   if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$name
-  out$nodes <- df_nodes[, c("name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax", "group", "level")[na.omit(which(c("name", "shape", "label","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax", "group", "level") %in% names(df_nodes)))]]
-  out$edges <- df_edges
+  order_nodes <- c("name", "shape", "label", "group", "level","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")
+  order_nodes <- order_nodes[which(order_nodes %in% names(df_nodes))]
+  order_nodes <- c(order_nodes, names(df_nodes)[!names(df_nodes) %in% order_nodes])
+  out$nodes <- df_nodes[, order_nodes]
+  order_edges <- c("from", "to", "label", "group", "level","arrow", "curvature", "connect_from", "connect_to")
+  order_edges <- order_edges[which(order_edges %in% names(df_edges))]
+  order_edges <- c(order_edges, names(df_edges)[!names(df_edges) %in% order_edges])
+  out$edges <- df_edges[, order_edges]
   out$layout <- NULL
   class(out) <- "sem_graph"
   out
@@ -382,7 +385,7 @@ prepare_graph_model <- function(model, layout, ...) {
 #' @importFrom stats setNames
 #' @importFrom ggplot2 aes_string arrow element_blank facet_grid geom_label
 #' @importFrom ggplot2 geom_rect geom_segment geom_text geom_vline ggplot labs
-#' @importFrom ggplot2 theme theme_bw unit facet_wrap facet_grid
+#' @importFrom ggplot2 theme theme_bw unit facet_wrap facet_grid coord_fixed
 #' @importFrom graphics plot
 #' @method plot sem_graph
 plot.sem_graph <- function(x, y, ...){
@@ -397,6 +400,11 @@ plot.sem_graph <- function(x, y, ...){
   spacing_y <- x$spacing_y
   text_size <- x$text_size
   fix_coord <- x$fix_coord
+
+# Check dfs ---------------------------------------------------------------
+  numeric_cols <- c("curvature")
+  df_edges[numeric_cols[which(numeric_cols %in% names(df_edges))]] <- lapply(df_edges[numeric_cols[which(numeric_cols %in% names(df_edges))]], as.numeric)
+
   connect_points <- .connect_points(df_nodes, df_edges)
 
   df_edges <- cbind(df_edges, connect_points)
@@ -407,19 +415,13 @@ plot.sem_graph <- function(x, y, ...){
 # Make plot ---------------------------------------------------------------
 
   p <- ggplot(NULL)
-  if(any(df_edges$connector == "curve")){
-    if(any(df_edges$from == df_edges$to)){
-      p <- .plot_variances(p, df = df_edges[df_edges$connector == "curve" & df_edges$from == df_edges$to, ], text_size = text_size, diameter = variance_diameter)
-    }
-    if(any(!df_edges$from == df_edges$to)){
-      p <- .plot_curves(p, df = df_edges[df_edges$connector == "curve" & !df_edges$from == df_edges$to, ], text_size = text_size)
-    }
 
+  if(any(df_edges$from == df_edges$to)){
+      p <- .plot_variances(p, df = df_edges[df_edges$from == df_edges$to, ], text_size = text_size, diameter = variance_diameter)
   }
-  if(any(df_edges$connector == "line")){
-    p <- .plot_lines(p, df_edges[df_edges$connector == "line", ], text_size)
+  if(any(!df_edges$from == df_edges$to)){
+    p <- .plot_edges(p, df_edges[!df_edges$from == df_edges$to, ], text_size)
   }
-
 
   p <- .plot_nodes(p, df = df_nodes, text_size = text_size, ellipses_width = ellipses_width, ellipses_height = ellipses_height)
 
@@ -432,10 +434,11 @@ plot.sem_graph <- function(x, y, ...){
   } else {
     if("group" %in% names(df_nodes) & "group" %in% names(df_edges)){
       p <- p + facet_wrap(~group, scales = "free")
+    } else {
+      if(fix_coord){
+        p <- p + coord_fixed(ratio = 1, xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
+      }
     }
-  }
-  if(fix_coord){
-    p <- p + coord_fixed(ratio = 1, xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
   }
   p + theme(axis.line = element_blank(),
           axis.text.x = element_blank(),
@@ -478,7 +481,6 @@ matrix_to_nodes <- function(nodes, shape){
   nodes_long$label <- as.character(nodes_long$label)
   nodes_long$shape <- as.vector(shape)
   nodes_long <- nodes_long[!nodes_long$label == "", ]
-  #nodes_long$node_id <- 1:nrow(nodes_long)
   nodes_long
 }
 
@@ -551,7 +553,9 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
   if(!is.null(label) & label %in% names(x)){
     labelz <- x[x$op == "~1", ]
     labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
-    nodes$label <- paste0(nodes$name, "\n", labelz)
+    if(any(!is.na(labelz))){
+      nodes$label[!is.na(labelz)] <- paste0(nodes$name[!is.na(labelz)], "\n", labelz[!is.na(labelz)])
+    }
   } else {
     nodes$label <- nodes$name
   }
@@ -644,11 +648,8 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
   x$arrow[x$op == "~"] <- "first"
   tmp <- x[, c("lhs", "rhs", "arrow", label)]
   tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
-  tmp$connector <- "line"
-  tmp$connector[x$op == "~~"] <- "curve"
-  #tmp$connector[x$op == "~~" & x$lhs == x$rhs] <- "var"
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
-  tmp$curvature[tmp$connector == "curve"] <- 60
+  tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
   class(tmp) <- c("tidy_edges", class(tmp))
   attr(tmp, "which_label") <- label
   row.names(tmp) <- NULL
@@ -764,7 +765,6 @@ match.call.defaults <- function(...) {
 #' @importFrom ggplot2 geom_curve
 .plot_curves2 <- function(p, df, text_size, ...){
   an = 90
-  #curvature = df$curvature#Flip curvature to mirror the curve
   ncp = 1
   df_edges <- data.frame(lapply(df[, c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax", "curvature")], as.numeric))
   df_curves <- data.frame(df, t(apply(df_edges, 1, function(x){unlist(calcControlPoints(x[[1]], x[[2]], x[[3]], x[[4]], angle = an, curvature = x[[5]], ncp = ncp))})))
@@ -850,7 +850,7 @@ match.call.defaults <- function(...) {
                             xend = "edge_xmax",
                             y = "edge_ymin",
                             yend = "edge_ymax"),
-                          arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df$arrow[!df$arrow == "none"], type = "closed"), arrow.fill = "black")
+                          arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df$arrow[!df$arrow == "none"], type = "closed"))
   }
   if(any(df$arrow == "none")){
     p <- p + geom_segment(data = df[df$arrow == "none", ],
@@ -866,11 +866,31 @@ match.call.defaults <- function(...) {
 }
 
 .plot_nodes <- function(p, df, text_size, ellipses_width, ellipses_height){
+  # Prepare aesthetics ------------------------------------------------------
+  if("colour" %in% names(df)){
+    df$colour <- as.character(df$colour)
+  } else {
+    df$colour <- "black"
+  }
+
+  if("fill" %in% names(df)){
+    df$fill <- as.character(df$fill)
+  } else {
+    df$fill <- "white"
+  }
+
   if(any(df$shape == "rect")){
-    p <- p + geom_rect(data = df[df$shape == "rect", ], aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax"), fill = "white", colour = "black")
+    df_rect <- df[df$shape == "rect", ]
+    Args <- c("linetype", "size", "colour", "fill", "alpha")
+    Args <- as.list(df_rect[which(names(df_rect) %in% Args)])
+    Args <- c(list(
+      data = df_rect,
+      mapping = aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax")),
+      Args)
+    p <- p + do.call(geom_rect, Args)
   }
   if(any(df$shape == "oval")){
-    p <- .oval_node(p, x = df[df$shape == "oval", ]$x, y = df[df$shape == "oval", ]$y, oval_width = ellipses_width, oval_height = ellipses_height, npoints = 360)
+    p <- .oval_node(p, df = df[df$shape == "oval", ], oval_width = ellipses_width, oval_height = ellipses_height, npoints = 360)
   }
   p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
 }
@@ -898,25 +918,21 @@ match.call.defaults <- function(...) {
     cbind(c("left", "right", "bottom", "top")[rep(1:4, each = 4)],
           c("left", "right", "bottom", "top")[rep(1:4, 4)])
   out <- matrix(nrow = nrow(df_edges), ncol = 2)
-  #df_nodes <- df_nodes[order(df_nodes$node_id), ]
 
-  # Instead of left and right col, split graph down the middle (and split 5 col like 3,2)
-  # Apply left-side connections to all same-col cors in left side of plot
+
+# Connect nodes -----------------------------------------------------------
+
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
-  #left_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == min(df_nodes$x)
-  #right_col <- df_nodes$x[match(df_edges$from, df_nodes$name)] == max(df_nodes$x)
   midpoint_df <- mean(range(df_nodes$x))
   left_half <- df_nodes$x[match(df_edges$from, df_nodes$name)] < midpoint_df
-  out[same_column & left_half & df_edges$connector == "curve", ] <- c("left", "left")
-  out[same_column & !left_half & df_edges$connector == "curve", ] <- c("right", "right")
+  out[same_column & left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("left", "left")
+  out[same_column & !left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("right", "right")
   # For rows
   same_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == df_nodes$y[match(df_edges$to, df_nodes$name)]
-  #bottom_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == min(df_nodes$y)
-  #top_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == max(df_nodes$y)
   midpoint_df <- mean(range(df_nodes$y))
   top_half <- df_nodes$y[match(df_edges$from, df_nodes$name)] > midpoint_df
-  out[same_row & !top_half & df_edges$connector == "curve", ] <- c("bottom", "bottom")
-  out[same_row & top_half & df_edges$connector == "curve", ] <- c("top", "top")
+  out[same_row & !top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("bottom", "bottom")
+  out[same_row & top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("top", "top")
   incomplete <- is.na(out[,1])
   df_edges <- df_edges[incomplete, ]
 
@@ -985,34 +1001,142 @@ match.call.defaults <- function(...) {
 }
 
 #' @importFrom stats dist
+#' @importFrom ggplot2 scale_linetype_manual aes_string
+.plot_edges <- function(p, df, text_size = 5, npoints = 101, ...) {
+  df_edges <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
+    this_row <- df[rownum, ]
+    if(is.na(this_row[["curvature"]])){
+      matrix(
+        c(this_row[["edge_xmin"]],
+          mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
+          this_row[["edge_xmax"]],
+          this_row[["edge_ymin"]],
+          mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]])),
+          this_row[["edge_ymax"]],
+          rep(rownum, 3)
+        ),
+        nrow = 3, dimnames = list(NULL, c("x", "y", "id"))
+      )
+    } else {
+      A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
+      B = matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), nrow = 1)
+      M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
+                    mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
+      radius <- dist(rbind(A, B))
+      AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
+      N <- matrix(c(AB[2], -AB[1]), nrow=1)
+      C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
+      radius <- dist(rbind(C, A))
+
+      if(this_row[["curvature"]] > 0){
+        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
+      } else {
+        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
+      }
+      point_seq <- seq(angles[1], angles[2],length.out = npoints)
+      matrix(
+        c(C[1] + radius * cos(point_seq),
+          C[2] + radius * sin(point_seq),
+          rep(rownum, npoints)),
+        nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
+      )
+    }
+  })))
+
+  df$id <- 1:nrow(df)
+  df_edges <- merge(df_edges, df, by = "id")
+  # Prepare label df --------------------------------------------------------
+  middle_point <- table(df_edges$id)
+  middle_point <- ceiling(middle_point/2)+cumsum(c(0, middle_point[-length(middle_point)]))
+  df_label <- df_edges[middle_point, ]
+  df_label$label <- df$label
+  df_label <- df_label[!(is.na(df_label$label) | df_label$label == ""), ]
+  # Prepare aesthetics ------------------------------------------------------
+  if(!"linetype" %in% names(df_edges)){
+    df_edges$linetype <- 2
+    df_edges$linetype[is.na(df_edges$curvature)] <- 1
+  }
+  if(any(df_edges$arrow == "curve")) browser() # Dit mag niet meer!
+
+  # Split edges with and without arrow --------------------------------------
+  if(any(df_edges$arrow != "none")){
+    df_path <- df_edges[!df_edges$arrow == "none", ]
+    Args <- c("linetype", "size", "colour", "alpha")
+    Args <- as.list(df_path[which(names(df_path) %in% Args)])
+    Args <- c(list(
+      data = df_path,
+      mapping = aes_string(x = "x", y = "y", group = "id"),
+      arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df_path$arrow[!df_path$arrow == "none"], type = "closed")),
+      Args)
+    p <- p + do.call(geom_path, Args)
+  }
+  if(any(df_edges$arrow == "none")){
+    df_path <- df_edges[df_edges$arrow == "none", ]
+    Args <- c("linetype", "size", "colour", "alpha")
+    Args <- as.list(df_path[which(names(df_path) %in% Args)])
+    Args <- c(list(
+      data = df_path,
+      mapping = aes_string(x = "x", y = "y", group = "id")),
+      Args)
+    p <- p + do.call(geom_path, Args)
+  }
+
+  # Add label and return ----------------------------------------------------
+  p +
+    geom_label(
+      data = df_label,
+      aes_string(x = "x", y = "y", label = "label"),
+      size = text_size,
+      fill = "white",
+      label.size = NA
+    )
+}
+
+
+#' @importFrom stats dist
 .plot_curves <- function(p, df, text_size = 5, npoints = 101, ...) {
   df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
     this_row <- df[rownum, ]
-    A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
-    B = matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), nrow = 1)
-    M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
-                  mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
-    radius <- dist(rbind(A, B))
-    AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
-    N <- matrix(c(AB[2], -AB[1]), nrow=1)
-    #C <- M + N * sin((this_row[["curvature"]]/180)*pi)
-    C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
-    radius <- dist(rbind(C, A))
-
-    if(this_row[["curvature"]] > 0){
-      angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
+    if(is.na(this_row[["curvature"]])){
+      matrix(
+        c(this_row[["edge_xmin"]],
+          mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
+          this_row[["edge_xmax"]],
+          this_row[["edge_ymin"]],
+          mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]])),
+          this_row[["edge_ymax"]],
+          rep(rownum, 3)
+          ),
+        nrow = 3, dimnames = list(NULL, c("x", "y", "id"))
+      )
     } else {
-      angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
+      A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
+      B = matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), nrow = 1)
+      M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
+                    mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
+      radius <- dist(rbind(A, B))
+      AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
+      N <- matrix(c(AB[2], -AB[1]), nrow=1)
+      C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
+      radius <- dist(rbind(C, A))
+
+      if(this_row[["curvature"]] > 0){
+        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
+      } else {
+        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
+      }
+      point_seq <- seq(angles[1], angles[2],length.out = npoints)
+      matrix(
+        c(C[1] + radius * cos(point_seq),
+          C[2] + radius * sin(point_seq),
+          rep(rownum, npoints)),
+        nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
+      )
     }
-    point_seq <- seq(angles[1], angles[2],length.out = npoints)
-    matrix(
-      c(C[1] + radius * cos(point_seq),
-        C[2] + radius * sin(point_seq),
-        rep(rownum, npoints)),
-      nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
-    )
   })))
-  df_label <- df_curves[seq(ceiling(npoints/2), nrow(df_curves), by = npoints), ]
+  tab_id <- table(df_curves$id)
+  tab_id <- ceiling(tab_id/2)+cumsum(c(0, tab_id[-length(tab_id)]))
+  df_label <- df_curves[tab_id, ]#[seq(ceiling(npoints/2), nrow(df_curves), by = npoints), ]
   df_label$label <- df$label
   p + geom_path(
     data = df_curves,
@@ -1030,7 +1154,6 @@ match.call.defaults <- function(...) {
 
 #' @importFrom stats dist
 .plot_curves3 <- function(p, df, text_size, npoints = 101, ...) {
-  browser()
   point_seq <- seq(pi, 2*pi,length.out = npoints) #%% (2*pi)
   df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
     this_row <- df[rownum, ]
