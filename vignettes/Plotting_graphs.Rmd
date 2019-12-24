@@ -93,8 +93,12 @@ lay <- get_layout("", "", "visual","","textual","","speed","", "",
 
 At this point, we could simply plot the graph:
 
-```{r, out.width = "500px", out.height="150px"}
+```{r, echo = TRUE, eval = FALSE}
 graph(model = fit, layout = lay)
+```
+
+```{r, out.width = "100%", echo = FALSE, eval = TRUE}
+graph(model = fit, layout = lay, text_size = 2, fix_coord = TRUE)
 ```
 
 ### Optional step 4: accessing the graph data before plotting
@@ -132,10 +136,10 @@ graph_data <- prepare_graph(model = fit, layout = lay)
 
 Now, for the edges, we see that the default edging algorithm has connected some nodes side-to-side (based on the smallest possible Euclidian distance). However, in this simple graph, it makes more sense to connect all nodes top-to-bottom - except for the latent variable covariances. We can use the same conditional replacement for the edges:
 
-```{r}
+```{r, eval = FALSE}
 edges(graph_data) %>%
-  mutate(connect_from = replace(connect_from, connector == "line", "bottom")) %>%
-  mutate(connect_to = replace(connect_to, connector == "line", "top")) -> edges(graph_data)
+  mutate(connect_from = replace(connect_from, is.na(curvature), "bottom")) %>%
+  mutate(connect_to = replace(connect_to, is.na(curvature), "top")) -> edges(graph_data)
 ```
 
 ### Step 7: Plot the graph
@@ -146,17 +150,68 @@ Finally, we can plot the resulting customized graph using `plot(graph_data)`:
 plot(graph_data)
 ```
 
-## Visual aspects
+## Connecting nodes
 
-The functions `graph()` and `prepare_graph()` have several visual parameters that can be tuned to customize the resulting image. Access the documentation by running `?graph`. We will demonstrate the use of the `angle` parameter, which controls which sides of nodes (circles and squares) will be connected by edges (arrows). Currently, graph connects nodes within a 90 degree angle of each other top-to-bottom. In the graph, we can see that only nodes with the same x-coordinates are connected this way. By increasing `angle` to a large number (up to 180 degrees), we can ensure that all nodes are connected top to bottom:
+The functions `graph()` and `prepare_graph()` will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the `angle` parameter. This parameter connects nodes top-to-bottom when they are within `angle` degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing `angle` to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:
 
 ```{r, out.width="500px", out.height = "150px"}
 graph(model = fit, layout = lay, angle = 170)
 ```
 
+## Visual aspects
+
+The functions `graph()` and `prepare_graph()` accept several optional visual parameters that can be used to customize the resulting image (see `?graph()`). These parameters can be passed as extra columns to the `nodes()` and `edges()` objects. Specifically, edges have the following aesthetics (see `?geom_path()`):
+
+* `linetype`: The type of line, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
+* `colour`: The colour of the line (e.g., `colour = "red"` or dashed `colour = "blue"`)
+* `size`: The size of the line (e.g., `size = 1` or dashed `size = 2`)
+* `alpha`: The transparancy of the line (e.g., `alpha = 1` or dashed `alpha = .2`)
+
+
+```{r}
+edg <- data.frame(from = "x",
+                  to = "y",
+                  linetype = 2,
+                  colour = "red",
+                  size = 2,
+                  alpha = .5)
+
+graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+```
+
+Nodes have the following aesthetics (see `?geom_polygon()`):
+
+* `linetype`: The type of line surrounding the node, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
+* `colour`: The colour of the line surrounding the node (e.g., `colour = "red"` or dashed `colour = "blue"`)
+* `fill`: The interior colour of the node (e.g., `colour = "red"` or dashed `colour = "blue"`)
+* `size`: The size of the line (e.g., `size = 1` or dashed `size = 2`)
+* `alpha`: The transparancy of the node (e.g., `alpha = 1` or dashed `alpha = .2`)
+
+
 ```{r}
 edg <- data.frame(from = "x",
                   to = "y")
-graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+nod <- data.frame(name = c("x", "y"),
+                    shape = c("rect", "oval"),
+                    linetype = c(2, 2),
+                    colour = c("blue", "blue"),
+                    fill = c("blue", "blue"),
+                    size = c(2, 2),
+                    alpha = .5)
+graph(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
 ```
+
+These aesthetics can also be passed to the `sem_graph` object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:
+
+```{r}
+edges(graph_data) %>%
+  mutate(colour = "black") %>%
+  mutate(colour = replace(colour, to == "x2", "red")) %>%
+  mutate(linetype = 1) %>%
+  mutate(linetype = replace(linetype, to == "x2", 2)) %>%
+  mutate(alpha = 1) %>%
+  mutate(alpha = replace(alpha, to == "x2", .5)) -> edges(graph_data)
+plot(graph_data)
+```
+
 

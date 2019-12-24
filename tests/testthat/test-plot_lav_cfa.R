@@ -23,3 +23,7 @@ tmp <- plot(p2)
 test_that("Plot works for lavaan cfa", {
   expect_s3_class(tmp, "ggplot")
 })
+
+edges(p2)$linetype <- 1
+
+edges(p2)$colour <- sample(c("red", "blue"), nrow(edges(p2)), replace = T)

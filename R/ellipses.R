@@ -32,8 +32,10 @@
   p + geom_path(data = df_ellipse, aes_string(x = "x", y = "y"), linetype = 1, arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = "both", type = "closed"))
 }
 
-#' @importFrom ggplot2 geom_path
-.oval_node <- function(p, x, y, oval_width, oval_height, npoints = 80){
+#' @importFrom ggplot2 geom_path geom_polygon
+.oval_node <- function(p, df, oval_width, oval_height, npoints = 80){
+  x <- df$x
+  y <- df$y
   point_seq <- seq(0,2*pi,length.out = npoints)
 
   df_ellipse <- matrix(
@@ -45,8 +47,16 @@
   }, x = x, y = y, SIMPLIFY = FALSE)
   df_ellipse <- data.frame(do.call(rbind, df_ellipse))
   df_ellipse$grp <- rep(letters[1:length(x)], each = npoints)
+  df$grp <- letters[1:nrow(df)]
+  df_ellipse <- merge(df_ellipse, df, by = "grp", all.y = TRUE)
+  Args <- c("linetype", "size", "colour", "fill", "alpha")
+  Args <- as.list(df_ellipse[which(names(df_ellipse) %in% Args)])
 
-  p + geom_path(data = df_ellipse, aes_string(x= "X1", y= "X2", group = "grp"))
+  Args <- c(list(
+    data = df_ellipse,
+    mapping = aes_string(x= "X1", y= "X2", group = "grp")), Args)
+
+  p + do.call(geom_polygon, Args)
 }
 
 #p <- ggplot(data = NULL)

@@ -12,7 +12,7 @@ graph(...)
 \method{graph}{default}(edges, layout, nodes = NULL, rect_width = 1.2,
   rect_height = 0.8, ellipses_width = 1, ellipses_height = 1,
   variance_diameter = 0.8, spacing_x = 2, spacing_y = 2,
-  text_size = 4, curvature = 0.3, angle = NULL, fix_coord = TRUE,
+  text_size = 4, curvature = 60, angle = NULL, fix_coord = TRUE,
   ...)
 
 \method{graph}{lavaan}(model, layout, ...)
@@ -24,7 +24,7 @@ graph(...)
 
 \item{edges}{Object of class 'tidy_edges', or a \code{data.frame} with  (at
 least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
-"label", "connector", "connect_from", "connect_to", "curvature")}.}
+"label", "connect_from", "connect_to", "curvature")}.}
 
 \item{layout}{An object of class \code{tidy_layout}, or a matrix with the
 layout of the graph that can be converted using
@@ -57,8 +57,10 @@ Default: .8}
 
 \item{text_size}{Point size of text, Default: 4}
 
-\item{curvature}{Curvature of curved connectors. To flip connectors, use
-negative values. Default: .3}
+\item{curvature}{Curvature of curved edges. The curve is a circle segment
+originating in a point that forms a triangle with the two connected points,
+with angles at the two connected points equal to \code{curvature}.
+To flip a curved edge, use a negative value for curvature. Default: 60}
 
 \item{angle}{Angle used to connect nodes by the top and bottom. Defaults to
 NULL, which means Euclidean distance is used to determine the shortest
