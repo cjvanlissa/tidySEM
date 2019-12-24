@@ -234,7 +234,7 @@ prepare_graph.default <- function(edges,
   }
 
   if(!all((df_edges$from %in% layout$name) & (df_edges$to %in% layout$name))){
-    warning("Some edges involve nodes not in layout. These were dropped.")
+    message("Some edges involve nodes not in layout. These were dropped.")
     df_edges <- df_edges[(df_edges$from %in% layout$name) & (df_edges$to %in% layout$name), ]
   }
 

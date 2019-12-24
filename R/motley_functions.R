@@ -47,7 +47,7 @@ report <- function(x, digits = 2, equals = TRUE){
 #' @importFrom stats pchisq
 SBChisquare <- function(Chisq1, df1, scf1, Chisq2, df2, scf2) {
   if (df1 == df2) {
-    warning("Models cannot be nested, DF are equal")
+    stop("Models cannot be nested, DF are equal")
     return(c(
       Chisq = NaN,
       df = NaN,

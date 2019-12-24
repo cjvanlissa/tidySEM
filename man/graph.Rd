@@ -12,7 +12,7 @@ graph(...)
 \method{graph}{default}(edges, layout, nodes = NULL, rect_width = 1.2,
   rect_height = 0.8, ellipses_width = 1, ellipses_height = 1,
   variance_diameter = 0.8, spacing_x = 2, spacing_y = 2,
-  text_size = 4, curvature = 60, angle = NULL, fix_coord = TRUE,
+  text_size = 4, curvature = 60, angle = NULL, fix_coord = FALSE,
   ...)
 
 \method{graph}{lavaan}(model, layout, ...)
@@ -69,7 +69,8 @@ where 0 means that only nodes with the same x-coordinates are connected
 top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
 
 \item{fix_coord}{Whether or not to fix the aspect ratio of the graph.
-Default: TRUE.}
+Does not work with multi-group or multilevel models.
+Default: FALSE.}
 
 \item{model}{Instead of the edges argument, it is also possible to use the
 model argument and pass an object for which a method exists (e.g.,
