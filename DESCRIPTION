@@ -28,5 +28,6 @@ Suggests:
     knitr,
     rmarkdown,
     dplyr,
-    stringr
+    stringr,
+    covr
 VignetteBuilder: knitr

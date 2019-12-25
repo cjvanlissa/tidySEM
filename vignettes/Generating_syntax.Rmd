@@ -102,9 +102,10 @@ The dictionary and syntax can be examined using `dictionary(model)` and `syntax(
 
 ```{r}
 dictionary(model)
-syntax(model)
+sem(lavaanify(syntax(model)), df)
 ```
 
 ### Optional step 6: Modify the dictionary and syntax
 
 At this stage, we may want to modify the basic syntax slightly. The functions `dictionary(model) <- ...` and `syntax(model) <- ...` can be used to modify the dictionary and syntax:
+
