@@ -28,7 +28,7 @@ measurement.data_dict <- function(x, center = TRUE, scale = TRUE){
   variables <- unique(c(NA, x$scale))[-1]
   update_dict <- rbind(x, data.frame(name = variables, scale = NA, item = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
-  out <- list(data_dict = update_dict,
+  out <- list(dictionary = update_dict,
               syntax = do.call(switch(getOption("sem_software"),
                                       "lavaan" = measurement_lavaan,
                                       "mplus" = measurement_mplus), list(x = x)),

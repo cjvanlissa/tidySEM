@@ -14,7 +14,7 @@
 #' @author Caspar J. van Lissa
 #' @export
 #' @examples
-#' dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5",
+#' get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5",
 #' "macqj_1", "macqj_2", "macqj_3", "macqj_4", "macqj_5", "macqj_6",
 #' "macqj_7", "macqj_8", "macqj_9", "macqj_10", "macqj_11",
 #' "macqj_12", "macqj_13", "macqj_14", "macqj_15", "macqj_16",
@@ -23,7 +23,7 @@
 #' "macqr_7", "macqr_8", "macqr_9", "macqr_10", "macqr_11",
 #' "macqr_12", "macqr_13", "macqr_14", "macqr_15", "macqr_16",
 #' "macqr_17", "macqr_18", "macqr_19", "macqr_20", "macqr_21", "sex"))
-#' dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5",
+#' get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5",
 #' "mac_q_j_1", "mac_q_j_2", "mac_q_j_3", "mac_q_j_4", "mac_q_j_5", "mac_q_j_6",
 #' "mac_q_j_7", "mac_q_j_8", "mac_q_j_9", "mac_q_j_10", "mac_q_j_11",
 #' "mac_q_j_12", "mac_q_j_13", "mac_q_j_14", "mac_q_j_15", "mac_q_j_16",
@@ -32,14 +32,14 @@
 #' "mac_q_r_7", "mac_q_r_8", "mac_q_r_9", "mac_q_r_10", "mac_q_r_11",
 #' "mac_q_r_12", "mac_q_r_13", "mac_q_r_14", "mac_q_r_15", "mac_q_r_16",
 #' "mac_q_r_17", "mac_q_r_18", "mac_q_r_19", "mac_q_r_20", "mac_q_r_21"))
-dictionary <- function(x,
+get_dictionary <- function(x,
                        split = "_"){
-  UseMethod("dictionary")
+  UseMethod("get_dictionary")
 }
 
-#' @method dictionary character
+#' @method get_dictionary character
 #' @export
-dictionary.character <- function(x, split = "_"){
+get_dictionary.character <- function(x, split = "_"){
   split_items <- strsplit(x, split)
   num_splits <- sapply(split_items, length)
   if(any(num_splits > 2)){
@@ -63,35 +63,36 @@ dictionary.character <- function(x, split = "_"){
   dict
 }
 
-#' @method dictionary data.frame
+#' @method get_dictionary data.frame
 #' @export
-dictionary.data.frame <- function(x, split = "_"){
+get_dictionary.data.frame <- function(x, split = "_"){
   Args <- as.list(match.call()[-1])
   Args$x <- names(x)
-  do.call(dictionary, Args)
+  do.call(get_dictionary, Args)
 }
 
 
-keys <- function(x, min_items){
+keys <- function(x, min_items = 3){
   UseMethod("keys")
 }
 
 #' @method keys data_dict
 #' @export
-keys.data_dict <- function(x, min_items){
+keys.data_dict <- function(x, min_items = 3){
   num_items <- table(x$scale)
   retain_q <- names(num_items)[which(num_items >= min_items)]
   #retain_q <- retain_q[!retain_q %in% skip_questionnaires]
-  outlist <- lapply(retain_q, function(i){x$name[x$scale == i]})
+  outlist <- lapply(retain_q, function(i){x$name[which(x$scale == i)]})
   names(outlist) <- retain_q
   class(outlist) <- c("keys_list", class(outlist))
+  outlist
 }
 
 #' @method keys character
 #' @export
-keys.character <- function(x, min_items){
+keys.character <- function(x, min_items = 3){
   Args <- list(x = x)
-  dict <- do.call(dictionary, Args)
+  dict <- do.call(get_dictionary, Args)
   Args <- list(x = dict,
                min_items = min_items)
   do.call(keys, Args)
@@ -101,7 +102,7 @@ keys.character <- function(x, min_items){
 #' @export
 keys.data.frame <- function(x, min_items){
   Args <- list(x = names(x))
-  dict <- do.call(dictionary, Args)
+  dict <- do.call(get_dictionary, Args)
   Args <- list(x = dict,
                min_items = min_items)
   do.call(keys, Args)

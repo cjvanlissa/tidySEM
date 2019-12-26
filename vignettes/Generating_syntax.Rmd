@@ -1,0 +1,111 @@
+---
+title: "Generating syntax for structural equation models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating syntax for structural equation models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidySEM)
+library(lavaan)
+library(dplyr)
+```
+
+`tidySEM` offers a user-friendly, tidy workflow for generating syntax for SEM models. The workflow is top-down, meaning that syntax is generated based on conceptual model elements. In many cases, the generated syntax will suffice - but it is always customizable. The workflow also tries to intelligently guess which variables go together, but these defaults can be overridden.
+
+
+## The tidySEM workflow
+
+The workflow underlying syntax generation in `tidySEM` is as follows:
+
+1. Give the variables in your `data` object short, informative names, that are easily read by the machine
+2. Generate a data dictionary by running `dict <- get_dictionary(data)`
+<!--    * The `data_dictionary` called `dict` can be used to generate `keys(dict)`, for use with functions (reliability, factor analysis) from the `psych` library
+    * The `data_dictionary` called `dict` can be used to generate syntax for structural equation models in `lavaan` or Mplus (through `MplusAutomation`)-->
+3. Convert the `data_dictionary` to a `sem_syntax` object by adding elements of syntax
+    * E.g., `dict %>% cfa() -> model`
+5. *Optionally*, access the `data_dictionary` and `syntax` elements in the `sem_syntax` object `dictionary(model)` and `syntax(model)`
+6. *Optionally*, modify the `data_dictionary` and `syntax` elements in the `sem_syntax` object `dictionary(model) <- ...` and `syntax(model) <- ...`
+7. Run an analysis on the generated syntax using `lavaan::sem()` or `MplusAutomation::mplusObject()`
+
+Objects returned by all functions are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the `tidyverse`.
+
+## Example: Running a CFA
+
+### Step 1: Check the variable names
+
+As an example, let's make a graph for a classic `lavaan` tutorial example for CFA. First, we check the data names:
+
+```{r}
+df <- HolzingerSwineford1939
+names(df)
+```
+
+These names are not informative, as the items named `x..` are indicators of three different latent variables. We will rename them accordingly:
+
+```{r}
+names(df)[grepl("^x", names(df))] <- c("vis_1", "vis_2", "vis_3", "tex_1", "tex_2", "tex_3", "spe_1", "spe_2", "spe_3")
+```
+
+### General rules for naming variables
+
+In general, it is good practice to name variables using the following information:
+
+* Scale name (or if the variable is not part of a scale, observed variable name)
+* Measurement occasion (if longitudinal)
+* Respondent id (if multiple respondents completed the same scales)
+* Scale item number, which `tidySEM` expects to be separated from the remainder of the variable name by a splitting character (e.g., `scale_item`)
+
+Roughly speaking, the elements of the variable name are ordered from "slow-changing" to "fast-changing"; i.e.; there are only a few scales, with possibly several measurement occasions or respondents, and many items.
+
+### Step 2: Generate a dictionary
+
+Thanks to the informative names we've given the data, we can easily construct a data dictionary:
+
+```{r}
+dict <- get_dictionary(df)
+dict
+```
+
+<!--### Optional: Get reliability from psych
+
+Using the data dictionary, we can easily get a keys list for use with functions from the `psych` library, such as `psych::alpha()`:
+
+
+library(psych)
+psych::alpha(df, keys = tidySEM:::keys(dict))
+
+-->
+
+### Step 3: Generate syntax
+
+We can convert the `data_dict` object to `sem_syntax`, simply by adding a first syntax element; in this case, a measurement model:
+
+```{r}
+dict %>%
+  measurement() -> model
+model
+```
+
+### Optional step 5: Access the dictionary and syntax
+
+The dictionary and syntax can be examined using `dictionary(model)` and `syntax(model)`:
+
+```{r}
+dictionary(model)
+sem(lavaanify(syntax(model)), df)
+```
+
+### Optional step 6: Modify the dictionary and syntax
+
+At this stage, we may want to modify the basic syntax slightly. The functions `dictionary(model) <- ...` and `syntax(model) <- ...` can be used to modify the dictionary and syntax:
+

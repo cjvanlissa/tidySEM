@@ -30,7 +30,7 @@ cors.sem_syntax <- function(x, ...){
   out <- force(x)
 dots <- list(...)
   if(!length(dots)){
-    Args <- list(x = x$data_dict$name[x$data_dict$type %in% c("observed", "latent")])
+    Args <- list(x = x$dictionary$name[x$dictionary$type %in% c("observed", "latent")])
   } else {
     Args <- check_dots_cors(dots)
   }
@@ -51,7 +51,7 @@ cors.data_dict <- function(x, ...){
   } else {
     Args <- check_dots_cors(dots)
   }
-  out <- list(data_dict = x,
+  out <- list(dictionary = x,
               syntax = do.call(switch(getOption("sem_software"),
                                       "lavaan" = cors_lavaan,
                                       "mplus" = cors_mplus), Args),
