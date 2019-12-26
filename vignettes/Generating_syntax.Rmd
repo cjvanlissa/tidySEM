@@ -100,10 +100,6 @@ model
 
 The dictionary and syntax can be examined using `dictionary(model)` and `syntax(model)`:
 
-```{r}
-dictionary(model)
-sem(lavaanify(syntax(model)), df)
-```
 
 ### Optional step 6: Modify the dictionary and syntax
 

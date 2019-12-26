@@ -15,7 +15,7 @@
 #' intercorrelations between elements of \code{x} are returned.
 #' @return An object of class \code{sem_syntax}.
 #' @examples
-#' dict <- dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
+#' dict <- get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
 #' cors(dict)
 #' cors(dict, c("bfi_1", "bfi_2"))
 #' @rdname cors

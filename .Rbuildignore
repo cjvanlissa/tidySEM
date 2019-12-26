@@ -9,3 +9,5 @@
 dev/
 ^.*\.RData$
 ^codecov\.yml$
+^docs$
+^_pkgdown\.yml$
