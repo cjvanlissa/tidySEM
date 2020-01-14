@@ -28,6 +28,5 @@ Generate syntax for a measurement model for latent variables.
 }
 \examples{
 dict <- get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
-cors(dict)
 cors(dict, c("bfi_1", "bfi_2"))
 }

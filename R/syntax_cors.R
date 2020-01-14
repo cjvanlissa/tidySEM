@@ -1,5 +1,3 @@
-#tmp <- measurement(dict)
-
 #' @title Generate syntax for a measurement model
 #' @description Generate syntax for a measurement model for latent variables.
 #' @param x Object for which a method exists. If \code{x} is an object of class
@@ -16,7 +14,6 @@
 #' @return An object of class \code{sem_syntax}.
 #' @examples
 #' dict <- get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
-#' cors(dict)
 #' cors(dict, c("bfi_1", "bfi_2"))
 #' @rdname cors
 #' @export
@@ -28,16 +25,14 @@ cors <- function(x, ...){
 #' @export
 cors.sem_syntax <- function(x, ...){
   out <- force(x)
-dots <- list(...)
+  dots <- list(...)
   if(!length(dots)){
     Args <- list(x = x$dictionary$name[x$dictionary$type %in% c("observed", "latent")])
   } else {
     Args <- check_dots_cors(dots)
   }
-  syntax <- do.call(switch(x$sem_software,
-                           "lavaan" = cors_lavaan,
-                           "mplus" = cors_mplus), Args)
-  out$syntax <- c(out$syntax, syntax)
+  syntax <- do.call(cors_table, Args)
+  out$syntax <- rbind(out$syntax, syntax)
   out
 }
 
@@ -52,9 +47,7 @@ cors.data_dict <- function(x, ...){
     Args <- check_dots_cors(dots)
   }
   out <- list(dictionary = x,
-              syntax = do.call(switch(getOption("sem_software"),
-                                      "lavaan" = cors_lavaan,
-                                      "mplus" = cors_mplus), Args),
+              syntax = do.call(cors_table, Args),
               sem_software = getOption("sem_software"))
   class(out) <- c("sem_syntax", class(out))
   out
@@ -68,6 +61,20 @@ cors.data.frame <- function(x, ...){
   do.call(cors, Args)
 }
 
+# cors_table(c("a", "b", "c"))
+# cors_table(c("a", "b", "c"), c("x", "y"))
+cors_table <- function(x, y = NULL){
+  if(is.null(y)){
+    mod_mat <- matrix(1:(length(x)*length(x)), nrow = length(x))
+    out <- cbind(expand.grid(x, "~~", x)[upper.tri(mod_mat), ], TRUE, 0, "covariance", "covariance")
+  } else {
+    out <- cbind(expand.grid(x, "~~", y), TRUE, 0, "covariance", "covariance")
+  }
+  names(out) <- c("lhs", "op", "rhs", "free", "value", "category", "aspect")
+  out
+}
+
+
 # cors_mplus(c("a", "b", "c"))
 # cors_mplus(c("a", "b", "c"), c("x", "y"))
 cors_mplus <- function(x, y = NULL){
@@ -78,6 +85,7 @@ cors_mplus <- function(x, y = NULL){
     paste0(rep(x, length(x)), " WITH ", rep(y, each = length(x)), ";")
   }
 }
+
 
 # cors_lavaan(c("a", "b", "c"))
 # cors_lavaan(c("a", "b", "c"), c("x", "y"))
@@ -109,15 +117,13 @@ syntax_cor_lavaan <- function(x, y = NULL, all = TRUE, label = TRUE){
   }
 }
 
-
-
 check_dots_cors <- function(dots){
   if(length(dots) > 3){
     stop("Tried to pass more than two additional arguments to function cors.sem_syntax(). Cors accepts an object, and up to two character vectors of variable names.", call. = FALSE)
   }
   if(!all(sapply(dots, inherits, what = "character"))){
-      stop("Cors accepts up to two character vectors of variable names as optional arguments. The optional arguments are not all character vectors.", call. = FALSE)
-    }
+    stop("Cors accepts up to two character vectors of variable names as optional arguments. The optional arguments are not all character vectors.", call. = FALSE)
+  }
   names(dots) <- c("x", "y")[1:length(dots)]
   dots
 }
