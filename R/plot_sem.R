@@ -806,7 +806,8 @@ match.call.defaults <- function(...) {
     xlabel[df$connect_from == "right"] - diameter
   offset[df$connect_from == "right"] <- 1
 
-  df_label <- data.frame(x = xlabel,
+  df_label <- data.frame(df,
+                         x = xlabel,
                          y = ylabel,
                          label = df$label)
 
