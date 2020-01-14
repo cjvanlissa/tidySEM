@@ -762,24 +762,6 @@ match.call.defaults <- function(...) {
   match.call(sys.function(sys.parent()), call)
 }
 
-#' @importFrom ggplot2 geom_curve
-.plot_curves2 <- function(p, df, text_size, ...){
-  an = 90
-  ncp = 1
-  df_edges <- data.frame(lapply(df[, c("edge_xmin", "edge_ymin", "edge_xmax", "edge_ymax", "curvature")], as.numeric))
-  df_curves <- data.frame(df, t(apply(df_edges, 1, function(x){unlist(calcControlPoints(x[[1]], x[[2]], x[[3]], x[[4]], angle = an, curvature = x[[5]], ncp = ncp))})))
-  for(cur in unique(df$curvature)){
-    p <- p + geom_curve(data = df_curves[df_curves$curvature == cur, ], aes_string(x = "edge_xmin", y = "edge_ymin", xend = "x", yend = "y"), curvature = cur,
-                        angle = an, linetype = 2) +
-      geom_curve(data = df_curves[df_curves$curvature == cur, ], aes_string(x = "x", y = "y", xend = "edge_xmax", yend = "edge_ymax"), curvature = cur,
-                 angle = an, linetype = 2)
-  }
-  p + geom_label(data = df_curves,
-               aes_string(x = "x", y = "y", label = "label"),
-               size = text_size, fill = "white", label.size = NA)
-
-}
-
 .plot_variances <- function(p, df, text_size, diameter, ...) {
   npoints <- 20
   radius <- diameter / 2
@@ -830,6 +812,10 @@ match.call.defaults <- function(...) {
 
   df$id <- 1:nrow(df)
   df_ellipse <- merge(df_ellipse, df, by = "id")
+
+  #begin
+  browser()
+  #end
 
   p + geom_path(
     data = df_ellipse,
@@ -1156,38 +1142,54 @@ match.call.defaults <- function(...) {
     )
 }
 
-#' @importFrom stats dist
-.plot_curves3 <- function(p, df, text_size, npoints = 101, ...) {
-  point_seq <- seq(pi, 2*pi,length.out = npoints) #%% (2*pi)
-  df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
-    this_row <- df[rownum, ]
-    x <- c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])
-    y <- c(this_row[["edge_ymin"]], this_row[["edge_ymax"]])
-    Rx = dist(cbind(x, y))/2
-    Ry = this_row[["curvature"]] * Rx
-    Cx <- mean(x)
-    Cy <- mean(y)
-    angles <- atan2(y = y - Cy, x = x - Cx)
-    theta = angles[2]
-    matrix(
-      c(Rx * cos(point_seq)*cos(theta) - Ry * sin(point_seq) * sin(theta)+Cx,
-        Rx * cos(point_seq) * sin(theta) + Ry * sin(point_seq) * cos(theta)+Cy,
-        rep(rownum, npoints)),
-      nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
-    )
-  })))
-  df_label <- df_curves[seq(ceiling(npoints/2), nrow(df_curves), by = npoints), ]
-  df_label$label <- df$label
-  p + geom_path(
-    data = df_curves,
-    aes_string(x = "x", y = "y", group = "id"),
-    linetype = 2
-  ) +
-    geom_label(
-      data = df_label,
-      aes_string(x = "x", y = "y", label = "label"),
-      size = text_size,
-      fill = "white",
-      label.size = NA
-    )
+
+
+.plot_edges_internal <- function(p, df){
+  # Prepare aesthetics ------------------------------------------------------
+  if(!"linetype" %in% names(df)){
+    df$linetype <- 2
+    df$linetype[is.na(df$curvature)] <- 1
+  }
+  if(any(df$arrow != "none")){
+    df_path <- df[!df$arrow == "none", ]
+    Args <- c("linetype", "size", "colour", "alpha")
+    Args <- as.list(df_path[which(names(df_path) %in% Args)])
+    Args <- c(list(
+      data = df_path,
+      mapping = aes_string(x = "x", y = "y", group = "id"),
+      arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df_path$arrow[!df_path$arrow == "none"], type = "closed")),
+      Args)
+    p <- p + do.call(geom_path, Args)
+  }
+  if(any(df$arrow == "none")){
+    df_path <- df[df$arrow == "none", ]
+    Args <- c("linetype", "size", "colour", "alpha")
+    Args <- as.list(df_path[which(names(df_path) %in% Args)])
+    Args <- c(list(
+      data = df_path,
+      mapping = aes_string(x = "x", y = "y", group = "id")),
+      Args)
+    p <- p + do.call(geom_path, Args)
+  }
+  p
+}
+
+.plot_label_internal <- function(p, df, text_size){
+  # Prepare aesthetics ------------------------------------------------------
+  if(!"fill" %in% names(df)){
+    df$fill = "white"
+  }
+  if(!"size" %in% names(df)){
+    df$size <- text_size
+  }
+
+    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour", "alpha")
+    Args <- as.list(df_path[which(names(df_path) %in% Args)])
+    Args <- c(list(
+      data = df,
+      mapping = aes_string(x = "x", y = "y", label = "label"),
+	  label.size = NA),
+      Args)
+    p <- p + do.call(geom_label, Args)
+  p
 }
