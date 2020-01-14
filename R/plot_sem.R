@@ -1047,22 +1047,24 @@ match.call.defaults <- function(...) {
 }
 
 .plot_label_internal <- function(p, df, text_size){
-  df <- df[, c("x", "y", "label", grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|alpha)$", names(df), value = TRUE))]
-  names(df) <- gsub("^label_", "", names(df))
-  # Prepare aesthetics ------------------------------------------------------
-  if(!"fill" %in% names(df)){
-    df$fill = "white"
+  df <- df[, c("x", "y", "label", grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|alpha)$", names(df), value = TRUE)), drop = FALSE]
+  if(nrow(df) > 0){
+    names(df) <- gsub("^label_", "", names(df))
+    # Prepare aesthetics ------------------------------------------------------
+    if(!"fill" %in% names(df)){
+      df$fill = "white"
+    }
+    if(!"size" %in% names(df)){
+      df$size <- text_size
+    }
+    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour", "alpha")
+    Args <- as.list(df[which(names(df) %in% Args)])
+    Args <- c(list(
+      data = df,
+      mapping = aes_string(x = "x", y = "y", label = "label"),
+      label.size = NA),
+      Args)
+    p <- p + do.call(geom_label, Args)
   }
-  if(!"size" %in% names(df)){
-    df$size <- text_size
-  }
-  Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour", "alpha")
-  Args <- as.list(df[which(names(df) %in% Args)])
-  Args <- c(list(
-    data = df,
-    mapping = aes_string(x = "x", y = "y", label = "label"),
-    label.size = NA),
-    Args)
-  p <- p + do.call(geom_label, Args)
   p
 }

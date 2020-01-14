@@ -163,9 +163,9 @@ graph(model = fit, layout = lay, angle = 170)
 The functions `graph()` and `prepare_graph()` accept several optional visual parameters that can be used to customize the resulting image (see `?graph()`). These parameters can be passed as extra columns to the `nodes()` and `edges()` objects. Specifically, edges have the following aesthetics (see `?geom_path()`):
 
 * `linetype`: The type of line, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
-* `colour`: The colour of the line (e.g., `colour = "red"` or dashed `colour = "blue"`)
-* `size`: The size of the line (e.g., `size = 1` or dashed `size = 2`)
-* `alpha`: The transparancy of the line (e.g., `alpha = 1` or dashed `alpha = .2`)
+* `colour`: The colour of the line (e.g., `colour = "red"` or `colour = "blue"`)
+* `size`: The size of the line (e.g., `size = 1` or `size = 2`)
+* `alpha`: The transparancy of the line (e.g., `alpha = 1` or `alpha = .2`)
 
 
 ```{r}
@@ -182,10 +182,10 @@ graph(edges = edg, layout = get_layout("x", "y", rows = 1))
 Nodes have the following aesthetics (see `?geom_polygon()`):
 
 * `linetype`: The type of line surrounding the node, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
-* `colour`: The colour of the line surrounding the node (e.g., `colour = "red"` or dashed `colour = "blue"`)
-* `fill`: The interior colour of the node (e.g., `colour = "red"` or dashed `colour = "blue"`)
-* `size`: The size of the line (e.g., `size = 1` or dashed `size = 2`)
-* `alpha`: The transparancy of the node (e.g., `alpha = 1` or dashed `alpha = .2`)
+* `colour`: The colour of the line surrounding the node (e.g., `colour = "red"` or `colour = "blue"`)
+* `fill`: The interior colour of the node (e.g., `colour = "red"` or `colour = "blue"`)
+* `size`: The size of the line (e.g., `size = 1` or `size = 2`)
+* `alpha`: The transparancy of the node (e.g., `alpha = 1` or `alpha = .2`)
 
 
 ```{r}
@@ -206,12 +206,42 @@ These aesthetics can also be passed to the `sem_graph` object after preparing th
 ```{r}
 edges(graph_data) %>%
   mutate(colour = "black") %>%
-  mutate(colour = replace(colour, to == "x2", "red")) %>%
+  mutate(colour = replace(colour, from == "visual" & to == "x2", "red")) %>%
   mutate(linetype = 1) %>%
-  mutate(linetype = replace(linetype, to == "x2", 2)) %>%
+  mutate(linetype = replace(linetype, from == "visual" & to == "x2", 2)) %>%
   mutate(alpha = 1) %>%
-  mutate(alpha = replace(alpha, to == "x2", .5)) -> edges(graph_data)
+  mutate(alpha = replace(alpha, from == "visual" & to == "x2", .5)) -> edges(graph_data)
 plot(graph_data)
 ```
 
+## Visual aspects of edge labels
 
+Like nodes and edges, edge labels can be customized. Labels have the same aesthetics as the ggplot function `geom_label()` (see `?geom_label`). However, to disambiguate them from the edge aesthetics, all label aesthetics are prefaced by `"label_"`:
+
+* `label_colour`: The colour of the label text (e.g., `label_colour = "red"`)
+* `label_fill`: The colour of the rectangle behind the label text, ( e.g., `label_fill = "blue"`)
+* `label_size`: The font size of the label (e.g., `label_size = 4`)
+* `label_alpha`: The transparancy of the label (e.g., `alpha = 1` or `alpha = .2`)
+* `label_family`: The font family of the label text. By default, three are available: `"serif"`, `"sans"` and `"mono"`
+* `label_fontface`: The face of the label text: `"plain"`, `"bold"`, `"italic"`, or "`bold.italic"`
+* `label_hjust`: Horizontal justification of label text; either a string (`"left"`, `"center"`, `"right"`) or a number between 0 and 1 (left = 0, center = 0.5, right = 1)
+* `label_vjust`: Vertical justification of label text; either a string (`"top"`, `"middle"`, `"bottom"`) or a number between 0 and 1 (top = 1, middle = 0.5, bottom = 0)
+* `label_lineheight`: Line height for multiline text
+
+```{r}
+edg <- data.frame(from = "x",
+                  to = "y",
+                  label = "text",
+                  label_colour = "blue",
+                  label_fill = "red",
+                  label_size = 6,
+                  label_alpha = .5,
+                  label_family = "mono",
+                  label_fontface = "bold",
+                  label_hjust = "left",
+                  label_vjust = "top",
+                  label_lineheight = 1.5
+                  )
+
+graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+```
