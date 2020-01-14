@@ -26,6 +26,34 @@ measurement.data_dict <- function(x, center = TRUE, scale = TRUE){
   Args <- as.list(match.call()[-1])
   x <- force(x)
   variables <- unique(c(NA, x$scale))[-1]
+  update_dict <- rbind(x, data.frame(name = variables, scale = NA, type = "latent", label = variables))
+  update_dict$type[update_dict$scale %in% variables] <- "indicator"
+  out <- list(dictionary = update_dict,
+              syntax = do.call(measurement_table, Args),
+              sem_software = getOption("sem_software"))
+  class(out) <- c("sem_syntax", class(out))
+  out
+}
+
+measurement_table <- function(x, center = TRUE, scale = TRUE){
+  variables <- unique(c(NA, x$scale))[-1]
+  outlines <- do.call(rbind, lapply(variables, function(this_var){
+    rbind(c(this_var, "=~", x$name[which(x$scale == this_var)][1], ifelse(scale, "FALSE", "TRUE"), 1, "measurement", "loadings"),
+          expand.grid(this_var, "=~", x$name[which(x$scale == this_var)][-1], "TRUE", "1", "measurement", "loadings", stringsAsFactors = FALSE),
+          c(this_var, "~1", "", ifelse(center, "FALSE", "TRUE"), 0, "measurement", "center"),
+          c(this_var, "~~", this_var, ifelse(scale, "TRUE", "FALSE"), 1, "measurement", "scale"),
+          expand.grid(x$name[which(x$scale == this_var)], "~1", "", ifelse(center, "TRUE", "FALSE"), 0, "measurement", "item_intercepts", stringsAsFactors = FALSE),
+          expand.grid(x$name[which(x$scale == this_var)], "~~", x$name[which(x$scale == this_var)], "TRUE", NA, "measurement", "residual_variances")[seq(1, sum(x$scale == this_var)^2, by = (sum(x$scale == this_var))+1), ], stringsAsFactors = FALSE)
+  }))
+  names(outlines) <- c("lhs", "op", "rhs", "free", "value", "category", "aspect")
+  outlines
+}
+
+
+measurement.data_dict2 <- function(x, center = TRUE, scale = TRUE){
+  Args <- as.list(match.call()[-1])
+  x <- force(x)
+  variables <- unique(c(NA, x$scale))[-1]
   update_dict <- rbind(x, data.frame(name = variables, scale = NA, item = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
   out <- list(dictionary = update_dict,
@@ -73,46 +101,3 @@ measurement_lavaan <- function(x, center = TRUE, scale = TRUE){
   out <- do.call(measurement_mplus, Args)
   strsplit(mplus2lavaan.modelSyntax(paste0(out, collapse = "\n")), "\n")[[1]]
 }
-
-# measurement_mplus(dict, scale = F)
-# measurement_lavaan(dict, scale = T)
-# tmp <- paste0(tmp, collapse = "\n")
-# library(lavaan)
-
-
-
-#measurement(dict)
-# syntax_cfa_lavaan <- function(scales.list){
-#   variables <- names(scales.list)
-#   outlines <- do.call(c, list(sapply(variables, function(x){
-#     # x <- variables[1]
-#     c(paste0(x, " =~ NA*", scales.list[[x]][1], " + ",
-#              paste(scales.list[[x]][-1], collapse = " + ")),
-#       paste0(x, " ~~ 1*", x))
-#   }, USE.NAMES = FALSE)))
-#   outlines
-# }
-
-# measurement_lavaan <- function(x, center = TRUE, scale = TRUE){
-#   variables <- unique(c(NA, x$scale))[-1]
-#
-#   outlines <- do.call(c, list(sapply(variables, function(this_var){
-#     out <- paste0(this_var, " =~ NA*", x$name[which(x$scale == this_var)][1], " + ",
-#              paste(x$name[which(x$scale == this_var)][-1], collapse = " + "))
-#     attr(out, "type") <- "measurement"
-#     attr(out, "aspect") <- "loadings"
-#     if(center){
-#       out <- c(out, paste0(this_var, " ~0*1", this_var))
-#       attr(out[length(out)], "type") <- "measurement"
-#       attr(out[length(out)], "aspect") <- "center"
-#     }
-#     if(scale){
-#       out <- c(out, paste0(this_var, " ~~ 1*", this_var))
-#       attr(out[length(out)], "type") <- "measurement"
-#       attr(out[length(out)], "aspect") <- "scale"
-#     }
-#     out
-#   }, USE.NAMES = FALSE)))
-#   outlines
-# }
-

@@ -59,6 +59,7 @@ get_dictionary.character <- function(x, split = "_"){
   dict$type <- "observed"
   #dict$type[!observed] <- "indicator"
   dict$label <- dict$name
+  dict$item <- NULL
   class(dict) <- c("data_dict", class(dict))
   dict
 }

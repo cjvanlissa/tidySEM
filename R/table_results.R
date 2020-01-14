@@ -86,10 +86,18 @@ table_results <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
   UseMethod("table_results")
 }
 
+#' @method table_results mplusObject
+#' @export
+table_results.mplusObject <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
+  Args <- as.list(match.call()[-1])
+  Args$x <- x$results
+  do.call(table_results, Args)
+}
+
+
 #' @method table_results mplus.model
 #' @export
 table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digits = 2, ...){
-
   Args <- list(x = x)
   digits <- force(digits)
   get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
@@ -123,9 +131,10 @@ table_results.mplus.model <- function(x, standardized = TRUE, all = FALSE, digit
     remaining_cols <- names(results)[(length(order_cols)+6):(ncol(results))]
     remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
     order_cols <- c(1:5, match(order_cols, names(results)), match(remaining_cols, names(results)))
-    class(results) <- c("tidy_results", class(results))
-    results[, order_cols]
+    results <- results[, order_cols]
   }
+  class(results) <- c("tidy_results", class(results))
+  results
 }
 
 internal_table_mplusmodel <- function(x, parameters, digits){
@@ -507,9 +516,9 @@ table_results.lavaan <- function(x, standardized = TRUE, all = FALSE, digits = 2
     remaining_cols <- names(results)[(length(order_cols)+3):(ncol(results))]
     remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
     order_cols <- c(1:3, match(order_cols, names(results)), match(remaining_cols, names(results)))
-    class(results) <- c("tidy_results", class(results))
-    results[, order_cols]
-
+    results <- results[, order_cols]
   }
+  class(results) <- c("tidy_results", class(results))
+  results
 }
 

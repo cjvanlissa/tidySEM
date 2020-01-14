@@ -811,7 +811,7 @@ match.call.defaults <- function(...) {
                          label = df$label)
 
   df_ellipse <-
-    data.frame(do.call(rbind, lapply(1:length(xcenter), function(this_var) {
+    data.frame(do.call(rbind, lapply(1:nrow(df), function(this_var) {
       point_seq <-
         seq((offset[[this_var]] * pi), (2 + offset[[this_var]]) * pi, length.out = npoints) %% (2 *
                                                                                                   pi)
@@ -823,13 +823,16 @@ match.call.defaults <- function(...) {
         ),
         nrow = npoints,
         ncol = 3,
-        dimnames = list(NULL, c("x", "y", "var"))
+        dimnames = list(NULL, c("x", "y", "id"))
       )
     })))
 
+  df$id <- 1:nrow(df)
+  df_ellipse <- merge(df_ellipse, df, by = "id")
+
   p + geom_path(
     data = df_ellipse,
-    aes_string(x = "x", y = "y", group = "var"),
+    aes_string(x = "x", y = "y", group = "id"),
     linetype = 1,
     arrow = arrow(
       angle = 25,
