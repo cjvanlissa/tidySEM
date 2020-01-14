@@ -813,46 +813,8 @@ match.call.defaults <- function(...) {
   df$id <- 1:nrow(df)
   df_ellipse <- merge(df_ellipse, df, by = "id")
 
-  #begin
-  browser()
-  #end
-
-  p + geom_path(
-    data = df_ellipse,
-    aes_string(x = "x", y = "y", group = "id"),
-    linetype = 1,
-    arrow = arrow(
-      angle = 25,
-      length = unit(.1, "inches"),
-      ends = "both",
-      type = "closed"
-    )
-  ) +
-    geom_label(data = df_label, aes_string(x = "x", y = "y", label = "label"),
-               size = text_size, fill = "white", label.size = NA)
-}
-
-.plot_lines <- function(p, df, text_size, ...){
-  if(any(df$arrow != "none")){
-    p <- p + geom_segment(data = df[!df$arrow == "none", ],
-                          aes_string(
-                            x = "edge_xmin",
-                            xend = "edge_xmax",
-                            y = "edge_ymin",
-                            yend = "edge_ymax"),
-                          arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df$arrow[!df$arrow == "none"], type = "closed"))
-  }
-  if(any(df$arrow == "none")){
-    p <- p + geom_segment(data = df[df$arrow == "none", ],
-                          aes_string(
-                            x = "edge_xmin",
-                            xend = "edge_xmax",
-                            y = "edge_ymin",
-                            yend = "edge_ymax"))
-  }
-  p <- p + geom_label(data = df,
-                      aes_string(x = "text_x", y = "text_y", label = "label"),
-                      size = text_size, fill = "white", label.size = NA)
+  p <- .plot_edges_internal(p, df_ellipse)
+  .plot_label_internal(p, df_label, text_size)
 }
 
 .plot_nodes <- function(p, df, text_size, ellipses_width, ellipses_height){
@@ -1048,101 +1010,11 @@ match.call.defaults <- function(...) {
   }
   if(any(df_edges$arrow == "curve")) browser() # Dit mag niet meer!
 
-  # Split edges with and without arrow --------------------------------------
-  if(any(df_edges$arrow != "none")){
-    df_path <- df_edges[!df_edges$arrow == "none", ]
-    Args <- c("linetype", "size", "colour", "alpha")
-    Args <- as.list(df_path[which(names(df_path) %in% Args)])
-    Args <- c(list(
-      data = df_path,
-      mapping = aes_string(x = "x", y = "y", group = "id"),
-      arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df_path$arrow[!df_path$arrow == "none"], type = "closed")),
-      Args)
-    p <- p + do.call(geom_path, Args)
-  }
-  if(any(df_edges$arrow == "none")){
-    df_path <- df_edges[df_edges$arrow == "none", ]
-    Args <- c("linetype", "size", "colour", "alpha")
-    Args <- as.list(df_path[which(names(df_path) %in% Args)])
-    Args <- c(list(
-      data = df_path,
-      mapping = aes_string(x = "x", y = "y", group = "id")),
-      Args)
-    p <- p + do.call(geom_path, Args)
-  }
+  p <- .plot_edges_internal(p, df_edges)
 
   # Add label and return ----------------------------------------------------
-  p +
-    geom_label(
-      data = df_label,
-      aes_string(x = "x", y = "y", label = "label"),
-      size = text_size,
-      fill = "white",
-      label.size = NA
-    )
+  .plot_label_internal(p, df_label, text_size)
 }
-
-
-#' @importFrom stats dist
-.plot_curves <- function(p, df, text_size = 5, npoints = 101, ...) {
-  df_curves <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
-    this_row <- df[rownum, ]
-    if(is.na(this_row[["curvature"]])){
-      matrix(
-        c(this_row[["edge_xmin"]],
-          mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
-          this_row[["edge_xmax"]],
-          this_row[["edge_ymin"]],
-          mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]])),
-          this_row[["edge_ymax"]],
-          rep(rownum, 3)
-          ),
-        nrow = 3, dimnames = list(NULL, c("x", "y", "id"))
-      )
-    } else {
-      A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
-      B = matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), nrow = 1)
-      M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
-                    mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
-      radius <- dist(rbind(A, B))
-      AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
-      N <- matrix(c(AB[2], -AB[1]), nrow=1)
-      C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
-      radius <- dist(rbind(C, A))
-
-      if(this_row[["curvature"]] > 0){
-        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
-      } else {
-        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
-      }
-      point_seq <- seq(angles[1], angles[2],length.out = npoints)
-      matrix(
-        c(C[1] + radius * cos(point_seq),
-          C[2] + radius * sin(point_seq),
-          rep(rownum, npoints)),
-        nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
-      )
-    }
-  })))
-  tab_id <- table(df_curves$id)
-  tab_id <- ceiling(tab_id/2)+cumsum(c(0, tab_id[-length(tab_id)]))
-  df_label <- df_curves[tab_id, ]#[seq(ceiling(npoints/2), nrow(df_curves), by = npoints), ]
-  df_label$label <- df$label
-  p + geom_path(
-    data = df_curves,
-    aes_string(x = "x", y = "y", group = "id"),
-    linetype = 2
-  ) +
-    geom_label(
-      data = df_label,
-      aes_string(x = "x", y = "y", label = "label"),
-      size = text_size,
-      fill = "white",
-      label.size = NA
-    )
-}
-
-
 
 .plot_edges_internal <- function(p, df){
   # Prepare aesthetics ------------------------------------------------------
@@ -1175,6 +1047,8 @@ match.call.defaults <- function(...) {
 }
 
 .plot_label_internal <- function(p, df, text_size){
+  df <- df[, c("x", "y", "label", grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|alpha)$", names(df), value = TRUE))]
+  names(df) <- gsub("^label_", "", names(df))
   # Prepare aesthetics ------------------------------------------------------
   if(!"fill" %in% names(df)){
     df$fill = "white"
@@ -1182,14 +1056,13 @@ match.call.defaults <- function(...) {
   if(!"size" %in% names(df)){
     df$size <- text_size
   }
-
-    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour", "alpha")
-    Args <- as.list(df_path[which(names(df_path) %in% Args)])
-    Args <- c(list(
-      data = df,
-      mapping = aes_string(x = "x", y = "y", label = "label"),
-	  label.size = NA),
-      Args)
-    p <- p + do.call(geom_label, Args)
+  Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour", "alpha")
+  Args <- as.list(df[which(names(df) %in% Args)])
+  Args <- c(list(
+    data = df,
+    mapping = aes_string(x = "x", y = "y", label = "label"),
+    label.size = NA),
+    Args)
+  p <- p + do.call(geom_label, Args)
   p
 }
