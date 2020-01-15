@@ -71,7 +71,7 @@ graph <- function(...){
 #' @rdname graph
 #' @export
 graph.default <- function(edges,
-                          layout,
+                          layout = NULL,
                           nodes = NULL,
                          rect_width = 1.2,
                          rect_height = .8,
@@ -101,7 +101,6 @@ graph.default <- function(edges,
 #' @rdname graph
 #' @export
 graph.lavaan <- function(model,
-                         layout,
                          ...){
   Args <- as.list(match.call()[-1])
   do.call(graph_model, Args)
@@ -112,16 +111,21 @@ graph.lavaan <- function(model,
 #' @export
 graph.mplus.model <- graph.lavaan
 
-graph_model <- function(model,
-                        layout,
-                        ...) {
-  Args <- list(x = model)
-  edges <- do.call(get_edges, Args)
-  nodes <- do.call(get_nodes, Args)
+graph_model <- function(model, ...) {
   Args <- as.list(match.call()[-1])
-  Args$layout <- layout
-  Args$edges <- edges
-  Args$nodes <- nodes
+  call_args <- list(x = model)
+  if(!"edges" %in% names(Args)){
+    edges <- do.call(get_edges, call_args)
+    Args$edges <- edges
+  }
+  if(!"nodes" %in% names(Args)){
+    nodes <- do.call(get_nodes, call_args)
+    Args$nodes <- nodes
+  }
+  if(!"layout" %in% names(Args)){
+    layout <- do.call(generate_layout, call_args)
+    Args$layout <- layout
+  }
   Args[["model"]] <- NULL
   do.call(graph.default, Args)
 }
@@ -196,7 +200,7 @@ prepare_graph <- function(...){
 #' @rdname prepare_graph
 #' @export
 prepare_graph.default <- function(edges,
-                                 layout,
+                                 layout = NULL,
                                  nodes = NULL,
                                  rect_width = 1.2,
                                  rect_height = .8,
@@ -219,7 +223,10 @@ prepare_graph.default <- function(edges,
   }
 
   # Check if nodes exist in edges and layout --------------------------------
-
+  if(inherits(layout, "matrix")){
+    layout <- as.layout(layout)
+    Args$layout <- layout
+  }
   df_edges <- edges
   fac_vars <- sapply(df_edges, inherits, what = "factor")
   if(any(fac_vars)){
@@ -359,7 +366,7 @@ prepare_graph.default <- function(edges,
 #' \code{mplus.model} or \code{lavaan}).
 #' @rdname prepare_graph
 #' @export
-prepare_graph.lavaan <- function(model, layout, ...){
+prepare_graph.lavaan <- function(model, ...){
   Args <- as.list(match.call()[-1])
   do.call(prepare_graph_model, Args)
 }
@@ -369,14 +376,22 @@ prepare_graph.lavaan <- function(model, layout, ...){
 #' @export
 prepare_graph.mplus.model <- prepare_graph.lavaan
 
-prepare_graph_model <- function(model, layout, ...) {
-  Args <- list(x = model)
-  edges <- do.call(get_edges, Args)
-  nodes <- do.call(get_nodes, Args)
+prepare_graph_model <- function(model, ...) {
+  browser()
   Args <- as.list(match.call()[-1])
-  Args$layout <- layout
-  Args$edges <- edges
-  Args$nodes <- nodes
+  call_args <- list(x = model)
+  if(!"edges" %in% names(Args)){
+    edges <- do.call(get_edges, call_args)
+    Args$edges <- edges
+  }
+  if(!"nodes" %in% names(Args)){
+    nodes <- do.call(get_nodes, call_args)
+    Args$nodes <- nodes
+  }
+  if(!"layout" %in% names(Args)){
+    layout <- do.call(generate_layout, call_args)
+    Args$layout <- layout
+  }
   Args[["model"]] <- NULL
   do.call(prepare_graph.default, Args)
 }

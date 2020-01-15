@@ -73,7 +73,7 @@ as.lavaan <- function(x, ...){
 #' @export
 #' @importFrom lavaan mplus2lavaan.modelSyntax
 as.lavaan.sem_syntax <- function(x, ...){
-  tab <- mod$syntax
+  tab <- x$syntax
   tab$free <- as.numeric(as.logical(tab$free))
   names(tab)[match("value", names(tab))] <- "ustart"
   if(any(c("label", "group", "level") %in% names(tab))){

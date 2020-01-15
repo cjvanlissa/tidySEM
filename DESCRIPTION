@@ -22,7 +22,8 @@ Imports:
     utils,
     ggplot2,
     lavaan,
-    MplusAutomation
+    MplusAutomation,
+    igraph
 Suggests:
     testthat (>= 2.1.0),
     knitr,

@@ -9,15 +9,15 @@
 \usage{
 prepare_graph(...)
 
-\method{prepare_graph}{default}(edges, layout, nodes = NULL,
+\method{prepare_graph}{default}(edges, layout = NULL, nodes = NULL,
   rect_width = 1.2, rect_height = 0.8, ellipses_width = 1,
   ellipses_height = 1, variance_diameter = 0.8, spacing_x = 2,
   spacing_y = 2, text_size = 4, curvature = 60, angle = NULL,
   fix_coord = FALSE, ...)
 
-\method{prepare_graph}{lavaan}(model, layout, ...)
+\method{prepare_graph}{lavaan}(model, ...)
 
-\method{prepare_graph}{mplus.model}(model, layout, ...)
+\method{prepare_graph}{mplus.model}(model, ...)
 }
 \arguments{
 \item{...}{Additional arguments passed to and from functions.}

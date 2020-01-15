@@ -9,15 +9,15 @@
 \usage{
 graph(...)
 
-\method{graph}{default}(edges, layout, nodes = NULL, rect_width = 1.2,
-  rect_height = 0.8, ellipses_width = 1, ellipses_height = 1,
-  variance_diameter = 0.8, spacing_x = 2, spacing_y = 2,
-  text_size = 4, curvature = 60, angle = NULL, fix_coord = FALSE,
-  ...)
+\method{graph}{default}(edges, layout = NULL, nodes = NULL,
+  rect_width = 1.2, rect_height = 0.8, ellipses_width = 1,
+  ellipses_height = 1, variance_diameter = 0.8, spacing_x = 2,
+  spacing_y = 2, text_size = 4, curvature = 60, angle = NULL,
+  fix_coord = FALSE, ...)
 
-\method{graph}{lavaan}(model, layout, ...)
+\method{graph}{lavaan}(model, ...)
 
-\method{graph}{mplus.model}(model, layout, ...)
+\method{graph}{mplus.model}(model, ...)
 }
 \arguments{
 \item{...}{Additional arguments passed to and from functions.}
