@@ -33,8 +33,10 @@ Takes a model object, and formats it as a publication-ready table.
 #Make me!
 }
 \seealso{
-Other Reporting tools: \code{\link{conf_int}},
-  \code{\link{est_sig}}, \code{\link{report_columns}}
+Other Reporting tools: 
+\code{\link{conf_int}()},
+\code{\link{est_sig}()},
+\code{\link{report_columns}()}
 }
 \author{
 Caspar J. van Lissa

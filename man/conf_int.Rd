@@ -33,8 +33,10 @@ conf_int(x = c(1.325, 2.432), se = c(.05336, .00325))
 \seealso{
 table_results est_sig
 
-Other Reporting tools: \code{\link{est_sig}},
-  \code{\link{report_columns}}, \code{\link{table_results}}
+Other Reporting tools: 
+\code{\link{est_sig}()},
+\code{\link{report_columns}()},
+\code{\link{table_results}()}
 }
 \author{
 Caspar J. van Lissa

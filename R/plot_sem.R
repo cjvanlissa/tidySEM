@@ -35,9 +35,8 @@ graph <- function(...){
 #' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
 #' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 #' "label", "connect_from", "connect_to", "curvature")}.
-#' @param layout An object of class \code{tidy_layout}, or a matrix with the
-#' layout of the graph that can be converted using
-#' \code{\link[tidySEM]{as.layout}}.
+#' @param layout A matrix (or data.frame) that describes the layout; see
+#' \code{\link[tidySEM]{get_layout}}.
 #' @param nodes Optional, object of class 'tidy_nodes', created with the
 #' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
 #' least) the column \code{c("name")}, and optionally, \code{c("shape",
@@ -123,7 +122,7 @@ graph_model <- function(model, ...) {
     Args$nodes <- nodes
   }
   if(!"layout" %in% names(Args)){
-    layout <- do.call(generate_layout, call_args)
+    layout <- do.call(get_layout, call_args)
     Args$layout <- layout
   }
   Args[["model"]] <- NULL
@@ -164,9 +163,8 @@ prepare_graph <- function(...){
 #' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
 #' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 #' "label", "connect_from", "connect_to", "curvature")}.
-#' @param layout An object of class \code{tidy_layout}, or a matrix with the
-#' layout of the graph that can be converted using
-#' \code{\link[tidySEM]{as.layout}}.
+#' @param layout A matrix (or data.frame) that describes the layout; see
+#' \code{\link[tidySEM]{get_layout}}.
 #' @param nodes Optional, object of class 'tidy_nodes', created with the
 #' \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
 #' least) the column \code{c("name")}, and optionally, \code{c("shape",
@@ -223,9 +221,11 @@ prepare_graph.default <- function(edges,
   }
 
   # Check if nodes exist in edges and layout --------------------------------
-  if(inherits(layout, "matrix")){
-    layout <- as.layout(layout)
+  if(inherits(layout, c("matrix", "data.frame"))){
+    layout <- long_layout(layout)
     Args$layout <- layout
+  } else {
+    stop("Argument 'layout' must be a matrix or data.frame.")
   }
   df_edges <- edges
   fac_vars <- sapply(df_edges, inherits, what = "factor")
@@ -377,7 +377,6 @@ prepare_graph.lavaan <- function(model, ...){
 prepare_graph.mplus.model <- prepare_graph.lavaan
 
 prepare_graph_model <- function(model, ...) {
-  browser()
   Args <- as.list(match.call()[-1])
   call_args <- list(x = model)
   if(!"edges" %in% names(Args)){
@@ -389,7 +388,7 @@ prepare_graph_model <- function(model, ...) {
     Args$nodes <- nodes
   }
   if(!"layout" %in% names(Args)){
-    layout <- do.call(generate_layout, call_args)
+    layout <- do.call(get_layout, call_args)
     Args$layout <- layout
   }
   Args[["model"]] <- NULL
@@ -672,92 +671,6 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
 }
 
 
-#' @title Convert object to layout
-#' @description Convert an object to a tidy_layout for a SEM graph.
-#' @param x Object to convert to a tidy_layout. The default argument reads a
-#' selected matrix from the clipboard.
-#' To use this functionality, specify your layout in a spreadsheet program,
-#' select the block of cells, and copy it to the clipboard.
-#' @return Object of class 'tidy_layout'
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname as.layout
-#' @keywords tidy_graph
-#' @export
-as.layout <- function(x){
-  UseMethod("as.layout")
-}
-
-#' @method as.layout data.frame
-#' @export
-as.layout.data.frame <- function(x){
-  Args <- as.list(match.call()[-1])
-  Args$x <- as.matrix(x)
-  do.call(as.layout, Args)
-}
-
-#' @method as.layout matrix
-#' @export
-as.layout.matrix <- function(x){
-  mat <- x
-  mat[is.na(mat)] <- ""
-  nodes_long <- setNames(as.data.frame.table(mat), c("y", "x", "name"))
-  nodes_long[1:2] <- lapply(nodes_long[1:2], as.numeric)
-  nodes_long$y <- (max(nodes_long$y)+1)-nodes_long$y
-  nodes_long$name <- as.character(nodes_long$name)
-  #nodes_long$shape <- as.vector(shape)
-  nodes_long <- nodes_long[!nodes_long$name == "", ]
-  row.names(nodes_long) <- NULL
-  class(nodes_long) <- c("tidy_layout", class(nodes_long))
-  nodes_long
-}
-
-#' @title Generate graph layout
-#' @description Generate a tidy_layout for a SEM graph by specifying node names,
-#' and empty strings or \code{NA} values for spaces.
-#' @param ... Character arguments corresponding to layout elements. Use node
-#' names, empty strings (""), or NA values.
-#' @param rows Numeric, indicating the number of rows of the graph.
-#' @return Object of class 'tidy_layout'
-#' @examples
-#' get_layout("c", "",  "d",
-#'            "",  "e", "", rows = 2)
-#' @rdname layout
-#' @keywords tidy_graph
-#' @seealso as.layout
-#' @export
-get_layout <- function(..., rows = NULL){
-  Args <- as.list(match.call()[-1])
-  if("rows" %in% names(Args)){
-    Args$rows <- NULL
-  } else {
-    if(length(sapply(Args, is.numeric)) == 1){
-      Args[which(sapply(Args, is.numeric))] <- NULL
-    } else {
-      stop("Provide 'rows' argument.", call. = FALSE)
-    }
-  }
-  if(!(length(Args) %% rows == 0)){
-    stop("Number of arguments is not a multiple of rows = ", rows, call. = FALSE)
-  }
-  vec <- do.call(c, Args)
-
-  Args <- list(x = do.call(matrix, list(
-    data = vec,
-    nrow = rows,
-    byrow = TRUE
-  )))
-  out <- do.call(as.layout, Args)
-  class(out) <- c("tidy_layout", class(out))
-  out
-}
-
-
-
 .euclidean_distance <- function(p, q){
   sqrt(sum((p - q)^2))
 }
@@ -802,7 +715,6 @@ match.call.defaults <- function(...) {
   xlabel[df$connect_from == "right"] <-
     xlabel[df$connect_from == "right"] - diameter
   offset[df$connect_from == "right"] <- 1
-
   df_label <- data.frame(df,
                          x = xlabel,
                          y = ylabel,
@@ -1062,7 +974,9 @@ match.call.defaults <- function(...) {
 }
 
 .plot_label_internal <- function(p, df, text_size){
-  df <- df[, c("x", "y", "label", grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|alpha)$", names(df), value = TRUE)), drop = FALSE]
+  retain_cols <- c("x", "y", "label", "group", "level")
+  retain_cols <- retain_cols[which(retain_cols %in% names(df))]
+  df <- df[, c(retain_cols, grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|alpha)$", names(df), value = TRUE)), drop = FALSE]
   if(nrow(df) > 0){
     names(df) <- gsub("^label_", "", names(df))
     # Prepare aesthetics ------------------------------------------------------

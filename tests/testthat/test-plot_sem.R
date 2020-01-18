@@ -1,15 +1,15 @@
-layout <- get_layout("ne", "phys", "",
+lo <- get_layout("ne", "phys", "",
                      "plea", "", "",
                      "dist", "", "dep",
                      "saf", "", "",
                      "coh", "stress", "", rows = 5)
 
-test_that("matrix correctly converts to tidy_layout", {
-  expect_s3_class(layout, "tidy_layout")
+test_that("get_layout generates matrix", {
+  expect_true(class(lo) == "matrix")
 })
 
-
-df_nodes <-  data.frame(node_id = 1:length(layout$name), name = layout$name, stringsAsFactors = FALSE)
+long_lo <- tidySEM:::long_layout(lo)
+df_nodes <-  data.frame(node_id = 1:length(long_lo$name), name = long_lo$name, stringsAsFactors = FALSE)
 df_nodes$shape <- "oval"
 df_nodes$shape[grepl("(phys)", df_nodes$name)] <- "rect"
 labels <- list("ne" = "Natural environment",
@@ -44,7 +44,7 @@ df_edges$from <- df_nodes$name[as.numeric(df_edges$from)]
 df_edges$to <- df_nodes$name[as.numeric(df_edges$to)]
 df_edges$curvature <- c(rep(NA, 12))
 
-prep <- prepare_graph(nodes = df_nodes, layout = layout, edges = df_edges)
+prep <- prepare_graph(nodes = df_nodes, layout = lo, edges = df_edges)
 
 test_that("prepare_graph correctly generates graph data", {
   expect_s3_class(prep, "sem_graph")

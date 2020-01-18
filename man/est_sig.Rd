@@ -25,8 +25,10 @@ est_sig(c(.222, .3333), sig = c(.054, .045))
 \seealso{
 table_results
 
-Other Reporting tools: \code{\link{conf_int}},
-  \code{\link{report_columns}}, \code{\link{table_results}}
+Other Reporting tools: 
+\code{\link{conf_int}()},
+\code{\link{report_columns}()},
+\code{\link{table_results}()}
 }
 \author{
 Caspar J. van Lissa

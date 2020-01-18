@@ -64,6 +64,83 @@ get_edges(fit)
 
 ### Step 3: Specifying a layout
 
+In `tidySEM`, the layout is specified as a matrix (grid) with node names and empty spaces (`NA` or `""`). There are essentially three ways to specify the layout:
+
+1. Manually in R
+2. Automatically, from the fit model
+3. In a spreadsheet program
+
+#### Specifying layout manually in R
+
+Specify a grid for the layout by providing node names and empty spaces (`NA` or `""`), and the number of rows of the desired layout matrix. For example: 
+
+```{r}
+get_layout("c", NA,  "d",
+           NA,  "e", NA, rows = 2)
+```
+
+#### Automatically generate layout for a model
+
+A layout can be automatically generated for a fit model (lavaan or Mplus) using the function `igraph::layout_as_tree()`, or other layout functions in the `igraph` package. For example: 
+
+```{r message=FALSE, warning = FALSE}
+library(lavaan)
+fit <- cfa(' visual  =~ x1 + x2 + x3 ',
+           data = HolzingerSwineford1939[1:50, ])
+get_layout(fit)
+```
+
+Other layout functions from the `igraph` package can be used by specifying the `layout_algorithm = ...` argument:
+
+```{r message=FALSE, warning = FALSE}
+get_layout(fit, layout_algorithm = "layout_in_circle")
+```
+
+#### Specifying layout in a spreadsheet program
+
+Specifying the layout in a spreadsheet program is very user-friendly, because one can visually position the nodes, e.g.:
+
+![](spreadsheet.png)
+
+To obtain the layout matrix, one can save the spreadsheet as `.csv` file and load it in R like this:
+
+```{r, eval = FALSE, echo = TRUE}
+read.csv("example.csv")
+```
+
+```{r echo = FALSE, eval = TRUE}
+write.csv(matrix(c("x1", "x2",  "x3", "",  "visual", ""), nrow = 2, byrow = TRUE), file = "example.csv", row.names = FALSE)
+read.csv("example.csv")
+file.remove("example.csv")
+```
+
+Alternatively, one can select the layout as in the image above, copy it to the clipboard, and then read it into R from the clipboard. This works differently on Windows and Mac.
+
+On Windows, run:
+
+```{r, eval = FALSE, echo = TRUE}
+read.table("clipboard", sep = "\t")
+```
+
+On Mac, run:
+
+```{r, eval = FALSE, echo = TRUE}
+read.table(pipe("pbpaste"), sep="\t")
+```
+
+```{r echo = FALSE, eval = TRUE}
+structure(list(V1 = structure(2:1, .Label = c("", "x1"), class = "factor"), 
+    V2 = structure(2:1, .Label = c("visual", "x2"), class = "factor"), 
+    V3 = structure(2:1, .Label = c("", "x3"), class = "factor")), class = "data.frame", row.names = c(NA, 
+-2L))
+HS.model <- ' visual  =~ x1 + x2 + x3
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9 '
+fit <- cfa(HS.model, data=HolzingerSwineford1939)
+```
+
+### Examples of user-defined layout
+
 We can specify a simple layout for two hypothetical nodes `x` and `y` is generated as follows:
 
 ```{r}

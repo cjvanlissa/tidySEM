@@ -34,9 +34,11 @@ SBChisquare(24, 78, 1.02, 65, 70, 1.28)
 \code{\link{SB_chisq_Pvalues}} to apply SBChisquare to a table of
 model chi-square values.
 
-Other Mplus functions: \code{\link{SB_chisq_Pvalues}},
-  \code{\link{param_label}}, \code{\link{rbind_tables}},
-  \code{\link{table_cor}}
+Other Mplus functions: 
+\code{\link{SB_chisq_Pvalues}()},
+\code{\link{param_label}()},
+\code{\link{rbind_tables}()},
+\code{\link{table_cor}()}
 }
 \author{
 Caspar J. van Lissa

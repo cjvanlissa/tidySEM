@@ -4,8 +4,12 @@
 \alias{table_cor}
 \title{Extract correlation tables from mplusModel}
 \usage{
-table_cor(mplusModel, parameters = "stdyx.standardized",
-  valueColumn = "est_sig", digits = 2)
+table_cor(
+  mplusModel,
+  parameters = "stdyx.standardized",
+  valueColumn = "est_sig",
+  digits = 2
+)
 }
 \arguments{
 \item{mplusModel}{An mplusModel object, as returned by \code{readModels}.}
@@ -33,9 +37,11 @@ publication-ready correlation matrix.
 \seealso{
 \code{\link[MplusAutomation]{readModels}}.
 
-Other Mplus functions: \code{\link{SBChisquare}},
-  \code{\link{SB_chisq_Pvalues}},
-  \code{\link{param_label}}, \code{\link{rbind_tables}}
+Other Mplus functions: 
+\code{\link{SBChisquare}()},
+\code{\link{SB_chisq_Pvalues}()},
+\code{\link{param_label}()},
+\code{\link{rbind_tables}()}
 }
 \author{
 Caspar J. van Lissa

@@ -25,9 +25,11 @@ SB_chisq_Pvalues(df)
 \seealso{
 \code{\link{SBChisquare}} for a single chi-square test.
 
-Other Mplus functions: \code{\link{SBChisquare}},
-  \code{\link{param_label}}, \code{\link{rbind_tables}},
-  \code{\link{table_cor}}
+Other Mplus functions: 
+\code{\link{SBChisquare}()},
+\code{\link{param_label}()},
+\code{\link{rbind_tables}()},
+\code{\link{table_cor}()}
 }
 \author{
 Caspar J. van Lissa

@@ -25,9 +25,11 @@ param_label(data)
 \seealso{
 \code{\link[MplusAutomation]{readModels}}.
 
-Other Mplus functions: \code{\link{SBChisquare}},
-  \code{\link{SB_chisq_Pvalues}},
-  \code{\link{rbind_tables}}, \code{\link{table_cor}}
+Other Mplus functions: 
+\code{\link{SBChisquare}()},
+\code{\link{SB_chisq_Pvalues}()},
+\code{\link{rbind_tables}()},
+\code{\link{table_cor}()}
 }
 \author{
 Caspar J. van Lissa

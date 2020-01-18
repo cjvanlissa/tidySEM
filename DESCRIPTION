@@ -13,7 +13,7 @@ Description: A tidy workflow for running, reporting, and plotting structural
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Depends:
     R (>= 3.0.0),
 Imports:

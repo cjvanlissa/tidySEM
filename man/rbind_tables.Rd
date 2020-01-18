@@ -26,9 +26,11 @@ table_list <- list(
 rbind_tables(table_list)
 }
 \seealso{
-Other Mplus functions: \code{\link{SBChisquare}},
-  \code{\link{SB_chisq_Pvalues}},
-  \code{\link{param_label}}, \code{\link{table_cor}}
+Other Mplus functions: 
+\code{\link{SBChisquare}()},
+\code{\link{SB_chisq_Pvalues}()},
+\code{\link{param_label}()},
+\code{\link{table_cor}()}
 }
 \author{
 Caspar J. van Lissa

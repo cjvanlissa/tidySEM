@@ -4,8 +4,9 @@
 \alias{report_columns}
 \title{Change which columns table_results reports}
 \usage{
-report_columns(x = c("label", "est_sig", "se", "pval", "confint",
-  "group", "level"))
+report_columns(
+  x = c("label", "est_sig", "se", "pval", "confint", "group", "level")
+)
 }
 \arguments{
 \item{x}{A character vector with column names for
@@ -19,8 +20,10 @@ Sets a global option to control which columns table_results reports when
 report_columns(c("label", "est_sig", "se", "pval", "confint", "group"))
 }
 \seealso{
-Other Reporting tools: \code{\link{conf_int}},
-  \code{\link{est_sig}}, \code{\link{table_results}}
+Other Reporting tools: 
+\code{\link{conf_int}()},
+\code{\link{est_sig}()},
+\code{\link{table_results}()}
 }
 \author{
 Caspar J. van Lissa

@@ -9,11 +9,23 @@
 \usage{
 prepare_graph(...)
 
-\method{prepare_graph}{default}(edges, layout = NULL, nodes = NULL,
-  rect_width = 1.2, rect_height = 0.8, ellipses_width = 1,
-  ellipses_height = 1, variance_diameter = 0.8, spacing_x = 2,
-  spacing_y = 2, text_size = 4, curvature = 60, angle = NULL,
-  fix_coord = FALSE, ...)
+\method{prepare_graph}{default}(
+  edges,
+  layout = NULL,
+  nodes = NULL,
+  rect_width = 1.2,
+  rect_height = 0.8,
+  ellipses_width = 1,
+  ellipses_height = 1,
+  variance_diameter = 0.8,
+  spacing_x = 2,
+  spacing_y = 2,
+  text_size = 4,
+  curvature = 60,
+  angle = NULL,
+  fix_coord = FALSE,
+  ...
+)
 
 \method{prepare_graph}{lavaan}(model, ...)
 
@@ -26,9 +38,8 @@ prepare_graph(...)
 least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 "label", "connect_from", "connect_to", "curvature")}.}
 
-\item{layout}{An object of class \code{tidy_layout}, or a matrix with the
-layout of the graph that can be converted using
-\code{\link[tidySEM]{as.layout}}.}
+\item{layout}{A matrix (or data.frame) that describes the layout; see
+\code{\link[tidySEM]{get_layout}}.}
 
 \item{nodes}{Optional, object of class 'tidy_nodes', created with the
 \code{\link[tidySEM]{get_nodes}} function, or a \code{data.frame} with (at
