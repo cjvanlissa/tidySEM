@@ -70,7 +70,7 @@ square values, degrees of freedom, and scale correction factors." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.5</span>
       </span>
     </div>
 
@@ -92,6 +92,9 @@ square values, degrees of freedom, and scale correction factors." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
@@ -142,9 +145,11 @@ for chi-square difference tests.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='SBChisquare.html'>SBChisquare</a></code> for a single chi-square test.</p>
-<p>Other Mplus functions: <code><a href='SBChisquare.html'>SBChisquare</a></code>,
-  <code><a href='param_label.html'>param_label</a></code>, <code><a href='rbind_tables.html'>rbind_tables</a></code>,
-  <code><a href='table_cor.html'>table_cor</a></code></p></div>
+<p>Other Mplus functions: 
+<code><a href='SBChisquare.html'>SBChisquare</a>()</code>,
+<code><a href='param_label.html'>param_label</a>()</code>,
+<code><a href='rbind_tables.html'>rbind_tables</a>()</code>,
+<code><a href='table_cor.html'>table_cor</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>23</span>, <span class='fl'>44</span>, <span class='fl'>65</span>), <span class='kw'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>78</span>, <span class='fl'>74</span>, <span class='fl'>70</span>), <span class='kw'>scf</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.02</span>, <span class='fl'>1.12</span>, <span class='fl'>1.28</span>))

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a data dictionary — dictionary • tidySEM</title>
+<title>Extract dictionary from sem_syntax — dictionary • tidySEM</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,10 @@
 
 
 
-<meta property="og:title" content="Make a data dictionary — dictionary" />
-<meta property="og:description" content="Make a data dictionary for a data.frame, based on variable names." />
+<meta property="og:title" content="Extract dictionary from sem_syntax — dictionary" />
+<meta property="og:description" content="Provides access to the dictionary element of a
+sem_syntax object. This can be used to return or assign to the
+dictionary element." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.5</span>
       </span>
     </div>
 
@@ -92,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
   </ul>
@@ -112,162 +117,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a data dictionary</h1>
+    <h1>Extract dictionary from sem_syntax</h1>
     
     <div class="hidden name"><code>dictionary.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Make a data dictionary for a data.frame, based on variable names.</p>
+    <p>Provides access to the <code>dictionary</code> element of a
+<code>sem_syntax</code> object. This can be used to return or assign to the
+<code>dictionary</code> element.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dictionary</span>(<span class='no'>x</span>, <span class='kw'>split</span> <span class='kw'>=</span> <span class='st'>"_"</span>)</pre>
+    <pre class="usage"><span class='fu'>dictionary</span>(<span class='no'>x</span>)
+
+<span class='fu'>dictionary</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object for which a method exists, e.g., a vector of variable
-names, or a data.frame.</p></td>
+      <td><p>Object of class sem_syntax.</p></td>
     </tr>
     <tr>
-      <th>split</th>
-      <td><p>Character. Within variable names, which character separates the
-name of the scale/construct from the number (or name) of the item? E.g.,
-if the name is <code>"construct_1"</code>, the split character <code>"_"</code> separates
-the <code>"construct"</code> name from item number <code>"1"</code>.</p></td>
+      <th>value</th>
+      <td><p>A valid value for <code>dictionary(x)</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class "data_dict"</p>
+    <p>data.frame</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>dictionary</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bfi_1"</span>, <span class='st'>"bfi_2"</span>, <span class='st'>"bfi_3"</span>, <span class='st'>"bfi_4"</span>, <span class='st'>"bfi_5"</span>,
-<span class='st'>"macqj_1"</span>, <span class='st'>"macqj_2"</span>, <span class='st'>"macqj_3"</span>, <span class='st'>"macqj_4"</span>, <span class='st'>"macqj_5"</span>, <span class='st'>"macqj_6"</span>,
-<span class='st'>"macqj_7"</span>, <span class='st'>"macqj_8"</span>, <span class='st'>"macqj_9"</span>, <span class='st'>"macqj_10"</span>, <span class='st'>"macqj_11"</span>,
-<span class='st'>"macqj_12"</span>, <span class='st'>"macqj_13"</span>, <span class='st'>"macqj_14"</span>, <span class='st'>"macqj_15"</span>, <span class='st'>"macqj_16"</span>,
-<span class='st'>"macqj_17"</span>, <span class='st'>"macqj_18"</span>, <span class='st'>"macqj_19"</span>, <span class='st'>"macqj_20"</span>, <span class='st'>"macqj_21"</span>,
-<span class='st'>"macqr_1"</span>, <span class='st'>"macqr_2"</span>, <span class='st'>"macqr_3"</span>, <span class='st'>"macqr_4"</span>, <span class='st'>"macqr_5"</span>, <span class='st'>"macqr_6"</span>,
-<span class='st'>"macqr_7"</span>, <span class='st'>"macqr_8"</span>, <span class='st'>"macqr_9"</span>, <span class='st'>"macqr_10"</span>, <span class='st'>"macqr_11"</span>,
-<span class='st'>"macqr_12"</span>, <span class='st'>"macqr_13"</span>, <span class='st'>"macqr_14"</span>, <span class='st'>"macqr_15"</span>, <span class='st'>"macqr_16"</span>,
-<span class='st'>"macqr_17"</span>, <span class='st'>"macqr_18"</span>, <span class='st'>"macqr_19"</span>, <span class='st'>"macqr_20"</span>, <span class='st'>"macqr_21"</span>, <span class='st'>"sex"</span>))</div><div class='output co'>#&gt;        name scale item     type    label
-#&gt; 1     bfi_1   bfi    1 observed    bfi_1
-#&gt; 2     bfi_2   bfi    2 observed    bfi_2
-#&gt; 3     bfi_3   bfi    3 observed    bfi_3
-#&gt; 4     bfi_4   bfi    4 observed    bfi_4
-#&gt; 5     bfi_5   bfi    5 observed    bfi_5
-#&gt; 6   macqj_1 macqj    1 observed  macqj_1
-#&gt; 7   macqj_2 macqj    2 observed  macqj_2
-#&gt; 8   macqj_3 macqj    3 observed  macqj_3
-#&gt; 9   macqj_4 macqj    4 observed  macqj_4
-#&gt; 10  macqj_5 macqj    5 observed  macqj_5
-#&gt; 11  macqj_6 macqj    6 observed  macqj_6
-#&gt; 12  macqj_7 macqj    7 observed  macqj_7
-#&gt; 13  macqj_8 macqj    8 observed  macqj_8
-#&gt; 14  macqj_9 macqj    9 observed  macqj_9
-#&gt; 15 macqj_10 macqj   10 observed macqj_10
-#&gt; 16 macqj_11 macqj   11 observed macqj_11
-#&gt; 17 macqj_12 macqj   12 observed macqj_12
-#&gt; 18 macqj_13 macqj   13 observed macqj_13
-#&gt; 19 macqj_14 macqj   14 observed macqj_14
-#&gt; 20 macqj_15 macqj   15 observed macqj_15
-#&gt; 21 macqj_16 macqj   16 observed macqj_16
-#&gt; 22 macqj_17 macqj   17 observed macqj_17
-#&gt; 23 macqj_18 macqj   18 observed macqj_18
-#&gt; 24 macqj_19 macqj   19 observed macqj_19
-#&gt; 25 macqj_20 macqj   20 observed macqj_20
-#&gt; 26 macqj_21 macqj   21 observed macqj_21
-#&gt; 27  macqr_1 macqr    1 observed  macqr_1
-#&gt; 28  macqr_2 macqr    2 observed  macqr_2
-#&gt; 29  macqr_3 macqr    3 observed  macqr_3
-#&gt; 30  macqr_4 macqr    4 observed  macqr_4
-#&gt; 31  macqr_5 macqr    5 observed  macqr_5
-#&gt; 32  macqr_6 macqr    6 observed  macqr_6
-#&gt; 33  macqr_7 macqr    7 observed  macqr_7
-#&gt; 34  macqr_8 macqr    8 observed  macqr_8
-#&gt; 35  macqr_9 macqr    9 observed  macqr_9
-#&gt; 36 macqr_10 macqr   10 observed macqr_10
-#&gt; 37 macqr_11 macqr   11 observed macqr_11
-#&gt; 38 macqr_12 macqr   12 observed macqr_12
-#&gt; 39 macqr_13 macqr   13 observed macqr_13
-#&gt; 40 macqr_14 macqr   14 observed macqr_14
-#&gt; 41 macqr_15 macqr   15 observed macqr_15
-#&gt; 42 macqr_16 macqr   16 observed macqr_16
-#&gt; 43 macqr_17 macqr   17 observed macqr_17
-#&gt; 44 macqr_18 macqr   18 observed macqr_18
-#&gt; 45 macqr_19 macqr   19 observed macqr_19
-#&gt; 46 macqr_20 macqr   20 observed macqr_20
-#&gt; 47 macqr_21 macqr   21 observed macqr_21
-#&gt; 48      sex  &lt;NA&gt; &lt;NA&gt; observed      sex</div><div class='input'><span class='fu'>dictionary</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bfi_1"</span>, <span class='st'>"bfi_2"</span>, <span class='st'>"bfi_3"</span>, <span class='st'>"bfi_4"</span>, <span class='st'>"bfi_5"</span>,
-<span class='st'>"mac_q_j_1"</span>, <span class='st'>"mac_q_j_2"</span>, <span class='st'>"mac_q_j_3"</span>, <span class='st'>"mac_q_j_4"</span>, <span class='st'>"mac_q_j_5"</span>, <span class='st'>"mac_q_j_6"</span>,
-<span class='st'>"mac_q_j_7"</span>, <span class='st'>"mac_q_j_8"</span>, <span class='st'>"mac_q_j_9"</span>, <span class='st'>"mac_q_j_10"</span>, <span class='st'>"mac_q_j_11"</span>,
-<span class='st'>"mac_q_j_12"</span>, <span class='st'>"mac_q_j_13"</span>, <span class='st'>"mac_q_j_14"</span>, <span class='st'>"mac_q_j_15"</span>, <span class='st'>"mac_q_j_16"</span>,
-<span class='st'>"mac_q_j_17"</span>, <span class='st'>"mac_q_j_18"</span>, <span class='st'>"mac_q_j_19"</span>, <span class='st'>"mac_q_j_20"</span>, <span class='st'>"mac_q_j_21"</span>,
-<span class='st'>"mac_q_r_1"</span>, <span class='st'>"mac_q_r_2"</span>, <span class='st'>"mac_q_r_3"</span>, <span class='st'>"mac_q_r_4"</span>, <span class='st'>"mac_q_r_5"</span>, <span class='st'>"mac_q_r_6"</span>,
-<span class='st'>"mac_q_r_7"</span>, <span class='st'>"mac_q_r_8"</span>, <span class='st'>"mac_q_r_9"</span>, <span class='st'>"mac_q_r_10"</span>, <span class='st'>"mac_q_r_11"</span>,
-<span class='st'>"mac_q_r_12"</span>, <span class='st'>"mac_q_r_13"</span>, <span class='st'>"mac_q_r_14"</span>, <span class='st'>"mac_q_r_15"</span>, <span class='st'>"mac_q_r_16"</span>,
-<span class='st'>"mac_q_r_17"</span>, <span class='st'>"mac_q_r_18"</span>, <span class='st'>"mac_q_r_19"</span>, <span class='st'>"mac_q_r_20"</span>, <span class='st'>"mac_q_r_21"</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Some variable names contained more than one splitting character. Ignored all but the last splitting character.</span></div><div class='output co'>#&gt;          name   scale item     type      label
-#&gt; 1       bfi_1     bfi    1 observed      bfi_1
-#&gt; 2       bfi_2     bfi    2 observed      bfi_2
-#&gt; 3       bfi_3     bfi    3 observed      bfi_3
-#&gt; 4       bfi_4     bfi    4 observed      bfi_4
-#&gt; 5       bfi_5     bfi    5 observed      bfi_5
-#&gt; 6   mac_q_j_1 mac_q_j    1 observed  mac_q_j_1
-#&gt; 7   mac_q_j_2 mac_q_j    2 observed  mac_q_j_2
-#&gt; 8   mac_q_j_3 mac_q_j    3 observed  mac_q_j_3
-#&gt; 9   mac_q_j_4 mac_q_j    4 observed  mac_q_j_4
-#&gt; 10  mac_q_j_5 mac_q_j    5 observed  mac_q_j_5
-#&gt; 11  mac_q_j_6 mac_q_j    6 observed  mac_q_j_6
-#&gt; 12  mac_q_j_7 mac_q_j    7 observed  mac_q_j_7
-#&gt; 13  mac_q_j_8 mac_q_j    8 observed  mac_q_j_8
-#&gt; 14  mac_q_j_9 mac_q_j    9 observed  mac_q_j_9
-#&gt; 15 mac_q_j_10 mac_q_j   10 observed mac_q_j_10
-#&gt; 16 mac_q_j_11 mac_q_j   11 observed mac_q_j_11
-#&gt; 17 mac_q_j_12 mac_q_j   12 observed mac_q_j_12
-#&gt; 18 mac_q_j_13 mac_q_j   13 observed mac_q_j_13
-#&gt; 19 mac_q_j_14 mac_q_j   14 observed mac_q_j_14
-#&gt; 20 mac_q_j_15 mac_q_j   15 observed mac_q_j_15
-#&gt; 21 mac_q_j_16 mac_q_j   16 observed mac_q_j_16
-#&gt; 22 mac_q_j_17 mac_q_j   17 observed mac_q_j_17
-#&gt; 23 mac_q_j_18 mac_q_j   18 observed mac_q_j_18
-#&gt; 24 mac_q_j_19 mac_q_j   19 observed mac_q_j_19
-#&gt; 25 mac_q_j_20 mac_q_j   20 observed mac_q_j_20
-#&gt; 26 mac_q_j_21 mac_q_j   21 observed mac_q_j_21
-#&gt; 27  mac_q_r_1 mac_q_r    1 observed  mac_q_r_1
-#&gt; 28  mac_q_r_2 mac_q_r    2 observed  mac_q_r_2
-#&gt; 29  mac_q_r_3 mac_q_r    3 observed  mac_q_r_3
-#&gt; 30  mac_q_r_4 mac_q_r    4 observed  mac_q_r_4
-#&gt; 31  mac_q_r_5 mac_q_r    5 observed  mac_q_r_5
-#&gt; 32  mac_q_r_6 mac_q_r    6 observed  mac_q_r_6
-#&gt; 33  mac_q_r_7 mac_q_r    7 observed  mac_q_r_7
-#&gt; 34  mac_q_r_8 mac_q_r    8 observed  mac_q_r_8
-#&gt; 35  mac_q_r_9 mac_q_r    9 observed  mac_q_r_9
-#&gt; 36 mac_q_r_10 mac_q_r   10 observed mac_q_r_10
-#&gt; 37 mac_q_r_11 mac_q_r   11 observed mac_q_r_11
-#&gt; 38 mac_q_r_12 mac_q_r   12 observed mac_q_r_12
-#&gt; 39 mac_q_r_13 mac_q_r   13 observed mac_q_r_13
-#&gt; 40 mac_q_r_14 mac_q_r   14 observed mac_q_r_14
-#&gt; 41 mac_q_r_15 mac_q_r   15 observed mac_q_r_15
-#&gt; 42 mac_q_r_16 mac_q_r   16 observed mac_q_r_16
-#&gt; 43 mac_q_r_17 mac_q_r   17 observed mac_q_r_17
-#&gt; 44 mac_q_r_18 mac_q_r   18 observed mac_q_r_18
-#&gt; 45 mac_q_r_19 mac_q_r   19 observed mac_q_r_19
-#&gt; 46 mac_q_r_20 mac_q_r   20 observed mac_q_r_20
-#&gt; 47 mac_q_r_21 mac_q_r   21 observed mac_q_r_21</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Caspar J. van Lissa</p>
   </div>
 </div>
 

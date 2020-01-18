@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.5</span>
       </span>
     </div>
 
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
   </ul>
@@ -93,7 +96,7 @@
 </li>
 <li>Examine what nodes and edges can be extracted from the fit model object, by running <code><a href="../reference/get_nodes.html">get_nodes(fit)</a></code> and <code><a href="../reference/get_edges.html">get_edges(fit)</a></code>
 </li>
-<li>Specify a layout for the graph using <code><a href="../reference/layout.html">get_layout()</a></code>
+<li>Specify a layout for the graph using <code><a href="../reference/get_layout.html">get_layout()</a></code>
 </li>
 <li>
 <em>Optionally</em>, prepare graph data before plotting, by running <code><a href="../reference/prepare_graph.html">prepare_graph(fit, layout)</a></code>. Store the resulting graph data in an object, e.g., <code>graph_data</code>
@@ -172,119 +175,173 @@
 <div id="step-3-specifying-a-layout" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3-specifying-a-layout" class="anchor"></a>Step 3: Specifying a layout</h3>
+<p>In <code>tidySEM</code>, the layout is specified as a matrix (grid) with node names and empty spaces (<code>NA</code> or <code>""</code>). There are essentially three ways to specify the layout:</p>
+<ol style="list-style-type: decimal">
+<li>Manually in R</li>
+<li>Automatically, from the fit model</li>
+<li>In a spreadsheet program</li>
+</ol>
+<div id="specifying-layout-manually-in-r" class="section level4">
+<h4 class="hasAnchor">
+<a href="#specifying-layout-manually-in-r" class="anchor"></a>Specifying layout manually in R</h4>
+<p>Specify a grid for the layout by providing node names and empty spaces (<code>NA</code> or <code>""</code>), and the number of rows of the desired layout matrix. For example:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"c"</span>, <span class="ot">NA</span>,  <span class="st">"d"</span>,</a>
+<a class="sourceLine" id="cb5-2" title="2">           <span class="ot">NA</span>,  <span class="st">"e"</span>, <span class="ot">NA</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt;      [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; [1,] "c"  NA   "d" </span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; [2,] NA   "e"  NA</span></a></code></pre></div>
+</div>
+<div id="automatically-generate-layout-for-a-model" class="section level4">
+<h4 class="hasAnchor">
+<a href="#automatically-generate-layout-for-a-model" class="anchor"></a>Automatically generate layout for a model</h4>
+<p>A layout can be automatically generated for a fit model (lavaan or Mplus) using the function <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html">igraph::layout_as_tree()</a></code>, or other layout functions in the <code>igraph</code> package. For example:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(lavaan)</a>
+<a class="sourceLine" id="cb6-2" title="2">fit &lt;-<span class="st"> </span><span class="kw">cfa</span>(<span class="st">' visual  =~ x1 + x2 + x3 '</span>,</a>
+<a class="sourceLine" id="cb6-3" title="3">           <span class="dt">data =</span> HolzingerSwineford1939[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, ])</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(fit)</a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">#&gt;      [,1] [,2]     [,3]</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; [1,] NA   "visual" NA  </span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; [2,] "x1" "x2"     "x3"</span></a></code></pre></div>
+<p>Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(fit, <span class="dt">layout_algorithm =</span> <span class="st">"layout_in_circle"</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">#&gt;      [,1] [,2] [,3]    </span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co">#&gt; [1,] NA   "x1" NA      </span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">#&gt; [2,] "x2" NA   "visual"</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">#&gt; [3,] NA   "x3" NA</span></a></code></pre></div>
+</div>
+<div id="specifying-layout-in-a-spreadsheet-program" class="section level4">
+<h4 class="hasAnchor">
+<a href="#specifying-layout-in-a-spreadsheet-program" class="anchor"></a>Specifying layout in a spreadsheet program</h4>
+<p>Specifying the layout in a spreadsheet program is very user-friendly, because one can visually position the nodes, e.g.:</p>
+<p><img src="spreadsheet.png"></p>
+<p>To obtain the layout matrix, one can save the spreadsheet as <code>.csv</code> file and load it in R like this:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="st">"example.csv"</span>)</a></code></pre></div>
+<pre><code>#&gt;   V1     V2 V3
+#&gt; 1 x1     x2 x3
+#&gt; 2    visual
+#&gt; [1] TRUE</code></pre>
+<p>Alternatively, one can select the layout as in the image above, copy it to the clipboard, and then read it into R from the clipboard. This works differently on Windows and Mac.</p>
+<p>On Windows, run:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="st">"clipboard"</span>, <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\t</span><span class="st">"</span>)</a></code></pre></div>
+<p>On Mac, run:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/connections.html">pipe</a></span>(<span class="st">"pbpaste"</span>), <span class="dt">sep=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>)</a></code></pre></div>
+<pre><code>#&gt;   V1     V2 V3
+#&gt; 1 x1     x2 x3
+#&gt; 2    visual</code></pre>
+</div>
+</div>
+<div id="examples-of-user-defined-layout" class="section level3">
+<h3 class="hasAnchor">
+<a href="#examples-of-user-defined-layout" class="anchor"></a>Examples of user-defined layout</h3>
 <p>We can specify a simple layout for two hypothetical nodes <code>x</code> and <code>y</code> is generated as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt;   y x name</span></a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt; 1 1 1    x</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; 2 1 2    y</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="co">#&gt;      [,1] [,2]</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co">#&gt; [1,] "x"  "y"</span></a></code></pre></div>
 <p>For a mediation model, one might specify a layout like this:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="../reference/layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,</a>
-<a class="sourceLine" id="cb6-2" title="2">           <span class="st">"x"</span>, <span class="st">""</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt;   y x name</span></a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; 1 1 1    x</span></a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="co">#&gt; 2 2 2    m</span></a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; 3 1 3    y</span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,</a>
+<a class="sourceLine" id="cb14-2" title="2">           <span class="st">"x"</span>, <span class="st">""</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#&gt;      [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#&gt; [1,] ""   "m"  ""  </span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#&gt; [2,] "x"  ""   "y"</span></a></code></pre></div>
 <p>For a three-item CFA model, one might specify:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="../reference/layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,</a>
-<a class="sourceLine" id="cb7-2" title="2">           <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="co">#&gt;   y x name</span></a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="co">#&gt; 1 1 1   y1</span></a>
-<a class="sourceLine" id="cb7-5" title="5"><span class="co">#&gt; 2 2 2    F</span></a>
-<a class="sourceLine" id="cb7-6" title="6"><span class="co">#&gt; 3 1 2   y2</span></a>
-<a class="sourceLine" id="cb7-7" title="7"><span class="co">#&gt; 4 1 3   y3</span></a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,</a>
+<a class="sourceLine" id="cb15-2" title="2">           <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="co">#&gt;      [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="co">#&gt; [1,] ""   "F"  ""  </span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt; [2,] "y1" "y2" "y3"</span></a></code></pre></div>
 <p>And for the CFA model we estimated above:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">lay &lt;-<span class="st"> </span><span class="kw"><a href="../reference/layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,</a>
-<a class="sourceLine" id="cb8-2" title="2">                  <span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span>, <span class="st">"x7"</span>, <span class="st">"x8"</span>, <span class="st">"x9"</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">lay &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,</a>
+<a class="sourceLine" id="cb16-2" title="2">                  <span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span>, <span class="st">"x7"</span>, <span class="st">"x8"</span>, <span class="st">"x9"</span>, <span class="dt">rows =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p>At this point, we could simply plot the graph:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">model =</span> fit, <span class="dt">layout =</span> lay)</a></code></pre></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">model =</span> fit, <span class="dt">layout =</span> lay)</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
 </div>
 <div id="optional-step-4-accessing-the-graph-data-before-plotting" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-4-accessing-the-graph-data-before-plotting" class="anchor"></a>Optional step 4: accessing the graph data before plotting</h3>
 <p>One important feature of <code>tidySEM</code> graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. First, use <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> to assign the plot data to an object.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">graph_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/prepare_graph.html">prepare_graph</a></span>(<span class="dt">model =</span> fit, <span class="dt">layout =</span> lay)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">graph_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/prepare_graph.html">prepare_graph</a></span>(<span class="dt">model =</span> fit, <span class="dt">layout =</span> lay)</a></code></pre></div>
 </div>
 <div id="optional-step-5-access-the-nodes-and-edges" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-5-access-the-nodes-and-edges" class="anchor"></a>Optional step 5: Access the nodes and edges</h3>
 <p>The nodes and edges can be examined using <code><a href="../reference/nodes.html">nodes(graph_data)</a></code> and <code><a href="../reference/edges.html">edges(graph_data)</a></code>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="../reference/nodes.html">nodes</a></span>(graph_data)</a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="co">#&gt;       name shape   label  x y node_xmin node_xmax node_ymin node_ymax</span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="co">#&gt; 1    speed  oval   speed 14 4      13.5      14.5       3.5       4.5</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="co">#&gt; 2  textual  oval textual 10 4       9.5      10.5       3.5       4.5</span></a>
-<a class="sourceLine" id="cb11-5" title="5"><span class="co">#&gt; 3   visual  oval  visual  6 4       5.5       6.5       3.5       4.5</span></a>
-<a class="sourceLine" id="cb11-6" title="6"><span class="co">#&gt; 4       x1  rect      x1  2 2       1.4       2.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-7" title="7"><span class="co">#&gt; 5       x2  rect      x2  4 2       3.4       4.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-8" title="8"><span class="co">#&gt; 6       x3  rect      x3  6 2       5.4       6.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-9" title="9"><span class="co">#&gt; 7       x4  rect      x4  8 2       7.4       8.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-10" title="10"><span class="co">#&gt; 8       x5  rect      x5 10 2       9.4      10.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-11" title="11"><span class="co">#&gt; 9       x6  rect      x6 12 2      11.4      12.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-12" title="12"><span class="co">#&gt; 10      x7  rect      x7 14 2      13.4      14.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-13" title="13"><span class="co">#&gt; 11      x8  rect      x8 16 2      15.4      16.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-14" title="14"><span class="co">#&gt; 12      x9  rect      x9 18 2      17.4      18.6       1.6       2.4</span></a>
-<a class="sourceLine" id="cb11-15" title="15"><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data)</a>
-<a class="sourceLine" id="cb11-16" title="16"><span class="co">#&gt;       from      to   label arrow curvature connect_from connect_to</span></a>
-<a class="sourceLine" id="cb11-17" title="17"><span class="co">#&gt; 1   visual      x1 0.77***  last        NA         left      right</span></a>
-<a class="sourceLine" id="cb11-18" title="18"><span class="co">#&gt; 2   visual      x2 0.42***  last        NA       bottom      right</span></a>
-<a class="sourceLine" id="cb11-19" title="19"><span class="co">#&gt; 3   visual      x3 0.58***  last        NA       bottom        top</span></a>
-<a class="sourceLine" id="cb11-20" title="20"><span class="co">#&gt; 4  textual      x4 0.85***  last        NA       bottom      right</span></a>
-<a class="sourceLine" id="cb11-21" title="21"><span class="co">#&gt; 5  textual      x5 0.86***  last        NA       bottom        top</span></a>
-<a class="sourceLine" id="cb11-22" title="22"><span class="co">#&gt; 6  textual      x6 0.84***  last        NA       bottom       left</span></a>
-<a class="sourceLine" id="cb11-23" title="23"><span class="co">#&gt; 7    speed      x7 0.57***  last        NA       bottom        top</span></a>
-<a class="sourceLine" id="cb11-24" title="24"><span class="co">#&gt; 8    speed      x8 0.72***  last        NA       bottom       left</span></a>
-<a class="sourceLine" id="cb11-25" title="25"><span class="co">#&gt; 9    speed      x9 0.67***  last        NA        right       left</span></a>
-<a class="sourceLine" id="cb11-26" title="26"><span class="co">#&gt; 10      x1      x1 0.40***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-27" title="27"><span class="co">#&gt; 11      x2      x2 0.82***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-28" title="28"><span class="co">#&gt; 12      x3      x3 0.66***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-29" title="29"><span class="co">#&gt; 13      x4      x4 0.27***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-30" title="30"><span class="co">#&gt; 14      x5      x5 0.27***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-31" title="31"><span class="co">#&gt; 15      x6      x6 0.30***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-32" title="32"><span class="co">#&gt; 16      x7      x7 0.68***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-33" title="33"><span class="co">#&gt; 17      x8      x8 0.48***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-34" title="34"><span class="co">#&gt; 18      x9      x9 0.56***  both        NA       bottom     bottom</span></a>
-<a class="sourceLine" id="cb11-35" title="35"><span class="co">#&gt; 19  visual  visual    1.00  both        NA          top        top</span></a>
-<a class="sourceLine" id="cb11-36" title="36"><span class="co">#&gt; 20 textual textual    1.00  both        NA          top        top</span></a>
-<a class="sourceLine" id="cb11-37" title="37"><span class="co">#&gt; 21   speed   speed    1.00  both        NA          top        top</span></a>
-<a class="sourceLine" id="cb11-38" title="38"><span class="co">#&gt; 22  visual textual 0.46***  none        60          top        top</span></a>
-<a class="sourceLine" id="cb11-39" title="39"><span class="co">#&gt; 23  visual   speed 0.47***  none        60          top        top</span></a>
-<a class="sourceLine" id="cb11-40" title="40"><span class="co">#&gt; 24 textual   speed 0.28***  none        60          top        top</span></a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw"><a href="../reference/nodes.html">nodes</a></span>(graph_data)</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="co">#&gt;       name shape   label  x y node_xmin node_xmax node_ymin node_ymax</span></a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co">#&gt; 1    speed  oval   speed 14 4      13.5      14.5       3.5       4.5</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="co">#&gt; 2  textual  oval textual 10 4       9.5      10.5       3.5       4.5</span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="co">#&gt; 3   visual  oval  visual  6 4       5.5       6.5       3.5       4.5</span></a>
+<a class="sourceLine" id="cb19-6" title="6"><span class="co">#&gt; 4       x1  rect      x1  2 2       1.4       2.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-7" title="7"><span class="co">#&gt; 5       x2  rect      x2  4 2       3.4       4.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-8" title="8"><span class="co">#&gt; 6       x3  rect      x3  6 2       5.4       6.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-9" title="9"><span class="co">#&gt; 7       x4  rect      x4  8 2       7.4       8.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-10" title="10"><span class="co">#&gt; 8       x5  rect      x5 10 2       9.4      10.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-11" title="11"><span class="co">#&gt; 9       x6  rect      x6 12 2      11.4      12.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-12" title="12"><span class="co">#&gt; 10      x7  rect      x7 14 2      13.4      14.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-13" title="13"><span class="co">#&gt; 11      x8  rect      x8 16 2      15.4      16.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-14" title="14"><span class="co">#&gt; 12      x9  rect      x9 18 2      17.4      18.6       1.6       2.4</span></a>
+<a class="sourceLine" id="cb19-15" title="15"><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data)</a>
+<a class="sourceLine" id="cb19-16" title="16"><span class="co">#&gt;       from      to   label arrow curvature connect_from connect_to</span></a>
+<a class="sourceLine" id="cb19-17" title="17"><span class="co">#&gt; 1   visual      x1 0.77***  last        NA         left      right</span></a>
+<a class="sourceLine" id="cb19-18" title="18"><span class="co">#&gt; 2   visual      x2 0.42***  last        NA       bottom      right</span></a>
+<a class="sourceLine" id="cb19-19" title="19"><span class="co">#&gt; 3   visual      x3 0.58***  last        NA       bottom        top</span></a>
+<a class="sourceLine" id="cb19-20" title="20"><span class="co">#&gt; 4  textual      x4 0.85***  last        NA       bottom      right</span></a>
+<a class="sourceLine" id="cb19-21" title="21"><span class="co">#&gt; 5  textual      x5 0.86***  last        NA       bottom        top</span></a>
+<a class="sourceLine" id="cb19-22" title="22"><span class="co">#&gt; 6  textual      x6 0.84***  last        NA       bottom       left</span></a>
+<a class="sourceLine" id="cb19-23" title="23"><span class="co">#&gt; 7    speed      x7 0.57***  last        NA       bottom        top</span></a>
+<a class="sourceLine" id="cb19-24" title="24"><span class="co">#&gt; 8    speed      x8 0.72***  last        NA       bottom       left</span></a>
+<a class="sourceLine" id="cb19-25" title="25"><span class="co">#&gt; 9    speed      x9 0.67***  last        NA        right       left</span></a>
+<a class="sourceLine" id="cb19-26" title="26"><span class="co">#&gt; 10      x1      x1 0.40***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-27" title="27"><span class="co">#&gt; 11      x2      x2 0.82***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-28" title="28"><span class="co">#&gt; 12      x3      x3 0.66***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-29" title="29"><span class="co">#&gt; 13      x4      x4 0.27***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-30" title="30"><span class="co">#&gt; 14      x5      x5 0.27***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-31" title="31"><span class="co">#&gt; 15      x6      x6 0.30***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-32" title="32"><span class="co">#&gt; 16      x7      x7 0.68***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-33" title="33"><span class="co">#&gt; 17      x8      x8 0.48***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-34" title="34"><span class="co">#&gt; 18      x9      x9 0.56***  both        NA       bottom     bottom</span></a>
+<a class="sourceLine" id="cb19-35" title="35"><span class="co">#&gt; 19  visual  visual    1.00  both        NA          top        top</span></a>
+<a class="sourceLine" id="cb19-36" title="36"><span class="co">#&gt; 20 textual textual    1.00  both        NA          top        top</span></a>
+<a class="sourceLine" id="cb19-37" title="37"><span class="co">#&gt; 21   speed   speed    1.00  both        NA          top        top</span></a>
+<a class="sourceLine" id="cb19-38" title="38"><span class="co">#&gt; 22  visual textual 0.46***  none        60          top        top</span></a>
+<a class="sourceLine" id="cb19-39" title="39"><span class="co">#&gt; 23  visual   speed 0.47***  none        60          top        top</span></a>
+<a class="sourceLine" id="cb19-40" title="40"><span class="co">#&gt; 24 textual   speed 0.28***  none        60          top        top</span></a></code></pre></div>
 </div>
 <div id="optional-step-6-modify-the-nodes-and-edges" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-6-modify-the-nodes-and-edges" class="anchor"></a>Optional step 6: Modify the nodes and edges</h3>
 <p>At this stage, we may want to improve the basic plot slightly. The functions <code>nodes(graph_data) &lt;- ...</code> and <code>edges(graph_data) &lt;- ...</code> can be used to modify the nodes and edges. These functions pair well with the general tidyverse workflow. For example, we might want to print node labels for latent variables in <em>Title Case</em> instead of just using the variable names:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="co">#&gt; Attaching package: 'dplyr'</span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="co">#&gt; The following objects are masked from 'package:stats':</span></a>
-<a class="sourceLine" id="cb12-5" title="5"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb12-6" title="6"><span class="co">#&gt;     filter, lag</span></a>
-<a class="sourceLine" id="cb12-7" title="7"><span class="co">#&gt; The following objects are masked from 'package:base':</span></a>
-<a class="sourceLine" id="cb12-8" title="8"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb12-9" title="9"><span class="co">#&gt;     intersect, setdiff, setequal, union</span></a>
-<a class="sourceLine" id="cb12-10" title="10"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stringr)</a>
-<a class="sourceLine" id="cb12-11" title="11"><span class="kw"><a href="../reference/nodes.html">nodes</a></span>(graph_data) &lt;-<span class="st"> </span><span class="kw"><a href="../reference/nodes.html">nodes</a></span>(graph_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">str_to_title</span>(label))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="co">#&gt; Attaching package: 'dplyr'</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="co">#&gt; The following objects are masked from 'package:stats':</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="co">#&gt;     filter, lag</span></a>
+<a class="sourceLine" id="cb20-7" title="7"><span class="co">#&gt; The following objects are masked from 'package:base':</span></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb20-9" title="9"><span class="co">#&gt;     intersect, setdiff, setequal, union</span></a>
+<a class="sourceLine" id="cb20-10" title="10"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stringr)</a>
+<a class="sourceLine" id="cb20-11" title="11"><span class="kw"><a href="../reference/nodes.html">nodes</a></span>(graph_data) &lt;-<span class="st"> </span><span class="kw"><a href="../reference/nodes.html">nodes</a></span>(graph_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">str_to_title</span>(label))</a></code></pre></div>
 <p>Now, for the edges, we see that the default edging algorithm has connected some nodes side-to-side (based on the smallest possible Euclidian distance). However, in this simple graph, it makes more sense to connect all nodes top-to-bottom - except for the latent variable covariances. We can use the same conditional replacement for the edges:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">connect_from =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(connect_from, <span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(curvature), <span class="st">"bottom"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">connect_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(connect_to, <span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(curvature), <span class="st">"top"</span>)) -&gt;<span class="st"> </span><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">connect_from =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(connect_from, <span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(curvature), <span class="st">"bottom"</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">connect_to =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(connect_to, <span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(curvature), <span class="st">"top"</span>)) -&gt;<span class="st"> </span><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data)</a></code></pre></div>
 </div>
 <div id="step-7-plot-the-graph" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-7-plot-the-graph" class="anchor"></a>Step 7: Plot the graph</h3>
 <p>Finally, we can plot the resulting customized graph using <code><a href="https://rdrr.io/r/graphics/plot.html">plot(graph_data)</a></code>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(graph_data)</a></code></pre></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(graph_data)</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
 </div>
 </div>
 <div id="connecting-nodes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connecting-nodes" class="anchor"></a>Connecting nodes</h2>
 <p>The functions <code><a href="../reference/graph.html">graph()</a></code> and <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the <code>angle</code> parameter. This parameter connects nodes top-to-bottom when they are within <code>angle</code> degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing <code>angle</code> to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">model =</span> fit, <span class="dt">layout =</span> lay, <span class="dt">angle =</span> <span class="dv">170</span>)</a></code></pre></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-17-1.png" width="500px" height="150px"></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">model =</span> fit, <span class="dt">layout =</span> lay, <span class="dt">angle =</span> <span class="dv">170</span>)</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-25-1.png" width="500px" height="150px"></p>
 </div>
 <div id="visual-aspects" class="section level2">
 <h2 class="hasAnchor">
@@ -294,55 +351,98 @@
 <li>
 <code>linetype</code>: The type of line, e.g., continuous (<code>linetype = 1</code> or dashed <code>linetype = 2</code>)</li>
 <li>
-<code>colour</code>: The colour of the line (e.g., <code>colour = "red"</code> or dashed <code>colour = "blue"</code>)</li>
+<code>colour</code>: The colour of the line (e.g., <code>colour = "red"</code> or <code>colour = "blue"</code>)</li>
 <li>
-<code>size</code>: The size of the line (e.g., <code>size = 1</code> or dashed <code>size = 2</code>)</li>
+<code>size</code>: The size of the line (e.g., <code>size = 1</code> or <code>size = 2</code>)</li>
 <li>
-<code>alpha</code>: The transparancy of the line (e.g., <code>alpha = 1</code> or dashed <code>alpha = .2</code>)</li>
+<code>alpha</code>: The transparancy of the line (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">edg &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">from =</span> <span class="st">"x"</span>,</a>
-<a class="sourceLine" id="cb16-2" title="2">                  <span class="dt">to =</span> <span class="st">"y"</span>,</a>
-<a class="sourceLine" id="cb16-3" title="3">                  <span class="dt">linetype =</span> <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb16-4" title="4">                  <span class="dt">colour =</span> <span class="st">"red"</span>,</a>
-<a class="sourceLine" id="cb16-5" title="5">                  <span class="dt">size =</span> <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb16-6" title="6">                  <span class="dt">alpha =</span> <span class="fl">.5</span>)</a>
-<a class="sourceLine" id="cb16-7" title="7"></a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">edges =</span> edg, <span class="dt">layout =</span> <span class="kw"><a href="../reference/layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>))</a></code></pre></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">edg &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">from =</span> <span class="st">"x"</span>,</a>
+<a class="sourceLine" id="cb24-2" title="2">                  <span class="dt">to =</span> <span class="st">"y"</span>,</a>
+<a class="sourceLine" id="cb24-3" title="3">                  <span class="dt">linetype =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb24-4" title="4">                  <span class="dt">colour =</span> <span class="st">"red"</span>,</a>
+<a class="sourceLine" id="cb24-5" title="5">                  <span class="dt">size =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb24-6" title="6">                  <span class="dt">alpha =</span> <span class="fl">.5</span>)</a>
+<a class="sourceLine" id="cb24-7" title="7"></a>
+<a class="sourceLine" id="cb24-8" title="8"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">edges =</span> edg, <span class="dt">layout =</span> <span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>))</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 <p>Nodes have the following aesthetics (see <code>?geom_polygon()</code>):</p>
 <ul>
 <li>
 <code>linetype</code>: The type of line surrounding the node, e.g., continuous (<code>linetype = 1</code> or dashed <code>linetype = 2</code>)</li>
 <li>
-<code>colour</code>: The colour of the line surrounding the node (e.g., <code>colour = "red"</code> or dashed <code>colour = "blue"</code>)</li>
+<code>colour</code>: The colour of the line surrounding the node (e.g., <code>colour = "red"</code> or <code>colour = "blue"</code>)</li>
 <li>
-<code>fill</code>: The interior colour of the node (e.g., <code>colour = "red"</code> or dashed <code>colour = "blue"</code>)</li>
+<code>fill</code>: The interior colour of the node (e.g., <code>colour = "red"</code> or <code>colour = "blue"</code>)</li>
 <li>
-<code>size</code>: The size of the line (e.g., <code>size = 1</code> or dashed <code>size = 2</code>)</li>
+<code>size</code>: The size of the line (e.g., <code>size = 1</code> or <code>size = 2</code>)</li>
 <li>
-<code>alpha</code>: The transparancy of the node (e.g., <code>alpha = 1</code> or dashed <code>alpha = .2</code>)</li>
+<code>alpha</code>: The transparancy of the node (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">edg &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">from =</span> <span class="st">"x"</span>,</a>
-<a class="sourceLine" id="cb17-2" title="2">                  <span class="dt">to =</span> <span class="st">"y"</span>)</a>
-<a class="sourceLine" id="cb17-3" title="3">nod &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">name =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>),</a>
-<a class="sourceLine" id="cb17-4" title="4">                    <span class="dt">shape =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"rect"</span>, <span class="st">"oval"</span>),</a>
-<a class="sourceLine" id="cb17-5" title="5">                    <span class="dt">linetype =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb17-6" title="6">                    <span class="dt">colour =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"blue"</span>, <span class="st">"blue"</span>),</a>
-<a class="sourceLine" id="cb17-7" title="7">                    <span class="dt">fill =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"blue"</span>, <span class="st">"blue"</span>),</a>
-<a class="sourceLine" id="cb17-8" title="8">                    <span class="dt">size =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb17-9" title="9">                    <span class="dt">alpha =</span> <span class="fl">.5</span>)</a>
-<a class="sourceLine" id="cb17-10" title="10"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">edges =</span> edg, <span class="dt">nodes =</span> nod, <span class="dt">layout =</span> <span class="kw"><a href="../reference/layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>))</a></code></pre></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">edg &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">from =</span> <span class="st">"x"</span>,</a>
+<a class="sourceLine" id="cb25-2" title="2">                  <span class="dt">to =</span> <span class="st">"y"</span>)</a>
+<a class="sourceLine" id="cb25-3" title="3">nod &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">name =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>),</a>
+<a class="sourceLine" id="cb25-4" title="4">                    <span class="dt">shape =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"rect"</span>, <span class="st">"oval"</span>),</a>
+<a class="sourceLine" id="cb25-5" title="5">                    <span class="dt">linetype =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb25-6" title="6">                    <span class="dt">colour =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"blue"</span>, <span class="st">"blue"</span>),</a>
+<a class="sourceLine" id="cb25-7" title="7">                    <span class="dt">fill =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"blue"</span>, <span class="st">"blue"</span>),</a>
+<a class="sourceLine" id="cb25-8" title="8">                    <span class="dt">size =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb25-9" title="9">                    <span class="dt">alpha =</span> <span class="fl">.5</span>)</a>
+<a class="sourceLine" id="cb25-10" title="10"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">edges =</span> edg, <span class="dt">nodes =</span> nod, <span class="dt">layout =</span> <span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>))</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
 <p>These aesthetics can also be passed to the <code>sem_graph</code> object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">colour =</span> <span class="st">"black"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">colour =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(colour, to <span class="op">==</span><span class="st"> "x2"</span>, <span class="st">"red"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">linetype =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">linetype =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(linetype, to <span class="op">==</span><span class="st"> "x2"</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">alpha =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(alpha, to <span class="op">==</span><span class="st"> "x2"</span>, <span class="fl">.5</span>)) -&gt;<span class="st"> </span><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data)</a>
-<a class="sourceLine" id="cb18-8" title="8"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(graph_data)</a></code></pre></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">colour =</span> <span class="st">"black"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">colour =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(colour, from <span class="op">==</span><span class="st"> "visual"</span> <span class="op">&amp;</span><span class="st"> </span>to <span class="op">==</span><span class="st"> "x2"</span>, <span class="st">"red"</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">linetype =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">linetype =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(linetype, from <span class="op">==</span><span class="st"> "visual"</span> <span class="op">&amp;</span><span class="st"> </span>to <span class="op">==</span><span class="st"> "x2"</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">alpha =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(alpha, from <span class="op">==</span><span class="st"> "visual"</span> <span class="op">&amp;</span><span class="st"> </span>to <span class="op">==</span><span class="st"> "x2"</span>, <span class="fl">.5</span>)) -&gt;<span class="st"> </span><span class="kw"><a href="../reference/edges.html">edges</a></span>(graph_data)</a>
+<a class="sourceLine" id="cb26-8" title="8"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(graph_data)</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
+</div>
+<div id="visual-aspects-of-edge-labels" class="section level2">
+<h2 class="hasAnchor">
+<a href="#visual-aspects-of-edge-labels" class="anchor"></a>Visual aspects of edge labels</h2>
+<p>Like nodes and edges, edge labels can be customized. Labels have the same aesthetics as the ggplot function <code>geom_label()</code> (see <code>?geom_label</code>). However, to disambiguate them from the edge aesthetics, all label aesthetics are prefaced by <code>"label_"</code>:</p>
+<ul>
+<li>
+<code>label_colour</code>: The colour of the label text (e.g., <code>label_colour = "red"</code>)</li>
+<li>
+<code>label_fill</code>: The colour of the rectangle behind the label text, ( e.g., <code>label_fill = "blue"</code>)</li>
+<li>
+<code>label_size</code>: The font size of the label (e.g., <code>label_size = 4</code>)</li>
+<li>
+<code>label_alpha</code>: The transparancy of the label (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
+<li>
+<code>label_family</code>: The font family of the label text. By default, three are available: <code>"serif"</code>, <code>"sans"</code> and <code>"mono"</code>
+</li>
+<li>
+<code>label_fontface</code>: The face of the label text: <code>"plain"</code>, <code>"bold"</code>, <code>"italic"</code>, or "<code>bold.italic"</code>
+</li>
+<li>
+<code>label_hjust</code>: Horizontal justification of label text; either a string (<code>"left"</code>, <code>"center"</code>, <code>"right"</code>) or a number between 0 and 1 (left = 0, center = 0.5, right = 1)</li>
+<li>
+<code>label_vjust</code>: Vertical justification of label text; either a string (<code>"top"</code>, <code>"middle"</code>, <code>"bottom"</code>) or a number between 0 and 1 (top = 1, middle = 0.5, bottom = 0)</li>
+<li>
+<code>label_lineheight</code>: Line height for multiline text</li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">edg &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">from =</span> <span class="st">"x"</span>,</a>
+<a class="sourceLine" id="cb27-2" title="2">                  <span class="dt">to =</span> <span class="st">"y"</span>,</a>
+<a class="sourceLine" id="cb27-3" title="3">                  <span class="dt">label =</span> <span class="st">"text"</span>,</a>
+<a class="sourceLine" id="cb27-4" title="4">                  <span class="dt">label_colour =</span> <span class="st">"blue"</span>,</a>
+<a class="sourceLine" id="cb27-5" title="5">                  <span class="dt">label_fill =</span> <span class="st">"red"</span>,</a>
+<a class="sourceLine" id="cb27-6" title="6">                  <span class="dt">label_size =</span> <span class="dv">6</span>,</a>
+<a class="sourceLine" id="cb27-7" title="7">                  <span class="dt">label_alpha =</span> <span class="fl">.5</span>,</a>
+<a class="sourceLine" id="cb27-8" title="8">                  <span class="dt">label_family =</span> <span class="st">"mono"</span>,</a>
+<a class="sourceLine" id="cb27-9" title="9">                  <span class="dt">label_fontface =</span> <span class="st">"bold"</span>,</a>
+<a class="sourceLine" id="cb27-10" title="10">                  <span class="dt">label_hjust =</span> <span class="st">"left"</span>,</a>
+<a class="sourceLine" id="cb27-11" title="11">                  <span class="dt">label_vjust =</span> <span class="st">"top"</span>,</a>
+<a class="sourceLine" id="cb27-12" title="12">                  <span class="dt">label_lineheight =</span> <span class="fl">1.5</span></a>
+<a class="sourceLine" id="cb27-13" title="13">                  )</a>
+<a class="sourceLine" id="cb27-14" title="14"></a>
+<a class="sourceLine" id="cb27-15" title="15"><span class="kw"><a href="../reference/graph.html">graph</a></span>(<span class="dt">edges =</span> edg, <span class="dt">layout =</span> <span class="kw"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="dt">rows =</span> <span class="dv">1</span>))</a></code></pre></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
 </div>
   </div>
 
@@ -356,6 +456,7 @@
       <li><a href="#example-graphing-a-cfa">Example: Graphing a CFA</a></li>
       <li><a href="#connecting-nodes">Connecting nodes</a></li>
       <li><a href="#visual-aspects">Visual aspects</a></li>
+      <li><a href="#visual-aspects-of-edge-labels">Visual aspects of edge labels</a></li>
       </ul>
 </div>
       </div>

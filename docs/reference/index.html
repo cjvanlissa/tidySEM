@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.5</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
@@ -131,9 +134,15 @@
       <tr>
         
         <td>
-          <p><code><a href="as.layout.html">as.layout()</a></code> </p>
+          <p><code><a href="as.lavaan.html">as.lavaan()</a></code> </p>
         </td>
-        <td><p>Convert object to layout</p></td>
+        <td><p>Convert sem_syntax to lavaan syntax</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="as.mplus.html">as.mplus()</a></code> </p>
+        </td>
+        <td><p>Convert sem_syntax to Mplus syntax</p></td>
       </tr><tr>
         
         <td>
@@ -149,9 +158,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="dictionary.html">dictionary()</a></code> </p>
+          <p><code><a href="dictionary.html">dictionary()</a></code> <code><a href="dictionary.html">`dictionary<-`()</a></code> </p>
         </td>
-        <td><p>Make a data dictionary</p></td>
+        <td><p>Extract dictionary from sem_syntax</p></td>
       </tr><tr>
         
         <td>
@@ -173,15 +182,21 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="get_dict.html">get_dict()</a></code> <code><a href="get_dict.html">`get_dict<-`()</a></code> </p>
+          <p><code><a href="get_dictionary.html">get_dictionary()</a></code> </p>
         </td>
-        <td><p>Extract data_dict from sem_syntax</p></td>
+        <td><p>Make a data dictionary</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="get_edges.html">get_edges()</a></code> </p>
         </td>
         <td><p>Extract edges from a SEM model object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_layout.html">get_layout()</a></code> </p>
+        </td>
+        <td><p>Generate graph layout</p></td>
       </tr><tr>
         
         <td>
@@ -194,12 +209,6 @@
           <p><code><a href="graph.html">graph()</a></code> </p>
         </td>
         <td><p>Render a graph</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="layout.html">get_layout()</a></code> </p>
-        </td>
-        <td><p>Generate graph layout</p></td>
       </tr><tr>
         
         <td>
@@ -272,6 +281,12 @@
           <p><code><a href="SB_chisq_Pvalues.html">SB_chisq_Pvalues()</a></code> </p>
         </td>
         <td><p>Satorra-Bentler corrected chi-square tests for table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="syntax.html">syntax()</a></code> <code><a href="syntax.html">`syntax<-`()</a></code> </p>
+        </td>
+        <td><p>Extract syntax from sem_syntax</p></td>
       </tr><tr>
         
         <td>

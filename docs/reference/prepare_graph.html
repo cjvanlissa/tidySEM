@@ -74,7 +74,7 @@ a model object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.5</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@ a model object." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
@@ -134,17 +137,29 @@ a model object.</p>
     <pre class="usage"><span class='fu'>prepare_graph</span>(<span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>prepare_graph</span>(<span class='no'>edges</span>, <span class='no'>layout</span>, <span class='kw'>nodes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>rect_width</span> <span class='kw'>=</span> <span class='fl'>1.2</span>, <span class='kw'>rect_height</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>ellipses_width</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>ellipses_height</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>variance_diameter</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>spacing_x</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>spacing_y</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>curvature</span> <span class='kw'>=</span> <span class='fl'>60</span>, <span class='kw'>angle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fix_coord</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>prepare_graph</span>(
+  <span class='no'>edges</span>,
+  <span class='kw'>layout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nodes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>rect_width</span> <span class='kw'>=</span> <span class='fl'>1.2</span>,
+  <span class='kw'>rect_height</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>ellipses_width</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>ellipses_height</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>variance_diameter</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>spacing_x</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>spacing_y</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>curvature</span> <span class='kw'>=</span> <span class='fl'>60</span>,
+  <span class='kw'>angle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fix_coord</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S3 method for lavaan</span>
-<span class='fu'>prepare_graph</span>(<span class='no'>model</span>, <span class='no'>layout</span>, <span class='no'>...</span>)
+<span class='fu'>prepare_graph</span>(<span class='no'>model</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for mplus.model</span>
-<span class='fu'>prepare_graph</span>(<span class='no'>model</span>, <span class='no'>layout</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>prepare_graph</span>(<span class='no'>model</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,9 +176,8 @@ least) the columns <code><a href='https://rdrr.io/r/base/c.html'>c("from", "to")
     </tr>
     <tr>
       <th>layout</th>
-      <td><p>An object of class <code>tidy_layout</code>, or a matrix with the
-layout of the graph that can be converted using
-<code><a href='as.layout.html'>as.layout</a></code>.</p></td>
+      <td><p>A matrix (or data.frame) that describes the layout; see
+<code><a href='get_layout.html'>get_layout</a></code>.</p></td>
     </tr>
     <tr>
       <th>nodes</th>
@@ -228,7 +242,8 @@ top-to-bottom, and 180 means that all nodes are connected top-to-bottom.</p></td
     <tr>
       <th>fix_coord</th>
       <td><p>Whether or not to fix the aspect ratio of the graph.
-Default: TRUE.</p></td>
+Does not work with multi-group or multilevel models.
+Default: FALSE.</p></td>
     </tr>
     <tr>
       <th>model</th>

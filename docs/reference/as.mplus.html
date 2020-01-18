@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Format confidence intervals to object — conf_int • tidySEM</title>
+<title>Convert sem_syntax to Mplus syntax — as.mplus • tidySEM</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="Format confidence intervals to object — conf_int" />
-<meta property="og:description" content="Takes a model object, and creates APA-formated confidence intervals." />
+<meta property="og:title" content="Convert sem_syntax to Mplus syntax — as.mplus" />
+<meta property="og:description" content="Final stage in the tidySEM workflow for syntax generation:
+Convert the sem_syntax object to Mplus syntax." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,73 +116,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Format confidence intervals to object</h1>
+    <h1>Convert sem_syntax to Mplus syntax</h1>
     
-    <div class="hidden name"><code>conf_int.Rd</code></div>
+    <div class="hidden name"><code>as.mplus.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes a model object, and creates APA-formated confidence intervals.</p>
+    <p>Final stage in the tidySEM workflow for syntax generation:
+Convert the sem_syntax object to Mplus syntax.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>conf_int</span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>se</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>95</span>)</pre>
+    <pre class="usage"><span class='fu'>as.mplus</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A model object for which a method exists.</p></td>
+      <td><p>An object of class <code>sem_syntax</code></p></td>
     </tr>
     <tr>
-      <th>digits</th>
-      <td><p>Integer. The number of digits to round the condidence
-boundaries to.</p></td>
-    </tr>
-    <tr>
-      <th>se</th>
-      <td><p>Optional, numeric. Standard error of the parameters.</p></td>
-    </tr>
-    <tr>
-      <th>lb</th>
-      <td><p>Optional, numeric. Lower boundary of confidence intervals.</p></td>
-    </tr>
-    <tr>
-      <th>ub</th>
-      <td><p>Optional, numeric. Upper boundary of confidence intervals.</p></td>
-    </tr>
-    <tr>
-      <th>ci</th>
-      <td><p>Optional, numeric. What percentage CI to use (only used when
-computing CI from <code>se</code>, based on a normal distribution).</p></td>
+      <th>...</th>
+      <td><p>Additional parameters to be passed to and from functions.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of formatted confidence intervals.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>table_results est_sig</p>
-<p>Other Reporting tools: 
-<code><a href='est_sig.html'>est_sig</a>()</code>,
-<code><a href='report_columns.html'>report_columns</a>()</code>,
-<code><a href='table_results.html'>table_results</a>()</code></p></div>
+    <p>Character vector.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>conf_int</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.325</span>, <span class='fl'>2.432</span>), <span class='kw'>se</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.05336</span>, <span class='fl'>.00325</span>))</div><div class='output co'>#&gt; [1] "[1.22, 1.43]" "[2.43, 2.44]"</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Caspar J. van Lissa</p>
   </div>
 </div>
 
