@@ -7,6 +7,10 @@ HS.model <- ' visual  =~ x1 + x2 + x3
               speed   =~ x7 + x8 + x9 '
 fit <- cfa(HS.model, data=df, meanstructure = T)
 
+test_that("Can plot lavaan without specifying anything", {
+  expect_error(do.call(graph, list(model = fit)), NA)
+})
+
 layout <- get_layout("", "", "visual","","textual","","speed","", "",
                      paste0("x", 1:9), rows = 2)
 

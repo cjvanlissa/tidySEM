@@ -1,4 +1,4 @@
-Galo <- read.csv(system.file("testdata", "galo.csv", package="tidySEM"))
+Galo <- read.csv("../testdata/galo.csv")
 
 L.in.G <- ' group: foo
   level: within
