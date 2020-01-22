@@ -35,7 +35,6 @@ table_results est_sig
 
 Other Reporting tools: 
 \code{\link{est_sig}()},
-\code{\link{report_columns}()},
 \code{\link{table_results}()}
 }
 \author{

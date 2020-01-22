@@ -526,7 +526,7 @@ get_nodes <- function(x, label = "est_sig", ...){
 #' @export
 get_nodes.mplus.model <- function(x, label = "est_sig", ...){
   Args <- as.list(match.call()[-1])
-  Args$x <- table_results(x, all = TRUE)
+  Args$x <- table_results(x, columns = NULL)
   do.call(get_nodes, Args)
 }
 
@@ -535,7 +535,7 @@ get_nodes.mplus.model <- function(x, label = "est_sig", ...){
 #' @importFrom lavaan parameterTable lavInspect
 get_nodes.lavaan <- function(x, label = "est_sig", ...){
   Args <- as.list(match.call()[-1])
-  Args$x <- table_results(x, all = TRUE)
+  Args$x <- table_results(x, columns = NULL)
   do.call(get_nodes, Args)
 }
 
@@ -620,7 +620,7 @@ get_edges <- function(x, label = "est_sig", ...){
 #' @export
 get_edges.lavaan <- function(x, label = "est_sig_std", ...){
     Args <- as.list(match.call()[-1])
-    Args$x <- table_results(x, all = TRUE)
+    Args$x <- table_results(x, columns = NULL)
     do.call(get_edges, Args)
 }
 

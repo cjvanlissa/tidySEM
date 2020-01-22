@@ -26,7 +26,6 @@ as.mplus.sem_syntax <- function(x, ...){
     stop("Develop")
   }
   x$syntax$label <- paste0("lab", 1:nrow(x$syntax))
-  browser()
   x$syntax$value[is.na(x$syntax$value)] <- ""
   apply(x$syntax, 1, function(this_row){
     switch(this_row[["op"]],

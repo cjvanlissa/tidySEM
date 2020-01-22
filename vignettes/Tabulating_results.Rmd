@@ -1,0 +1,80 @@
+---
+title: "Tabulating results from structural equation models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tabulating_results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidySEM)
+library(lavaan)
+library(MplusAutomation)
+library(dplyr)
+```
+
+`tidySEM` tabulates the results of different types of models in the same uniform way. This facilitates parsing the output into Tables and Figures for publication.
+
+## Output from lavaan
+
+As an example, let's tabulate the results from a classic `lavaan` tutorial example for a multiple group model. First, we run the model:
+
+```{r}
+HS.model <- '  visual =~ x1 + x2 + x3
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9 '
+fit <- cfa(HS.model, 
+           data = HolzingerSwineford1939, 
+           group = "school")
+```
+The results can be tabulated using the `lavaan` function `summary()`:
+
+```{r}
+summary(fit)
+```
+
+Alternatively, we can use the `tidySEM` function `table_results()`:
+
+```{r}
+table_results(fit)
+```
+
+## Output from Mplus
+
+Now, we'll reproduce the same analysis in Mplus, via the package `MplusAutomation`. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:
+
+```{r}
+fit <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);",
+                                MODEL = c("visual BY x1 x2 x3;",
+                                          "textual BY x4 x5 x6;",
+                                          "speed BY x7 x8 x9;"),
+                                usevariables = c(paste0("x", 1:9), "school"),
+                                rdata = HolzingerSwineford1939),
+                    modelout = "example.inp",
+                    run = 1L)
+fit$results$parameters
+```
+```{r, echo = FALSE, message=FALSE, error=FALSE, results= "hide"}
+flz <- list.files(pattern = "\\.(inp|out|dat)")
+sapply(flz, file.remove)
+```
+
+The results can be tabulated using the `MplusAutomation` function `coef.mplus.model()`:
+
+```{r}
+coef(fit)
+```
+
+Alternatively, we can use the `tidySEM` function `table_results()`:
+
+```{r}
+table_results(fit)
+```

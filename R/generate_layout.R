@@ -1,5 +1,5 @@
 if(FALSE){
-  tab_res <- table_results(fit, all = TRUE)
+  tab_res <- table_results(fit, columns = NULL)
   mm <- tab_res[tab_res$op == "=~", ]
   sem <- tab_res[tab_res$op == "~" | (tab_res$op == "~~" & !(tab_res$lhs == tab_res$rhs)), ]
 
@@ -99,7 +99,7 @@ space_these <- function(these, n){
 #' @export
 get_layout.lavaan <- function(x, ..., layout_algorithm = "layout_as_tree"){
   Args <- as.list(match.call()[-1])
-  Args$x <- table_results(x, all = TRUE)
+  Args$x <- table_results(x, columns = NULL)
   do.call(get_layout, Args)
 }
 

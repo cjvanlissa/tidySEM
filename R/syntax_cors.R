@@ -47,8 +47,7 @@ cors.data_dict <- function(x, ...){
     Args <- check_dots_cors(dots)
   }
   out <- list(dictionary = x,
-              syntax = do.call(cors_table, Args),
-              sem_software = getOption("sem_software"))
+              syntax = do.call(cors_table, Args))
   class(out) <- c("sem_syntax", class(out))
   out
 }

@@ -90,7 +90,7 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 
 We can convert the `data_dict` object to `sem_syntax`, simply by adding a first syntax element; in this case, a measurement model:
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 dict %>%
   measurement() -> model
 model
@@ -100,6 +100,13 @@ model
 
 The dictionary and syntax can be examined using `dictionary(model)` and `syntax(model)`:
 
+```{r}
+dictionary(model)
+```
+
+```{r}
+syntax(model)
+```
 
 ### Optional step 6: Modify the dictionary and syntax
 

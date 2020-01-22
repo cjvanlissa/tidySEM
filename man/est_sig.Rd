@@ -27,7 +27,6 @@ table_results
 
 Other Reporting tools: 
 \code{\link{conf_int}()},
-\code{\link{report_columns}()},
 \code{\link{table_results}()}
 }
 \author{

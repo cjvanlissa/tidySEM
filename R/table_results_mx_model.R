@@ -1,7 +1,7 @@
 #' @method table_results MxModel
 #' @export
 #' @importFrom stats pnorm
-table_results.MxModel <- function (x, standardized = TRUE, all = FALSE, digits = 2, ...)
+table_results.MxModel <- function (x, standardized = TRUE, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...)
 {
   Args <- list(x = x)
   digits <- force(digits)
@@ -40,9 +40,8 @@ table_results.MxModel <- function (x, standardized = TRUE, all = FALSE, digits =
   results[c("estimate", "Estimate")] <- NULL
   names(results)[match("Std.Error", names(results))] <- "se"
   names(results) <- tolower(names(results))
-  if (!all) {
-    keep_cols <- getOption("report_columns")
-    results[, na.omit(match(keep_cols, names(results)))]
+  if(!is.null(columns)) {
+    results[, na.omit(match(columns, names(results)))]
   }
   else {
     order_cols <- c("label")

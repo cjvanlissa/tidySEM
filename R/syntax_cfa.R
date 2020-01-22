@@ -25,26 +25,32 @@ measurement <- function(x, center = TRUE, scale = TRUE){
 measurement.data_dict <- function(x, center = TRUE, scale = TRUE){
   Args <- as.list(match.call()[-1])
   x <- force(x)
+  Args$x <- x
   variables <- unique(c(NA, x$scale))[-1]
   update_dict <- rbind(x, data.frame(name = variables, scale = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
   out <- list(dictionary = update_dict,
-              syntax = do.call(measurement_table, Args),
-              sem_software = getOption("sem_software"))
+              syntax = do.call(measurement_table, Args))
   class(out) <- c("sem_syntax", class(out))
   out
 }
 
 measurement_table <- function(x, center = TRUE, scale = TRUE){
   variables <- unique(c(NA, x$scale))[-1]
-  outlines <- do.call(rbind, lapply(variables, function(this_var){
-    rbind(c(this_var, "=~", x$name[which(x$scale == this_var)][1], ifelse(scale, "FALSE", "TRUE"), 1, "measurement", "loadings"),
-          expand.grid(this_var, "=~", x$name[which(x$scale == this_var)][-1], "TRUE", "1", "measurement", "loadings", stringsAsFactors = FALSE),
-          c(this_var, "~1", "", ifelse(center, "FALSE", "TRUE"), 0, "measurement", "center"),
-          c(this_var, "~~", this_var, ifelse(scale, "TRUE", "FALSE"), 1, "measurement", "scale"),
-          expand.grid(x$name[which(x$scale == this_var)], "~1", "", ifelse(center, "TRUE", "FALSE"), 0, "measurement", "item_intercepts", stringsAsFactors = FALSE),
-          expand.grid(x$name[which(x$scale == this_var)], "~~", x$name[which(x$scale == this_var)], "TRUE", NA, "measurement", "residual_variances")[seq(1, sum(x$scale == this_var)^2, by = (sum(x$scale == this_var))+1), ], stringsAsFactors = FALSE)
-  }))
+  outlines <- lapply(variables, function(this_var){
+    rbind(
+      c(this_var, "=~", x$name[which(x$scale == this_var)][1], ifelse(scale, "FALSE", "TRUE"), 1, "measurement", "loadings"),
+      expand.grid(this_var, "=~", x$name[which(x$scale == this_var)][-1], "TRUE", "1", "measurement", "loadings", stringsAsFactors = FALSE),
+      c(this_var, "~1", "", ifelse(center, "FALSE", "TRUE"), 0, "measurement", "center"),
+      c(this_var, "~~", this_var, ifelse(scale, "TRUE", "FALSE"), 1, "measurement", "scale"),
+      expand.grid(x$name[which(x$scale == this_var)], "~1", "", ifelse(center, "TRUE", "FALSE"), 0, "measurement", "item_intercepts", stringsAsFactors = FALSE),
+      data.frame(Var1 = x$name[which(x$scale == this_var)], Var2 = "~~", Var3 = x$name[which(x$scale == this_var)], Var4 = "TRUE", Var5 = 1, Var6 = "measurement", Var7 = "residual_variances", stringsAsFactors = FALSE), stringsAsFactors = FALSE)
+  })
+  if(length(variables) > 1){
+    outlines <- c(outlines,
+                  list(setNames(cors_table(variables), paste0("Var", 1:7))))
+  }
+  outlines <- do.call(rbind, outlines)
   names(outlines) <- c("lhs", "op", "rhs", "free", "value", "category", "aspect")
   outlines
 }
@@ -57,10 +63,7 @@ measurement.data_dict2 <- function(x, center = TRUE, scale = TRUE){
   update_dict <- rbind(x, data.frame(name = variables, scale = NA, item = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
   out <- list(dictionary = update_dict,
-              syntax = do.call(switch(getOption("sem_software"),
-                                      "lavaan" = measurement_lavaan,
-                                      "mplus" = measurement_mplus), list(x = x)),
-              sem_software = getOption("sem_software"))
+              syntax = do.call(measurement_lavaan, list(x = x)))
   class(out) <- c("sem_syntax", class(out))
   out
 }
