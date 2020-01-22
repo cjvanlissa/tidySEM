@@ -4,27 +4,26 @@ Title: Generate tidy SEM-syntax
 Version: 0.1.0.5
 Authors@R: person(given = c("Caspar", "J."), family = "van Lissa", role = c("aut", "cre"), email = "c.j.vanlissa@uu.nl")
 Maintainer: Caspar J. van Lissa <c.j.vanlissa@uu.nl>
-Description: A tidy workflow for running, reporting, and plotting structural
-    equation models in lavaan or Mplus.
+Description: A tidy workflow for running, reporting, and plotting structural equation models in lavaan or Mplus.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
 Depends:
-    R (>= 3.0.0),
+  R (>= 3.0.0),
 Imports:
-    methods,
-    stats,
-    utils,
-    ggplot2,
-    lavaan,
-    MplusAutomation,
-    igraph
+  methods,
+  stats,
+  utils,
+  ggplot2,
+  lavaan,
+  MplusAutomation,
+  igraph
 Suggests:
-    testthat (>= 2.1.0),
-    knitr,
-    rmarkdown,
-    dplyr,
-    stringr,
-    covr
+  testthat (>= 2.1.0),
+  knitr,
+  rmarkdown,
+  dplyr,
+  stringr,
+  covr
 VignetteBuilder: knitr
