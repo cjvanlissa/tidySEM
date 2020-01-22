@@ -4,7 +4,6 @@ Date: 2020-01-22
 Title: Generate tidy SEM-syntax
 Version: 0.1.0.5
 Authors@R: person("Caspar", "van Lissa", email = "c.j.vanlissa@uu.nl", role = c("aut", "cre"))
- )
 Description: A tidy workflow for running, reporting, and plotting structural
  equation models in lavaan or Mplus.
 License: GPL (>= 3)
