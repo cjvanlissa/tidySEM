@@ -9,3 +9,4 @@ doc
 Meta
 dev/
 *.RData
+tests/test_local.R
