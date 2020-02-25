@@ -1,7 +1,7 @@
 #' @method table_results MxModel
 #' @export
 #' @importFrom stats pnorm
-table_results.MxModel <- function (x, standardized = TRUE, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...)
+table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...)
 {
   Args <- list(x = x)
   digits <- force(digits)

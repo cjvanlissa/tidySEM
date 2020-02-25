@@ -6,7 +6,6 @@
 \usage{
 table_results(
   x,
-  standardized = TRUE,
   columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"),
   digits = 2,
   ...
@@ -14,9 +13,6 @@ table_results(
 }
 \arguments{
 \item{x}{A model object for which a method exists.}
-
-\item{standardized}{Logical. Return standardized parameters, or not.
-Defaults to TRUE.}
 
 \item{columns}{A character vector of columns to retain from the results
 section. If this is set to \code{NULL}, all available columns are returned.
