@@ -655,10 +655,12 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
     return(do.call(rbind, x_list))
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
+
   x$from <- x$to <- NA
-  x$arrow <- "last"
+  x$arrow <- NA
   x$arrow[x$op == "~~"] <- "none" # Covariances
   x$arrow[x$op == "~~" & x$lhs == x$rhs] <- "both" # Variances
+  x$arrow[x$op == "=~"] <- "last"
   x$arrow[x$op == "~"] <- "first"
   tmp <- x[, c("lhs", "rhs", "arrow", label)]
   tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
@@ -881,6 +883,7 @@ match.call.defaults <- function(...) {
 
 #' @importFrom stats dist
 #' @importFrom ggplot2 scale_linetype_manual aes_string
+#' @importFrom ggplot2 arrow
 .plot_edges <- function(p, df, text_size = 5, npoints = 101, ...) {
   df_edges <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
     this_row <- df[rownum, ]
@@ -907,18 +910,19 @@ match.call.defaults <- function(...) {
       C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
       radius <- dist(rbind(C, A))
 
-      if(this_row[["curvature"]] > 0){
+      if(this_row[["curvature"]] < 0){
         angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
       } else {
         angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
       }
-      point_seq <- seq(angles[1], angles[2],length.out = npoints)
-      matrix(
+      point_seq <- seq(angles[2], angles[1],length.out = npoints)
+      out <- matrix(
         c(C[1] + radius * cos(point_seq),
           C[2] + radius * sin(point_seq),
           rep(rownum, npoints)),
         nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
       )
+      out
     }
   })))
 
@@ -938,7 +942,6 @@ match.call.defaults <- function(...) {
   if(any(df_edges$arrow == "curve")) browser() # Dit mag niet meer!
 
   p <- .plot_edges_internal(p, df_edges)
-
   # Add label and return ----------------------------------------------------
   .plot_label_internal(p, df_label, text_size)
 }
@@ -951,14 +954,18 @@ match.call.defaults <- function(...) {
   }
   if(any(df$arrow != "none")){
     df_path <- df[!df$arrow == "none", ]
-    Args <- c("linetype", "size", "colour", "alpha")
-    Args <- as.list(df_path[which(names(df_path) %in% Args)])
-    Args <- c(list(
+    aes_args <- c("id", "arrow", "linetype", "size", "colour", "alpha")
+    aes_args <- df_path[!duplicated(df_path$id), which(names(df_path) %in% aes_args)]
+    Args <- list(
       data = df_path,
       mapping = aes_string(x = "x", y = "y", group = "id"),
-      arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = df_path$arrow[!df_path$arrow == "none"], type = "closed")),
-      Args)
-    p <- p + do.call(geom_path, Args)
+      arrow = quote(arrow(angle = 25, length = unit(.1, "inches"), ends = "last", type = "closed")))
+
+    for(this_path in unique(df_path$id)){
+      Args$data <- df_path[df_path$id == this_path, ]
+      Args$arrow[4] <- force(aes_args$arrow[aes_args$id == this_path])
+      p <- p + do.call(geom_path, c(Args, as.list(aes_args[1, -c(1, 2), drop = FALSE])))
+    }
   }
   if(any(df$arrow == "none")){
     df_path <- df[df$arrow == "none", ]
