@@ -656,14 +656,16 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
     return(do.call(rbind, x_list))
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
-
-  x$from <- x$to <- NA
+  x$from <- x$lhs
+  x$to <- x$rhs
   x$arrow <- NA
   x$arrow[x$op == "~~"] <- "none" # Covariances
   x$arrow[x$op == "~~" & x$lhs == x$rhs] <- "both" # Variances
   x$arrow[x$op == "=~"] <- "last"
-  x$arrow[x$op == "~"] <- "first"
-  tmp <- x[, c("lhs", "rhs", "arrow", label)]
+  x$arrow[x$op == "~"] <- "last"
+  x$from[x$op == "~"] <- x$rhs[x$op == "~"]
+  x$to[x$op == "~"] <- x$lhs[x$op == "~"]
+  tmp <- x[, c("from", "to", "arrow", label)]
   tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
