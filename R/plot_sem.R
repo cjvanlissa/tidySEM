@@ -888,16 +888,12 @@ match.call.defaults <- function(...) {
   df_edges <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
     this_row <- df[rownum, ]
     if(is.na(this_row[["curvature"]])){
+      label_loc <- ifelse(is.null(this_row[["label_location"]]), .5, this_row[["label_location"]])
       matrix(
-        c(this_row[["edge_xmin"]],
-          mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
-          this_row[["edge_xmax"]],
-          this_row[["edge_ymin"]],
-          mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]])),
-          this_row[["edge_ymax"]],
-          rep(rownum, 3)
-        ),
-        nrow = 3, dimnames = list(NULL, c("x", "y", "id"))
+        c(this_row[["edge_xmin"]], this_row[["edge_ymin"]], rownum,
+          (1-label_loc) * matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), ncol = 2)+ label_loc*(matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), ncol = 2)), rownum,
+          this_row[["edge_xmax"]], this_row[["edge_ymax"]], rownum),
+        nrow = 3, byrow = TRUE, dimnames = list(NULL, c("x", "y", "id"))
       )
     } else {
       A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
@@ -909,7 +905,6 @@ match.call.defaults <- function(...) {
       N <- matrix(c(AB[2], -AB[1]), nrow=1)
       C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
       radius <- dist(rbind(C, A))
-
       if(this_row[["curvature"]] < 0){
         angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
       } else {
@@ -925,12 +920,13 @@ match.call.defaults <- function(...) {
       out
     }
   })))
-
   df$id <- 1:nrow(df)
   df_edges <- merge(df_edges, df, by = "id")
   # Prepare label df --------------------------------------------------------
-  middle_point <- table(df_edges$id)
-  middle_point <- ceiling(middle_point/2)+cumsum(c(0, middle_point[-length(middle_point)]))
+  select_these <- middle_point <- table(df_edges$id)
+  select_these[middle_point == 3] <- 2
+  select_these[!middle_point == 3] <- ceiling(middle_point[!middle_point == 3]/2)
+  middle_point <- select_these+cumsum(c(0, middle_point[-length(middle_point)]))
   df_label <- df_edges[middle_point, ]
   df_label$label <- df$label
   df_label <- df_label[!(is.na(df_label$label) | df_label$label == ""), ]
