@@ -934,8 +934,9 @@ match.call.defaults <- function(...) {
   df_edges <- merge(df_edges, df, by = "id")
   # Prepare label df --------------------------------------------------------
   select_these <- middle_point <- table(df_edges$id)
-  select_these[middle_point == 3] <- 2
-  select_these[!middle_point == 3] <- ceiling(middle_point[!middle_point == 3]/2)
+  straightline <- middle_point == 3
+  select_these[straightline] <- 2
+  select_these[!straightline] <- ceiling(df$label_location[!straightline]*middle_point[!straightline])
   middle_point <- select_these+cumsum(c(0, middle_point[-length(middle_point)]))
   df_label <- df_edges[middle_point, ]
   df_label$label <- df$label
