@@ -340,9 +340,10 @@ prepare_graph.default <- function(edges,
   # Sort by group first, then by level
   df_edges$connect_from <- connect_cols[, 1]
   df_edges$connect_to <- connect_cols[, 2]
-
+  df_edges$curvature <- as.numeric(connect_cols[, 3])
   has_curve <- which(!is.na(df_edges$curvature)) # Check if this is correct, or should be is.null / is.na
-  df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0]
+
+  #df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0]
 
   out <- Args
 
@@ -803,15 +804,22 @@ match.call.defaults <- function(...) {
 
 # Connect nodes -----------------------------------------------------------
 
+  curws <- df_edges$curvature
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
   midpoint_df <- mean(range(df_nodes$x))
   left_half <- df_nodes$x[match(df_edges$from, df_nodes$name)] < midpoint_df
+
+  curws[same_column & left_half & (!is.na(df_edges$curvature))] <- curws[same_column & left_half & (!is.na(df_edges$curvature))]*sign(df_nodes$y[match(df_edges$to, df_nodes$name)]-df_nodes$y[match(df_edges$from, df_nodes$name)])[same_column & left_half & (!is.na(df_edges$curvature))]
+
   out[same_column & left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("left", "left")
   out[same_column & !left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("right", "right")
   # For rows
   same_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == df_nodes$y[match(df_edges$to, df_nodes$name)]
   midpoint_df <- mean(range(df_nodes$y))
   top_half <- df_nodes$y[match(df_edges$from, df_nodes$name)] > midpoint_df
+
+  curws[same_row & top_half & (!is.na(df_edges$curvature))] <- curws[same_row & top_half & (!is.na(df_edges$curvature))]*sign(df_nodes$x[match(df_edges$to, df_nodes$name)]-df_nodes$x[match(df_edges$from, df_nodes$name)])[same_row & top_half & (!is.na(df_edges$curvature))]
+
   out[same_row & !top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("bottom", "bottom")
   out[same_row & top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("top", "top")
   incomplete <- is.na(out[,1])
@@ -878,7 +886,7 @@ match.call.defaults <- function(...) {
 
     }, from = df_edges$from, to = df_edges$to))
   }
-  out
+  cbind(out, curws)
 }
 
 #' @importFrom stats dist
@@ -905,11 +913,11 @@ match.call.defaults <- function(...) {
       N <- matrix(c(AB[2], -AB[1]), nrow=1)
       C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
       radius <- dist(rbind(C, A))
-      if(this_row[["curvature"]] < 0){
-        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1])
-      } else {
-        angles <- atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
-      }
+      angles <- list(
+        atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]),
+        atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
+      )
+      angles <- angles[[which.min(sapply(angles, dist))]]
       point_seq <- seq(angles[2], angles[1],length.out = npoints)
       out <- matrix(
         c(C[1] + radius * cos(point_seq),
