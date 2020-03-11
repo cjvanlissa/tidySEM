@@ -1,3 +1,72 @@
+#' @title Filter graph elements
+#' @description Apply a filter to one of the elements
+#' of a \code{sem_graph} object, and return the modified \code{sem_graph}. Uses
+#' the function \code{\link[base]{subset}}.
+#' @param x An object of class \code{sem_graph}.
+#' @param subset logical expression indicating elements or rows to keep:
+#' missing values are taken as false.
+#' @param select Expression, indicating columns to select from a data frame.
+#' @param element Character. The element of the \code{sem_graph} to filter,
+#' defaults to \code{"edges"}.
+#' @param ... Arguments passed on to \code{\link[base]{within}}.
+#' @return An object of class \code{sem_graph}.
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname filter_graph
+#' @export
+filter_graph <- function(x, subset, select, element = "edges", ...){
+  UseMethod("filter_graph", x)
+}
+
+#' @method filter_graph sem_graph
+#' @export
+filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
+  if(!element %in% names(x)){
+    stop("Element ", element, " is not an element of the sem_graph object.", call. = FALSE)
+  }
+  Args <- as.list(match.call())
+  Args$x <- x[[element]]
+  Args[[1]] <- as.symbol("subset")
+  x[[element]] <- eval.parent(as.call(Args))
+  x
+}
+
+#' @title Edit graph elements
+#' @description Evaluate an R expression within the environment of the elements
+#' of a \code{sem_graph} object, and return the modified \code{sem_graph}.
+#' @param x An object of class \code{sem_graph}.
+#' @param expr expression to evaluate.
+#' @param element Character. The element of the \code{sem_graph} to edit,
+#' defaults to \code{"edges"}.
+#' @param ... Arguments passed on to \code{\link[base]{within}}.
+#' @return An object of class \code{sem_graph}.
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname edit_graph
+#' @export
+edit_graph <- function(x, expr, element = "edges", ...){
+  UseMethod("edit_graph", x)
+}
+
+#' @method edit_graph sem_graph
+#' @export
+edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
+  if(!element %in% names(x)){
+    stop("Element ", element, " is not an element of the sem_graph object.", call. = FALSE)
+  }
+  Args <- c(list(data = x[[element]]), as.list(match.call()[-c(1, which(names(as.list(match.call())) %in% c("x", "element")))]))
+  x[[element]] <- do.call(within, Args)
+  x
+}
+
 #' @title Render a graph
 #' @description Render a graph based on a layout, and either nodes and edges, or
 #' a model object.
@@ -711,14 +780,14 @@ match.call.defaults <- function(...) {
     ylabel[df$connect_from == "bottom"] - diameter
   offset[df$connect_from == "bottom"] <- .5
   xcenter[df$connect_from == "left"] <-
-    xcenter[df$connect_from == "left"] + radius
+    xcenter[df$connect_from == "left"] - radius
   xlabel[df$connect_from == "left"] <-
-    xlabel[df$connect_from == "left"] + diameter
+    xlabel[df$connect_from == "left"] - diameter
   offset[df$connect_from == "left"] <- 0
   xcenter[df$connect_from == "right"] <-
-    xcenter[df$connect_from == "right"] - radius
+    xcenter[df$connect_from == "right"] + radius
   xlabel[df$connect_from == "right"] <-
-    xlabel[df$connect_from == "right"] - diameter
+    xlabel[df$connect_from == "right"] + diameter
   offset[df$connect_from == "right"] <- 1
   df_label <- data.frame(df,
                          x = xlabel,
@@ -933,10 +1002,14 @@ match.call.defaults <- function(...) {
   df$id <- 1:nrow(df)
   df_edges <- merge(df_edges, df, by = "id")
   # Prepare label df --------------------------------------------------------
+  if(is.null(df[["label_location"]])){
+    df$label_location <- .5
+  }
   select_these <- middle_point <- table(df_edges$id)
   straightline <- middle_point == 3
   select_these[straightline] <- 2
   select_these[!straightline] <- ceiling(df$label_location[!straightline]*middle_point[!straightline])
+
   middle_point <- select_these+cumsum(c(0, middle_point[-length(middle_point)]))
   df_label <- df_edges[middle_point, ]
   df_label$label <- df$label
