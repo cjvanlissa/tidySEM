@@ -20,8 +20,8 @@ fit <- suppressWarnings(sem(L.in.G, data = Galo, cluster = "school", fixed.x = F
 nod <- get_nodes(fit)
 edg <- get_edges(fit)
 
-layout <- matrix(c("galo.within", "focc.within",
-                   "galo.between", "focc.between"), ncol = 2, byrow = TRUE)
+layout <- matrix(c("focc.within", "galo.within",
+                   "focc.between", "galo.between"), ncol = 2, byrow = TRUE)
 
 test_that("Nodes correct nr of rows", {
   expect_true(nrow(nod) == 2*length(as.vector(layout)[!as.vector(layout) == ""]))

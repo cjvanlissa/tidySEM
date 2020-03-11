@@ -54,6 +54,7 @@ test_that("prepare_graph correctly generates graph data", {
 prep$edges$connect_from <- "right"
 prep$edges$connect_to[c(5,6)] <- c("bottom", "top")
 prep$edges$connect_to <- c(rep("left", 10), "top", "bottom")
+prep$edges$label_location <- .2
 p <- plot(prep)
 
 test_that("multiplication works", {
