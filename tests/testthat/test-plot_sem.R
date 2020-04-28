@@ -5,7 +5,7 @@ lo <- get_layout("ne", "phys", "",
                      "coh", "stress", "", rows = 5)
 
 test_that("get_layout generates matrix", {
-  expect_true(class(lo) == "matrix")
+  expect_true(inherits(lo, "matrix"))
 })
 
 long_lo <- tidySEM:::long_layout(lo)
