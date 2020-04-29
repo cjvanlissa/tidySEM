@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='badge.png' align="right" height="139" /></a>
+
 <!--[![CRAN status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
 [![](https://cranlogs.r-pkg.org/badges/tidySEM)](https://cran.r-project.org/package=tidySEM)-->
 
@@ -10,8 +12,6 @@ status](https://travis-ci.org/cjvanlissa/tidySEM.svg?branch=master)](https://tra
 [![Codecov test
 coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://codecov.io/gh/cjvanlissa/tidySEM?branch=master)
 <!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
-
-## tidySEM
 
 tidySEM provides functionality to conduct and report structural equation
 modeling analyses with existing packages, such as `lavaan` and

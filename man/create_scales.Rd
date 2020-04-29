@@ -56,6 +56,7 @@ It relies on several functions from the
 \code{\link[psych]{omega}}.
 }
 \examples{
-out <- create_scales(iris, keys.list = list(scalename = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")))
+out <- create_scales(iris, keys.list = list(scalename =
+            c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")))
 out$descriptives
 }
