@@ -1,15 +1,17 @@
-#' @importFrom psych scoreItems omega
+#' @importFrom psych scoreItems omega fa make.keys describe
+#' @importFrom utils write.csv
+#' @importFrom stats complete.cases cor.test var
 create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
                           digits = 2, ...)
 {
+  keys.list <- keys.list[!sapply(keys.list, length) < 2]
   scoredatanames <- as.vector(unlist(keys.list))
   scoredatanames <- unique(scoredatanames)
   data <- data[, names(data) %in% scoredatanames]
   keys <- make.keys(length(scoredatanames), keys.list = keys.list,
                     item.labels = scoredatanames)
   scores <- scoreItems(keys, data, missing = missing, impute = impute)
-
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
                                    Items = unlist(lapply(keys.list, length)), as.matrix(describe(scores$scores))[, c(2, 3, 4, 8, 9)])
@@ -35,6 +37,13 @@ create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
                                      Omega = omegas, Interpret.O = interpret(omegas))
   }
 
+  fas <- t(sapply(names(keys.list), function(scale_name){
+    tryCatch(range(as.numeric(fa(data[keys.list[[scale_name]]])$loadings)),
+             error = function(e){warning(e); return(c(NA, NA))},
+             warning = function(w){warning(paste0("When computing factor loadings for ", scale_name, gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE); return(c(NA, NA))})
+  }))
+  colnames(fas) <- c("min_load", "max_load")
+  table_descriptives <- cbind(table_descriptives, fas)
   table_descriptives[, sapply(table_descriptives, is.numeric)] <- lapply(table_descriptives[,
                                                                                             sapply(table_descriptives, is.numeric)], formatC, digits = digits,
                                                                          format = "f")
@@ -126,6 +135,7 @@ spearman_brown.data.frame <- function(x, y = NULL, ...){
 
 spearman_brown.matrix <- spearman_brown.data.frame
 
+#' @importFrom stats cor
 spearman_brown.default <- function(x, y, ...){
   r <- cor(x, y, use = "pairwise.complete.obs")
   1/(1+(1/((r/(1-r))+(r/(1-r)))))
