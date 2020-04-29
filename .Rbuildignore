@@ -12,3 +12,7 @@ dev/
 ^docs$
 ^_pkgdown\.yml$
 R/data_types\.md
+^.*\.psd$
+^.*\.eps$
+^.*\.png$
+^.*\.svg$

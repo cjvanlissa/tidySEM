@@ -1,7 +1,7 @@
-#' @importFrom psych scoreItems
+#' @importFrom psych scoreItems omega
 create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
-                           omega = NULL, write_files = FALSE,
-                           digits = 2, ...)
+                          omega = NULL, write_files = FALSE,
+                          digits = 2, ...)
 {
   scoredatanames <- as.vector(unlist(keys.list))
   scoredatanames <- unique(scoredatanames)
@@ -16,12 +16,21 @@ create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
 
   table_descriptives <- cbind(table_descriptives, skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))
 
-  table_descriptives$Alpha <- as.vector(scores$alpha)
-  table_descriptives$Interpret.a = interpret(as.vector(scores$alpha))
+  table_descriptives$Reliability <- as.vector(scores$alpha)
+  two_items <- table_descriptives$Items < 3
+  if(any(two_items)){
+    table_descriptives$Reliability[two_items] <- sapply(keys.list[which(two_items)], function(this_scale){
+      spearman_brown(data[this_scale])
+    })
+  }
+  table_descriptives$Interpret = interpret(as.vector(scores$alpha))
   if (!is.null(omega)) {
-    omegas <- unlist(sapply(1:length(keys.list), function(x) {
-      omega(data[keys.list[[x]]])[[omega]]
-    }))
+    omegas <- sapply(names(keys.list), function(scale_name){
+      tryCatch(omega(data[keys.list[[scale_name]]])[[omega]],
+               error = function(e){warning(e); return(NA)},
+               warning = function(w){warning(paste0("When computing Omega for ", scale_name, gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE); return(NA)})
+
+    })
     table_descriptives <- data.frame(table_descriptives,
                                      Omega = omegas, Interpret.O = interpret(omegas))
   }
@@ -30,6 +39,10 @@ create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
                                                                                             sapply(table_descriptives, is.numeric)], formatC, digits = digits,
                                                                          format = "f")
 
+  if(any(two_items)){
+    table_descriptives$Reliability[two_items] <- paste0(table_descriptives$Reliability[two_items],
+                                                        "(sb)")
+  }
   if (write_files)
     write.csv(table_descriptives, "scale table.csv", row.names = FALSE)
   cordat <- data.frame(scores$scores)
@@ -89,11 +102,31 @@ skew_kurtosis.default <- function(x, verbose = FALSE, se = FALSE, ...){
 }
 
 interpret <- function(reliability = NULL) {
-  interpretation <- rep("Unacceptable", length(reliability))
+  interpretation <- rep(NA, length(reliability))
+  interpretation[reliability < 0.5] <- "Unacceptable"
   interpretation[reliability >= 0.5] <- "Poor"
   interpretation[reliability >= 0.6] <- "Questionable"
   interpretation[reliability >= 0.7] <- "Acceptable"
   interpretation[reliability >= 0.8] <- "Good"
   interpretation[reliability >= 0.9] <- "Excellent"
   return(interpretation)
+}
+
+spearman_brown <- function(x, y = NULL, ...){
+  UseMethod("spearman_brown", x)
+}
+
+spearman_brown.data.frame <- function(x, y = NULL, ...){
+  if(ncol(x) > 2) stop("Spearman Brown is only appropriate as a reliability estimate for two-item scales.")
+  cl <- as.list(match.call()[-1])
+  cl$x <- x[, 1]
+  cl$y <- x[, 2]
+  do.call(spearman_brown, cl)
+}
+
+spearman_brown.matrix <- spearman_brown.data.frame
+
+spearman_brown.default <- function(x, y, ...){
+  r <- cor(x, y, use = "pairwise.complete.obs")
+  1/(1+(1/((r/(1-r))+(r/(1-r)))))
 }

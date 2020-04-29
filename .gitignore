@@ -10,3 +10,7 @@ Meta
 dev/
 *.RData
 tests/test_local.R
+*.psd
+*.eps
+*.png
+*.svg
