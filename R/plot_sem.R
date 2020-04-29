@@ -634,11 +634,13 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
   nodes <- unique(c(latent, obs))
   nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
 
-  if(!is.null(label) & label %in% names(x)){
-    labelz <- x[x$op == "~1", ]
-    labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
-    if(any(!is.na(labelz))){
-      nodes$label[!is.na(labelz)] <- paste0(nodes$name[!is.na(labelz)], "\n", labelz[!is.na(labelz)])
+  if(!is.null(label)){
+    if(label %in% names(x)){
+      labelz <- x[x$op == "~1", ]
+      labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
+      if(any(!is.na(labelz))){
+        nodes$label[!is.na(labelz)] <- paste0(nodes$name[!is.na(labelz)], "\n", labelz[!is.na(labelz)])
+      }
     }
   } else {
     nodes$label <- nodes$name
@@ -702,7 +704,7 @@ get_edges.mplus.object <- get_edges.lavaan
 
 #' @method get_edges tidy_results
 #' @export
-get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
+get_edges.tidy_results <- function(x, label = "est_sig_std", ..., remove_fixed = TRUE){
   Args <- as.list(match.call())[-1]
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
@@ -723,6 +725,9 @@ get_edges.tidy_results <- function(x, label = "est_sig_std", ...){
       tmp
     })
     return(do.call(rbind, x_list))
+  }
+  if(remove_fixed){
+    x <- x[!x$se == "", ]
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
   x$from <- x$lhs
