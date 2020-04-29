@@ -1,6 +1,41 @@
+#' @title Create scale scores from observed variables
+#' @description This function calculates mean or sum scores from a
+#' \code{data.frame} and a named list describing the items in each scale. It
+#' returns the scores, a scale descriptive table, and a scale correlation table.
+#' It relies on several functions from the
+#' \code{psych} package; most notably \code{\link[psych]{scoreItems}},
+#' \code{\link[psych]{describe}}, \code{\link[psych]{fa}}, and
+#' \code{\link[psych]{omega}}.
+#' @param data A \code{data.frame} containing all variables referenced in the
+#' \code{keys.list}.
+#' @param keys.list A named list, indicating which variables belong to which
+#' scale. See \code{\link[psych]{scoreItems}} and
+#' \code{\link[psych]{make.keys}} for more information.
+#' @param missing Whether to use rows with partially missing values, Default: TRUE.
+#' See: \code{\link[psych]{scoreItems}}.
+#' @param impute Method for handling missing values, Default: 'none'. This
+#' default method uses all available data to calculate scale scores, which is
+#' acceptable for mean scales, but not for sum scales. See:
+#' \code{\link[psych]{scoreItems}}.
+#' @param omega Which of McDonald's \code{\link[psych]{omega}} coefficients to
+#' report. Default: NULL; valid options include: \code{"omega_h"},
+#' \code{"omega.lim"}, \code{"alpha"}, \code{"omega.tot"}, \code{"G6"}.
+#' @param write_files Whether to write the scale descriptive and correlation
+#' tables to .csv files, Default: FALSE
+#' @param digits Number of digits for rounding, Default: 2
+#' @param ... Additional parameters to pass to and from functions.
+#' @return List with elements: \code{$descriptives}, \code{$correlations}, and
+#' \code{$scores}.
+#' @examples
+#' out <- create_scales(iris, keys.list = list(scalename =
+#'             c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")))
+#' out$descriptives
+#' @rdname create_scales
+#' @export
 #' @importFrom psych scoreItems omega fa make.keys describe
 #' @importFrom utils write.csv
 #' @importFrom stats complete.cases cor.test var
+# sb: Spearman-Brown reliability coefficient for two-item scales, as described in Eisinga, R., Grotenhuis, M. te, & Pelzer, B. (2012). The reliability of a two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal of Public Health, 58(4), 637–642. doi:10.1007/s00038-012-0416-3
 create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
                           digits = 2, ...)
@@ -14,7 +49,7 @@ create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
   scores <- scoreItems(keys, data, missing = missing, impute = impute)
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
-                                   Items = unlist(lapply(keys.list, length)), as.matrix(describe(scores$scores))[, c(2, 3, 4, 8, 9)])
+                                   Items = sapply(keys.list, length), describe(scores$scores)[, c(2, 3, 4, 8, 9)])
 
   table_descriptives <- cbind(table_descriptives, skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))
 
@@ -70,45 +105,18 @@ create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
   cortab[upper.tri(cortab)] <- ""
   if (write_files) write.csv(cortab, "correlation table.csv")
 
-  return(list(table_descriptives = table_descriptives, correlations = cortab,
+  return(list(descriptives = table_descriptives, correlations = cortab,
               scores = scores$scores))
 }
 
-skew_kurtosis <- function(x, verbose = FALSE, se = FALSE, ...){
-  UseMethod("skew_kurtosis", x)
-}
-
-skew_kurtosis.data.frame <- function(x, verbose = FALSE, se = FALSE, ...){
-  t(sapply(x, skew_kurtosis))
-}
-
-skew_kurtosis.matrix <- function(x, verbose = FALSE, se = FALSE, ...){
-  t(apply(x, 2, skew_kurtosis))
-}
-
-skew_kurtosis.numeric <- function(x, verbose = FALSE, se = FALSE, ...){
-  x <- x[!is.na(x)]
-  n <- length(x)
-  if(n < 3){
-    out <- rep(NA, 6)
-    names(out) <- c("sk", "se_sk", "sk_2se", "ku", "se_ku", "ku_2se")
-    out
-  }
-  if(n > 5000 & verbose) message("Sample size > 5000; skew and kurtosis will likely be significant.")
-  sk <- sum((x-mean(x))^3)/(n*sqrt(var(x))^3)
-  se_sk <- sqrt(6*n*(n-1)/(n-2)/(n+1)/(n+3))
-  sk_2se <- sk/(2*se_sk)
-  ku <- sum((x-mean(x))^4)/(n*var(x)^2) - 3
-  se_ku <- sqrt(24*n*((n-1)^2)/(n-3)/(n-2)/(n+3)/(n+5))
-  ku_2se <- ku/(2*se_ku)
-  c(sk = sk, se_sk = se_sk, sk_2se = sk_2se, ku = ku, se_ku = se_ku, ku_2se = ku_2se)
-}
-
-skew_kurtosis.default <- function(x, verbose = FALSE, se = FALSE, ...){
-  out <- rep(NA, 6)
-  names(out) <- c("sk", "se_sk", "sk_2se", "ku", "se_ku", "ku_2se")
-  out
-}
+# if(n > 5000 & verbose) message("Sample size > 5000; skew and kurtosis will likely be significant.")
+# sk <- sum((x-mean(x))^3)/(n*sqrt(var(x))^3)
+# se_sk <- sqrt(6*n*(n-1)/(n-2)/(n+1)/(n+3))
+# sk_2se <- sk/(2*se_sk)
+# ku <- sum((x-mean(x))^4)/(n*var(x)^2) - 3
+# se_ku <- sqrt(24*n*((n-1)^2)/(n-3)/(n-2)/(n+3)/(n+5))
+# ku_2se <- ku/(2*se_ku)
+# out <- c(sk = sk, se_sk = se_sk, sk_2se = sk_2se, ku = ku, se_ku = se_ku, ku_2se = ku_2se)
 
 interpret <- function(reliability = NULL) {
   interpretation <- rep(NA, length(reliability))
@@ -140,3 +148,72 @@ spearman_brown.default <- function(x, y, ...){
   r <- cor(x, y, use = "pairwise.complete.obs")
   1/(1+(1/((r/(1-r))+(r/(1-r)))))
 }
+
+
+#' @title Calculate skew and kurtosis
+#' @description Calculate skew and kurtosis, standard errors for both, and the
+#' estimates divided by two times the standard error. If this latter quantity
+#' exceeds an absolute value of 1, the skew/kurtosis is significant. With very
+#' large sample sizes, significant skew/kurtosis is common.
+#' @param x An object for which a method exists.
+#' @param verbose Whether or not to print messages to the console,
+#' Default: FALSE
+#' @param se Whether or not to return the standard errors, Default: FALSE
+#' @param ... Additional arguments to pass to and from functions.
+#' @return matrix
+#' @examples
+#' skew_kurtosis(datasets::anscombe)
+#' @rdname skew_kurtosis
+#' @export
+skew_kurtosis <- function(x, verbose = FALSE, se = FALSE, ...){
+  UseMethod("skew_kurtosis", x)
+}
+
+#' @method skew_kurtosis data.frame
+#' @export
+skew_kurtosis.data.frame <- function(x, verbose = FALSE, se = FALSE, ...){
+  t(sapply(x, skew_kurtosis))
+}
+
+#' @method skew_kurtosis matrix
+#' @export
+skew_kurtosis.matrix <- function(x, verbose = FALSE, se = FALSE, ...){
+  t(apply(x, 2, skew_kurtosis))
+}
+
+#' @method skew_kurtosis numeric
+#' @export
+skew_kurtosis.numeric <- function(x, verbose = FALSE, se = FALSE, ...){
+  x <- x[!is.na(x)]
+  n <- length(x)
+  out <- rep(NA, 6)
+  names(out) <- c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
+  if(n > 3){
+    if(n > 5000 & verbose) message("Sample size > 5000; skew and kurtosis will likely be significant.")
+    skew <- sum((x-mean(x))^3)/(n*sqrt(var(x))^3)
+    skew_se <- sqrt(6*n*(n-1)/(n-2)/(n+1)/(n+3))
+    skew_2se <- skew/(2*skew_se)
+    kurt <- sum((x-mean(x))^4)/(n*var(x)^2) - 3
+    kurt_se <- sqrt(24*n*((n-1)^2)/(n-3)/(n-2)/(n+3)/(n+5))
+    kurt_2se <- kurt/(2*kurt_se)
+    out <- c(skew = skew, skew_se = skew_se, skew_2se = skew_2se, kurt = kurt, kurt_se = kurt_se, kurt_2se = kurt_2se)
+  }
+  if(se){
+    return(out)
+  } else {
+    return(out[c(1,3,4,6)])
+  }
+}
+
+#' @method skew_kurtosis default
+#' @export
+skew_kurtosis.default <- function(x, verbose = FALSE, se = FALSE, ...){
+  out <- rep(NA, 6)
+  names(out) <- c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
+  if(se){
+    return(out)
+  } else {
+    return(out[c(1,3,4,6)])
+  }
+}
+

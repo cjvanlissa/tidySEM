@@ -1,7 +1,7 @@
 Type: Package
 Package: tidySEM
 Title: Tidy Structural Equation Modeling
-Version: 0.1.0.9
+Version: 0.1.0.10
 Authors@R: 
     c(person(given = "Caspar",
              family = "van Lissa",
