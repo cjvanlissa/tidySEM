@@ -115,12 +115,13 @@ get_layout.mplus.model <- get_layout.lavaan
 #' layout_with_graphopt layout_with_kk layout_with_lgl layout_with_mds
 get_layout.tidy_results <- function(x, ..., layout_algorithm = "layout_as_tree"){
   tab_res <- x
-  df <- tab_res[tab_res$op %in% c("~", "=~"), c("lhs", "rhs")]
+  df <- tab_res[tab_res$op %in% c("~~", "~", "=~"), c("lhs", "rhs")]
   g <- graph.data.frame(df, directed = TRUE)
   lo <- do.call(layout_algorithm, list(g))
   lo <- round(lo)
   if(any(duplicated(lo))){
-    stop("Could not snap to grid, some nodes were in the same location.")
+    lo <- resolve_dups(lo)
+    #stop("Could not snap to grid, some nodes were in the same location.")
   }
   lo <- sweep(lo, 2, (apply(lo, 2, min)-1), "-")
   out <- matrix(nrow = max(lo[,2]), ncol = max(lo[, 1]))
@@ -132,6 +133,22 @@ get_layout.tidy_results <- function(x, ..., layout_algorithm = "layout_as_tree")
     t(out)
   } else {
     out[nrow(out):1, ]
+  }
+}
+
+#' @importFrom utils tail
+resolve_dups <- function(lo){
+  new_lo <- lo
+  first_dup <- which(duplicated(lo))[1]
+  dup_row <- lo[first_dup,]
+  neighboring_locs <- t(apply(expand.grid(c(-1,0,1), c(-1,0,1)), 1, `+`, dup_row))
+  free_locs <- neighboring_locs[tail(!duplicated(rbind(lo, neighboring_locs)), 9), ]
+  if(!any(free_locs)) stop("Could not generate layout automatically. Please specify a layout manually.")
+  new_lo[first_dup, ] <- free_locs[sample.int(nrow(free_locs), 1), ]
+  if(any(duplicated(new_lo))){
+    resolve_dups(new_lo)
+  } else {
+    return(new_lo)
   }
 }
 

@@ -13,3 +13,4 @@ dev/
 ^_pkgdown\.yml$
 R/data_types\.md
 ^.*\.psd$
+^badge\.png$

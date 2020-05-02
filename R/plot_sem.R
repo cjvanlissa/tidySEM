@@ -72,12 +72,12 @@ edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
 #' a model object.
 #' @param ... Additional arguments passed to and from functions.
 #@usage ## Default S3 method:
-#graph(edges, layout, nodes = NULL,  rect_width = 1.2, rect_height = .8,
+#graph_sem(edges, layout, nodes = NULL,  rect_width = 1.2, rect_height = .8,
 #  ellipses_width = 1, ellipses_height = 1, spacing_x = 2, spacing_y = 2,
 #  text_size = 4, curvature = 60, angle = NULL, ...)
 #
 ### Alternative interface:
-#graph(model, layout, ...)
+#graph_sem(model, layout, ...)
 # Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
 #' @details The default interface simply Runs the functions
@@ -92,15 +92,15 @@ edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname graph
+#' @rdname graph_sem
 #' @keywords tidy_graph
 #' @export
-graph <- function(...){
+graph_sem <- function(...){
 
-  UseMethod("graph")
+  UseMethod("graph_sem")
 }
 
-#' @method graph default
+#' @method graph_sem default
 #' @param edges Object of class 'tidy_edges', or a \code{data.frame} with  (at
 #' least) the columns \code{c("from", "to")}, and optionally, \code{c("arrow",
 #' "label", "connect_from", "connect_to", "curvature")}.
@@ -136,9 +136,9 @@ graph <- function(...){
 #' @param fix_coord Whether or not to fix the aspect ratio of the graph.
 #' Does not work with multi-group or multilevel models.
 #' Default: FALSE.
-#' @rdname graph
+#' @rdname graph_sem
 #' @export
-graph.default <- function(edges,
+graph_sem.default <- function(edges = NULL,
                           layout = NULL,
                           nodes = NULL,
                          rect_width = 1.2,
@@ -162,22 +162,22 @@ graph.default <- function(edges,
   plot(prep)
 }
 
-#' @method graph lavaan
+#' @method graph_sem lavaan
 #' @param model Instead of the edges argument, it is also possible to use the
 #' model argument and pass an object for which a method exists (e.g.,
 #' \code{mplus.model} or \code{lavaan}).
-#' @rdname graph
+#' @rdname graph_sem
 #' @export
-graph.lavaan <- function(model,
+graph_sem.lavaan <- function(model,
                          ...){
   Args <- as.list(match.call()[-1])
   do.call(graph_model, Args)
 }
 
-#' @method graph mplus.model
-#' @rdname graph
+#' @method graph_sem mplus.model
+#' @rdname graph_sem
 #' @export
-graph.mplus.model <- graph.lavaan
+graph_sem.mplus.model <- graph_sem.lavaan
 
 graph_model <- function(model, ...) {
   Args <- as.list(match.call()[-1])
@@ -195,7 +195,7 @@ graph_model <- function(model, ...) {
     Args$layout <- layout
   }
   Args[["model"]] <- NULL
-  do.call(graph.default, Args)
+  do.call(graph_sem.default, Args)
 }
 
 #' @title Prepare graph data
@@ -266,7 +266,7 @@ prepare_graph <- function(...){
 #' Default: FALSE.
 #' @rdname prepare_graph
 #' @export
-prepare_graph.default <- function(edges,
+prepare_graph.default <- function(edges = NULL,
                                  layout = NULL,
                                  nodes = NULL,
                                  rect_width = 1.2,
@@ -296,7 +296,12 @@ prepare_graph.default <- function(edges,
   } else {
     stop("Argument 'layout' must be a matrix or data.frame.")
   }
-  df_edges <- edges
+  if(!is.null(edges)){
+    df_edges <- edges
+  } else {
+    df_edges <- data.frame(from = character(),
+                           to = character())
+  }
   fac_vars <- sapply(df_edges, inherits, what = "factor")
   if(any(fac_vars)){
     df_edges[which(fac_vars)] <- lapply(df_edges[which(fac_vars)], as.character)
@@ -328,20 +333,22 @@ prepare_graph.default <- function(edges,
 
   # Check edges df ----------------------------------------------------------
 
-  if(!"arrow" %in% names(df_edges)){
-    df_edges$arrow <- "last"
-  }
-  if(!"label" %in% names(df_edges)){
-    df_edges$label <- ""
-  }
-  if(!"connect_from" %in% names(df_edges)){
-    df_edges$connect_from <- "left"
-  }
-  if(!"connect_to" %in% names(df_edges)){
-    df_edges$connect_to <- "right"
-  }
-  if(!"curvature" %in% names(df_edges)){
-    df_edges$curvature <- NA
+  if(nrow(df_edges)){
+    if(!"arrow" %in% names(df_edges)){
+      df_edges$arrow <- "last"
+    }
+    if(!"label" %in% names(df_edges)){
+      df_edges$label <- ""
+    }
+    if(!"connect_from" %in% names(df_edges)){
+      df_edges$connect_from <- "left"
+    }
+    if(!"connect_to" %in% names(df_edges)){
+      df_edges$connect_to <- "right"
+    }
+    if(!"curvature" %in% names(df_edges)){
+      df_edges$curvature <- NA
+    }
   }
 
   # Defaults for missing columns --------------------------------------------
@@ -489,11 +496,13 @@ plot.sem_graph <- function(x, y, ...){
   numeric_cols <- c("curvature")
   df_edges[numeric_cols[which(numeric_cols %in% names(df_edges))]] <- lapply(df_edges[numeric_cols[which(numeric_cols %in% names(df_edges))]], as.numeric)
 
-  connect_points <- .connect_points(df_nodes, df_edges)
+  if(nrow(df_edges)){
+    connect_points <- .connect_points(df_nodes, df_edges)
 
-  df_edges <- cbind(df_edges, connect_points)
+    df_edges <- cbind(df_edges, connect_points)
 
-  df_edges <- cbind(df_edges, setNames(data.frame(t(apply(connect_points, 1, function(x){(x[1:2]+x[3:4])/2}))), c("text_x", "text_y")))
+    df_edges <- cbind(df_edges, setNames(data.frame(t(apply(connect_points, 1, function(x){(x[1:2]+x[3:4])/2}))), c("text_x", "text_y")))
+  }
 
 
 # Make plot ---------------------------------------------------------------

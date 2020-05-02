@@ -10,7 +10,7 @@
 prepare_graph(...)
 
 \method{prepare_graph}{default}(
-  edges,
+  edges = NULL,
   layout = NULL,
   nodes = NULL,
   rect_width = 1.2,

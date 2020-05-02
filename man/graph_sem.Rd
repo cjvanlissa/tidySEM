@@ -10,7 +10,7 @@
 graph_sem(...)
 
 \method{graph_sem}{default}(
-  edges,
+  edges = NULL,
   layout = NULL,
   nodes = NULL,
   rect_width = 1.2,

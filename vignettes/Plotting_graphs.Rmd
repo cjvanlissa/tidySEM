@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(tidySEM)
 ```
 
-`tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programatic*, meaning that graphs are created mostly automatically from the output of an analysis. There is one important intentional exception to the programmatic workflow: **Users must create a layout matrix for the graph by hand.** This allows swift customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
+`tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
 
 ## The tidySEM workflow
 
@@ -94,6 +94,7 @@ Other layout functions from the `igraph` package can be used by specifying the `
 
 ```{r message=FALSE, warning = FALSE}
 get_layout(fit, layout_algorithm = "layout_in_circle")
+get_layout(fit, layout_algorithm = "layout_on_grid")
 ```
 
 #### Specifying layout in a spreadsheet program
@@ -171,11 +172,11 @@ lay <- get_layout("", "", "visual","","textual","","speed","", "",
 At this point, we could simply plot the graph:
 
 ```{r, echo = TRUE, eval = FALSE}
-graph(model = fit, layout = lay)
+graph_sem(model = fit, layout = lay)
 ```
 
 ```{r, out.width = "100%", echo = FALSE, eval = TRUE}
-graph(model = fit, layout = lay, text_size = 2, fix_coord = TRUE)
+graph_sem(model = fit, layout = lay, text_size = 2, fix_coord = TRUE)
 ```
 
 ### Optional step 4: accessing the graph data before plotting
@@ -199,7 +200,7 @@ edges(graph_data)
 
 At this stage, we may want to improve the basic plot slightly. The functions `nodes(graph_data) <- ...` and `edges(graph_data) <- ...` can be used to modify the nodes and edges. These functions pair well with the general tidyverse workflow. For example, we might want to print node labels for latent variables in *Title Case* instead of just using the variable names:
 
-```{r}
+```{r, message=FALSE}
 library(dplyr)
 library(stringr)
 nodes(graph_data) <- nodes(graph_data) %>%
@@ -229,15 +230,15 @@ plot(graph_data)
 
 ## Connecting nodes
 
-The functions `graph()` and `prepare_graph()` will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the `angle` parameter. This parameter connects nodes top-to-bottom when they are within `angle` degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing `angle` to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:
+The functions `graph_sem()` and `prepare_graph()` will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the `angle` parameter. This parameter connects nodes top-to-bottom when they are within `angle` degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing `angle` to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:
 
 ```{r, out.width="500px", out.height = "150px"}
-graph(model = fit, layout = lay, angle = 170)
+graph_sem(model = fit, layout = lay, angle = 170)
 ```
 
 ## Visual aspects
 
-The functions `graph()` and `prepare_graph()` accept several optional visual parameters that can be used to customize the resulting image (see `?graph()`). These parameters can be passed as extra columns to the `nodes()` and `edges()` objects. Specifically, edges have the following aesthetics (see `?geom_path()`):
+The functions `graph_sem()` and `prepare_graph()` accept several optional visual parameters that can be used to customize the resulting image (see `?graph_sem()`). These parameters can be passed as extra columns to the `nodes()` and `edges()` objects. Specifically, edges have the following aesthetics (see `?geom_path()`):
 
 * `linetype`: The type of line, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
 * `colour`: The colour of the line (e.g., `colour = "red"` or `colour = "blue"`)
@@ -253,7 +254,7 @@ edg <- data.frame(from = "x",
                   size = 2,
                   alpha = .5)
 
-graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
 
 Nodes have the following aesthetics (see `?geom_polygon()`):
@@ -275,7 +276,7 @@ nod <- data.frame(name = c("x", "y"),
                     fill = c("blue", "blue"),
                     size = c(2, 2),
                     alpha = .5)
-graph(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
+graph_sem(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
 ```
 
 These aesthetics can also be passed to the `sem_graph` object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:
@@ -304,6 +305,7 @@ Like nodes and edges, edge labels can be customized. Labels have the same aesthe
 * `label_hjust`: Horizontal justification of label text; either a string (`"left"`, `"center"`, `"right"`) or a number between 0 and 1 (left = 0, center = 0.5, right = 1)
 * `label_vjust`: Vertical justification of label text; either a string (`"top"`, `"middle"`, `"bottom"`) or a number between 0 and 1 (top = 1, middle = 0.5, bottom = 0)
 * `label_lineheight`: Line height for multiline text
+* `label_location`: Where along the edge to plot the label; a number between 0 (beginning) and 1 (end)
 
 ```{r}
 edg <- data.frame(from = "x",
@@ -317,8 +319,9 @@ edg <- data.frame(from = "x",
                   label_fontface = "bold",
                   label_hjust = "left",
                   label_vjust = "top",
-                  label_lineheight = 1.5
+                  label_lineheight = 1.5,
+                  label_location = .2
                   )
 
-graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
