@@ -302,6 +302,7 @@ prepare_graph.default <- function(edges = NULL,
     df_edges <- data.frame(from = character(),
                            to = character())
   }
+
   fac_vars <- sapply(df_edges, inherits, what = "factor")
   if(any(fac_vars)){
     df_edges[which(fac_vars)] <- lapply(df_edges[which(fac_vars)], as.character)
@@ -893,86 +894,101 @@ match.call.defaults <- function(...) {
   # Connect nodes -----------------------------------------------------------
 
   curws <- df_edges$curvature
+  # For columns
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
-  midpoint_df <- mean(range(df_nodes$x))
-  left_half <- df_nodes$x[match(df_edges$from, df_nodes$name)] < midpoint_df
+  xrange <- range(df_nodes$x)
+  # Check if nodes vary along the x range
+  if(diff(xrange) > 0){
+    midpoint_df <- mean(xrange)
+    left_half <- df_nodes$x[match(df_edges$from, df_nodes$name)] < midpoint_df
 
-  curws[same_column & left_half & (!is.na(df_edges$curvature))] <- curws[same_column & left_half & (!is.na(df_edges$curvature))]*sign(df_nodes$y[match(df_edges$to, df_nodes$name)]-df_nodes$y[match(df_edges$from, df_nodes$name)])[same_column & left_half & (!is.na(df_edges$curvature))]
+    curws[same_column & left_half & (!is.na(df_edges$curvature))] <- curws[same_column & left_half & (!is.na(df_edges$curvature))]*sign(df_nodes$y[match(df_edges$to, df_nodes$name)]-df_nodes$y[match(df_edges$from, df_nodes$name)])[same_column & left_half & (!is.na(df_edges$curvature))]
 
-  out[same_column & left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("left", "left")
-  out[same_column & !left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("right", "right")
+    out[same_column & left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("left", "left")
+    out[same_column & !left_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("right", "right")
+  } else {
+    #out[same_column & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("right", "right")
+  }
+
   # For rows
   same_row <- df_nodes$y[match(df_edges$from, df_nodes$name)] == df_nodes$y[match(df_edges$to, df_nodes$name)]
-  midpoint_df <- mean(range(df_nodes$y))
-  top_half <- df_nodes$y[match(df_edges$from, df_nodes$name)] > midpoint_df
+  yrange <- range(df_nodes$y)
+  if(diff(yrange) > 0){
+    midpoint_df <- mean(yrange)
+    top_half <- df_nodes$y[match(df_edges$from, df_nodes$name)] > midpoint_df
 
-  curws[same_row & top_half & (!is.na(df_edges$curvature))] <- curws[same_row & top_half & (!is.na(df_edges$curvature))]*sign(df_nodes$x[match(df_edges$to, df_nodes$name)]-df_nodes$x[match(df_edges$from, df_nodes$name)])[same_row & top_half & (!is.na(df_edges$curvature))]
+    curws[same_row & top_half & (!is.na(df_edges$curvature))] <- curws[same_row & top_half & (!is.na(df_edges$curvature))]*sign(df_nodes$x[match(df_edges$to, df_nodes$name)]-df_nodes$x[match(df_edges$from, df_nodes$name)])[same_row & top_half & (!is.na(df_edges$curvature))]
 
-  out[same_row & !top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("bottom", "bottom")
-  out[same_row & top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("top", "top")
+    out[same_row & !top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("bottom", "bottom")
+    out[same_row & top_half & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("top", "top")
+  } else {
+    #out[same_row & (!is.na(df_edges$curvature) | df_edges$from == df_edges$to), ] <- c("top", "top")
+  }
+
   incomplete <- is.na(out[,1])
   df_edges <- df_edges[incomplete, ]
+  if(any(incomplete)){
+    if(!is.null(angle)){
+      out[incomplete, ] <- t(mapply(function(from, to){
+        if(angle > 180) angle <- 180
+        if(angle < 0) angle <- 0
+        fx <- df_nodes$x[df_nodes$name == from]
+        tx <- df_nodes$x[df_nodes$name == to]
+        fy <- df_nodes$y[df_nodes$name == from]
+        ty <- df_nodes$y[df_nodes$name == to]
 
-  if(!is.null(angle)){
-    out[incomplete, ] <- t(mapply(function(from, to){
-      if(angle > 180) angle <- 180
-      if(angle < 0) angle <- 0
-      fx <- df_nodes$x[df_nodes$name == from]
-      tx <- df_nodes$x[df_nodes$name == to]
-      fy <- df_nodes$y[df_nodes$name == from]
-      ty <- df_nodes$y[df_nodes$name == to]
+        if(!(fx == tx | fy == ty)){
 
-      if(!(fx == tx | fy == ty)){
-
-        dx <- tx-fx
-        dy <- ty-fy
-        an <- (atan2(dy,dx)*(180/pi)) %% 360
-        if(an > 90+.5*angle & an < 270-.5*angle){
-          return(c("left", "right"))
-        }
-        if(an <= 90+(.5*angle) & an >= 90-(.5*angle)){
-          return(c("top", "bottom"))
-        }
-        if(an <  90-.5*angle | an > 270+.5*angle){
-          return(c("right", "left"))
-        }
-        return(c("bottom", "top"))
-      } else {
-        if(fx == tx){
-          list(c("bottom", "top"), c("top", "bottom"))[[(((ty-fy)>0)+1)]]
+          dx <- tx-fx
+          dy <- ty-fy
+          an <- (atan2(dy,dx)*(180/pi)) %% 360
+          if(an > 90+.5*angle & an < 270-.5*angle){
+            return(c("left", "right"))
+          }
+          if(an <= 90+(.5*angle) & an >= 90-(.5*angle)){
+            return(c("top", "bottom"))
+          }
+          if(an <  90-.5*angle | an > 270+.5*angle){
+            return(c("right", "left"))
+          }
+          return(c("bottom", "top"))
         } else {
-          list(c("left", "right"), c("right", "left"))[[(((tx-fx)>0)+1)]]
+          if(fx == tx){
+            list(c("bottom", "top"), c("top", "bottom"))[[(((ty-fy)>0)+1)]]
+          } else {
+            list(c("left", "right"), c("right", "left"))[[(((tx-fx)>0)+1)]]
+          }
         }
-      }
 
-    }, from = df_edges$from, to = df_edges$to))
-  } else {
-    out[incomplete, ] <- t(mapply(function(from, to) {
-      from_mat <-
-        as.matrix(rbind(
-          expand.grid(x = unlist(df_nodes[df_nodes$name == from, c("node_xmin", "node_xmax")]),
-                      y = unlist(df_nodes[df_nodes$name == from, "y"])),
-          expand.grid(x = unlist(df_nodes[df_nodes$name == from, "x"]),
-                      y = unlist(df_nodes[df_nodes$name == from, c("node_ymin", "node_ymax")]))
-        ))
+      }, from = df_edges$from, to = df_edges$to))
+    } else {
+      out[incomplete, ] <- t(mapply(function(from, to) {
+        from_mat <-
+          as.matrix(rbind(
+            expand.grid(x = unlist(df_nodes[df_nodes$name == from, c("node_xmin", "node_xmax")]),
+                        y = unlist(df_nodes[df_nodes$name == from, "y"])),
+            expand.grid(x = unlist(df_nodes[df_nodes$name == from, "x"]),
+                        y = unlist(df_nodes[df_nodes$name == from, c("node_ymin", "node_ymax")]))
+          ))
 
-      to_mat <-
-        as.matrix(rbind(
-          expand.grid(x = unlist(df_nodes[df_nodes$name == to, c("node_xmin", "node_xmax")]),
-                      y = unlist(df_nodes[df_nodes$name == to, "y"])),
-          expand.grid(x = unlist(df_nodes[df_nodes$name == to, "x"]),
-                      y = unlist(df_nodes[df_nodes$name == to, c("node_ymin", "node_ymax")]))
-        ))
+        to_mat <-
+          as.matrix(rbind(
+            expand.grid(x = unlist(df_nodes[df_nodes$name == to, c("node_xmin", "node_xmax")]),
+                        y = unlist(df_nodes[df_nodes$name == to, "y"])),
+            expand.grid(x = unlist(df_nodes[df_nodes$name == to, "x"]),
+                        y = unlist(df_nodes[df_nodes$name == to, c("node_ymin", "node_ymax")]))
+          ))
 
-      connector_sides[which.min(mapply(
-        function(from, to) {
-          do.call(.euclidean_distance, list(p = from_mat[from, ], q = to_mat[to, ]))
-        },
-        from = rep(1:4, each = 4),
-        to = rep(1:4, 4)
-      )), ]
+        connector_sides[which.min(mapply(
+          function(from, to) {
+            do.call(.euclidean_distance, list(p = from_mat[from, ], q = to_mat[to, ]))
+          },
+          from = rep(1:4, each = 4),
+          to = rep(1:4, 4)
+        )), ]
 
-    }, from = df_edges$from, to = df_edges$to))
+      }, from = df_edges$from, to = df_edges$to))
+    }
   }
   cbind(out, curws)
 }
