@@ -717,7 +717,7 @@ get_edges.mplus.object <- get_edges.lavaan
 
 #' @method get_edges tidy_results
 #' @export
-get_edges.tidy_results <- function(x, label = "est_sig_std", ..., remove_fixed = TRUE){
+get_edges.tidy_results <- function(x, label = "est_sig_std", ..., remove_fixed = FALSE){
   Args <- as.list(match.call())[-1]
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
