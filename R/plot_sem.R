@@ -139,20 +139,20 @@ graph_sem <- function(...){
 #' @rdname graph_sem
 #' @export
 graph_sem.default <- function(edges = NULL,
-                          layout = NULL,
-                          nodes = NULL,
-                         rect_width = 1.2,
-                         rect_height = .8,
-                         ellipses_width = 1,
-                         ellipses_height = 1,
-                         variance_diameter = .8,
-                         spacing_x = 2,
-                         spacing_y = 2,
-                         text_size = 4,
-                         curvature = 60,
-                         angle = NULL,
-                         fix_coord = FALSE,
-                         ...){
+                              layout = NULL,
+                              nodes = NULL,
+                              rect_width = 1.2,
+                              rect_height = .8,
+                              ellipses_width = 1,
+                              ellipses_height = 1,
+                              variance_diameter = .8,
+                              spacing_x = 2,
+                              spacing_y = 2,
+                              text_size = 4,
+                              curvature = 60,
+                              angle = NULL,
+                              fix_coord = FALSE,
+                              ...){
   Args <- as.list(match.call()[-1])
   Args$layout <- force(layout)
   Args$edges <- force(edges)
@@ -169,7 +169,7 @@ graph_sem.default <- function(edges = NULL,
 #' @rdname graph_sem
 #' @export
 graph_sem.lavaan <- function(model,
-                         ...){
+                             ...){
   Args <- as.list(match.call()[-1])
   do.call(graph_model, Args)
 }
@@ -267,20 +267,20 @@ prepare_graph <- function(...){
 #' @rdname prepare_graph
 #' @export
 prepare_graph.default <- function(edges = NULL,
-                                 layout = NULL,
-                                 nodes = NULL,
-                                 rect_width = 1.2,
-                                 rect_height = .8,
-                                 ellipses_width = 1,
-                                 ellipses_height = 1,
-                                 variance_diameter = .8,
-                                 spacing_x = 2,
-                                 spacing_y = 2,
-                                 text_size = 4,
-                                 curvature = 60,
-                                 angle = NULL,
-                                 fix_coord = FALSE,
-                                 ...
+                                  layout = NULL,
+                                  nodes = NULL,
+                                  rect_width = 1.2,
+                                  rect_height = .8,
+                                  ellipses_width = 1,
+                                  ellipses_height = 1,
+                                  variance_diameter = .8,
+                                  spacing_x = 2,
+                                  spacing_y = 2,
+                                  text_size = 4,
+                                  curvature = 60,
+                                  angle = NULL,
+                                  fix_coord = FALSE,
+                                  ...
 ){
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_graph.default)
@@ -377,7 +377,7 @@ prepare_graph.default <- function(edges = NULL,
     }))
   }
 
-# Order nodes and edges ---------------------------------------------------
+  # Order nodes and edges ---------------------------------------------------
   if("group" %in% names(df_edges)){
     if("level" %in% names(df_edges)){
       df_edges <- df_edges[with(df_edges, order(group, level)), ]
@@ -386,7 +386,7 @@ prepare_graph.default <- function(edges = NULL,
     }
   }
 
-# Compute x, y coordinates ------------------------------------------------
+  # Compute x, y coordinates ------------------------------------------------
 
   df_nodes$x <- df_nodes$x * spacing_x
   df_nodes$y <- df_nodes$y * spacing_y
@@ -409,7 +409,7 @@ prepare_graph.default <- function(edges = NULL,
                                                                              df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_height)
   }
 
-# Determine where best to connect nodes -----------------------------------
+  # Determine where best to connect nodes -----------------------------------
 
   connect_cols <- .determine_connections(df_nodes, df_edges, angle)
   # assign by groups to prevent arrows from ending up in the wrong place
@@ -420,6 +420,9 @@ prepare_graph.default <- function(edges = NULL,
   has_curve <- which(!is.na(df_edges$curvature)) # Check if this is correct, or should be is.null / is.na
 
   #df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0]
+
+  # Reposition error variances to "empty" part of the node
+  df_edges <- reposition_variances(df_edges)
 
   out <- Args
 
@@ -492,7 +495,7 @@ plot.sem_graph <- function(x, y, ...){
   text_size <- x$text_size
   fix_coord <- x$fix_coord
 
-# Check dfs ---------------------------------------------------------------
+  # Check dfs ---------------------------------------------------------------
   numeric_cols <- c("curvature")
   df_edges[numeric_cols[which(numeric_cols %in% names(df_edges))]] <- lapply(df_edges[numeric_cols[which(numeric_cols %in% names(df_edges))]], as.numeric)
 
@@ -505,12 +508,12 @@ plot.sem_graph <- function(x, y, ...){
   }
 
 
-# Make plot ---------------------------------------------------------------
+  # Make plot ---------------------------------------------------------------
 
   p <- ggplot(NULL)
 
   if(any(df_edges$from == df_edges$to)){
-      p <- .plot_variances(p, df = df_edges[df_edges$from == df_edges$to, ], text_size = text_size, diameter = variance_diameter)
+    p <- .plot_variances(p, df = df_edges[df_edges$from == df_edges$to, ], text_size = text_size, diameter = variance_diameter)
   }
   if(any(!df_edges$from == df_edges$to)){
     p <- .plot_edges(p, df_edges[!df_edges$from == df_edges$to, ], text_size)
@@ -534,14 +537,14 @@ plot.sem_graph <- function(x, y, ...){
     }
   }
   p + theme(axis.line = element_blank(),
-          axis.text.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(), legend.position = "none",
-          panel.background = element_blank(), panel.border = element_blank(),
-          panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-          plot.background = element_blank())
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank(), legend.position = "none",
+            panel.background = element_blank(), panel.border = element_blank(),
+            panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+            plot.background = element_blank())
 
 }
 
@@ -635,7 +638,7 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
       tmp$name <- paste0(tmp$name, ".", i)
       tmp$level <- i
       tmp
-      })
+    })
     return(do.call(rbind, x_list))
   }
   latent <- unique(x$lhs[x$op == "=~"])
@@ -700,9 +703,9 @@ get_edges <- function(x, label = "est_sig", ...){
 #' @method get_edges lavaan
 #' @export
 get_edges.lavaan <- function(x, label = "est_sig_std", ...){
-    Args <- as.list(match.call()[-1])
-    Args$x <- table_results(x, columns = NULL)
-    do.call(get_edges, Args)
+  Args <- as.list(match.call()[-1])
+  Args$x <- table_results(x, columns = NULL)
+  do.call(get_edges, Args)
 }
 
 #' @method get_edges mplus.object
@@ -868,7 +871,7 @@ match.call.defaults <- function(...) {
     x_list <- lapply(unique(df_nodes$group), function(i){
       .determine_connections(df_nodes = df_nodes[df_nodes$group == i, -which(names(df_nodes) == "group")],
                              df_edges = df_edges[df_edges$group == i, -which(names(df_edges) == "group")],
-      angle = angle)
+                             angle = angle)
     })
     return(do.call(rbind, x_list))
   }
@@ -887,7 +890,7 @@ match.call.defaults <- function(...) {
   out <- matrix(nrow = nrow(df_edges), ncol = 2)
 
 
-# Connect nodes -----------------------------------------------------------
+  # Connect nodes -----------------------------------------------------------
 
   curws <- df_edges$curvature
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
@@ -1097,4 +1100,22 @@ match.call.defaults <- function(...) {
     p <- p + do.call(geom_label, Args)
   }
   p
+}
+
+reposition_variances <- function(df_edges){
+  variances <- df_edges$from == df_edges$to & df_edges$arrow == "both"
+  variance_vars <- df_edges$from[variances]
+  new_loc <- mapply(function(vv, vloc){
+    tb <- table(c("top", "bottom", "left", "right",
+                  df_edges$connect_from[df_edges$from == vv & !variances],
+                  df_edges$connect_to[df_edges$to == vv & !variances]))
+    if(tb[vloc] == 1){
+      return(vloc)
+    } else {
+      tb <- names(tb)[which.min(tb)]
+      return(tb[sample.int(length(tb), 1)])
+    }
+    }, vv = variance_vars, vloc = df_edges$connect_from[variances])
+  df_edges$connect_from[variances] <- df_edges$connect_to[variances] <- new_loc
+  return(df_edges)
 }
