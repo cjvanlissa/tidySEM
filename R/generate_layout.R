@@ -143,7 +143,7 @@ resolve_dups <- function(lo){
   dup_row <- lo[first_dup,]
   neighboring_locs <- t(apply(expand.grid(c(-1,0,1), c(-1,0,1)), 1, `+`, dup_row))
   free_locs <- neighboring_locs[tail(!duplicated(rbind(lo, neighboring_locs)), 9), ]
-  if(!any(free_locs)) stop("Could not generate layout automatically. Please specify a layout manually.")
+  if(nrow(free_locs) == 0) stop("Could not generate layout automatically. Please specify a layout manually.")
   new_lo[first_dup, ] <- free_locs[sample.int(nrow(free_locs), 1), ]
   if(any(duplicated(new_lo))){
     resolve_dups(new_lo)
