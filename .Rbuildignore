@@ -14,3 +14,6 @@ dev/
 R/data_types\.md
 ^.*\.psd$
 ^badge\.png$
+^.*\.dat$
+^.*\.inp$
+^.*\.out$
