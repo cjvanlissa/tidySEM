@@ -1,5 +1,5 @@
-#' @title Generate syntax for a measurement model
-#' @description Generate syntax for a measurement model for latent variables.
+#' @title Generate syntax for correlations
+#' @description Generate syntax for correlations between variables.
 #' @param x Object for which a method exists. If \code{x} is an object of class
 #'  \code{sem_syntax} or \code{data_dict}, then correlations between all
 #'  observed and latent variables in the data dictionary of that object are

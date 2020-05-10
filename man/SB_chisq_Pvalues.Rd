@@ -35,3 +35,4 @@ Other Mplus functions:
 Caspar J. van Lissa
 }
 \concept{Mplus functions}
+\keyword{internal}

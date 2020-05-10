@@ -25,3 +25,4 @@ poms(data)
 \author{
 Caspar J. van Lissa
 }
+\keyword{internal}

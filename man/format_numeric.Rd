@@ -4,7 +4,7 @@
 \alias{format_numeric}
 \title{Format numeric columns}
 \usage{
-format_numeric(x, digits)
+format_numeric(x, digits = 2)
 }
 \arguments{
 \item{x}{A data.frame.}
@@ -22,3 +22,4 @@ format_numeric(dat, 1)
 \author{
 Caspar J. van Lissa
 }
+\keyword{internal}

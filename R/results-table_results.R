@@ -278,17 +278,22 @@ est_sig.mplus.params <- function(x, digits = 2, sig = NULL){
 #}
 
 
-#' Format confidence intervals to object
+#' Format confidence intervals
 #'
-#' Takes a model object, and creates APA-formated confidence intervals.
-#' @param x A model object for which a method exists.
+#' Creates APA-formated confidence intervals, either from an object for which a
+#' method exists, or from the arguments \code{lb} and \code{ub}. When argument
+#' \code{x} is a numeric vector, it is also possible to construct a confidence
+#' interval using the standard error (\code{se}) and a percentile interval
+#' (\code{ci}).
+#' @param x Optional. An object for which a method exists.
 #' @param digits Integer. The number of digits to round the condidence
 #' boundaries to.
 #' @param se Optional, numeric. Standard error of the parameters.
 #' @param lb Optional, numeric. Lower boundary of confidence intervals.
 #' @param ub Optional, numeric. Upper boundary of confidence intervals.
 #' @param ci Optional, numeric. What percentage CI to use (only used when
-#' computing CI from \code{se}, based on a normal distribution).
+#' computing CI from a numeric vector \code{x}, and the standard error
+#' \code{se}, based on a normal distribution).
 #' @return A character vector of formatted confidence intervals.
 #' @author Caspar J. van Lissa
 #' @family Reporting tools

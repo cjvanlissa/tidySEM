@@ -1,0 +1,275 @@
+Mplus VERSION 8
+MUTHEN & MUTHEN
+05/10/2020   9:27 PM
+
+INPUT INSTRUCTIONS
+
+  DATA:
+  FILE = "model_6e617b3d26be9ffaa260f593f0f6d7e3.dat";
+
+  VARIABLE:
+  NAMES = vis_1 vis_2 vis_3 tex_1 tex_2 tex_3 spe_1 spe_2 spe_3;
+   MISSING=.;
+
+  MODEL:
+  vis BY vis_1@1 (lab1);
+  vis BY vis_2*1 (lab2);
+  vis BY vis_3*1 (lab3);
+  [vis@0] (lab4);
+  vis*1 (lab5);
+  [vis_1*0] (lab6);
+  [vis_2*0] (lab7);
+  [vis_3*0] (lab8);
+  vis_1*1 (lab9);
+  vis_2*1 (lab10);
+  vis_3*1 (lab11);
+  tex BY tex_1@1 (lab12);
+  tex BY tex_2*1 (lab13);
+  tex BY tex_3*1 (lab14);
+  [tex@0] (lab15);
+  tex*1 (lab16);
+  [tex_1*0] (lab17);
+  [tex_2*0] (lab18);
+  [tex_3*0] (lab19);
+  tex_1*1 (lab20);
+  tex_2*1 (lab21);
+  tex_3*1 (lab22);
+  tex BY spe_1@1 (lab23);
+  tex BY spe_2*1 (lab24);
+  tex BY spe_3*1 (lab25);
+  [spe_1*0] (lab26);
+  [spe_2*0] (lab27);
+  [spe_3*0] (lab28);
+  spe_1*1 (lab29);
+  spe_2*1 (lab30);
+  spe_3*1 (lab31);
+  vis WITH tex*0 (lab32);
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         301
+
+Number of dependent variables                                    9
+Number of independent variables                                  0
+Number of continuous latent variables                            2
+
+Observed dependent variables
+
+  Continuous
+   VIS_1       VIS_2       VIS_3       TEX_1       TEX_2       TEX_3
+   SPE_1       SPE_2       SPE_3
+
+Continuous latent variables
+   VIS         TEX
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  model_6e617b3d26be9ffaa260f593f0f6d7e3.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              VIS_1         VIS_2         VIS_3         TEX_1         TEX_2
+              ________      ________      ________      ________      ________
+ VIS_1          1.000
+ VIS_2          1.000         1.000
+ VIS_3          1.000         1.000         1.000
+ TEX_1          1.000         1.000         1.000         1.000
+ TEX_2          1.000         1.000         1.000         1.000         1.000
+ TEX_3          1.000         1.000         1.000         1.000         1.000
+ SPE_1          1.000         1.000         1.000         1.000         1.000
+ SPE_2          1.000         1.000         1.000         1.000         1.000
+ SPE_3          1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              TEX_3         SPE_1         SPE_2         SPE_3
+              ________      ________      ________      ________
+ TEX_3          1.000
+ SPE_1          1.000         1.000
+ SPE_2          1.000         1.000         1.000
+ SPE_3          1.000         1.000         1.000         1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     VIS_1                 4.936      -0.256       0.667    0.33%       4.000      4.667      5.000
+             301.000       1.358       0.330       8.500    0.33%       5.333      5.833
+     VIS_2                 6.088       0.472       2.250    0.33%       5.250      5.750      6.000
+             301.000       1.382       0.355       9.250    1.66%       6.250      7.000
+     VIS_3                 2.250       0.385       0.250    0.33%       1.250      1.750      2.125
+             301.000       1.275      -0.894       4.500    1.99%       2.375      3.375
+     TEX_1                 3.061       0.269       0.000    0.33%       2.000      2.667      3.000
+             301.000       1.351       0.101       6.333    0.33%       3.333      4.000
+     TEX_2                 4.341      -0.352       1.000    0.66%       3.000      4.000      4.500
+             301.000       1.660      -0.536       7.000    0.33%       4.750      5.500
+     TEX_3                 2.186       0.862       0.143    0.66%       1.286      1.857      2.000
+             301.000       1.196       0.842       6.143    0.33%       2.286      2.857
+     SPE_1                 4.186       0.250       1.304    0.33%       3.304      3.783      4.087
+             301.000       1.183      -0.289       7.435    0.33%       4.391      5.130
+     SPE_2                 5.527       0.528       3.050    0.33%       4.700      5.250      5.500
+             301.000       1.022       1.199      10.000    0.33%       5.700      6.300
+     SPE_3                 5.374       0.205       2.778    0.33%       4.500      5.083      5.417
+             301.000       1.015       0.312       9.250    0.33%       5.611      6.222
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       27
+
+Loglikelihood
+
+          H0 Value                       -3860.589
+          H1 Value                       -3695.092
+
+Information Criteria
+
+          Akaike (AIC)                    7775.178
+          Bayesian (BIC)                  7875.270
+          Sample-Size Adjusted BIC        7789.641
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                            330.994
+          Degrees of Freedom                    27
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.193
+          90 Percent C.I.                    0.175  0.212
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.656
+          TLI                                0.541
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            918.852
+          Degrees of Freedom                    36
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.199
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ VIS      BY
+    VIS_1              1.000      0.000    999.000    999.000
+    VIS_2              0.558      0.120      4.637      0.000
+    VIS_3              0.711      0.125      5.690      0.000
+
+ TEX      BY
+    TEX_1              1.000      0.000    999.000    999.000
+    TEX_2              1.448      0.109     13.283      0.000
+    TEX_3              1.234      0.096     12.806      0.000
+    SPE_1              1.000      0.000    999.000    999.000
+    SPE_2              0.319      0.085      3.756      0.000
+    SPE_3              0.437      0.085      5.140      0.000
+
+ VIS      WITH
+    TEX                0.331      0.064      5.135      0.000
+
+ Means
+    VIS                0.000      0.000    999.000    999.000
+    TEX                0.000      0.000    999.000    999.000
+
+ Intercepts
+    VIS_1              4.936      0.067     73.473      0.000
+    VIS_2              6.088      0.068     89.855      0.000
+    VIS_3              2.250      0.065     34.579      0.000
+    TEX_1              3.061      0.060     51.280      0.000
+    TEX_2              4.341      0.074     58.452      0.000
+    TEX_3              2.186      0.063     34.667      0.000
+    SPE_1              4.186      0.080     52.360      0.000
+    SPE_2              5.527      0.058     94.854      0.000
+    SPE_3              5.374      0.058     92.546      0.000
+
+ Variances
+    VIS                0.821      0.163      5.028      0.000
+    TEX                0.560      0.084      6.674      0.000
+
+ Residual Variances
+    VIS_1              0.538      0.135      3.984      0.000
+    VIS_2              1.127      0.107     10.482      0.000
+    VIS_3              0.860      0.098      8.741      0.000
+    TEX_1              0.512      0.058      8.863      0.000
+    TEX_2              0.485      0.065      7.511      0.000
+    TEX_3              0.343      0.046      7.433      0.000
+    SPE_1              1.364      0.125     10.881      0.000
+    SPE_2              0.965      0.079     12.141      0.000
+    SPE_3              0.908      0.076     12.015      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.590E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+     Beginning Time:  21:27:24
+        Ending Time:  21:27:24
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2017 Muthen & Muthen

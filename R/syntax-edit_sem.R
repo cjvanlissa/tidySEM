@@ -1,13 +1,42 @@
-edit_sem <- function(model, ..., element = "syntax"){
-  #dots <- lapply(list(...), function(i){do.call(quote, list(expr = i))})
-  #dots <- lapply(list(...), function(i){Reduce(paste, deparse(i))})
+#' @title Add paths to an object of class 'sem_syntax'
+#' @description Add paths to an object of class \code{sem_syntax}, or replace
+#' existing paths. The paths must be specified as
+#' \code{\link{lavaan}{model.syntax}}, and separated by commas.
+#' @param model An object of class \code{sem_syntax}.
+#' @param ... Paths to add or substitute, specified in
+#' \code{\link{lavaan}{model.syntax}}, and separated by commas.
+#' @return An object of class \code{sem_syntax}.
+#' @details Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
+#' ~~, =~,} and \code{~1} are parsed.
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[lavaan]{model.syntax}}
+#' @rdname add_paths
+#' @export
+#' @importFrom lavaan lavParseModelString
+add_paths <- function(model, ...){
   # Clean dots
-
-  dots <- lapply(sys.call()[-c(1:2)], deparse)
-  has_name <- names(dots) == ""
-  dots[!has_name] <- paste0(names(dots[!has_name]), "=", dots[!has_name])
+  dots <- list(...)
+  is_char <- sapply(dots, inherits, "character")
+  if(any(!is_char)){
+    no_char <- lapply(sys.call()[-c(1:2)][!is_char], deparse)
+    has_name <- names(no_char) == ""
+    no_char[!has_name] <- paste0(names(no_char[!has_name]), "=", no_char[!has_name])
+    dots[!is_char] <- no_char
+  }
+  is_char <- sapply(dots, inherits, "character")
+  if(any(!is_char)){
+    warning("Some elements of '...' could not be parsed. Try entering these commands as a character string.")
+    dots <- dots[is_char]
+  }
+  # Parse dots
   tab <- do.call(rbind, lapply(dots, function(i){
-    out <- lavaan::lavParseModelString(i, as.data.frame. = TRUE)#[, 1:5, drop = FALSE]
+    out <- lavParseModelString(i, as.data.frame. = TRUE)#[, 1:5, drop = FALSE]
   }))
   # if(any(duplicated(tab[, c(1, 3)]))){
   #   stop("Several commands specify relationships between the same pair of variables. Specifically:\n  ",
@@ -47,4 +76,3 @@ edit_sem <- function(model, ..., element = "syntax"){
   model$syntax <- mod
   return(model)
 }
-edit_sem(model, vis ~ text, vis ~~ spe, vis ~1, vis=~tex, vis~tex+spe, vis~.5*tex+spe)

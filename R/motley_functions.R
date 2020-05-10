@@ -7,6 +7,7 @@
 #' @param equals Logical. Whether to report an equals (or: smaller than) sign.
 #' @return An atomic character vector.
 #' @author Caspar J. van Lissa
+#' @keywords internal
 #' @export
 #' @examples
 #' report(.0234)
@@ -41,6 +42,7 @@ report <- function(x, digits = 2, equals = TRUE){
 #' @seealso \code{\link{SB_chisq_Pvalues}} to apply SBChisquare to a table of
 #' model chi-square values.
 #' @export
+#' @keywords internal
 #' @examples
 #' df <- data.frame(chi2 = c(23, 44, 65), df = c(78, 74, 70), scf = c(1.02, 1.12, 1.28))
 #' SBChisquare(24, 78, 1.02, 65, 70, 1.28)
@@ -90,6 +92,7 @@ SBChisquare <- function(Chisq1, df1, scf1, Chisq2, df2, scf2) {
 #' @family Mplus functions
 #' @seealso \code{\link{SBChisquare}} for a single chi-square test.
 #' @export
+#' @keywords internal
 #' @examples
 #' df <- data.frame(chi2 = c(23, 44, 65), df = c(78, 74, 70), scf = c(1.02, 1.12, 1.28))
 #' SB_chisq_Pvalues(df)
@@ -113,6 +116,7 @@ SB_chisq_Pvalues<-function(tableChi_df_scf){
 #' @return A data.frame.
 #' @author Caspar J. van Lissa
 #' @export
+#' @keywords internal
 #' @examples
 #' data <- data.frame(a = c(1, 2, 2, 4, 1, 6),
 #'                    b = c(6, 6, 3, 5, 3, 4),
@@ -136,10 +140,11 @@ poms <- function(data){
 #' @param digits The desired number of digits.
 #' @author Caspar J. van Lissa
 #' @export
+#' @keywords internal
 #' @examples
 #' dat <- mtcars
 #' format_numeric(dat, 1)
-format_numeric <- function(x, digits) {
+format_numeric <- function(x, digits = 2) {
   numeric_columns <- sapply(x, class) == 'numeric'
   x[numeric_columns] <-  lapply(x[numeric_columns], formatC, digits, format = "f")
   x
