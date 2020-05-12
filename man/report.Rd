@@ -18,7 +18,7 @@ An atomic character vector.
 }
 \description{
 Report a number, rounded to a specific number of decimals (defaults to two),
-using C-style formats. Intended for RMarkdown reports.
+using \code{\link{formatC}}. Intended for 'R Markdown' reports.
 }
 \examples{
 report(.0234)

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='badge.png' align="right" height="139" /></a>
+# tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png' align="right" height="139" /></a>
 
 <!--[![CRAN status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
 [![](https://cranlogs.r-pkg.org/badges/tidySEM)](https://cran.r-project.org/package=tidySEM)-->

@@ -38,10 +38,7 @@ publication-ready correlation matrix.
 \code{\link[MplusAutomation]{readModels}}.
 
 Other Mplus functions: 
-\code{\link{SBChisquare}()},
-\code{\link{SB_chisq_Pvalues}()},
-\code{\link{param_label}()},
-\code{\link{rbind_tables}()}
+\code{\link{chisq_sb}()}
 }
 \author{
 Caspar J. van Lissa

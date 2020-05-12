@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract syntax from sem_syntax — syntax • tidySEM</title>
+<title>Filter graph elements — filter_graph • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Extract syntax from sem_syntax — syntax" />
-<meta property="og:description" content="Provides access to the syntax element of a
-sem_syntax object. This can be used to return or assign to the
-syntax element." />
+<meta property="og:title" content="Filter graph elements — filter_graph" />
+<meta property="og:description" content="Apply a filter to one of the elements
+of a sem_graph object, and return the modified sem_graph. Uses
+the function subset." />
 
 
 
@@ -128,37 +128,46 @@ syntax element." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract syntax from sem_syntax</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-attributes.R'><code>R/syntax-attributes.R</code></a></small>
-    <div class="hidden name"><code>syntax.Rd</code></div>
+    <h1>Filter graph elements</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/plot-plot_sem.R'><code>R/plot-plot_sem.R</code></a></small>
+    <div class="hidden name"><code>filter_graph.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides access to the <code>syntax</code> element of a
-<code>sem_syntax</code> object. This can be used to return or assign to the
-<code>syntax</code> element.</p>
+    <p>Apply a filter to one of the elements
+of a <code>sem_graph</code> object, and return the modified <code>sem_graph</code>. Uses
+the function <code><a href='https://rdrr.io/r/base/subset.html'>subset</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>syntax</span>(<span class='no'>x</span>)
-
-<span class='fu'>syntax</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+    <pre class="usage"><span class='fu'>filter_graph</span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>select</span>, <span class='kw'>element</span> <span class='kw'>=</span> <span class='st'>"edges"</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class sem_syntax.</p></td>
+      <td><p>An object of class <code>sem_graph</code>.</p></td>
     </tr>
     <tr>
-      <th>value</th>
-      <td><p>A valid value for <code>syntax(x)</code>.</p></td>
+      <th>subset</th>
+      <td><p>logical expression indicating elements or rows to keep:
+missing values are taken as false.</p></td>
+    </tr>
+    <tr>
+      <th>select</th>
+      <td><p>Expression, indicating columns to select from a data frame.</p></td>
+    </tr>
+    <tr>
+      <th>element</th>
+      <td><p>Character. The element of the <code>sem_graph</code> to filter,
+defaults to <code>"edges"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='https://rdrr.io/r/base/with.html'>within</a></code>.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>data.frame</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

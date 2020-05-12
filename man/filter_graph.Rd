@@ -19,18 +19,8 @@ defaults to \code{"edges"}.}
 
 \item{...}{Arguments passed on to \code{\link[base]{within}}.}
 }
-\value{
-An object of class \code{sem_graph}.
-}
 \description{
 Apply a filter to one of the elements
 of a \code{sem_graph} object, and return the modified \code{sem_graph}. Uses
 the function \code{\link[base]{subset}}.
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
 }

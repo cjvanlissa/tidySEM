@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract syntax from sem_syntax — syntax • tidySEM</title>
+<title>Calculate skew and kurtosis — skew_kurtosis • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,11 @@
 
 
 
-<meta property="og:title" content="Extract syntax from sem_syntax — syntax" />
-<meta property="og:description" content="Provides access to the syntax element of a
-sem_syntax object. This can be used to return or assign to the
-syntax element." />
+<meta property="og:title" content="Calculate skew and kurtosis — skew_kurtosis" />
+<meta property="og:description" content="Calculate skew and kurtosis, standard errors for both, and the
+estimates divided by two times the standard error. If this latter quantity
+exceeds an absolute value of 1, the skew/kurtosis is significant. With very
+large sample sizes, significant skew/kurtosis is common." />
 
 
 
@@ -128,38 +129,56 @@ syntax element." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract syntax from sem_syntax</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-attributes.R'><code>R/syntax-attributes.R</code></a></small>
-    <div class="hidden name"><code>syntax.Rd</code></div>
+    <h1>Calculate skew and kurtosis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-create_scales.R'><code>R/syntax-create_scales.R</code></a></small>
+    <div class="hidden name"><code>skew_kurtosis.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides access to the <code>syntax</code> element of a
-<code>sem_syntax</code> object. This can be used to return or assign to the
-<code>syntax</code> element.</p>
+    <p>Calculate skew and kurtosis, standard errors for both, and the
+estimates divided by two times the standard error. If this latter quantity
+exceeds an absolute value of 1, the skew/kurtosis is significant. With very
+large sample sizes, significant skew/kurtosis is common.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>syntax</span>(<span class='no'>x</span>)
-
-<span class='fu'>syntax</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+    <pre class="usage"><span class='fu'>skew_kurtosis</span>(<span class='no'>x</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>se</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class sem_syntax.</p></td>
+      <td><p>An object for which a method exists.</p></td>
     </tr>
     <tr>
-      <th>value</th>
-      <td><p>A valid value for <code>syntax(x)</code>.</p></td>
+      <th>verbose</th>
+      <td><p>Whether or not to print messages to the console,
+Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>se</th>
+      <td><p>Whether or not to return the standard errors, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments to pass to and from functions.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame</p>
+    <p>matrix</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>skew_kurtosis</span>(<span class='kw pkg'>datasets</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/r/datasets/anscombe.html'>anscombe</a></span>)</div><div class='output co'>#&gt;           skew   skew_2se       kurt   kurt_2se
+#&gt; x1  0.00000000  0.0000000 -1.5289256 -0.5975093
+#&gt; x2  0.00000000  0.0000000 -1.5289256 -0.5975093
+#&gt; x3  0.00000000  0.0000000 -1.5289256 -0.5975093
+#&gt; x4  2.46691100  1.8669273  4.5206612  1.7666896
+#&gt; y1 -0.04837355 -0.0366085 -1.1991228 -0.4686212
+#&gt; y2 -0.97869294 -0.7406626 -0.5143191 -0.2009976
+#&gt; y3  1.38012040  1.0444578  1.2400439  0.4846133
+#&gt; y4  1.12077386  0.8481876  0.6287512  0.2457181</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

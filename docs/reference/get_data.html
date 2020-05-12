@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract syntax from sem_syntax — syntax • tidySEM</title>
+<title>Get data from model object — get_data • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Extract syntax from sem_syntax — syntax" />
-<meta property="og:description" content="Provides access to the syntax element of a
-sem_syntax object. This can be used to return or assign to the
-syntax element." />
+<meta property="og:title" content="Get data from model object — get_data" />
+<meta property="og:description" content="Extracts data from an object for which a method exists." />
 
 
 
@@ -128,38 +126,40 @@ syntax element." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract syntax from sem_syntax</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-attributes.R'><code>R/syntax-attributes.R</code></a></small>
-    <div class="hidden name"><code>syntax.Rd</code></div>
+    <h1>Get data from model object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-get_data.R'><code>R/syntax-get_data.R</code></a></small>
+    <div class="hidden name"><code>get_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides access to the <code>syntax</code> element of a
-<code>sem_syntax</code> object. This can be used to return or assign to the
-<code>syntax</code> element.</p>
+    <p>Extracts data from an object for which a method exists.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>syntax</span>(<span class='no'>x</span>)
-
-<span class='fu'>syntax</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+    <pre class="usage"><span class='fu'>get_data</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class sem_syntax.</p></td>
+      <td><p>An object for which a method exists.</p></td>
     </tr>
     <tr>
-      <th>value</th>
-      <td><p>A valid value for <code>syntax(x)</code>.</p></td>
+      <th>...</th>
+      <td><p>Additional arguments passed to and from functions.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame</p>
+    <p>A <code>data.frame</code>.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract edges from a SEM model object — get_edges • tidySEM</title>
+<title>Render a graph — graph_sem • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Extract edges from a SEM model object — get_edges" />
-<meta property="og:description" content="Attempts to extract edges from a SEM model object, where edges
-are defined as regression paths and covariances between variables (nodes)." />
+<meta property="og:title" content="Render a graph — graph_sem" />
+<meta property="og:description" content="Render a graph based on a layout, and either nodes and edges, or
+a model object." />
 
 
 
@@ -127,40 +127,145 @@ are defined as regression paths and covariances between variables (nodes)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract edges from a SEM model object</h1>
+    <h1>Render a graph</h1>
     <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/plot-plot_sem.R'><code>R/plot-plot_sem.R</code></a></small>
-    <div class="hidden name"><code>get_edges.Rd</code></div>
+    <div class="hidden name"><code>graph_sem.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Attempts to extract edges from a SEM model object, where edges
-are defined as regression paths and covariances between variables (nodes).</p>
+    <p>Render a graph based on a layout, and either nodes and edges, or
+a model object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_edges</span>(<span class='no'>x</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"est_sig"</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>graph_sem</span>(<span class='no'>...</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>graph_sem</span>(
+  <span class='kw'>edges</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>layout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nodes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>rect_width</span> <span class='kw'>=</span> <span class='fl'>1.2</span>,
+  <span class='kw'>rect_height</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>ellipses_width</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>ellipses_height</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>variance_diameter</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>spacing_x</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>spacing_y</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>curvature</span> <span class='kw'>=</span> <span class='fl'>60</span>,
+  <span class='kw'>angle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fix_coord</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)
+
+<span class='co'># S3 method for lavaan</span>
+<span class='fu'>graph_sem</span>(<span class='no'>model</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mplus.model</span>
+<span class='fu'>graph_sem</span>(<span class='no'>model</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>A model object of class 'mplusObject' or 'lavaan'.</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>Character, indicating which column to use for edge labels.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.</p></td>
-    </tr>
-    <tr>
       <th>...</th>
-      <td><p>Additional parameters to be passed to and from other functions.</p></td>
+      <td><p>Additional arguments passed to and from functions.</p></td>
+    </tr>
+    <tr>
+      <th>edges</th>
+      <td><p>Object of class 'tidy_edges', or a <code>data.frame</code> with  (at
+least) the columns <code><a href='https://rdrr.io/r/base/c.html'>c("from", "to")</a></code>, and optionally, <code><a href='https://rdrr.io/r/base/c.html'>c("arrow",
+"label", "connect_from", "connect_to", "curvature")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>layout</th>
+      <td><p>A matrix (or data.frame) that describes the layout; see
+<code><a href='get_layout.html'>get_layout</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>nodes</th>
+      <td><p>Optional, object of class 'tidy_nodes', created with the
+<code><a href='get_nodes.html'>get_nodes</a></code> function, or a <code>data.frame</code> with (at
+least) the column <code><a href='https://rdrr.io/r/base/c.html'>c("name")</a></code>, and optionally, <code><a href='https://rdrr.io/r/base/c.html'>c("shape",
+"label")</a></code>. If set to <code>NULL</code> (the default), nodes are inferred from the
+<code>layout</code> and <code>edges</code> arguments.</p></td>
+    </tr>
+    <tr>
+      <th>rect_width</th>
+      <td><p>Width of rectangles (used to display observed variables),
+Default: 1.2</p></td>
+    </tr>
+    <tr>
+      <th>rect_height</th>
+      <td><p>Height of rectangles (used to display observed variables),
+Default: 0.8</p></td>
+    </tr>
+    <tr>
+      <th>ellipses_width</th>
+      <td><p>Width of ellipses (used to display latent variables),
+Default: 1</p></td>
+    </tr>
+    <tr>
+      <th>ellipses_height</th>
+      <td><p>Height of ellipses (used to display latent variables),
+Default: 1</p></td>
+    </tr>
+    <tr>
+      <th>variance_diameter</th>
+      <td><p>Diameter of variance circles,
+Default: .8</p></td>
+    </tr>
+    <tr>
+      <th>spacing_x</th>
+      <td><p>Spacing between columns of the graph, Default: 1</p></td>
+    </tr>
+    <tr>
+      <th>spacing_y</th>
+      <td><p>Spacing between rows of the graph, Default: 1</p></td>
+    </tr>
+    <tr>
+      <th>text_size</th>
+      <td><p>Point size of text, Default: 4</p></td>
+    </tr>
+    <tr>
+      <th>curvature</th>
+      <td><p>Curvature of curved edges. The curve is a circle segment
+originating in a point that forms a triangle with the two connected points,
+with angles at the two connected points equal to <code>curvature</code>.
+To flip a curved edge, use a negative value for curvature. Default: 60</p></td>
+    </tr>
+    <tr>
+      <th>angle</th>
+      <td><p>Angle used to connect nodes by the top and bottom. Defaults to
+NULL, which means Euclidean distance is used to determine the shortest
+distance between node sides. A numeric value between 0-180 can be provided,
+where 0 means that only nodes with the same x-coordinates are connected
+top-to-bottom, and 180 means that all nodes are connected top-to-bottom.</p></td>
+    </tr>
+    <tr>
+      <th>fix_coord</th>
+      <td><p>Whether or not to fix the aspect ratio of the graph.
+Does not work with multi-group or multilevel models.
+Default: FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>model</th>
+      <td><p>Instead of the edges argument, it is also possible to use the
+model argument and pass an object for which a method exists (e.g.,
+<code>mplus.model</code> or <code>lavaan</code>).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class 'tidy_edges'</p>
+    <p>Object of class 'sem_graph'</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The default interface simply Runs the functions
+<code><a href='prepare_graph.html'>prepare_graph</a></code> and
+<code>plot</code>. The alternative interface first runs
+<code><a href='get_nodes.html'>get_nodes</a></code> and <code><a href='get_edges.html'>get_edges</a></code> on
+the <code>model</code> argument.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

@@ -9,21 +9,21 @@
 #' @param element Character. The element of the \code{sem_graph} to filter,
 #' defaults to \code{"edges"}.
 #' @param ... Arguments passed on to \code{\link[base]{within}}.
-#' @return An object of class \code{sem_graph}.
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname filter_graph
-#' @export
+# @return An object of class \code{sem_graph}.
+# @examples
+# \dontrun{
+# if(interactive()){
+#  #EXAMPLE1
+#  }
+# }
+# @rdname filter_graph
+# @export
 filter_graph <- function(x, subset, select, element = "edges", ...){
   UseMethod("filter_graph", x)
 }
 
-#' @method filter_graph sem_graph
-#' @export
+# @method filter_graph sem_graph
+# @export
 filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
   if(!element %in% names(x)){
     stop("Element ", element, " is not an element of the sem_graph object.", call. = FALSE)

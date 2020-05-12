@@ -339,21 +339,21 @@ conf_int.mplus.params <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL
   gsub("^ \\[", "\\[ ", gsub("([^-]\\d\\.\\d{2})", " \\1", confint))
 }
 
-#' Add parameter labels to Mplus output
-#'
-#' Sometimes a single parameter label is more convenient than the two (or more)
-#' columns returned by \code{readModels}. This function constructs parameter
-#' labels by concatenating the paramHeader and param columns, or other relevant
-#' label columns
-#' @param mplusresults An mplusModel object, as returned by \code{readModels}.
-#' @return A character vector of parameter labels.
-#' @author Caspar J. van Lissa
-#' @family Mplus functions
-#' @seealso \code{\link[MplusAutomation]{readModels}}.
-#' @export
-#' @examples
-#' data <- data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B"))
-#' param_label(data)
+# Add parameter labels to Mplus output
+#
+# Sometimes a single parameter label is more convenient than the two (or more)
+# columns returned by \code{readModels}. This function constructs parameter
+# labels by concatenating the paramHeader and param columns, or other relevant
+# label columns
+# @param mplusresults An mplusModel object, as returned by \code{readModels}.
+# @return A character vector of parameter labels.
+# @author Caspar J. van Lissa
+# @family Mplus functions
+# @seealso \code{\link[MplusAutomation]{readModels}}.
+# @export
+# @examples
+# data <- data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B"))
+# param_label(data)
 param_label <- function(mplusresults){
   label_columns <- c("paramheader", "param", "pred", "intervening", "summary", "outcome", "group", "betweenwithin")
   label_columns <- names(mplusresults)[which(tolower(names(mplusresults)) %in% label_columns)]
@@ -370,23 +370,23 @@ param_label <- function(mplusresults){
 }
 
 
-#' Row-binds tables for publication
-#'
-#' Converts tables (data.frames, matrices) to character, and row-binds them,
-#' inserting a label into the first column for each sub-table.
-#' @param table_list A list of tables.
-#' @return A table.
-#' @author Caspar J. van Lissa
-#' @family Mplus functions
-#' @export
-#' @examples
-#' table_list <- list(
-#'   table_f = data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B")),
-#'   table_g = data.frame(paramHeader = c("G.BY", "G.BY"), param = c("A", "B")))
-#' table_list <- list(
-#'   data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B")),
-#'   data.frame(paramHeader = c("G.BY", "G.BY"), param = c("A", "B")))
-#' rbind_tables(table_list)
+# Row-binds tables for publication
+#
+# Converts tables (data.frames, matrices) to character, and row-binds them,
+# inserting a label into the first column for each sub-table.
+# @param table_list A list of tables.
+# @return A table.
+# @author Caspar J. van Lissa
+# @family Mplus functions
+# @export
+# @examples
+# table_list <- list(
+#   table_f = data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B")),
+#   table_g = data.frame(paramHeader = c("G.BY", "G.BY"), param = c("A", "B")))
+# table_list <- list(
+#   data.frame(paramHeader = c("F.BY", "F.BY"), param = c("A", "B")),
+#   data.frame(paramHeader = c("G.BY", "G.BY"), param = c("A", "B")))
+# rbind_tables(table_list)
 rbind_tables <- function(table_list){
   if(length(unique(sapply(table_list, ncol))) > 1) stop("Not all tables have the same number of columns.")
   if(is.null(names(table_list))) names(table_list) <- 1:length(table_list)

@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options("test_mplus" = FALSE)
+if(file.exists("../tests/test_local.R")) source("../tests/test_local.R")
 ```
 
 ```{r setup}
@@ -106,7 +108,19 @@ summary(res, estimates = FALSE)
 
 The same model can be estimated in Mplus through the R-package `MplusAutomation`. This requires Mplus to be installed.
 
-```{r}
+```{r echo = FALSE, eval = getOption("test_mplus")}
+library(MplusAutomation)
+res <- mplusModeler(
+  mplusObject(
+    MODEL = as.mplus(model),
+    rdata = df
+  ),
+  modelout = "model.inp",
+  run = 1L
+  )
+summary(res)
+```
+```{r eval = FALSE, echo = TRUE}
 library(MplusAutomation)
 res <- mplusModeler(
   mplusObject(

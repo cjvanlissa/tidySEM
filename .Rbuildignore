@@ -17,3 +17,4 @@ R/data_types\.md
 ^.*\.dat$
 ^.*\.inp$
 ^.*\.out$
+^.*.ai$

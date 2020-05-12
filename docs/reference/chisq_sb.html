@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract syntax from sem_syntax — syntax • tidySEM</title>
+<title>Satorra-Bentler corrected chi-square test — chisq_sb • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Extract syntax from sem_syntax — syntax" />
-<meta property="og:description" content="Provides access to the syntax element of a
-sem_syntax object. This can be used to return or assign to the
-syntax element." />
+<meta property="og:title" content="Satorra-Bentler corrected chi-square test — chisq_sb" />
+<meta property="og:description" content="Computes Satorra-Bentler corrected chi-square test." />
 
 
 
@@ -128,38 +126,58 @@ syntax element." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract syntax from sem_syntax</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-attributes.R'><code>R/syntax-attributes.R</code></a></small>
-    <div class="hidden name"><code>syntax.Rd</code></div>
+    <h1>Satorra-Bentler corrected chi-square test</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/motley_functions.R'><code>R/motley_functions.R</code></a></small>
+    <div class="hidden name"><code>chisq_sb.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides access to the <code>syntax</code> element of a
-<code>sem_syntax</code> object. This can be used to return or assign to the
-<code>syntax</code> element.</p>
+    <p>Computes Satorra-Bentler corrected chi-square test.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>syntax</span>(<span class='no'>x</span>)
-
-<span class='fu'>syntax</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+    <pre class="usage"><span class='fu'>chisq_sb</span>(<span class='no'>chisq1</span>, <span class='no'>df1</span>, <span class='no'>scf1</span>, <span class='no'>chisq2</span>, <span class='no'>df2</span>, <span class='no'>scf2</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Object of class sem_syntax.</p></td>
+      <th>chisq1</th>
+      <td><p>Chi square value of model 1.</p></td>
     </tr>
     <tr>
-      <th>value</th>
-      <td><p>A valid value for <code>syntax(x)</code>.</p></td>
+      <th>df1</th>
+      <td><p>Degrees of freedom of model 1.</p></td>
+    </tr>
+    <tr>
+      <th>scf1</th>
+      <td><p>Scale correction factor of model 1.</p></td>
+    </tr>
+    <tr>
+      <th>chisq2</th>
+      <td><p>Chi square value of model 2.</p></td>
+    </tr>
+    <tr>
+      <th>df2</th>
+      <td><p>Degrees of freedom of model 2.</p></td>
+    </tr>
+    <tr>
+      <th>scf2</th>
+      <td><p>Scale correction factor of model 2.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame</p>
+    <p>Named numeric vector with chi-square value, degrees of freedom, and
+p-value.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p>Other Mplus functions: 
+<code><a href='table_cor.html'>table_cor</a>()</code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>23</span>, <span class='fl'>44</span>, <span class='fl'>65</span>), <span class='kw'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>78</span>, <span class='fl'>74</span>, <span class='fl'>70</span>), <span class='kw'>scf</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.02</span>, <span class='fl'>1.12</span>, <span class='fl'>1.28</span>))
+<span class='fu'>chisq_sb</span>(<span class='fl'>24</span>, <span class='fl'>78</span>, <span class='fl'>1.02</span>, <span class='fl'>65</span>, <span class='fl'>70</span>, <span class='fl'>1.28</span>)</div><div class='output co'>#&gt; <span class='error'>Error in chisq_sb(24, 78, 1.02, 65, 70, 1.28): could not find function "chisq_sb"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

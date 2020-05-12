@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract syntax from sem_syntax — syntax • tidySEM</title>
+<title>Create scale scores from observed variables — create_scales • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,14 @@
 
 
 
-<meta property="og:title" content="Extract syntax from sem_syntax — syntax" />
-<meta property="og:description" content="Provides access to the syntax element of a
-sem_syntax object. This can be used to return or assign to the
-syntax element." />
+<meta property="og:title" content="Create scale scores from observed variables — create_scales" />
+<meta property="og:description" content="This function calculates mean or sum scores from a
+data.frame and a named list describing the items in each scale. It
+returns the scores, a scale descriptive table, and a scale correlation table.
+It relies on several functions from the
+psych package; most notably scoreItems,
+describe, fa, and
+omega." />
 
 
 
@@ -128,38 +132,90 @@ syntax element." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract syntax from sem_syntax</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-attributes.R'><code>R/syntax-attributes.R</code></a></small>
-    <div class="hidden name"><code>syntax.Rd</code></div>
+    <h1>Create scale scores from observed variables</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-create_scales.R'><code>R/syntax-create_scales.R</code></a></small>
+    <div class="hidden name"><code>create_scales.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides access to the <code>syntax</code> element of a
-<code>sem_syntax</code> object. This can be used to return or assign to the
-<code>syntax</code> element.</p>
+    <p>This function calculates mean or sum scores from a
+<code>data.frame</code> and a named list describing the items in each scale. It
+returns the scores, a scale descriptive table, and a scale correlation table.
+It relies on several functions from the
+<code>psych</code> package; most notably <code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code>,
+<code><a href='https://rdrr.io/pkg/psych/man/describe.html'>describe</a></code>, <code><a href='https://rdrr.io/pkg/psych/man/fa.html'>fa</a></code>, and
+<code><a href='https://rdrr.io/pkg/psych/man/omega.html'>omega</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>syntax</span>(<span class='no'>x</span>)
-
-<span class='fu'>syntax</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+    <pre class="usage"><span class='fu'>create_scales</span>(
+  <span class='no'>data</span>,
+  <span class='no'>keys.list</span>,
+  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>impute</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>omega</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>write_files</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Object of class sem_syntax.</p></td>
+      <th>data</th>
+      <td><p>A <code>data.frame</code> containing all variables referenced in the
+<code>keys.list</code>.</p></td>
     </tr>
     <tr>
-      <th>value</th>
-      <td><p>A valid value for <code>syntax(x)</code>.</p></td>
+      <th>keys.list</th>
+      <td><p>A named list, indicating which variables belong to which
+scale. See <code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code> and
+<code><a href='https://rdrr.io/pkg/psych/man/make.keys.html'>make.keys</a></code> for more information.</p></td>
+    </tr>
+    <tr>
+      <th>missing</th>
+      <td><p>Whether to use rows with partially missing values, Default: TRUE.
+See: <code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>impute</th>
+      <td><p>Method for handling missing values, Default: 'none'. This
+default method uses all available data to calculate scale scores, which is
+acceptable for mean scales, but not for sum scales. See:
+<code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>omega</th>
+      <td><p>Which of McDonald's <code><a href='https://rdrr.io/pkg/psych/man/omega.html'>omega</a></code> coefficients to
+report. Default: NULL; valid options include: <code>"omega_h"</code>,
+<code>"omega.lim"</code>, <code>"alpha"</code>, <code>"omega.tot"</code>, <code>"G6"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>write_files</th>
+      <td><p>Whether to write the scale descriptive and correlation
+tables to .csv files, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>digits</th>
+      <td><p>Number of digits for rounding, Default: 2</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional parameters to pass to and from functions.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame</p>
+    <p>List with elements: <code>$descriptives</code>, <code>$correlations</code>, and
+<code>$scores</code>.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>create_scales</span>(<span class='no'>iris</span>, <span class='kw'>keys.list</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>scalename</span> <span class='kw'>=</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span>, <span class='st'>"Petal.Length"</span>, <span class='st'>"Petal.Width"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='input'><span class='no'>out</span>$<span class='no'>descriptives</span></div><div class='output co'>#&gt;            Subscale Items      n mean   sd  min  max  skew skew_2se  kurt
+#&gt; scalename scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20
+#&gt;           kurt_2se Reliability  Interpret min_load max_load
+#&gt; scalename    -1.52        0.71 Acceptable       NA       NA</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

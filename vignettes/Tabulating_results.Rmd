@@ -51,7 +51,7 @@ table_results(fit)
 
 Now, we'll reproduce the same analysis in Mplus, via the package `MplusAutomation`. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 fit <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);",
                                 MODEL = c("visual BY x1 x2 x3;",
                                           "textual BY x4 x5 x6;",
@@ -61,6 +61,18 @@ fit <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);
                     modelout = "example.inp",
                     run = 1L)
 fit$results$parameters
+```
+```{r, eval = getOption("test_mplus"), echo = FALSE}
+fit <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);",
+                                MODEL = c("visual BY x1 x2 x3;",
+                                          "textual BY x4 x5 x6;",
+                                          "speed BY x7 x8 x9;"),
+                                usevariables = c(paste0("x", 1:9), "school"),
+                                rdata = HolzingerSwineford1939),
+                    modelout = "example.inp",
+                    run = 1L)
+flz <- list.files(pattern = "\\.(inp|out|dat)")
+sapply(flz, file.remove)
 ```
 ```{r echo = FALSE}
 fit <- list(results = list(parameters = list(unstandardized = structure(list(paramHeader = c("VISUAL.BY", 
@@ -127,11 +139,6 @@ fit <- list(results = list(parameters = list(unstandardized = structure(list(par
 class(fit) <- c("mplusObject", "list")
 class(fit$results) <- c("mplus.model", "list")
 fit$results$parameters
-```
-
-```{r, echo = FALSE, message=FALSE, error=FALSE, results= "hide"}
-flz <- list.files(pattern = "\\.(inp|out|dat)")
-sapply(flz, file.remove)
 ```
 
 The results can be tabulated using the `MplusAutomation` function `coef.mplus.model()`:

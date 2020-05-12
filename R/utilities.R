@@ -1,23 +1,23 @@
-#' @title Longest common substring
-#' @description Extract the longest common substring of two strings using
-#' base R.
-#' @param x First atomic character vector.
-#' @param y Second atomic character vector.
-#' @return Character string
-#' @examples
-#' lcs("test1", "test2")
-#' @rdname lcs
-#' @keywords mplus utilities
-#' @export
-#' @importFrom utils adist
-lcs <- function(x,y) {
-  matches <- gregexpr("M+", drop(attr(adist(x, y, counts=TRUE), "trafos")))[[1]];
-  lengths <- attr(matches, 'match.length')
-  which_longest <- which.max(lengths)
-  index_longest <- matches[which_longest]
-  length_longest <- lengths[which_longest]
-  substring(c(x,y)[which.max(nchar(c(x,y)))], index_longest , index_longest + length_longest - 1)
-}
+# @title Longest common substring
+# @description Extract the longest common substring of two strings using
+# base R.
+# @param x First atomic character vector.
+# @param y Second atomic character vector.
+# @return Character string
+# @examples
+# lcs("test1", "test2")
+# @rdname lcs
+# @keywords mplus utilities
+# @export
+# @importFrom utils adist
+# lcs <- function(x,y) {
+#   matches <- gregexpr("M+", drop(attr(adist(x, y, counts=TRUE), "trafos")))[[1]];
+#   lengths <- attr(matches, 'match.length')
+#   which_longest <- which.max(lengths)
+#   index_longest <- matches[which_longest]
+#   length_longest <- lengths[which_longest]
+#   substring(c(x,y)[which.max(nchar(c(x,y)))], index_longest , index_longest + length_longest - 1)
+# }
 
 #' @title Expand abbreviated Mplus variable names
 #' @description Expand the Mplus syntax for abbreviating lists of variable
