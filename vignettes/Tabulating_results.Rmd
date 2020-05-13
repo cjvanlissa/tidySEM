@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(MplusAutomation)
+run_mplus <- mplusAvailable(TRUE) == 0
 ```
 
 ```{r setup}
@@ -62,7 +64,7 @@ fit <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);
                     run = 1L)
 fit$results$parameters
 ```
-```{r, eval = getOption("test_mplus"), echo = FALSE}
+```{r, eval = run_mplus, echo = FALSE}
 fit <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);",
                                 MODEL = c("visual BY x1 x2 x3;",
                                           "textual BY x4 x5 x6;",
