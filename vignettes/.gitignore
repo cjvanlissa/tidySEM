@@ -1,2 +1,3 @@
 *.html
 *.R
+!tabres_1.R

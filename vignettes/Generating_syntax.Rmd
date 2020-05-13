@@ -118,6 +118,7 @@ res <- mplusModeler(
   modelout = "model.inp",
   run = 1L
   )
+file.remove(list.files(pattern = "^model.+(inp|out|dat)$"))
 write(capture.output(summary(res)), file = "gensyn_1.txt")
 summary(res)
 ```
