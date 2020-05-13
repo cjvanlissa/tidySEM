@@ -118,6 +118,7 @@ res <- mplusModeler(
   modelout = "model.inp",
   run = 1L
   )
+write(capture.output(summary(res)), file = "gensyn_1.txt")
 summary(res)
 ```
 ```{r eval = FALSE, echo = TRUE}
@@ -131,6 +132,10 @@ res <- mplusModeler(
   run = 1L
   )
 summary(res)
+```
+```{r eval = TRUE, echo = FALSE}
+# Read the results
+cat(readLines("gensyn_1.txt"), sep = "\n")
 ```
 
 ### Optional step 5: Access the dictionary and syntax
