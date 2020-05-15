@@ -119,7 +119,7 @@ res <- mplusModeler(
   run = 1L
   )
 file.remove(list.files(pattern = "^model.+(inp|out|dat)$"))
-write(capture.output(summary(res)), file = "gensyn_1.txt")
+#dput(capture.output(summary(res)))
 summary(res)
 ```
 ```{r eval = FALSE, echo = TRUE}
@@ -135,8 +135,12 @@ res <- mplusModeler(
 summary(res)
 ```
 ```{r eval = TRUE, echo = FALSE}
-# Read the results
-cat(readLines("gensyn_1.txt"), sep = "\n")
+# Display the results
+cat(c("Estimated using ML ", "Number of obs: 301, number of (free) parameters: 30 ", 
+"", "Model: Chi2(df = 24) = 85.306, p = 0 ", "Baseline model: Chi2(df = 36) = 918.852, p = 0 ", 
+"", "Fit Indices: ", "", "CFI = 0.931, TLI = 0.896, SRMR = 0.06 ", 
+"RMSEA = 0.092, 90% CI [0.071, 0.114], p < .05 = 0.001 ", "AIC = 7535.49, BIC = 7646.703 "
+), sep = "\n")
 ```
 
 ### Optional step 5: Access the dictionary and syntax

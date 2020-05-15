@@ -24,13 +24,13 @@ measurement <- function(x, center = TRUE, scale = TRUE){
 #' @export
 measurement.data_dict <- function(x, center = TRUE, scale = TRUE){
   Args <- as.list(match.call()[-1])
-  x <- force(x)
-  Args$x <- x
-  variables <- unique(c(NA, x$scale))[-1]
-  update_dict <- rbind(x, data.frame(name = variables, scale = NA, type = "latent", label = variables))
+  Args$x <- x$dictionary
+  variables <- unique(c(NA, x$dictionary$scale))[-1]
+  update_dict <- rbind(x$dictionary, data.frame(name = variables, scale = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
-  out <- list(dictionary = update_dict,
-              syntax = do.call(measurement_table, Args))
+  x$dictionary <- update_dict
+  out <- c(x,
+           list(syntax = do.call(measurement_table, Args)))
   class(out) <- c("sem_syntax", class(out))
   out
 }
@@ -62,8 +62,8 @@ measurement.data_dict2 <- function(x, center = TRUE, scale = TRUE){
   variables <- unique(c(NA, x$scale))[-1]
   update_dict <- rbind(x, data.frame(name = variables, scale = NA, item = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
-  out <- list(dictionary = update_dict,
-              syntax = do.call(measurement_lavaan, list(x = x)))
+  out <- c(dictionary = update_dict,
+           list(syntax = do.call(measurement_lavaan, list(x = x))))
   class(out) <- c("sem_syntax", class(out))
   out
 }
@@ -72,7 +72,7 @@ measurement.data_dict2 <- function(x, center = TRUE, scale = TRUE){
 #' @export
 measurement.data.frame <- function(x, center = TRUE, scale = TRUE){
   Args <- as.list(match.call()[-1])
-  Args$x <- do.call(dictionary, Args[1])
+  Args$x <- do.call(get_dictionary, Args[1])
   do.call(measurement, Args)
 }
 

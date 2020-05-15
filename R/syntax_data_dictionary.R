@@ -40,6 +40,31 @@ get_dictionary <- function(x,
 #' @method get_dictionary character
 #' @export
 get_dictionary.character <- function(x, split = "_"){
+  Args <- as.list(match.call()[-1])
+  out <- list(dictionary = do.call(.data_dict_internal, Args),
+              data = NULL)
+  class(out) <- c("data_dict", class(out))
+  out
+}
+
+#' @method get_dictionary data.frame
+#' @export
+get_dictionary.data.frame <- function(x, split = "_"){
+  Args <- as.list(match.call()[-1])
+  Args$x <- names(x)
+  out <- list(dictionary = do.call(.data_dict_internal, Args),
+              data = x)
+  class(out) <- c("data_dict", class(out))
+  out
+}
+
+
+keys <- function(x, min_items = 3){
+  UseMethod("keys")
+}
+
+
+.data_dict_internal <- function(x, split = "_", ...){
   split_items <- strsplit(x, split)
   num_splits <- sapply(split_items, length)
   if(any(num_splits > 2)){
@@ -54,28 +79,15 @@ get_dictionary.character <- function(x, split = "_"){
       c(NA, NA)
     })
   }
-  dict <- data.frame(name = x, do.call(rbind, split_items), stringsAsFactors = FALSE)
-  names(dict)[c(2,3)] <- c("scale", "item")
-  dict$type <- "observed"
-  #dict$type[!observed] <- "indicator"
-  dict$label <- dict$name
-  dict$item <- NULL
-  class(dict) <- c("data_dict", class(dict))
-  dict
+  dictionary <- data.frame(name = x, do.call(rbind, split_items), stringsAsFactors = FALSE)
+  names(dictionary)[c(2,3)] <- c("scale", "item")
+  dictionary$type <- "observed"
+  #dictionary$type[!observed] <- "indicator"
+  dictionary$label <- dictionary$name
+  dictionary$item <- NULL
+  dictionary
 }
 
-#' @method get_dictionary data.frame
-#' @export
-get_dictionary.data.frame <- function(x, split = "_"){
-  Args <- as.list(match.call()[-1])
-  Args$x <- names(x)
-  do.call(get_dictionary, Args)
-}
-
-
-keys <- function(x, min_items = 3){
-  UseMethod("keys")
-}
 
 #' @method keys data_dict
 #' @export
@@ -93,8 +105,8 @@ keys.data_dict <- function(x, min_items = 3){
 #' @export
 keys.character <- function(x, min_items = 3){
   Args <- list(x = x)
-  dict <- do.call(get_dictionary, Args)
-  Args <- list(x = dict,
+  dictionary <- do.call(get_dictionary, Args)
+  Args <- list(x = dictionary,
                min_items = min_items)
   do.call(keys, Args)
 }
@@ -103,8 +115,18 @@ keys.character <- function(x, min_items = 3){
 #' @export
 keys.data.frame <- function(x, min_items){
   Args <- list(x = names(x))
-  dict <- do.call(get_dictionary, Args)
-  Args <- list(x = dict,
+  dictionary <- do.call(get_dictionary, Args)
+  Args <- list(x = dictionary,
                min_items = min_items)
   do.call(keys, Args)
+}
+
+#' @method print data_dict
+#' @export
+print.data_dict <- function(x, ...){
+  msg <- "Data dictionary\n\n"
+  #if(!is.null(x[["data"]])) msg <- paste0(msg, " ")
+  #has_code <- !is.null(x[["syntax"]])
+  cat(msg)
+  print(x[["dictionary"]])
 }

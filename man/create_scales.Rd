@@ -5,7 +5,7 @@
 \title{Create scale scores from observed variables}
 \usage{
 create_scales(
-  data,
+  x,
   keys.list,
   missing = TRUE,
   impute = "none",
@@ -16,8 +16,8 @@ create_scales(
 )
 }
 \arguments{
-\item{data}{A \code{data.frame} containing all variables referenced in the
-\code{keys.list}.}
+\item{x}{A \code{data.frame} containing all variables referenced in the
+\code{keys.list}, or an object of class \code{data_dict}.}
 
 \item{keys.list}{A named list, indicating which variables belong to which
 scale. See \code{\link[psych]{scoreItems}} and

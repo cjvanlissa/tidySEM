@@ -6,8 +6,8 @@
 #' \code{psych} package; most notably \code{\link[psych]{scoreItems}},
 #' \code{\link[psych]{describe}}, \code{\link[psych]{fa}}, and
 #' \code{\link[psych]{omega}}.
-#' @param data A \code{data.frame} containing all variables referenced in the
-#' \code{keys.list}.
+#' @param x A \code{data.frame} containing all variables referenced in the
+#' \code{keys.list}, or an object of class \code{data_dict}.
 #' @param keys.list A named list, indicating which variables belong to which
 #' scale. See \code{\link[psych]{scoreItems}} and
 #' \code{\link[psych]{make.keys}} for more information.
@@ -36,10 +36,34 @@
 #' @importFrom utils write.csv
 #' @importFrom stats complete.cases cor.test var
 # sb: Spearman-Brown reliability coefficient for two-item scales, as described in Eisinga, R., Grotenhuis, M. te, & Pelzer, B. (2012). The reliability of a two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal of Public Health, 58(4), 637–642. doi:10.1007/s00038-012-0416-3
-create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
+create_scales <- function(x, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
                           digits = 2, ...)
 {
+  UseMethod("create_scales", x)
+}
+
+#' @method create_scales data_dict
+#' @export
+create_scales.data_dict <- function(x, keys.list, missing = TRUE, impute = "none",
+                          omega = NULL, write_files = FALSE,
+                          digits = 2, ...)
+{
+  Args <- as.list(match.call()[-1])
+  Args$x <- x$data
+  sl <- lapply(unique(x$dictionary$scale), function(i){x$dictionary$name[x$dictionary$scale == i]})
+  names(sl) <- unique(x$dictionary$scale)
+  Args$keys.list <- sl
+  do.call(create_scales, Args)
+}
+
+#' @method create_scales data.frame
+#' @export
+create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "none",
+                          omega = NULL, write_files = FALSE,
+                          digits = 2, ...)
+{
+  data <- x
   keys.list <- keys.list[!sapply(keys.list, length) < 2]
   scoredatanames <- as.vector(unlist(keys.list))
   scoredatanames <- unique(scoredatanames)
@@ -104,9 +128,10 @@ create_scales <- function(data, keys.list, missing = TRUE, impute = "none",
   colnames(cortab) <- rownames(cortab) <- names(cordat)
   cortab[upper.tri(cortab)] <- ""
   if (write_files) write.csv(cortab, "correlation table.csv")
-
-  return(list(descriptives = table_descriptives, correlations = cortab,
-              scores = scores$scores))
+  out <- list(descriptives = table_descriptives, correlations = cortab,
+              scores = data.frame(scores$scores))
+  class(out) <- c("tidy_scales", class(out))
+  return(out)
 }
 
 # if(n > 5000 & verbose) message("Sample size > 5000; skew and kurtosis will likely be significant.")

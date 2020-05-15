@@ -41,8 +41,9 @@ cors.sem_syntax <- function(x, ...){
 #' @export
 cors.data_dict <- function(x, ...){
   dots <- list(...)
+  x <- force(x)
   if(!length(dots)){
-    Args <- list(x = x$name[x$type %in% c("observed", "latent")])
+    Args <- list(x = x$dictionary$name[x$dictionary$type %in% c("observed", "latent")])
   } else {
     Args <- check_dots_cors(dots)
   }
