@@ -34,7 +34,14 @@ A data.frame of formatted Mplus results.
 Takes a model object, and formats it as a publication-ready table.
 }
 \examples{
-#Make me!
+library(lavaan)
+HS.model <- '  visual =~ x1 + x2 + x3
+               textual =~ x4 + x5 + x6
+               speed   =~ x7 + x8 + x9 '
+fit <- cfa(HS.model,
+           data = HolzingerSwineford1939,
+           group = "school")
+table_results(fit)
 }
 \seealso{
 Other Reporting tools: 

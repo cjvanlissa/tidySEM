@@ -30,10 +30,6 @@ Computes Satorra-Bentler corrected chi-square test.
 df <- data.frame(chi2 = c(23, 44, 65), df = c(78, 74, 70), scf = c(1.02, 1.12, 1.28))
 chisq_sb(24, 78, 1.02, 65, 70, 1.28)
 }
-\seealso{
-Other Mplus functions: 
-\code{\link{table_cor}()}
-}
 \author{
 Caspar J. van Lissa
 }

@@ -17,7 +17,7 @@ create_scales(
 }
 \arguments{
 \item{x}{A \code{data.frame} containing all variables referenced in the
-\code{keys.list}, or an object of class \code{data_dict}.}
+\code{keys.list}, or an object of class \code{tidy_sem}.}
 
 \item{keys.list}{A named list, indicating which variables belong to which
 scale. See \code{\link[psych]{scoreItems}} and

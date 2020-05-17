@@ -2,7 +2,7 @@ library(lavaan)
 df <- HolzingerSwineford1939
 
 names(df)[grepl("^x", names(df))] <- c("vis_1", "vis_2", "vis_3", "tex_1", "tex_2", "tex_3", "spe_1", "spe_2", "spe_3")
-dict <- get_dictionary(df)
+dict <- tidy_sem(df)
 measurement(dict) -> model
 
 res_lav <- sem(as.lavaan(model), data = df)

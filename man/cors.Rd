@@ -8,25 +8,25 @@ cors(x, ...)
 }
 \arguments{
 \item{x}{Object for which a method exists. If \code{x} is an object of class
- \code{sem_syntax} or \code{data_dict}, then correlations between all
+ \code{tidy_sem}, then correlations between all
  observed and latent variables in the data dictionary of that object are
  computed, by default. If
 \code{x} is a character vector, all elements of the vector are used.}
 
 \item{...}{Optional additional character vectors of variables to be
-correlated. If \code{x} is an object of class \code{sem_syntax} or
-\code{data_dict}, then up to two vectors can be provided. If \code{x} is a
+correlated. If \code{x} is an object of class \code{tidy_sem}, then up to two
+vectors can be provided. If \code{x} is a
 vector, then one more optional vector can be provided.
 When no additional vectors of variable names are provided, only
 intercorrelations between elements of \code{x} are returned.}
 }
 \value{
-An object of class \code{sem_syntax}.
+An object of class \code{tidy_sem}.
 }
 \description{
 Generate syntax for correlations between variables.
 }
 \examples{
-dict <- get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
+dict <- tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
 cors(dict, c("bfi_1", "bfi_2"))
 }

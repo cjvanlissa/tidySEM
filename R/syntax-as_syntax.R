@@ -1,7 +1,7 @@
-#' @title Convert sem_syntax to Mplus syntax
+#' @title Convert tidy_sem to Mplus syntax
 #' @description Final stage in the tidySEM workflow for syntax generation:
-#' Convert the sem_syntax object to Mplus syntax.
-#' @param x An object of class \code{sem_syntax}
+#' Convert the tidy_sem object to Mplus syntax.
+#' @param x An object of class \code{tidy_sem}
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
 #' @examples
@@ -16,44 +16,72 @@ as.mplus <- function(x, ...){
   UseMethod("as.mplus")
 }
 
-#' @method as.mplus sem_syntax
+#' @method as.mplus tidy_sem
 #' @export
-as.mplus.sem_syntax <- function(x, ...){
+as.mplus.tidy_sem <- function(x, ...){
+  if(!has_syntax(x)) return(NULL)
   if("group" %in% names(x$syntax)){
     stop("Develop")
   }
   if("level" %in% names(x$syntax)){
     stop("Develop")
   }
-  x$syntax$label <- paste0("lab", 1:nrow(x$syntax))
+  x$syntax$free <- as.logical(x$syntax$free)
+  x$syntax$lhs <- gsub(".", "_", x$syntax$lhs, fixed = TRUE)
+  x$syntax$rhs <- gsub(".", "_", x$syntax$rhs, fixed = TRUE)
+  #x$syntax$label <- paste0("lab", 1:nrow(x$syntax))
   x$syntax$value[is.na(x$syntax$value)] <- ""
   apply(x$syntax, 1, function(this_row){
+    this_free <- as.logical(this_row[["free"]])
     switch(this_row[["op"]],
            "=~" = {
-             paste0(this_row[["lhs"]], " BY ", this_row[["rhs"]], ifelse(this_row[["free"]], "*", "@"), this_row[["value"]], " (", this_row[["label"]], ")", ";")
+             paste0(this_row[["lhs"]],
+                    " BY ",
+                    this_row[["rhs"]],
+                    if(!this_free){paste0("@", this_row[["value"]])},
+                    if(!this_row[["label"]] == ""){paste0(" (", this_row[["label"]], ")")},
+                    ";")
            },
            "~1" = {
-             paste0("[", this_row[["lhs"]], ifelse(this_row[["free"]], "*", "@"), this_row[["value"]], "] (", this_row[["label"]], ")", ";")
+             paste0("[",
+                    this_row[["lhs"]],
+                    if(!this_free){paste0("@", this_row[["value"]])},
+                    "]",
+                    if(!this_row[["label"]] == ""){paste0("(", this_row[["label"]], ")")},
+                    ";")
            },
            "~~" = {
              if(this_row[["lhs"]] == this_row[["rhs"]]){
-               paste0(this_row[["lhs"]], ifelse(this_row[["free"]], "*", "@"), this_row[["value"]], " (", this_row[["label"]], ")", ";")
+               paste0(this_row[["lhs"]],
+                      if(!this_free){paste0("@", this_row[["value"]])},
+                      if(!this_row[["label"]] == ""){paste0(" (", this_row[["label"]], ")")},
+                      ";")
              } else {
-               paste0(this_row[["lhs"]], " WITH ", this_row[["rhs"]], ifelse(this_row[["free"]], "*", "@"), this_row[["value"]], " (", this_row[["label"]], ")", ";")
+               paste0(this_row[["lhs"]],
+                      " WITH ",
+                      this_row[["rhs"]],
+                      if(!this_free){paste0("@", this_row[["value"]])},
+                      if(!this_row[["label"]] == ""){paste0(" (", this_row[["label"]], ")")},
+                      ";")
              }
            },
            "~" = {
-             paste0(this_row[["lhs"]], " ON ", this_row[["rhs"]], ifelse(this_row[["free"]], "*", "@"), this_row[["value"]], " (", this_row[["label"]], ")", ";")
+             paste0(this_row[["lhs"]],
+                    " ON ",
+                    this_row[["rhs"]],
+                    if(!this_free){paste0("@", this_row[["value"]])},
+                    if(!this_row[["label"]] == ""){paste0(" (", this_row[["label"]], ")")},
+                    ";")
            }
            )
   })
 
 }
 
-#' @title Convert sem_syntax to lavaan syntax
+#' @title Convert tidy_sem to lavaan syntax
 #' @description Final stage in the tidySEM workflow for syntax generation:
-#' Convert the sem_syntax object to lavaan syntax.
-#' @param x An object of class \code{sem_syntax}
+#' Convert the tidy_sem object to lavaan syntax.
+#' @param x An object of class \code{tidy_sem}
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
 #' @examples
@@ -68,20 +96,28 @@ as.lavaan <- function(x, ...){
   UseMethod("as.lavaan")
 }
 
-#' @method as.lavaan sem_syntax
+#' @method as.lavaan tidy_sem
 #' @export
 #' @importFrom lavaan mplus2lavaan.modelSyntax
-as.lavaan.sem_syntax <- function(x, ...){
+as.lavaan.tidy_sem <- function(x, ...){
+  if(!has_syntax(x)) return(NULL)
   tab <- x$syntax
-  tab$free <- as.numeric(as.logical(tab$free))
+  free_values <- rep(0, nrow(tab))
+  tab$free <- as.logical(tab$free)
+  free_values[tab$free] <- 1:sum(tab$free)
   names(tab)[match("value", names(tab))] <- "ustart"
-  if(any(c("label", "group", "level") %in% names(tab))){
+  tab$ustart[tab$free] <- NA
+  tab$free <- free_values
+  if(any(c("group", "level") %in% names(tab))){
     stop("Develop")
   }
-  tab[, 1:5]
+  drop_args <- eval(formals(check_lav_tab)$lav_names)
+  drop_args <- drop_args[!names(drop_args) == ""]
+  drop_args <- which(names(tab) %in% drop_args)
+  tab[, -drop_args]
 }
 
-as.lavaan.sem_syntax3 <- function(x, ...){
+as.lavaan.tidy_sem3 <- function(x, ...){
   if("group" %in% names(x$syntax)){
     stop("Develop")
   }
@@ -94,7 +130,7 @@ as.lavaan.sem_syntax3 <- function(x, ...){
   paste0(x$syntax[["lhs"]], " ", x$syntax[["op"]], " ", ifelse(x$syntax[["free"]], x$syntax[["label"]], x$syntax[["value"]]), " * ", x$syntax[["rhs"]])
 }
 
-as.lavaan.sem_syntax2 <- function(x, ...){
+as.lavaan.tidy_sem2 <- function(x, ...){
   Args <- as.list(match.call()[-1])
   mplus_syntax <- do.call(as.mplus, Args)
   out <- paste0(mplus_syntax, collapse = "\n")

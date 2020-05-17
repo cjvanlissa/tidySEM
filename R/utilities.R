@@ -18,6 +18,50 @@
 #   length_longest <- lengths[which_longest]
 #   substring(c(x,y)[which.max(nchar(c(x,y)))], index_longest , index_longest + length_longest - 1)
 # }
+#' @importFrom MplusAutomation mplusAvailable
+has_mplus <- function(verbose = FALSE){
+  hasmplus <- mplusAvailable(TRUE) == 0
+  if(verbose){
+    if(hasmplus){
+      cat("\033[0;32mv  \033[0m")
+      colmsg("Mplus is available.")
+    } else {
+      cat("\033[0;31mX  \033[0m")
+      colmsg("Mplus is not available.")
+    }
+  }
+  invisible(hasmplus)
+}
+
+has_syntax <- function(x){
+  if(is.null(x[["syntax"]])){
+    cat("\033[0;31mX  \033[0m")
+    colmsg("Object of class 'tidy_sem' has no syntax element.")
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
+
+has_dictionary <- function(x){
+  if(is.null(x[["dictionary"]])){
+    cat("\033[0;31mX  \033[0m")
+    colmsg("Object of class 'tidy_sem' has no dictionary element.")
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
+
+has_data <- function(x){
+  if(is.null(x[["data"]])){
+    cat("\033[0;31mX  \033[0m")
+    colmsg("Object of class 'tidy_sem' has no data element.")
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
 
 #' @title Expand abbreviated Mplus variable names
 #' @description Expand the Mplus syntax for abbreviating lists of variable
@@ -49,4 +93,12 @@ mplus_expand_names <- function(x){
   vnames <- as.list(vnames)
   vnames[expand_these] <- exp_nam
   unlist(vnames)
+}
+
+is_cor <- function(x){
+  !(x$lhs == x$rhs) & x$op == "~~"
+}
+
+is_var <- function(x){
+  (x$lhs == x$rhs) & x$op == "~~"
 }

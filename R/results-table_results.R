@@ -13,7 +13,6 @@
 #                                          "est_sig", "confint"), digits = 2, ...){
 #   UseMethod("table_results", x)
 # }
-
 #' @method table_results rma
 #' @export
 table_results.rma <-  function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
@@ -83,7 +82,14 @@ report_columns <- function(x = c("label", "est_sig", "se", "pval", "confint", "g
 #' @keywords reporting
 #' @export
 #' @examples
-#' #Make me!
+#' library(lavaan)
+#' HS.model <- '  visual =~ x1 + x2 + x3
+#'                textual =~ x4 + x5 + x6
+#'                speed   =~ x7 + x8 + x9 '
+#' fit <- cfa(HS.model,
+#'            data = HolzingerSwineford1939,
+#'            group = "school")
+#' table_results(fit)
 table_results <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   UseMethod("table_results")
 }
@@ -398,67 +404,70 @@ rbind_tables <- function(table_list){
   )
 }
 
-#' Extract correlation tables from mplusModel
+#' Extract correlation tables
 #'
-#' Takes an mplusModel object returned by \code{readModels}, and extracts a
-#' publication-ready correlation matrix.
-#' @param mplusModel An mplusModel object, as returned by \code{readModels}.
-#' @param parameters A character string corresponding to the name of an element
-#' of the $parameters list in \code{mplusModel}. Usually one of
-#' \code{c("unstandardized", "stdyx.standardized", "stdy.standardized")}.
-#' @param valueColumn Character. Which column to use to propagate the matrix.
-#' Defaults to "est_sig", the estimate with significance asterisks.
+#' Extracts a publication-ready covariance or correlation matrix from an object
+#' for which a method exists.
+#' @param x An object for which a method exists.
+#' @param value_column Character. Name of the column to use to propagate the
+#' matrix. Defaults to "est_sig_std", the standardized estimate with
+#' significance asterisks.
 #' @param digits Number of digits to round to when formatting values.
+#' @param ... Additional arguments passed to and from methods.
 #' @return A Matrix or a list of matrices (in case there are between/within
 #' correlation matrices).
 #' @author Caspar J. van Lissa
-#' @family Mplus functions
-#' @seealso \code{\link[MplusAutomation]{readModels}}.
 #' @export
 #' @examples
-#' #Make me!
-#' @importFrom stats na.omit reshape
+#' library(lavaan)
+#' HS.model <- '  visual =~ x1 + x2 + x3
+#'                textual =~ x4 + x5 + x6
+#'                speed   =~ x7 + x8 + x9 '
+#' fit <- cfa(HS.model,
+#'            data = HolzingerSwineford1939,
+#'            group = "school")
+#' table_cors(fit)
+table_cors <- function(x, value_column = "est_sig_std", digits = 2, ...){
+  UseMethod("table_cors", x)
+}
 
-table_cor <- function(mplusModel, parameters = "stdyx.standardized", valueColumn = "est_sig", digits = 2){
-  correlations <- mplusModel$parameters[[parameters]]
-  if("BetweenWithin" %in% names(correlations)){
-    cornames <- unique(correlations$BetweenWithin)
-    correlations <- lapply(cornames, function(x){
-      correlations[correlations$BetweenWithin == x, ]
+#' @method table_cors default
+#' @export
+table_cors.default <- function(x, value_column = "est_sig_std", digits = 2, ...){
+  correlations <- table_results(x, columns = NULL, digits = digits)
+  grouping_cols <- c("group", "level")[c("group", "level") %in% names(correlations)]
+  if(length(grouping_cols) > 0){
+    if(length(grouping_cols) > 1){
+      correlations$split_id <- do.call(paste0, c(list(sep = "_"), correlations[, grouping_cols]))
+    } else {
+      correlations$split_id <- correlations[[grouping_cols]]
+    }
+  }
+  .table_cor_internal(correlations = correlations, value_column = value_column)
+}
+
+.table_cor_internal <- function(correlations, value_column){
+  if("split_id" %in% names(correlations)){
+    outlist <- lapply(unique(correlations$split_id), function(i){
+      .table_cor_internal(correlations = correlations[correlations$split_id == i, -which(names(correlations) == "split_id")],
+                value_column = value_column)
     })
-    names(correlations) <- cornames
-  } else {
-    correlations <- list(correlations)
+    names(outlist) <- unique(correlations$split_id)
+    return(outlist)
   }
-  correlations <- lapply(correlations, function(cors){
-    cors <- cors[grep("WITH$", cors$paramHeader), ]
-    cors$paramHeader <- gsub("\\.WITH", "", cors$paramHeader)
-    cors$paramHeader <- substr(cors$paramHeader,  1, 8)
-    cors$param <- substr(cors$param,  1, 8)
-    if(valueColumn == "est_sig"){
-      cors$est_sig <- est_sig(cors, digits = digits)
-    }
-    if(valueColumn == "confint"){
-      cors$confint <- conf_int(cors, digits = digits)
-    }
-
-    cors <- cors[ , c("paramHeader", "param", valueColumn)]
-    cor_order <- unique(c(rbind(cors$paramHeader, cors$param)))
-    names(cors)[3] <- "value"
-    cors <- rbind(cors, data.frame(paramHeader = cors$param, param = cors$paramHeader, value = cors$value))
-    cors <- rbind(cors, data.frame(paramHeader = unique(cors$paramHeader), param = unique(cors$paramHeader), value = rep(ifelse(valueColumn %in% c("est", "est_sig"), 1, NA), length(unique(cors$paramHeader)))))
-    cors <- reshape(cors, v.names = "value", timevar = "paramHeader", idvar = "param", direction = "wide")
-    names(cors) <- substr(names(cors), 7, 15)
-
-    cors <- cors[match(cor_order, cors[[1]]), na.omit(match(cor_order, names(cors)))]
-    row.names(cors) <- cor_order
-    cors[is.na(cors)] <- ""
-    cors
-  })
-  if(length(correlations) == 1){
-    correlations <- correlations[[1]]
-  }
-  correlations
+  # End recursion
+  cors <- correlations[is_cor(correlations), c("lhs", "rhs", value_column)]
+  cor_order <- unique(c(rbind(cors$lhs, cors$rhs)))
+  names(cors)[3] <- "value"
+  cors <- rbind(cors, data.frame(lhs = cors$rhs, rhs = cors$lhs, value = cors$value))
+  vars <- t(sapply(unique(cors$lhs), function(x){unlist(correlations[correlations$lhs == x & correlations$rhs == x & correlations$op == "~~", c("lhs", "rhs", value_column)])}))
+  colnames(vars)[3] <- "value"
+  cors <- rbind(cors, vars)
+  cors <- cors[order(cors$lhs, cors$rhs),]
+  out <- matrix(cors$value, ncol = length(unique(cors$lhs)))
+  rownames(out) <- colnames(out) <- unique(cors$lhs)
+  out[is.na(out)] <- ""
+  out
 }
 
 

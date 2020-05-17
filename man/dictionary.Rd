@@ -3,14 +3,14 @@
 \name{dictionary}
 \alias{dictionary}
 \alias{dictionary<-}
-\title{Extract dictionary from sem_syntax}
+\title{Extract dictionary from tidy_sem}
 \usage{
 dictionary(x)
 
 dictionary(x) <- value
 }
 \arguments{
-\item{x}{Object of class sem_syntax.}
+\item{x}{Object of class tidy_sem.}
 
 \item{value}{A valid value for \code{dictionary(x)}.}
 }
@@ -19,6 +19,6 @@ data.frame
 }
 \description{
 Provides access to the \code{dictionary} element of a
-\code{sem_syntax} object. This can be used to return or assign to the
+\code{tidy_sem} object. This can be used to return or assign to the
 \code{dictionary} element.
 }

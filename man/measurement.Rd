@@ -7,7 +7,7 @@
 measurement(x, center = TRUE, scale = TRUE)
 }
 \arguments{
-\item{x}{An object for which a method exists, including \code{data_dict}
+\item{x}{An object for which a method exists, including \code{tidy_sem}
 (generated using \code{\link[tidySEM]{dictionary}}, or \code{data.frame} (for
 which \code{\link[tidySEM]{dictionary}} will be run first).}
 
@@ -19,12 +19,12 @@ to 1 (\code{scale = TRUE}), or by fixing the first factor loading to 1
 (\code{scale = FALSE}).}
 }
 \value{
-An object of class \code{sem_syntax}.
+An object of class \code{tidy_sem}.
 }
 \description{
 Generate syntax for a measurement model for latent variables.
 }
 \examples{
-dict <- get_dictionary(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
+dict <- tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
 measurement(dict)
 }

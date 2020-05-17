@@ -549,6 +549,7 @@ plot.sem_graph <- function(x, y, ...){
 
 }
 
+#' @importFrom stats na.omit
 .connect_points <- function(df_nodes, df_edges){
   node_id <- do.call(paste0, df_nodes[, na.omit(match(c("name", "group", "level"), names(df_nodes))), drop = FALSE])
 

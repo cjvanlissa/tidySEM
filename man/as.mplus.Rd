@@ -2,12 +2,12 @@
 % Please edit documentation in R/syntax-as_syntax.R
 \name{as.mplus}
 \alias{as.mplus}
-\title{Convert sem_syntax to Mplus syntax}
+\title{Convert tidy_sem to Mplus syntax}
 \usage{
 as.mplus(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{sem_syntax}}
+\item{x}{An object of class \code{tidy_sem}}
 
 \item{...}{Additional parameters to be passed to and from functions.}
 }
@@ -16,7 +16,7 @@ Character vector.
 }
 \description{
 Final stage in the tidySEM workflow for syntax generation:
-Convert the sem_syntax object to Mplus syntax.
+Convert the tidy_sem object to Mplus syntax.
 }
 \examples{
 \dontrun{

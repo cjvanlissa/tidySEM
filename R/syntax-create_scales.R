@@ -7,7 +7,7 @@
 #' \code{\link[psych]{describe}}, \code{\link[psych]{fa}}, and
 #' \code{\link[psych]{omega}}.
 #' @param x A \code{data.frame} containing all variables referenced in the
-#' \code{keys.list}, or an object of class \code{data_dict}.
+#' \code{keys.list}, or an object of class \code{tidy_sem}.
 #' @param keys.list A named list, indicating which variables belong to which
 #' scale. See \code{\link[psych]{scoreItems}} and
 #' \code{\link[psych]{make.keys}} for more information.
@@ -43,9 +43,9 @@ create_scales <- function(x, keys.list, missing = TRUE, impute = "none",
   UseMethod("create_scales", x)
 }
 
-#' @method create_scales data_dict
+#' @method create_scales tidy_sem
 #' @export
-create_scales.data_dict <- function(x, keys.list, missing = TRUE, impute = "none",
+create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
                           digits = 2, ...)
 {

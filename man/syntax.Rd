@@ -3,14 +3,14 @@
 \name{syntax}
 \alias{syntax}
 \alias{syntax<-}
-\title{Extract syntax from sem_syntax}
+\title{Extract syntax from tidy_sem}
 \usage{
 syntax(x)
 
 syntax(x) <- value
 }
 \arguments{
-\item{x}{Object of class sem_syntax.}
+\item{x}{Object of class tidy_sem.}
 
 \item{value}{A valid value for \code{syntax(x)}.}
 }
@@ -19,6 +19,6 @@ data.frame
 }
 \description{
 Provides access to the \code{syntax} element of a
-\code{sem_syntax} object. This can be used to return or assign to the
+\code{tidy_sem} object. This can be used to return or assign to the
 \code{syntax} element.
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/syntax-as_syntax.R
 \name{as.lavaan}
 \alias{as.lavaan}
-\title{Convert sem_syntax to lavaan syntax}
+\title{Convert tidy_sem to lavaan syntax}
 \usage{
 as.lavaan(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{sem_syntax}}
+\item{x}{An object of class \code{tidy_sem}}
 
 \item{...}{Additional parameters to be passed to and from functions.}
 }
@@ -16,7 +16,7 @@ Character vector.
 }
 \description{
 Final stage in the tidySEM workflow for syntax generation:
-Convert the sem_syntax object to lavaan syntax.
+Convert the tidy_sem object to lavaan syntax.
 }
 \examples{
 \dontrun{
