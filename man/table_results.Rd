@@ -28,7 +28,7 @@ variable for multilevel models, if available.}
 \item{...}{Logical expressions used to filter the rows of results returned.}
 }
 \value{
-A data.frame of formatted Mplus results.
+A data.frame of formatted results.
 }
 \description{
 Takes a model object, and formats it as a publication-ready table.

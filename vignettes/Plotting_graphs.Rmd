@@ -18,13 +18,13 @@ knitr::opts_chunk$set(
 library(tidySEM)
 ```
 
-`tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
+`tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programmatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
 
 ## The tidySEM workflow
 
 The workflow underlying graphing in `tidySEM` is as follows:
 
-1. Run an analysis, e.g., using `lavaan::sem()` or `MplusAutomation::mplusModeler()`, assing the output to an object, e.g., `fit`
+1. Run an analysis, e.g., using `lavaan::sem()` or `MplusAutomation::mplusModeler()`, passing the output to an object, e.g., `fit`
 2. Examine what nodes and edges can be extracted from the fit model object, by running `get_nodes(fit)` and `get_edges(fit)`
 3. Specify a layout for the graph using `get_layout()`
 4. *Optionally*, prepare graph data before plotting, by running `prepare_graph(fit, layout)`. Store the resulting graph data in an object, e.g., `graph_data`
@@ -32,7 +32,7 @@ The workflow underlying graphing in `tidySEM` is as follows:
 6. *Optionally*, modify the nodes and edges in `graph_data` using `nodes(graph_data) <- ...`and `edges(graph_data) <- ...`
 7. Plot the graph using `plot(graph_data)`, or skip steps 4-6 and use the function `graph(model, layout)`.
 
-This workflow ensures a high degree of transparancy and customizability. Objects returned by all functions are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the `tidyverse`.
+This workflow ensures a high degree of transparency and customizability. Objects returned by all functions are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the 'tidyverse'.
 
 ## Example: Graphing a CFA
 
@@ -90,7 +90,7 @@ get_layout("c", NA,  "d",
 
 #### Automatically generate layout for a model
 
-A layout can be automatically generated for a fit model (lavaan or Mplus) using the function `igraph::layout_as_tree()`, or other layout functions in the `igraph` package. For example: 
+A layout can be automatically generated for a fit model (`lavaan` or `Mplus`) using the function `igraph::layout_as_tree()`, or other layout functions in the `igraph` package. For example: 
 
 ```{r eval = FALSE, echo = TRUE}
 library(lavaan)
@@ -215,7 +215,7 @@ edges(graph_data)
 
 ### Optional step 6: Modify the nodes and edges
 
-At this stage, we may want to improve the basic plot slightly. The functions `nodes(graph_data) <- ...` and `edges(graph_data) <- ...` can be used to modify the nodes and edges. These functions pair well with the general tidyverse workflow. For example, we might want to print node labels for latent variables in *Title Case* instead of just using the variable names:
+At this stage, we may want to improve the basic plot slightly. The functions `nodes(graph_data) <- ...` and `edges(graph_data) <- ...` can be used to modify the nodes and edges. These functions pair well with the general 'tidyverse' workflow. For example, we might want to print node labels for latent variables in *Title Case* instead of just using the variable names:
 
 ```{r, message=FALSE}
 library(dplyr)
@@ -260,7 +260,7 @@ The functions `graph_sem()` and `prepare_graph()` accept several optional visual
 * `linetype`: The type of line, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
 * `colour`: The colour of the line (e.g., `colour = "red"` or `colour = "blue"`)
 * `size`: The size of the line (e.g., `size = 1` or `size = 2`)
-* `alpha`: The transparancy of the line (e.g., `alpha = 1` or `alpha = .2`)
+* `alpha`: The transparency of the line (e.g., `alpha = 1` or `alpha = .2`)
 
 
 ```{r}
@@ -280,7 +280,7 @@ Nodes have the following aesthetics (see `?geom_polygon()`):
 * `colour`: The colour of the line surrounding the node (e.g., `colour = "red"` or `colour = "blue"`)
 * `fill`: The interior colour of the node (e.g., `colour = "red"` or `colour = "blue"`)
 * `size`: The size of the line (e.g., `size = 1` or `size = 2`)
-* `alpha`: The transparancy of the node (e.g., `alpha = 1` or `alpha = .2`)
+* `alpha`: The transparency of the node (e.g., `alpha = 1` or `alpha = .2`)
 
 
 ```{r}
@@ -316,7 +316,7 @@ Like nodes and edges, edge labels can be customized. Labels have the same aesthe
 * `label_colour`: The colour of the label text (e.g., `label_colour = "red"`)
 * `label_fill`: The colour of the rectangle behind the label text, ( e.g., `label_fill = "blue"`)
 * `label_size`: The font size of the label (e.g., `label_size = 4`)
-* `label_alpha`: The transparancy of the label (e.g., `alpha = 1` or `alpha = .2`)
+* `label_alpha`: The transparency of the label (e.g., `alpha = 1` or `alpha = .2`)
 * `label_family`: The font family of the label text. By default, three are available: `"serif"`, `"sans"` and `"mono"`
 * `label_fontface`: The face of the label text: `"plain"`, `"bold"`, `"italic"`, or "`bold.italic"`
 * `label_hjust`: Horizontal justification of label text; either a string (`"left"`, `"center"`, `"right"`) or a number between 0 and 1 (left = 0, center = 0.5, right = 1)

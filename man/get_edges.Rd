@@ -7,7 +7,7 @@
 get_edges(x, label = "est_sig", ...)
 }
 \arguments{
-\item{x}{A model object of class 'mplusObject' or 'lavaan'.}
+\item{x}{A model object of class \code{mplusObject} or \code{lavaan}.}
 
 \item{label}{Character, indicating which column to use for edge labels.
 Defaults to 'est_sig', which consists of the estimate value with significance

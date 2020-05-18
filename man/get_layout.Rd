@@ -11,7 +11,7 @@ get_layout(x, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists; currently, methods exist for
-character, lavaan, and mplus.model objects.}
+\code{character}, \code{lavaan}, and \code{mplus.model} objects.}
 
 \item{...}{Character arguments corresponding to layout elements. Use node
 names, empty strings (""), or NA values.}
@@ -42,7 +42,8 @@ There are three ways to generate a layout:
   layout to the clipboard from your spreadsheet program, and load it from the
   clipboard (see Example 4)
 }
-The layout algorithms imported from `igraph` are: \code{c("layout_as_star",
+The layout algorithms imported from \code{igraph} are:
+\code{c("layout_as_star",
 "layout_as_tree", "layout_in_circle", "layout_nicely",
 "layout_on_grid", "layout_randomly", "layout_with_dh", "layout_with_fr",
 "layout_with_gem",

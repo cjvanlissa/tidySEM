@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -107,13 +107,13 @@
 <span class="co">#&gt; Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; -- see citation("MplusAutomation").</span></pre></body></html></div>
-<p><code>tidySEM</code> offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely <em>programatic</em>, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as <code>data.frame</code>s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through <code><a href="../reference/table_results.html">table_results()</a></code>.</p>
+<p><code>tidySEM</code> offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely <em>programmatic</em>, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as <code>data.frame</code>s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through <code><a href="../reference/table_results.html">table_results()</a></code>.</p>
 <div id="the-tidysem-workflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-tidysem-workflow" class="anchor"></a>The tidySEM workflow</h2>
 <p>The workflow underlying graphing in <code>tidySEM</code> is as follows:</p>
 <ol style="list-style-type: decimal">
-<li>Run an analysis, e.g., using <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html">lavaan::sem()</a></code> or <code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">MplusAutomation::mplusModeler()</a></code>, assing the output to an object, e.g., <code>fit</code>
+<li>Run an analysis, e.g., using <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html">lavaan::sem()</a></code> or <code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">MplusAutomation::mplusModeler()</a></code>, passing the output to an object, e.g., <code>fit</code>
 </li>
 <li>Examine what nodes and edges can be extracted from the fit model object, by running <code><a href="../reference/get_nodes.html">get_nodes(fit)</a></code> and <code><a href="../reference/get_edges.html">get_edges(fit)</a></code>
 </li>
@@ -130,7 +130,7 @@
 </li>
 <li>Plot the graph using <code><a href="https://rdrr.io/r/base/plot.html">plot(graph_data)</a></code>, or skip steps 4-6 and use the function <code>graph(model, layout)</code>.</li>
 </ol>
-<p>This workflow ensures a high degree of transparancy and customizability. Objects returned by all functions are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the <code>tidyverse</code>.</p>
+<p>This workflow ensures a high degree of transparency and customizability. Objects returned by all functions are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the ‘tidyverse’.</p>
 </div>
 <div id="example-graphing-a-cfa" class="section level2">
 <h2 class="hasAnchor">
@@ -213,7 +213,7 @@
 <div id="automatically-generate-layout-for-a-model" class="section level4">
 <h4 class="hasAnchor">
 <a href="#automatically-generate-layout-for-a-model" class="anchor"></a>Automatically generate layout for a model</h4>
-<p>A layout can be automatically generated for a fit model (lavaan or Mplus) using the function <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html">igraph::layout_as_tree()</a></code>, or other layout functions in the <code>igraph</code> package. For example:</p>
+<p>A layout can be automatically generated for a fit model (<code>lavaan</code> or <code>Mplus</code>) using the function <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html">igraph::layout_as_tree()</a></code>, or other layout functions in the <code>igraph</code> package. For example:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lavaan</span>)
 <span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span>(<span class="st">' visual  =~ x1 + x2 + x3 '</span>,
            <span class="kw">data</span> <span class="kw">=</span> <span class="no">HolzingerSwineford1939</span>[<span class="fl">1</span>:<span class="fl">50</span>, ])
@@ -333,7 +333,7 @@
 <div id="optional-step-6-modify-the-nodes-and-edges" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-6-modify-the-nodes-and-edges" class="anchor"></a>Optional step 6: Modify the nodes and edges</h3>
-<p>At this stage, we may want to improve the basic plot slightly. The functions <code>nodes(graph_data) &lt;- ...</code> and <code>edges(graph_data) &lt;- ...</code> can be used to modify the nodes and edges. These functions pair well with the general tidyverse workflow. For example, we might want to print node labels for latent variables in <em>Title Case</em> instead of just using the variable names:</p>
+<p>At this stage, we may want to improve the basic plot slightly. The functions <code>nodes(graph_data) &lt;- ...</code> and <code>edges(graph_data) &lt;- ...</code> can be used to modify the nodes and edges. These functions pair well with the general ‘tidyverse’ workflow. For example, we might want to print node labels for latent variables in <em>Title Case</em> instead of just using the variable names:</p>
 <div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
 <span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
@@ -370,7 +370,7 @@
 <li>
 <code>size</code>: The size of the line (e.g., <code>size = 1</code> or <code>size = 2</code>)</li>
 <li>
-<code>alpha</code>: The transparancy of the line (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
+<code>alpha</code>: The transparency of the line (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
 <div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>,
@@ -392,7 +392,7 @@
 <li>
 <code>size</code>: The size of the line (e.g., <code>size = 1</code> or <code>size = 2</code>)</li>
 <li>
-<code>alpha</code>: The transparancy of the node (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
+<code>alpha</code>: The transparency of the node (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
 <div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>)
@@ -428,7 +428,7 @@
 <li>
 <code>label_size</code>: The font size of the label (e.g., <code>label_size = 4</code>)</li>
 <li>
-<code>label_alpha</code>: The transparancy of the label (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
+<code>label_alpha</code>: The transparency of the label (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 <li>
 <code>label_family</code>: The font family of the label text. By default, three are available: <code>"serif"</code>, <code>"sans"</code> and <code>"mono"</code>
 </li>
@@ -475,7 +475,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Caspar van Lissa.</p>
+  <p>Developed by Caspar J. van Lissa.</p>
 </div>
 
 <div class="pkgdown">

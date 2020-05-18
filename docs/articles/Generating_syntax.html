@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -102,8 +102,8 @@
 <p>The workflow underlying syntax generation in <code>tidySEM</code> is as follows:</p>
 <ol style="list-style-type: decimal">
 <li>Give the variables in your <code>data</code> object short, informative names, that are easily machine readable</li>
-<li>Convert the data to a <code>tidy_sem</code> obejct by running <code>model &lt;- tidy_sem(data)</code> <!--    * The `data_dictionary` called `dict` can be used to generate `keys(dict)`, for use with functions (reliability, factor analysis) from the `psych` library
-    * The `data_dictionary` called `dict` can be used to generate syntax for structural equation models in `lavaan` or Mplus (through `MplusAutomation`)-->
+<li>Convert the data to a <code>tidy_sem</code> object by running <code>model &lt;- tidy_sem(data)</code> <!--    * The `data_dictionary` called `dict` can be used to generate `keys(dict)`, for use with functions (reliability, factor analysis) from the `psych` library
+    * The `data_dictionary` called `dict` can be used to generate syntax for structural equation models in `lavaan` or 'Mplus' (through `MplusAutomation`)-->
 </li>
 <li>Add elements of syntax
 <ul>
@@ -128,7 +128,7 @@
 </ul>
 </li>
 </ol>
-<p>All elements of the <code>tidy_sem</code> object are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the <code>tidyverse</code>. Thus, the data, dictionary, and syntax are all represented as <code>data.frame</code>s.</p>
+<p>All elements of the <code>tidy_sem</code> object are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the ‘tidyverse’. Thus, the data, dictionary, and syntax are all represented as <code>data.frame</code>s.</p>
 </div>
 <div id="example-running-a-cfa" class="section level2">
 <h2 class="hasAnchor">
@@ -191,7 +191,7 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <div id="step-4-run-the-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-4-run-the-model" class="anchor"></a>Step 4: Run the model</h3>
-<p>The resulting model can be evaluated as Mplus syntax or lavaan syntax, using the <code>as_mplus</code> and <code>as_lavaan</code> functions. For example, using lavaan:</p>
+<p>The resulting model can be evaluated as ‘Mplus’ syntax or ‘lavaan’ syntax, using the <code>as_mplus</code> and <code>as_lavaan</code> functions. For example, using lavaan:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu">lavaan</span>(<span class="fu"><a href="../reference/as_lavaan.html">as_lavaan</a></span>(<span class="no">model</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">res</span>, <span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 <span class="co">#&gt; lavaan 0.6-5 ended normally after 20 iterations</span>
@@ -223,7 +223,7 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <span class="co">#&gt;   Test statistic                                85.306</span>
 <span class="co">#&gt;   Degrees of freedom                                24</span>
 <span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
-<p>The same model can be estimated in Mplus through the R-package <code>MplusAutomation</code>. This requires Mplus to be installed.</p>
+<p>The same model can be estimated in ‘Mplus’ through the R-package <code>MplusAutomation</code>. This requires ‘Mplus’ to be installed.</p>
 <pre><code>#&gt; [0;32mv  [0m[0;30mMplus is available.[0m
 #&gt; 
 #&gt; Running model: mplus_model.inp 
@@ -458,7 +458,7 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 
 
       <footer><div class="copyright">
-  <p>Developed by Caspar van Lissa.</p>
+  <p>Developed by Caspar J. van Lissa.</p>
 </div>
 
 <div class="pkgdown">

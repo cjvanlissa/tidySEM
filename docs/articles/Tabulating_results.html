@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -339,7 +339,7 @@
 <div id="output-from-mplus" class="section level2">
 <h2 class="hasAnchor">
 <a href="#output-from-mplus" class="anchor"></a>Output from Mplus</h2>
-<p>Now, we’ll reproduce the same analysis in Mplus, via the package <code>MplusAutomation</code>. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:</p>
+<p>Now, we’ll reproduce the same analysis in ‘Mplus’, via the package <code>MplusAutomation</code>. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">mplusModeler</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">mplusObject</a></span>(<span class="kw">VARIABLE</span> <span class="kw">=</span> <span class="st">"grouping IS school (1 = GW 2 = Pas);"</span>,
                                 <span class="kw">MODEL</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"visual BY x1 x2 x3;"</span>,
                                           <span class="st">"textual BY x4 x5 x6;"</span>,
@@ -609,7 +609,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Caspar van Lissa.</p>
+  <p>Developed by Caspar J. van Lissa.</p>
 </div>
 
 <div class="pkgdown">

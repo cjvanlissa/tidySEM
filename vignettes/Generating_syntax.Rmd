@@ -29,9 +29,9 @@ library(dplyr)
 The workflow underlying syntax generation in `tidySEM` is as follows:
 
 1. Give the variables in your `data` object short, informative names, that are easily machine readable
-2. Convert the data to a `tidy_sem` obejct by running `model <- tidy_sem(data)`
+2. Convert the data to a `tidy_sem` object by running `model <- tidy_sem(data)`
 <!--    * The `data_dictionary` called `dict` can be used to generate `keys(dict)`, for use with functions (reliability, factor analysis) from the `psych` library
-    * The `data_dictionary` called `dict` can be used to generate syntax for structural equation models in `lavaan` or Mplus (through `MplusAutomation`)-->
+    * The `data_dictionary` called `dict` can be used to generate syntax for structural equation models in `lavaan` or 'Mplus' (through `MplusAutomation`)-->
 3. Add elements of syntax
     * E.g., `measurement(model)`
 5. *Optionally*, access the `dictionary`, `data`, and `syntax` elements in the `tidy_sem` object by calling `dictionary(model)`, `get_data(model)`, or `syntax(model)`
@@ -41,7 +41,7 @@ The workflow underlying syntax generation in `tidySEM` is as follows:
     * Converting the `tidy_sem` object to `Mplus` using `as_mplus(model)`, and using that as input for `MplusAutomation::mplusObject()`
     * Using the functions `estimate_lavaan(model)` or `estimate_mplus(model)`
 
-All elements of the `tidy_sem` object are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the `tidyverse`. Thus, the data, dictionary, and syntax are all represented as `data.frame`s.
+All elements of the `tidy_sem` object are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the 'tidyverse'. Thus, the data, dictionary, and syntax are all represented as `data.frame`s.
 
 ## Example: Running a CFA
 
@@ -103,7 +103,7 @@ model
 
 ### Step 4: Run the model
 
-The resulting model can be evaluated as Mplus syntax or lavaan syntax, using the `as_mplus` and `as_lavaan` functions. For example, using lavaan:
+The resulting model can be evaluated as 'Mplus' syntax or 'lavaan' syntax, using the `as_mplus` and `as_lavaan` functions. For example, using lavaan:
 
 ```{r}
 res <- lavaan(as_lavaan(model), data = df)
@@ -117,7 +117,7 @@ model %>%
   estimate_lavaan()
 ```
 
-The same model can be estimated in Mplus through the R-package `MplusAutomation`. This requires Mplus to be installed.
+The same model can be estimated in 'Mplus' through the R-package `MplusAutomation`. This requires 'Mplus' to be installed.
 
 ```{r echo = FALSE, eval = run_mplus, message=FALSE, warning=FALSE}
 library(MplusAutomation)

@@ -37,7 +37,7 @@ These functions are designed with the [*tidy tools manifesto* (Wickham, last upd
 install.packages("tidySEM")
 ```
 -->
-You can install the development version of tidySEM from GitHub with:
+You can install the development version of `tidySEM` from 'GitHub' with:
 
 ```{r gh-installation, eval = FALSE}
 install.packages("devtools")
@@ -62,9 +62,9 @@ You can cite the R-package with the following citation:
 
 ## Contributing and Contact Information
 
-If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on GitHub, or sending a pull request with proposed features.
+If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on 'GitHub', or sending a pull request with proposed features.
 
-* File a GitHub issue [here](https://github.com/cjvanlissa/tidySEM)
+* File a 'GitHub' issue [here](https://github.com/cjvanlissa/tidySEM)
 * Make a pull request [here](https://github.com/cjvanlissa/tidySEM/pulls)
 
 By participating in this project, you agree to abide by the [Contributor Code of Conduct v2.0](https://www.contributor-covenant.org/).

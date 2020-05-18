@@ -2,7 +2,7 @@
 % Please edit documentation in R/syntax-as_syntax.R
 \name{as_lavaan}
 \alias{as_lavaan}
-\title{Convert tidy_sem to lavaan syntax}
+\title{Convert tidy_sem to 'lavaan' syntax}
 \usage{
 as_lavaan(x, ...)
 }
@@ -15,9 +15,9 @@ as_lavaan(x, ...)
 Character vector.
 }
 \description{
-Final stage in the tidySEM workflow for syntax generation:
-Convert the tidy_sem object to lavaan syntax in tabular format (see
-\code{\link[lavaan]{model.syntax}}).
+Final stage in the 'tidySEM' workflow for syntax generation:
+Convert the \code{tidy_sem} object to \code{lavaan} syntax in tabular format
+(see \code{\link[lavaan]{model.syntax}}).
 }
 \examples{
 mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(

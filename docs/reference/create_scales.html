@@ -78,7 +78,7 @@ omega." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -221,6 +221,15 @@ tables to .csv files, Default: FALSE</p></td>
 
     <p>List with elements: <code>$descriptives</code>, <code>$correlations</code>, and
 <code>$scores</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>For scales with less than 3 items, Cronbach's alpha might not be
+suitable as an estimate of reliability. For such scales, the Spearman-Brown
+reliability coefficient for two-item scales is computed, as described in
+Eisinga, R., Grotenhuis, M. te, &amp; Pelzer, B. (2012). The reliability of a
+two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal
+of Public Health, 58(4), 637–642. &lt;doi:10.1007/s00038-012-0416-3&gt;.
+These coefficients are marked with "(sb)".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>create_scales</span>(<span class='no'>iris</span>, <span class='kw'>keys.list</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>scalename</span> <span class='kw'>=</span>
@@ -250,7 +259,7 @@ tables to .csv files, Default: FALSE</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Caspar van Lissa.</p>
+  <p>Developed by Caspar J. van Lissa.</p>
 </div>
 
 <div class="pkgdown">

@@ -37,6 +37,10 @@ report <- function(x, digits = 2, equals = TRUE){
 #' @param scf2 Scale correction factor of model 2.
 #' @return Named numeric vector with chi-square value, degrees of freedom, and
 #' p-value.
+#' @details Reference:
+#' Satorra, A., & Bentler, P. M. (2001). A scaled difference chi-square test
+#' statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
+#' <doi:10.1007/BF02296192>
 #' @author Caspar J. van Lissa
 #' @export
 #' @keywords internal

@@ -9,8 +9,8 @@
 #' correlated. If \code{x} is an object of class \code{tidy_sem}, then up to two
 #' vectors can be provided. If \code{x} is a
 #' vector, then one more optional vector can be provided.
-#' When no additional vectors of variable names are provided, only
-#' intercorrelations between elements of \code{x} are returned.
+#' When no additional vectors of variable names are provided, only the
+#' correlations among the elements of \code{x} are returned.
 #' @return An object of class \code{tidy_sem}.
 #' @examples
 #' dict <- tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))

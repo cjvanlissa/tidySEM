@@ -2,7 +2,7 @@
 % Please edit documentation in R/syntax-as_syntax.R
 \name{as_mplus}
 \alias{as_mplus}
-\title{Convert tidy_sem to Mplus syntax}
+\title{Convert tidy_sem to 'Mplus' syntax}
 \usage{
 as_mplus(x, ...)
 }
@@ -15,8 +15,8 @@ as_mplus(x, ...)
 Character vector.
 }
 \description{
-Final stage in the tidySEM workflow for syntax generation:
-Convert the tidy_sem object to Mplus syntax.
+Final stage in the 'tidySEM' workflow for syntax generation:
+Convert the \code{tidy_sem} object to 'Mplus' syntax.
 }
 \examples{
 mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(

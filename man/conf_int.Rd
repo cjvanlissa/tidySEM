@@ -9,7 +9,7 @@ conf_int(x, digits = 2, se = NULL, lb = NULL, ub = NULL, ci = 95)
 \arguments{
 \item{x}{Optional. An object for which a method exists.}
 
-\item{digits}{Integer. The number of digits to round the condidence
+\item{digits}{Integer. The number of digits to round the confidence
 boundaries to.}
 
 \item{se}{Optional, numeric. Standard error of the parameters.}
@@ -26,7 +26,7 @@ computing CI from a numeric vector \code{x}, and the standard error
 A character vector of formatted confidence intervals.
 }
 \description{
-Creates 'APA'-formated confidence intervals, either from an object for which
+Creates 'APA'-formatted confidence intervals, either from an object for which
 a method exists, or from the arguments \code{lb} and \code{ub}. When argument
 \code{x} is a numeric vector, it is also possible to construct a confidence
 interval using the standard error (\code{se}) and a percentile interval

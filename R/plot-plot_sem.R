@@ -579,7 +579,7 @@ matrix_to_nodes <- function(nodes, shape){
 #' @title Extract nodes from a SEM model object
 #' @description Attempts to extract nodes from a SEM model object, where nodes
 #' are defined as observed or latent variables.
-#' @param x A model object of class 'mplusObject' or 'lavaan'.
+#' @param x A model object of class \code{mplusObject} or \code{lavaan}.
 #' @param label Character, indicating which column to use for node labels. Nodes
 #' are labeled with mean values of the observed/latent variables they represent.
 #' Defaults to 'est_sig', which consists of the estimate value with significance
@@ -657,7 +657,7 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
 #' @title Extract edges from a SEM model object
 #' @description Attempts to extract edges from a SEM model object, where edges
 #' are defined as regression paths and covariances between variables (nodes).
-#' @param x A model object of class 'mplusObject' or 'lavaan'.
+#' @param x A model object of class \code{mplusObject} or \code{lavaan}.
 #' @param label Character, indicating which column to use for edge labels.
 #' Defaults to 'est_sig', which consists of the estimate value with significance
 #' asterisks.

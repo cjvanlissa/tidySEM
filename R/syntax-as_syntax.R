@@ -1,6 +1,6 @@
-#' @title Convert tidy_sem to Mplus syntax
-#' @description Final stage in the tidySEM workflow for syntax generation:
-#' Convert the tidy_sem object to Mplus syntax.
+#' @title Convert tidy_sem to 'Mplus' syntax
+#' @description Final stage in the 'tidySEM' workflow for syntax generation:
+#' Convert the \code{tidy_sem} object to 'Mplus' syntax.
 #' @param x An object of class \code{tidy_sem}.
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
@@ -77,10 +77,10 @@ as_mplus.tidy_sem <- function(x, ...){
 
 }
 
-#' @title Convert tidy_sem to lavaan syntax
-#' @description Final stage in the tidySEM workflow for syntax generation:
-#' Convert the tidy_sem object to lavaan syntax in tabular format (see
-#' \code{\link[lavaan]{model.syntax}}).
+#' @title Convert tidy_sem to 'lavaan' syntax
+#' @description Final stage in the 'tidySEM' workflow for syntax generation:
+#' Convert the \code{tidy_sem} object to \code{lavaan} syntax in tabular format
+#' (see \code{\link[lavaan]{model.syntax}}).
 #' @param x An object of class \code{tidy_sem}
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.

@@ -30,12 +30,18 @@
 #' out <- create_scales(iris, keys.list = list(scalename =
 #'             c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")))
 #' out$descriptives
+#' @details For scales with less than 3 items, Cronbach's alpha might not be
+#' suitable as an estimate of reliability. For such scales, the Spearman-Brown
+#' reliability coefficient for two-item scales is computed, as described in
+#' Eisinga, R., Grotenhuis, M. te, & Pelzer, B. (2012). The reliability of a
+#' two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal
+#' of Public Health, 58(4), 637–642. <doi:10.1007/s00038-012-0416-3>.
+#' These coefficients are marked with "(sb)".
 #' @rdname create_scales
 #' @export
 #' @importFrom psych scoreItems omega fa make.keys describe
 #' @importFrom utils write.csv
 #' @importFrom stats complete.cases cor.test var
-# sb: Spearman-Brown reliability coefficient for two-item scales, as described in Eisinga, R., Grotenhuis, M. te, & Pelzer, B. (2012). The reliability of a two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal of Public Health, 58(4), 637–642. doi:10.1007/s00038-012-0416-3
 create_scales <- function(x, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
                           digits = 2, ...)

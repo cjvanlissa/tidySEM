@@ -7,7 +7,7 @@
 get_nodes(x, label = "est_sig", ...)
 }
 \arguments{
-\item{x}{A model object of class 'mplusObject' or 'lavaan'.}
+\item{x}{A model object of class \code{mplusObject} or \code{lavaan}.}
 
 \item{label}{Character, indicating which column to use for node labels. Nodes
 are labeled with mean values of the observed/latent variables they represent.
