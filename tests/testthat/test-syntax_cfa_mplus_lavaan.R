@@ -5,13 +5,13 @@ names(df)[grepl("^x", names(df))] <- c("vis_1", "vis_2", "vis_3", "tex_1", "tex_
 dict <- tidy_sem(df)
 measurement(dict) -> model
 
-res_lav <- sem(as.lavaan(model), data = df)
+res_lav <- sem(as_lavaan(model), data = df)
 
 tb_lav <- table_results(res_lav, columns = NULL)
 
 if(getOption("test_mplus")){
   library(MplusAutomation)
-  res_mplus <- mplusModeler(mplusObject(MODEL = as.mplus(model), rdata = df), modelout = "test.inp", run = 1L)
+  res_mplus <- mplusModeler(mplusObject(MODEL = as_mplus(model), rdata = df), modelout = "test.inp", run = 1L)
 
   tb_mplus <- table_results(res_mplus, columns = NULL)
 

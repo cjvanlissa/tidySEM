@@ -1,21 +1,21 @@
-#' @title Filter graph elements
-#' @description Apply a filter to one of the elements
-#' of a \code{sem_graph} object, and return the modified \code{sem_graph}. Uses
-#' the function \code{\link[base]{subset}}.
-#' @param x An object of class \code{sem_graph}.
-#' @param subset logical expression indicating elements or rows to keep:
-#' missing values are taken as false.
-#' @param select Expression, indicating columns to select from a data frame.
-#' @param element Character. The element of the \code{sem_graph} to filter,
-#' defaults to \code{"edges"}.
-#' @param ... Arguments passed on to \code{\link[base]{within}}.
+# @title Filter graph elements
+# @description Apply a filter to one of the elements
+# of a \code{sem_graph} object, and return the modified \code{sem_graph}. Uses
+# the function \code{\link{subset}}.
+# @param x An object of class \code{sem_graph}.
+# @param subset logical expression indicating elements or rows to keep:
+# missing values are taken as false.
+# @param select Expression, indicating columns to select from a data frame.
+# @param element Character. The element of the \code{sem_graph} to filter,
+# defaults to \code{"edges"}.
+# @param ... Arguments passed on to \code{\link{within}}.
 # @return An object of class \code{sem_graph}.
 # @examples
-# \dontrun{
-# if(interactive()){
-#  #EXAMPLE1
-#  }
-# }
+# library(lavaan)
+# res <- sem("Sepal.Length ~ Petal.Length + Petal.Width", iris)
+# p <- filter_graph(p, !arrow == "none")
+# plot(p)
+
 # @rdname filter_graph
 # @export
 filter_graph <- function(x, subset, select, element = "edges", ...){
@@ -42,14 +42,12 @@ filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
 #' @param expr expression to evaluate.
 #' @param element Character. The element of the \code{sem_graph} to edit,
 #' defaults to \code{"edges"}.
-#' @param ... Arguments passed on to \code{\link[base]{within}}.
+#' @param ... Arguments passed on to \code{\link{within}}.
 #' @return An object of class \code{sem_graph}.
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' p <- prepare_graph(layout = get_layout("x", rows = 1))
+#' p <- edit_graph(p, {colour = "blue"}, element = "nodes")
+#' plot(p)
 #' @rdname edit_graph
 #' @export
 edit_graph <- function(x, expr, element = "edges", ...){
@@ -85,13 +83,10 @@ edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
 #' \code{plot}. The alternative interface first runs
 #' \code{\link[tidySEM]{get_nodes}} and \code{\link[tidySEM]{get_edges}} on
 #' the \code{model} argument.
-#'
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' library(lavaan)
+#' res <- sem("dist ~ speed", cars)
+#' graph_sem(res)
 #' @rdname graph_sem
 #' @keywords tidy_graph
 #' @export
@@ -217,11 +212,9 @@ graph_model <- function(model, ...) {
 # Default: "euclidean", but could be set to "manhattan".
 #' @return Object of class 'sem_graph'
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' library(lavaan)
+#' res <- sem("dist ~ speed", cars)
+#' prepare_graph(res)
 #' @rdname prepare_graph
 #' @export
 prepare_graph <- function(...){
@@ -594,11 +587,9 @@ matrix_to_nodes <- function(nodes, shape){
 #' @param ... Additional parameters to be passed to and from other functions.
 #' @return An object of class 'tidy_nodes'
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' library(lavaan)
+#' res <- sem("dist ~ speed", cars)
+#' get_nodes(res)
 #' @rdname get_nodes
 #' @keywords tidy_graph
 #' @export
@@ -673,11 +664,9 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
 #' @param ... Additional parameters to be passed to and from other functions.
 #' @return An object of class 'tidy_edges'
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' library(lavaan)
+#' res <- sem("dist ~ speed", cars)
+#' get_edges(res)
 #' @rdname get_edges
 #' @keywords tidy_graph
 #' @export

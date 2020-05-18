@@ -2,9 +2,21 @@
 % Please edit documentation in R/syntax-create_scales.R
 \name{create_scales}
 \alias{create_scales}
+\alias{create_scales.tidy_sem}
 \title{Create scale scores from observed variables}
 \usage{
 create_scales(
+  x,
+  keys.list,
+  missing = TRUE,
+  impute = "none",
+  omega = NULL,
+  write_files = FALSE,
+  digits = 2,
+  ...
+)
+
+\method{create_scales}{tidy_sem}(
   x,
   keys.list,
   missing = TRUE,
@@ -59,4 +71,6 @@ It relies on several functions from the
 out <- create_scales(iris, keys.list = list(scalename =
             c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")))
 out$descriptives
+dict <- tidy_sem(iris, split = "\\\\.")
+create_scales(dict)
 }

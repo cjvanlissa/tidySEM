@@ -22,3 +22,7 @@ Provides access to the \code{dictionary} element of a
 \code{tidy_sem} object. This can be used to return or assign to the
 \code{dictionary} element.
 }
+\examples{
+dict <- tidy_sem(iris, split = "\\\\.")
+dictionary(dict)
+}

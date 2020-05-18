@@ -102,10 +102,8 @@ The default interface simply Runs the functions
 the \code{model} argument.
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+library(lavaan)
+res <- sem("dist ~ speed", cars)
+graph_sem(res)
 }
 \keyword{tidy_graph}

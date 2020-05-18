@@ -23,10 +23,8 @@ Attempts to extract edges from a SEM model object, where edges
 are defined as regression paths and covariances between variables (nodes).
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+library(lavaan)
+res <- sem("dist ~ speed", cars)
+get_edges(res)
 }
 \keyword{tidy_graph}

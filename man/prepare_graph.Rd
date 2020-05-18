@@ -99,9 +99,7 @@ Input consists of (at least) a layout, and either nodes and edges, or
 a model object.
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+library(lavaan)
+res <- sem("dist ~ speed", cars)
+prepare_graph(res)
 }

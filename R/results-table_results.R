@@ -247,8 +247,9 @@ lavaan_labels <- function(x){
 
 #' Add significance asterisks to object
 #'
-#' Takes a model object, and adds significance asterisks to the estimate column.
-#' @param x A model object for which a method exists.
+#' Takes an object, and adds significance asterisks.
+#' @param x An object for which a method exists. This will be treated as numeric
+#' by the default method.
 #' @param digits Integer. The number of digits to round the estimate column to.
 #' @param sig Optional, a vector of p-values for the default method.
 #' @return A character vector of formatted estimates.
@@ -286,8 +287,8 @@ est_sig.mplus.params <- function(x, digits = 2, sig = NULL){
 
 #' Format confidence intervals
 #'
-#' Creates APA-formated confidence intervals, either from an object for which a
-#' method exists, or from the arguments \code{lb} and \code{ub}. When argument
+#' Creates 'APA'-formated confidence intervals, either from an object for which
+#' a method exists, or from the arguments \code{lb} and \code{ub}. When argument
 #' \code{x} is a numeric vector, it is also possible to construct a confidence
 #' interval using the standard error (\code{se}) and a percentile interval
 #' (\code{ci}).

@@ -22,3 +22,8 @@ Provides access to the \code{edges} element of a
 \code{sem_graph} object. This can be used to return or assign to the
 \code{edges} element.
 }
+\examples{
+edg <- data.frame(from = "x", to = "y")
+p <- prepare_graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+edges(p)
+}

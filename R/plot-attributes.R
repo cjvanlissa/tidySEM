@@ -4,6 +4,10 @@
 #' \code{edges} element.
 #' @param x Object of class sem_graph.
 #' @return data.frame
+#' @examples
+#' edg <- data.frame(from = "x", to = "y")
+#' p <- prepare_graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+#' edges(p)
 #' @rdname edges
 #' @export
 edges <- function(x) UseMethod("edges")
@@ -42,6 +46,10 @@ edges.sem_graph <- function(x) x[["edges"]]
 #' @param x Object of class sem_graph.
 #' @return data.frame
 #' @rdname nodes
+#' @examples
+#' edg <- data.frame(from = "x", to = "y")
+#' p <- prepare_graph(edges = edg, layout = get_layout("x", "y", rows = 1))
+#' nodes(p)
 #' @export
 nodes <- function(x) UseMethod("nodes")
 

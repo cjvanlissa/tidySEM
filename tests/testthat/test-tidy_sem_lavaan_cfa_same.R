@@ -10,7 +10,7 @@ parTable(res1)
 
 
 mod_ts <- measurement(tidy_sem(df))
-res2 <- sem(as.lavaan(mod_ts), data = df)
+res2 <- sem(as_lavaan(mod_ts), data = df)
 
 
 library(testthat)

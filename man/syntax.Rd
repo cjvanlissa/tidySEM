@@ -22,3 +22,8 @@ Provides access to the \code{syntax} element of a
 \code{tidy_sem} object. This can be used to return or assign to the
 \code{syntax} element.
 }
+\examples{
+dict <- tidy_sem(iris, split = "\\\\.")
+dict <- add_paths(dict, Sepal.Width ~~ Sepal.Length)
+syntax(dict)
+}

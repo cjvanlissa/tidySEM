@@ -7,7 +7,8 @@
 est_sig(x, digits = 2, sig = NULL)
 }
 \arguments{
-\item{x}{A model object for which a method exists.}
+\item{x}{An object for which a method exists. This will be treated as numeric
+by the default method.}
 
 \item{digits}{Integer. The number of digits to round the estimate column to.}
 
@@ -17,7 +18,7 @@ est_sig(x, digits = 2, sig = NULL)
 A character vector of formatted estimates.
 }
 \description{
-Takes a model object, and adds significance asterisks to the estimate column.
+Takes an object, and adds significance asterisks.
 }
 \examples{
 est_sig(c(.222, .3333), sig = c(.054, .045))

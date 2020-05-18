@@ -24,10 +24,8 @@ Attempts to extract nodes from a SEM model object, where nodes
 are defined as observed or latent variables.
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+library(lavaan)
+res <- sem("dist ~ speed", cars)
+get_nodes(res)
 }
 \keyword{tidy_graph}

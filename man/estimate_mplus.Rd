@@ -30,7 +30,7 @@ optional. If these are not specified, the model will be run in
 \code{\link{tempdir}}.
 }
 \examples{
-library(lavaan)
+library(MplusAutomation)
 if(tidySEM:::has_mplus()){
   model <- tidy_sem(iris, "\\\\.")
   model <- measurement(model)

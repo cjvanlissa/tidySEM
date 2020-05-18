@@ -14,7 +14,7 @@ edit_graph(x, expr, element = "edges", ...)
 \item{element}{Character. The element of the \code{sem_graph} to edit,
 defaults to \code{"edges"}.}
 
-\item{...}{Arguments passed on to \code{\link[base]{within}}.}
+\item{...}{Arguments passed on to \code{\link{within}}.}
 }
 \value{
 An object of class \code{sem_graph}.
@@ -24,9 +24,7 @@ Evaluate an R expression within the environment of the elements
 of a \code{sem_graph} object, and return the modified \code{sem_graph}.
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+p <- prepare_graph(layout = get_layout("x", rows = 1))
+p <- edit_graph(p, {colour = "blue"}, element = "nodes")
+plot(p)
 }

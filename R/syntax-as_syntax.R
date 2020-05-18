@@ -1,24 +1,23 @@
 #' @title Convert tidy_sem to Mplus syntax
 #' @description Final stage in the tidySEM workflow for syntax generation:
 #' Convert the tidy_sem object to Mplus syntax.
-#' @param x An object of class \code{tidy_sem}
+#' @param x An object of class \code{tidy_sem}.
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname as.mplus
+#' mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(
+#' lhs = "x", op = "~", rhs = "y", free = TRUE)))
+#' class(mod) <- "tidy_sem"
+#' as_mplus(mod)
+#' @rdname as_mplus
 #' @export
-as.mplus <- function(x, ...){
-  UseMethod("as.mplus")
+as_mplus <- function(x, ...){
+  UseMethod("as_mplus")
 }
 
-#' @method as.mplus tidy_sem
+#' @method as_mplus tidy_sem
 #' @export
-as.mplus.tidy_sem <- function(x, ...){
+as_mplus.tidy_sem <- function(x, ...){
   if(!has_syntax(x)) return(NULL)
   if("group" %in% names(x$syntax)){
     stop("Develop")
@@ -80,26 +79,26 @@ as.mplus.tidy_sem <- function(x, ...){
 
 #' @title Convert tidy_sem to lavaan syntax
 #' @description Final stage in the tidySEM workflow for syntax generation:
-#' Convert the tidy_sem object to lavaan syntax.
+#' Convert the tidy_sem object to lavaan syntax in tabular format (see
+#' \code{\link[lavaan]{model.syntax}}).
 #' @param x An object of class \code{tidy_sem}
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname as.lavaan
+#' mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(
+#' lhs = "x", op = "~", rhs = "y", free = TRUE)))
+#' class(mod) <- "tidy_sem"
+#' as_lavaan(mod)
+#' @rdname as_lavaan
 #' @export
-as.lavaan <- function(x, ...){
-  UseMethod("as.lavaan")
+as_lavaan <- function(x, ...){
+  UseMethod("as_lavaan")
 }
 
-#' @method as.lavaan tidy_sem
+#' @method as_lavaan tidy_sem
 #' @export
 #' @importFrom lavaan mplus2lavaan.modelSyntax
-as.lavaan.tidy_sem <- function(x, ...){
+as_lavaan.tidy_sem <- function(x, ...){
   if(!has_syntax(x)) return(NULL)
   tab <- x$syntax
   free_values <- rep(0, nrow(tab))
@@ -117,7 +116,7 @@ as.lavaan.tidy_sem <- function(x, ...){
   tab[, -drop_args]
 }
 
-as.lavaan.tidy_sem3 <- function(x, ...){
+as_lavaan.tidy_sem3 <- function(x, ...){
   if("group" %in% names(x$syntax)){
     stop("Develop")
   }
@@ -130,9 +129,9 @@ as.lavaan.tidy_sem3 <- function(x, ...){
   paste0(x$syntax[["lhs"]], " ", x$syntax[["op"]], " ", ifelse(x$syntax[["free"]], x$syntax[["label"]], x$syntax[["value"]]), " * ", x$syntax[["rhs"]])
 }
 
-as.lavaan.tidy_sem2 <- function(x, ...){
+as_lavaan.tidy_sem2 <- function(x, ...){
   Args <- as.list(match.call()[-1])
-  mplus_syntax <- do.call(as.mplus, Args)
+  mplus_syntax <- do.call(as_mplus, Args)
   out <- paste0(mplus_syntax, collapse = "\n")
   out <- mplus2lavaan.modelSyntax(out)
   out <- strsplit(out, "\n")[[1]]

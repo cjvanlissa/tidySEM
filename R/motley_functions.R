@@ -38,7 +38,6 @@ report <- function(x, digits = 2, equals = TRUE){
 #' @return Named numeric vector with chi-square value, degrees of freedom, and
 #' p-value.
 #' @author Caspar J. van Lissa
-#' @family Mplus functions
 #' @export
 #' @keywords internal
 #' @examples

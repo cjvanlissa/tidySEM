@@ -44,6 +44,10 @@ create_scales <- function(x, keys.list, missing = TRUE, impute = "none",
 }
 
 #' @method create_scales tidy_sem
+#' @rdname create_scales
+#' @examples
+#' dict <- tidy_sem(iris, split = "\\.")
+#' create_scales(dict)
 #' @export
 create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
@@ -51,10 +55,17 @@ create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none"
 {
   Args <- as.list(match.call()[-1])
   Args$x <- x$data
-  sl <- lapply(unique(x$dictionary$scale), function(i){x$dictionary$name[x$dictionary$scale == i]})
-  names(sl) <- unique(x$dictionary$scale)
-  Args$keys.list <- sl
-  do.call(create_scales, Args)
+  scale_names <- unique(c(NA, x$dictionary$scale))[-1]
+  if(length(scale_names) > 0){
+    sl <- lapply(scale_names, function(i){x$dictionary$name[x$dictionary$scale == i & !is.na(x$dictionary$scale)]})
+    names(sl) <- scale_names
+    Args$keys.list <- sl
+    do.call(create_scales, Args)
+  } else {
+    cat("\033[0;31mX  \033[0m")
+    colmsg("No scales found in dictionary.")
+    return(NULL)
+  }
 }
 
 #' @method create_scales data.frame

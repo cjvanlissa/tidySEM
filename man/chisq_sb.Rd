@@ -33,5 +33,4 @@ chisq_sb(24, 78, 1.02, 65, 70, 1.28)
 \author{
 Caspar J. van Lissa
 }
-\concept{Mplus functions}
 \keyword{internal}

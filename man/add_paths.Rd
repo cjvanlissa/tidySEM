@@ -4,13 +4,19 @@
 \alias{add_paths}
 \title{Add paths to an object of class 'tidy_sem'}
 \usage{
-add_paths(model, ...)
+add_paths(model, ..., strict_check = TRUE)
 }
 \arguments{
 \item{model}{An object of class \code{tidy_sem}.}
 
 \item{...}{Paths to add or substitute, specified in
 \code{\link{lavaan}{model.syntax}}, and separated by commas.}
+
+\item{strict_check}{Logical, indicating whether or not to throw an error if
+the variable names referenced in the new paths do not exist in the
+\code{data}, or in the \code{dictionary}, or in the existing \code{syntax}
+element. If \code{strict_check = FALSE}, the check is still performed, but
+throws a \code{warning} instead of an \code{error}.}
 }
 \value{
 An object of class \code{tidy_sem}.
@@ -18,18 +24,21 @@ An object of class \code{tidy_sem}.
 \description{
 Add paths to an object of class \code{tidy_sem}, or replace
 existing paths. The paths must be specified as
-\code{\link{lavaan}{model.syntax}}, and separated by commas.
+\code{\link[lavaan]{model.syntax}}, and separated by commas.
 }
 \details{
 Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
 ~~, =~,} and \code{~1} are parsed.
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+library(lavaan)
+df <- iris[, 1:4]
+names(df) <- paste0("x_", 1:4)
+model <- tidy_sem(df)
+model <- measurement(model)
+model <- add_paths(model, x =~ a*x_1 + b*x_2 + a*x_3 + b*x_4)
+res <- estimate_lavaan(model)
+summary(res)
 }
 \seealso{
 \code{\link[lavaan]{model.syntax}}

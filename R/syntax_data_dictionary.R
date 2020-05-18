@@ -1,15 +1,29 @@
-#' Make a data dictionary
+#' Create a tidy_sem object
 #'
-#' Make a data dictionary for a data.frame, based on variable names.
-# Attempts to generate a keys.list, as used by functions from the \code{psych}
-# package, and several functions in this \code{motley} package.
-#'
+#' Create an object of class \code{tidy_sem}, which has the following elements:
+#' \itemize{
+#' \item{dictionary} An overview of the variables in the \code{tidy_sem} object,
+#' and their assignment to scale/latent variables.
+#' \item{data} Optionally, the \code{data.frame} containing the data referenced
+#' in \code{$dictionary}.
+#' \item{syntax} Optionally, syntax defining a SEM-model by reference to the
+#' variables contained in \code{$data}.
+#' }
+#' @details When \code{tidy_sem} is called on a \code{character} string or
+#' \code{data.frame}, it attempts to assign variables to superordinate
+#' scale/latent variables based on the variable name and the splitting character
+#' defined in the \code{split} argument. Thus, the function will assign the
+#' variable \code{"scale_01"} to a scale/latent variable called \code{"scale"}
+#' when \code{split = "_"}.  Alternatively, if the variable name is
+#' \code{"construct.1"}, the split character \code{"\\."} separates
+#' the \code{"construct"} name from item number \code{"1"}. The character
+#' \code{"."} is escaped with a double backslash, because it is a special
+#' character in regular expressions.
 #' @param x An object for which a method exists, e.g., a vector of variable
 #' names, or a data.frame.
-#' @param split Character. Within variable names, which character separates the
-#' name of the scale/construct from the number (or name) of the item? E.g.,
-#' if the name is \code{"construct_1"}, the split character \code{"_"} separates
-#' the \code{"construct"} name from item number \code{"1"}.
+#' @param split Character. Defining the regular expression used by
+#' \code{\link{strsplit}} to separate variable names into 1) the
+#' name of the scale/construct and 2) the number (or name) of the item.
 #' @return An object of class "tidy_sem"
 #' @author Caspar J. van Lissa
 #' @export

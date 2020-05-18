@@ -26,8 +26,8 @@ computing CI from a numeric vector \code{x}, and the standard error
 A character vector of formatted confidence intervals.
 }
 \description{
-Creates APA-formated confidence intervals, either from an object for which a
-method exists, or from the arguments \code{lb} and \code{ub}. When argument
+Creates 'APA'-formated confidence intervals, either from an object for which
+a method exists, or from the arguments \code{lb} and \code{ub}. When argument
 \code{x} is a numeric vector, it is also possible to construct a confidence
 interval using the standard error (\code{se}) and a percentile interval
 (\code{ci}).

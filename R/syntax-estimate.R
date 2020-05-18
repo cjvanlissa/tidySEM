@@ -11,18 +11,16 @@
 #' @examples
 #' library(lavaan)
 #' model <- tidy_sem(iris, "\\.")
-#' model <- measurement(model)
-# DOes not work yet:
-# model <- add_paths(model, sepal =~ a*sepal.length, sepal =~ a*sepal.width,
-#                   petal =~ b*petal.length, petal =~ b*petal.width)
-#' estimate_lavaan(model)
+#' model <- measurement(model, center = F, scale = F)
+#' res <- estimate_lavaan(model)
+#' summary(res)
 #' @rdname estimate_lavaan
 #' @export
 estimate_lavaan <- function(x, func = "sem", ...){
   if(!has_data(x)) return(NULL)
   if(!has_syntax(x)) return(NULL)
   Args <- c(list(
-    model = do.call(as.lavaan, list(x = x)),
+    model = do.call(as_lavaan, list(x = x)),
     data = x$data),
     list(...))
   do.call(func, Args)
@@ -44,7 +42,7 @@ estimate_lavaan <- function(x, func = "sem", ...){
 #' \code{\link{tempdir}}.
 #' @return An object of class \code{mplusObject}.
 #' @examples
-#' library(lavaan)
+#' library(MplusAutomation)
 #' if(tidySEM:::has_mplus()){
 #'   model <- tidy_sem(iris, "\\.")
 #'   model <- measurement(model)
@@ -62,7 +60,7 @@ estimate_mplus <- function(x, ...){
   dots <- list(...)
   Args_mplusobject <- dots[which(names(dots) %in% c("TITLE", "DATA", "VARIABLE", "DEFINE", "MONTECARLO", "MODELPOPULATION", "MODELMISSING", "ANALYSIS", "MODELINDIRECT", "MODELCONSTRAINT", "MODELTEST", "MODELPRIORS", "OUTPUT", "SAVEDATA", "PLOT", "usevariables", "autov", "imputed"))]
   Args_mplusobject$rdata <- x$data
-  Args_mplusobject$MODEL <- do.call(as.mplus, list(x = x))
+  Args_mplusobject$MODEL <- do.call(as_mplus, list(x = x))
   Args_mplusmodeler <- dots[which(names(dots) %in% c("dataout", "modelout", "run", "check", "varwarnings", "Mplus_command", "writeData", "hashfilename"))]
   Args_mplusmodeler$object <- do.call(mplusObject, Args_mplusobject)
   run_in_temp <- FALSE
