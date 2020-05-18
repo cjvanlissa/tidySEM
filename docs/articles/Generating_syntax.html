@@ -95,19 +95,6 @@
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidySEM</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lavaan</span>)
-<span class="co">#&gt; This is lavaan 0.6-5</span>
-<span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span></pre></body></html></div>
 <p><code>tidySEM</code> offers a user-friendly, tidy workflow for generating syntax for SEM models. The workflow is top-down, meaning that syntax is generated based on conceptual model elements. In many cases, the generated syntax will suffice - but it is always customizable. The workflow also tries to intelligently guess which variables go together, but these defaults can be overridden.</p>
 <div id="the-tidysem-workflow" class="section level2">
 <h2 class="hasAnchor">
@@ -115,25 +102,33 @@
 <p>The workflow underlying syntax generation in <code>tidySEM</code> is as follows:</p>
 <ol style="list-style-type: decimal">
 <li>Give the variables in your <code>data</code> object short, informative names, that are easily machine readable</li>
-<li>Generate a data dictionary by running <code>dict &lt;- get_dictionary(data)</code> <!--    * The `data_dictionary` called `dict` can be used to generate `keys(dict)`, for use with functions (reliability, factor analysis) from the `psych` library
+<li>Convert the data to a <code>tidy_sem</code> obejct by running <code>model &lt;- tidy_sem(data)</code> <!--    * The `data_dictionary` called `dict` can be used to generate `keys(dict)`, for use with functions (reliability, factor analysis) from the `psych` library
     * The `data_dictionary` called `dict` can be used to generate syntax for structural equation models in `lavaan` or Mplus (through `MplusAutomation`)-->
 </li>
-<li>Convert the <code>data_dictionary</code> to a <code>sem_syntax</code> object by adding elements of syntax
+<li>Add elements of syntax
 <ul>
-<li>E.g., <code>dict %&gt;% cfa() -&gt; model</code>
+<li>E.g., <code><a href="../reference/measurement.html">measurement(model)</a></code>
 </li>
 </ul>
 </li>
 <li>
-<em>Optionally</em>, access the <code>data_dictionary</code> and <code>syntax</code> elements in the <code>sem_syntax</code> object <code><a href="../reference/dictionary.html">dictionary(model)</a></code> and <code><a href="../reference/syntax.html">syntax(model)</a></code>
+<em>Optionally</em>, access the <code>dictionary</code>, <code>data</code>, and <code>syntax</code> elements in the <code>tidy_sem</code> object by calling <code><a href="../reference/dictionary.html">dictionary(model)</a></code>, <code><a href="../reference/get_data.html">get_data(model)</a></code>, or <code><a href="../reference/syntax.html">syntax(model)</a></code>
 </li>
 <li>
-<em>Optionally</em>, modify the <code>data_dictionary</code> and <code>syntax</code> elements in the <code>sem_syntax</code> object <code>dictionary(model) &lt;- ...</code> and <code>syntax(model) &lt;- ...</code>
+<em>Optionally</em>, modify the <code>dictionary</code>, <code>data</code>, and <code>syntax</code> elements in the <code>tidy_sem</code> object <code>dictionary(model) &lt;- ...</code>, <code>get_data(model) &lt;- ...</code>, and <code>syntax(model) &lt;- ...</code>
 </li>
-<li>Run an analysis on the generated syntax using <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html">lavaan::sem()</a></code> or <code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">MplusAutomation::mplusObject()</a></code>
+<li>Run the analysis, either by:
+<ul>
+<li>Converting the <code>tidy_sem</code> object to <code>lavaan</code> syntax using <code><a href="../reference/as_lavaan.html">as_lavaan(model)</a></code> and using that as input for the <code>lavaan</code> functions <code>sem</code>, <code>lavaan</code>, or <code>cfa</code>
+</li>
+<li>Converting the <code>tidy_sem</code> object to <code>Mplus</code> using <code><a href="../reference/as_mplus.html">as_mplus(model)</a></code>, and using that as input for <code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">MplusAutomation::mplusObject()</a></code>
+</li>
+<li>Using the functions <code><a href="../reference/estimate_lavaan.html">estimate_lavaan(model)</a></code> or <code><a href="../reference/estimate_mplus.html">estimate_mplus(model)</a></code>
+</li>
+</ul>
 </li>
 </ol>
-<p>Objects returned by all functions are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the <code>tidyverse</code>.</p>
+<p>All elements of the <code>tidy_sem</code> object are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the <code>tidyverse</code>. Thus, the data, dictionary, and syntax are all represented as <code>data.frame</code>s.</p>
 </div>
 <div id="example-running-a-cfa" class="section level2">
 <h2 class="hasAnchor">
@@ -142,16 +137,16 @@
 <h3 class="hasAnchor">
 <a href="#step-1-check-the-variable-names" class="anchor"></a>Step 1: Check the variable names</h3>
 <p>As an example, let’s make a graph for a classic <code>lavaan</code> tutorial example for CFA. First, we check the data names:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">df</span> <span class="kw">&lt;-</span> <span class="no">HolzingerSwineford1939</span>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="no">df</span> <span class="kw">&lt;-</span> <span class="no">HolzingerSwineford1939</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">df</span>)
 <span class="co">#&gt;  [1] "id"     "sex"    "ageyr"  "agemo"  "school" "grade"  "x1"     "x2"    </span>
 <span class="co">#&gt;  [9] "x3"     "x4"     "x5"     "x6"     "x7"     "x8"     "x9"</span></pre></body></html></div>
 <p>These names are not informative, as the items named <code>x..</code> are indicators of three different latent variables. We will rename them accordingly:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">df</span>)[<span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span>(<span class="st">"^x"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">df</span>))] <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"vis_1"</span>, <span class="st">"vis_2"</span>, <span class="st">"vis_3"</span>, <span class="st">"tex_1"</span>, <span class="st">"tex_2"</span>, <span class="st">"tex_3"</span>, <span class="st">"spe_1"</span>, <span class="st">"spe_2"</span>, <span class="st">"spe_3"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">df</span>)[<span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span>(<span class="st">"^x"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">df</span>))] <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"vis_1"</span>, <span class="st">"vis_2"</span>, <span class="st">"vis_3"</span>, <span class="st">"tex_1"</span>, <span class="st">"tex_2"</span>, <span class="st">"tex_3"</span>, <span class="st">"spe_1"</span>, <span class="st">"spe_2"</span>, <span class="st">"spe_3"</span>)</pre></body></html></div>
 </div>
-<div id="general-rules-for-naming-variables" class="section level3">
+<div id="guidelines-for-naming-variables" class="section level3">
 <h3 class="hasAnchor">
-<a href="#general-rules-for-naming-variables" class="anchor"></a>General rules for naming variables</h3>
+<a href="#guidelines-for-naming-variables" class="anchor"></a>Guidelines for naming variables</h3>
 <p>In general, it is good practice to name variables using the following information:</p>
 <ul>
 <li>Scale name (or if the variable is not part of a scale, observed variable name)</li>
@@ -159,30 +154,18 @@
 <li>Respondent id (if multiple respondents completed the same scales)</li>
 <li>Scale item number, which <code>tidySEM</code> expects to be separated from the remainder of the variable name by a splitting character (e.g., <code>scale_item</code>)</li>
 </ul>
-<p>Roughly speaking, the elements of the variable name are ordered from “slow-changing” to “fast-changing”; i.e.; there are only a few scales, with possibly several measurement occasions or respondents, and many items.</p>
+<p>Roughly speaking, elements of the variable name should be ordered from “slow-changing” to “fast-changing”; i.e.; there are only a few scales, with possibly several measurement occasions or respondents, and many items.</p>
 </div>
 <div id="step-2-generate-a-dictionary" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2-generate-a-dictionary" class="anchor"></a>Step 2: Generate a dictionary</h3>
-<p>Thanks to the informative names we’ve given the data, we can easily construct a data dictionary:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">dict</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_dictionary.html">get_dictionary</a></span>(<span class="no">df</span>)
-<span class="no">dict</span>
-<span class="co">#&gt;      name scale     type  label</span>
-<span class="co">#&gt; 1      id  &lt;NA&gt; observed     id</span>
-<span class="co">#&gt; 2     sex  &lt;NA&gt; observed    sex</span>
-<span class="co">#&gt; 3   ageyr  &lt;NA&gt; observed  ageyr</span>
-<span class="co">#&gt; 4   agemo  &lt;NA&gt; observed  agemo</span>
-<span class="co">#&gt; 5  school  &lt;NA&gt; observed school</span>
-<span class="co">#&gt; 6   grade  &lt;NA&gt; observed  grade</span>
-<span class="co">#&gt; 7   vis_1   vis observed  vis_1</span>
-<span class="co">#&gt; 8   vis_2   vis observed  vis_2</span>
-<span class="co">#&gt; 9   vis_3   vis observed  vis_3</span>
-<span class="co">#&gt; 10  tex_1   tex observed  tex_1</span>
-<span class="co">#&gt; 11  tex_2   tex observed  tex_2</span>
-<span class="co">#&gt; 12  tex_3   tex observed  tex_3</span>
-<span class="co">#&gt; 13  spe_1   spe observed  spe_1</span>
-<span class="co">#&gt; 14  spe_2   spe observed  spe_2</span>
-<span class="co">#&gt; 15  spe_3   spe observed  spe_3</span></pre></body></html></div>
+<p>A dictionary indicates which variables in the data belong to, for example, the same scale. When the data have informative names, it is possible to construct a data dictionary automatically:</p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/tidy_sem.html">tidy_sem</a></span>(<span class="no">df</span>)
+<span class="no">model</span>
+<span class="co">#&gt; A tidy_sem object</span>
+<span class="co">#&gt; [0;30m[0;32mv  [0m  $dictionary[0m</span>
+<span class="co">#&gt; [0;30m[0;32mv  [0m  $data[0m</span>
+<span class="co">#&gt; [0;30m[0;37mo  [0m  $syntax[0m</span></pre></body></html></div>
 <!--### Optional: Get reliability from psych
 
 Using the data dictionary, we can easily get a keys list for use with functions from the `psych` library, such as `psych::alpha()`:
@@ -196,55 +179,38 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <div id="step-3-generate-syntax" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3-generate-syntax" class="anchor"></a>Step 3: Generate syntax</h3>
-<p>We can convert the <code>data_dict</code> object to <code>sem_syntax</code>, simply by adding a first syntax element; in this case, a measurement model:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">dict</span> <span class="kw">%&gt;%</span>
+<p>We can automatically add basic syntax to the <code>sem_syntax</code> object, by passing it to a syntax-generating function like <code><a href="../reference/measurement.html">measurement()</a></code>, which adds a measurement model for any scales in the object:</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/measurement.html">measurement</a></span>() <span class="kw">-&gt;</span> <span class="no">model</span>
 <span class="no">model</span>
-<span class="co">#&gt;      lhs op   rhs  free value    category             aspect</span>
-<span class="co">#&gt; 1    vis =~ vis_1 FALSE     1 measurement           loadings</span>
-<span class="co">#&gt; 2    vis =~ vis_2  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 3    vis =~ vis_3  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 4    vis ~1       FALSE     0 measurement             center</span>
-<span class="co">#&gt; 5    vis ~~   vis  TRUE     1 measurement              scale</span>
-<span class="co">#&gt; 6  vis_1 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 7  vis_2 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 8  vis_3 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 9  vis_1 ~~ vis_1  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 10 vis_2 ~~ vis_2  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 11 vis_3 ~~ vis_3  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 12   tex =~ tex_1 FALSE     1 measurement           loadings</span>
-<span class="co">#&gt; 13   tex =~ tex_2  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 14   tex =~ tex_3  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 15   tex ~1       FALSE     0 measurement             center</span>
-<span class="co">#&gt; 16   tex ~~   tex  TRUE     1 measurement              scale</span>
-<span class="co">#&gt; 17 tex_1 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 18 tex_2 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 19 tex_3 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 20 tex_1 ~~ tex_1  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 21 tex_2 ~~ tex_2  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 22 tex_3 ~~ tex_3  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 23   spe =~ spe_1 FALSE     1 measurement           loadings</span>
-<span class="co">#&gt; 24   spe =~ spe_2  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 25   spe =~ spe_3  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 26   spe ~1       FALSE     0 measurement             center</span>
-<span class="co">#&gt; 27   spe ~~   spe  TRUE     1 measurement              scale</span>
-<span class="co">#&gt; 28 spe_1 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 29 spe_2 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 30 spe_3 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 31 spe_1 ~~ spe_1  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 32 spe_2 ~~ spe_2  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 33 spe_3 ~~ spe_3  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 41   vis ~~   tex  TRUE     0  covariance         covariance</span>
-<span class="co">#&gt; 71   vis ~~   spe  TRUE     0  covariance         covariance</span>
-<span class="co">#&gt; 81   tex ~~   spe  TRUE     0  covariance         covariance</span></pre></body></html></div>
+<span class="co">#&gt; A tidy_sem object</span>
+<span class="co">#&gt; [0;30m[0;32mv  [0m  $dictionary[0m</span>
+<span class="co">#&gt; [0;30m[0;32mv  [0m  $data[0m</span>
+<span class="co">#&gt; [0;30m[0;32mv  [0m  $syntax[0m</span></pre></body></html></div>
 </div>
 <div id="step-4-run-the-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-4-run-the-model" class="anchor"></a>Step 4: Run the model</h3>
-<p>The resulting model can be evaluated as Mplus syntax or lavaan syntax, using the <code>as.mplus</code> and <code>as.lavaan</code> functions. For example, using lavaan:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html">sem</a></span>(<span class="fu"><a href="../reference/as.lavaan.html">as.lavaan</a></span>(<span class="no">model</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>)
+<p>The resulting model can be evaluated as Mplus syntax or lavaan syntax, using the <code>as_mplus</code> and <code>as_lavaan</code> functions. For example, using lavaan:</p>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu">lavaan</span>(<span class="fu"><a href="../reference/as_lavaan.html">as_lavaan</a></span>(<span class="no">model</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">res</span>, <span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; lavaan 0.6-5 ended normally after 89 iterations</span>
+<span class="co">#&gt; lavaan 0.6-5 ended normally after 20 iterations</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Estimator                                         ML</span>
+<span class="co">#&gt;   Optimization method                           NLMINB</span>
+<span class="co">#&gt;   Number of free parameters                         30</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Number of observations                           301</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt; Model Test User Model:</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Test statistic                                85.306</span>
+<span class="co">#&gt;   Degrees of freedom                                24</span>
+<span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
+<p>Or, alternatively, the model can be estimated using the <code>lavaan</code> wrapper <code><a href="../reference/estimate_lavaan.html">estimate_lavaan()</a></code>:</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>()
+<span class="co">#&gt; lavaan 0.6-5 ended normally after 20 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
@@ -258,51 +224,31 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <span class="co">#&gt;   Degrees of freedom                                24</span>
 <span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
 <p>The same model can be estimated in Mplus through the R-package <code>MplusAutomation</code>. This requires Mplus to be installed.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">MplusAutomation</span>)
-<span class="co">#&gt; Version:  0.7-3</span>
-<span class="co">#&gt; We work hard to write this free software. Please help us get credit by citing: </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; -- see citation("MplusAutomation").</span>
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">mplusModeler</a></span>(
-  <span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">mplusObject</a></span>(
-    <span class="kw">MODEL</span> <span class="kw">=</span> <span class="fu"><a href="../reference/as.mplus.html">as.mplus</a></span>(<span class="no">model</span>),
-    <span class="kw">rdata</span> <span class="kw">=</span> <span class="no">df</span>
-  ),
-  <span class="kw">modelout</span> <span class="kw">=</span> <span class="st">"model.inp"</span>,
-  <span class="kw">run</span> <span class="kw">=</span> <span class="fl">1L</span>
-  )
-<span class="co">#&gt; R variables selected automatically as any variable name that</span>
-<span class="co">#&gt; occurs in the MODEL, VARIABLE, or DEFINE section.</span>
-<span class="co">#&gt; If any issues, suggest explicitly specifying USEVARIABLES.</span>
-<span class="co">#&gt; A starting point may be:</span>
-<span class="co">#&gt; USEVARIABLES = vis_1 vis_2 vis_3 tex_1 tex_2 tex_3 spe_1 spe_2 spe_3;</span>
-<span class="co">#&gt; Wrote model to: model.inp</span>
-<span class="co">#&gt; File(s) with md5 hash matching data found, using </span>
-<span class="co">#&gt; model_6e617b3d26be9ffaa260f593f0f6d7e3.dat</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Running model: model.inp </span>
-<span class="co">#&gt; System command: C:\WINDOWS\system32\cmd.exe /c cd "." &amp;&amp; "Mplus" "model.inp" </span>
-<span class="co">#&gt; Reading model:  model.out</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">res</span>)
-<span class="co">#&gt; Estimated using ML </span>
-<span class="co">#&gt; Number of obs: 301, number of (free) parameters: 30 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model: Chi2(df = 24) = 85.306, p = 0 </span>
-<span class="co">#&gt; Baseline model: Chi2(df = 36) = 918.852, p = 0 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Fit Indices: </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; CFI = 0.931, TLI = 0.896, SRMR = 0.06 </span>
-<span class="co">#&gt; RMSEA = 0.092, 90% CI [0.071, 0.114], p &lt; .05 = 0.001 </span>
-<span class="co">#&gt; AIC = 7535.49, BIC = 7646.703</span></pre></body></html></div>
+<pre><code>#&gt; [0;32mv  [0m[0;30mMplus is available.[0m
+#&gt; 
+#&gt; Running model: mplus_model.inp 
+#&gt; System command: C:\WINDOWS\system32\cmd.exe /c cd "." &amp;&amp; "Mplus" "mplus_model.inp" 
+#&gt; Reading model:  mplus_model.out</code></pre>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">MplusAutomation</span>)
+<span class="no">model</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/estimate_mplus.html">estimate_mplus</a></span>()</pre></body></html></div>
+<pre><code>#&gt; Estimated using ML 
+#&gt; Number of obs: 301, number of (free) parameters: 30 
+#&gt; 
+#&gt; Model: Chi2(df = 24) = 85.306, p = 0 
+#&gt; Baseline model: Chi2(df = 36) = 918.852, p = 0 
+#&gt; 
+#&gt; Fit Indices: 
+#&gt; 
+#&gt; CFI = 0.931, TLI = 0.896, SRMR = 0.06 
+#&gt; RMSEA = 0.092, 90% CI [0.071, 0.114], p &lt; .05 = 0.001 
+#&gt; AIC = 7535.49, BIC = 7646.703</code></pre>
 </div>
-<div id="optional-step-5-access-the-dictionary-and-syntax" class="section level3">
+<div id="optional-step-5-access-the-dictionary-data-and-syntax" class="section level3">
 <h3 class="hasAnchor">
-<a href="#optional-step-5-access-the-dictionary-and-syntax" class="anchor"></a>Optional step 5: Access the dictionary and syntax</h3>
+<a href="#optional-step-5-access-the-dictionary-data-and-syntax" class="anchor"></a>Optional step 5: Access the dictionary, data, and syntax</h3>
 <p>The dictionary and syntax can be examined using <code><a href="../reference/dictionary.html">dictionary(model)</a></code> and <code><a href="../reference/syntax.html">syntax(model)</a></code>:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/dictionary.html">dictionary</a></span>(<span class="no">model</span>)
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="../reference/dictionary.html">dictionary</a></span>(<span class="no">model</span>)
 <span class="co">#&gt;      name scale      type  label</span>
 <span class="co">#&gt; 1      id  &lt;NA&gt;  observed     id</span>
 <span class="co">#&gt; 2     sex  &lt;NA&gt;  observed    sex</span>
@@ -322,51 +268,51 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <span class="co">#&gt; 16    vis  &lt;NA&gt;    latent    vis</span>
 <span class="co">#&gt; 17    tex  &lt;NA&gt;    latent    tex</span>
 <span class="co">#&gt; 18    spe  &lt;NA&gt;    latent    spe</span></pre></body></html></div>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>)
-<span class="co">#&gt;      lhs op   rhs  free value    category             aspect</span>
-<span class="co">#&gt; 1    vis =~ vis_1 FALSE     1 measurement           loadings</span>
-<span class="co">#&gt; 2    vis =~ vis_2  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 3    vis =~ vis_3  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 4    vis ~1       FALSE     0 measurement             center</span>
-<span class="co">#&gt; 5    vis ~~   vis  TRUE     1 measurement              scale</span>
-<span class="co">#&gt; 6  vis_1 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 7  vis_2 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 8  vis_3 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 9  vis_1 ~~ vis_1  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 10 vis_2 ~~ vis_2  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 11 vis_3 ~~ vis_3  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 12   tex =~ tex_1 FALSE     1 measurement           loadings</span>
-<span class="co">#&gt; 13   tex =~ tex_2  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 14   tex =~ tex_3  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 15   tex ~1       FALSE     0 measurement             center</span>
-<span class="co">#&gt; 16   tex ~~   tex  TRUE     1 measurement              scale</span>
-<span class="co">#&gt; 17 tex_1 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 18 tex_2 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 19 tex_3 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 20 tex_1 ~~ tex_1  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 21 tex_2 ~~ tex_2  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 22 tex_3 ~~ tex_3  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 23   spe =~ spe_1 FALSE     1 measurement           loadings</span>
-<span class="co">#&gt; 24   spe =~ spe_2  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 25   spe =~ spe_3  TRUE     1 measurement           loadings</span>
-<span class="co">#&gt; 26   spe ~1       FALSE     0 measurement             center</span>
-<span class="co">#&gt; 27   spe ~~   spe  TRUE     1 measurement              scale</span>
-<span class="co">#&gt; 28 spe_1 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 29 spe_2 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 30 spe_3 ~1        TRUE     0 measurement    item_intercepts</span>
-<span class="co">#&gt; 31 spe_1 ~~ spe_1  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 32 spe_2 ~~ spe_2  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 33 spe_3 ~~ spe_3  TRUE     1 measurement residual_variances</span>
-<span class="co">#&gt; 41   vis ~~   tex  TRUE     0  covariance         covariance</span>
-<span class="co">#&gt; 71   vis ~~   spe  TRUE     0  covariance         covariance</span>
-<span class="co">#&gt; 81   tex ~~   spe  TRUE     0  covariance         covariance</span></pre></body></html></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>)
+<span class="co">#&gt;      lhs op   rhs  free value label    category            aspect</span>
+<span class="co">#&gt; 1    vis =~ vis_1  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 2    vis =~ vis_2  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 3    vis =~ vis_3  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 4  vis_1 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 5  vis_2 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 6  vis_3 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 7    vis ~1       FALSE     0       measurement              mean</span>
+<span class="co">#&gt; 8  vis_1 ~~ vis_1  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 9  vis_2 ~~ vis_2  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 10 vis_3 ~~ vis_3  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 11   vis ~~   vis FALSE     1       measurement          variance</span>
+<span class="co">#&gt; 12   tex =~ tex_1  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 13   tex =~ tex_2  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 14   tex =~ tex_3  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 15 tex_1 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 16 tex_2 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 17 tex_3 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 18   tex ~1       FALSE     0       measurement              mean</span>
+<span class="co">#&gt; 19 tex_1 ~~ tex_1  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 20 tex_2 ~~ tex_2  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 21 tex_3 ~~ tex_3  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 22   tex ~~   tex FALSE     1       measurement          variance</span>
+<span class="co">#&gt; 23   spe =~ spe_1  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 24   spe =~ spe_2  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 25   spe =~ spe_3  TRUE             measurement          loadings</span>
+<span class="co">#&gt; 26 spe_1 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 27 spe_2 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 28 spe_3 ~1        TRUE             measurement         intercept</span>
+<span class="co">#&gt; 29   spe ~1       FALSE     0       measurement              mean</span>
+<span class="co">#&gt; 30 spe_1 ~~ spe_1  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 31 spe_2 ~~ spe_2  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 32 spe_3 ~~ spe_3  TRUE     0       measurement variance_residual</span>
+<span class="co">#&gt; 33   spe ~~   spe FALSE     1       measurement          variance</span>
+<span class="co">#&gt; 41   vis ~~   tex  TRUE              covariance        covariance</span>
+<span class="co">#&gt; 71   vis ~~   spe  TRUE              covariance        covariance</span>
+<span class="co">#&gt; 81   tex ~~   spe  TRUE              covariance        covariance</span></pre></body></html></div>
 </div>
 <div id="optional-step-6-modify-the-dictionary-and-syntax" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-6-modify-the-dictionary-and-syntax" class="anchor"></a>Optional step 6: Modify the dictionary and syntax</h3>
 <p>At this stage, we may want to modify the basic syntax slightly. The functions <code>dictionary(model) &lt;- ...</code> and <code>syntax(model) &lt;- ...</code> can be used to modify the dictionary and syntax:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="../reference/dictionary.html">dictionary</a></span>(<span class="no">model</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">label</span> <span class="kw">==</span> <span class="st">"vis"</span>, <span class="st">"Visual"</span>, <span class="no">label</span>))
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/dictionary.html">dictionary</a></span>(<span class="no">model</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">label</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">label</span> <span class="kw">==</span> <span class="st">"vis"</span>, <span class="st">"Visual"</span>, <span class="no">label</span>))
 <span class="co">#&gt;      name scale      type  label</span>
 <span class="co">#&gt; 1      id  &lt;NA&gt;  observed     id</span>
 <span class="co">#&gt; 2     sex  &lt;NA&gt;  observed    sex</span>
@@ -387,55 +333,12 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <span class="co">#&gt; 17    tex  &lt;NA&gt;    latent    tex</span>
 <span class="co">#&gt; 18    spe  &lt;NA&gt;    latent    spe</span></pre></body></html></div>
 <p>For example, imagine we want to change the model, so that all items of the “spe” subscale load on the “tex” latent variable. We would first replace the latent variable “spe” with “tex”, and secondly remove all mention of the “spe” latent variable:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">lhs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">lhs</span> <span class="kw">==</span> <span class="st">"spe"</span> <span class="kw">&amp;</span> <span class="no">op</span> <span class="kw">==</span> <span class="st">"=~"</span>, <span class="st">"tex"</span>, <span class="no">lhs</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!(<span class="no">lhs</span> <span class="kw">==</span> <span class="st">"spe"</span> <span class="kw">|</span> <span class="no">rhs</span> <span class="kw">==</span> <span class="st">"spe"</span>)) <span class="kw">-&gt;</span> <span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">lhs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">lhs</span> <span class="kw">==</span> <span class="st">"spe"</span> <span class="kw">&amp;</span> <span class="no">op</span> <span class="kw">==</span> <span class="st">"=~"</span>, <span class="st">"tex"</span>, <span class="no">lhs</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!(<span class="no">lhs</span> <span class="kw">==</span> <span class="st">"spe"</span> <span class="kw">|</span> <span class="no">rhs</span> <span class="kw">==</span> <span class="st">"spe"</span>)) <span class="kw">-&gt;</span> <span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>)</pre></body></html></div>
 <p>The modified model could then be run:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html">sem</a></span>(<span class="fu"><a href="../reference/as.lavaan.html">as.lavaan</a></span>(<span class="no">model</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">res</span>, <span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; lavaan 0.6-5 ended normally after 83 iterations</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   Estimator                                         ML</span>
-<span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         27</span>
-<span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Number of observations                           301</span>
-<span class="co">#&gt;                                                       </span>
-<span class="co">#&gt; Model Test User Model:</span>
-<span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Test statistic                               330.994</span>
-<span class="co">#&gt;   Degrees of freedom                                27</span>
-<span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
-</div>
-<div id="optional-step-7-adding-paths" class="section level3">
-<h3 class="hasAnchor">
-<a href="#optional-step-7-adding-paths" class="anchor"></a>Optional step 7: Adding paths</h3>
-<p>In addition to the way of editing the <code>data.frame</code> with model syntax described in Step 6, it is also possible to add (or modify) paths by adding <code>lavaan</code> syntax. For example, imagine that - instead of having “vis” and “tex” correlate, we want to add a regression path between them:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span>(<span class="st">"vis ~ tex"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/as.lavaan.html">as.lavaan</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html">sem</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; lavaan 0.6-5 ended normally after 82 iterations</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   Estimator                                         ML</span>
-<span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         27</span>
-<span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Number of observations                           301</span>
-<span class="co">#&gt;                                                       </span>
-<span class="co">#&gt; Model Test User Model:</span>
-<span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Test statistic                               330.994</span>
-<span class="co">#&gt;   Degrees of freedom                                27</span>
-<span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
-<p>This function accepts both quoted (character) and unquoted arguments. So, for example, if we want to add a cross-loading from “spe_1” on “vis”, in addition to the regression path before, we could use the following code:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span>(<span class="st">"vis ~ tex"</span>, <span class="kw">vis</span> <span class="kw">=</span>~ <span class="no">spe_1</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/as.lavaan.html">as.lavaan</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html">sem</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; lavaan 0.6-5 ended normally after 91 iterations</span>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>(<span class="no">model</span>)
+<span class="co">#&gt; lavaan 0.6-5 ended normally after 19 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
@@ -445,8 +348,100 @@ psych::alpha(df, keys = tidySEM:::keys(dict))
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt; Model Test User Model:</span>
 <span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Test statistic                               293.954</span>
+<span class="co">#&gt;   Test statistic                               236.091</span>
 <span class="co">#&gt;   Degrees of freedom                                26</span>
+<span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
+</div>
+<div id="optional-step-7-adding-paths" class="section level3">
+<h3 class="hasAnchor">
+<a href="#optional-step-7-adding-paths" class="anchor"></a>Optional step 7: Adding paths</h3>
+<p>In addition to the way of editing the <code>data.frame</code> with model syntax described in Step 6, it is also possible to add (or modify) paths by adding <code>lavaan</code> syntax. For example, imagine that - instead of having “vis” and “tex” correlate, we want to add a regression path between them:</p>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span>(<span class="st">"vis ~ tex"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="co">#&gt; lavaan 0.6-5 ended normally after 20 iterations</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Estimator                                         ML</span>
+<span class="co">#&gt;   Optimization method                           NLMINB</span>
+<span class="co">#&gt;   Number of free parameters                         28</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Number of observations                           301</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt; Model Test User Model:</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Test statistic                               236.091</span>
+<span class="co">#&gt;   Degrees of freedom                                26</span>
+<span class="co">#&gt;   P-value (Chi-square)                           0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Parameter Estimates:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Information                                 Expected</span>
+<span class="co">#&gt;   Information saturated (h1) model          Structured</span>
+<span class="co">#&gt;   Standard errors                             Standard</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Latent Variables:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;   vis =~                                              </span>
+<span class="co">#&gt;     vis_1             0.799    0.085    9.384    0.000</span>
+<span class="co">#&gt;     vis_2             0.440    0.069    6.361    0.000</span>
+<span class="co">#&gt;     vis_3             0.559    0.068    8.265    0.000</span>
+<span class="co">#&gt;   tex =~                                              </span>
+<span class="co">#&gt;     tex_1             0.987    0.057   17.428    0.000</span>
+<span class="co">#&gt;     tex_2             1.095    0.063   17.440    0.000</span>
+<span class="co">#&gt;     tex_3             0.915    0.054   17.056    0.000</span>
+<span class="co">#&gt;     spe_1             0.196    0.066    2.970    0.003</span>
+<span class="co">#&gt;     spe_2             0.195    0.061    3.193    0.001</span>
+<span class="co">#&gt;     spe_3             0.296    0.060    4.910    0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Regressions:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;   vis ~                                               </span>
+<span class="co">#&gt;     tex               0.552    0.094    5.886    0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Intercepts:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;    .vis_1             4.936    0.067   73.473    0.000</span>
+<span class="co">#&gt;    .vis_2             6.088    0.068   89.855    0.000</span>
+<span class="co">#&gt;    .vis_3             2.250    0.065   34.579    0.000</span>
+<span class="co">#&gt;    .vis               0.000                           </span>
+<span class="co">#&gt;    .tex_1             3.061    0.067   45.694    0.000</span>
+<span class="co">#&gt;    .tex_2             4.341    0.074   58.452    0.000</span>
+<span class="co">#&gt;    .tex_3             2.186    0.063   34.667    0.000</span>
+<span class="co">#&gt;     tex               0.000                           </span>
+<span class="co">#&gt;    .spe_1             4.186    0.063   66.766    0.000</span>
+<span class="co">#&gt;    .spe_2             5.527    0.058   94.854    0.000</span>
+<span class="co">#&gt;    .spe_3             5.374    0.058   92.546    0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Variances:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;    .vis_1             0.526    0.127    4.136    0.000</span>
+<span class="co">#&gt;    .vis_2             1.129    0.102   11.030    0.000</span>
+<span class="co">#&gt;    .vis_3             0.867    0.094    9.237    0.000</span>
+<span class="co">#&gt;    .vis               1.000                           </span>
+<span class="co">#&gt;    .tex_1             0.376    0.048    7.885    0.000</span>
+<span class="co">#&gt;    .tex_2             0.461    0.059    7.871    0.000</span>
+<span class="co">#&gt;    .tex_3             0.358    0.043    8.334    0.000</span>
+<span class="co">#&gt;     tex               1.000                           </span>
+<span class="co">#&gt;    .spe_1             1.145    0.094   12.216    0.000</span>
+<span class="co">#&gt;    .spe_2             0.984    0.081   12.207    0.000</span>
+<span class="co">#&gt;    .spe_3             0.928    0.077   12.121    0.000</span></pre></body></html></div>
+<p>This function accepts both quoted (character) and unquoted arguments. So, for example, if we want to add a cross-loading from “spe_1” on “vis”, in addition to the regression path before, we could use the following code:</p>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span>(<span class="st">"vis ~ tex"</span>, <span class="kw">vis</span> <span class="kw">=</span>~ <span class="no">spe_1</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>()
+<span class="co">#&gt; lavaan 0.6-5 ended normally after 20 iterations</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Estimator                                         ML</span>
+<span class="co">#&gt;   Optimization method                           NLMINB</span>
+<span class="co">#&gt;   Number of free parameters                         29</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Number of observations                           301</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt; Model Test User Model:</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Test statistic                               235.995</span>
+<span class="co">#&gt;   Degrees of freedom                                25</span>
 <span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
 </div>
 </div>

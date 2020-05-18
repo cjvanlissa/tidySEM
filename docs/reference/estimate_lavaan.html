@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add significance asterisks to object — est_sig • tidySEM</title>
+<title>Estimate tidy_sem using 'lavaan' — estimate_lavaan • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,11 @@
 
 
 
-<meta property="og:title" content="Add significance asterisks to object — est_sig" />
-<meta property="og:description" content="Takes an object, and adds significance asterisks." />
+<meta property="og:title" content="Estimate tidy_sem using 'lavaan' — estimate_lavaan" />
+<meta property="og:description" content="This function is a wrapper for the lavaan
+estimating functions. By default, the wrapper uses sem,
+but users can also specify lavaan,
+cfa, or growth." />
 
 
 
@@ -126,47 +129,98 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add significance asterisks to object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/results-table_results.R'><code>R/results-table_results.R</code></a></small>
-    <div class="hidden name"><code>est_sig.Rd</code></div>
+    <h1>Estimate tidy_sem using 'lavaan'</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-estimate.R'><code>R/syntax-estimate.R</code></a></small>
+    <div class="hidden name"><code>estimate_lavaan.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes an object, and adds significance asterisks.</p>
+    <p>This function is a wrapper for the <code><a href='https://rdrr.io/pkg/lavaan/man/lavaan.html'>lavaan</a></code>
+estimating functions. By default, the wrapper uses <code><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></code>,
+but users can also specify <code><a href='https://rdrr.io/pkg/lavaan/man/lavaan.html'>lavaan</a></code>,
+<code><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></code>, or <code><a href='https://rdrr.io/pkg/lavaan/man/growth.html'>growth</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>est_sig</span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sig</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>estimate_lavaan</span>(<span class='no'>x</span>, <span class='kw'>func</span> <span class='kw'>=</span> <span class='st'>"sem"</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object for which a method exists. This will be treated as numeric
-by the default method.</p></td>
+      <td><p>An object of class <code>tidy_sem</code>.</p></td>
     </tr>
     <tr>
-      <th>digits</th>
-      <td><p>Integer. The number of digits to round the estimate column to.</p></td>
+      <th>func</th>
+      <td><p>The <code><a href='https://rdrr.io/pkg/lavaan/man/lavaan.html'>lavaan</a></code> modeling function to invoke,
+Default: 'sem'.</p></td>
     </tr>
     <tr>
-      <th>sig</th>
-      <td><p>Optional, a vector of p-values for the default method.</p></td>
+      <th>...</th>
+      <td><p>Additional parameters passed to the estimating function.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of formatted estimates.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>table_results</p>
-<p>Other Reporting tools: 
-<code><a href='conf_int.html'>conf_int</a>()</code>,
-<code><a href='table_results.html'>table_results</a>()</code></p></div>
+    <p>An object of class <code>lavaan</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>est_sig</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.222</span>, <span class='fl'>.3333</span>), <span class='kw'>sig</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.054</span>, <span class='fl'>.045</span>))</div><div class='output co'>#&gt; [1] "0.22"  "0.33*"</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>lavaan</span>)
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='st'>"\\."</span>)
+<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='measurement.html'>measurement</a></span>(<span class='no'>model</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='no'>F</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>estimate_lavaan</span>(<span class='no'>model</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: lavaan WARNING: some estimated ov variances are negative</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; lavaan 0.6-5 ended normally after 58 iterations
+#&gt; 
+#&gt;   Estimator                                         ML
+#&gt;   Optimization method                           NLMINB
+#&gt;   Number of free parameters                         11
+#&gt;                                                       
+#&gt;   Number of observations                           150
+#&gt;                                                       
+#&gt; Model Test User Model:
+#&gt;                                                       
+#&gt;   Test statistic                               265.801
+#&gt;   Degrees of freedom                                 3
+#&gt;   P-value (Chi-square)                           0.000
+#&gt; 
+#&gt; Parameter Estimates:
+#&gt; 
+#&gt;   Information                                 Expected
+#&gt;   Information saturated (h1) model          Structured
+#&gt;   Standard errors                             Standard
+#&gt; 
+#&gt; Latent Variables:
+#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
+#&gt;   Sepal =~                                            
+#&gt;     Sepal.Length      1.000                           
+#&gt;     Sepal.Width       0.510    0.009   57.074    0.000
+#&gt;   Petal =~                                            
+#&gt;     Petal.Length      1.000                           
+#&gt;     Petal.Width       0.330    0.005   63.864    0.000
+#&gt; 
+#&gt; Covariances:
+#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
+#&gt;   Sepal ~~                                            
+#&gt;     Petal             1.251    0.154    8.138    0.000
+#&gt; 
+#&gt; Intercepts:
+#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
+#&gt;    .Sepal.Length      0.000                           
+#&gt;    .Sepal.Width       0.000                           
+#&gt;     Sepal             5.831    0.074   78.678    0.000
+#&gt;    .Petal.Length      0.000                           
+#&gt;    .Petal.Width       0.000                           
+#&gt;     Petal             3.826    0.131   29.264    0.000
+#&gt; 
+#&gt; Variances:
+#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
+#&gt;    .Sepal.Length     -0.128    0.045   -2.863    0.004
+#&gt;    .Sepal.Width       0.448    0.053    8.472    0.000
+#&gt;     Sepal             0.952    0.107    8.894    0.000
+#&gt;    .Petal.Length     -0.324    0.060   -5.385    0.000
+#&gt;    .Petal.Width       0.102    0.013    7.934    0.000
+#&gt;     Petal             2.907    0.299    9.717    0.000
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

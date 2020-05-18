@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add significance asterisks to object — est_sig • tidySEM</title>
+<title>Estimate tidy_sem using 'Mplus' — estimate_mplus • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,11 @@
 
 
 
-<meta property="og:title" content="Add significance asterisks to object — est_sig" />
-<meta property="og:description" content="Takes an object, and adds significance asterisks." />
+<meta property="og:title" content="Estimate tidy_sem using 'Mplus' — estimate_mplus" />
+<meta property="og:description" content="This function is a wrapper for the functions
+mplusObject and
+mplusModeler. Using this function requires
+'Mplus' to be installed." />
 
 
 
@@ -126,47 +129,57 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add significance asterisks to object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/results-table_results.R'><code>R/results-table_results.R</code></a></small>
-    <div class="hidden name"><code>est_sig.Rd</code></div>
+    <h1>Estimate tidy_sem using 'Mplus'</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-estimate.R'><code>R/syntax-estimate.R</code></a></small>
+    <div class="hidden name"><code>estimate_mplus.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes an object, and adds significance asterisks.</p>
+    <p>This function is a wrapper for the functions
+<code><a href='https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html'>mplusObject</a></code> and
+<code><a href='https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html'>mplusModeler</a></code>. Using this function requires
+'Mplus' to be installed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>est_sig</span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sig</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>estimate_mplus</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object for which a method exists. This will be treated as numeric
-by the default method.</p></td>
+      <td><p>An object of class <code>tidy_sem</code>.</p></td>
     </tr>
     <tr>
-      <th>digits</th>
-      <td><p>Integer. The number of digits to round the estimate column to.</p></td>
-    </tr>
-    <tr>
-      <th>sig</th>
-      <td><p>Optional, a vector of p-values for the default method.</p></td>
+      <th>...</th>
+      <td><p>Additional parameters passed to
+<code><a href='https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html'>mplusObject</a></code> and
+<code><a href='https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html'>mplusModeler</a></code>. These arguments are matched to
+the correct function by name. The arguments <code>rdata</code>, and <code>MODEL</code>
+cannot be edited, as they are determined from the <code>tidy_sem</code> object.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of formatted estimates.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p>An object of class <code>mplusObject</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <div class='dont-index'><p>table_results</p>
-<p>Other Reporting tools: 
-<code><a href='conf_int.html'>conf_int</a>()</code>,
-<code><a href='table_results.html'>table_results</a>()</code></p></div>
+    <p>The arguments <code>dataout</code>, <code>modelout</code>, and <code>run</code> are
+optional. If these are not specified, the model will be run in
+<code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>est_sig</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.222</span>, <span class='fl'>.3333</span>), <span class='kw'>sig</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.054</span>, <span class='fl'>.045</span>))</div><div class='output co'>#&gt; [1] "0.22"  "0.33*"</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>MplusAutomation</span>)
+<span class='kw'>if</span>(<span class='kw pkg'>tidySEM</span><span class='kw ns'>:::</span><span class='fu'>has_mplus</span>()){
+  <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='st'>"\\."</span>)
+  <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='measurement.html'>measurement</a></span>(<span class='no'>model</span>)
+  <span class='fu'>estimate_mplus</span>(<span class='no'>model</span>)
+}</div><div class='output co'>#&gt; <span style='color: #00BB00;'>v  </span><span style='color: #000000;'>Mplus is available.</span><span></div><div class='output co'>#&gt; <span class='message'>R variables selected automatically as any variable name that</span>
+#&gt; <span class='message'>occurs in the MODEL, VARIABLE, or DEFINE section.</span></div><div class='output co'>#&gt; <span class='message'>Wrote model to: mplus_model.inp</span></div><div class='output co'>#&gt; <span class='message'>Wrote data to: mplus_model_e6b1bd104828dfab3bafd3948d12902f.dat</span></div><div class='output co'>#&gt; 
+#&gt; Running model: mplus_model.inp 
+#&gt; System command: C:\WINDOWS\system32\cmd.exe /c cd "." &amp;&amp; "Mplus" "mplus_model.inp" 
+#&gt; Reading model:  mplus_model.out </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

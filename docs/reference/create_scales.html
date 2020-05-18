@@ -148,7 +148,19 @@ It relies on several functions from the
     </div>
 
     <pre class="usage"><span class='fu'>create_scales</span>(
-  <span class='no'>data</span>,
+  <span class='no'>x</span>,
+  <span class='no'>keys.list</span>,
+  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>impute</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>omega</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>write_files</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='no'>...</span>
+)
+
+<span class='co'># S3 method for tidy_sem</span>
+<span class='fu'>create_scales</span>(
+  <span class='no'>x</span>,
   <span class='no'>keys.list</span>,
   <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>impute</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
@@ -162,9 +174,9 @@ It relies on several functions from the
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
+      <th>x</th>
       <td><p>A <code>data.frame</code> containing all variables referenced in the
-<code>keys.list</code>.</p></td>
+<code>keys.list</code>, or an object of class <code>tidy_sem</code>.</p></td>
     </tr>
     <tr>
       <th>keys.list</th>
@@ -215,7 +227,18 @@ tables to .csv files, Default: FALSE</p></td>
             <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span>, <span class='st'>"Petal.Length"</span>, <span class='st'>"Petal.Width"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='input'><span class='no'>out</span>$<span class='no'>descriptives</span></div><div class='output co'>#&gt;            Subscale Items      n mean   sd  min  max  skew skew_2se  kurt
 #&gt; scalename scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20
 #&gt;           kurt_2se Reliability  Interpret min_load max_load
-#&gt; scalename    -1.52        0.71 Acceptable       NA       NA</div></pre>
+#&gt; scalename    -1.52        0.71 Acceptable       NA       NA</div><div class='input'><span class='no'>dict</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='kw'>split</span> <span class='kw'>=</span> <span class='st'>"\\."</span>)
+<span class='fu'>create_scales</span>(<span class='no'>dict</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; A tidy_scales object
+#&gt; <span style='color: #00BB00;'>v  </span><span>  $descriptives
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>  $correlations
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>  $scores
+#&gt; 
+#&gt;       Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
+#&gt; Sepal    Sepal  2.00 150.00 4.45 0.44 3.40 5.85  0.31     0.77  0.04     0.05
+#&gt; Petal    Petal  2.00 150.00 2.48 1.25 0.60 4.60 -0.26    -0.65 -1.45    -1.84
+#&gt;       Reliability    Interpret min_load max_load
+#&gt; Sepal   -0.27(sb) Unacceptable    -0.34     0.34
+#&gt; Petal    0.98(sb)         Good     0.98     0.98</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

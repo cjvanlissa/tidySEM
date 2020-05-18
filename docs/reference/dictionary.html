@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract dictionary from sem_syntax — dictionary • tidySEM</title>
+<title>Extract dictionary from tidy_sem — dictionary • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Extract dictionary from sem_syntax — dictionary" />
+<meta property="og:title" content="Extract dictionary from tidy_sem — dictionary" />
 <meta property="og:description" content="Provides access to the dictionary element of a
-sem_syntax object. This can be used to return or assign to the
+tidy_sem object. This can be used to return or assign to the
 dictionary element." />
 
 
@@ -128,14 +128,14 @@ dictionary element." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract dictionary from sem_syntax</h1>
+    <h1>Extract dictionary from tidy_sem</h1>
     <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-attributes.R'><code>R/syntax-attributes.R</code></a></small>
     <div class="hidden name"><code>dictionary.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Provides access to the <code>dictionary</code> element of a
-<code>sem_syntax</code> object. This can be used to return or assign to the
+<code>tidy_sem</code> object. This can be used to return or assign to the
 <code>dictionary</code> element.</p>
     </div>
 
@@ -148,7 +148,7 @@ dictionary element." />
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Object of class sem_syntax.</p></td>
+      <td><p>Object of class tidy_sem.</p></td>
     </tr>
     <tr>
       <th>value</th>
@@ -160,6 +160,14 @@ dictionary element." />
 
     <p>data.frame</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>dict</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='kw'>split</span> <span class='kw'>=</span> <span class='st'>"\\."</span>)
+<span class='fu'>dictionary</span>(<span class='no'>dict</span>)</div><div class='output co'>#&gt;           name scale     type        label
+#&gt; 1 Sepal.Length Sepal observed Sepal.Length
+#&gt; 2  Sepal.Width Sepal observed  Sepal.Width
+#&gt; 3 Petal.Length Petal observed Petal.Length
+#&gt; 4  Petal.Width Petal observed  Petal.Width
+#&gt; 5      Species  &lt;NA&gt; observed      Species</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add significance asterisks to object — est_sig • tidySEM</title>
+<title>Convert tidy_sem to Mplus syntax — as_mplus • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Add significance asterisks to object — est_sig" />
-<meta property="og:description" content="Takes an object, and adds significance asterisks." />
+<meta property="og:title" content="Convert tidy_sem to Mplus syntax — as_mplus" />
+<meta property="og:description" content="Final stage in the tidySEM workflow for syntax generation:
+Convert the tidy_sem object to Mplus syntax." />
 
 
 
@@ -126,47 +127,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add significance asterisks to object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/results-table_results.R'><code>R/results-table_results.R</code></a></small>
-    <div class="hidden name"><code>est_sig.Rd</code></div>
+    <h1>Convert tidy_sem to Mplus syntax</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-as_syntax.R'><code>R/syntax-as_syntax.R</code></a></small>
+    <div class="hidden name"><code>as_mplus.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes an object, and adds significance asterisks.</p>
+    <p>Final stage in the tidySEM workflow for syntax generation:
+Convert the tidy_sem object to Mplus syntax.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>est_sig</span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sig</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>as_mplus</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object for which a method exists. This will be treated as numeric
-by the default method.</p></td>
+      <td><p>An object of class <code>tidy_sem</code>.</p></td>
     </tr>
     <tr>
-      <th>digits</th>
-      <td><p>Integer. The number of digits to round the estimate column to.</p></td>
-    </tr>
-    <tr>
-      <th>sig</th>
-      <td><p>Optional, a vector of p-values for the default method.</p></td>
+      <th>...</th>
+      <td><p>Additional parameters to be passed to and from functions.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of formatted estimates.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>table_results</p>
-<p>Other Reporting tools: 
-<code><a href='conf_int.html'>conf_int</a>()</code>,
-<code><a href='table_results.html'>table_results</a>()</code></p></div>
+    <p>Character vector.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>est_sig</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.222</span>, <span class='fl'>.3333</span>), <span class='kw'>sig</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.054</span>, <span class='fl'>.045</span>))</div><div class='output co'>#&gt; [1] "0.22"  "0.33*"</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>syntax</span> <span class='kw'>=</span> <span class='kw pkg'>tidySEM</span><span class='kw ns'>:::</span><span class='fu'>check_lav_tab</span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+<span class='kw'>lhs</span> <span class='kw'>=</span> <span class='st'>"x"</span>, <span class='kw'>op</span> <span class='kw'>=</span> <span class='st'>"~"</span>, <span class='kw'>rhs</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>free</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))
+<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>mod</span>) <span class='kw'>&lt;-</span> <span class='st'>"tidy_sem"</span>
+<span class='fu'>as_mplus</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; [1] "x ON y;"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

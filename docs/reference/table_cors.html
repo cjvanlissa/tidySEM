@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add significance asterisks to object — est_sig • tidySEM</title>
+<title>Extract correlation tables — table_cors • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Add significance asterisks to object — est_sig" />
-<meta property="og:description" content="Takes an object, and adds significance asterisks." />
+<meta property="og:title" content="Extract correlation tables — table_cors" />
+<meta property="og:description" content="Extracts a publication-ready covariance or correlation matrix from an object
+for which a method exists." />
 
 
 
@@ -126,47 +127,66 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add significance asterisks to object</h1>
+    <h1>Extract correlation tables</h1>
     <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/results-table_results.R'><code>R/results-table_results.R</code></a></small>
-    <div class="hidden name"><code>est_sig.Rd</code></div>
+    <div class="hidden name"><code>table_cors.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes an object, and adds significance asterisks.</p>
+    <p>Extracts a publication-ready covariance or correlation matrix from an object
+for which a method exists.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>est_sig</span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>sig</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>table_cors</span>(<span class='no'>x</span>, <span class='kw'>value_column</span> <span class='kw'>=</span> <span class='st'>"est_sig_std"</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object for which a method exists. This will be treated as numeric
-by the default method.</p></td>
+      <td><p>An object for which a method exists.</p></td>
+    </tr>
+    <tr>
+      <th>value_column</th>
+      <td><p>Character. Name of the column to use to propagate the
+matrix. Defaults to "est_sig_std", the standardized estimate with
+significance asterisks.</p></td>
     </tr>
     <tr>
       <th>digits</th>
-      <td><p>Integer. The number of digits to round the estimate column to.</p></td>
+      <td><p>Number of digits to round to when formatting values.</p></td>
     </tr>
     <tr>
-      <th>sig</th>
-      <td><p>Optional, a vector of p-values for the default method.</p></td>
+      <th>...</th>
+      <td><p>Additional arguments passed to and from methods.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A character vector of formatted estimates.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>table_results</p>
-<p>Other Reporting tools: 
-<code><a href='conf_int.html'>conf_int</a>()</code>,
-<code><a href='table_results.html'>table_results</a>()</code></p></div>
+    <p>A Matrix or a list of matrices (in case there are between/within
+correlation matrices).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>est_sig</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.222</span>, <span class='fl'>.3333</span>), <span class='kw'>sig</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>.054</span>, <span class='fl'>.045</span>))</div><div class='output co'>#&gt; [1] "0.22"  "0.33*"</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>lavaan</span>)
+<span class='no'>HS.model</span> <span class='kw'>&lt;-</span> <span class='st'>'  visual =~ x1 + x2 + x3
+               textual =~ x4 + x5 + x6
+               speed   =~ x7 + x8 + x9 '</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span>(<span class='no'>HS.model</span>,
+           <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>HolzingerSwineford1939</span>,
+           <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"school"</span>)
+<span class='fu'>table_cors</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $Pasteur
+#&gt;         speed    textual   visual   
+#&gt; speed   "1.00"   "0.33**"  "0.30**" 
+#&gt; textual "0.33**" "1.00"    "0.48***"
+#&gt; visual  "0.30**" "0.48***" "1.00"   
+#&gt; 
+#&gt; $`Grant-White`
+#&gt;         speed     textual   visual   
+#&gt; speed   "1.00"    "0.34***" "0.52***"
+#&gt; textual "0.34***" "1.00"    "0.54***"
+#&gt; visual  "0.52***" "0.54***" "1.00"   
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -95,7 +95,18 @@
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidySEM</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidySEM</span>)
+<span class="co">#&gt; Loading required package: ggplot2</span>
+<span class="co">#&gt; Loading required package: lavaan</span>
+<span class="co">#&gt; This is lavaan 0.6-5</span>
+<span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
+<span class="co">#&gt; Loading required package: MplusAutomation</span>
+<span class="co">#&gt; Version:  0.7-3</span>
+<span class="co">#&gt; We work hard to write this free software. Please help us get credit by citing: </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; -- see citation("MplusAutomation").</span></pre></body></html></div>
 <p><code>tidySEM</code> offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely <em>programatic</em>, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as <code>data.frame</code>s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through <code><a href="../reference/table_results.html">table_results()</a></code>.</p>
 <div id="the-tidysem-workflow" class="section level2">
 <h2 class="hasAnchor">
@@ -129,8 +140,6 @@
 <a href="#step-1-run-an-analysis" class="anchor"></a>Step 1: Run an analysis</h3>
 <p>As an example, let’s make a graph for a classic <code>lavaan</code> tutorial example for CFA. First, we conduct the SEM analysis:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lavaan</span>)
-<span class="co">#&gt; This is lavaan 0.6-5</span>
-<span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
 <span class="no">HS.model</span> <span class="kw">&lt;-</span> <span class="st">' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '</span>
@@ -208,12 +217,12 @@
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lavaan</span>)
 <span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span>(<span class="st">' visual  =~ x1 + x2 + x3 '</span>,
            <span class="kw">data</span> <span class="kw">=</span> <span class="no">HolzingerSwineford1939</span>[<span class="fl">1</span>:<span class="fl">50</span>, ])
-<span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>)
-<span class="co">#&gt;      [,1] [,2]     [,3]</span>
-<span class="co">#&gt; [1,] NA   "visual" NA  </span>
-<span class="co">#&gt; [2,] "x1" "x2"     "x3"</span></pre></body></html></div>
+<span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>)</pre></body></html></div>
+<pre><code>#&gt;      [,1] [,2]     [,3]
+#&gt; [1,] NA   "visual" NA  
+#&gt; [2,] "x1" "x2"     "x3"</code></pre>
 <p>Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_in_circle"</span>)
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_in_circle"</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]    </span>
 <span class="co">#&gt; [1,] NA   "x1" NA      </span>
 <span class="co">#&gt; [2,] "x2" NA   "visual"</span>
@@ -229,16 +238,16 @@
 <p>Specifying the layout in a spreadsheet program is very user-friendly, because one can visually position the nodes, e.g.:</p>
 <p><img src="spreadsheet.png"></p>
 <p>To obtain the layout matrix, one can save the spreadsheet as <code>.csv</code> file and load it in R like this:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="st">"example.csv"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="st">"example.csv"</span>)</pre></body></html></div>
 <pre><code>#&gt;   V1     V2 V3
 #&gt; 1 x1     x2 x3
 #&gt; 2    visual
 #&gt; [1] TRUE</code></pre>
 <p>Alternatively, one can select the layout as in the image above, copy it to the clipboard, and then read it into R from the clipboard. This works differently on Windows and Mac.</p>
 <p>On Windows, run:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="st">"clipboard"</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"\t"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="st">"clipboard"</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"\t"</span>)</pre></body></html></div>
 <p>On Mac, run:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">pipe</a></span>(<span class="st">"pbpaste"</span>), <span class="kw">sep</span><span class="kw">=</span><span class="st">"\t"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">pipe</a></span>(<span class="st">"pbpaste"</span>), <span class="kw">sep</span><span class="kw">=</span><span class="st">"\t"</span>)</pre></body></html></div>
 <pre><code>#&gt;   V1     V2 V3
 #&gt; 1 x1     x2 x3
 #&gt; 2    visual</code></pre>
@@ -248,39 +257,39 @@
 <h3 class="hasAnchor">
 <a href="#examples-of-user-defined-layout" class="anchor"></a>Examples of user-defined layout</h3>
 <p>We can specify a simple layout for two hypothetical nodes <code>x</code> and <code>y</code> is generated as follows:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>)
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>)
 <span class="co">#&gt;      [,1] [,2]</span>
 <span class="co">#&gt; [1,] "x"  "y"</span></pre></body></html></div>
 <p>For a mediation model, one might specify a layout like this:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
            <span class="st">"x"</span>, <span class="st">""</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "m"  ""  </span>
 <span class="co">#&gt; [2,] "x"  ""   "y"</span></pre></body></html></div>
 <p>For a three-item CFA model, one might specify:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
            <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "F"  ""  </span>
 <span class="co">#&gt; [2,] "y1" "y2" "y3"</span></pre></body></html></div>
 <p>And for the CFA model we estimated above:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">lay</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">lay</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
                   <span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span>, <span class="st">"x7"</span>, <span class="st">"x8"</span>, <span class="st">"x9"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
 <p>At this point, we could simply plot the graph:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-20-1.png" width="100%"></p>
 </div>
 <div id="optional-step-4-accessing-the-graph-data-before-plotting" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-4-accessing-the-graph-data-before-plotting" class="anchor"></a>Optional step 4: accessing the graph data before plotting</h3>
 <p>One important feature of <code>tidySEM</code> graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. First, use <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> to assign the plot data to an object.</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">graph_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">graph_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
 </div>
 <div id="optional-step-5-access-the-nodes-and-edges" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-5-access-the-nodes-and-edges" class="anchor"></a>Optional step 5: Access the nodes and edges</h3>
 <p>The nodes and edges can be examined using <code><a href="../reference/nodes.html">nodes(graph_data)</a></code> and <code><a href="../reference/edges.html">edges(graph_data)</a></code>:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>)
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>)
 <span class="co">#&gt;       name shape   label  x y node_xmin node_xmax node_ymin node_ymax</span>
 <span class="co">#&gt; 1    speed  oval   speed 14 4      13.5      14.5       3.5       4.5</span>
 <span class="co">#&gt; 2  textual  oval textual 10 4       9.5      10.5       3.5       4.5</span>
@@ -325,12 +334,12 @@
 <h3 class="hasAnchor">
 <a href="#optional-step-6-modify-the-nodes-and-edges" class="anchor"></a>Optional step 6: Modify the nodes and edges</h3>
 <p>At this stage, we may want to improve the basic plot slightly. The functions <code>nodes(graph_data) &lt;- ...</code> and <code>edges(graph_data) &lt;- ...</code> can be used to modify the nodes and edges. These functions pair well with the general tidyverse workflow. For example, we might want to print node labels for latent variables in <em>Title Case</em> instead of just using the variable names:</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
 <span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html">str_to_title</a></span>(<span class="no">label</span>))</pre></body></html></div>
 <p>Now, for the edges, we see that the default edging algorithm has connected some nodes side-to-side (based on the smallest possible Euclidian distance). However, in this simple graph, it makes more sense to connect all nodes top-to-bottom - except for the latent variable covariances. We can use the same conditional replacement for the edges:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">connect_from</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">connect_from</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">curvature</span>), <span class="st">"bottom"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">connect_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">connect_to</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">curvature</span>), <span class="st">"top"</span>)) <span class="kw">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
 </div>
@@ -338,16 +347,16 @@
 <h3 class="hasAnchor">
 <a href="#step-7-plot-the-graph" class="anchor"></a>Step 7: Plot the graph</h3>
 <p>Finally, we can plot the resulting customized graph using <code><a href="https://rdrr.io/r/base/plot.html">plot(graph_data)</a></code>:</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 </div>
 </div>
 <div id="connecting-nodes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connecting-nodes" class="anchor"></a>Connecting nodes</h2>
 <p>The functions <code><a href="../reference/graph_sem.html">graph_sem()</a></code> and <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the <code>angle</code> parameter. This parameter connects nodes top-to-bottom when they are within <code>angle</code> degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing <code>angle</code> to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>, <span class="kw">angle</span> <span class="kw">=</span> <span class="fl">170</span>)</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-25-1.png" width="500px" height="150px"></p>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>, <span class="kw">angle</span> <span class="kw">=</span> <span class="fl">170</span>)</pre></body></html></div>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-27-1.png" width="500px" height="150px"></p>
 </div>
 <div id="visual-aspects" class="section level2">
 <h2 class="hasAnchor">
@@ -363,7 +372,7 @@
 <li>
 <code>alpha</code>: The transparancy of the line (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>,
                   <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>,
                   <span class="kw">colour</span> <span class="kw">=</span> <span class="st">"red"</span>,
@@ -371,7 +380,7 @@
                   <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">.5</span>)
 
 <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">edges</span> <span class="kw">=</span> <span class="no">edg</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>))</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
 <p>Nodes have the following aesthetics (see <code>?geom_polygon()</code>):</p>
 <ul>
 <li>
@@ -385,7 +394,7 @@
 <li>
 <code>alpha</code>: The transparancy of the node (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>)
 <span class="no">nod</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">name</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>),
                     <span class="kw">shape</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"rect"</span>, <span class="st">"oval"</span>),
@@ -395,9 +404,9 @@
                     <span class="kw">size</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">2</span>),
                     <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">.5</span>)
 <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">edges</span> <span class="kw">=</span> <span class="no">edg</span>, <span class="kw">nodes</span> <span class="kw">=</span> <span class="no">nod</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>))</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
 <p>These aesthetics can also be passed to the <code>sem_graph</code> object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">colour</span> <span class="kw">=</span> <span class="st">"black"</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">colour</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">colour</span>, <span class="no">from</span> <span class="kw">==</span> <span class="st">"visual"</span> <span class="kw">&amp;</span> <span class="no">to</span> <span class="kw">==</span> <span class="st">"x2"</span>, <span class="st">"red"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
@@ -405,7 +414,7 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">alpha</span>, <span class="no">from</span> <span class="kw">==</span> <span class="st">"visual"</span> <span class="kw">&amp;</span> <span class="no">to</span> <span class="kw">==</span> <span class="st">"x2"</span>, <span class="fl">.5</span>)) <span class="kw">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
 </div>
 <div id="visual-aspects-of-edge-labels" class="section level2">
 <h2 class="hasAnchor">
@@ -435,7 +444,7 @@
 <li>
 <code>label_location</code>: Where along the edge to plot the label; a number between 0 (beginning) and 1 (end)</li>
 </ul>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>,
                   <span class="kw">label</span> <span class="kw">=</span> <span class="st">"text"</span>,
                   <span class="kw">label_colour</span> <span class="kw">=</span> <span class="st">"blue"</span>,
@@ -451,7 +460,7 @@
                   )
 
 <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">edges</span> <span class="kw">=</span> <span class="no">edg</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>))</pre></body></html></div>
-<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
+<p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
 </div>
   </div>
 

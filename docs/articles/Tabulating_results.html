@@ -96,16 +96,12 @@
     
     
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidySEM</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lavaan</span>)
+<span class="co">#&gt; Loading required package: ggplot2</span>
+<span class="co">#&gt; Loading required package: lavaan</span>
 <span class="co">#&gt; This is lavaan 0.6-5</span>
 <span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lavaan</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">MplusAutomation</span>)
-<span class="co">#&gt; Version:  0.7-3</span>
-<span class="co">#&gt; We work hard to write this free software. Please help us get credit by citing: </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; -- see citation("MplusAutomation").</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'dplyr'</span>
@@ -353,6 +349,20 @@
                     <span class="kw">modelout</span> <span class="kw">=</span> <span class="st">"example.inp"</span>,
                     <span class="kw">run</span> <span class="kw">=</span> <span class="fl">1L</span>)
 <span class="no">fit</span>$<span class="no">results</span>$<span class="no">parameters</span></pre></body></html></div>
+<pre><code>#&gt; Wrote model to: example.inp
+#&gt; Wrote data to: example_cb98f358cdab6146ff3c10a3e487e476.dat
+#&gt; Factors will be converted to numbers in Mplus data file
+#&gt; 
+#&gt; Factor: school 
+#&gt; Conversion:
+#&gt;        level number
+#&gt;  Grant-White      1
+#&gt;      Pasteur      2
+#&gt; 
+#&gt; Running model: example.inp 
+#&gt; System command: C:\WINDOWS\system32\cmd.exe /c cd "." &amp;&amp; "Mplus" "example.inp" 
+#&gt; Reading model:  example.out
+#&gt; [1] TRUE TRUE TRUE</code></pre>
 <pre><code>#&gt; $unstandardized
 #&gt;           paramHeader   param    est    se  est_se    pval Group
 #&gt; 1           VISUAL.BY      X1  1.000 0.000 999.000 999.000    GW
@@ -428,7 +438,7 @@
 #&gt; 71 Residual.Variances      X8  0.541 0.099   5.483   0.000   PAS
 #&gt; 72 Residual.Variances      X9  0.654 0.101   6.476   0.000   PAS</code></pre>
 <p>The results can be tabulated using the <code>MplusAutomation</code> function <code><a href="https://rdrr.io/pkg/MplusAutomation/man/coef.mplus.model.html">coef.mplus.model()</a></code>:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit</span>)
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(<span class="no">fit</span>)
 <span class="co">#&gt; $GW</span>
 <span class="co">#&gt;                 Label   est    se    pval</span>
 <span class="co">#&gt; 1          X1&lt;-VISUAL 1.000 0.000 999.000</span>
@@ -510,7 +520,7 @@
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "mplus.model.coefs.list" "list"</span></pre></body></html></div>
 <p>Alternatively, we can use the <code>tidySEM</code> function <code><a href="../reference/table_results.html">table_results()</a></code>:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/table_results.html">table_results</a></span>(<span class="no">fit</span>)
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/table_results.html">table_results</a></span>(<span class="no">fit</span>)
 <span class="co">#&gt; Calculated confidence intervals from est and se.</span>
 <span class="co">#&gt;                        label  est_sig   se pval        confint group</span>
 <span class="co">#&gt; 1            VISUAL.BY.X1.GW     1.00                             GW</span>

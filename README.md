@@ -6,11 +6,10 @@
 <!--[![CRAN status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
 [![](https://cranlogs.r-pkg.org/badges/tidySEM)](https://cran.r-project.org/package=tidySEM)-->
 
-[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis build
 status](https://travis-ci.org/cjvanlissa/tidySEM.svg?branch=master)](https://travis-ci.org/cjvanlissa/tidySEM)
-[![Codecov test
-coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://codecov.io/gh/cjvanlissa/tidySEM?branch=master)
+<!--[![Codecov test coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://codecov.io/gh/cjvanlissa/tidySEM?branch=master)
 <!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
 
 tidySEM provides functionality to conduct and report structural equation
@@ -48,17 +47,25 @@ devtools::install_github("cjvanlissa/tidySEM")
 
 Every user-facing function in the package is documented, and the
 documentation can be accessed by running `?function_name` in the R
-console, e.g., `?graph`.
+console, e.g., `?graph_sem`.
 
-<!--* *Read the Introduction to tidySEM* [vignette](https://data-edu.github.io/tidySEM/articles/Introduction_to_tidySEM.html), which has much more information on the models that can be specified with tidySEM and on additional functionality-->
+Furthermore, there are three vignettes, describing the three main tracks
+of `tidySEM` functions:
+
+1.  A [vignette about generating syntax and estimating
+    models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html)
+2.  A [vignette about tabulating
+    results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
+3.  A [vignette about making
+    graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
 
 ## Citing tidySEM
 
 You can cite the R-package with the following citation:
 
-> Van Lissa, C. J., (2019). tidySEM: A tidy workflow for running,
-> reporting, and plotting structural equation models in lavaan or Mplus.
-> \[R package\]. <https://github.com/cjvanlissa/tidySEM/>
+Van Lissa, C. J., (2019). *tidySEM: A tidy workflow for running,
+reporting, and plotting structural equation models in lavaan or Mplus.*
+\[R package\]. <https://github.com/cjvanlissa/tidySEM/>
 
 ## Contributing and Contact Information
 
