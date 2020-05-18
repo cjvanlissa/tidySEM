@@ -1,6 +1,15 @@
 # Version 0.1.0
 
-NOTE: New submission
+This resubmission addresses the comment by CRAN-maintainer Uwe Ligges:
+
+* Please single quote software names in the Description field of the  
+  DESCRIPTION file as in 'Mplus'.
+    + We have done as requested; we had already done this in all R/Rd files,  
+      but forgot the DESCRIPTION file. Apologies!
+* Is there some reference about the method you can add in the Description  
+  field in the form Authors (year) <doi:.....>?
+    + There is no reference as of yet. After publishing to CRAN, the next step
+      will be to write a tutorial paper.
 
 ## Test environments
 
