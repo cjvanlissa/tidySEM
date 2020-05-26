@@ -70,6 +70,7 @@ estimate_mplus <- function(x, ...){
     tmpdir <- file.path(tempdir(), "mplus")
     dir.create(tmpdir)
     setwd(tmpdir)
+    on.exit(setwd(old_wd))
     Args_mplusmodeler$modelout <- "mplus_model.inp"
   }
   if(is.null(Args_mplusmodeler[["run"]])){

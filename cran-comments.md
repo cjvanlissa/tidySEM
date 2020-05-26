@@ -1,15 +1,15 @@
-# Version 0.1.0
+# Version 0.1.1
 
-This resubmission addresses the comment by CRAN-maintainer Uwe Ligges:
+This resubmission addresses the comment by CRAN-maintainer Jelena Saf:
 
-* Please single quote software names in the Description field of the  
-  DESCRIPTION file as in 'Mplus'.
-    + We have done as requested; we had already done this in all R/Rd files,  
-      but forgot the DESCRIPTION file. Apologies!
-* Is there some reference about the method you can add in the Description  
-  field in the form Authors (year) <doi:.....>?
-    + There is no reference as of yet. After publishing to CRAN, the next step
-      will be to write a tutorial paper.
+* Please make sure that you do not change the user's options, par or working
+  directory. If you really have to do so, please ensure with an *immediate*
+  call of on.exit()
+  + I have done as requested; line 73 of R/syntax-estimate.R now reads:
+    on.exit(setwd(oldwd))
+  + Unfortunately it is necessary to change the working directory, because 
+    the R-package 'MplusAutomation' did not respect file paths until I reported
+    this as a bug.
 
 ## Test environments
 
