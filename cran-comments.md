@@ -17,8 +17,7 @@ This resubmission addresses the comment by CRAN-maintainer Jelena Saf:
 * win-builder: release: R version 4.0.0 (2020-04-24)
 * win-builder: oldrelease: R version 3.6.3 (2020-02-29)
 * win-builder: devel: R Under development (unstable) (2020-05-15 r78473)
-* rhub check: Fedora Linux, R-devel, clang, gfortran
-* rhub check: Ubuntu Linux 16.04 LTS, R-release, GCC
+* rhub check: RHub non-responsive
 * Travis Ubuntu 16.04.6 LTS, R release
 
 ## R CMD check results
