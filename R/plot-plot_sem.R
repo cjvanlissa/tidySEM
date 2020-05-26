@@ -1070,7 +1070,7 @@ match.call.defaults <- function(...) {
     for(this_path in unique(df_path$id)){
       Args$data <- df_path[df_path$id == this_path, ]
       Args$arrow[4] <- force(aes_args$arrow[aes_args$id == this_path])
-      p <- p + do.call(geom_path, c(Args, as.list(aes_args[1, -c(1, 2), drop = FALSE])))
+      p <- p + do.call(geom_path, c(Args, as.list(aes_args[aes_args$id == this_path, -c(1, 2), drop = FALSE])))
     }
   }
   if(any(df$arrow == "none")){
