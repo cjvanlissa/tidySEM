@@ -285,6 +285,9 @@ prepare_graph.default <- function(edges = NULL,
   # Check if nodes exist in edges and layout --------------------------------
   if(inherits(layout, c("matrix", "data.frame"))){
     layout <- long_layout(layout)
+    if(any(duplicated(layout$name))){
+      stop("Some nodes are duplicated in the layout. The offending node names are: ", paste0(unique(layout$name[duplicated(layout$name)]), collapse = ", "))
+    }
     Args$layout <- layout
   } else {
     stop("Argument 'layout' must be a matrix or data.frame.")
