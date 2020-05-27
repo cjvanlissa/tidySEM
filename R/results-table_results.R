@@ -464,6 +464,12 @@ table_cors.default <- function(x, value_column = "est_sig_std", digits = 2, ...)
   vars <- t(sapply(unique(cors$lhs), function(x){unlist(correlations[correlations$lhs == x & correlations$rhs == x & correlations$op == "~~", c("lhs", "rhs", value_column)])}))
   colnames(vars)[3] <- "value"
   cors <- rbind(cors, vars)
+  should_have <- expand.grid(cor_order, cor_order, stringsAsFactors = FALSE)
+  for(i in 1:nrow(should_have)){
+    if(!any(apply(cors[, 1:2], 1, function(x){ all(x == should_have[i, ])}))){
+      cors[(nrow(cors)+1), ] <-  c(unlist(should_have[i, , drop = TRUE]), NA)
+    }
+  }
   cors <- cors[order(cors$lhs, cors$rhs),]
   out <- matrix(cors$value, ncol = length(unique(cors$lhs)))
   rownames(out) <- colnames(out) <- unique(cors$lhs)
