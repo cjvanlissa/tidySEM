@@ -78,14 +78,45 @@ create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none"
 #' @export
 create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "none",
                           omega = NULL, write_files = FALSE,
-                          digits = 2, ...)
+                          digits = 2, reverse_items = TRUE, ...)
 {
   data <- x
-  keys.list <- keys.list[!sapply(keys.list, length) < 2]
+  use_keys <- keys.list <- keys.list[!sapply(keys.list, length) < 2]
+
   scoredatanames <- as.vector(unlist(keys.list))
   scoredatanames <- unique(scoredatanames)
   data <- data[, names(data) %in% scoredatanames]
-  keys <- make.keys(length(scoredatanames), keys.list = keys.list,
+
+  fas <- matrix(nrow = length(keys.list), ncol = 2)
+  for(i in seq_along(names(keys.list))){
+    scale_name <- names(keys.list)[i]
+    tryCatch({
+      fa_loadings <- fa(data[keys.list[[scale_name]]])$loadings
+      rev_items <- sign(fa_loadings) == -1
+      if(reverse_items & any(rev_items)){
+        message("Some factor loadings were negative for scale '", scale_name, "'. These items were automatically reversed: ", paste0(keys.list[[scale_name]][rev_items], collapse = ", "))
+        use_keys[[scale_name]][rev_items] <- paste0("-", use_keys[[scale_name]][rev_items])
+        fas[i, ] <- range(abs(as.numeric(fa_loadings)))
+      } else {
+        fas[i, ] <- range(as.numeric(fa_loadings))
+      }
+      },
+      error = function(e){
+        warning(e)
+        fas[i, ] <- c(NA, NA)
+        },
+      warning = function(w){
+        warning(paste0("When computing factor loadings for ", scale_name, gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE)
+        fas[i, ] <- c(NA, NA)})
+  }
+
+  # fas <- t(sapply(names(keys.list), function(scale_name){
+  #   tryCatch(range(as.numeric(fa(data[keys.list[[scale_name]]])$loadings)),
+  #            error = function(e){warning(e); return(c(NA, NA))},
+  #            warning = function(w){warning(paste0("When computing factor loadings for ", scale_name, gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE); return(c(NA, NA))})
+  # }))
+
+  keys <- make.keys(length(scoredatanames), keys.list = use_keys,
                     item.labels = scoredatanames)
   scores <- scoreItems(keys, data, missing = missing, impute = impute)
 
@@ -113,11 +144,6 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
                                      Omega = omegas, Interpret.O = interpret(omegas))
   }
 
-  fas <- t(sapply(names(keys.list), function(scale_name){
-    tryCatch(range(as.numeric(fa(data[keys.list[[scale_name]]])$loadings)),
-             error = function(e){warning(e); return(c(NA, NA))},
-             warning = function(w){warning(paste0("When computing factor loadings for ", scale_name, gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE); return(c(NA, NA))})
-  }))
   colnames(fas) <- c("min_load", "max_load")
   table_descriptives <- cbind(table_descriptives, fas)
   table_descriptives[, sapply(table_descriptives, is.numeric)] <- lapply(table_descriptives[,

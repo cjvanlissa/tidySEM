@@ -1,1 +1,40 @@
-Package: tidySEMType: PackageDate: 2020-05-26Title: Tidy Structural Equation ModelingVersion: 0.1.1Authors@R:     c(person(given = c("Caspar", "J."),             family = "van Lissa",             role = c("aut", "cre"),             email = "c.j.vanlissa@uu.nl",             comment = c(ORCID = "0000-0002-0808-5024")))Description: A tidy workflow for generating, estimating, reporting,    and plotting structural equation models using 'lavaan' or 'Mplus'.     Throughout this workflow, elements of syntax, results, and graphs are     represented as 'tidy' data, making them easy to customize.License: GPL (>= 3)URL: https://cjvanlissa.github.io/tidySEMBugReports: https://github.com/cjvanlissa/tidySEM/issuesDepends:     R (>= 3.2.0),    stats,    utils,    ggplot2,    lavaan,    MplusAutomationImports:     igraph,    psychSuggests:     testthat,    knitr,    rmarkdown,    dplyr,    stringr,    covrVignetteBuilder:     knitrEncoding: UTF-8LazyData: yesRoxygenNote: 7.1.0
+Package: tidySEM
+Type: Package
+Date: 2020-05-26
+Title: Tidy Structural Equation Modeling
+Version: 0.1.2.1
+Authors@R: 
+    c(person(given = c("Caspar", "J."),
+             family = "van Lissa",
+             role = c("aut", "cre"),
+             email = "c.j.vanlissa@uu.nl",
+             comment = c(ORCID = "0000-0002-0808-5024")))
+Description: A tidy workflow for generating, estimating, reporting,
+    and plotting structural equation models using 'lavaan' or 'Mplus'. 
+    Throughout this workflow, elements of syntax, results, and graphs are 
+    represented as 'tidy' data, making them easy to customize.
+License: GPL (>= 3)
+URL: https://cjvanlissa.github.io/tidySEM
+BugReports: https://github.com/cjvanlissa/tidySEM/issues
+Depends: 
+    R (>= 3.2.0),
+    stats,
+    utils,
+    ggplot2,
+    lavaan,
+    MplusAutomation
+Imports: 
+    igraph,
+    psych
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown,
+    dplyr,
+    stringr,
+    covr
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: yes
+RoxygenNote: 7.1.0

@@ -161,11 +161,17 @@ graph_sem.default <- function(edges = NULL,
 #' @param model Instead of the edges argument, it is also possible to use the
 #' model argument and pass an object for which a method exists (e.g.,
 #' \code{mplus.model} or \code{lavaan}).
+#' @param label Character, indicating which column to use for node labels. Nodes
+#' are labeled with mean values of the observed/latent variables they represent.
+#' Defaults to 'est_sig', which consists of the estimate value with significance
+#' asterisks.
 #' @rdname graph_sem
 #' @export
 graph_sem.lavaan <- function(model,
+                             label = "est_sig",
                              ...){
   Args <- as.list(match.call()[-1])
+  Args$model <- force(model)
   do.call(graph_model, Args)
 }
 
@@ -174,9 +180,10 @@ graph_sem.lavaan <- function(model,
 #' @export
 graph_sem.mplus.model <- graph_sem.lavaan
 
-graph_model <- function(model, ...) {
+graph_model <- function(model, label = "est_sig", ...) {
   Args <- as.list(match.call()[-1])
-  call_args <- list(x = model)
+  call_args <- list(x = model,
+                    label = label)
   if(!"edges" %in% names(Args)){
     edges <- do.call(get_edges, call_args)
     Args$edges <- edges
@@ -641,17 +648,15 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
   obs <- unique(x$lhs[x$op %in% c("~~", "~", "~1")])
   nodes <- unique(c(latent, obs))
   nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
-
+  nodes$label <- nodes$name
   if(!is.null(label)){
     if(label %in% names(x)){
       labelz <- x[x$op == "~1", ]
       labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
       if(any(!is.na(labelz))){
-        nodes$label[!is.na(labelz)] <- paste0(nodes$name[!is.na(labelz)], "\n", labelz[!is.na(labelz)])
+        nodes$label[!is.na(labelz)] <- apply(cbind(nodes$name[!is.na(labelz)], labelz[!is.na(labelz)]), 1, paste0, collapse = "\n")
       }
     }
-  } else {
-    nodes$label <- nodes$name
   }
   class(nodes) <- c("tidy_nodes", class(nodes))
   nodes

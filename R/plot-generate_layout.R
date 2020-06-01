@@ -130,10 +130,12 @@ get_layout.tidy_results <- function(x, ..., layout_algorithm = "layout_as_tree")
     out[lo[this_var, 2], lo[this_var, 1]] <- vnames[this_var]
   }
   if(dim(out)[2] < dim(out)[1]){
-    t(out)
+    out <- t(out)
   } else {
-    out[nrow(out):1, ]
+    out <- out[nrow(out):1, ]
   }
+  class(out) <- c("layout_matrix", class(out))
+  return(out)
 }
 
 #' @importFrom utils tail
@@ -254,11 +256,13 @@ get_layout.default <- function(x, ..., rows = NULL){
     stop("Number of arguments is not a multiple of rows = ", rows, call. = FALSE)
   }
   vec <- do.call(c, Args)
-  do.call(matrix, list(
+  out <- do.call(matrix, list(
     data = vec,
     nrow = rows,
     byrow = TRUE
   ))
+  class(out) <- c("layout_matrix", class(out))
+  return(out)
 }
 
 
