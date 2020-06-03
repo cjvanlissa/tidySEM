@@ -45,7 +45,7 @@ graph_sem(layout = matrix("x")) + coord_fixed()
 
 ```{r echo = FALSE, out.width='20%'}
 p <- graph_sem(layout = matrix("x")) + coord_fixed()
-ggsave("var_obs.svg", p, device = "svg", width= 1, height = .7)
+if(!file.exists("var_obs.svg")) ggsave("var_obs.svg", p, device = "svg", width= 1, height = .7)
 knitr::include_graphics("var_obs.svg")
 ```
 
@@ -63,7 +63,7 @@ graph_sem(nodes = data.frame(name = "x", shape = "oval"), layout = matrix("x"), 
 ```
 ```{r echo = FALSE, out.width='20%'}
 p <- graph_sem(nodes = data.frame(name = "x", shape = "oval"), layout = matrix("x"), fix_coord = TRUE)
-ggsave("var_lat.svg", p, device = "svg", width= 1, height = .7)
+if(!file.exists("var_lat.svg")) ggsave("var_lat.svg", p, device = "svg", width= 1, height = .7)
 knitr::include_graphics("var_lat.svg")
 ```
 
@@ -83,7 +83,7 @@ In SEM graphs, we represent regression effects as single-headed arrows:
 
 ```{r echo = FALSE, out.width='20%'}
 p <- ggplot(data.frame(x = 1, y = 1, xend = 4, yend = 1), aes(x=x, y=y,xend=xend, yend=yend)) +geom_segment(arrow = arrow(type = "closed"))+theme_void()
-ggsave("arrow.svg", p, device = "svg", width= 3, height = .7)
+if(!file.exists("arrow.svg")) ggsave("arrow.svg", p, device = "svg", width= 3, height = .7)
 knitr::include_graphics("arrow.svg")
 ```
 
@@ -99,7 +99,7 @@ Visually, we indicate covariances as curved (dashed) lines without arrowheads:
 
 ```{r echo = FALSE, out.width='20%'}
 p <- ggplot(data.frame(x = 1, y = 1, xend = 2, yend = 1), aes(x=x, y=y,xend=xend, yend=yend)) + geom_curve(linetype = 2)+theme_void()+scale_y_continuous(limits = c(0,2))
-ggsave("curve.svg", p, device = "svg", width= 4, height = 2)
+if(!file.exists("curve.svg")) ggsave("curve.svg", p, device = "svg", width= 4, height = 2)
 knitr::include_graphics("curve.svg")
 ```
 
@@ -122,7 +122,7 @@ p <- tidySEM:::.plot_variances(p = ggplot(NULL), df = data.frame(edge_xmin = 1, 
                                                    connect_to = "top", label = "e",
                                                    arrow = "both"), diameter = 1,
                           text_size = 8)+theme_void()
-ggsave("error.svg", p, device = "svg", width= 2, height = 2)
+if(!file.exists("error.svg")) ggsave("error.svg", p, device = "svg", width= 2, height = 2)
 knitr::include_graphics("error.svg")
 ```
 
@@ -151,7 +151,7 @@ df <- iris[, 1:2]
 names(df) <- c("x", "y")
 sem("y ~ x", df) %>%
   graph_sem(spacing_x = 2.5, fix_coord = TRUE) -> p
-ggsave("mod_reg.svg", p, device = "svg", width= 4, height = 1)
+if(!file.exists("mod_reg.svg")) ggsave("mod_reg.svg", p, device = "svg", width= 4, height = 1)
 knitr::include_graphics("mod_reg.svg")
 ```
 
@@ -191,7 +191,7 @@ tidy_sem(df) %>%
   measurement() %>%
   estimate_lavaan() %>%
   graph_sem(fix_coord = TRUE) -> p
-ggsave("mod_meas.svg", p, device = "svg", width= 4, height = 4)
+if(!file.exists("mod_meas.svg")) ggsave("mod_meas.svg", p, device = "svg", width= 4, height = 4)
 knitr::include_graphics("mod_meas.svg")
 ```
 
@@ -226,7 +226,7 @@ tidy_sem(df) %>%
   add_paths(y ~ x, x ~~ x, x ~1) %>%
   estimate_lavaan() %>%
   graph_sem(fix_coord = TRUE) -> p
-ggsave("mod_sem1.svg", p, device = "svg", width= 6, height = 6)
+if(!file.exists("mod_sem1.svg")) ggsave("mod_sem1.svg", p, device = "svg", width= 6, height = 6)
 knitr::include_graphics("mod_sem1.svg")
 ```
 
@@ -256,7 +256,7 @@ tidy_sem(df) %>%
               get_layout("",     "x",    "",
                          "",     "y",    "",
                          "y_1", "y_2", "y_3", rows = 3), fix_coord = TRUE) -> p
-ggsave("mod_sem2.svg", p, device = "svg", width= 6, height = 6)
+if(!file.exists("mod_sem2.svg")) ggsave("mod_sem2.svg", p, device = "svg", width= 6, height = 6)
 knitr::include_graphics("mod_sem2.svg")
 ```
 
