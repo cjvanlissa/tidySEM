@@ -11,3 +11,4 @@ dev/
 *.RData
 tests/test_local.R
 *.psd
+CRAN-RELEASE
