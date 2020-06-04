@@ -43,9 +43,9 @@ estimate_lavaan <- function(x, func = "sem", ...){
 #' @return An object of class \code{mplusObject}.
 #' @examples
 #' library(MplusAutomation)
-#' if(tidySEM:::has_mplus()){
-#'   model <- tidy_sem(iris, "\\.")
-#'   model <- measurement(model)
+#' model <- tidy_sem(iris, "\\.")
+#' model <- measurement(model)
+#' if(mplusAvailable() == 0){
 #'   estimate_mplus(model)
 #' }
 #' @rdname estimate_mplus

@@ -12,8 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(MplusAutomation)
-run_mplus <- mplusAvailable(TRUE) == 0
+run_mplus <- FALSE
 ```
 
 ```{r setup, echo = FALSE, message = FALSE}
@@ -79,16 +78,6 @@ A dictionary indicates which variables in the data belong to, for example, the s
 model <- tidy_sem(df)
 model
 ```
-
-<!--### Optional: Get reliability from psych
-
-Using the data dictionary, we can easily get a keys list for use with functions from the `psych` library, such as `psych::alpha()`:
-
-
-library(psych)
-psych::alpha(df, keys = tidySEM:::keys(dict))
-
--->
 
 ### Step 3: Generate syntax
 

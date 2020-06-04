@@ -5,8 +5,10 @@
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
 #' @examples
-#' mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(
-#' lhs = "x", op = "~", rhs = "y", free = TRUE)))
+#' mod <- list(syntax = structure(list(lhs = "x", op = "~", rhs = "y",
+#'                                     free = TRUE, value = "", label = "",
+#'                                     category = "", aspect = ""),
+#'             class = "data.frame", row.names = c(NA, -1L)))
 #' class(mod) <- "tidy_sem"
 #' as_mplus(mod)
 #' @rdname as_mplus
@@ -85,8 +87,10 @@ as_mplus.tidy_sem <- function(x, ...){
 #' @param ... Additional parameters to be passed to and from functions.
 #' @return Character vector.
 #' @examples
-#' mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(
-#' lhs = "x", op = "~", rhs = "y", free = TRUE)))
+#' mod <- list(syntax = structure(list(lhs = "x", op = "~", rhs = "y",
+#'                                     free = TRUE, value = "", label = "",
+#'                                     category = "", aspect = ""),
+#'             class = "data.frame", row.names = c(NA, -1L)))
 #' class(mod) <- "tidy_sem"
 #' as_lavaan(mod)
 #' @rdname as_lavaan

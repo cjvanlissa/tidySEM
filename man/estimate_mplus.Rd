@@ -31,9 +31,9 @@ optional. If these are not specified, the model will be run in
 }
 \examples{
 library(MplusAutomation)
-if(tidySEM:::has_mplus()){
-  model <- tidy_sem(iris, "\\\\.")
-  model <- measurement(model)
+model <- tidy_sem(iris, "\\\\.")
+model <- measurement(model)
+if(mplusAvailable() == 0){
   estimate_mplus(model)
 }
 }

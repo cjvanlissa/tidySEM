@@ -19,8 +19,10 @@ Final stage in the 'tidySEM' workflow for syntax generation:
 Convert the \code{tidy_sem} object to 'Mplus' syntax.
 }
 \examples{
-mod <- list(syntax = tidySEM:::check_lav_tab(data.frame(
-lhs = "x", op = "~", rhs = "y", free = TRUE)))
+mod <- list(syntax = structure(list(lhs = "x", op = "~", rhs = "y",
+                                    free = TRUE, value = "", label = "",
+                                    category = "", aspect = ""),
+            class = "data.frame", row.names = c(NA, -1L)))
 class(mod) <- "tidy_sem"
 as_mplus(mod)
 }
