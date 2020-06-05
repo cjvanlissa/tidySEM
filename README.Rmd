@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 <!--[![Codecov test coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://codecov.io/gh/cjvanlissa/tidySEM?branch=master)
 <!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
 
-tidySEM provides functionality to conduct and report structural equation modeling analyses with existing packages, such as `lavaan` and `MplusAutomation`. Its aim is to provide three specific functions:
+The package `tidySEM` provides a 'tidy' workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the R package `lavaan`, or the commercial stand-alone program `Mplus` (through `MplusAutomation`). The aim of `tidySEM` is to provide three specific functions:
 
-1. To generate model syntax in a top-down, tidy way,
-2. To tabulate model output in a publication-ready, uniform manner,
-3. To make easily customizable graphs for SEM-models.
+1. Generate model syntax in a top-down, tidy way,
+2. Tabulate model output in a publication-ready, uniform manner,
+3. Make easily customizable graphs for SEM-models.
 
 These functions are designed with the [*tidy tools manifesto* (Wickham, last updated 23-11-2019)](https://tidyverse.tidyverse.org/articles/manifesto.html) in mind, and interface with the existing suite of packages in the [`tidyverse`](https://tidyverse.tidyverse.org/).
 
@@ -48,11 +48,13 @@ devtools::install_github("cjvanlissa/tidySEM")
 
 Every user-facing function in the package is documented, and the documentation can be accessed by running `?function_name` in the R console, e.g., `?graph_sem`.
 
-Furthermore, there are three vignettes, describing the three main tracks of `tidySEM` functions:
+Furthermore, there are three main vignettes, describing the three main tracks of `tidySEM` functions:
 
 1. A [vignette about generating syntax and estimating models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html)
 2. A [vignette about tabulating results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
 3. A [vignette about making graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
+    a) An additional vignette describes the A [graphing conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html) for
+    structural equation models.
 
 ## Citing tidySEM
 
