@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   Generating_syntax: Generating_syntax.html
   Plotting_graphs: Plotting_graphs.html
+  sem_graph: sem_graph.html
   Tabulating_results: Tabulating_results.html
-last_built: 2020-05-18T12:04Z
+last_built: 2020-06-05T14:00Z
 

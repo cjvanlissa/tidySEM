@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract correlation tables — table_cors • tidySEM</title>
+<title>Changelog • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,7 @@
 
 
 
-<meta property="og:title" content="Extract correlation tables — table_cors" />
-<meta property="og:description" content="Extracts a publication-ready covariance or correlation matrix from an object
-for which a method exists." />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -60,7 +58,7 @@ for which a method exists." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -133,72 +131,44 @@ for which a method exists." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract correlation tables</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/results-table_results.R'><code>R/results-table_results.R</code></a></small>
-    <div class="hidden name"><code>table_cors.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Extracts a publication-ready covariance or correlation matrix from an object
-for which a method exists.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>table_cors</span>(<span class='no'>x</span>, <span class='kw'>value_column</span> <span class='kw'>=</span> <span class='st'>"est_sig_std"</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>An object for which a method exists.</p></td>
-    </tr>
-    <tr>
-      <th>value_column</th>
-      <td><p>Character. Name of the column to use to propagate the
-matrix. Defaults to "est_sig_std", the standardized estimate with
-significance asterisks.</p></td>
-    </tr>
-    <tr>
-      <th>digits</th>
-      <td><p>Number of digits to round to when formatting values.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Additional arguments passed to and from methods.</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A Matrix or a list of matrices (in case there are between/within
-correlation matrices).</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>lavaan</span>)
-<span class='no'>HS.model</span> <span class='kw'>&lt;-</span> <span class='st'>'  visual =~ x1 + x2 + x3
-               textual =~ x4 + x5 + x6
-               speed   =~ x7 + x8 + x9 '</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span>(<span class='no'>HS.model</span>,
-           <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>HolzingerSwineford1939</span>,
-           <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"school"</span>)
-<span class='fu'>table_cors</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $Pasteur
-#&gt;         speed    textual   visual   
-#&gt; speed   "1.00"   "0.33**"  "0.30**" 
-#&gt; textual "0.33**" "1.00"    "0.48***"
-#&gt; visual  "0.30**" "0.48***" "1.00"   
-#&gt; 
-#&gt; $`Grant-White`
-#&gt;         speed     textual   visual   
-#&gt; speed   "1.00"    "0.34***" "0.52***"
-#&gt; textual "0.34***" "1.00"    "0.54***"
-#&gt; visual  "0.52***" "0.54***" "1.00"   
-#&gt; </div></pre>
+    <div id="tidysem-012" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.2">
+<a href="#tidysem-012" class="anchor"></a>tidySEM 0.1.2</h1>
+<ul>
+<li>
+<code><a href="../reference/graph_sem.html">graph_sem.lavaan()</a></code> and <code><a href="../reference/graph_sem.html">graph_sem.mplus.model()</a></code> gain an argument <code>label = "est_sig"</code>, so users can easily select custom labels.</li>
+<li>New vignette about SEM plotting conventions.</li>
+<li>
+<code><a href="../reference/graph_sem.html">graph_sem()</a></code> adds empty labels for nodes without a mean; in version 0.1.1, such nodes were displayed without any node label. TODO: * <code><a href="../reference/add_paths.html">add_paths()</a></code> by default sets variance for variables so the model can be estimated in lavaan</li>
+</ul>
+</div>
+    <div id="tidysem-011" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.1">
+<a href="#tidysem-011" class="anchor"></a>tidySEM 0.1.1</h1>
+<ul>
+<li>Addressed comment by CRAN maintainer Jelena Saf</li>
+<li>Minor bug fixes</li>
+</ul>
+</div>
+    <div id="tidysem-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#tidysem-010" class="anchor"></a>tidySEM 0.1.0</h1>
+<ul>
+<li>First CRAN release.</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 

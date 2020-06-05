@@ -12,13 +12,17 @@ status](https://travis-ci.org/cjvanlissa/tidySEM.svg?branch=master)](https://tra
 <!--[![Codecov test coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://codecov.io/gh/cjvanlissa/tidySEM?branch=master)
 <!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
 
-tidySEM provides functionality to conduct and report structural equation
-modeling analyses with existing packages, such as `lavaan` and
-`MplusAutomation`. Its aim is to provide three specific functions:
+The package `tidySEM` provides a ‘tidy’ workflow for conducting,
+reporting, and plotting structural equation modeling analyses. It does
+not perform model estimation, but instead allows users to estimate
+models in a software-agnostic way, using either the R package `lavaan`,
+or the commercial stand-alone program `Mplus` (through
+`MplusAutomation`). The aim of `tidySEM` is to provide three specific
+functions:
 
-1.  To generate model syntax in a top-down, tidy way,
-2.  To tabulate model output in a publication-ready, uniform manner,
-3.  To make easily customizable graphs for SEM-models.
+1.  Generate model syntax in a top-down, tidy way,
+2.  Tabulate model output in a publication-ready, uniform manner,
+3.  Make easily customizable graphs for SEM-models.
 
 These functions are designed with the [*tidy tools manifesto* (Wickham,
 last updated
@@ -36,7 +40,7 @@ install.packages("tidySEM")
 ```
 -->
 
-You can install the development version of tidySEM from GitHub with:
+You can install the development version of `tidySEM` from ‘GitHub’ with:
 
 ``` r
 install.packages("devtools")
@@ -49,8 +53,8 @@ Every user-facing function in the package is documented, and the
 documentation can be accessed by running `?function_name` in the R
 console, e.g., `?graph_sem`.
 
-Furthermore, there are three vignettes, describing the three main tracks
-of `tidySEM` functions:
+Furthermore, there are three main vignettes, describing the three main
+tracks of `tidySEM` functions:
 
 1.  A [vignette about generating syntax and estimating
     models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html)
@@ -58,6 +62,9 @@ of `tidySEM` functions:
     results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
 3.  A [vignette about making
     graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
+    1)  An additional vignette describes the A [graphing
+        conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html)
+        for structural equation models.
 
 ## Citing tidySEM
 
@@ -71,10 +78,10 @@ reporting, and plotting structural equation models in lavaan or Mplus.*
 
 If you have ideas, please get involved. I am currently looking for a
 major contributor on this project, and smaller contributions are also
-welcome. You can contribute by opening an issue on GitHub, or sending a
-pull request with proposed features.
+welcome. You can contribute by opening an issue on ‘GitHub’, or sending
+a pull request with proposed features.
 
-  - File a GitHub issue [here](https://github.com/cjvanlissa/tidySEM)
+  - File a ‘GitHub’ issue [here](https://github.com/cjvanlissa/tidySEM)
   - Make a pull request
     [here](https://github.com/cjvanlissa/tidySEM/pulls)
 

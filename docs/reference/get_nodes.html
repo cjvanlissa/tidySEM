@@ -73,7 +73,7 @@ are defined as observed or latent variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -102,9 +102,15 @@ are defined as observed or latent variables." />
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
     <li>
+      <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -166,9 +172,9 @@ asterisks.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>lavaan</span>)
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span>(<span class='st'>"dist ~ speed"</span>, <span class='no'>cars</span>)
-<span class='fu'>get_nodes</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;    name shape
-#&gt; 1  dist  rect
-#&gt; 2 speed  rect</div></pre>
+<span class='fu'>get_nodes</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;    name shape label
+#&gt; 1  dist  rect  dist
+#&gt; 2 speed  rect speed</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

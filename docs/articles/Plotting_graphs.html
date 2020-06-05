@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -60,9 +60,15 @@
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
     <li>
+      <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -98,7 +104,7 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidySEM</span>)
 <span class="co">#&gt; Loading required package: ggplot2</span>
 <span class="co">#&gt; Loading required package: lavaan</span>
-<span class="co">#&gt; This is lavaan 0.6-5</span>
+<span class="co">#&gt; This is lavaan 0.6-6</span>
 <span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
 <span class="co">#&gt; Loading required package: MplusAutomation</span>
 <span class="co">#&gt; Version:  0.7-3</span>
@@ -108,6 +114,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; -- see citation("MplusAutomation").</span></pre></body></html></div>
 <p><code>tidySEM</code> offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely <em>programmatic</em>, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as <code>data.frame</code>s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through <code><a href="../reference/table_results.html">table_results()</a></code>.</p>
+<p>For users wholly unfamiliar with SEM graphs, I recommend reading the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">vignette about SEM graphing conventions</a> first.</p>
 <div id="the-tidysem-workflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-tidysem-workflow" class="anchor"></a>The tidySEM workflow</h2>
@@ -150,19 +157,19 @@
 <a href="#step-2-examine-nodes-and-edges" class="anchor"></a>Step 2: Examine nodes and edges</h3>
 <p>For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running <code><a href="../reference/get_nodes.html">get_nodes()</a></code>:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span>(<span class="no">fit</span>)
-<span class="co">#&gt;       name shape</span>
-<span class="co">#&gt; 1   visual  oval</span>
-<span class="co">#&gt; 2  textual  oval</span>
-<span class="co">#&gt; 3    speed  oval</span>
-<span class="co">#&gt; 4       x1  rect</span>
-<span class="co">#&gt; 5       x2  rect</span>
-<span class="co">#&gt; 6       x3  rect</span>
-<span class="co">#&gt; 7       x4  rect</span>
-<span class="co">#&gt; 8       x5  rect</span>
-<span class="co">#&gt; 9       x6  rect</span>
-<span class="co">#&gt; 10      x7  rect</span>
-<span class="co">#&gt; 11      x8  rect</span>
-<span class="co">#&gt; 12      x9  rect</span></pre></body></html></div>
+<span class="co">#&gt;       name shape   label</span>
+<span class="co">#&gt; 1   visual  oval  visual</span>
+<span class="co">#&gt; 2  textual  oval textual</span>
+<span class="co">#&gt; 3    speed  oval   speed</span>
+<span class="co">#&gt; 4       x1  rect      x1</span>
+<span class="co">#&gt; 5       x2  rect      x2</span>
+<span class="co">#&gt; 6       x3  rect      x3</span>
+<span class="co">#&gt; 7       x4  rect      x4</span>
+<span class="co">#&gt; 8       x5  rect      x5</span>
+<span class="co">#&gt; 9       x6  rect      x6</span>
+<span class="co">#&gt; 10      x7  rect      x7</span>
+<span class="co">#&gt; 11      x8  rect      x8</span>
+<span class="co">#&gt; 12      x9  rect      x9</span></pre></body></html></div>
 <p>And for the edges:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span>(<span class="no">fit</span>)
 <span class="co">#&gt;       from      to arrow   label connect_from connect_to curvature</span>
@@ -208,7 +215,9 @@
            <span class="fl">NA</span>,  <span class="st">"e"</span>, <span class="fl">NA</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] "c"  NA   "d" </span>
-<span class="co">#&gt; [2,] NA   "e"  NA</span></pre></body></html></div>
+<span class="co">#&gt; [2,] NA   "e"  NA  </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 </div>
 <div id="automatically-generate-layout-for-a-model" class="section level4">
 <h4 class="hasAnchor">
@@ -220,17 +229,23 @@
 <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>)</pre></body></html></div>
 <pre><code>#&gt;      [,1] [,2]     [,3]
 #&gt; [1,] NA   "visual" NA  
-#&gt; [2,] "x1" "x2"     "x3"</code></pre>
+#&gt; [2,] "x1" "x2"     "x3"
+#&gt; attr(,"class")
+#&gt; [1] "layout_matrix" "matrix"        "array"</code></pre>
 <p>Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_in_circle"</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]    </span>
 <span class="co">#&gt; [1,] NA   "x1" NA      </span>
 <span class="co">#&gt; [2,] "x2" NA   "visual"</span>
-<span class="co">#&gt; [3,] NA   "x3" NA</span>
+<span class="co">#&gt; [3,] NA   "x3" NA      </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span>
 <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_on_grid"</span>)
 <span class="co">#&gt;      [,1]     [,2]</span>
 <span class="co">#&gt; [1,] "x2"     "x3"</span>
-<span class="co">#&gt; [2,] "visual" "x1"</span></pre></body></html></div>
+<span class="co">#&gt; [2,] "visual" "x1"</span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 </div>
 <div id="specifying-layout-in-a-spreadsheet-program" class="section level4">
 <h4 class="hasAnchor">
@@ -259,19 +274,25 @@
 <p>We can specify a simple layout for two hypothetical nodes <code>x</code> and <code>y</code> is generated as follows:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>)
 <span class="co">#&gt;      [,1] [,2]</span>
-<span class="co">#&gt; [1,] "x"  "y"</span></pre></body></html></div>
+<span class="co">#&gt; [1,] "x"  "y" </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>For a mediation model, one might specify a layout like this:</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
            <span class="st">"x"</span>, <span class="st">""</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "m"  ""  </span>
-<span class="co">#&gt; [2,] "x"  ""   "y"</span></pre></body></html></div>
+<span class="co">#&gt; [2,] "x"  ""   "y" </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>For a three-item CFA model, one might specify:</p>
 <div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
            <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "F"  ""  </span>
-<span class="co">#&gt; [2,] "y1" "y2" "y3"</span></pre></body></html></div>
+<span class="co">#&gt; [2,] "y1" "y2" "y3"</span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>And for the CFA model we estimated above:</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">lay</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
                   <span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span>, <span class="st">"x7"</span>, <span class="st">"x8"</span>, <span class="st">"x9"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -101,9 +101,15 @@
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
     <li>
+      <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -192,13 +198,17 @@ names, empty strings (""), or NA values.</p></td>
 <span class='fu'>get_layout</span>(<span class='st'>"c"</span>, <span class='fl'>NA</span>,  <span class='st'>"d"</span>,
            <span class='fl'>NA</span>,  <span class='st'>"e"</span>, <span class='fl'>NA</span>, <span class='kw'>rows</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3]
 #&gt; [1,] "c"  NA   "d" 
-#&gt; [2,] NA   "e"  NA  </div><div class='input'>
+#&gt; [2,] NA   "e"  NA  
+#&gt; attr(,"class")
+#&gt; [1] "layout_matrix" "matrix"        "array"        </div><div class='input'>
 <span class='co'># Example 2</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>lavaan</span>)
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span>(<span class='st'>' visual  =~ x1 + x2 + x3 '</span>,
            <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>HolzingerSwineford1939</span>[<span class='fl'>1</span>:<span class='fl'>50</span>, ])</div><div class='output co'>#&gt; <span class='warning'>Warning: lavaan WARNING: some estimated ov variances are negative</span></div><div class='input'><span class='fu'>get_layout</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      [,1] [,2]     [,3]
 #&gt; [1,] NA   "visual" NA  
-#&gt; [2,] "x1" "x2"     "x3"</div><div class='input'>
+#&gt; [2,] "x1" "x2"     "x3"
+#&gt; attr(,"class")
+#&gt; [1] "layout_matrix" "matrix"        "array"        </div><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Example 3</span>
 <span class='co'># Here, we first write the layout to .csv, but you could create it in a</span>

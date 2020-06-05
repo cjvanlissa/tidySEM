@@ -74,7 +74,7 @@ Convert the tidy_sem object to lavaan syntax in tabular format
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -103,9 +103,15 @@ Convert the tidy_sem object to lavaan syntax in tabular format
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
     </li>
     <li>
+      <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -159,8 +165,10 @@ Convert the <code>tidy_sem</code> object to <code>lavaan</code> syntax in tabula
     <p>Character vector.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>syntax</span> <span class='kw'>=</span> <span class='kw pkg'>tidySEM</span><span class='kw ns'>:::</span><span class='fu'>check_lav_tab</span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-<span class='kw'>lhs</span> <span class='kw'>=</span> <span class='st'>"x"</span>, <span class='kw'>op</span> <span class='kw'>=</span> <span class='st'>"~"</span>, <span class='kw'>rhs</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>free</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))
+    <pre class="examples"><div class='input'><span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>syntax</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/structure.html'>structure</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>lhs</span> <span class='kw'>=</span> <span class='st'>"x"</span>, <span class='kw'>op</span> <span class='kw'>=</span> <span class='st'>"~"</span>, <span class='kw'>rhs</span> <span class='kw'>=</span> <span class='st'>"y"</span>,
+                                    <span class='kw'>free</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>""</span>,
+                                    <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>aspect</span> <span class='kw'>=</span> <span class='st'>""</span>),
+            <span class='kw'>class</span> <span class='kw'>=</span> <span class='st'>"data.frame"</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, -<span class='fl'>1L</span>)))
 <span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>mod</span>) <span class='kw'>&lt;-</span> <span class='st'>"tidy_sem"</span>
 <span class='fu'>as_lavaan</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt;   lhs op rhs free ustart label
 #&gt; 1   x  ~   y    1   &lt;NA&gt;      </div></pre>
