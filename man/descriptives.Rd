@@ -4,10 +4,12 @@
 \alias{descriptives}
 \title{Describe a dataset}
 \usage{
-descriptives(x)
+descriptives(x, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists.}
+
+\item{...}{Additional arguments.}
 }
 \value{
 A \code{data.frame} with descriptive statistics for \code{x}.
