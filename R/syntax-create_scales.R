@@ -119,8 +119,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
                                    Items = sapply(keys.list, length))
-  desc <- do.call(psych::describe, list(x = scores$scores))[, c(2, 3, 4, 8, 9)]
-  class(desc) <- "data.frame"
+  desc <- descriptives(scores$scores)[, c("missing", "mean", "sd", "min", "max")]
   table_descriptives <- cbind(table_descriptives,
                               desc,
                               skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))
@@ -213,73 +212,5 @@ spearman_brown.matrix <- spearman_brown.data.frame
 spearman_brown.default <- function(x, y, ...){
   r <- cor(x, y, use = "pairwise.complete.obs")
   1/(1+(1/((r/(1-r))+(r/(1-r)))))
-}
-
-
-#' @title Calculate skew and kurtosis
-#' @description Calculate skew and kurtosis, standard errors for both, and the
-#' estimates divided by two times the standard error. If this latter quantity
-#' exceeds an absolute value of 1, the skew/kurtosis is significant. With very
-#' large sample sizes, significant skew/kurtosis is common.
-#' @param x An object for which a method exists.
-#' @param verbose Whether or not to print messages to the console,
-#' Default: FALSE
-#' @param se Whether or not to return the standard errors, Default: FALSE
-#' @param ... Additional arguments to pass to and from functions.
-#' @return matrix
-#' @examples
-#' skew_kurtosis(datasets::anscombe)
-#' @rdname skew_kurtosis
-#' @export
-skew_kurtosis <- function(x, verbose = FALSE, se = FALSE, ...){
-  UseMethod("skew_kurtosis", x)
-}
-
-#' @method skew_kurtosis data.frame
-#' @export
-skew_kurtosis.data.frame <- function(x, verbose = FALSE, se = FALSE, ...){
-  t(sapply(x, skew_kurtosis))
-}
-
-#' @method skew_kurtosis matrix
-#' @export
-skew_kurtosis.matrix <- function(x, verbose = FALSE, se = FALSE, ...){
-  t(apply(x, 2, skew_kurtosis))
-}
-
-#' @method skew_kurtosis numeric
-#' @export
-skew_kurtosis.numeric <- function(x, verbose = FALSE, se = FALSE, ...){
-  x <- x[!is.na(x)]
-  n <- length(x)
-  out <- rep(NA, 6)
-  names(out) <- c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
-  if(n > 3){
-    if(n > 5000 & verbose) message("Sample size > 5000; skew and kurtosis will likely be significant.")
-    skew <- sum((x-mean(x))^3)/(n*sqrt(var(x))^3)
-    skew_se <- sqrt(6*n*(n-1)/(n-2)/(n+1)/(n+3))
-    skew_2se <- skew/(2*skew_se)
-    kurt <- sum((x-mean(x))^4)/(n*var(x)^2) - 3
-    kurt_se <- sqrt(24*n*((n-1)^2)/(n-3)/(n-2)/(n+3)/(n+5))
-    kurt_2se <- kurt/(2*kurt_se)
-    out <- c(skew = skew, skew_se = skew_se, skew_2se = skew_2se, kurt = kurt, kurt_se = kurt_se, kurt_2se = kurt_2se)
-  }
-  if(se){
-    return(out)
-  } else {
-    return(out[c(1,3,4,6)])
-  }
-}
-
-#' @method skew_kurtosis default
-#' @export
-skew_kurtosis.default <- function(x, verbose = FALSE, se = FALSE, ...){
-  out <- rep(NA, 6)
-  names(out) <- c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
-  if(se){
-    return(out)
-  } else {
-    return(out[c(1,3,4,6)])
-  }
 }
 
