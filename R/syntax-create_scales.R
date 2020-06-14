@@ -120,7 +120,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
                                    Items = sapply(keys.list, length))
   desc <- do.call(psych::describe, list(x = scores$scores))[, c(2, 3, 4, 8, 9)]
-
+  class(desc) <- "data.frame"
   table_descriptives <- cbind(table_descriptives,
                               desc,
                               skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))
