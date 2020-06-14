@@ -20,8 +20,6 @@
 #' @param omega Which of McDonald's \code{\link[psych]{omega}} coefficients to
 #' report. Default: NULL; valid options include: \code{"omega_h"},
 #' \code{"omega.lim"}, \code{"alpha"}, \code{"omega.tot"}, \code{"G6"}.
-#' @param write_files Whether to write the scale descriptive and correlation
-#' tables to .csv files, Default: FALSE
 #' @param digits Number of digits for rounding, Default: 2
 #' @param ... Additional parameters to pass to and from functions.
 #' @return List with elements: \code{$descriptives}, \code{$correlations}, and
@@ -40,10 +38,9 @@
 #' @rdname create_scales
 #' @export
 #' @importFrom psych scoreItems omega fa make.keys describe
-#' @importFrom utils write.csv
 #' @importFrom stats complete.cases cor.test var
 create_scales <- function(x, keys.list, missing = TRUE, impute = "none",
-                          omega = NULL, write_files = FALSE,
+                          omega = NULL,
                           digits = 2, ...)
 {
   UseMethod("create_scales", x)
@@ -56,7 +53,7 @@ create_scales <- function(x, keys.list, missing = TRUE, impute = "none",
 #' create_scales(dict)
 #' @export
 create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none",
-                          omega = NULL, write_files = FALSE,
+                          omega = NULL,
                           digits = 2, ...)
 {
   Args <- as.list(match.call()[-1])
@@ -77,7 +74,7 @@ create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none"
 #' @method create_scales data.frame
 #' @export
 create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "none",
-                          omega = NULL, write_files = FALSE,
+                          omega = NULL,
                           digits = 2, reverse_items = TRUE, ...)
 {
   data <- x
@@ -121,9 +118,12 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
   scores <- scoreItems(keys, data, missing = missing, impute = impute)
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
-                                   Items = sapply(keys.list, length), describe(scores$scores)[, c(2, 3, 4, 8, 9)])
+                                   Items = sapply(keys.list, length))
+  desc <- do.call(psych::describe, list(x = scores$scores))[, c(2, 3, 4, 8, 9)]
 
-  table_descriptives <- cbind(table_descriptives, skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))
+  table_descriptives <- cbind(table_descriptives,
+                              desc,
+                              skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))
 
   table_descriptives$Reliability <- as.vector(scores$alpha)
   two_items <- table_descriptives$Items < 3
@@ -154,8 +154,6 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
     table_descriptives$Reliability[two_items] <- paste0(table_descriptives$Reliability[two_items],
                                                         "(sb)")
   }
-  if (write_files)
-    write.csv(table_descriptives, "scale table.csv", row.names = FALSE)
   cordat <- data.frame(scores$scores)
   if (missing == FALSE) {
     cordat <- cordat[complete.cases(cordat), ]
@@ -170,7 +168,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
   }, x = combos$Var1, y = combos$Var2), nrow = ncol(cordat))
   colnames(cortab) <- rownames(cortab) <- names(cordat)
   cortab[upper.tri(cortab)] <- ""
-  if (write_files) write.csv(cortab, "correlation table.csv")
+  rownames(table_descriptives) <- NULL
   out <- list(descriptives = table_descriptives, correlations = cortab,
               scores = data.frame(scores$scores))
   class(out) <- c("tidy_scales", class(out))

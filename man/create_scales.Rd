@@ -11,7 +11,6 @@ create_scales(
   missing = TRUE,
   impute = "none",
   omega = NULL,
-  write_files = FALSE,
   digits = 2,
   ...
 )
@@ -22,7 +21,6 @@ create_scales(
   missing = TRUE,
   impute = "none",
   omega = NULL,
-  write_files = FALSE,
   digits = 2,
   ...
 )
@@ -46,9 +44,6 @@ acceptable for mean scales, but not for sum scales. See:
 \item{omega}{Which of McDonald's \code{\link[psych]{omega}} coefficients to
 report. Default: NULL; valid options include: \code{"omega_h"},
 \code{"omega.lim"}, \code{"alpha"}, \code{"omega.tot"}, \code{"G6"}.}
-
-\item{write_files}{Whether to write the scale descriptive and correlation
-tables to .csv files, Default: FALSE}
 
 \item{digits}{Number of digits for rounding, Default: 2}
 
