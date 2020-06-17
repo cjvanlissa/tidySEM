@@ -30,7 +30,7 @@ descriptives.data.frame <- function(x, ...) {
   out <- lapply(x, descriptives)
   all_names <-
     c(
-      "missing",
+      "n",
       "unique",
       "mean",
       "median",
@@ -70,7 +70,7 @@ descriptives.numeric <- function(x, ...) {
   sk <- skew_kurtosis(x)
   cbind(
     data.frame(
-      missing = sum(is.na(x)) / length(x),
+      n = sum(!is.na(x)),
       unique = length(unique(x)),
       mean = mean(x, na.rm = TRUE),
       median = median(x, na.rm = TRUE),
@@ -94,7 +94,7 @@ descriptives.default <- function(x, ...) {
   if(!is.vector(x)) x <- tryCatch(as.vector(x), error = function(e){NA})
   tb <- tryCatch(table(x), error = function(e){NA})
   data.frame(
-    missing = tryCatch({sum(is.na(x)) / length(x)}, error = function(e){NA}),
+    n = tryCatch({sum(!is.na(x))}, error = function(e){NA}),
     unique = tryCatch(length(tb), error = function(e){NA}),
     mode = tryCatch(tb[which.max(tb)], error = function(e){NA}),
     mode_value = tryCatch(names(tb)[which.max(tb)], error = function(e){NA}),
