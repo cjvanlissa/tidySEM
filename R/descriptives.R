@@ -165,30 +165,32 @@ skew_kurtosis.numeric <-
   function(x, verbose = FALSE, se = FALSE, ...) {
     x <- x[!is.na(x)]
     n <- length(x)
-    out <- rep(NA, 6)
+    out <- tryCatch({
+      if (n > 3) {
+        if (n > 5000 &
+            verbose)
+          message("Sample size > 5000; skew and kurtosis will likely be significant.")
+        skew <- sum((x - mean(x)) ^ 3) / (n * sqrt(var(x)) ^ 3)
+        skew_se <- sqrt(6 * n * (n - 1) / (n - 2) / (n + 1) / (n + 3))
+        skew_2se <- skew / (2 * skew_se)
+        kurt <- sum((x - mean(x)) ^ 4) / (n * var(x) ^ 2) - 3
+        kurt_se <- sqrt(24 * n * ((n - 1) ^ 2) / (n - 3) / (n - 2) / (n + 3) /
+                          (n + 5))
+        kurt_2se <- kurt / (2 * kurt_se)
+        c(skew,
+          skew_se,
+          skew_2se,
+          kurt,
+          kurt_se,
+          kurt_2se
+        )
+      } else {
+        stop()
+      }
+    }, error = function(e){ rep(NA, 6) })
+
     names(out) <-
       c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
-    if (n > 3) {
-      if (n > 5000 &
-          verbose)
-        message("Sample size > 5000; skew and kurtosis will likely be significant.")
-      skew <- sum((x - mean(x)) ^ 3) / (n * sqrt(var(x)) ^ 3)
-      skew_se <- sqrt(6 * n * (n - 1) / (n - 2) / (n + 1) / (n + 3))
-      skew_2se <- skew / (2 * skew_se)
-      kurt <- sum((x - mean(x)) ^ 4) / (n * var(x) ^ 2) - 3
-      kurt_se <- sqrt(24 * n * ((n - 1) ^ 2) / (n - 3) / (n - 2) / (n + 3) /
-                        (n + 5))
-      kurt_2se <- kurt / (2 * kurt_se)
-      out <-
-        c(
-          skew = skew,
-          skew_se = skew_se,
-          skew_2se = skew_2se,
-          kurt = kurt,
-          kurt_se = kurt_se,
-          kurt_2se = kurt_2se
-        )
-    }
     if (se) {
       return(out)
     } else {
