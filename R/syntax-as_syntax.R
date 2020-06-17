@@ -21,19 +21,20 @@ as_mplus <- function(x, ...){
 #' @export
 as_mplus.tidy_sem <- function(x, ...){
   if(!has_syntax(x)) return(NULL)
-  if("group" %in% names(x$syntax)){
+  if(length(unique(x$syntax$group[x$syntax$group > 0])) > 1){
     stop("Develop")
   }
   if("level" %in% names(x$syntax)){
     stop("Develop")
   }
-  x$syntax$free <- as.logical(x$syntax$free)
-  x$syntax$lhs <- gsub(".", "_", x$syntax$lhs, fixed = TRUE)
+  x$syntax$free_mplus <- !x$syntax$free == 0
+  x$syntax$lhs <- gsub(".", "_", x$syntax$lhs, fixed = TRUE) # Watch out: labels like .p1. are affected
   x$syntax$rhs <- gsub(".", "_", x$syntax$rhs, fixed = TRUE)
   #x$syntax$label <- paste0("lab", 1:nrow(x$syntax))
-  x$syntax$value[is.na(x$syntax$value)] <- ""
+  x$syntax$value <- ""
+  x$syntax$value[!is.na(x$syntax$ustart)] <- x$syntax$ustart[!is.na(x$syntax$ustart)]
   apply(x$syntax, 1, function(this_row){
-    this_free <- as.logical(this_row[["free"]])
+    this_free <- as.logical(this_row[["free_mplus"]])
     switch(this_row[["op"]],
            "=~" = {
              paste0(this_row[["lhs"]],
@@ -103,7 +104,12 @@ as_lavaan <- function(x, ...){
 #' @export
 #' @importFrom lavaan mplus2lavaan.modelSyntax
 as_lavaan.tidy_sem <- function(x, ...){
-  if(!has_syntax(x)) return(NULL)
+  if(!has_syntax(x)){
+    return(NULL)
+  } else {
+    return(x$syntax)
+  }
+
   tab <- x$syntax
   free_values <- rep(0, nrow(tab))
   tab$free <- as.logical(tab$free)
@@ -111,9 +117,9 @@ as_lavaan.tidy_sem <- function(x, ...){
   names(tab)[match("value", names(tab))] <- "ustart"
   tab$ustart[tab$free] <- NA
   tab$free <- free_values
-  if(any(c("group", "level") %in% names(tab))){
-    stop("Develop")
-  }
+  # if(any(c("group", "level") %in% names(tab))){
+  #   stop("Develop")
+  # }
   drop_args <- eval(formals(check_lav_tab)$lav_names)
   drop_args <- drop_args[!names(drop_args) == ""]
   drop_args <- which(names(tab) %in% drop_args)

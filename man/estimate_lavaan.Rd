@@ -26,7 +26,7 @@ but users can also specify \code{\link[lavaan]{lavaan}},
 \examples{
 library(lavaan)
 model <- tidy_sem(iris, "\\\\.")
-model <- measurement(model, center = F, scale = F)
+model <- measurement(model)
 res <- estimate_lavaan(model)
 summary(res)
 }

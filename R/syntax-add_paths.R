@@ -5,14 +5,23 @@
 #' @param model An object of class \code{tidy_sem}.
 #' @param ... Paths to add or substitute, specified in
 #' \code{\link{lavaan}{model.syntax}}, and separated by commas.
-#' @param strict_check Logical, indicating whether or not to throw an error if
-#' the variable names referenced in the new paths do not exist in the
-#' \code{data}, or in the \code{dictionary}, or in the existing \code{syntax}
-#' element. If \code{strict_check = FALSE}, the check is still performed, but
-#' throws a \code{warning} instead of an \code{error}.
+# @param strict_check Logical, indicating whether or not to throw an error if
+# the variable names referenced in the new paths do not exist in the
+# \code{data}, or in the \code{dictionary}, or in the existing \code{syntax}
+# element. If \code{strict_check = FALSE}, the check is still performed, but
+# throws a \code{warning} instead of an \code{error}.
+# @param use_cols Character. Which columns to retain from the \code{lavaan}
+# parameter table. Defaults to \code{c("lhs", "op", "rhs", "free", "label")}.
 #' @return An object of class \code{tidy_sem}.
 #' @details Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
 #' ~~, =~,} and \code{~1} are parsed.
+#' @details  This function
+#' relies on \code{\link[lavaan]{lavaanify}} to convert syntax strings to
+#' \code{lavaan} parameter tables. By default, is uses the arguments
+#' \code{int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
+#' auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
+#' auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE}, akin
+#' to \code{\link[lavaan]{sem}} and \code{\link[lavaan]{cfa}}.
 #' @examples
 #' library(lavaan)
 #' df <- iris[, 1:4]
@@ -27,9 +36,72 @@
 #' @rdname add_paths
 #' @export
 #' @importFrom lavaan lavParseModelString
-add_paths <- function(model, ..., strict_check = TRUE){
+# lavParseModelString() zet een string om in een data.frame
+#   - Modifiers (bvb 3*x1) en constraints (bvb a > b) worden apart bijgehouden in als attributes.
+# De output van lavPareModelString() gaat naar lavaanify(), die de volledige parameter tabel aanmaakt.
+# De sem()/cfa() functies maken gebruik van de vele auto.* argumenten, om de tabel te vervolledigen
+# De lavaan() functie doet dit opzettelijk niet.
+
+# Indien je de lavaanify() functie rechtstreeks aanroept, is het handig om auto = TRUE te gebruiken, wat correspondeert met de sem/cfa functies. Bvb.
+#
+# lavaanify(HS.model, auto = TRUE)
+#
+# Daarnaast zijn er ook opties voor multiple groups (ngroups, group.equal,
+#                                                    group.partial)
+#
+# Heel wat (publieke en interne) functies in lavaan voeren bewerkingen uit op deze parameter tabel:
+#
+#   lavaan:::lav_partable_*
+#
+#   > geschikte manier om bepaalde paden automatisch in te vullen,
+# > bijvoorbeeld residual variance voor endogenous variables als de
+# > gebruiker dat vergeten is. Ik wil hierbij ook zo min mogelijk dubbel
+# > werk doen, en zoveel mogelijk aansluiten bij lavaan.
+#
+# Dit is precies wat lavaanify() doet, in combinatie met auto = TRUE, of fijnmaziger met de aparte argumenten. De lavaanify() functie is wat mij betreft het hart van lavaan.
+
+add_paths <- function(model, ...){ #, strict_check = TRUE
+  UseMethod("add_paths", model)
+}
+
+#structure(list(id = NULL, lhs = NULL, op = NULL, rhs = NULL, user = NULL, block = NULL, group = NULL, free = NULL, ustart = NULL, exo = NULL, label = NULL, plabel = NULL), class = "data.frame", row.names = c(NA, -0L))
+
+#' @method add_paths tidy_sem
+#' @export
+add_paths.tidy_sem <- function(model, ...){ #, strict_check = TRUE
+  Args <- c(list(model = model$syntax), as.list(match.call()[-c(1:2)]))
+  model$syntax <- do.call(add_paths, Args)
+  return(model)
+}
+
+#' @method add_paths default
+#' @export
+#' @importFrom lavaan lavaanify lav_partable_complete lav_partable_merge
+add_paths.default <- function(model, ...){ #, strict_check = TRUE
+  browser()
+  if(!is.null(model)){
+    if(!(is.data.frame(model) & all(c("lhs", "op", "rhs", "free") %in% names(model)))){
+      stop("Model is not a valid lavaan parameterTable.", call. = FALSE)
+    }
+    #existing_pars <- max(unique(model$id))
+  }
+  # If use_cols is NULL, use all lav_partable columns
+  use_cols <- c("lhs", "op", "rhs", "block", "free", "label", "ustart", "plabel")
+  if(is.null(use_cols)){
+    use_cols <- names(lav_partable_complete(data.frame("lhs" = NA, "op" = NA, "rhs" = NA)))
+  } else {
+    if(!all(c("lhs", "op", "rhs", "free") %in% use_cols)){
+      message("Columns 'lhs', 'op', 'rhs', and 'free' are required use_cols. These were added to use_cols.")
+      use_cols <- unique(c("lhs", "op", "rhs", "free"), use_cols)
+    }
+  }
+
+  model_old <- model
   # Clean dots
+  Args_lav <- lav_from_dots(...)
   dots <- list(...)
+  dots[names(Args_lav)] <- NULL
+  # Now, check syntax arguments
   is_char <- sapply(dots, inherits, "character")
   if(any(!is_char)){
     no_char <- lapply(sys.call()[-c(1:2)][!is_char], deparse)
@@ -43,52 +115,54 @@ add_paths <- function(model, ..., strict_check = TRUE){
     dots <- dots[is_char]
   }
   # Parse dots
-  tab <- do.call(rbind, lapply(dots, function(i){
-    out <- lavParseModelString(i, as.data.frame. = TRUE)#[, 1:5, drop = FALSE]
-  }))
+  tab <- lavParseModelString(paste0(unlist(dots), collapse = ";"), as.data.frame. = TRUE)
+  # Convert to lavaan
+  tab <- do.call(lavaanify, c(list(model = tab), Args_lav))
+  tab$free[!tab$free==0] <- 1
 
-  tab$free <- tab$fixed == ""
-  tab$value <- tab$fixed
-  tab$value[tab$free] <- 0
-  tab <- cbind(tab, category = "user", aspect = "user")
-  tab <- check_lav_tab(tab)
-  rownames(tab) <- NULL
-  mod <- model$syntax
-  rownames(mod) <- NULL
+  # Use use_cols
+  tab <- tab[, use_cols]
 
-# Perform checks ----------------------------------------------------------
-  new_vars <- unique(c(tab$lhs, tab$rhs))
-  varnames <- vector("character")
-  if(has_data(model)){
-    varnames <- append(varnames, names(model$data))
-  }
-  if(has_dictionary(model)){
-    varnames <- append(varnames, model$dictionary$name)
-  }
-  if(has_syntax(model)){
-    varnames <- varnames <- append(varnames, unique(c(model$syntax$lhs, model$syntax$rhs)))
-  }
-  if(any(!new_vars %in% varnames)){
-    msg <- list("Specifying syntax for variables not in existing elements of 'tidy_sem' object. The offending variables are: ", paste0(new_vars[!new_vars %in% varnames], collapse = ", "), call. = FALSE)
-    if(strict_check){
-      do.call(stop, msg)
-    } else {
-      do.call(warning, msg)
+
+  if(!is.null(model_old)){
+    model_old$pid <- get_pid(model_old)
+    tab$pid <- get_pid(tab)
+    new_pids <- tab$pid[!tab$pid %in% model_old$pid]
+    maxpid <- max(as.numeric(gsub("^\\.p(\\d+)\\.$", "\\1", model_old$plabel)))
+    if(length(new_pids) > 0){
+      for(this_col in c("lhs", "rhs", "plabel")){
+        for(i in 1:length(new_pids)){
+          this_plabel <- tab$plabel[tab$pid == new_pids[i]]
+          tab[[this_col]][tab[[this_col]] == this_plabel] <- paste0(".p", maxpid + i, ".")
+        }
+      }
     }
-  }
-  for(this_row in 1:nrow(tab)){
-    dup <- duplicated(rbind(tab[this_row, c(1, 3)], mod[, c(1, 3)]))[-1]
-    if(!any(dup)){
-      mod <- rbind(mod, tab[this_row, ])
-    } else {
-      mod[which(dup), ] <- tab[this_row, ]
+
+    pid_dups <- tab[tab$pid %in% model_old$pid, ]
+    if(nrow(pid_dups) > 0){
+      tab <- tab[!tab$pid %in% model_old$pid, ]
+      #model_old[match(pid_dups$pid, model_old$pid), -which(names(model_old) == "plabel")] <- pid_dups[, -which(names(pid_dups) == "plabel")]
     }
+    # Remove rows where operator changed
+    model_old$newopid <- get_pid(model_old, c("lhs", "rhs", "block"))
+    tab$newopid <- get_pid(tab, c("lhs", "rhs", "block"))
+    these <- tab$newopid %in% model_old$newopid
+    if(any(these)){
+      remove_plabels <- model_old$plabel[model_old$newopid %in% tab$newopid[these]]
+      retain_rows <- apply(model_old, 1, function(x){!any(x %in% remove_plabels)})
+      model_old <- model_old[retain_rows, ]
+    }
+    model_new <- lav_partable_merge(model_old, tab, remove.duplicated = TRUE, fromLast = TRUE, warn = FALSE)
+    model_new[c("pid", "newopid")] <- NULL
+  } else {
+    model_new <- tab
   }
-  if(any(duplicated(mod[, c(1, 3)]))){
-    stop("Several commands specify relationships between the same pair of variables. Specifically:\n  ",
-         paste0(do.call(paste, mod[duplicated(mod[, c(1, 3)]) | duplicated(mod[, c(1, 3)], fromLast = TRUE), 1:3]), collapse = "\n  ")
-    )
-  }
-  model$syntax <- mod
-  return(model)
+
+  return(model_new)
 }
+
+
+get_pid <- function(tab, pidcols = c("lhs", "rhs", "op", "block")){
+  apply(tab[, pidcols], 1, function(x){paste0(c(sort(x[c("lhs", "rhs")]), x[!names(x) %in% c("lhs", "rhs")]), collapse = "_X_")})
+}
+

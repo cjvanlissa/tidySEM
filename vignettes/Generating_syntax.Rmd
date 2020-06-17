@@ -111,7 +111,7 @@ The same model can be estimated in 'Mplus' through the R-package `MplusAutomatio
 ```{r echo = FALSE, eval = run_mplus, message=FALSE, warning=FALSE}
 library(MplusAutomation)
 model %>%
-  estimate_mplus()
+  estimate_mplus() -> res
 #dput(capture.output(summary(res)))
 ```
 ```{r eval = FALSE, echo = TRUE}

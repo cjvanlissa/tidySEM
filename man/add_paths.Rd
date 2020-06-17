@@ -4,19 +4,13 @@
 \alias{add_paths}
 \title{Add paths to an object of class 'tidy_sem'}
 \usage{
-add_paths(model, ..., strict_check = TRUE)
+add_paths(model, ...)
 }
 \arguments{
 \item{model}{An object of class \code{tidy_sem}.}
 
 \item{...}{Paths to add or substitute, specified in
 \code{\link{lavaan}{model.syntax}}, and separated by commas.}
-
-\item{strict_check}{Logical, indicating whether or not to throw an error if
-the variable names referenced in the new paths do not exist in the
-\code{data}, or in the \code{dictionary}, or in the existing \code{syntax}
-element. If \code{strict_check = FALSE}, the check is still performed, but
-throws a \code{warning} instead of an \code{error}.}
 }
 \value{
 An object of class \code{tidy_sem}.
@@ -29,6 +23,14 @@ existing paths. The paths must be specified as
 \details{
 Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
 ~~, =~,} and \code{~1} are parsed.
+
+This function
+relies on \code{\link[lavaan]{lavaanify}} to convert syntax strings to
+\code{lavaan} parameter tables. By default, is uses the arguments
+\code{int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
+auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
+auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE}, akin
+to \code{\link[lavaan]{sem}} and \code{\link[lavaan]{cfa}}.
 }
 \examples{
 library(lavaan)

@@ -4,25 +4,21 @@
 \alias{measurement}
 \title{Generate syntax for a measurement model}
 \usage{
-measurement(x, center = TRUE, scale = TRUE)
+measurement(x, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists, including \code{tidy_sem}
 (generated using \code{\link[tidySEM]{dictionary}}, or \code{data.frame} (for
 which \code{\link[tidySEM]{dictionary}} will be run first).}
 
-\item{center}{Whether or not to mean-center the latent variables,
-Default: TRUE}
-
-\item{scale}{Whether to identify the model by fixing latent variable variance
-to 1 (\code{scale = TRUE}), or by fixing the first factor loading to 1
-(\code{scale = FALSE}).}
+\item{...}{Additional parameters passed to \code{\link{add_paths}}.}
 }
 \value{
 An object of class \code{tidy_sem}.
 }
 \description{
 Generate syntax for a measurement model for latent variables.
+This function relies on \code{\link{add_paths}} to generate syntax.
 }
 \examples{
 dict <- tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))

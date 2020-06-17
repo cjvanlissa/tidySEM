@@ -11,7 +11,7 @@
 #' @examples
 #' library(lavaan)
 #' model <- tidy_sem(iris, "\\.")
-#' model <- measurement(model, center = F, scale = F)
+#' model <- measurement(model)
 #' res <- estimate_lavaan(model)
 #' summary(res)
 #' @rdname estimate_lavaan
@@ -20,7 +20,7 @@ estimate_lavaan <- function(x, func = "sem", ...){
   if(!has_data(x)) return(NULL)
   if(!has_syntax(x)) return(NULL)
   Args <- c(list(
-    model = do.call(as_lavaan, list(x = x)),
+    model = x$syntax, #do.call(as_lavaan, list(x = x))
     data = x$data),
     list(...))
   do.call(func, Args)

@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 library(tidySEM)
 library(lavaan)
 library(dplyr)
+library(ggplot2)
 include_code <- function(expr){
   browser()
   txt <- deparse(substitute(expr))

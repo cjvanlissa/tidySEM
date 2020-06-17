@@ -119,7 +119,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
                                    Items = sapply(keys.list, length))
-  desc <- descriptives(scores$scores)[, c("missing", "mean", "sd", "min", "max")]
+  desc <- descriptives(scores$scores)[, c("n", "mean", "sd", "min", "max")]
   table_descriptives <- cbind(table_descriptives,
                               desc,
                               skew_kurtosis(scores$scores, verbose = FALSE, se = FALSE))

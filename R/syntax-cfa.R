@@ -9,39 +9,54 @@ check_lav_tab <- function(x, lav_names = c("lhs", "op", "rhs", "free", "value", 
 
 #' @title Generate syntax for a measurement model
 #' @description Generate syntax for a measurement model for latent variables.
+#' This function relies on \code{\link{add_paths}} to generate syntax.
 #' @param x An object for which a method exists, including \code{tidy_sem}
 #' (generated using \code{\link[tidySEM]{dictionary}}, or \code{data.frame} (for
 #' which \code{\link[tidySEM]{dictionary}} will be run first).
-#' @param center Whether or not to mean-center the latent variables,
-#' Default: TRUE
-#' @param scale Whether to identify the model by fixing latent variable variance
-#' to 1 (\code{scale = TRUE}), or by fixing the first factor loading to 1
-#' (\code{scale = FALSE}).
+# @param center Whether or not to mean-center the latent variables,
+# Default: TRUE
+# @param scale Whether to identify the model by fixing latent variable variance
+# to 1 (\code{scale = TRUE}), or by fixing the first factor loading to 1
+# (\code{scale = FALSE}).
+#' @param ... Additional parameters passed to \code{\link{add_paths}}.
 #' @return An object of class \code{tidy_sem}.
 #' @examples
 #' dict <- tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5"))
 #' measurement(dict)
 #' @rdname measurement
 #' @export
-measurement <- function(x, center = TRUE, scale = TRUE){
+measurement <- function(x, ...){
   UseMethod("measurement")
 }
 
 #' @method measurement tidy_sem
 #' @export
-measurement.tidy_sem <- function(x, center = TRUE, scale = TRUE){
+measurement.tidy_sem <- function(x, ...){
   out <- x
-  Args <- as.list(match.call()[-1])
-  Args$x <- x$dictionary
+  Args_lav <- lav_from_dots(...)
+
   variables <- unique(c(NA, x$dictionary$scale))[-1]
   update_dict <- rbind(x$dictionary, data.frame(name = variables, scale = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
   out$dictionary <- update_dict
-  out$syntax <- do.call(measurement_table, Args)
+
+  out$syntax <- do.call(add_paths, c(list(model = NULL,
+                                          do.call(syntax_measurement, list(x = x))),
+                                     Args_lav))
   if(!inherits(out, "tidy_sem")) class(out) <- c("tidy_sem", class(out))
   out
 }
 
+syntax_measurement <- function(x, ...){
+  UseMethod("syntax_measurement", x)
+}
+
+syntax_measurement.tidy_sem <- function(x, ...){
+  if(!has_dictionary(x)) stop("Dictionary required to create measurement model syntax.", call. = FALSE)
+  variables <- unique(c(NA, x$dictionary$scale))[-1]
+  indicators <- lapply(variables, function(this_var) x$dictionary$name[which(x$dictionary$scale == this_var)])
+  paste0(paste0(variables, " =~ ", sapply(indicators, paste0, collapse = " + ")), collapse = "; ")
+}
 
 measurement_table <- function(x, center = TRUE, scale = TRUE){
   #                   "op", "free",     "value", "category",    "element"
@@ -103,7 +118,7 @@ measurement_table <- function(x, center = TRUE, scale = TRUE){
 
 #' @method measurement data.frame
 #' @export
-measurement.data.frame <- function(x, center = TRUE, scale = TRUE){
+measurement.data.frame <- function(x, ...){
   Args <- as.list(match.call()[-1])
   out <- list(
     dictionary = do.call(tidy_sem, Args[1]),
