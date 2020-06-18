@@ -30,16 +30,14 @@ create_scales(
 \code{keys.list}, or an object of class \code{tidy_sem}.}
 
 \item{keys.list}{A named list, indicating which variables belong to which
-scale. See \code{\link[psych]{scoreItems}} and
-\code{\link[psych]{make.keys}} for more information.}
+scale.}
 
-\item{missing}{Whether to use rows with partially missing values, Default: TRUE.
-See: \code{\link[psych]{scoreItems}}.}
+\item{missing}{Whether to use rows with partially missing values.
+Default: TRUE.}
 
 \item{impute}{Method for handling missing values, Default: 'none'. This
 default method uses all available data to calculate scale scores, which is
-acceptable for mean scales, but not for sum scales. See:
-\code{\link[psych]{scoreItems}}.}
+acceptable for mean scales, but not for sum scales.}
 
 \item{omega}{Which of McDonald's \code{\link[psych]{omega}} coefficients to
 report. Default: NULL; valid options include: \code{"omega_h"},
@@ -58,9 +56,7 @@ This function calculates mean or sum scores from a
 \code{data.frame} and a named list describing the items in each scale. It
 returns the scores, a scale descriptive table, and a scale correlation table.
 It relies on several functions from the
-\code{psych} package; most notably \code{\link[psych]{scoreItems}},
-\code{\link[psych]{describe}}, \code{\link[psych]{fa}}, and
-\code{\link[psych]{omega}}.
+\code{psych} package.
 }
 \details{
 For scales with less than 3 items, Cronbach's alpha might not be

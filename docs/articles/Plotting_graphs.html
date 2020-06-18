@@ -176,12 +176,11 @@
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_in_circle"</span>)
-<span class="co">#&gt;      [,1] [,2] [,3] [,4]     [,5]     </span>
-<span class="co">#&gt; [1,] NA   "x2" NA   NA       NA       </span>
-<span class="co">#&gt; [2,] NA   "x3" "x1" "speed"  NA       </span>
-<span class="co">#&gt; [3,] "x5" "x4" NA   "visual" NA       </span>
-<span class="co">#&gt; [4,] NA   "x6" "x7" "x9"     "textual"</span>
-<span class="co">#&gt; [5,] NA   NA   "x8" NA       NA       </span>
+<span class="co">#&gt;      [,1] [,2]      [,3]     [,4]    [,5]</span>
+<span class="co">#&gt; [1,] NA   "x6"      "x4"     "x3"    NA  </span>
+<span class="co">#&gt; [2,] NA   "x7"      "x5"     "x1"    NA  </span>
+<span class="co">#&gt; [3,] "x8" "x9"      "visual" "speed" "x2"</span>
+<span class="co">#&gt; [4,] NA   "textual" NA       NA      NA  </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span>
 <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_on_grid"</span>)

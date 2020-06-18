@@ -44,9 +44,7 @@
 data.frame and a named list describing the items in each scale. It
 returns the scores, a scale descriptive table, and a scale correlation table.
 It relies on several functions from the
-psych package; most notably scoreItems,
-describe, fa, and
-omega." />
+psych package." />
 
 
 
@@ -148,9 +146,7 @@ omega." />
 <code>data.frame</code> and a named list describing the items in each scale. It
 returns the scores, a scale descriptive table, and a scale correlation table.
 It relies on several functions from the
-<code>psych</code> package; most notably <code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code>,
-<code><a href='https://rdrr.io/pkg/psych/man/describe.html'>describe</a></code>, <code><a href='https://rdrr.io/pkg/psych/man/fa.html'>fa</a></code>, and
-<code><a href='https://rdrr.io/pkg/psych/man/omega.html'>omega</a></code>.</p>
+<code>psych</code> package.</p>
     </div>
 
     <pre class="usage"><span class='fu'>create_scales</span>(
@@ -185,20 +181,18 @@ It relies on several functions from the
     <tr>
       <th>keys.list</th>
       <td><p>A named list, indicating which variables belong to which
-scale. See <code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code> and
-<code><a href='https://rdrr.io/pkg/psych/man/make.keys.html'>make.keys</a></code> for more information.</p></td>
+scale.</p></td>
     </tr>
     <tr>
       <th>missing</th>
-      <td><p>Whether to use rows with partially missing values, Default: TRUE.
-See: <code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code>.</p></td>
+      <td><p>Whether to use rows with partially missing values.
+Default: TRUE.</p></td>
     </tr>
     <tr>
       <th>impute</th>
       <td><p>Method for handling missing values, Default: 'none'. This
 default method uses all available data to calculate scale scores, which is
-acceptable for mean scales, but not for sum scales. See:
-<code><a href='https://rdrr.io/pkg/psych/man/score.items.html'>scoreItems</a></code>.</p></td>
+acceptable for mean scales, but not for sum scales.</p></td>
     </tr>
     <tr>
       <th>omega</th>
