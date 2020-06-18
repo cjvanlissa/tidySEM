@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 288.00 72.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    line, polyline, polygon, path, rect, circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA=='>
+    <rect x='8.22' y='5.48' width='274.30' height='58.30' />
+  </clipPath>
+</defs>
+<polyline points='114.20,34.63 145.37,34.63 176.54,34.63 ' style='stroke-width: 4.27; stroke: #FF0000; stroke-opacity: 0.50; stroke-dasharray: 22.76,22.76; stroke-linecap: butt;' clip-path='url(#cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA==)' />
+<polygon points='170.02,37.67 176.54,34.63 170.02,31.59 ' style='stroke-width: 4.27; stroke: #FF0000; stroke-opacity: 0.50; stroke-dasharray: 22.76,22.76; stroke-linecap: butt; fill: #FF0000; fill-opacity: 0.50;' clip-path='url(#cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA==)' />
+<rect x='20.69' y='8.13' width='93.51' height='53.00' style='stroke-width: 1.07; stroke-linecap: square; stroke-linejoin: miter; fill: #FFFFFF;' clip-path='url(#cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA==)' />
+<rect x='176.54' y='8.13' width='93.51' height='53.00' style='stroke-width: 1.07; stroke-linecap: square; stroke-linejoin: miter; fill: #FFFFFF;' clip-path='url(#cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA==)' />
+<g clip-path='url(#cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA==)'><text x='64.60' y='38.70' style='font-size: 11.38px; font-family: Arial;' textLength='5.69px' lengthAdjust='spacingAndGlyphs'>x</text></g>
+<g clip-path='url(#cpOC4yMnwyODIuNTJ8NjMuNzh8NS40OA==)'><text x='220.45' y='38.70' style='font-size: 11.38px; font-family: Arial;' textLength='5.69px' lengthAdjust='spacingAndGlyphs'>y</text></g>
+<defs>
+  <clipPath id='cpMC4wMHwyODguMDB8NzIuMDB8MC4wMA=='>
+    <rect x='0.00' y='0.00' width='288.00' height='72.00' />
+  </clipPath>
+</defs>
+</svg>

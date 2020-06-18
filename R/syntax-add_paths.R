@@ -16,8 +16,8 @@
 #' @details Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
 #' ~~, =~,} and \code{~1} are parsed.
 #' @details  This function
-#' relies on \code{\link[lavaan]{lavaanify}} to convert syntax strings to
-#' \code{lavaan} parameter tables. By default, is uses the arguments
+#' relies on \code{lavaan \link[lavaan]{model.syntax}} to convert syntax strings
+#' to \code{lavaan} parameter tables. By default, is uses the arguments
 #' \code{int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
 #' auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
 #' auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE}, akin
@@ -78,7 +78,6 @@ add_paths.tidy_sem <- function(model, ...){ #, strict_check = TRUE
 #' @export
 #' @importFrom lavaan lavaanify lav_partable_complete lav_partable_merge
 add_paths.default <- function(model, ...){ #, strict_check = TRUE
-  browser()
   if(!is.null(model)){
     if(!(is.data.frame(model) & all(c("lhs", "op", "rhs", "free") %in% names(model)))){
       stop("Model is not a valid lavaan parameterTable.", call. = FALSE)

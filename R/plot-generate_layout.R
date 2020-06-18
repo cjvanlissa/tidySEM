@@ -96,6 +96,11 @@ space_these <- function(these, n){
 # @rdname generate_layout
 
 #' @method get_layout lavaan
+#' @rdname get_layout
+#' @param layout_algorithm Optional argument for fit model objects. Character
+#' string, indicating which \code{igraph}
+#' layout algorithm to apply to position the nodes. Defaults to
+#' \code{"layout_as_tree"}; see details for more options.
 #' @export
 get_layout.lavaan <- function(x, ..., layout_algorithm = "layout_as_tree"){
   Args <- as.list(match.call()[-1])
@@ -184,7 +189,8 @@ resolve_dups <- function(lo){
 #' "layout_on_grid", "layout_randomly", "layout_with_dh", "layout_with_fr",
 #' "layout_with_gem",
 #' "layout_with_graphopt", "layout_with_kk", "layout_with_lgl",
-#' "layout_with_mds")}
+#' "layout_with_mds")}. These can be used by specifying the optional argument
+#' \code{layout_algorithm = ""}.
 #' @return Object of class 'tidy_layout'
 #' @examples
 #' # Example 1

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -139,11 +139,14 @@
 <h1 class="page-header" data-toc-text="0.1.2">
 <a href="#tidysem-012" class="anchor"></a>tidySEM 0.1.2</h1>
 <ul>
+<li>create_scales() no longer writes .csv files</li>
+<li>add_paths() now relies on lavaanify(lavParseModelString()), uses the lavaan parameter table, and accepts all arguments of lavaanify(), with default arguments same as sem() and cfa()</li>
+<li>measurement() uses add_paths() for consistency</li>
 <li>
 <code><a href="../reference/graph_sem.html">graph_sem.lavaan()</a></code> and <code><a href="../reference/graph_sem.html">graph_sem.mplus.model()</a></code> gain an argument <code>label = "est_sig"</code>, so users can easily select custom labels.</li>
 <li>New vignette about SEM plotting conventions.</li>
 <li>
-<code><a href="../reference/graph_sem.html">graph_sem()</a></code> adds empty labels for nodes without a mean; in version 0.1.1, such nodes were displayed without any node label. TODO: * <code><a href="../reference/add_paths.html">add_paths()</a></code> by default sets variance for variables so the model can be estimated in lavaan</li>
+<code><a href="../reference/graph_sem.html">graph_sem()</a></code> adds empty labels for nodes without a mean; in version 0.1.1, such nodes were displayed without any node label.</li>
 </ul>
 </div>
     <div id="tidysem-011" class="section level1">

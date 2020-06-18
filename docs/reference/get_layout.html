@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate graph layout — get_layout • tidySEM</title>
+<title>Generate graph layout — get_layout.lavaan • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Generate graph layout — get_layout" />
+<meta property="og:title" content="Generate graph layout — get_layout.lavaan" />
 <meta property="og:description" content="Generate a tidy_layout for a SEM graph." />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -141,7 +141,10 @@
     <p>Generate a tidy_layout for a SEM graph.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_layout</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='co'># S3 method for lavaan</span>
+<span class='fu'>get_layout</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>layout_algorithm</span> <span class='kw'>=</span> <span class='st'>"layout_as_tree"</span>)
+
+<span class='fu'>get_layout</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>get_layout</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -158,6 +161,13 @@
       <th>...</th>
       <td><p>Character arguments corresponding to layout elements. Use node
 names, empty strings (""), or NA values.</p></td>
+    </tr>
+    <tr>
+      <th>layout_algorithm</th>
+      <td><p>Optional argument for fit model objects. Character
+string, indicating which <code>igraph</code>
+layout algorithm to apply to position the nodes. Defaults to
+<code>"layout_as_tree"</code>; see details for more options.</p></td>
     </tr>
     <tr>
       <th>rows</th>
@@ -191,7 +201,8 @@ names, empty strings (""), or NA values.</p></td>
 "layout_on_grid", "layout_randomly", "layout_with_dh", "layout_with_fr",
 "layout_with_gem",
 "layout_with_graphopt", "layout_with_kk", "layout_with_lgl",
-"layout_with_mds")</a></code></p>
+"layout_with_mds")</a></code>. These can be used by specifying the optional argument
+<code>layout_algorithm = ""</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Example 1</span>

@@ -29,7 +29,7 @@
     nrow = npoints, ncol = 2, dimnames = list(NULL, c("x", "y"))
   )
   )
-  p + geom_path(data = df_ellipse, aes_string(x = "x", y = "y"), linetype = 1, arrow = arrow(angle = 25, length = unit(.1, "inches"), ends = "both", type = "closed"))
+  p + geom_path(data = df_ellipse, aes_string(x = "x", y = "y"), linetype = 1, arrow = ggplot2::arrow(angle = 25, length = unit(.1, "inches"), ends = "both", type = "closed"))
 }
 
 #' @importFrom ggplot2 geom_path geom_polygon

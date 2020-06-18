@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -100,11 +100,11 @@
 <!--[![CRAN status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
 [![](https://cranlogs.r-pkg.org/badges/tidySEM)](https://cran.r-project.org/package=tidySEM)-->
 
-<p>tidySEM provides functionality to conduct and report structural equation modeling analyses with existing packages, such as <code>lavaan</code> and <code>MplusAutomation</code>. Its aim is to provide three specific functions:</p>
+<p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the R package <code>lavaan</code>, or the commercial stand-alone program <code>Mplus</code> (through <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
 <ol>
-<li>To generate model syntax in a top-down, tidy way,</li>
-<li>To tabulate model output in a publication-ready, uniform manner,</li>
-<li>To make easily customizable graphs for SEM-models.</li>
+<li>Generate model syntax in a top-down, tidy way,</li>
+<li>Tabulate model output in a publication-ready, uniform manner,</li>
+<li>Make easily customizable graphs for SEM-models.</li>
 </ol>
 <p>These functions are designed with the <a href="https://tidyverse.tidyverse.org/articles/manifesto.html"><em>tidy tools manifesto</em> (Wickham, last updated 23-11-2019)</a> in mind, and interface with the existing suite of packages in the <a href="https://tidyverse.tidyverse.org/"><code>tidyverse</code></a>.</p>
 <div id="installation" class="section level2">
@@ -117,7 +117,7 @@
 install.packages("tidySEM")
 ```
 -->
-<p>You can install the development version of tidySEM from GitHub with:</p>
+<p>You can install the development version of <code>tidySEM</code> from ‘GitHub’ with:</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
 <span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"cjvanlissa/tidySEM"</span>)</pre></div>
 </div>
@@ -125,14 +125,13 @@ install.packages("tidySEM")
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
 <p>Every user-facing function in the package is documented, and the documentation can be accessed by running <code>?function_name</code> in the R console, e.g., <code><a href="reference/graph_sem.html">?graph_sem</a></code>.</p>
-<p>Furthermore, there are three vignettes, describing the three main tracks of <code>tidySEM</code> functions:</p>
+<p>Furthermore, there are three main vignettes, describing the three main tracks of <code>tidySEM</code> functions:</p>
 <ol>
 <li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html">vignette about generating syntax and estimating models</a>
 </li>
 <li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html">vignette about tabulating results</a>
 </li>
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">vignette about making graphs</a>
-</li>
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">vignette about making graphs</a> 1) An additional vignette describes the A <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">graphing conventions</a> for structural equation models.</li>
 </ol>
 </div>
 <div id="citing-tidysem" class="section level2">
@@ -144,9 +143,9 @@ install.packages("tidySEM")
 <div id="contributing-and-contact-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributing-and-contact-information" class="anchor"></a>Contributing and Contact Information</h2>
-<p>If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on GitHub, or sending a pull request with proposed features.</p>
+<p>If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on ‘GitHub’, or sending a pull request with proposed features.</p>
 <ul>
-<li>File a GitHub issue <a href="https://github.com/cjvanlissa/tidySEM">here</a>
+<li>File a ‘GitHub’ issue <a href="https://github.com/cjvanlissa/tidySEM">here</a>
 </li>
 <li>Make a pull request <a href="https://github.com/cjvanlissa/tidySEM/pulls">here</a>
 </li>

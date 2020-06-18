@@ -1,14 +1,11 @@
-# Version 0.1.1
+# Version 0.1.2
 
-This resubmission addresses the comment by CRAN-maintainer Martina Schmirl:
-
-* It seeems like you write to the home filespace in the vignette and maybe also
-  in examples. Please check.
+This resubmission addresses the comment by CRAN-maintainer Swetlana Herbrandt:
+* We see code lines such as write.csv(table_descriptives, "scale table.csv", 
+  row.names = FALSE)
   + Response:
-    Several vignettes use the external program 'Mplus', and these indeed wrote
-    files to the user's home filespace when the documentation was built.
-    I have disabled all of these calls by including an if() statement that is
-    set to FALSE. There are no examples that write to the home filespace.
+    We have removed the calls to write.csv(). It is now up to users to
+    save the results of analyses (makes more sense, anyway).
 
 ## Test environments
 

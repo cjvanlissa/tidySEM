@@ -1057,6 +1057,7 @@ match.call.defaults <- function(...) {
   .plot_label_internal(p, df_label, text_size)
 }
 
+#' @importFrom ggplot2 arrow
 .plot_edges_internal <- function(p, df){
   # Prepare aesthetics ------------------------------------------------------
   if(!"linetype" %in% names(df)){
@@ -1070,7 +1071,7 @@ match.call.defaults <- function(...) {
     Args <- list(
       data = df_path,
       mapping = aes_string(x = "x", y = "y", group = "id"),
-      arrow = quote(arrow(angle = 25, length = unit(.1, "inches"), ends = "last", type = "closed")))
+      arrow = quote(ggplot2::arrow(angle = 25, length = unit(.1, "inches"), ends = "last", type = "closed")))
 
     for(this_path in unique(df_path$id)){
       Args$data <- df_path[df_path$id == this_path, ]

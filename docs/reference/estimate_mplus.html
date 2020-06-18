@@ -75,7 +75,7 @@ mplusModeler. Using this function requires
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -176,8 +176,12 @@ optional. If these are not specified, the model will be run in
 <code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>MplusAutomation</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='st'>"\\."</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>MplusAutomation</span>)</div><div class='output co'>#&gt; <span class='message'>Version:  0.7-3</span>
+#&gt; <span class='message'>We work hard to write this free software. Please help us get credit by citing: </span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>-- see citation("MplusAutomation").</span></div><div class='input'><span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='st'>"\\."</span>)
 <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='measurement.html'>measurement</a></span>(<span class='no'>model</span>)
 <span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/pkg/MplusAutomation/man/mplusAvailable.html'>mplusAvailable</a></span>() <span class='kw'>==</span> <span class='fl'>0</span>){
   <span class='fu'>estimate_mplus</span>(<span class='no'>model</span>)

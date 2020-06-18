@@ -74,7 +74,7 @@ Convert the tidy_sem object to lavaan syntax in tabular format
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -170,8 +170,8 @@ Convert the <code>tidy_sem</code> object to <code>lavaan</code> syntax in tabula
                                     <span class='kw'>category</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>aspect</span> <span class='kw'>=</span> <span class='st'>""</span>),
             <span class='kw'>class</span> <span class='kw'>=</span> <span class='st'>"data.frame"</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, -<span class='fl'>1L</span>)))
 <span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>mod</span>) <span class='kw'>&lt;-</span> <span class='st'>"tidy_sem"</span>
-<span class='fu'>as_lavaan</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt;   lhs op rhs free ustart label
-#&gt; 1   x  ~   y    1   &lt;NA&gt;      </div></pre>
+<span class='fu'>as_lavaan</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt;   lhs op rhs free value label category aspect
+#&gt; 1   x  ~   y TRUE                            </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

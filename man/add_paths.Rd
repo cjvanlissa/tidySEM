@@ -25,8 +25,8 @@ Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
 ~~, =~,} and \code{~1} are parsed.
 
 This function
-relies on \code{\link[lavaan]{lavaanify}} to convert syntax strings to
-\code{lavaan} parameter tables. By default, is uses the arguments
+relies on \code{lavaan \link[lavaan]{model.syntax}} to convert syntax strings
+to \code{lavaan} parameter tables. By default, is uses the arguments
 \code{int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
 auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
 auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE}, akin

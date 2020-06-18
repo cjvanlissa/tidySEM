@@ -118,13 +118,15 @@ are displayed as double-headed arrows. This is a stylistic decision.
 Error variances are displayed like this:
 
 ```{r echo = FALSE, out.width='10%'}
-p <- tidySEM:::.plot_variances(p = ggplot(NULL), df = data.frame(edge_xmin = 1, edge_ymin = 1,
+if(generate_svgs){
+  p <- tidySEM:::.plot_variances(p = ggplot(NULL), df = data.frame(edge_xmin = 1, edge_ymin = 1,
                                                    edge_xmax = 1, edge_ymax = 1,
                                                    connect_from = "top",
                                                    connect_to = "top", label = "e",
                                                    arrow = "both"), diameter = 1,
                           text_size = 8)+theme_void()
-if(generate_svgs) ggsave("error.svg", p, device = "svg", width= 2, height = 2)
+  ggsave("error.svg", p, device = "svg", width= 2, height = 2)
+} 
 knitr::include_graphics("error.svg")
 ```
 

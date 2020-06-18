@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Generate syntax for a measurement model — measurement" />
-<meta property="og:description" content="Generate syntax for a measurement model for latent variables." />
+<meta property="og:description" content="Generate syntax for a measurement model for latent variables.
+This function relies on add_paths to generate syntax." />
 
 
 
@@ -72,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -138,10 +139,11 @@
     </div>
 
     <div class="ref-description">
-    <p>Generate syntax for a measurement model for latent variables.</p>
+    <p>Generate syntax for a measurement model for latent variables.
+This function relies on <code><a href='add_paths.html'>add_paths</a></code> to generate syntax.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>measurement</span>(<span class='no'>x</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>measurement</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,15 +155,8 @@
 which <code><a href='dictionary.html'>dictionary</a></code> will be run first).</p></td>
     </tr>
     <tr>
-      <th>center</th>
-      <td><p>Whether or not to mean-center the latent variables,
-Default: TRUE</p></td>
-    </tr>
-    <tr>
-      <th>scale</th>
-      <td><p>Whether to identify the model by fixing latent variable variance
-to 1 (<code>scale = TRUE</code>), or by fixing the first factor loading to 1
-(<code>scale = FALSE</code>).</p></td>
+      <th>...</th>
+      <td><p>Additional parameters passed to <code><a href='add_paths.html'>add_paths</a></code>.</p></td>
     </tr>
     </table>
 

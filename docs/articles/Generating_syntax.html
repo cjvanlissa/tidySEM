@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -191,11 +191,11 @@
 <p>The resulting model can be evaluated as ‘Mplus’ syntax or ‘lavaan’ syntax, using the <code>as_mplus</code> and <code>as_lavaan</code> functions. For example, using lavaan:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu">lavaan</span>(<span class="fu"><a href="../reference/as_lavaan.html">as_lavaan</a></span>(<span class="no">model</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">df</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">res</span>, <span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; lavaan 0.6-6 ended normally after 20 iterations</span>
+<span class="co">#&gt; lavaan 0.6-6 ended normally after 35 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         30</span>
+<span class="co">#&gt;   Number of free parameters                         21</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt;   Number of observations                           301</span>
 <span class="co">#&gt;                                                       </span>
@@ -207,11 +207,11 @@
 <p>Or, alternatively, the model can be estimated using the <code>lavaan</code> wrapper <code><a href="../reference/estimate_lavaan.html">estimate_lavaan()</a></code>:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>()
-<span class="co">#&gt; lavaan 0.6-6 ended normally after 20 iterations</span>
+<span class="co">#&gt; lavaan 0.6-6 ended normally after 35 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         30</span>
+<span class="co">#&gt;   Number of free parameters                         21</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt;   Number of observations                           301</span>
 <span class="co">#&gt;                                                       </span>
@@ -261,43 +261,31 @@
 <span class="co">#&gt; 17    tex  &lt;NA&gt;    latent    tex</span>
 <span class="co">#&gt; 18    spe  &lt;NA&gt;    latent    spe</span></pre></body></html></div>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>)
-<span class="co">#&gt;      lhs op   rhs  free value label    category            aspect</span>
-<span class="co">#&gt; 1    vis =~ vis_1  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 2    vis =~ vis_2  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 3    vis =~ vis_3  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 4  vis_1 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 5  vis_2 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 6  vis_3 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 7    vis ~1       FALSE     0       measurement              mean</span>
-<span class="co">#&gt; 8  vis_1 ~~ vis_1  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 9  vis_2 ~~ vis_2  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 10 vis_3 ~~ vis_3  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 11   vis ~~   vis FALSE     1       measurement          variance</span>
-<span class="co">#&gt; 12   tex =~ tex_1  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 13   tex =~ tex_2  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 14   tex =~ tex_3  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 15 tex_1 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 16 tex_2 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 17 tex_3 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 18   tex ~1       FALSE     0       measurement              mean</span>
-<span class="co">#&gt; 19 tex_1 ~~ tex_1  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 20 tex_2 ~~ tex_2  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 21 tex_3 ~~ tex_3  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 22   tex ~~   tex FALSE     1       measurement          variance</span>
-<span class="co">#&gt; 23   spe =~ spe_1  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 24   spe =~ spe_2  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 25   spe =~ spe_3  TRUE             measurement          loadings</span>
-<span class="co">#&gt; 26 spe_1 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 27 spe_2 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 28 spe_3 ~1        TRUE             measurement         intercept</span>
-<span class="co">#&gt; 29   spe ~1       FALSE     0       measurement              mean</span>
-<span class="co">#&gt; 30 spe_1 ~~ spe_1  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 31 spe_2 ~~ spe_2  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 32 spe_3 ~~ spe_3  TRUE     0       measurement variance_residual</span>
-<span class="co">#&gt; 33   spe ~~   spe FALSE     1       measurement          variance</span>
-<span class="co">#&gt; 41   vis ~~   tex  TRUE              covariance        covariance</span>
-<span class="co">#&gt; 71   vis ~~   spe  TRUE              covariance        covariance</span>
-<span class="co">#&gt; 81   tex ~~   spe  TRUE              covariance        covariance</span></pre></body></html></div>
+<span class="co">#&gt;      lhs op   rhs block free label ustart plabel</span>
+<span class="co">#&gt; 1    vis =~ vis_1     1    0            1   .p1.</span>
+<span class="co">#&gt; 2    vis =~ vis_2     1    1           NA   .p2.</span>
+<span class="co">#&gt; 3    vis =~ vis_3     1    1           NA   .p3.</span>
+<span class="co">#&gt; 4    tex =~ tex_1     1    0            1   .p4.</span>
+<span class="co">#&gt; 5    tex =~ tex_2     1    1           NA   .p5.</span>
+<span class="co">#&gt; 6    tex =~ tex_3     1    1           NA   .p6.</span>
+<span class="co">#&gt; 7    spe =~ spe_1     1    0            1   .p7.</span>
+<span class="co">#&gt; 8    spe =~ spe_2     1    1           NA   .p8.</span>
+<span class="co">#&gt; 9    spe =~ spe_3     1    1           NA   .p9.</span>
+<span class="co">#&gt; 10 vis_1 ~~ vis_1     1    1           NA  .p10.</span>
+<span class="co">#&gt; 11 vis_2 ~~ vis_2     1    1           NA  .p11.</span>
+<span class="co">#&gt; 12 vis_3 ~~ vis_3     1    1           NA  .p12.</span>
+<span class="co">#&gt; 13 tex_1 ~~ tex_1     1    1           NA  .p13.</span>
+<span class="co">#&gt; 14 tex_2 ~~ tex_2     1    1           NA  .p14.</span>
+<span class="co">#&gt; 15 tex_3 ~~ tex_3     1    1           NA  .p15.</span>
+<span class="co">#&gt; 16 spe_1 ~~ spe_1     1    1           NA  .p16.</span>
+<span class="co">#&gt; 17 spe_2 ~~ spe_2     1    1           NA  .p17.</span>
+<span class="co">#&gt; 18 spe_3 ~~ spe_3     1    1           NA  .p18.</span>
+<span class="co">#&gt; 19   vis ~~   vis     1    1           NA  .p19.</span>
+<span class="co">#&gt; 20   tex ~~   tex     1    1           NA  .p20.</span>
+<span class="co">#&gt; 21   spe ~~   spe     1    1           NA  .p21.</span>
+<span class="co">#&gt; 22   vis ~~   tex     1    1           NA  .p22.</span>
+<span class="co">#&gt; 23   vis ~~   spe     1    1           NA  .p23.</span>
+<span class="co">#&gt; 24   tex ~~   spe     1    1           NA  .p24.</span></pre></body></html></div>
 </div>
 <div id="optional-step-6-modify-the-dictionary-and-syntax" class="section level3">
 <h3 class="hasAnchor">
@@ -330,18 +318,18 @@
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(!(<span class="no">lhs</span> <span class="kw">==</span> <span class="st">"spe"</span> <span class="kw">|</span> <span class="no">rhs</span> <span class="kw">==</span> <span class="st">"spe"</span>)) <span class="kw">-&gt;</span> <span class="fu"><a href="../reference/syntax.html">syntax</a></span>(<span class="no">model</span>)</pre></body></html></div>
 <p>The modified model could then be run:</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>(<span class="no">model</span>)
-<span class="co">#&gt; lavaan 0.6-6 ended normally after 19 iterations</span>
+<span class="co">#&gt; lavaan 0.6-6 ended normally after 28 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         28</span>
+<span class="co">#&gt;   Number of free parameters                         18</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt;   Number of observations                           301</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt; Model Test User Model:</span>
 <span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Test statistic                               236.091</span>
-<span class="co">#&gt;   Degrees of freedom                                26</span>
+<span class="co">#&gt;   Test statistic                               330.994</span>
+<span class="co">#&gt;   Degrees of freedom                                27</span>
 <span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
 </div>
 <div id="optional-step-7-adding-paths" class="section level3">
@@ -352,18 +340,18 @@
   <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span>(<span class="st">"vis ~ tex"</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">estimates</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="co">#&gt; lavaan 0.6-6 ended normally after 20 iterations</span>
+<span class="co">#&gt; lavaan 0.6-6 ended normally after 27 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         28</span>
+<span class="co">#&gt;   Number of free parameters                         18</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt;   Number of observations                           301</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt; Model Test User Model:</span>
 <span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Test statistic                               236.091</span>
-<span class="co">#&gt;   Degrees of freedom                                26</span>
+<span class="co">#&gt;   Test statistic                               330.994</span>
+<span class="co">#&gt;   Degrees of freedom                                27</span>
 <span class="co">#&gt;   P-value (Chi-square)                           0.000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Parameter Estimates:</span>
@@ -375,65 +363,53 @@
 <span class="co">#&gt; Latent Variables:</span>
 <span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
 <span class="co">#&gt;   vis =~                                              </span>
-<span class="co">#&gt;     vis_1             0.799    0.085    9.384    0.000</span>
-<span class="co">#&gt;     vis_2             0.440    0.069    6.361    0.000</span>
-<span class="co">#&gt;     vis_3             0.559    0.068    8.265    0.000</span>
+<span class="co">#&gt;     vis_1             1.000                           </span>
+<span class="co">#&gt;     vis_2             0.558    0.104    5.361    0.000</span>
+<span class="co">#&gt;     vis_3             0.711    0.116    6.143    0.000</span>
 <span class="co">#&gt;   tex =~                                              </span>
-<span class="co">#&gt;     tex_1             0.987    0.057   17.428    0.000</span>
-<span class="co">#&gt;     tex_2             1.095    0.063   17.440    0.000</span>
-<span class="co">#&gt;     tex_3             0.915    0.054   17.056    0.000</span>
-<span class="co">#&gt;     spe_1             0.196    0.066    2.970    0.003</span>
-<span class="co">#&gt;     spe_2             0.195    0.061    3.193    0.001</span>
-<span class="co">#&gt;     spe_3             0.296    0.060    4.910    0.000</span>
+<span class="co">#&gt;     tex_1             1.000                           </span>
+<span class="co">#&gt;     tex_2             1.448    0.099   14.657    0.000</span>
+<span class="co">#&gt;     tex_3             1.234    0.084   14.696    0.000</span>
+<span class="co">#&gt;     spe_1             1.000                           </span>
+<span class="co">#&gt;     spe_2             0.319    0.083    3.860    0.000</span>
+<span class="co">#&gt;     spe_3             0.437    0.082    5.326    0.000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Regressions:</span>
 <span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
 <span class="co">#&gt;   vis ~                                               </span>
-<span class="co">#&gt;     tex               0.552    0.094    5.886    0.000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Intercepts:</span>
-<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
-<span class="co">#&gt;    .vis_1             4.936    0.067   73.473    0.000</span>
-<span class="co">#&gt;    .vis_2             6.088    0.068   89.855    0.000</span>
-<span class="co">#&gt;    .vis_3             2.250    0.065   34.579    0.000</span>
-<span class="co">#&gt;    .vis               0.000                           </span>
-<span class="co">#&gt;    .tex_1             3.061    0.067   45.694    0.000</span>
-<span class="co">#&gt;    .tex_2             4.341    0.074   58.452    0.000</span>
-<span class="co">#&gt;    .tex_3             2.186    0.063   34.667    0.000</span>
-<span class="co">#&gt;     tex               0.000                           </span>
-<span class="co">#&gt;    .spe_1             4.186    0.063   66.766    0.000</span>
-<span class="co">#&gt;    .spe_2             5.527    0.058   94.854    0.000</span>
-<span class="co">#&gt;    .spe_3             5.374    0.058   92.546    0.000</span>
+<span class="co">#&gt;     tex               0.591    0.092    6.408    0.000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Variances:</span>
 <span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
-<span class="co">#&gt;    .vis_1             0.526    0.127    4.136    0.000</span>
-<span class="co">#&gt;    .vis_2             1.129    0.102   11.030    0.000</span>
-<span class="co">#&gt;    .vis_3             0.867    0.094    9.237    0.000</span>
-<span class="co">#&gt;    .vis               1.000                           </span>
-<span class="co">#&gt;    .tex_1             0.376    0.048    7.885    0.000</span>
-<span class="co">#&gt;    .tex_2             0.461    0.059    7.871    0.000</span>
-<span class="co">#&gt;    .tex_3             0.358    0.043    8.334    0.000</span>
-<span class="co">#&gt;     tex               1.000                           </span>
-<span class="co">#&gt;    .spe_1             1.145    0.094   12.216    0.000</span>
-<span class="co">#&gt;    .spe_2             0.984    0.081   12.207    0.000</span>
-<span class="co">#&gt;    .spe_3             0.928    0.077   12.121    0.000</span></pre></body></html></div>
+<span class="co">#&gt;    .vis_1             0.538    0.126    4.280    0.000</span>
+<span class="co">#&gt;    .vis_2             1.127    0.102   11.006    0.000</span>
+<span class="co">#&gt;    .vis_3             0.860    0.094    9.151    0.000</span>
+<span class="co">#&gt;    .tex_1             0.512    0.050   10.281    0.000</span>
+<span class="co">#&gt;    .tex_2             0.485    0.065    7.447    0.000</span>
+<span class="co">#&gt;    .tex_3             0.343    0.047    7.335    0.000</span>
+<span class="co">#&gt;    .spe_1             1.364    0.118   11.587    0.000</span>
+<span class="co">#&gt;    .spe_2             0.965    0.079   12.160    0.000</span>
+<span class="co">#&gt;    .spe_3             0.908    0.075   12.055    0.000</span>
+<span class="co">#&gt;    .vis               0.625    0.134    4.673    0.000</span>
+<span class="co">#&gt;     tex               0.560    0.073    7.638    0.000</span></pre></body></html></div>
 <p>This function accepts both quoted (character) and unquoted arguments. So, for example, if we want to add a cross-loading from “spe_1” on “vis”, in addition to the regression path before, we could use the following code:</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">model</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span>(<span class="st">"vis ~ tex"</span>, <span class="kw">vis</span> <span class="kw">=</span>~ <span class="no">spe_1</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span>()
-<span class="co">#&gt; lavaan 0.6-6 ended normally after 20 iterations</span>
+<span class="co">#&gt; Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov</span>
+<span class="co">#&gt; variances are negative</span>
+<span class="co">#&gt; lavaan 0.6-6 ended normally after 64 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         29</span>
+<span class="co">#&gt;   Number of free parameters                         18</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt;   Number of observations                           301</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt; Model Test User Model:</span>
 <span class="co">#&gt;                                                       </span>
-<span class="co">#&gt;   Test statistic                               235.995</span>
-<span class="co">#&gt;   Degrees of freedom                                25</span>
+<span class="co">#&gt;   Test statistic                               407.730</span>
+<span class="co">#&gt;   Degrees of freedom                                27</span>
 <span class="co">#&gt;   P-value (Chi-square)                           0.000</span></pre></body></html></div>
 </div>
 </div>
