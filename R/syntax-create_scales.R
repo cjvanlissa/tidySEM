@@ -3,20 +3,16 @@
 #' \code{data.frame} and a named list describing the items in each scale. It
 #' returns the scores, a scale descriptive table, and a scale correlation table.
 #' It relies on several functions from the
-#' \code{psych} package; most notably \code{\link[psych]{scoreItems}},
-#' \code{\link[psych]{describe}}, \code{\link[psych]{fa}}, and
-#' \code{\link[psych]{omega}}.
+#' \code{psych} package.
 #' @param x A \code{data.frame} containing all variables referenced in the
 #' \code{keys.list}, or an object of class \code{tidy_sem}.
 #' @param keys.list A named list, indicating which variables belong to which
-#' scale. See \code{\link[psych]{scoreItems}} and
-#' \code{\link[psych]{make.keys}} for more information.
-#' @param missing Whether to use rows with partially missing values, Default: TRUE.
-#' See: \code{\link[psych]{scoreItems}}.
+#' scale.
+#' @param missing Whether to use rows with partially missing values.
+#' Default: TRUE.
 #' @param impute Method for handling missing values, Default: 'none'. This
 #' default method uses all available data to calculate scale scores, which is
-#' acceptable for mean scales, but not for sum scales. See:
-#' \code{\link[psych]{scoreItems}}.
+#' acceptable for mean scales, but not for sum scales.
 #' @param omega Which of McDonald's \code{\link[psych]{omega}} coefficients to
 #' report. Default: NULL; valid options include: \code{"omega_h"},
 #' \code{"omega.lim"}, \code{"alpha"}, \code{"omega.tot"}, \code{"G6"}.
@@ -107,15 +103,9 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
         fas[i, ] <- c(NA, NA)})
   }
 
-  # fas <- t(sapply(names(keys.list), function(scale_name){
-  #   tryCatch(range(as.numeric(fa(data[keys.list[[scale_name]]])$loadings)),
-  #            error = function(e){warning(e); return(c(NA, NA))},
-  #            warning = function(w){warning(paste0("When computing factor loadings for ", scale_name, gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE); return(c(NA, NA))})
-  # }))
-
-  keys <- make.keys(length(scoredatanames), keys.list = use_keys,
+  keys <- psych::make.keys(length(scoredatanames), keys.list = use_keys,
                     item.labels = scoredatanames)
-  scores <- scoreItems(keys, data, missing = missing, impute = impute)
+  scores <- psych::scoreItems(keys, data, missing = missing, impute = impute)
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
                                    Items = sapply(keys.list, length))
@@ -173,15 +163,6 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
   class(out) <- c("tidy_scales", class(out))
   return(out)
 }
-
-# if(n > 5000 & verbose) message("Sample size > 5000; skew and kurtosis will likely be significant.")
-# sk <- sum((x-mean(x))^3)/(n*sqrt(var(x))^3)
-# se_sk <- sqrt(6*n*(n-1)/(n-2)/(n+1)/(n+3))
-# sk_2se <- sk/(2*se_sk)
-# ku <- sum((x-mean(x))^4)/(n*var(x)^2) - 3
-# se_ku <- sqrt(24*n*((n-1)^2)/(n-3)/(n-2)/(n+3)/(n+5))
-# ku_2se <- ku/(2*se_ku)
-# out <- c(sk = sk, se_sk = se_sk, sk_2se = sk_2se, ku = ku, se_ku = se_ku, ku_2se = ku_2se)
 
 interpret <- function(reliability = NULL) {
   interpretation <- rep(NA, length(reliability))
