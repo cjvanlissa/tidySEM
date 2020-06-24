@@ -225,9 +225,9 @@ layout algorithm to apply to position the nodes. Defaults to
 <span class='co'># Here, we first write the layout to .csv, but you could create it in a</span>
 <span class='co'># spreadsheet program, and save the spreadsheet to .csv:</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"c"</span>, <span class='st'>""</span>,  <span class='st'>"d"</span>, <span class='st'>""</span>,  <span class='st'>"e"</span>, <span class='st'>""</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-          <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"example3.csv"</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+          <span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>"example3.csv"</span>), <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='co'># Now, we load the .csv:</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='st'>"example3.csv"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>"example3.csv"</span>))
 
 <span class='co'># Example 4</span>
 <span class='co'># For this example, make your layout in a spreadsheet program, select it, and</span>

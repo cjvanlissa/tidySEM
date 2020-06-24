@@ -176,11 +176,11 @@
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_in_circle"</span>)
-<span class="co">#&gt;      [,1] [,2]      [,3]     [,4]    [,5]</span>
-<span class="co">#&gt; [1,] NA   "x6"      "x4"     "x3"    NA  </span>
-<span class="co">#&gt; [2,] NA   "x7"      "x5"     "x1"    NA  </span>
-<span class="co">#&gt; [3,] "x8" "x9"      "visual" "speed" "x2"</span>
-<span class="co">#&gt; [4,] NA   "textual" NA       NA      NA  </span>
+<span class="co">#&gt;      [,1] [,2] [,3] [,4]     [,5]     </span>
+<span class="co">#&gt; [1,] NA   "x3" "x1" "speed"  NA       </span>
+<span class="co">#&gt; [2,] NA   "x4" "x2" "visual" NA       </span>
+<span class="co">#&gt; [3,] "x5" "x6" "x7" "x9"     "textual"</span>
+<span class="co">#&gt; [4,] NA   NA   NA   "x8"     NA       </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span>
 <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="no">fit</span>, <span class="kw">layout_algorithm</span> <span class="kw">=</span> <span class="st">"layout_on_grid"</span>)
@@ -211,15 +211,11 @@
 <p><img src="spreadsheet.png"></p>
 <p>To obtain the layout matrix, one can save the spreadsheet as <code>.csv</code> file and load it in R like this:</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span>(<span class="st">"example.csv"</span>)</pre></body></html></div>
-<pre><code>#&gt;   V1     V2 V3
-#&gt; 1 x1     x2 x3
-#&gt; 2    visual
-#&gt; [1] TRUE</code></pre>
 <p>Alternatively, one can select the layout as in the image above, copy it to the clipboard, and then read it into R from the clipboard. This works differently on Windows and Mac.</p>
 <p>On Windows, run:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="st">"clipboard"</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"\t"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="st">"clipboard"</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"\t"</span>)</pre></body></html></div>
 <p>On Mac, run:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">pipe</a></span>(<span class="st">"pbpaste"</span>), <span class="kw">sep</span><span class="kw">=</span><span class="st">"\t"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">pipe</a></span>(<span class="st">"pbpaste"</span>), <span class="kw">sep</span><span class="kw">=</span><span class="st">"\t"</span>)</pre></body></html></div>
 <pre><code>#&gt;   V1     V2 V3
 #&gt; 1 x1     x2 x3
 #&gt; 2    visual</code></pre>
@@ -229,13 +225,13 @@
 <h3 class="hasAnchor">
 <a href="#examples-of-user-defined-layout" class="anchor"></a>Examples of user-defined layout</h3>
 <p>We can specify a simple layout for two hypothetical nodes <code>x</code> and <code>y</code> is generated as follows:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>)
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>)
 <span class="co">#&gt;      [,1] [,2]</span>
 <span class="co">#&gt; [1,] "x"  "y" </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>For a mediation model, one might specify a layout like this:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
            <span class="st">"x"</span>, <span class="st">""</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "m"  ""  </span>
@@ -243,7 +239,7 @@
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>For a three-item CFA model, one might specify:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
            <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "F"  ""  </span>
@@ -251,17 +247,17 @@
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></pre></body></html></div>
 <p>And for the CFA model we estimated above:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">lay</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">lay</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
                   <span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span>, <span class="st">"x7"</span>, <span class="st">"x8"</span>, <span class="st">"x9"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
 <p>We could plot the CFA model with this custom layout as follows:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
 <p><img src="pgfig2_1.svg" width="100%"></p>
 </div>
 <div id="optional-step-4-examine-nodes-and-edges" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-4-examine-nodes-and-edges" class="anchor"></a>Optional step 4: Examine nodes and edges</h3>
 <p>The function For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running <code><a href="../reference/get_nodes.html">get_nodes()</a></code>:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span>(<span class="no">fit</span>)
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span>(<span class="no">fit</span>)
 <span class="co">#&gt;       name shape   label</span>
 <span class="co">#&gt; 1   visual  oval  visual</span>
 <span class="co">#&gt; 2  textual  oval textual</span>
@@ -276,7 +272,7 @@
 <span class="co">#&gt; 11      x8  rect      x8</span>
 <span class="co">#&gt; 12      x9  rect      x9</span></pre></body></html></div>
 <p>And for the edges:</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span>(<span class="no">fit</span>)
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span>(<span class="no">fit</span>)
 <span class="co">#&gt;       from      to arrow   label connect_from connect_to curvature</span>
 <span class="co">#&gt; 1   visual      x1  last 0.77***           NA         NA        NA</span>
 <span class="co">#&gt; 2   visual      x2  last 0.42***           NA         NA        NA</span>
@@ -307,13 +303,13 @@
 <h3 class="hasAnchor">
 <a href="#optional-step-5-accessing-graph-data-before-plotting" class="anchor"></a>Optional step 5: accessing graph data before plotting</h3>
 <p>One important feature of <code>tidySEM</code> graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. First, use <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> to assign the plot data to an object.</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">graph_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">graph_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>)</pre></body></html></div>
 </div>
 <div id="optional-step-6-access-the-nodes-and-edges" class="section level3">
 <h3 class="hasAnchor">
 <a href="#optional-step-6-access-the-nodes-and-edges" class="anchor"></a>Optional step 6: Access the nodes and edges</h3>
 <p>The nodes and edges can be examined using <code><a href="../reference/nodes.html">nodes(graph_data)</a></code> and <code><a href="../reference/edges.html">edges(graph_data)</a></code>:</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>)
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>)
 <span class="co">#&gt;       name shape   label  x y node_xmin node_xmax node_ymin node_ymax</span>
 <span class="co">#&gt; 1    speed  oval   speed 14 4      13.5      14.5       3.5       4.5</span>
 <span class="co">#&gt; 2  textual  oval textual 10 4       9.5      10.5       3.5       4.5</span>
@@ -358,12 +354,12 @@
 <h3 class="hasAnchor">
 <a href="#optional-step-7-modify-the-nodes-and-edges" class="anchor"></a>Optional step 7: Modify the nodes and edges</h3>
 <p>At this stage, we may want to improve the basic plot slightly. The functions <code>nodes(graph_data) &lt;- ...</code> and <code>edges(graph_data) &lt;- ...</code> can be used to modify the nodes and edges. These functions pair well with the general ‘tidyverse’ workflow. For example, we might want to print node labels for latent variables in <em>Title Case</em> instead of just using the variable names:</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
 <span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html">str_to_title</a></span>(<span class="no">label</span>))</pre></body></html></div>
 <p>Now, for the edges, we see that the default edging algorithm has connected some nodes side-to-side (based on the smallest possible Euclidian distance). However, in this simple graph, it makes more sense to connect all nodes top-to-bottom - except for the latent variable covariances. We can use the same conditional replacement for the edges:</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">connect_from</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">connect_from</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">curvature</span>), <span class="st">"bottom"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">connect_to</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">connect_to</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">curvature</span>), <span class="st">"top"</span>)) <span class="kw">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
 </div>
@@ -371,7 +367,7 @@
 <h3 class="hasAnchor">
 <a href="#plot-the-customized-graph" class="anchor"></a>Plot the customized graph</h3>
 <p>We can plot a customized graph using <code><a href="https://rdrr.io/r/base/plot.html">plot(graph_data)</a></code>; a generic plot method for <code>sem_graph</code> objects:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">graph_data</span>)</pre></body></html></div>
 <p><img src="pgfig2.svg" width="100%"></p>
 </div>
 </div>
@@ -379,7 +375,7 @@
 <h2 class="hasAnchor">
 <a href="#connecting-nodes" class="anchor"></a>Connecting nodes</h2>
 <p>The functions <code><a href="../reference/graph_sem.html">graph_sem()</a></code> and <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the <code>angle</code> parameter. This parameter connects nodes top-to-bottom when they are within <code>angle</code> degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing <code>angle</code> to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:</p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>, <span class="kw">angle</span> <span class="kw">=</span> <span class="fl">170</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">model</span> <span class="kw">=</span> <span class="no">fit</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="no">lay</span>, <span class="kw">angle</span> <span class="kw">=</span> <span class="fl">170</span>)</pre></body></html></div>
 <p><img src="pgfig3.svg" width="100%"></p>
 </div>
 <div id="visual-aspects" class="section level2">
@@ -396,7 +392,7 @@
 <li>
 <code>alpha</code>: The transparency of the line (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>,
                   <span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">2</span>,
                   <span class="kw">colour</span> <span class="kw">=</span> <span class="st">"red"</span>,
@@ -418,7 +414,7 @@
 <li>
 <code>alpha</code>: The transparency of the node (e.g., <code>alpha = 1</code> or <code>alpha = .2</code>)</li>
 </ul>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>)
 <span class="no">nod</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">name</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>),
                     <span class="kw">shape</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"rect"</span>, <span class="st">"oval"</span>),
@@ -430,7 +426,7 @@
 <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span>(<span class="kw">edges</span> <span class="kw">=</span> <span class="no">edg</span>, <span class="kw">nodes</span> <span class="kw">=</span> <span class="no">nod</span>, <span class="kw">layout</span> <span class="kw">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="kw">rows</span> <span class="kw">=</span> <span class="fl">1</span>))</pre></body></html></div>
 <p><img src="pgfig5.svg" width="30%"></p>
 <p>These aesthetics can also be passed to the <code>sem_graph</code> object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="../reference/edges.html">edges</a></span>(<span class="no">graph_data</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">colour</span> <span class="kw">=</span> <span class="st">"black"</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">colour</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span>(<span class="no">colour</span>, <span class="no">from</span> <span class="kw">==</span> <span class="st">"visual"</span> <span class="kw">&amp;</span> <span class="no">to</span> <span class="kw">==</span> <span class="st">"x2"</span>, <span class="st">"red"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">linetype</span> <span class="kw">=</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
@@ -468,7 +464,7 @@
 <li>
 <code>label_location</code>: Where along the edge to plot the label; a number between 0 (beginning) and 1 (end)</li>
 </ul>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">edg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">from</span> <span class="kw">=</span> <span class="st">"x"</span>,
                   <span class="kw">to</span> <span class="kw">=</span> <span class="st">"y"</span>,
                   <span class="kw">label</span> <span class="kw">=</span> <span class="st">"text"</span>,
                   <span class="kw">label_colour</span> <span class="kw">=</span> <span class="st">"blue"</span>,

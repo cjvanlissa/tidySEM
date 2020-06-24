@@ -134,7 +134,7 @@ To obtain the layout matrix, one can save the spreadsheet as `.csv` file and loa
 read.csv("example.csv")
 ```
 
-```{r echo = FALSE, eval = TRUE}
+```{r echo = FALSE, eval = FALSE}
 write.csv(matrix(c("x1", "x2",  "x3", "",  "visual", ""), nrow = 2, byrow = TRUE), file = "example.csv", row.names = FALSE)
 read.csv("example.csv")
 file.remove("example.csv")

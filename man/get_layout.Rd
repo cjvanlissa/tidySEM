@@ -75,9 +75,9 @@ get_layout(fit)
 # Here, we first write the layout to .csv, but you could create it in a
 # spreadsheet program, and save the spreadsheet to .csv:
 write.csv(matrix(c("c", "",  "d", "",  "e", ""), nrow = 2, byrow = TRUE),
-          file = "example3.csv", row.names = FALSE)
+          file = file.path(tempdir(), "example3.csv"), row.names = FALSE)
 # Now, we load the .csv:
-read.csv("example3.csv")
+read.csv(file.path(tempdir(), "example3.csv"))
 
 # Example 4
 # For this example, make your layout in a spreadsheet program, select it, and

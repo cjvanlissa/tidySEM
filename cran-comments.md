@@ -1,11 +1,10 @@
 # Version 0.1.2
 
 This resubmission addresses the comment by CRAN-maintainer Swetlana Herbrandt:
-* We see code lines such as write.csv(table_descriptives, "scale table.csv", 
-  row.names = FALSE)
+* Please ensure that your functions do not modify (save or delete) the user's
+  home filespace in your examples/vignettes/tests.
   + Response:
-    We have removed the calls to write.csv(). It is now up to users to
-    save the results of analyses (makes more sense, anyway).
+    We have removed the last two remaining calls to write.csv().
 
 ## Test environments
 
