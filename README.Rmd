@@ -53,7 +53,7 @@ Furthermore, there are three main vignettes, describing the three main tracks of
 1. A [vignette about generating syntax and estimating models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html)
 2. A [vignette about tabulating results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
 3. A [vignette about making graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
-    a) An additional vignette describes the A [graphing conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html) for
+    a) An additional vignette describes the [graphing conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html) for
     structural equation models.
 
 ## Citing tidySEM

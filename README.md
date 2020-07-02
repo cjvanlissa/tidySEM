@@ -62,7 +62,7 @@ tracks of `tidySEM` functions:
     results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
 3.  A [vignette about making
     graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
-    1)  An additional vignette describes the A [graphing
+    1)  An additional vignette describes the [graphing
         conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html)
         for structural equation models.
 

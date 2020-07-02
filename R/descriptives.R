@@ -31,6 +31,7 @@ descriptives.data.frame <- function(x, ...) {
   all_names <-
     c(
       "n",
+      "missing",
       "unique",
       "mean",
       "median",
@@ -71,6 +72,7 @@ descriptives.numeric <- function(x, ...) {
   cbind(
     data.frame(
       n = sum(!is.na(x)),
+      missing = sum(is.na(x))/length(x),
       unique = length(unique(x)),
       mean = mean(x, na.rm = TRUE),
       median = median(x, na.rm = TRUE),
@@ -95,6 +97,7 @@ descriptives.default <- function(x, ...) {
   tb <- tryCatch(table(x), error = function(e){NA})
   data.frame(
     n = tryCatch({sum(!is.na(x))}, error = function(e){NA}),
+    missing = sum(is.na(x))/length(x),
     unique = tryCatch(length(tb), error = function(e){NA}),
     mode = tryCatch(tb[which.max(tb)], error = function(e){NA}),
     mode_value = tryCatch(names(tb)[which.max(tb)], error = function(e){NA}),
