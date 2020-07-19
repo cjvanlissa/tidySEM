@@ -1,3 +1,7 @@
+# tidySEM 0.1.3
+
+* Minor bugfixes
+
 # tidySEM 0.1.2
 
 * create_scales() no longer writes .csv files
