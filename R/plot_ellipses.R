@@ -36,7 +36,7 @@
 .oval_node <- function(p, df, oval_width, oval_height, npoints = 80){
   x <- df$x
   y <- df$y
-  point_seq <- seq(0,2*pi,length.out = npoints)
+  point_seq <- seq(0, 2*pi,length.out = npoints)
 
   df_ellipse <- matrix(
     c((.5*oval_width) * cos(point_seq), (.5*oval_height) * sin(point_seq)),
@@ -46,8 +46,8 @@
     t(t(df_ellipse) + c(x, y))
   }, x = x, y = y, SIMPLIFY = FALSE)
   df_ellipse <- data.frame(do.call(rbind, df_ellipse))
-  df_ellipse$grp <- rep(letters[1:length(x)], each = npoints)
-  df$grp <- letters[1:nrow(df)]
+  df_ellipse$grp <- rep(paste0("g", 1:length(x)), each = npoints)
+  df$grp <- paste0("g", 1:length(x))
   df_ellipse <- merge(df_ellipse, df, by = "grp", all.y = TRUE)
   Args <- c("linetype", "size", "colour", "fill", "alpha")
   Args <- as.list(df_ellipse[which(names(df_ellipse) %in% Args)])

@@ -1,6 +1,7 @@
 # tidySEM 0.1.3
 
 * Minor bugfixes
+* Fix bug where > 26 nodes resulted in wrong plot
 
 # tidySEM 0.1.2
 
