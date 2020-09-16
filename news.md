@@ -1,5 +1,11 @@
 # tidySEM 0.1.3
 
+* Changed arguments for graph_sem.lavaan and graph_sem.mplus.model; these gain
+  arguments "label", "edges", "layout", and "nodes",
+  which apply get_edges(), get_layout(), and get_nodes() to the model argument,
+  respectively, passing on the "label" argument to get_edges() and get_nodes().
+* The default label has been changed to "est_sig" throughout the package. Some
+  functions used "est_sig_std" instead.
 * Minor bugfixes
 * Fix bug where > 26 nodes resulted in wrong plot
 

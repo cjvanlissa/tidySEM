@@ -148,10 +148,11 @@ graph_sem.default <- function(edges = NULL,
                               angle = NULL,
                               fix_coord = FALSE,
                               ...){
-  Args <- as.list(match.call()[-1])
-  Args$layout <- force(layout)
-  Args$edges <- force(edges)
-  Args$nodes <- force(nodes)
+  Args <- all_args()
+  # Args <- as.list(match.call()[-1])
+  # Args$layout <- force(layout)
+  # Args$edges <- force(edges)
+  # Args$nodes <- force(nodes)
   Args[["model"]] <- NULL
   prep <- do.call(prepare_graph, Args)
   plot(prep)
@@ -169,9 +170,11 @@ graph_sem.default <- function(edges = NULL,
 #' @export
 graph_sem.lavaan <- function(model,
                              label = "est_sig",
+                             edges = get_edges(x = model, label = label),
+                             layout = get_layout(x = model),
+                             nodes = get_nodes(x = model, label = label),
                              ...){
-  Args <- as.list(match.call()[-1])
-  Args$model <- force(model)
+  Args <- all_args()
   do.call(graph_model, Args)
 }
 
@@ -180,10 +183,10 @@ graph_sem.lavaan <- function(model,
 #' @export
 graph_sem.mplus.model <- graph_sem.lavaan
 
-graph_model <- function(model, label = "est_sig", ...) {
+graph_model <- function(model, ...) {
   Args <- as.list(match.call()[-1])
   call_args <- list(x = model,
-                    label = label)
+                    label = Args$label)
   if(!"edges" %in% names(Args)){
     edges <- do.call(get_edges, call_args)
     Args$edges <- edges
@@ -448,10 +451,19 @@ prepare_graph.default <- function(edges = NULL,
 #' @param model Instead of the edges argument, it is also possible to use the
 #' model argument and pass an object for which a method exists (e.g.,
 #' \code{mplus.model} or \code{lavaan}).
+#' @param label Character, indicating which column to use for node labels. Nodes
+#' are labeled with mean values of the observed/latent variables they represent.
+#' Defaults to 'est_sig', which consists of the estimate value with significance
+#' asterisks.
 #' @rdname prepare_graph
 #' @export
-prepare_graph.lavaan <- function(model, ...){
-  Args <- as.list(match.call()[-1])
+prepare_graph.lavaan <- function(model,
+                                 label = "est_sig",
+                                 edges = get_edges(x = model, label = label),
+                                 layout = get_layout(x = model),
+                                 nodes = get_nodes(x = model, label = label),
+                                 ...){
+  Args <- all_args()
   do.call(prepare_graph_model, Args)
 }
 
@@ -701,7 +713,7 @@ get_edges <- function(x, label = "est_sig", ...){
 
 #' @method get_edges lavaan
 #' @export
-get_edges.lavaan <- function(x, label = "est_sig_std", ...){
+get_edges.lavaan <- function(x, label = "est_sig", ...){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, columns = NULL)
   do.call(get_edges, Args)
@@ -715,8 +727,8 @@ get_edges.mplus.object <- get_edges.lavaan
 
 #' @method get_edges tidy_results
 #' @export
-get_edges.tidy_results <- function(x, label = "est_sig_std", ..., remove_fixed = FALSE){
-  Args <- as.list(match.call())[-1]
+get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FALSE){
+  Args <- all_args()
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
       Args$x <- x[x$group == i, -which(names(x) == "group")]

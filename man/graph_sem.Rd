@@ -27,9 +27,23 @@ graph_sem(...)
   ...
 )
 
-\method{graph_sem}{lavaan}(model, label = "est_sig", ...)
+\method{graph_sem}{lavaan}(
+  model,
+  label = "est_sig",
+  edges = get_edges(x = model, label = label),
+  layout = get_layout(x = model),
+  nodes = get_nodes(x = model, label = label),
+  ...
+)
 
-\method{graph_sem}{mplus.model}(model, label = "est_sig", ...)
+\method{graph_sem}{mplus.model}(
+  model,
+  label = "est_sig",
+  edges = get_edges(x = model, label = label),
+  layout = get_layout(x = model),
+  nodes = get_nodes(x = model, label = label),
+  ...
+)
 }
 \arguments{
 \item{...}{Additional arguments passed to and from functions.}
