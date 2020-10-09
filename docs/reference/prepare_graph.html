@@ -77,7 +77,7 @@ a model object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -151,32 +151,46 @@ Input consists of (at least) a layout, and either nodes and edges, or
 a model object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prepare_graph</span>(<span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>prepare_graph</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>prepare_graph</span>(
-  <span class='kw'>edges</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>layout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nodes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>rect_width</span> <span class='kw'>=</span> <span class='fl'>1.2</span>,
-  <span class='kw'>rect_height</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
-  <span class='kw'>ellipses_width</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>ellipses_height</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>variance_diameter</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
-  <span class='kw'>spacing_x</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>spacing_y</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>curvature</span> <span class='kw'>=</span> <span class='fl'>60</span>,
-  <span class='kw'>angle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fix_coord</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>prepare_graph</span><span class='op'>(</span>
+  edges <span class='op'>=</span> <span class='cn'>NULL</span>,
+  layout <span class='op'>=</span> <span class='cn'>NULL</span>,
+  nodes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rect_width <span class='op'>=</span> <span class='fl'>1.2</span>,
+  rect_height <span class='op'>=</span> <span class='fl'>0.8</span>,
+  ellipses_width <span class='op'>=</span> <span class='fl'>1</span>,
+  ellipses_height <span class='op'>=</span> <span class='fl'>1</span>,
+  variance_diameter <span class='op'>=</span> <span class='fl'>0.8</span>,
+  spacing_x <span class='op'>=</span> <span class='fl'>2</span>,
+  spacing_y <span class='op'>=</span> <span class='fl'>2</span>,
+  text_size <span class='op'>=</span> <span class='fl'>4</span>,
+  curvature <span class='op'>=</span> <span class='fl'>60</span>,
+  angle <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fix_coord <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for lavaan</span>
-<span class='fu'>prepare_graph</span>(<span class='no'>model</span>, <span class='no'>...</span>)
+<span class='fu'>prepare_graph</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  label <span class='op'>=</span> <span class='st'>"est_sig"</span>,
+  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  layout <span class='op'>=</span> <span class='fu'><a href='get_layout.lavaan.html'>get_layout</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
+  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for mplus.model</span>
-<span class='fu'>prepare_graph</span>(<span class='no'>model</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>prepare_graph</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  label <span class='op'>=</span> <span class='st'>"est_sig"</span>,
+  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  layout <span class='op'>=</span> <span class='fu'><a href='get_layout.lavaan.html'>get_layout</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
+  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -194,7 +208,7 @@ least) the columns <code><a href='https://rdrr.io/r/base/c.html'>c("from", "to")
     <tr>
       <th>layout</th>
       <td><p>A matrix (or data.frame) that describes the layout; see
-<code><a href='get_layout.html'>get_layout</a></code>.</p></td>
+<code><a href='get_layout.lavaan.html'>get_layout</a></code>.</p></td>
     </tr>
     <tr>
       <th>nodes</th>
@@ -268,6 +282,13 @@ Default: FALSE.</p></td>
 model argument and pass an object for which a method exists (e.g.,
 <code>mplus.model</code> or <code>lavaan</code>).</p></td>
     </tr>
+    <tr>
+      <th>label</th>
+      <td><p>Character, indicating which column to use for node labels. Nodes
+are labeled with mean values of the observed/latent variables they represent.
+Defaults to 'est_sig', which consists of the estimate value with significance
+asterisks.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -275,9 +296,17 @@ model argument and pass an object for which a method exists (e.g.,
     <p>Object of class 'sem_graph'</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>lavaan</span>)
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span>(<span class='st'>"dist ~ speed"</span>, <span class='no'>cars</span>)
-<span class='fu'>prepare_graph</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (model, ...) {    Args &lt;- as.list(match.call()[-1])    call_args &lt;- list(x = model)    if (!"edges" %in% names(Args)) {        edges &lt;- do.call(get_edges, call_args)        Args$edges &lt;- edges    }    if (!"nodes" %in% names(Args)) {        nodes &lt;- do.call(get_nodes, call_args)        Args$nodes &lt;- nodes    }    if (!"layout" %in% names(Args)) {        layout &lt;- do.call(get_layout, call_args)        Args$layout &lt;- layout    }    Args[["model"]] &lt;- NULL    do.call(prepare_graph.default, Args)})(model = res): object 'res' not found</span></div></pre>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span><span class='op'>(</span><span class='st'>"dist ~ speed"</span>, <span class='va'>cars</span><span class='op'>)</span>
+<span class='fu'>prepare_graph</span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; A tidy_sem object with 3 edges and 2 nodes, and the following elements:
+#&gt; <span style='color: #00BB00;'>v  </span><span>edges             </span><span style='color: #00BB00;'>v  </span><span>nodes
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>rect_width        </span><span style='color: #00BB00;'>v  </span><span>rect_height
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>ellipses_width    </span><span style='color: #00BB00;'>v  </span><span>ellipses_height
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>variance_diameter </span><span style='color: #00BB00;'>v  </span><span>spacing_x
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>spacing_y         </span><span style='color: #00BB00;'>v  </span><span>text_size
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>curvature         </span><span style='color: #BBBBBB;'>o  </span><span>angle
+#&gt; </span><span style='color: #00BB00;'>v  </span><span>fix_coord         </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -293,7 +322,7 @@ model argument and pass an object for which a method exists (e.g.,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

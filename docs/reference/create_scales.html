@@ -76,7 +76,7 @@ psych package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -149,26 +149,26 @@ It relies on several functions from the
 <code>psych</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_scales</span>(
-  <span class='no'>x</span>,
-  <span class='no'>keys.list</span>,
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>impute</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
-  <span class='kw'>omega</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='no'>...</span>
-)
+    <pre class="usage"><span class='fu'>create_scales</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>keys.list</span>,
+  missing <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  impute <span class='op'>=</span> <span class='st'>"none"</span>,
+  omega <span class='op'>=</span> <span class='cn'>NULL</span>,
+  digits <span class='op'>=</span> <span class='fl'>2</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for tidy_sem</span>
-<span class='fu'>create_scales</span>(
-  <span class='no'>x</span>,
-  <span class='no'>keys.list</span>,
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>impute</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
-  <span class='kw'>omega</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>create_scales</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>keys.list</span>,
+  missing <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  impute <span class='op'>=</span> <span class='st'>"none"</span>,
+  omega <span class='op'>=</span> <span class='cn'>NULL</span>,
+  digits <span class='op'>=</span> <span class='fl'>2</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -225,12 +225,15 @@ of Public Health, 58(4), 637–642. &lt;doi:10.1007/s00038-012-0416-3&gt;.
 These coefficients are marked with "(sb)".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>create_scales</span>(<span class='no'>iris</span>, <span class='kw'>keys.list</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>scalename</span> <span class='kw'>=</span>
-            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span>, <span class='st'>"Petal.Length"</span>, <span class='st'>"Petal.Width"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='input'><span class='no'>out</span>$<span class='no'>descriptives</span></div><div class='output co'>#&gt;    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
+    <pre class="examples"><div class='input'><span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'>create_scales</span><span class='op'>(</span><span class='va'>iris</span>, keys.list <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>scalename <span class='op'>=</span>
+            <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span>, <span class='st'>"Petal.Length"</span>, <span class='st'>"Petal.Width"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>descriptives</span>
+</div><div class='output co'>#&gt;    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
 #&gt; 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20    -1.52
 #&gt;   Reliability  Interpret min_load max_load
-#&gt; 1        0.71 Acceptable       NA       NA</div><div class='input'><span class='no'>dict</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span>(<span class='no'>iris</span>, <span class='kw'>split</span> <span class='kw'>=</span> <span class='st'>"\\."</span>)
-<span class='fu'>create_scales</span>(<span class='no'>dict</span>)</div><div class='output co'>#&gt; <span class='message'>Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span></div><div class='output co'>#&gt; A tidy_scales object
+#&gt; 1        0.71 Acceptable       NA       NA</div><div class='input'><span class='va'>dict</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span><span class='op'>(</span><span class='va'>iris</span>, split <span class='op'>=</span> <span class='st'>"\\."</span><span class='op'>)</span>
+<span class='fu'>create_scales</span><span class='op'>(</span><span class='va'>dict</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span></div><div class='output co'>#&gt; A tidy_scales object
 #&gt; <span style='color: #00BB00;'>v  </span><span>  $descriptives
 #&gt; </span><span style='color: #00BB00;'>v  </span><span>  $correlations
 #&gt; </span><span style='color: #00BB00;'>v  </span><span>  $scores
@@ -256,7 +259,7 @@ These coefficients are marked with "(sb)".</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

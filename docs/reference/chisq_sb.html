@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@
     <p>Computes Satorra-Bentler corrected chi-square test.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chisq_sb</span>(<span class='no'>chisq1</span>, <span class='no'>df1</span>, <span class='no'>scf1</span>, <span class='no'>chisq2</span>, <span class='no'>df2</span>, <span class='no'>scf2</span>)</pre>
+    <pre class="usage"><span class='fu'>chisq_sb</span><span class='op'>(</span><span class='va'>chisq1</span>, <span class='va'>df1</span>, <span class='va'>scf1</span>, <span class='va'>chisq2</span>, <span class='va'>df2</span>, <span class='va'>scf2</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,10 +182,14 @@ p-value.</p>
 Satorra, A., &amp; Bentler, P. M. (2001). A scaled difference chi-square test
 statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
 &lt;doi:10.1007/BF02296192&gt;</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Caspar J. van Lissa</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>23</span>, <span class='fl'>44</span>, <span class='fl'>65</span>), <span class='kw'>df</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>78</span>, <span class='fl'>74</span>, <span class='fl'>70</span>), <span class='kw'>scf</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.02</span>, <span class='fl'>1.12</span>, <span class='fl'>1.28</span>))
-<span class='fu'>chisq_sb</span>(<span class='fl'>24</span>, <span class='fl'>78</span>, <span class='fl'>1.02</span>, <span class='fl'>65</span>, <span class='fl'>70</span>, <span class='fl'>1.28</span>)</div><div class='output co'>#&gt; chisq    df     p 
+    <pre class="examples"><div class='input'><span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>chi2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>23</span>, <span class='fl'>44</span>, <span class='fl'>65</span><span class='op'>)</span>, df <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>78</span>, <span class='fl'>74</span>, <span class='fl'>70</span><span class='op'>)</span>, scf <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1.02</span>, <span class='fl'>1.12</span>, <span class='fl'>1.28</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>chisq_sb</span><span class='op'>(</span><span class='fl'>24</span>, <span class='fl'>78</span>, <span class='fl'>1.02</span>, <span class='fl'>65</span>, <span class='fl'>70</span>, <span class='fl'>1.28</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; chisq    df     p 
 #&gt; 46.79 -8.00  1.00 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -202,7 +206,7 @@ statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
