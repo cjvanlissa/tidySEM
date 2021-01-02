@@ -112,6 +112,10 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
   all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par, digits = digits)))})
   if(length(all_res) == 1){
     results <- all_res[[1]]
+    if(is.null(results)){
+      message("No valid results found.")
+      invisible(return(NULL))
+    }
   } else {
     all_res[[2]][c("paramHeader", "param", "est_se", "Group", "betweenwithin", "label")] <- NULL
     names(all_res[[2]])[-ncol(all_res[[2]])] <- paste0(names(all_res[[2]])[-ncol(all_res[[2]])], "_std")
@@ -146,6 +150,9 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
 
 internal_table_mplusmodel <- function(x, parameters, digits){
   results <- x$parameters[[parameters]]
+  if(is.null(results[["se"]])){
+    return(NULL)
+  }
   value_columns <- c("est", "se", "est_se", "pval", "posterior_sd")
   value_columns <- value_columns[which(value_columns %in% names(results))]
   add_cis <- FALSE
