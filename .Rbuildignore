@@ -20,3 +20,4 @@ R/data_types\.md
 ^cran-comments\.md$
 ^news\.md$
 ^\.github$
+^codecov\.yml$

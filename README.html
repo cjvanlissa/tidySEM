@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+@font-face {
+font-family: octicons-link;
+src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+body {
+-webkit-text-size-adjust: 100%;
+text-size-adjust: 100%;
+color: #333;
+font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+font-size: 16px;
+line-height: 1.6;
+word-wrap: break-word;
+}
+a {
+background-color: transparent;
+}
+a:active,
+a:hover {
+outline: 0;
+}
+strong {
+font-weight: bold;
+}
+h1 {
+font-size: 2em;
+margin: 0.67em 0;
+}
+img {
+border: 0;
+}
+hr {
+box-sizing: content-box;
+height: 0;
+}
+pre {
+overflow: auto;
+}
+code,
+kbd,
+pre {
+font-family: monospace, monospace;
+font-size: 1em;
+}
+input {
+color: inherit;
+font: inherit;
+margin: 0;
+}
+html input[disabled] {
+cursor: default;
+}
+input {
+line-height: normal;
+}
+input[type="checkbox"] {
+box-sizing: border-box;
+padding: 0;
+}
+table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+td,
+th {
+padding: 0;
+}
+* {
+box-sizing: border-box;
+}
+input {
+font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+a {
+color: #4078c0;
+text-decoration: none;
+}
+a:hover,
+a:active {
+text-decoration: underline;
+}
+hr {
+height: 0;
+margin: 15px 0;
+overflow: hidden;
+background: transparent;
+border: 0;
+border-bottom: 1px solid #ddd;
+}
+hr:before {
+display: table;
+content: "";
+}
+hr:after {
+display: table;
+clear: both;
+content: "";
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 15px;
+margin-bottom: 15px;
+line-height: 1.1;
+}
+h1 {
+font-size: 30px;
+}
+h2 {
+font-size: 21px;
+}
+h3 {
+font-size: 16px;
+}
+h4 {
+font-size: 14px;
+}
+h5 {
+font-size: 12px;
+}
+h6 {
+font-size: 11px;
+}
+blockquote {
+margin: 0;
+}
+ul,
+ol {
+padding: 0;
+margin-top: 0;
+margin-bottom: 0;
+}
+ol ol,
+ul ol {
+list-style-type: lower-roman;
+}
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
+list-style-type: lower-alpha;
+}
+dd {
+margin-left: 0;
+}
+code {
+font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+font-size: 12px;
+}
+pre {
+margin-top: 0;
+margin-bottom: 0;
+font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+.select::-ms-expand {
+opacity: 0;
+}
+.octicon {
+font: normal normal normal 16px/1 octicons-link;
+display: inline-block;
+text-decoration: none;
+text-rendering: auto;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+.octicon-link:before {
+content: '\f05c';
+}
+.markdown-body:before {
+display: table;
+content: "";
+}
+.markdown-body:after {
+display: table;
+clear: both;
+content: "";
+}
+.markdown-body>*:first-child {
+margin-top: 0 !important;
+}
+.markdown-body>*:last-child {
+margin-bottom: 0 !important;
+}
+a:not([href]) {
+color: inherit;
+text-decoration: none;
+}
+.anchor {
+display: inline-block;
+padding-right: 2px;
+margin-left: -18px;
+}
+.anchor:focus {
+outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 1em;
+margin-bottom: 16px;
+font-weight: bold;
+line-height: 1.4;
+}
+h1 .octicon-link,
+h2 .octicon-link,
+h3 .octicon-link,
+h4 .octicon-link,
+h5 .octicon-link,
+h6 .octicon-link {
+color: #000;
+vertical-align: middle;
+visibility: hidden;
+}
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+text-decoration: none;
+}
+h1:hover .anchor .octicon-link,
+h2:hover .anchor .octicon-link,
+h3:hover .anchor .octicon-link,
+h4:hover .anchor .octicon-link,
+h5:hover .anchor .octicon-link,
+h6:hover .anchor .octicon-link {
+visibility: visible;
+}
+h1 {
+padding-bottom: 0.3em;
+font-size: 2.25em;
+line-height: 1.2;
+border-bottom: 1px solid #eee;
+}
+h1 .anchor {
+line-height: 1;
+}
+h2 {
+padding-bottom: 0.3em;
+font-size: 1.75em;
+line-height: 1.225;
+border-bottom: 1px solid #eee;
+}
+h2 .anchor {
+line-height: 1;
+}
+h3 {
+font-size: 1.5em;
+line-height: 1.43;
+}
+h3 .anchor {
+line-height: 1.2;
+}
+h4 {
+font-size: 1.25em;
+}
+h4 .anchor {
+line-height: 1.2;
+}
+h5 {
+font-size: 1em;
+}
+h5 .anchor {
+line-height: 1.1;
+}
+h6 {
+font-size: 1em;
+color: #777;
+}
+h6 .anchor {
+line-height: 1.1;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table,
+pre {
+margin-top: 0;
+margin-bottom: 16px;
+}
+hr {
+height: 4px;
+padding: 0;
+margin: 16px 0;
+background-color: #e7e7e7;
+border: 0 none;
+}
+ul,
+ol {
+padding-left: 2em;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+margin-top: 0;
+margin-bottom: 0;
+}
+li>p {
+margin-top: 16px;
+}
+dl {
+padding: 0;
+}
+dl dt {
+padding: 0;
+margin-top: 16px;
+font-size: 1em;
+font-style: italic;
+font-weight: bold;
+}
+dl dd {
+padding: 0 16px;
+margin-bottom: 16px;
+}
+blockquote {
+padding: 0 15px;
+color: #777;
+border-left: 4px solid #ddd;
+}
+blockquote>:first-child {
+margin-top: 0;
+}
+blockquote>:last-child {
+margin-bottom: 0;
+}
+table {
+display: block;
+width: 100%;
+overflow: auto;
+word-break: normal;
+word-break: keep-all;
+}
+table th {
+font-weight: bold;
+}
+table th,
+table td {
+padding: 6px 13px;
+border: 1px solid #ddd;
+}
+table tr {
+background-color: #fff;
+border-top: 1px solid #ccc;
+}
+table tr:nth-child(2n) {
+background-color: #f8f8f8;
+}
+img {
+max-width: 100%;
+box-sizing: content-box;
+background-color: #fff;
+}
+code {
+padding: 0;
+padding-top: 0.2em;
+padding-bottom: 0.2em;
+margin: 0;
+font-size: 85%;
+background-color: rgba(0,0,0,0.04);
+border-radius: 3px;
+}
+code:before,
+code:after {
+letter-spacing: -0.2em;
+content: "\00a0";
+}
+pre>code {
+padding: 0;
+margin: 0;
+font-size: 100%;
+word-break: normal;
+white-space: pre;
+background: transparent;
+border: 0;
+}
+.highlight {
+margin-bottom: 16px;
+}
+.highlight pre,
+pre {
+padding: 16px;
+overflow: auto;
+font-size: 85%;
+line-height: 1.45;
+background-color: #f7f7f7;
+border-radius: 3px;
+}
+.highlight pre {
+margin-bottom: 0;
+word-break: normal;
+}
+pre {
+word-wrap: normal;
+}
+pre code {
+display: inline;
+max-width: initial;
+padding: 0;
+margin: 0;
+overflow: initial;
+line-height: inherit;
+word-wrap: normal;
+background-color: transparent;
+border: 0;
+}
+pre code:before,
+pre code:after {
+content: normal;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font-size: 11px;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.pl-c {
+color: #969896;
+}
+.pl-c1,
+.pl-s .pl-v {
+color: #0086b3;
+}
+.pl-e,
+.pl-en {
+color: #795da3;
+}
+.pl-s .pl-s1,
+.pl-smi {
+color: #333;
+}
+.pl-ent {
+color: #63a35c;
+}
+.pl-k {
+color: #a71d5d;
+}
+.pl-pds,
+.pl-s,
+.pl-s .pl-pse .pl-s1,
+.pl-sr,
+.pl-sr .pl-cce,
+.pl-sr .pl-sra,
+.pl-sr .pl-sre {
+color: #183691;
+}
+.pl-v {
+color: #ed6a43;
+}
+.pl-id {
+color: #b52a1d;
+}
+.pl-ii {
+background-color: #b52a1d;
+color: #f8f8f8;
+}
+.pl-sr .pl-cce {
+color: #63a35c;
+font-weight: bold;
+}
+.pl-ml {
+color: #693a17;
+}
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+color: #1d3e81;
+font-weight: bold;
+}
+.pl-mq {
+color: #008080;
+}
+.pl-mi {
+color: #333;
+font-style: italic;
+}
+.pl-mb {
+color: #333;
+font-weight: bold;
+}
+.pl-md {
+background-color: #ffecec;
+color: #bd2c00;
+}
+.pl-mi1 {
+background-color: #eaffea;
+color: #55a532;
+}
+.pl-mdr {
+color: #795da3;
+font-weight: bold;
+}
+.pl-mo {
+color: #1d3e81;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.task-list-item {
+list-style-type: none;
+}
+.task-list-item+.task-list-item {
+margin-top: 3px;
+}
+.task-list-item input {
+margin: 0 0.35em 0.25em -1.6em;
+vertical-align: middle;
+}
+:checked+.radio-label {
+z-index: 1;
+position: relative;
+border-color: #4078c0;
+}
+.sourceLine {
+display: inline-block;
+}
+code .kw { color: #000000; }
+code .dt { color: #ed6a43; }
+code .dv { color: #009999; }
+code .bn { color: #009999; }
+code .fl { color: #009999; }
+code .ch { color: #009999; }
+code .st { color: #183691; }
+code .co { color: #969896; }
+code .ot { color: #0086b3; }
+code .al { color: #a61717; }
+code .fu { color: #63a35c; }
+code .er { color: #a61717; background-color: #e3d2d2; }
+code .wa { color: #000000; }
+code .cn { color: #008080; }
+code .sc { color: #008080; }
+code .vs { color: #183691; }
+code .ss { color: #183691; }
+code .im { color: #000000; }
+code .va {color: #008080; }
+code .cf { color: #000000; }
+code .op { color: #000000; }
+code .bu { color: #000000; }
+code .ex { color: #000000; }
+code .pp { color: #999999; }
+code .at { color: #008080; }
+code .do { color: #969896; }
+code .an { color: #008080; }
+code .cv { color: #008080; }
+code .in { color: #008080; }
+</style>
+<style>
+body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+  padding-top: 0px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<h1 id="tidysem-">tidySEM <a href="https://github.com/cjvanlissa/tidySEM"><img src="data:image/png;base64,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" align="right" height="139" /></a></h1>
+<p><a href="https://cran.r-project.org/package=tidySEM"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz4KICA8L21hc2s+CiAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQzdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNDMgMGg2M3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoODV2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iNjMiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMC4xLjMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjYzIiB5PSIxNCI+CiAgICAgIDAuMS4zCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN status" /></a> <a href="https://r-pkg.org/pkg/tidySEM"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDgiIGhlaWdodD0iMjAiPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8bWFzayBpZD0iYSI+CiAgICA8cmVjdCB3aWR0aD0iMTA4IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPgogIDwvbWFzaz4KICA8ZyBtYXNrPSJ1cmwoI2EpIj48cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDcwdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjMDA3ZWM2IiBkPSJNNzAgMGgzOHYyMEg3MHoiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoMTA4djIwSDB6Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPgogICAgPHRleHQgeD0iMzYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgZG93bmxvYWRzCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTQiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg4IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIDM4MDcKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9Ijg4IiB5PSIxNCI+CiAgICAgIDM4MDcKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" alt="CRAN RStudio mirror downloads" /></a> <a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTE2IiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImxpZmVjeWNsZTogbWF0dXJpbmciPjx0aXRsZT5saWZlY3ljbGU6IG1hdHVyaW5nPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxMTYiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI1NSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjU1IiB3aWR0aD0iNjEiIGhlaWdodD0iMjAiIGZpbGw9IiMwMDdlYzYiLz48cmVjdCB3aWR0aD0iMTE2IiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjI4NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNDUwIj5saWZlY3ljbGU8L3RleHQ+PHRleHQgeD0iMjg1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI0NTAiPmxpZmVjeWNsZTwvdGV4dD48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iODQ1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI1MTAiPm1hdHVyaW5nPC90ZXh0Pjx0ZXh0IHg9Ijg0NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNTEwIj5tYXR1cmluZzwvdGV4dD48L2c+PC9zdmc+" alt="lifecycle" /></a> <a href="https://github.com/cjvanlissa/tidySEM/actions"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTIiIGhlaWdodD0iMjAiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ3b3JrZmxvdy1maWxsIiB4MT0iNTAlIiB5MT0iMCUiIHgyPSI1MCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzQ0NEQ1NiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMjQyOTJFIiBvZmZzZXQ9IjEwMCUiPjwvc3RvcD4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InN0YXRlLWZpbGwiIHgxPSI1MCUiIHkxPSIwJSIgeDI9IjUwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMzREMDU4IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMyOEE3NDUiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgIDxnIGZvbnQtZmFtaWx5PSImIzM5O0RlamFWdSBTYW5zJiMzOTssVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgIDxwYXRoIGlkPSJ3b3JrZmxvdy1iZyIgZD0iTTAsMyBDMCwxLjM0MzEgMS4zNTUyLDAgMy4wMjcwMjcwMywwIEwxMDIsMCBMMTAyLDIwIEwzLjAyNzAyNzAzLDIwIEMxLjM1NTIsMjAgMCwxOC42NTY5IDAsMTcgTDAsMyBaIiBmaWxsPSJ1cmwoI3dvcmtmbG93LWZpbGwpIiBmaWxsLXJ1bGU9Im5vbnplcm8iPjwvcGF0aD4KICAgICAgPHRleHQgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgICAgPHRzcGFuIHg9IjIyLjE5ODE5ODIiIHk9IjE1Ij5SLUNNRC1jaGVjazwvdHNwYW4+CiAgICAgIDwvdGV4dD4KICAgICAgPHRleHQgZmlsbD0iI0ZGRkZGRiI+CiAgICAgICAgPHRzcGFuIHg9IjIyLjE5ODE5ODIiIHk9IjE0Ij5SLUNNRC1jaGVjazwvdHNwYW4+CiAgICAgIDwvdGV4dD4KICAgIDwvZz4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMikiIGZvbnQtZmFtaWx5PSImIzM5O0RlamFWdSBTYW5zJiMzOTssVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgIDxwYXRoIGQ9Ik0wIDBoNDYuOTM5QzQ4LjYyOSAwIDUwIDEuMzQzIDUwIDN2MTRjMCAxLjY1Ny0xLjM3IDMtMy4wNjEgM0gwVjB6IiBpZD0ic3RhdGUtYmciIGZpbGw9InVybCgjc3RhdGUtZmlsbCkiIGZpbGwtcnVsZT0ibm9uemVybyI+PC9wYXRoPgogICAgICA8dGV4dCBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgICA8dHNwYW4geD0iNCIgeT0iMTUiPnBhc3Npbmc8L3RzcGFuPgogICAgICA8L3RleHQ+CiAgICAgIDx0ZXh0IGZpbGw9IiNGRkZGRkYiPgogICAgICAgIDx0c3BhbiB4PSI0IiB5PSIxNCI+cGFzc2luZzwvdHNwYW4+CiAgICAgIDwvdGV4dD4KICAgIDwvZz4KICAgIDxwYXRoIGZpbGw9IiM5NTlEQTUiIGQ9Ik0xMSAzYy0zLjg2OCAwLTcgMy4xMzItNyA3YTYuOTk2IDYuOTk2IDAgMCAwIDQuNzg2IDYuNjQxYy4zNS4wNjIuNDgyLS4xNDguNDgyLS4zMzIgMC0uMTY2LS4wMS0uNzE4LS4wMS0xLjMwNC0xLjc1OC4zMjQtMi4yMTMtLjQyOS0yLjM1My0uODIyLS4wNzktLjIwMi0uNDItLjgyMy0uNzE3LS45OS0uMjQ1LS4xMy0uNTk1LS40NTQtLjAxLS40NjMuNTUyLS4wMDkuOTQ2LjUwOCAxLjA3Ny43MTguNjMgMS4wNTggMS42MzYuNzYgMi4wMzkuNTc3LjA2MS0uNDU1LjI0NS0uNzYxLjQ0Ni0uOTM2LTEuNTU3LS4xNzUtMy4xODUtLjc3OS0zLjE4NS0zLjQ1NiAwLS43NjIuMjcxLTEuMzkyLjcxOC0xLjg4Mi0uMDctLjE3NS0uMzE1LS44OTIuMDctMS44NTUgMCAwIC41ODYtLjE4MyAxLjkyNS43MThhNi41IDYuNSAwIDAgMSAxLjc1LS4yMzYgNi41IDYuNSAwIDAgMSAxLjc1LjIzNmMxLjMzOC0uOTEgMS45MjUtLjcxOCAxLjkyNS0uNzE4LjM4NS45NjMuMTQgMS42OC4wNyAxLjg1NS40NDYuNDkuNzE3IDEuMTEyLjcxNyAxLjg4MiAwIDIuNjg2LTEuNjM2IDMuMjgtMy4xOTQgMy40NTYuMjU0LjIxOS40NzMuNjM5LjQ3MyAxLjI5NSAwIC45MzYtLjAwOSAxLjY4OS0uMDA5IDEuOTI1IDAgLjE4NC4xMzEuNDAyLjQ4MS4zMzJBNy4wMTEgNy4wMTEgMCAwIDAgMTggMTBjMC0zLjg2Ny0zLjEzMy03LTctN3oiPjwvcGF0aD4KICA8L2c+Cjwvc3ZnPgoK" alt="R-CMD-check" /></a></p>
+<!--[![test-coverage](https://github.com/cjvanlissa/tidySEM/workflows/test-coverage/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)-->
+
+<p><a href="https://codecov.io/gh/cjvanlissa/tidySEM?branch=master"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTIiIGhlaWdodD0iMjAiPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIgLz4KICAgICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPG1hc2sgaWQ9ImEiPgogICAgICAgIDxyZWN0IHdpZHRoPSIxMTIiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIiAvPgogICAgPC9tYXNrPgogICAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICAgICAgPHBhdGggZmlsbD0iIzU1NSIgZD0iTTAgMGg3NnYyMEgweiIgLz4KICAgICAgICA8cGF0aCBmaWxsPSIjZTA1ZDQ0IiBkPSJNNzYgMGgzNnYyMEg3NnoiIC8+CiAgICAgICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxMTJ2MjBIMHoiIC8+CiAgICA8L2c+CiAgICA8ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgICAgPHRleHQgeD0iNDYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5jb2RlY292PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjQ2IiB5PSIxNCI+Y29kZWNvdjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MyIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPjAlPC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjkzIiB5PSIxNCI+MCU8L3RleHQ+CiAgICA8L2c+CiAgICA8c3ZnIHZpZXdCb3g9IjEyMCAtOCA2MCA2MCI+CiAgICAgICAgPHBhdGggZD0iTTIzLjAxMyAwQzEwLjMzMy4wMDkuMDEgMTAuMjIgMCAyMi43NjJ2LjA1OGwzLjkxNCAyLjI3NS4wNTMtLjAzNmExMS4yOTEgMTEuMjkxIDAgMCAxIDguMzUyLTEuNzY3IDEwLjkxMSAxMC45MTEgMCAwIDEgNS41IDIuNzI2bC42NzMuNjI0LjM4LS44MjhjLjM2OC0uODAyLjc5My0xLjU1NiAxLjI2NC0yLjI0LjE5LS4yNzYuMzk4LS41NTQuNjM3LS44NTFsLjM5My0uNDktLjQ4NC0uNDA0YTE2LjA4IDE2LjA4IDAgMCAwLTcuNDUzLTMuNDY2IDE2LjQ4MiAxNi40ODIgMCAwIDAtNy43MDUuNDQ5QzcuMzg2IDEwLjY4MyAxNC41NiA1LjAxNiAyMy4wMyA1LjAxYzQuNzc5IDAgOS4yNzIgMS44NCAxMi42NTEgNS4xOCAyLjQxIDIuMzgyIDQuMDY5IDUuMzUgNC44MDcgOC41OTFhMTYuNTMgMTYuNTMgMCAwIDAtNC43OTItLjcyM2wtLjI5Mi0uMDAyYTE2LjcwNyAxNi43MDcgMCAwIDAtMS45MDIuMTRsLS4wOC4wMTJjLS4yOC4wMzctLjUyNC4wNzQtLjc0OC4xMTUtLjExLjAxOS0uMjE4LjA0MS0uMzI3LjA2My0uMjU3LjA1Mi0uNTEuMTA4LS43NS4xNjlsLS4yNjUuMDY3YTE2LjM5IDE2LjM5IDAgMCAwLS45MjYuMjc2bC0uMDU2LjAxOGMtLjY4Mi4yMy0xLjM2LjUxMS0yLjAxNi44MzhsLS4wNTIuMDI2Yy0uMjkuMTQ1LS41ODQuMzA1LS44OTkuNDlsLS4wNjkuMDRhMTUuNTk2IDE1LjU5NiAwIDAgMC00LjA2MSAzLjQ2NmwtLjE0NS4xNzVjLS4yOS4zNi0uNTIxLjY2Ni0uNzIzLjk2LS4xNy4yNDctLjM0LjUxMy0uNTUyLjg2NGwtLjExNi4xOTljLS4xNy4yOTItLjMyLjU3LS40NDkuODI0bC0uMDMuMDU3YTE2LjExNiAxNi4xMTYgMCAwIDAtLjg0MyAyLjAyOWwtLjAzNC4xMDJhMTUuNjUgMTUuNjUgMCAwIDAtLjc4NiA1LjE3NGwuMDAzLjIxNGEyMS41MjMgMjEuNTIzIDAgMCAwIC4wNC43NTRjLjAwOS4xMTkuMDIuMjM3LjAzMi4zNTUuMDE0LjE0NS4wMzIuMjkuMDQ5LjQzMmwuMDEuMDhjLjAxLjA2Ny4wMTcuMTMzLjAyNi4xOTcuMDM0LjI0Mi4wNzQuNDguMTE5LjcyLjQ2MyAyLjQxOSAxLjYyIDQuODM2IDMuMzQ1IDYuOTlsLjA3OC4wOTguMDgtLjA5NWMuNjg4LS44MSAyLjM5NS0zLjM4IDIuNTM5LTQuOTIybC4wMDMtLjAyOS0uMDE0LS4wMjVhMTAuNzI3IDEwLjcyNyAwIDAgMS0xLjIyNi00Ljk1NmMwLTUuNzYgNC41NDUtMTAuNTQ0IDEwLjM0My0xMC44OWwuMzgxLS4wMTRhMTEuNDAzIDExLjQwMyAwIDAgMSA2LjY1MSAxLjk1N2wuMDU0LjAzNiAzLjg2Mi0yLjIzNy4wNS0uMDN2LS4wNTZjLjAwNi02LjA4LTIuMzg0LTExLjc5My02LjcyOS0xNi4wODlDMzQuOTMyIDIuMzYxIDI5LjE2IDAgMjMuMDEzIDAiIGZpbGw9IiNGMDFGN0EiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgPC9zdmc+Cjwvc3ZnPg==" alt="Codecov test coverage" /></a> <a href="code_of_conduct.md"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjEyIiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IkNvbnRyaWJ1dG9yIENvdmVuYW50OiB2Mi4wIGFkb3B0ZWQiPjx0aXRsZT5Db250cmlidXRvciBDb3ZlbmFudDogdjIuMCBhZG9wdGVkPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIyMTIiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSIxMjkiIGhlaWdodD0iMjAiIGZpbGw9IiM1NTUiLz48cmVjdCB4PSIxMjkiIHdpZHRoPSI4MyIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZmNjliNCIvPjxyZWN0IHdpZHRoPSIyMTIiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iNjU1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSIxMTkwIj5Db250cmlidXRvciBDb3ZlbmFudDwvdGV4dD48dGV4dCB4PSI2NTUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjExOTAiPkNvbnRyaWJ1dG9yIENvdmVuYW50PC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIxNjk1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI3MzAiPnYyLjAgYWRvcHRlZDwvdGV4dD48dGV4dCB4PSIxNjk1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI3MzAiPnYyLjAgYWRvcHRlZDwvdGV4dD48L2c+PC9zdmc+" alt="Contributor Covenant" /></a></p>
+<!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
+
+<p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the R package <code>lavaan</code>, or the commercial stand-alone program <code>Mplus</code> (through <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
+<ol>
+<li>Generate model syntax in a top-down, tidy way,</li>
+<li>Tabulate model output in a publication-ready, uniform manner,</li>
+<li>Make easily customizable graphs for SEM-models.</li>
+</ol>
+<p>These functions are designed with the <a href="https://tidyverse.tidyverse.org/articles/manifesto.html"><em>tidy tools manifesto</em> (Wickham, last updated 23-11-2019)</a> in mind, and interface with the existing suite of packages in the <a href="https://tidyverse.tidyverse.org/"><code>tidyverse</code></a>.</p>
+<h2 id="installation">Installation</h2>
+<!--You can install tidySEM from CRAN with:
+
+
+```r
+install.packages("tidySEM")
+```
+-->
+
+<p>You can install the development version of <code>tidySEM</code> from ‘GitHub’ with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;cjvanlissa/tidySEM&quot;</span>)</span></code></pre></div>
+<h2 id="documentation">Documentation</h2>
+<p>Every user-facing function in the package is documented, and the documentation can be accessed by running <code>?function_name</code> in the R console, e.g., <code>?graph_sem</code>.</p>
+<p>Furthermore, there are three main vignettes, describing the three main tracks of <code>tidySEM</code> functions:</p>
+<ol>
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html">vignette about generating syntax and estimating models</a></li>
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html">vignette about tabulating results</a></li>
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">vignette about making graphs</a>
+<ol>
+<li>An additional vignette describes the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">graphing conventions</a> for structural equation models.</li>
+</ol></li>
+</ol>
+<h2 id="citing-tidysem">Citing tidySEM</h2>
+<p>You can cite the R-package with the following citation:</p>
+<p>Van Lissa, C. J., (2019). <em>tidySEM: A tidy workflow for running, reporting, and plotting structural equation models in lavaan or Mplus.</em> [R package]. <a href="https://github.com/cjvanlissa/tidySEM/">https://github.com/cjvanlissa/tidySEM/</a></p>
+<h2 id="contributing-and-contact-information">Contributing and Contact Information</h2>
+<p>If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on ‘GitHub’, or sending a pull request with proposed features.</p>
+<ul>
+<li>File a ‘GitHub’ issue <a href="https://github.com/cjvanlissa/tidySEM">here</a></li>
+<li>Make a pull request <a href="https://github.com/cjvanlissa/tidySEM/pulls">here</a></li>
+</ul>
+<p>By participating in this project, you agree to abide by the <a href="https://www.contributor-covenant.org/">Contributor Code of Conduct v2.0</a>.</p>
+
+</body>
+</html>
