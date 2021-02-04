@@ -3,13 +3,13 @@
 
 # tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png' align="right" height="139" /></a>
 
-<!--[![CRAN status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
-[![](https://cranlogs.r-pkg.org/badges/tidySEM)](https://cran.r-project.org/package=tidySEM)-->
-
+[![CRAN
+status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
+[![CRAN RStudio mirror
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](https://r-pkg.org/pkg/tidySEM)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis build
-status](https://travis-ci.org/cjvanlissa/tidySEM.svg?branch=master)](https://travis-ci.org/cjvanlissa/tidySEM)
-<!--[![Codecov test coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://codecov.io/gh/cjvanlissa/tidySEM?branch=master)
+[![R-CMD-check](https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)
+[![test-coverage](https://github.com/cjvanlissa/tidySEM/workflows/test-coverage/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)
 <!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
 
 The package `tidySEM` provides a ‘tidy’ workflow for conducting,

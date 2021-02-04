@@ -1,14 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^galo\.csv$
-^\.travis\.yml$
 ^README\.Rmd$
 ^doc$
 ^Meta$
 ^data_types\.md$
 dev/
 ^.*\.RData$
-^codecov\.yml$
 ^docs$
 ^_pkgdown\.yml$
 R/data_types\.md
@@ -21,3 +19,4 @@ R/data_types\.md
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^news\.md$
+^\.github$
