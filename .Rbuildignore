@@ -19,3 +19,4 @@ R/data_types\.md
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^news\.md$
+^\.github$
