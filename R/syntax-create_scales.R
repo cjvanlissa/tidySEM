@@ -136,7 +136,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
   colnames(fas) <- c("min_load", "max_load")
   table_descriptives <- cbind(table_descriptives, fas)
   table_descriptives[, sapply(table_descriptives, is.numeric)] <- lapply(table_descriptives[,
-                                                                                            sapply(table_descriptives, is.numeric)], formatC, digits = digits,
+                                                                                            sapply(table_descriptives, is.numeric)], format_with_na, digits = digits,
                                                                          format = "f")
 
   if(any(two_items)){
@@ -150,7 +150,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
   combos <- expand.grid(names(cordat), names(cordat))
   cortab <- matrix(mapply(function(x, y) {
     tmp <- cor.test(cordat[[x]], cordat[[y]])
-    paste0(formatC(tmp$estimate, digits = digits, format = "f"),
+    paste0(format_with_na(tmp$estimate, digits = digits, format = "f"),
            ifelse(tmp$p.value < 0.05, "*", ""), ifelse(tmp$p.value <
                                                          0.01, "*", ""), ifelse(tmp$p.value < 0.001,
                                                                                 "*", ""))

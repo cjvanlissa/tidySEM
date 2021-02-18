@@ -148,13 +148,11 @@ graph_sem.default <- function(edges = NULL,
                               angle = NULL,
                               fix_coord = FALSE,
                               ...){
-  Args <- all_args()
-  # Args <- as.list(match.call()[-1])
-  # Args$layout <- force(layout)
-  # Args$edges <- force(edges)
-  # Args$nodes <- force(nodes)
-  Args[["model"]] <- NULL
-  prep <- do.call(prepare_graph, Args)
+  cl <- match.call()
+
+
+  cl[[1L]] <- quote(prepare_graph)
+  prep <- eval.parent(cl)
   plot(prep)
 }
 
@@ -174,8 +172,13 @@ graph_sem.lavaan <- function(model,
                              layout = get_layout(x = model),
                              nodes = get_nodes(x = model, label = label),
                              ...){
-  Args <- all_args()
-  do.call(graph_model, Args)
+  cl <- match.call()
+  cl$edges <- eval(edges, environment())
+  cl$layout <- eval(layout, environment())
+  cl$nodes <- eval(nodes, environment())
+  cl[["model"]] <- NULL
+  cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
+  eval.parent(cl)
 }
 
 #' @method graph_sem mplus.model
@@ -285,6 +288,7 @@ prepare_graph.default <- function(edges = NULL,
                                   fix_coord = FALSE,
                                   ...
 ){
+
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_graph.default)
   for ( v in names(myfor)){
@@ -604,16 +608,23 @@ matrix_to_nodes <- function(nodes, shape){
   nodes_long
 }
 
+globalVariables(c("name"))
 
 #' @title Extract nodes from a SEM model object
 #' @description Attempts to extract nodes from a SEM model object, where nodes
 #' are defined as observed or latent variables.
 #' @param x A model object of class \code{mplusObject} or \code{lavaan}.
-#' @param label Character, indicating which column to use for node labels. Nodes
-#' are labeled with mean values of the observed/latent variables they represent.
-#' Defaults to 'est_sig', which consists of the estimate value with significance
-#' asterisks.
+#' @param label Either a character, indicating which column to use for node
+#' labels, or an expression. See Details.
+#' Defaults to \code{paste(name, est_sig, sep = "\n"},
+#' which gives the node name followed by the estimated value with
+#' significance asterisks.
 #' @param ... Additional parameters to be passed to and from other functions.
+#' @details When an expression is passed to \code{label}, it is evaluated using
+#' \code{\link{with}}, in the context of a \code{data.frame} containing the
+#' results
+#' of a call to \code{\link{table_results}} on the \code{x} argument, with an
+#' additional column labeled \code{name}, which contains the node names.
 #' @return An object of class 'tidy_nodes'
 #' @examples
 #' library(lavaan)
@@ -622,30 +633,52 @@ matrix_to_nodes <- function(nodes, shape){
 #' @rdname get_nodes
 #' @keywords tidy_graph
 #' @export
-get_nodes <- function(x, label = "est_sig", ...){
+get_nodes <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
   UseMethod("get_nodes", x)
 }
 
-#' @method get_nodes mplus.model
-#' @export
-get_nodes.mplus.model <- function(x, label = "est_sig", ...){
-  Args <- as.list(match.call()[-1])
-  Args$x <- table_results(x, columns = NULL)
-  do.call(get_nodes, Args)
-}
+# # @method get_nodes mplus.model
+# # @export
+# get_nodes.mplus.model <- function(x, label = "est_sig", ...){
+#   Args <- as.list(match.call()[-1])
+#   Args$x <- table_results(x, columns = NULL)
+#   do.call(get_nodes, Args)
+# }
 
 #' @method get_nodes lavaan
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
-get_nodes.lavaan <- function(x, label = "est_sig", ...){
-  Args <- as.list(match.call()[-1])
-  Args$x <- table_results(x, columns = NULL)
-  do.call(get_nodes, Args)
+get_nodes.lavaan <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
+  dots <- list(...)
+  cl <- match.call()
+  cl["columns"] <- list(NULL)
+  cl[[1L]] <- quote(table_results)
+  cl$x <- eval.parent(cl)
+  #cl$label <- force(label)
+  if("columns" %in% names(dots)){
+    cl[["columns"]] <- dots[["columns"]]
+  }
+  cl[[1L]] <- quote(get_nodes)
+  eval.parent(cl)
 }
+
+#' @method get_nodes mplusObject
+#' @export
+get_nodes.mplusObject <- get_nodes.lavaan
+
+
+#' @method get_nodes mplus.object
+#' @export
+get_nodes.mplus.object <- get_nodes.lavaan
+
+#' @method get_nodes mplus.model
+#' @export
+get_nodes.mplus.model <- get_nodes.lavaan
 
 #' @method get_nodes tidy_results
 #' @export
-get_nodes.tidy_results <- function(x, label = "est_sig", ...){
+get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), label_name = TRUE, ...){
+  dots <- list(...)
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
       tmp <- get_nodes(x = x[x$group == i, -which(names(x) == "group")])
@@ -664,19 +697,59 @@ get_nodes.tidy_results <- function(x, label = "est_sig", ...){
     return(do.call(rbind, x_list))
   }
   latent <- unique(x$lhs[x$op == "=~"])
-  obs <- unique(x$lhs[x$op %in% c("~~", "~", "~1")])
+
+  obs <- unique(c(x$lhs[x$op %in% c("~~", "~", "~1")], x$rhs[x$op %in% c("~")]))
   nodes <- unique(c(latent, obs))
   nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
-  nodes$label <- nodes$name
-  if(!is.null(label)){
-    if(label %in% names(x)){
-      labelz <- x[x$op == "~1", ]
-      labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
-      if(any(!is.na(labelz))){
-        nodes$label[!is.na(labelz)] <- apply(cbind(nodes$name[!is.na(labelz)], labelz[!is.na(labelz)]), 1, paste0, collapse = "\n")
-      }
+  #nodes$label <- nodes$name
+
+  # Make a data.frame based on the information about node means
+  node_df <- x[x$op == "~1", ]
+  # Keep only rows corresponding to the identified nodes
+  node_rows <- match(nodes$name, node_df$lhs)
+  if(any(!is.na(node_rows))){
+    node_df <- node_df[match(nodes$name, node_df$lhs), , drop = FALSE]
+    nodes <- merge(nodes, node_df, by.x = "name", by.y = "lhs", all.x = TRUE)
+  }
+  # If the user asked for a label
+
+  # Check if the label is an expression. If it is, substitute it
+  if (inherits(suppressWarnings(try(label, silent = TRUE)), "try-error")) {
+    label <- substitute(label)
+  }
+
+  if(is.character(label)){
+    if(!is.null(nodes[[label]])){
+      nodes[["label"]] <- nodes[[label]]
+    } else {
+      nodes[["label"]] <- nodes[["name"]]
+    }
+  } else {
+    if(!is.null(label)){
+      nodes[["label"]] <- tryCatch(eval(label, envir = nodes), error = function(e){
+        nodes[["name"]]
+      })
+    } else {
+    nodes[["label"]] <- ""
     }
   }
+
+
+#
+#
+#     if(!is.null(label)){
+#       if(label %in% names(x)){
+#         labelz <- x[x$op == "~1", ]
+#         labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
+#         if(any(!is.na(labelz))){
+#           nodes$label[!is.na(labelz)] <- apply(cbind(nodes$name[!is.na(labelz)], labelz[!is.na(labelz)]), 1, paste0, collapse = "\n")
+#         }
+#       }
+#     }
+
+  # Retain all requested columns
+  keep_cols <- c(c("name", "shape", "label"), dots[["columns"]])
+  nodes <- nodes[, keep_cols, drop = FALSE]
   class(nodes) <- c("tidy_nodes", class(nodes))
   nodes
 }
@@ -721,25 +794,43 @@ get_edges <- function(x, label = "est_sig", ...){
 #' @method get_edges lavaan
 #' @export
 get_edges.lavaan <- function(x, label = "est_sig", ...){
-  Args <- as.list(match.call()[-1])
-  Args$x <- table_results(x, columns = NULL)
-  do.call(get_edges, Args)
+  dots <- list(...)
+  cl <- match.call()
+  cl[[1L]] <- quote(table_results)
+  cl["columns"] <- list(NULL)
+  cl$x <- eval.parent(cl)
+  if("columns" %in% names(dots)){
+    cl[["columns"]] <- dots[["columns"]]
+  }
+  cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
+  eval.parent(cl)
 }
+
+#' @method get_edges mplusObject
+#' @export
+get_edges.mplusObject <- get_edges.lavaan
+
 
 #' @method get_edges mplus.object
 #' @export
 get_edges.mplus.object <- get_edges.lavaan
 
-
+#' @method get_edges mplus.model
+#' @export
+get_edges.mplus.model <- get_edges.lavaan
 
 #' @method get_edges tidy_results
 #' @export
 get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FALSE){
-  Args <- all_args()
+  # if(is.character(substitute(label))){
+  #   label <- parse(text = label)
+  # }
+  dots <- list(...)
+  cl <- match.call()
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
-      Args$x <- x[x$group == i, -which(names(x) == "group")]
-      tmp <- do.call(get_edges, Args)
+      cl$x <- x[x$group == i, -which(names(x) == "group")]
+      tmp <- eval.parent(cl)
       tmp$group <- i
       tmp
     })
@@ -747,8 +838,8 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
   }
   if("level" %in% names(x)){
     x_list <- lapply(unique(x$level), function(i){
-      Args$x <- x[x$level == i, -which(names(x) == "level")]
-      tmp <- do.call(get_edges, Args)
+      cl$x <- x[x$level == i, -which(names(x) == "level")]
+      tmp <- eval.parent(cl)
       tmp$from <- paste0(tmp$from, ".", i)
       tmp$to <- paste0(tmp$to, ".", i)
       tmp$level <- i
@@ -769,8 +860,29 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
   x$arrow[x$op == "~"] <- "last"
   x$from[x$op == "~"] <- x$rhs[x$op == "~"]
   x$to[x$op == "~"] <- x$lhs[x$op == "~"]
-  tmp <- x[, c("from", "to", "arrow", label)]
-  tmp <- setNames(tmp, c("from", "to", "arrow", "label"))
+
+  # If the user asked for a label
+  the_class <- class(label)
+  keep_cols <- dots[["columns"]]
+  if(the_class == "character"){
+    if(!is.null(x[[label]])){
+      x[["label"]] <- x[[label]]
+      keep_cols <- c("label", dots[["columns"]])
+    }
+  } else {
+    if(!is.null(label)){
+      x[["label"]] <- tryCatch(eval(label, envir = x), error = function(e){
+        message("Could not construct label in get_edges().")
+      })
+      keep_cols <- c("label", dots[["columns"]])
+    }
+  }
+
+
+
+  tmp <- data.frame(as.list(x)[ c("from", "to", "arrow", keep_cols) ], check.names=FALSE)
+
+
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
   class(tmp) <- c("tidy_edges", class(tmp))

@@ -29,7 +29,7 @@ table_results.rma <-  function(x, columns = c("label", "est_sig", "se", "pval", 
   results$confint <- conf_int(results, digits)
 
   results[, value_columns] <- lapply(results[, value_columns],
-                                     formatC, digits = digits, format = "f")
+                                     format_with_na, digits = digits, format = "f")
   rownames(results) <- NULL
   if(!all){
     results <- results[, c("b", "se", "zval", "pval", "ci.lb", "ci.ub")]
@@ -97,9 +97,10 @@ table_results <- function(x, columns = c("label", "est_sig", "se", "pval", "conf
 #' @method table_results mplusObject
 #' @export
 table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
-  Args <- as.list(match.call()[-1])
-  Args$x <- x$results
-  do.call(table_results, Args)
+  cl <- match.call()
+  cl$x <- x$results
+  cl[[1L]] <- quote(table_results)
+  eval.parent(cl)
 }
 
 
@@ -108,13 +109,14 @@ table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "
 table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   Args <- list(x = x)
   cl <- match.call()
-  cl <- cl[c(1, which(names(cl) %in% names(formals(internal_table_mplusmodel))))]
-  cl[[1L]] <- str2lang("tidySEM:::internal_table_mplusmodel")
+  #cl <- cl[c(1, which(names(cl) %in% names(formals(internal_table_mplusmodel))))]
+  #cl[[1L]] <- str2lang("tidySEM:::internal_table_mplusmodel")
   get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
-  all_res <- lapply(get_res, function(which_par){
-    cl[["parameters"]] <- which_par
-    eval.parent(cl)
-    })
+  # all_res <- lapply(get_res, function(which_par){
+  #   cl[["parameters"]] <- which_par
+  #   eval.parent(cl)
+  #   })
+  all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par, digits = digits)))})
   if(length(all_res) == 1){
     results <- all_res[[1]]
     if(is.null(results)){
@@ -226,9 +228,8 @@ internal_table_mplusmodel <- function(x, parameters, digits = 2){
   cl[["x"]] <- results
   cl[[1L]] <- quote(conf_int)
   results$confint <- eval.parent(cl)
-
-  results[, value_columns] <- lapply(results[, value_columns], formatC, digits = digits, format = "f")
-  results[constrained_rows, which(names(results) %in% c("se", "pval", "est_se", "confint"))] <- ""
+  results[, value_columns] <- lapply(results[, value_columns], format_with_na, digits = digits, format = "f")
+  results[constrained_rows, which(names(results) %in% c("se", "pval", "est_se", "confint"))] <- NA
   id_cols <- c("paramHeader", "param", "Group", "betweenwithin", "LatentClass")
   results$id <- do.call(paste0, results[which(names(results) %in% id_cols)])
   results
@@ -291,7 +292,7 @@ est_sig <- function(x, digits = 2, sig = NULL){
 #' @method est_sig default
 #' @export
 est_sig.default <- function(x, digits = 2, sig = NULL){
-  out <- formatC(x, digits = digits, format = "f")
+  out <- format_with_na(x, digits = digits, format = "f")
   out[which(sig<.05)] <- paste0(out[which(sig<.05)], "*")
   out[which(sig<.01)] <- paste0(out[which(sig<.01)], "*")
   out[which(sig<.001)] <- paste0(out[which(sig<.001)], "*")
@@ -306,8 +307,6 @@ est_sig.mplus.params <- function(x, digits = 2, sig = NULL){
   do.call(est_sig, Args)
 }
 
-#  paste0(formatC(mplusresults$est, digits = digits, format = "f"), ifelse(mplusresults$pval<.05, "*", ""), ifelse(mplusresults$pval<.01, "*", ""), ifelse(mplusresults$pval<.001, "*", ""))
-#}
 
 
 #' Format confidence intervals
@@ -346,11 +345,11 @@ conf_int.default <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL, ci 
     se <- NULL
   }
   if(!is.null(lb) & !is.null(ub)){
-    paste0("[", formatC(lb, digits = digits, format = "f"), ", ", formatC(ub, digits = digits, format = "f"), "]")
+    paste0("[", format_with_na(lb, digits = digits, format = "f"), ", ", format_with_na(ub, digits = digits, format = "f"), "]")
   } else {
     if(!(ci>0 & ci < 100)) stop("Argument 'ci' must have a value between 0-100.", call. = FALSE)
     bound <- qnorm((1-(ci/100))/2)
-    paste0("[", formatC(x+(bound*se), digits = digits, format = "f"), ", ", formatC(x-(bound*se), digits = digits, format = "f"), "]")
+    paste0("[", format_with_na(x+(bound*se), digits = digits, format = "f"), ", ", format_with_na(x-(bound*se), digits = digits, format = "f"), "]")
   }
 }
 
@@ -360,13 +359,13 @@ conf_int.mplus.params <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL
   if("low2.5" %in% names(x) | "lower_2.5ci" %in% names(x)){
     if("low2.5" %in% names(x)){
       message("Used bootstrapped confidence intervals.")
-      confint <- paste0("[", formatC(x$low2.5, digits = digits, format = "f"), ", ", formatC(x$up2.5, digits = digits, format = "f"), "]")
+      confint <- paste0("[", format_with_na(x$low2.5, digits = digits, format = "f"), ", ", format_with_na(x$up2.5, digits = digits, format = "f"), "]")
     } else {
-      confint <- paste0("[", formatC(x$lower_2.5ci, digits = digits, format = "f"), ", ", formatC(x$upper_2.5ci, digits = digits, format = "f"), "]")
+      confint <- paste0("[", format_with_na(x$lower_2.5ci, digits = digits, format = "f"), ", ", format_with_na(x$upper_2.5ci, digits = digits, format = "f"), "]")
     }
   } else {
     message("Calculated confidence intervals from est and se.")
-    confint <- paste0("[", formatC(x$est-(1.96*x$se), digits = digits, format = "f"), ", ", formatC(x$est+(1.96*x$se), digits = digits, format = "f"), "]")
+    confint <- paste0("[", format_with_na(x$est-(1.96*x$se), digits = digits, format = "f"), ", ", format_with_na(x$est+(1.96*x$se), digits = digits, format = "f"), "]")
   }
   gsub("^ \\[", "\\[ ", gsub("([^-]\\d\\.\\d{2})", " \\1", confint))
 }
@@ -583,7 +582,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   value_columns <- names(results)[can_be_numeric(results)]
 
   results[, value_columns] <- lapply(results[, value_columns],
-                                       formatC, digits = digits, format = "f")
+                                       format_with_na, digits = digits, format = "f")
   results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
 
   if(!is.null(columns)){
@@ -605,3 +604,14 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 can_be_numeric <- function(x){
   sapply(x, function(col){ tryCatch(expr = {as.numeric(col); return(TRUE)}, warning= function(w){ return(FALSE) }) })
 }
+
+format_with_na <- function(x, ...){
+  cl <- match.call()
+  missings <- is.na(x)
+  out <- rep(NA, length(x))
+  cl$x <- na.omit(x)
+  cl[[1L]] <- quote(formatC)
+  out[!missings] <- eval.parent(cl)
+  out
+}
+

@@ -4,15 +4,16 @@
 \alias{get_nodes}
 \title{Extract nodes from a SEM model object}
 \usage{
-get_nodes(x, label = "est_sig", ...)
+get_nodes(x, label = paste(name, est_sig, sep = "\\n"), ...)
 }
 \arguments{
 \item{x}{A model object of class \code{mplusObject} or \code{lavaan}.}
 
-\item{label}{Character, indicating which column to use for node labels. Nodes
-are labeled with mean values of the observed/latent variables they represent.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.}
+\item{label}{Either a character, indicating which column to use for node
+labels, or an expression. See Details.
+Defaults to \code{paste(name, est_sig, sep = "\n"},
+which gives the node name followed by the estimated value with
+significance asterisks.}
 
 \item{...}{Additional parameters to be passed to and from other functions.}
 }
@@ -22,6 +23,13 @@ An object of class 'tidy_nodes'
 \description{
 Attempts to extract nodes from a SEM model object, where nodes
 are defined as observed or latent variables.
+}
+\details{
+When an expression is passed to \code{label}, it is evaluated using
+\code{\link{with}}, in the context of a \code{data.frame} containing the
+results
+of a call to \code{\link{table_results}} on the \code{x} argument, with an
+additional column labeled \code{name}, which contains the node names.
 }
 \examples{
 library(lavaan)

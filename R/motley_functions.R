@@ -14,13 +14,13 @@
 report <- function(x, digits = 2, equals = TRUE){
   equal_sign <- "= "
   if(x%%1==0){
-    outstring <- formatC(x, digits = 0, format = "f")
+    outstring <- format_with_na(x, digits = 0, format = "f")
   } else {
     if(abs(x) <  10^-digits){
       equal_sign <- "< "
       outstring <- 10^-digits
     } else {
-      outstring <- formatC(x, digits = digits, format = "f")
+      outstring <- format_with_na(x, digits = digits, format = "f")
     }
   }
   ifelse(equals, paste0(equal_sign, outstring), outstring)
@@ -147,7 +147,7 @@ poms <- function(data){
 # format_numeric(dat, 1)
 format_numeric <- function(x, digits = 2) {
   numeric_columns <- sapply(x, class) == 'numeric'
-  x[numeric_columns] <-  lapply(x[numeric_columns], formatC, digits, format = "f")
+  x[numeric_columns] <-  lapply(x[numeric_columns], format_with_na, digits, format = "f")
   x
 }
 
