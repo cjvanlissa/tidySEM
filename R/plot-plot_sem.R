@@ -356,6 +356,10 @@ prepare_graph.default <- function(edges = NULL,
     if(!"curvature" %in% names(df_edges)){
       df_edges$curvature <- NA
     }
+    # if("color" %in% names(df_edges)){
+    #   message("Edges contained a column named 'color'. Currently, only the 'colour' argument is implemented. The column was renamed.")
+    #   names(df_edges)[which(names(df_edges) == "color")] <- "colour"
+    # }
   }
 
   # Defaults for missing columns --------------------------------------------
@@ -364,7 +368,10 @@ prepare_graph.default <- function(edges = NULL,
     stop("Arguments 'nodes' and 'layout' must both have a 'name' column.")
   }
   df_nodes <- merge(nodes, layout, by = "name")
-
+  # if("color" %in% names(df_nodes)){
+  #   message("Nodes contained a column named 'color'. Currently, only the 'colour' argument is implemented. The column was renamed.")
+  #   names(df_nodes)[which(names(df_nodes) == "color")] <- "colour"
+  # }
   if(!"label" %in% names(df_nodes)){
     df_nodes$label <- df_nodes$name
   }
@@ -848,8 +855,8 @@ match.call.defaults <- function(...) {
 
 .plot_nodes <- function(p, df, text_size, ellipses_width, ellipses_height){
   # Prepare aesthetics ------------------------------------------------------
-  if("colour" %in% names(df)){
-    df$colour <- as.character(df$colour)
+  if(any(c("colour", "color") %in% names(df))){
+    df[[which(names(df) %in% c("colour", "color"))]] <- as.character(df[[which(names(df) %in% c("colour", "color"))]])
   } else {
     df$colour <- "black"
   }
@@ -862,7 +869,7 @@ match.call.defaults <- function(...) {
 
   if(any(df$shape == "rect")){
     df_rect <- df[df$shape == "rect", ]
-    Args <- c("linetype", "size", "colour", "fill", "alpha")
+    Args <- c("linetype", "size", "colour", "color", "fill", "alpha")
     Args <- as.list(df_rect[which(names(df_rect) %in% Args)])
     Args <- c(list(
       data = df_rect,
@@ -1077,7 +1084,7 @@ match.call.defaults <- function(...) {
   }
   if(any(df$arrow != "none")){
     df_path <- df[!df$arrow == "none", ]
-    aes_args <- c("id", "arrow", "linetype", "size", "colour", "alpha")
+    aes_args <- c("id", "arrow", "linetype", "size", "colour", "color", "alpha")
     aes_args <- df_path[!duplicated(df_path$id), which(names(df_path) %in% aes_args)]
     Args <- list(
       data = df_path,
@@ -1092,7 +1099,7 @@ match.call.defaults <- function(...) {
   }
   if(any(df$arrow == "none")){
     df_path <- df[df$arrow == "none", ]
-    Args <- c("linetype", "size", "colour", "alpha")
+    Args <- c("linetype", "size", "colour", "color", "alpha")
     Args <- as.list(df_path[which(names(df_path) %in% Args)])
     Args <- c(list(
       data = df_path,
@@ -1116,7 +1123,7 @@ match.call.defaults <- function(...) {
     if(!"size" %in% names(df)){
       df$size <- text_size
     }
-    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour", "alpha")
+    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha")
     Args <- as.list(df[which(names(df) %in% Args)])
     Args <- c(list(
       data = df,

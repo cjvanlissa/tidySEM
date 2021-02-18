@@ -1,3 +1,8 @@
+# tidySEM 0.1.4
+
+* Fixed bug in direction of arrow for curved paths
+* Support argument "color" in addition to "colour"
+
 # tidySEM 0.1.3
 
 * Changed arguments for graph_sem.lavaan and graph_sem.mplus.model; these gain
