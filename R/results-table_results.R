@@ -107,9 +107,14 @@ table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "
 #' @export
 table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   Args <- list(x = x)
-  digits <- force(digits)
+  cl <- match.call()
+  cl <- cl[c(1, which(names(cl) %in% names(formals(internal_table_mplusmodel))))]
+  cl[[1L]] <- str2lang("tidySEM:::internal_table_mplusmodel")
   get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
-  all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par, digits = digits)))})
+  all_res <- lapply(get_res, function(which_par){
+    cl[["parameters"]] <- which_par
+    eval.parent(cl)
+    })
   if(length(all_res) == 1){
     results <- all_res[[1]]
     if(is.null(results)){
@@ -148,13 +153,12 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
   results
 }
 
-internal_table_mplusmodel <- function(x, parameters, digits){
+internal_table_mplusmodel <- function(x, parameters, digits = 2){
   results <- x$parameters[[parameters]]
   if(is.null(results[["se"]])){
     return(NULL)
   }
-  value_columns <- c("est", "se", "est_se", "pval", "posterior_sd")
-  value_columns <- value_columns[which(value_columns %in% names(results))]
+
   add_cis <- FALSE
   if(!is.null(x$parameters[[paste0("ci.", parameters)]])){
     if(dim(results)[1]==dim(x$parameters[[paste0("ci.", parameters)]])[1]){
@@ -197,6 +201,8 @@ internal_table_mplusmodel <- function(x, parameters, digits){
     }
   }
 
+  # CHeck which columns can be numeric
+  value_columns <- names(results)[can_be_numeric(results)]
   var_classes <- sapply(results[value_columns], class)
   results[value_columns[which(var_classes == "character")]] <- lapply(results[value_columns[which(var_classes == "character")]], as.numeric)
   results[value_columns[which(var_classes == "factor")]] <- lapply(results[value_columns[which(var_classes == "factor")]], as.numeric.factor)
@@ -205,9 +211,21 @@ internal_table_mplusmodel <- function(x, parameters, digits){
 
   results$label <- param_label(results)
   if(all(c("est", "pval") %in% names(results))){
-    results$est_sig <- est_sig(results)
+    # Call est_sig
+    cl <- match.call()
+    cl <- cl[c(1, which(names(cl) %in% names(formals("est_sig"))))]
+    cl[["x"]] <- results$est
+    cl[["sig"]] <- results$pval
+    cl[[1L]] <- quote(est_sig)
+    results$est_sig <- eval.parent(cl)
   }
-  results$confint <- conf_int(results, digits)
+
+  # Call conf_int
+  cl <- match.call()
+  cl <- cl[c(1, which(names(cl) %in% names(formals("conf_int"))))]
+  cl[["x"]] <- results
+  cl[[1L]] <- quote(conf_int)
+  results$confint <- eval.parent(cl)
 
   results[, value_columns] <- lapply(results[, value_columns], formatC, digits = digits, format = "f")
   results[constrained_rows, which(names(results) %in% c("se", "pval", "est_se", "confint"))] <- ""
@@ -515,24 +533,43 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
     pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$level)
   }
   # Unst
-  pars_unst$confint <- conf_int(x = pars_unst$est, lb = pars_unst$ci.lower, ub = pars_unst$ci.upper)
-  pars_unst$est_sig <- est_sig(x = formatC(pars_unst$est, digits = digits, format = "f"), sig = pars_unst$pval)
-  value_columns <- c("est", "se", "pval")
-  value_columns <- value_columns[which(value_columns %in% names(pars_unst))]
-  pars_unst[, value_columns] <- lapply(pars_unst[, value_columns],
-                                     formatC, digits = digits, format = "f")
-  pars_unst[is.na(pars_unst$z), c("se", "pval")] <- ""
+  # Call conf_int
+  cl <- match.call()
+  cl <- cl[c(1, which(names(cl) %in% names(formals("conf_int"))))]
+  cl[["x"]] <- pars_unst$est
+  cl[["lb"]] <- pars_unst$ci.lower
+  cl[["ub"]] <-  pars_unst$ci.upper
+  cl[[1L]] <- quote(conf_int)
+  pars_unst$confint <- eval.parent(cl)
+  # Call est_sig
+  cl <- match.call()
+  cl <- cl[c(1, which(names(cl) %in% names(formals("est_sig"))))]
+  cl[["x"]] <- pars_unst$est
+  cl[["sig"]] <- pars_unst$pval
+  cl[[1L]] <- quote(est_sig)
+  pars_unst$est_sig <- eval.parent(cl)
   pars_unst[c("z", "ci.lower", "ci.upper")] <- NULL
+
   # Std
   pars_std <- standardizedsolution(x)
   names(pars_std)[match(names(rename_dict), names(pars_std))] <- rename_dict[names(rename_dict) %in% names(pars_std)]
-  pars_std$est_sig <- est_sig(x = pars_std$est, sig = pars_std$pval)
-  pars_std$confint <- conf_int(x = pars_std$est, lb = pars_std$ci.lower, ub = pars_std$ci.upper)
-  value_columns <- c("est", "se", "pval")
-  value_columns <- value_columns[which(value_columns %in% names(pars_std))]
-  pars_std[, value_columns] <- lapply(pars_std[, value_columns],
-                                       formatC, digits = digits, format = "f")
-  pars_std[is.na(pars_std$z), c("se", "pval")] <- ""
+  # Call conf_int
+  cl <- match.call()
+  cl <- cl[c(1, which(names(cl) %in% names(formals("conf_int"))))]
+  cl[["x"]] <- pars_std$est
+  cl[["lb"]] <- pars_std$ci.lower
+  cl[["ub"]] <-  pars_std$ci.upper
+  cl[[1L]] <- quote(conf_int)
+  pars_std$confint <- eval.parent(cl)
+  # Call est_sig
+  cl <- match.call()
+  cl <- cl[c(1, which(names(cl) %in% names(formals("est_sig"))))]
+  cl[["x"]] <- pars_std$est
+  cl[["sig"]] <- pars_std$pval
+  cl[[1L]] <- quote(est_sig)
+  pars_std$est_sig <- eval.parent(cl)
+  # Remove redundant columns
+
 
   pars_std[c("lhs", "op", "rhs", "group", "z", "ci.lower", "ci.upper")] <- NULL
 
@@ -541,10 +578,15 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 
   results <- cbind(pars_unst, pars_std)
 
+  # Apply digits
+  fixed_parameters <- is.na(results$z)
+  value_columns <- names(results)[can_be_numeric(results)]
+
+  results[, value_columns] <- lapply(results[, value_columns],
+                                       formatC, digits = digits, format = "f")
+  results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
+
   if(!is.null(columns)){
-    #if(standardized){
-    #  columns[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), columns))] <- paste0(columns[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), columns))], "_std")
-    #}
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
     first_cols <- c("lhs", "op", "rhs", "est", "se", "pval", "est_sig", "confint",
@@ -559,3 +601,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   results
 }
 
+
+can_be_numeric <- function(x){
+  sapply(x, function(col){ tryCatch(expr = {as.numeric(col); return(TRUE)}, warning= function(w){ return(FALSE) }) })
+}
