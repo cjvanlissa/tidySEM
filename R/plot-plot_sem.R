@@ -1023,7 +1023,7 @@ match.call.defaults <- function(...) {
       M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
                     mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
       radius <- dist(rbind(A, B))
-      AB <- matrix(c(B[1]-A[1], B[2]-A[2]), nrow=1)
+      AB <- B-A
       N <- matrix(c(AB[2], -AB[1]), nrow=1)
       C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
       radius <- dist(rbind(C, A))
@@ -1032,7 +1032,7 @@ match.call.defaults <- function(...) {
         atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
       )
       angles <- angles[[which.min(sapply(angles, dist))]]
-      point_seq <- seq(angles[2], angles[1],length.out = npoints)
+      point_seq <- seq(angles[1], angles[2],length.out = npoints)
       out <- matrix(
         c(C[1] + radius * cos(point_seq),
           C[2] + radius * sin(point_seq),
@@ -1063,7 +1063,6 @@ match.call.defaults <- function(...) {
     df_edges$linetype[is.na(df_edges$curvature)] <- 1
   }
   if(any(df_edges$arrow == "curve")) browser() # Dit mag niet meer!
-
   p <- .plot_edges_internal(p, df_edges)
   # Add label and return ----------------------------------------------------
   .plot_label_internal(p, df_label, text_size)
