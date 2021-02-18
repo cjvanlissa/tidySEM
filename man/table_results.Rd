@@ -19,7 +19,7 @@ section. If this is set to \code{NULL}, all available columns are returned.
 Defaults to \code{c("label", "est_sig", "se", "pval", "confint", "group",
 "level")}. These correspond to 1) the parameter label, 2) estimate column
 with significance asterisks appended
-(\* <.05, \*\* < .01, \*\*\* < .001); 3) standard error, 4) p-value, 5) a
+(* <.05, ** < .01, *** < .001); 3) standard error, 4) p-value, 5) a
 formatted confidence interval, 6) grouping variable (if available), 7) level
 variable for multilevel models, if available.}
 

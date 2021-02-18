@@ -71,7 +71,7 @@ report_columns <- function(x = c("label", "est_sig", "se", "pval", "confint", "g
 #' Defaults to \code{c("label", "est_sig", "se", "pval", "confint", "group",
 #' "level")}. These correspond to 1) the parameter label, 2) estimate column
 #' with significance asterisks appended
-#' (\* <.05, \*\* < .01, \*\*\* < .001); 3) standard error, 4) p-value, 5) a
+#' (* <.05, ** < .01, *** < .001); 3) standard error, 4) p-value, 5) a
 #' formatted confidence interval, 6) grouping variable (if available), 7) level
 #' variable for multilevel models, if available.
 #' @param digits Number of digits to round to when formatting numeric columns.
@@ -130,19 +130,19 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
   }
   names(results) <- tolower(names(results))
   if("betweenwithin" %in% names(results)) names(results)[names(results) == "betweenwithin"] <- "level"
-
+  # Drop id column
+  results[["id"]] <- NULL
   if(!is.null(columns)){
-    #if(standardized){
-    #  columns[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), columns))] <- paste0(columns[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), columns))], "_std")
-    #}
-    results <- results[, na.omit(match(columns, names(results)))]
+    results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
-    order_cols <- c("group", "level", "label")
-    order_cols <- order_cols[order_cols %in% names(results)]
-    remaining_cols <- names(results)[(length(order_cols)+6):(ncol(results))]
-    remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
-    order_cols <- c(1:5, match(order_cols, names(results)), match(remaining_cols, names(results)))
-    results <- results[, order_cols]
+    first_cols <- c("lhs", "op", "rhs", "paramheader", "param", "est", "se", "est_se",
+      "pval", "est_sig", "confint", "est_std", "se_std", "pval_std",
+      "est_sig_std", "confint_std")
+    last_cols <- c("group", "level", "label")
+    order_cols <- c(names(results)[names(results) %in% first_cols],
+                    names(results)[!names(results) %in% c(first_cols, last_cols)],
+                    names(results)[names(results) %in% last_cols])
+    results <- results[, order_cols, drop = FALSE]
   }
   class(results) <- c("tidy_results", class(results))
   results
@@ -494,8 +494,11 @@ lav_getParameterLabels <-
 #' @method table_results lavaan
 #' @export
 table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
-# <- function(x, standardize, retain_which = c("~", "~~", "=~")){
+  # Rename dictionary for consistency with mplus
+  rename_dict <- c("pvalue" = "pval")
   pars_unst <- parameterEstimates(x)
+  # Rename columns for consistency with mplus
+  names(pars_unst)[match(names(rename_dict), names(pars_unst))] <- rename_dict[names(rename_dict) %in% names(pars_unst)]
   pars_unst$label <- lavaan_labels(pars_unst)
 
   num_groups <- lavInspect(x, what = "ngroups")
@@ -513,26 +516,27 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   }
   # Unst
   pars_unst$confint <- conf_int(x = pars_unst$est, lb = pars_unst$ci.lower, ub = pars_unst$ci.upper)
-  pars_unst$est_sig <- est_sig(x = pars_unst$est, sig = pars_unst$pvalue)
-  value_columns <- c("est", "se", "pvalue")
+  pars_unst$est_sig <- est_sig(x = formatC(pars_unst$est, digits = digits, format = "f"), sig = pars_unst$pval)
+  value_columns <- c("est", "se", "pval")
   value_columns <- value_columns[which(value_columns %in% names(pars_unst))]
   pars_unst[, value_columns] <- lapply(pars_unst[, value_columns],
                                      formatC, digits = digits, format = "f")
-  pars_unst[is.na(pars_unst$z), c("se", "pvalue")] <- ""
+  pars_unst[is.na(pars_unst$z), c("se", "pval")] <- ""
   pars_unst[c("z", "ci.lower", "ci.upper")] <- NULL
   # Std
   pars_std <- standardizedsolution(x)
-  pars_std$est_sig <- est_sig(x = pars_std$est, sig = pars_std$pvalue)
+  names(pars_std)[match(names(rename_dict), names(pars_std))] <- rename_dict[names(rename_dict) %in% names(pars_std)]
+  pars_std$est_sig <- est_sig(x = pars_std$est, sig = pars_std$pval)
   pars_std$confint <- conf_int(x = pars_std$est, lb = pars_std$ci.lower, ub = pars_std$ci.upper)
-  value_columns <- c("est", "se", "pvalue")
+  value_columns <- c("est", "se", "pval")
   value_columns <- value_columns[which(value_columns %in% names(pars_std))]
   pars_std[, value_columns] <- lapply(pars_std[, value_columns],
                                        formatC, digits = digits, format = "f")
-  pars_std[is.na(pars_std$z), c("se", "pvalue")] <- ""
+  pars_std[is.na(pars_std$z), c("se", "pval")] <- ""
 
   pars_std[c("lhs", "op", "rhs", "group", "z", "ci.lower", "ci.upper")] <- NULL
 
-  names(pars_std)[na.omit(match(c("se", "pvalue", "est_sig", "confint"), names(pars_std)))] <- paste0(names(pars_std)[na.omit(match(c("se", "pvalue", "est_sig", "confint"), names(pars_std)))], "_std")
+  names(pars_std)[na.omit(match(c("se", "pval", "est_sig", "confint"), names(pars_std)))] <- paste0(names(pars_std)[na.omit(match(c("se", "pval", "est_sig", "confint"), names(pars_std)))], "_std")
   names(pars_std)[match("est.std", names(pars_std))] <- "est_std"
 
   results <- cbind(pars_unst, pars_std)
@@ -541,14 +545,15 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
     #if(standardized){
     #  columns[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), columns))] <- paste0(columns[na.omit(match(c("est", "est_sig", "se", "pval", "confint"), columns))], "_std")
     #}
-    results <- results[, na.omit(match(columns, names(results)))]
+    results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
-    order_cols <- c("block", "group", "level", "label")
-    order_cols <- order_cols[order_cols %in% names(results)]
-    remaining_cols <- names(results)[(length(order_cols)+3):(ncol(results))]
-    remaining_cols <- remaining_cols[!remaining_cols %in% order_cols]
-    order_cols <- c(1:3, match(order_cols, names(results)), match(remaining_cols, names(results)))
-    results <- results[, order_cols]
+    first_cols <- c("lhs", "op", "rhs", "est", "se", "pval", "est_sig", "confint",
+                    "est_std", "se_std", "pval_std", "est_sig_std", "confint_std")
+    last_cols <- c("block", "group", "level", "label")
+    order_cols <- c(names(results)[names(results) %in% first_cols],
+                    names(results)[!names(results) %in% c(first_cols, last_cols)],
+                    names(results)[names(results) %in% last_cols])
+    results <- results[, order_cols, drop = FALSE]
   }
   class(results) <- c("tidy_results", class(results))
   results
