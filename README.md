@@ -11,7 +11,7 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](ht
 [![R-CMD-check](https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)
 [![codecov](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r)](https://codecov.io/gh/cjvanlissa/tidySEM)
 [![Contributor
-Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
+Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)-->
 
 The package `tidySEM` provides a ‘tidy’ workflow for conducting,
@@ -74,7 +74,7 @@ You can cite the R-package with the following citation:
 
 > Van Lissa, C. J., (2019). *tidySEM: A tidy workflow for running,
 > reporting, and plotting structural equation models in lavaan or
-> Mplus.* R package version 0.1.4.
+> Mplus.* R package version 0.1.5.
 > <https://github.com/cjvanlissa/tidySEM/>
 
 ## Contributing and Contact Information
