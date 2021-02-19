@@ -1,3 +1,7 @@
+# tidySEM 0.1.6
+
+* Fixed another faulty URI in README.md
+
 # tidySEM 0.1.5
 
 * Fixed URI in README.md

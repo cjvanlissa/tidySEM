@@ -1,6 +1,6 @@
-# tidySEM 0.1.5
+# tidySEM 0.1.6
 
-* Fixed URI in README.md
+* Fixed another faulty URI in README.md
   
 ## Test environments
 
