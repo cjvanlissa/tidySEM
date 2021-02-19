@@ -73,7 +73,7 @@ are defined as observed or latent variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -162,7 +162,11 @@ significance asterisks.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional parameters to be passed to and from other functions.</p></td>
+      <td><p>Additional parameters passed to <code><a href='table_results.html'>table_results</a></code>. For
+example, users can pass the <code>digits</code> argument to control the number of
+digits in the node label, or pass the <code>columns</code> argument to retain
+auxiliary columns in the <code>tidy_nodes data.frame</code> for further processing
+(see Examples).</p></td>
     </tr>
     </table>
 
@@ -171,19 +175,55 @@ significance asterisks.</p></td>
     <p>An object of class 'tidy_nodes'</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>When an expression is passed to <code>label</code>, it is evaluated using
-<code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, in the context of a <code>data.frame</code> containing the
-results
+    <p>The function <code>get_nodes</code> identifies all dependent and
+independent variables in the model as nodes. If a mean structure / intercepts
+are included in the model, the output of <code>table_results</code> for those
+means / intercepts is used to label the nodes.</p>
+<p>## Custom labels</p>
+<p>One way to create custom node labels is by passing an expression to
+<code>label</code>, as in the default value of the argument. When an expression is
+passed to <code>label</code>, it is evaluated in the context of a <code>data.frame</code>
+containing the results
 of a call to <code><a href='table_results.html'>table_results</a></code> on the <code>x</code> argument, with an
 additional column labeled <code>name</code>, which contains the node names.</p>
+<p>Another way to create custom labels is by requesting auxiliary variables
+using the <code>columns</code> argument (which is passed to
+<code><a href='table_results.html'>table_results</a></code>), and then using these columns to construct a new
+label. See examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># Standard use extracts node names and shape</span>
+<span class='co'># (rect for observed, oval for latent)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span><span class='op'>(</span><span class='st'>"dist ~ speed"</span>, <span class='va'>cars</span><span class='op'>)</span>
 <span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    name shape label
 #&gt; 1  dist  rect  dist
-#&gt; 2 speed  rect speed</div></pre>
+#&gt; 2 speed  rect speed</div><div class='input'>
+<span class='co'># To label nodes with mean values, include meanstructure in the model</span>
+<span class='co'># Note that it is possible to pass the argument 'digits' to table_results</span>
+<span class='co'># through '...'</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span><span class='op'>(</span><span class='st'>"dist ~ speed"</span>, <span class='va'>cars</span>, meanstructure <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>res</span>, digits <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    name shape           label
+#&gt; 1  dist  rect dist\n-17.579**
+#&gt; 2 speed  rect   speed\n15.400</div><div class='input'>
+<span class='co'># Pass an expression to the 'label' argument for custom labels</span>
+<span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>res</span>, label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>" "</span>, <span class='va'>est_sig</span>, <span class='st'>"\n"</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    name shape                          label
+#&gt; 1  dist  rect dist -17.58**\n[-30.56, -4.60]
+#&gt; 2 speed  rect    speed 15.40\n[15.40, 15.40]</div><div class='input'>
+<span class='co'># Pass the argument 'columns' to table_results through '...' to retain</span>
+<span class='co'># auxiliary columns for further processing</span>
+<span class='va'>nod</span> <span class='op'>&lt;-</span> <span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>res</span>, columns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"est_sig"</span>, <span class='st'>"confint"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>nod</span>
+</div><div class='output co'>#&gt;    name shape          label  est_sig         confint
+#&gt; 1  dist  rect dist\n-17.58** -17.58** [-30.56, -4.60]
+#&gt; 2 speed  rect   speed\n15.40    15.40  [15.40, 15.40]</div><div class='input'><span class='va'>nod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>nod</span>, <span class='op'>{</span><span class='va'>label</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>" "</span>, <span class='va'>est_sig</span>, <span class='st'>"\n"</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>}</span><span class='op'>)</span>
+<span class='va'>nod</span>
+</div><div class='output co'>#&gt;    name shape                          label  est_sig         confint
+#&gt; 1  dist  rect dist -17.58**\n[-30.56, -4.60] -17.58** [-30.56, -4.60]
+#&gt; 2 speed  rect    speed 15.40\n[15.40, 15.40]    15.40  [15.40, 15.40]</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

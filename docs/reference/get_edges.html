@@ -73,7 +73,7 @@ are defined as regression paths and covariances between variables (nodes)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -154,28 +154,83 @@ are defined as regression paths and covariances between variables (nodes).</p>
     </tr>
     <tr>
       <th>label</th>
-      <td><p>Character, indicating which column to use for edge labels.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.</p></td>
+      <td><p>Either a character, indicating which column to use for edge
+labels, or an expression. See Details.
+Defaults to <code>"est_sig"</code>,
+which labels edges with the estimated value with significance asterisks,
+as obtained from <code><a href='table_results.html'>table_results</a></code>. See Details and examples for
+more information.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional parameters to be passed to and from other functions.</p></td>
+      <td><p>Additional parameters passed to <code><a href='table_results.html'>table_results</a></code>. For
+example, users can pass the <code>digits</code> argument to control the number of
+digits in the edge label, or pass the <code>columns</code> argument to retain
+auxiliary columns in the <code>tidy_edges data.frame</code> for further processing
+(see Examples).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class 'tidy_edges'</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The function <code>get_edges</code> identifies all regression paths,
+latent variable definitions, and covariances in the model as edges.
+The output of <code>table_results</code> for those
+paths is used to label the edges.</p>
+<p>## Custom labels</p>
+<p>One way to create custom edge labels is by passing an expression to
+<code>label</code>. When an expression is
+passed to <code>label</code>, it is evaluated in the context of a <code>data.frame</code>
+containing the results
+of a call to <code><a href='table_results.html'>table_results</a></code> on the <code>x</code> argument.</p>
+<p>Another way to create custom labels is by requesting auxiliary variables
+using the <code>columns</code> argument (which is passed to
+<code><a href='table_results.html'>table_results</a></code>), and then using these columns to construct a new
+label. See examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># Standard use</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span><span class='op'>(</span><span class='st'>"dist ~ speed"</span>, <span class='va'>cars</span><span class='op'>)</span>
 <span class='fu'>get_edges</span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    from    to arrow     label connect_from connect_to curvature
 #&gt; 1 speed  dist  last   3.93***           NA         NA        NA
 #&gt; 2  dist  dist  both 227.07***           NA         NA        NA
-#&gt; 3 speed speed  both     27.40           NA         NA        NA</div></pre>
+#&gt; 3 speed speed  both     27.40           NA         NA        NA</div><div class='input'>
+<span class='co'># Pass an expression to the 'label' argument for custom labels</span>
+<span class='fu'>get_edges</span><span class='op'>(</span><span class='va'>res</span>, label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>est_sig</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    from    to arrow                      label connect_from connect_to
+#&gt; 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA
+#&gt; 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA
+#&gt; 3 speed speed  both       27.40 [27.40, 27.40]           NA         NA
+#&gt;   curvature
+#&gt; 1        NA
+#&gt; 2        NA
+#&gt; 3        NA</div><div class='input'>
+<span class='co'># Pass the argument 'columns' to table_results through '...' to retain</span>
+<span class='co'># auxiliary columns for further processing</span>
+<span class='va'>edg</span> <span class='op'>&lt;-</span> <span class='fu'>get_edges</span><span class='op'>(</span><span class='va'>res</span>, columns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"est_sig"</span>, <span class='st'>"confint"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>edg</span>
+</div><div class='output co'>#&gt;    from    to arrow     label   est_sig          confint connect_from
+#&gt; 1 speed  dist  last   3.93***   3.93***     [3.13, 4.73]           NA
+#&gt; 2  dist  dist  both 227.07*** 227.07*** [138.06, 316.08]           NA
+#&gt; 3 speed speed  both     27.40     27.40   [27.40, 27.40]           NA
+#&gt;   connect_to curvature
+#&gt; 1         NA        NA
+#&gt; 2         NA        NA
+#&gt; 3         NA        NA</div><div class='input'><span class='va'>edg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>edg</span>, <span class='op'>{</span><span class='va'>label</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>est_sig</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>}</span><span class='op'>)</span>
+<span class='va'>edg</span>
+</div><div class='output co'>#&gt;    from    to arrow                      label   est_sig          confint
+#&gt; 1 speed  dist  last       3.93*** [3.13, 4.73]   3.93***     [3.13, 4.73]
+#&gt; 2  dist  dist  both 227.07*** [138.06, 316.08] 227.07*** [138.06, 316.08]
+#&gt; 3 speed speed  both       27.40 [27.40, 27.40]     27.40   [27.40, 27.40]
+#&gt;   connect_from connect_to curvature
+#&gt; 1           NA         NA        NA
+#&gt; 2           NA         NA        NA
+#&gt; 3           NA         NA        NA</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

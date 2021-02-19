@@ -11,9 +11,8 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](ht
 [![R-CMD-check](https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)
 <!--[![test-coverage](https://github.com/cjvanlissa/tidySEM/workflows/test-coverage/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)-->
 [![codecov](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r)](https://codecov.io/gh/cjvanlissa/tidySEM)
-[![Contributor
-Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
-<!--[![DOI](http://joss.theoj.org/papers/10.21105/joss.00978/status.svg)](https://doi.org/10.21105/joss.00978)-->
+[![Code of
+Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)
 
 The package `tidySEM` provides a ‘tidy’ workflow for conducting,
 reporting, and plotting structural equation modeling analyses. It does
@@ -88,5 +87,5 @@ a pull request with proposed features.
   - Make a pull request
     [here](https://github.com/cjvanlissa/tidySEM/pulls)
 
-By participating in this project, you agree to abide by the [Contributor
-Code of Conduct v2.0](https://www.contributor-covenant.org/).
+By participating in this project, you agree to abide by the [Code of
+Merit](https://codeofmerit.org/CODE_OF_CONDUCT.md).
