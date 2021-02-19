@@ -26,6 +26,7 @@ Let's load the required packages:
 library(tidySEM)
 library(lavaan)
 library(ggplot2)
+library(dplyr)
 ```
 
 ## The tidySEM workflow
@@ -90,7 +91,12 @@ In `tidySEM`, the layout is specified as a matrix (grid) with node names and emp
 
 #### Automatically generate layout for a model
 
-The example above used an automatically generated layout for the fit model (`lavaan` or `Mplus`). For this, the `graph_sem()` function makes use of the function `igraph::layout_as_tree()`, or other layout functions in the `igraph` package. To get this layout as a matrix, you can run:
+The example above used an automatically generated layout for the fit model (`lavaan` or `Mplus`).
+If you open the help file for the function by running `?graph_sem`,
+you can see that the default argument is `layout = get_layout(x = model)`, where model refers to the `model` argument of the same function.
+
+The `get_layout()` function automatically generates a layout for a fit model object.
+To get this layout as a matrix, you can run:
 
 ```{r eval = TRUE, echo = TRUE}
 get_layout(fit)
@@ -103,7 +109,7 @@ fit <- cfa(' visual  =~ x1 + x2 + x3 ',
 get_layout(fit)
 })
 ```
-
+The `get_layout()` function relies on `igraph::layout_as_tree()` to place the nodes.
 Other layout functions from the `igraph` package can be used by specifying the `layout_algorithm = ...` argument:
 
 ```{r message=FALSE, warning = FALSE}
@@ -205,10 +211,9 @@ if(generate_svgs) ggsave("pgfig2_1.svg", p, device = "svg", width= 9.5, height =
 knitr::include_graphics("pgfig2_1.svg")
 ```
 
+### Step 4: Customize nodes and edges
 
-### Optional step 4: Examine nodes and edges
-
-The function For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running `get_nodes()`:
+For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running `get_nodes()`:
 
 ```{r}
 get_nodes(fit)
@@ -220,6 +225,55 @@ And for the edges:
 get_edges(fit)
 ```
 
+#### Customizing node and edge labels
+
+The `get_nodes()` and `get_edges()` functions both call `table_results()` on the fit model object to get information about the nodes and edges.
+Both functions have a `label` argument which can either be a character string referencing a column of the output of `table_results()`, or an expression that is evaluated in the context of that output.
+
+This allows you to customize node and edge labels. For example, maybe you want to combine the parameter estimate and its confidence interval into an edge label:
+
+```{r}
+get_edges(fit, label = paste(est, confint))
+```
+
+We can do the same for the nodes, but at this time, the mean structure is **not** part of the model, so `table_results()` will not retrieve any parameter estimates for the nodes.
+Unless `label = NULL`, `get_nodes()` will use the node name as a label when no further information is available.
+
+We can re-run the model with a mean structure to get more information about the nodes:
+
+
+```{r}
+fit <- cfa(HS.model, data=HolzingerSwineford1939, meanstructure = TRUE)
+```
+
+Running `get_nodes()` now uses the estimated means in the label:
+
+```{r}
+get_nodes(fit)
+```
+These labels can be further customized as shown below:
+
+```{r}
+get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
+```
+#### Auxiliary columns
+
+Instead of customizing the node and edge labels in the call to `get_nodes()` and `get_edges()`,
+it is also possible to request auxiliary columns, and use these to customize the labels (or other properties of the plot) later.
+Below is an example for `get_edges()`, but the same mechanism applies to `get_nodes()`:
+
+```{r}
+get_edges(fit, label = "est", columns = "pval")
+```
+
+We can use this information to manually construct labels:
+
+```{r}
+get_edges(fit, label = "est", columns = c("est", "pval")) %>%
+  within({ label[!is.na(pval)] = paste0(est[!is.na(pval)], ", p = ", pval[!is.na(pval)])})
+```
+
+The section on **Visual aspects** demonstrates how to use these auxiliary columns to customize visual properties of the graph.
 
 ### Optional step 5: accessing graph data before plotting
 
@@ -290,13 +344,20 @@ knitr::include_graphics("pgfig3.svg")
 
 ## Visual aspects
 
-The functions `graph_sem()` and `prepare_graph()` accept several optional visual parameters that can be used to customize the resulting image (see `?graph_sem()`). These parameters can be passed as extra columns to the `nodes()` and `edges()` objects. Specifically, edges have the following aesthetics (see `?geom_path()`):
+The visual aspects of graphs created using `graph_sem()` and `prepare_graph()` can be easily customized (see `?graph_sem()`).
+These functions construct a graph based on a data.frame of nodes, and a data.frame of edges.
+The visual aspects can be customized by adding **extra columns** to those data.frames.
+
+### Visual aspects of edges
+
+Edges have the following aesthetics (see `?geom_path()`):
 
 * `linetype`: The type of line, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
-* `colour`: The colour of the line (e.g., `colour = "red"` or `colour = "blue"`)
+* `colour` or `color`: The color of the line (e.g., `colour = "red"` or `colour = "blue"`)
 * `size`: The size of the line (e.g., `size = 1` or `size = 2`)
 * `alpha`: The transparency of the line (e.g., `alpha = 1` or `alpha = .2`)
 
+These aesthetics can be customized by adding columns to the edges data.frame, whose names correspond to the aesthetics. For example:
 
 ```{r, eval = FALSE}
 edg <- data.frame(from = "x",
@@ -322,14 +383,17 @@ if(generate_svgs) ggsave("pgfig4.svg", p, device = "svg", width= 4, height = 1)
 knitr::include_graphics("pgfig4.svg")
 ```
 
+### Visual aspects of nodes
+
 Nodes have the following aesthetics (see `?geom_polygon()`):
 
 * `linetype`: The type of line surrounding the node, e.g., continuous (`linetype = 1` or dashed `linetype = 2`)
-* `colour`: The colour of the line surrounding the node (e.g., `colour = "red"` or `colour = "blue"`)
-* `fill`: The interior colour of the node (e.g., `colour = "red"` or `colour = "blue"`)
+* `colour` or `color`: The color of the line surrounding the node (e.g., `colour = "red"` or `colour = "blue"`)
+* `fill`: The interior color of the node (e.g., `colour = "red"` or `colour = "blue"`)
 * `size`: The size of the line (e.g., `size = 1` or `size = 2`)
 * `alpha`: The transparency of the node (e.g., `alpha = 1` or `alpha = .2`)
 
+These, too, can be appended as extra columns to the nodes data.frame:
 
 ```{r, eval = FALSE}
 edg <- data.frame(from = "x",
@@ -385,12 +449,12 @@ if(generate_svgs) ggsave("pgfig6.svg", p, device = "svg", width= 9.5, height = 3
 knitr::include_graphics("pgfig6.svg")
 ```
 
-## Visual aspects of edge labels
+### Visual aspects of edge labels
 
 Like nodes and edges, edge labels can be customized. Labels have the same aesthetics as the ggplot function `geom_label()` (see `?geom_label`). However, to disambiguate them from the edge aesthetics, all label aesthetics are prefaced by `"label_"`:
 
-* `label_colour`: The colour of the label text (e.g., `label_colour = "red"`)
-* `label_fill`: The colour of the rectangle behind the label text, ( e.g., `label_fill = "blue"`)
+* `label_colour` or `label_color`: The color of the label text (e.g., `label_colour = "red"`)
+* `label_fill`: The color of the rectangle behind the label text, ( e.g., `label_fill = "blue"`)
 * `label_size`: The font size of the label (e.g., `label_size = 4`)
 * `label_alpha`: The transparency of the label (e.g., `alpha = 1` or `alpha = .2`)
 * `label_family`: The font family of the label text. By default, three are available: `"serif"`, `"sans"` and `"mono"`
@@ -438,4 +502,43 @@ p = graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 
 if(generate_svgs) ggsave("pgfig7.svg", p, device = "svg", width= 4, height = 1)
 knitr::include_graphics("pgfig7.svg")
+```
+
+### Using auxiliary columns to customize visual aspects
+
+As explained before, the functions `get_edges()` and `get_nodes()`,
+which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
+have an argument `columns` which adds auxiliary columns to the resulting data.frames.
+This can be used to customize visual aspects of the edges and nodes based on, for example, the value of the estimates:
+
+```{r, eval = FALSE}
+fit <- sem("mpg ~ cyl
+           mpg ~ am", data = mtcars)
+
+p <- prepare_graph(fit,
+                   edges = get_edges(fit, columns = "est"),
+                   fix_coord = TRUE)
+edges(p) %>%
+  mutate(color = "black",
+         color = replace(color, arrow == "last" & as.numeric(est) < 0, "red"),
+         color = replace(color, arrow == "last" & as.numeric(est) > 0, "green")) -> edges(p)
+
+plot(p)
+```
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+fit <- sem("mpg ~ cyl
+           mpg ~ am", data = mtcars)
+set.seed(15)
+p <- prepare_graph(fit,
+                   edges = get_edges(fit, columns = "est"),
+                   fix_coord = TRUE)
+edges(p) %>%
+  mutate(color = "black",
+         color = replace(color, arrow == "last" & as.numeric(est) < 0, "red"),
+         color = replace(color, arrow == "last" & as.numeric(est) > 0, "green")) -> edges(p)
+
+p <- plot(p)
+
+if(generate_svgs) ggsave("pgfig8.svg", p, device = "svg", width= 4, height = 4)
+knitr::include_graphics("pgfig8.svg")
 ```

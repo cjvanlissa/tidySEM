@@ -1265,7 +1265,7 @@ match.call.defaults <- function(...) {
 .plot_label_internal <- function(p, df, text_size){
   retain_cols <- c("x", "y", "label", "group", "level")
   retain_cols <- retain_cols[which(retain_cols %in% names(df))]
-  df <- df[, c(retain_cols, grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|alpha)$", names(df), value = TRUE)), drop = FALSE]
+  df <- df[, c(retain_cols, grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|color|alpha)$", names(df), value = TRUE)), drop = FALSE]
   if(nrow(df) > 0){
     names(df) <- gsub("^label_", "", names(df))
     # Prepare aesthetics ------------------------------------------------------

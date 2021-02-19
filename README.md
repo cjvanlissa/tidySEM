@@ -9,10 +9,10 @@ status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.or
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](https://r-pkg.org/pkg/tidySEM)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![R-CMD-check](https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)
-<!--[![test-coverage](https://github.com/cjvanlissa/tidySEM/workflows/test-coverage/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)-->
 [![codecov](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r)](https://codecov.io/gh/cjvanlissa/tidySEM)
-[![Code of
-Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)
+[![Contributor
+Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
+<!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)-->
 
 The package `tidySEM` provides a ‘tidy’ workflow for conducting,
 reporting, and plotting structural equation modeling analyses. It does
@@ -64,7 +64,7 @@ tracks of `tidySEM` functions:
     results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
 3.  A [vignette about making
     graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
-    1)  An additional vignette describes the [graphing
+      - An additional vignette describes the [graphing
         conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html)
         for structural equation models.
 
@@ -72,9 +72,10 @@ tracks of `tidySEM` functions:
 
 You can cite the R-package with the following citation:
 
-Van Lissa, C. J., (2019). *tidySEM: A tidy workflow for running,
-reporting, and plotting structural equation models in lavaan or Mplus.*
-\[R package\]. <https://github.com/cjvanlissa/tidySEM/>
+> Van Lissa, C. J., (2019). *tidySEM: A tidy workflow for running,
+> reporting, and plotting structural equation models in lavaan or
+> Mplus.* R package version 0.1.4.
+> <https://github.com/cjvanlissa/tidySEM/>
 
 ## Contributing and Contact Information
 
