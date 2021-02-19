@@ -13,7 +13,7 @@
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (devel)
-* win-builder: release, R 4.0.2 (2020-06-22)
+* win-builder: release, R version 4.0.4 (2021-02-15)
 * win-builder: oldrelease: R version 3.6.3 (2020-02-29)
 * win-builder: R Under development (unstable) (2021-02-18 r80027)
 * rhub check: Ubuntu Linux 20.04.1 LTS, R-release, GCC
