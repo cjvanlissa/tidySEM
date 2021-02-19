@@ -73,7 +73,7 @@ are defined as observed or latent variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.4</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ are defined as observed or latent variables." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,7 +116,7 @@ are defined as observed or latent variables." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/cjvanlissa/tidySEM/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,7 +143,7 @@ are defined as observed or latent variables." />
 are defined as observed or latent variables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>x</span>, label <span class='op'>=</span> <span class='st'>"est_sig"</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>x</span>, label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>est_sig</span>, sep <span class='op'>=</span> <span class='st'>"\n"</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,10 +154,11 @@ are defined as observed or latent variables.</p>
     </tr>
     <tr>
       <th>label</th>
-      <td><p>Character, indicating which column to use for node labels. Nodes
-are labeled with mean values of the observed/latent variables they represent.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.</p></td>
+      <td><p>Either a character, indicating which column to use for node
+labels, or an expression. See Details.
+Defaults to <code>paste(name, est_sig, sep = "\n"</code>,
+which gives the node name followed by the estimated value with
+significance asterisks.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -168,6 +169,13 @@ asterisks.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class 'tidy_nodes'</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>When an expression is passed to <code>label</code>, it is evaluated using
+<code><a href='https://rdrr.io/r/base/with.html'>with</a></code>, in the context of a <code>data.frame</code> containing the
+results
+of a call to <code><a href='table_results.html'>table_results</a></code> on the <code>x</code> argument, with an
+additional column labeled <code>name</code>, which contains the node names.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>

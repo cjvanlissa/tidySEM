@@ -78,7 +78,7 @@ if(generate_svgs) ggsave("pgfig1.svg", p, device = "svg", width= 9.5, height = 3
 knitr::include_graphics("pgfig1.svg")
 ```
 
-This uses a default layout, provided by the `igraph` package. However, the node placement is not very aesthetically pleasing. One of the areas where `tidySEM` really excells is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.
+This uses a default layout, provided by the `igraph` package. However, the node placement is not very aesthetically pleasing. One of the areas where `tidySEM` really excels is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.
 
 ### Optional step 3: Customizing the layout
 

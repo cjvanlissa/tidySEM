@@ -15,7 +15,11 @@ Defaults to \code{paste(name, est_sig, sep = "\n"},
 which gives the node name followed by the estimated value with
 significance asterisks.}
 
-\item{...}{Additional parameters to be passed to and from other functions.}
+\item{...}{Additional parameters passed to \code{\link{table_results}}. For
+example, users can pass the \code{digits} argument to control the number of
+digits in the node label, or pass the \code{columns} argument to retain
+auxiliary columns in the \code{tidy_nodes data.frame} for further processing
+(see Examples).}
 }
 \value{
 An object of class 'tidy_nodes'
@@ -25,15 +29,46 @@ Attempts to extract nodes from a SEM model object, where nodes
 are defined as observed or latent variables.
 }
 \details{
-When an expression is passed to \code{label}, it is evaluated using
-\code{\link{with}}, in the context of a \code{data.frame} containing the
-results
+The function \code{get_nodes} identifies all dependent and
+independent variables in the model as nodes. If a mean structure / intercepts
+are included in the model, the output of \code{table_results} for those
+means / intercepts is used to label the nodes.
+
+## Custom labels
+
+One way to create custom node labels is by passing an expression to
+\code{label}, as in the default value of the argument. When an expression is
+passed to \code{label}, it is evaluated in the context of a \code{data.frame}
+containing the results
 of a call to \code{\link{table_results}} on the \code{x} argument, with an
 additional column labeled \code{name}, which contains the node names.
+
+Another way to create custom labels is by requesting auxiliary variables
+using the \code{columns} argument (which is passed to
+\code{\link{table_results}}), and then using these columns to construct a new
+label. See examples.
 }
 \examples{
+# Standard use extracts node names and shape
+# (rect for observed, oval for latent)
 library(lavaan)
 res <- sem("dist ~ speed", cars)
 get_nodes(res)
+
+# To label nodes with mean values, include meanstructure in the model
+# Note that it is possible to pass the argument 'digits' to table_results
+# through '...'
+res <- sem("dist ~ speed", cars, meanstructure = TRUE)
+get_nodes(res, digits = 3)
+
+# Pass an expression to the 'label' argument for custom labels
+get_nodes(res, label = paste0(name, " ", est_sig, "\n", confint))
+
+# Pass the argument 'columns' to table_results through '...' to retain
+# auxiliary columns for further processing
+nod <- get_nodes(res, columns = c("est_sig", "confint"))
+nod
+nod <- within(nod, {label <- paste0(name, " ", est_sig, "\n", confint)})
+nod
 }
 \keyword{tidy_graph}

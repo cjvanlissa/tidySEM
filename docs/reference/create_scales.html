@@ -76,7 +76,7 @@ psych package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.4</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ psych package." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,7 +119,7 @@ psych package." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/cjvanlissa/tidySEM/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -227,13 +227,13 @@ These coefficients are marked with "(sb)".</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'>create_scales</span><span class='op'>(</span><span class='va'>iris</span>, keys.list <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>scalename <span class='op'>=</span>
             <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span>, <span class='st'>"Petal.Length"</span>, <span class='st'>"Petal.Width"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>descriptives</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='output co'>#&gt; <span class='message'>Number of categories should be increased  in order to count frequencies. </span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>descriptives</span>
 </div><div class='output co'>#&gt;    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
 #&gt; 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20    -1.52
 #&gt;   Reliability  Interpret min_load max_load
 #&gt; 1        0.71 Acceptable       NA       NA</div><div class='input'><span class='va'>dict</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span><span class='op'>(</span><span class='va'>iris</span>, split <span class='op'>=</span> <span class='st'>"\\."</span><span class='op'>)</span>
 <span class='fu'>create_scales</span><span class='op'>(</span><span class='va'>dict</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span></div><div class='output co'>#&gt; A tidy_scales object
+</div><div class='output co'>#&gt; <span class='message'>Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span></div><div class='output co'>#&gt; <span class='message'>Number of categories should be increased  in order to count frequencies. </span></div><div class='output co'>#&gt; A tidy_scales object
 #&gt; <span style='color: #00BB00;'>v  </span><span>  $descriptives
 #&gt; </span><span style='color: #00BB00;'>v  </span><span>  $correlations
 #&gt; </span><span style='color: #00BB00;'>v  </span><span>  $scores

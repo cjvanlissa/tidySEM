@@ -619,17 +619,52 @@ globalVariables(c("name"))
 #' Defaults to \code{paste(name, est_sig, sep = "\n"},
 #' which gives the node name followed by the estimated value with
 #' significance asterisks.
-#' @param ... Additional parameters to be passed to and from other functions.
-#' @details When an expression is passed to \code{label}, it is evaluated using
-#' \code{\link{with}}, in the context of a \code{data.frame} containing the
-#' results
+#' @param ... Additional parameters passed to \code{\link{table_results}}. For
+#' example, users can pass the \code{digits} argument to control the number of
+#' digits in the node label, or pass the \code{columns} argument to retain
+#' auxiliary columns in the \code{tidy_nodes data.frame} for further processing
+#' (see Examples).
+#' @details The function \code{get_nodes} identifies all dependent and
+#' independent variables in the model as nodes. If a mean structure / intercepts
+#' are included in the model, the output of \code{table_results} for those
+#' means / intercepts is used to label the nodes.
+#'
+#' ## Custom labels
+#'
+#' One way to create custom node labels is by passing an expression to
+#' \code{label}, as in the default value of the argument. When an expression is
+#' passed to \code{label}, it is evaluated in the context of a \code{data.frame}
+#' containing the results
 #' of a call to \code{\link{table_results}} on the \code{x} argument, with an
 #' additional column labeled \code{name}, which contains the node names.
+#'
+#' Another way to create custom labels is by requesting auxiliary variables
+#' using the \code{columns} argument (which is passed to
+#' \code{\link{table_results}}), and then using these columns to construct a new
+#' label. See examples.
 #' @return An object of class 'tidy_nodes'
 #' @examples
+#' # Standard use extracts node names and shape
+#' # (rect for observed, oval for latent)
 #' library(lavaan)
 #' res <- sem("dist ~ speed", cars)
 #' get_nodes(res)
+#'
+#' # To label nodes with mean values, include meanstructure in the model
+#' # Note that it is possible to pass the argument 'digits' to table_results
+#' # through '...'
+#' res <- sem("dist ~ speed", cars, meanstructure = TRUE)
+#' get_nodes(res, digits = 3)
+#'
+#' # Pass an expression to the 'label' argument for custom labels
+#' get_nodes(res, label = paste0(name, " ", est_sig, "\n", confint))
+#'
+#' # Pass the argument 'columns' to table_results through '...' to retain
+#' # auxiliary columns for further processing
+#' nod <- get_nodes(res, columns = c("est_sig", "confint"))
+#' nod
+#' nod <- within(nod, {label <- paste0(name, " ", est_sig, "\n", confint)})
+#' nod
 #' @rdname get_nodes
 #' @keywords tidy_graph
 #' @export
@@ -734,19 +769,6 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
     }
   }
 
-
-#
-#
-#     if(!is.null(label)){
-#       if(label %in% names(x)){
-#         labelz <- x[x$op == "~1", ]
-#         labelz <- labelz[match(nodes$name, labelz$lhs), ][[label]]
-#         if(any(!is.na(labelz))){
-#           nodes$label[!is.na(labelz)] <- apply(cbind(nodes$name[!is.na(labelz)], labelz[!is.na(labelz)]), 1, paste0, collapse = "\n")
-#         }
-#       }
-#     }
-
   # Retain all requested columns
   keep_cols <- c(c("name", "shape", "label"), dots[["columns"]])
   nodes <- nodes[, keep_cols, drop = FALSE]
@@ -758,38 +780,56 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
 #' @description Attempts to extract edges from a SEM model object, where edges
 #' are defined as regression paths and covariances between variables (nodes).
 #' @param x A model object of class \code{mplusObject} or \code{lavaan}.
-#' @param label Character, indicating which column to use for edge labels.
-#' Defaults to 'est_sig', which consists of the estimate value with significance
-#' asterisks.
-#' @param ... Additional parameters to be passed to and from other functions.
+#' @param label Either a character, indicating which column to use for edge
+#' labels, or an expression. See Details.
+#' Defaults to \code{"est_sig"},
+#' which labels edges with the estimated value with significance asterisks,
+#' as obtained from \code{\link{table_results}}. See Details and examples for
+#' more information.
+#' @param ... Additional parameters passed to \code{\link{table_results}}. For
+#' example, users can pass the \code{digits} argument to control the number of
+#' digits in the edge label, or pass the \code{columns} argument to retain
+#' auxiliary columns in the \code{tidy_edges data.frame} for further processing
+#' (see Examples).
+#' @details The function \code{get_edges} identifies all regression paths,
+#' latent variable definitions, and covariances in the model as edges.
+#' The output of \code{table_results} for those
+#' paths is used to label the edges.
+#'
+#' ## Custom labels
+#'
+#' One way to create custom edge labels is by passing an expression to
+#' \code{label}. When an expression is
+#' passed to \code{label}, it is evaluated in the context of a \code{data.frame}
+#' containing the results
+#' of a call to \code{\link{table_results}} on the \code{x} argument.
+#'
+#' Another way to create custom labels is by requesting auxiliary variables
+#' using the \code{columns} argument (which is passed to
+#' \code{\link{table_results}}), and then using these columns to construct a new
+#' label. See examples.
 #' @return An object of class 'tidy_edges'
 #' @examples
+#' # Standard use
 #' library(lavaan)
 #' res <- sem("dist ~ speed", cars)
 #' get_edges(res)
+#'
+#' # Pass an expression to the 'label' argument for custom labels
+#' get_edges(res, label = paste(est_sig, confint))
+#'
+#' # Pass the argument 'columns' to table_results through '...' to retain
+#' # auxiliary columns for further processing
+#' edg <- get_edges(res, columns = c("est_sig", "confint"))
+#' edg
+#' edg <- within(edg, {label <- paste(est_sig, confint)})
+#' edg
 #' @rdname get_edges
 #' @keywords tidy_graph
 #' @export
 get_edges <- function(x, label = "est_sig", ...){
   UseMethod("get_edges", x)
 }
-
-# #' @method get_edges mplusObject
-# #' @export
-# get_edges.mplusObject <- function(x, label = "est_sig", ...){
-#   estimate <- table_results(x, ...)
-#   estimate <- estimate[grepl("\\.(ON|WITH|BY)\\.", estimate$label), ]
-#   estimate$from <- estimate$to <- NA
-#   tmp <- do.call(rbind, strsplit(estimate$label, "\\."))
-#   tmp[tmp[, 2] == "ON", ] <- tmp[tmp[, 2] == "ON", 3:1]
-#   tmp <- cbind(tmp, "last")
-#   tmp[tmp[, 2] == "WITH", 4] <- "none"
-#   tmp <- setNames(data.frame(tmp[, -2], label = estimate[[label]]), c("from", "to", "arrow", "label"))
-#   class(tmp) <- c("tidy_edges", class(tmp))
-#   row.names(tmp) <- NULL
-#   tmp
-# }
-
 
 #' @method get_edges lavaan
 #' @export
@@ -822,9 +862,6 @@ get_edges.mplus.model <- get_edges.lavaan
 #' @method get_edges tidy_results
 #' @export
 get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FALSE){
-  # if(is.character(substitute(label))){
-  #   label <- parse(text = label)
-  # }
   dots <- list(...)
   cl <- match.call()
   if("group" %in% names(x)){
@@ -862,9 +899,12 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
   x$to[x$op == "~"] <- x$lhs[x$op == "~"]
 
   # If the user asked for a label
-  the_class <- class(label)
+  # Check if the label is an expression. If it is, substitute it
+  if (inherits(suppressWarnings(try(label, silent = TRUE)), "try-error")) {
+    label <- substitute(label)
+  }
   keep_cols <- dots[["columns"]]
-  if(the_class == "character"){
+  if(is.character(label)){
     if(!is.null(x[[label]])){
       x[["label"]] <- x[[label]]
       keep_cols <- c("label", dots[["columns"]])

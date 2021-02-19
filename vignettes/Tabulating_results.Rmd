@@ -2,7 +2,7 @@
 title: "Tabulating results from structural equation models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tabulating_results}
+  %\VignetteIndexEntry{Tabulating results from structural equation models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

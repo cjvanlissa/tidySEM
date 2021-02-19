@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.4</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -74,7 +74,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/cjvanlissa/tidySEM/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -88,7 +88,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="Tabulating_results_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Tabulating results from structural equation models</h1>
@@ -101,13 +101,18 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM">tidySEM</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span>
+<span class="co">#&gt; Registered S3 methods overwritten by 'tidySEM':</span>
+<span class="co">#&gt;   method              from           </span>
+<span class="co">#&gt;   print.mplus.model   MplusAutomation</span>
+<span class="co">#&gt;   print.mplusObject   MplusAutomation</span>
+<span class="co">#&gt;   summary.mplus.model MplusAutomation</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lavaan.org">lavaan</a></span><span class="op">)</span>
 <span class="co">#&gt; This is lavaan 0.6-7</span>
 <span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/michaelhallquist/MplusAutomation">MplusAutomation</a></span><span class="op">)</span>
-<span class="co">#&gt; Version:  0.7-3</span>
+<span class="co">#&gt; Version:  0.8.1</span>
 <span class="co">#&gt; We work hard to write this free software. Please help us get credit by citing: </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
@@ -121,22 +126,22 @@
 <span class="co">#&gt;     filter, lag</span>
 <span class="co">#&gt; The following objects are masked from 'package:base':</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span></pre></div>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span></code></pre></div>
 <p><code>tidySEM</code> tabulates the results of different types of models in the same uniform way. This facilitates parsing the output into Tables and Figures for publication.</p>
 <div id="output-from-lavaan" class="section level2">
 <h2 class="hasAnchor">
 <a href="#output-from-lavaan" class="anchor"></a>Output from lavaan</h2>
 <p>As an example, let’s tabulate the results from a classic <code>lavaan</code> tutorial example for a multiple group model. First, we run the model:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">HS.model</span> <span class="op">&lt;-</span> <span class="st">'  visual =~ x1 + x2 + x3
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">HS.model</span> <span class="op">&lt;-</span> <span class="st">'  visual =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '</span>
 <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span><span class="op">(</span><span class="va">HS.model</span>, 
            data <span class="op">=</span> <span class="va">HolzingerSwineford1939</span>, 
-           group <span class="op">=</span> <span class="st">"school"</span><span class="op">)</span></pre></div>
+           group <span class="op">=</span> <span class="st">"school"</span><span class="op">)</span></code></pre></div>
 <p>The results can be tabulated using the <code>lavaan</code> function <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; lavaan 0.6-7 ended normally after 57 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
@@ -272,90 +277,90 @@
 <span class="co">#&gt;    .x9                0.535    0.089    6.010    0.000</span>
 <span class="co">#&gt;     visual            0.604    0.160    3.762    0.000</span>
 <span class="co">#&gt;     textual           0.942    0.152    6.177    0.000</span>
-<span class="co">#&gt;     speed             0.461    0.118    3.910    0.000</span></pre></div>
+<span class="co">#&gt;     speed             0.461    0.118    3.910    0.000</span></code></pre></div>
 <p>Alternatively, we can use the <code>tidySEM</code> function <code><a href="../reference/table_results.html">table_results()</a></code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
-<span class="co">#&gt;                              label est_sig   se       confint       group</span>
-<span class="co">#&gt; 1             visual.BY.x1.Pasteur    1.00       [1.00, 1.00]     Pasteur</span>
-<span class="co">#&gt; 2             visual.BY.x2.Pasteur  0.39** 0.12  [0.15, 0.63]     Pasteur</span>
-<span class="co">#&gt; 3             visual.BY.x3.Pasteur 0.57*** 0.14  [0.30, 0.84]     Pasteur</span>
-<span class="co">#&gt; 4            textual.BY.x4.Pasteur    1.00       [1.00, 1.00]     Pasteur</span>
-<span class="co">#&gt; 5            textual.BY.x5.Pasteur 1.18*** 0.10  [0.98, 1.38]     Pasteur</span>
-<span class="co">#&gt; 6            textual.BY.x6.Pasteur 0.87*** 0.08  [0.72, 1.03]     Pasteur</span>
-<span class="co">#&gt; 7              speed.BY.x7.Pasteur    1.00       [1.00, 1.00]     Pasteur</span>
-<span class="co">#&gt; 8              speed.BY.x8.Pasteur 1.12*** 0.28  [0.58, 1.67]     Pasteur</span>
-<span class="co">#&gt; 9              speed.BY.x9.Pasteur 0.92*** 0.22  [0.48, 1.36]     Pasteur</span>
-<span class="co">#&gt; 10            Variances.x1.Pasteur    0.30 0.23 [-0.16, 0.75]     Pasteur</span>
-<span class="co">#&gt; 11            Variances.x2.Pasteur 1.33*** 0.16  [1.02, 1.64]     Pasteur</span>
-<span class="co">#&gt; 12            Variances.x3.Pasteur 0.99*** 0.14  [0.72, 1.26]     Pasteur</span>
-<span class="co">#&gt; 13            Variances.x4.Pasteur 0.43*** 0.07  [0.29, 0.56]     Pasteur</span>
-<span class="co">#&gt; 14            Variances.x5.Pasteur 0.46*** 0.09  [0.29, 0.62]     Pasteur</span>
-<span class="co">#&gt; 15            Variances.x6.Pasteur 0.29*** 0.05  [0.19, 0.39]     Pasteur</span>
-<span class="co">#&gt; 16            Variances.x7.Pasteur 0.82*** 0.12  [0.58, 1.06]     Pasteur</span>
-<span class="co">#&gt; 17            Variances.x8.Pasteur 0.51*** 0.12  [0.28, 0.74]     Pasteur</span>
-<span class="co">#&gt; 18            Variances.x9.Pasteur 0.68*** 0.10  [0.48, 0.88]     Pasteur</span>
-<span class="co">#&gt; 19        Variances.visual.Pasteur 1.10*** 0.28  [0.55, 1.64]     Pasteur</span>
-<span class="co">#&gt; 20       Variances.textual.Pasteur 0.89*** 0.15  [0.60, 1.19]     Pasteur</span>
-<span class="co">#&gt; 21         Variances.speed.Pasteur  0.35** 0.13  [0.10, 0.60]     Pasteur</span>
-<span class="co">#&gt; 22     visual.WITH.textual.Pasteur 0.48*** 0.11  [0.27, 0.69]     Pasteur</span>
-<span class="co">#&gt; 23       visual.WITH.speed.Pasteur   0.19* 0.08  [0.03, 0.34]     Pasteur</span>
-<span class="co">#&gt; 24      textual.WITH.speed.Pasteur  0.18** 0.07  [0.05, 0.32]     Pasteur</span>
-<span class="co">#&gt; 25                Means.x1.Pasteur 4.94*** 0.09  [4.76, 5.13]     Pasteur</span>
-<span class="co">#&gt; 26                Means.x2.Pasteur 5.98*** 0.10  [5.79, 6.18]     Pasteur</span>
-<span class="co">#&gt; 27                Means.x3.Pasteur 2.49*** 0.09  [2.31, 2.67]     Pasteur</span>
-<span class="co">#&gt; 28                Means.x4.Pasteur 2.82*** 0.09  [2.64, 3.00]     Pasteur</span>
-<span class="co">#&gt; 29                Means.x5.Pasteur 4.00*** 0.10  [3.79, 4.20]     Pasteur</span>
-<span class="co">#&gt; 30                Means.x6.Pasteur 1.92*** 0.08  [1.77, 2.08]     Pasteur</span>
-<span class="co">#&gt; 31                Means.x7.Pasteur 4.43*** 0.09  [4.26, 4.60]     Pasteur</span>
-<span class="co">#&gt; 32                Means.x8.Pasteur 5.56*** 0.08  [5.41, 5.72]     Pasteur</span>
-<span class="co">#&gt; 33                Means.x9.Pasteur 5.42*** 0.08  [5.26, 5.57]     Pasteur</span>
-<span class="co">#&gt; 34            Means.visual.Pasteur    0.00       [0.00, 0.00]     Pasteur</span>
-<span class="co">#&gt; 35           Means.textual.Pasteur    0.00       [0.00, 0.00]     Pasteur</span>
-<span class="co">#&gt; 36             Means.speed.Pasteur    0.00       [0.00, 0.00]     Pasteur</span>
-<span class="co">#&gt; 37        visual.BY.x1.Grant-White    1.00       [1.00, 1.00] Grant-White</span>
-<span class="co">#&gt; 38        visual.BY.x2.Grant-White 0.74*** 0.15  [0.43, 1.04] Grant-White</span>
-<span class="co">#&gt; 39        visual.BY.x3.Grant-White 0.92*** 0.17  [0.60, 1.25] Grant-White</span>
-<span class="co">#&gt; 40       textual.BY.x4.Grant-White    1.00       [1.00, 1.00] Grant-White</span>
-<span class="co">#&gt; 41       textual.BY.x5.Grant-White 0.99*** 0.09  [0.82, 1.16] Grant-White</span>
-<span class="co">#&gt; 42       textual.BY.x6.Grant-White 0.96*** 0.08  [0.80, 1.13] Grant-White</span>
-<span class="co">#&gt; 43         speed.BY.x7.Grant-White    1.00       [1.00, 1.00] Grant-White</span>
-<span class="co">#&gt; 44         speed.BY.x8.Grant-White 1.23*** 0.19  [0.86, 1.59] Grant-White</span>
-<span class="co">#&gt; 45         speed.BY.x9.Grant-White 1.06*** 0.16  [0.74, 1.38] Grant-White</span>
-<span class="co">#&gt; 46        Variances.x1.Grant-White 0.71*** 0.13  [0.47, 0.96] Grant-White</span>
-<span class="co">#&gt; 47        Variances.x2.Grant-White 0.90*** 0.12  [0.66, 1.14] Grant-White</span>
-<span class="co">#&gt; 48        Variances.x3.Grant-White 0.56*** 0.10  [0.36, 0.76] Grant-White</span>
-<span class="co">#&gt; 49        Variances.x4.Grant-White 0.32*** 0.06  [0.19, 0.44] Grant-White</span>
-<span class="co">#&gt; 50        Variances.x5.Grant-White 0.42*** 0.07  [0.28, 0.56] Grant-White</span>
-<span class="co">#&gt; 51        Variances.x6.Grant-White 0.41*** 0.07  [0.27, 0.54] Grant-White</span>
-<span class="co">#&gt; 52        Variances.x7.Grant-White 0.60*** 0.09  [0.42, 0.78] Grant-White</span>
-<span class="co">#&gt; 53        Variances.x8.Grant-White 0.40*** 0.09  [0.22, 0.59] Grant-White</span>
-<span class="co">#&gt; 54        Variances.x9.Grant-White 0.53*** 0.09  [0.36, 0.71] Grant-White</span>
-<span class="co">#&gt; 55    Variances.visual.Grant-White 0.60*** 0.16  [0.29, 0.92] Grant-White</span>
-<span class="co">#&gt; 56   Variances.textual.Grant-White 0.94*** 0.15  [0.64, 1.24] Grant-White</span>
-<span class="co">#&gt; 57     Variances.speed.Grant-White 0.46*** 0.12  [0.23, 0.69] Grant-White</span>
-<span class="co">#&gt; 58 visual.WITH.textual.Grant-White 0.41*** 0.10  [0.22, 0.60] Grant-White</span>
-<span class="co">#&gt; 59   visual.WITH.speed.Grant-White 0.28*** 0.08  [0.13, 0.42] Grant-White</span>
-<span class="co">#&gt; 60  textual.WITH.speed.Grant-White  0.22** 0.07  [0.08, 0.37] Grant-White</span>
-<span class="co">#&gt; 61            Means.x1.Grant-White 4.93*** 0.10  [4.74, 5.12] Grant-White</span>
-<span class="co">#&gt; 62            Means.x2.Grant-White 6.20*** 0.09  [6.02, 6.38] Grant-White</span>
-<span class="co">#&gt; 63            Means.x3.Grant-White 2.00*** 0.09  [1.83, 2.16] Grant-White</span>
-<span class="co">#&gt; 64            Means.x4.Grant-White 3.32*** 0.09  [3.13, 3.50] Grant-White</span>
-<span class="co">#&gt; 65            Means.x5.Grant-White 4.71*** 0.10  [4.52, 4.90] Grant-White</span>
-<span class="co">#&gt; 66            Means.x6.Grant-White 2.47*** 0.09  [2.28, 2.65] Grant-White</span>
-<span class="co">#&gt; 67            Means.x7.Grant-White 3.92*** 0.09  [3.75, 4.09] Grant-White</span>
-<span class="co">#&gt; 68            Means.x8.Grant-White 5.49*** 0.09  [5.32, 5.66] Grant-White</span>
-<span class="co">#&gt; 69            Means.x9.Grant-White 5.33*** 0.09  [5.16, 5.49] Grant-White</span>
-<span class="co">#&gt; 70        Means.visual.Grant-White    0.00       [0.00, 0.00] Grant-White</span>
-<span class="co">#&gt; 71       Means.textual.Grant-White    0.00       [0.00, 0.00] Grant-White</span>
-<span class="co">#&gt; 72         Means.speed.Grant-White    0.00       [0.00, 0.00] Grant-White</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
+<span class="co">#&gt;                              label est_sig   se pval       confint       group</span>
+<span class="co">#&gt; 1             visual.BY.x1.Pasteur    1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur</span>
+<span class="co">#&gt; 2             visual.BY.x2.Pasteur  0.39** 0.12 0.00  [0.15, 0.63]     Pasteur</span>
+<span class="co">#&gt; 3             visual.BY.x3.Pasteur 0.57*** 0.14 0.00  [0.30, 0.84]     Pasteur</span>
+<span class="co">#&gt; 4            textual.BY.x4.Pasteur    1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur</span>
+<span class="co">#&gt; 5            textual.BY.x5.Pasteur 1.18*** 0.10 0.00  [0.98, 1.38]     Pasteur</span>
+<span class="co">#&gt; 6            textual.BY.x6.Pasteur 0.87*** 0.08 0.00  [0.72, 1.03]     Pasteur</span>
+<span class="co">#&gt; 7              speed.BY.x7.Pasteur    1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur</span>
+<span class="co">#&gt; 8              speed.BY.x8.Pasteur 1.12*** 0.28 0.00  [0.58, 1.67]     Pasteur</span>
+<span class="co">#&gt; 9              speed.BY.x9.Pasteur 0.92*** 0.22 0.00  [0.48, 1.36]     Pasteur</span>
+<span class="co">#&gt; 10            Variances.x1.Pasteur    0.30 0.23 0.20 [-0.16, 0.75]     Pasteur</span>
+<span class="co">#&gt; 11            Variances.x2.Pasteur 1.33*** 0.16 0.00  [1.02, 1.64]     Pasteur</span>
+<span class="co">#&gt; 12            Variances.x3.Pasteur 0.99*** 0.14 0.00  [0.72, 1.26]     Pasteur</span>
+<span class="co">#&gt; 13            Variances.x4.Pasteur 0.43*** 0.07 0.00  [0.29, 0.56]     Pasteur</span>
+<span class="co">#&gt; 14            Variances.x5.Pasteur 0.46*** 0.09 0.00  [0.29, 0.62]     Pasteur</span>
+<span class="co">#&gt; 15            Variances.x6.Pasteur 0.29*** 0.05 0.00  [0.19, 0.39]     Pasteur</span>
+<span class="co">#&gt; 16            Variances.x7.Pasteur 0.82*** 0.12 0.00  [0.58, 1.06]     Pasteur</span>
+<span class="co">#&gt; 17            Variances.x8.Pasteur 0.51*** 0.12 0.00  [0.28, 0.74]     Pasteur</span>
+<span class="co">#&gt; 18            Variances.x9.Pasteur 0.68*** 0.10 0.00  [0.48, 0.88]     Pasteur</span>
+<span class="co">#&gt; 19        Variances.visual.Pasteur 1.10*** 0.28 0.00  [0.55, 1.64]     Pasteur</span>
+<span class="co">#&gt; 20       Variances.textual.Pasteur 0.89*** 0.15 0.00  [0.60, 1.19]     Pasteur</span>
+<span class="co">#&gt; 21         Variances.speed.Pasteur  0.35** 0.13 0.01  [0.10, 0.60]     Pasteur</span>
+<span class="co">#&gt; 22     visual.WITH.textual.Pasteur 0.48*** 0.11 0.00  [0.27, 0.69]     Pasteur</span>
+<span class="co">#&gt; 23       visual.WITH.speed.Pasteur   0.19* 0.08 0.02  [0.03, 0.34]     Pasteur</span>
+<span class="co">#&gt; 24      textual.WITH.speed.Pasteur  0.18** 0.07 0.01  [0.05, 0.32]     Pasteur</span>
+<span class="co">#&gt; 25                Means.x1.Pasteur 4.94*** 0.09 0.00  [4.76, 5.13]     Pasteur</span>
+<span class="co">#&gt; 26                Means.x2.Pasteur 5.98*** 0.10 0.00  [5.79, 6.18]     Pasteur</span>
+<span class="co">#&gt; 27                Means.x3.Pasteur 2.49*** 0.09 0.00  [2.31, 2.67]     Pasteur</span>
+<span class="co">#&gt; 28                Means.x4.Pasteur 2.82*** 0.09 0.00  [2.64, 3.00]     Pasteur</span>
+<span class="co">#&gt; 29                Means.x5.Pasteur 4.00*** 0.10 0.00  [3.79, 4.20]     Pasteur</span>
+<span class="co">#&gt; 30                Means.x6.Pasteur 1.92*** 0.08 0.00  [1.77, 2.08]     Pasteur</span>
+<span class="co">#&gt; 31                Means.x7.Pasteur 4.43*** 0.09 0.00  [4.26, 4.60]     Pasteur</span>
+<span class="co">#&gt; 32                Means.x8.Pasteur 5.56*** 0.08 0.00  [5.41, 5.72]     Pasteur</span>
+<span class="co">#&gt; 33                Means.x9.Pasteur 5.42*** 0.08 0.00  [5.26, 5.57]     Pasteur</span>
+<span class="co">#&gt; 34            Means.visual.Pasteur    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur</span>
+<span class="co">#&gt; 35           Means.textual.Pasteur    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur</span>
+<span class="co">#&gt; 36             Means.speed.Pasteur    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur</span>
+<span class="co">#&gt; 37        visual.BY.x1.Grant-White    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White</span>
+<span class="co">#&gt; 38        visual.BY.x2.Grant-White 0.74*** 0.15 0.00  [0.43, 1.04] Grant-White</span>
+<span class="co">#&gt; 39        visual.BY.x3.Grant-White 0.92*** 0.17 0.00  [0.60, 1.25] Grant-White</span>
+<span class="co">#&gt; 40       textual.BY.x4.Grant-White    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White</span>
+<span class="co">#&gt; 41       textual.BY.x5.Grant-White 0.99*** 0.09 0.00  [0.82, 1.16] Grant-White</span>
+<span class="co">#&gt; 42       textual.BY.x6.Grant-White 0.96*** 0.08 0.00  [0.80, 1.13] Grant-White</span>
+<span class="co">#&gt; 43         speed.BY.x7.Grant-White    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White</span>
+<span class="co">#&gt; 44         speed.BY.x8.Grant-White 1.23*** 0.19 0.00  [0.86, 1.59] Grant-White</span>
+<span class="co">#&gt; 45         speed.BY.x9.Grant-White 1.06*** 0.16 0.00  [0.74, 1.38] Grant-White</span>
+<span class="co">#&gt; 46        Variances.x1.Grant-White 0.71*** 0.13 0.00  [0.47, 0.96] Grant-White</span>
+<span class="co">#&gt; 47        Variances.x2.Grant-White 0.90*** 0.12 0.00  [0.66, 1.14] Grant-White</span>
+<span class="co">#&gt; 48        Variances.x3.Grant-White 0.56*** 0.10 0.00  [0.36, 0.76] Grant-White</span>
+<span class="co">#&gt; 49        Variances.x4.Grant-White 0.32*** 0.06 0.00  [0.19, 0.44] Grant-White</span>
+<span class="co">#&gt; 50        Variances.x5.Grant-White 0.42*** 0.07 0.00  [0.28, 0.56] Grant-White</span>
+<span class="co">#&gt; 51        Variances.x6.Grant-White 0.41*** 0.07 0.00  [0.27, 0.54] Grant-White</span>
+<span class="co">#&gt; 52        Variances.x7.Grant-White 0.60*** 0.09 0.00  [0.42, 0.78] Grant-White</span>
+<span class="co">#&gt; 53        Variances.x8.Grant-White 0.40*** 0.09 0.00  [0.22, 0.59] Grant-White</span>
+<span class="co">#&gt; 54        Variances.x9.Grant-White 0.53*** 0.09 0.00  [0.36, 0.71] Grant-White</span>
+<span class="co">#&gt; 55    Variances.visual.Grant-White 0.60*** 0.16 0.00  [0.29, 0.92] Grant-White</span>
+<span class="co">#&gt; 56   Variances.textual.Grant-White 0.94*** 0.15 0.00  [0.64, 1.24] Grant-White</span>
+<span class="co">#&gt; 57     Variances.speed.Grant-White 0.46*** 0.12 0.00  [0.23, 0.69] Grant-White</span>
+<span class="co">#&gt; 58 visual.WITH.textual.Grant-White 0.41*** 0.10 0.00  [0.22, 0.60] Grant-White</span>
+<span class="co">#&gt; 59   visual.WITH.speed.Grant-White 0.28*** 0.08 0.00  [0.13, 0.42] Grant-White</span>
+<span class="co">#&gt; 60  textual.WITH.speed.Grant-White  0.22** 0.07 0.00  [0.08, 0.37] Grant-White</span>
+<span class="co">#&gt; 61            Means.x1.Grant-White 4.93*** 0.10 0.00  [4.74, 5.12] Grant-White</span>
+<span class="co">#&gt; 62            Means.x2.Grant-White 6.20*** 0.09 0.00  [6.02, 6.38] Grant-White</span>
+<span class="co">#&gt; 63            Means.x3.Grant-White 2.00*** 0.09 0.00  [1.83, 2.16] Grant-White</span>
+<span class="co">#&gt; 64            Means.x4.Grant-White 3.32*** 0.09 0.00  [3.13, 3.50] Grant-White</span>
+<span class="co">#&gt; 65            Means.x5.Grant-White 4.71*** 0.10 0.00  [4.52, 4.90] Grant-White</span>
+<span class="co">#&gt; 66            Means.x6.Grant-White 2.47*** 0.09 0.00  [2.28, 2.65] Grant-White</span>
+<span class="co">#&gt; 67            Means.x7.Grant-White 3.92*** 0.09 0.00  [3.75, 4.09] Grant-White</span>
+<span class="co">#&gt; 68            Means.x8.Grant-White 5.49*** 0.09 0.00  [5.32, 5.66] Grant-White</span>
+<span class="co">#&gt; 69            Means.x9.Grant-White 5.33*** 0.09 0.00  [5.16, 5.49] Grant-White</span>
+<span class="co">#&gt; 70        Means.visual.Grant-White    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White</span>
+<span class="co">#&gt; 71       Means.textual.Grant-White    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White</span>
+<span class="co">#&gt; 72         Means.speed.Grant-White    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White</span></code></pre></div>
 </div>
 <div id="output-from-mplus" class="section level2">
 <h2 class="hasAnchor">
 <a href="#output-from-mplus" class="anchor"></a>Output from Mplus</h2>
 <p>Now, we’ll reproduce the same analysis in ‘Mplus’. The <code>tidySEM</code> package has a function <code><a href="../reference/measurement.html">measurement()</a></code> to generate measurement models automatically. However, to illustrate the fact that <code>tidySEM</code> is compatible with existing solutions, we will specify the syntax for this example manually, using the package <code>MplusAutomation</code>. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">mplusModeler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">mplusObject</a></span><span class="op">(</span>VARIABLE <span class="op">=</span> <span class="st">"grouping IS school (1 = GW 2 = Pas);"</span>,
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">mplusModeler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">mplusObject</a></span><span class="op">(</span>VARIABLE <span class="op">=</span> <span class="st">"grouping IS school (1 = GW 2 = Pas);"</span>,
                                 MODEL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"visual BY x1 x2 x3;"</span>,
                                           <span class="st">"textual BY x4 x5 x6;"</span>,
                                           <span class="st">"speed BY x7 x8 x9;"</span><span class="op">)</span>,
@@ -363,7 +368,7 @@
                                 rdata <span class="op">=</span> <span class="va">HolzingerSwineford1939</span><span class="op">)</span>,
                     modelout <span class="op">=</span> <span class="st">"example.inp"</span>,
                     run <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span>
-<span class="va">fit</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">parameters</span></pre></div>
+<span class="va">fit</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">parameters</span></code></pre></div>
 <pre><code>#&gt; $unstandardized
 #&gt;           paramHeader   param    est    se  est_se    pval Group
 #&gt; 1           VISUAL.BY      X1  1.000 0.000 999.000 999.000    GW
@@ -439,8 +444,8 @@
 #&gt; 71 Residual.Variances      X8  0.541 0.099   5.483   0.000   PAS
 #&gt; 72 Residual.Variances      X9  0.654 0.101   6.476   0.000   PAS</code></pre>
 <p>The results can be tabulated using the <code>MplusAutomation</code> function <code><a href="https://rdrr.io/pkg/MplusAutomation/man/coef.mplus.model.html">coef.mplus.model()</a></code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $GW</span>
 <span class="co">#&gt;                 Label   est    se    pval</span>
 <span class="co">#&gt; 1          X1&lt;-VISUAL 1.000 0.000 999.000</span>
@@ -520,27 +525,27 @@
 <span class="co">#&gt; 72            X9&lt;-&gt;X9  0.654 0.101   0.000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; attr(,"class")</span>
-<span class="co">#&gt; [1] "mplus.model.coefs.list" "list"</span></pre></div>
+<span class="co">#&gt; [1] "mplus.model.coefs.list" "list"</span></code></pre></div>
 <p>Alternatively, we can use the <code>tidySEM</code> function <code><a href="../reference/table_results.html">table_results()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; Calculated confidence intervals from est and se.</span>
 <span class="co">#&gt;                        label  est_sig   se pval        confint group</span>
-<span class="co">#&gt; 1            VISUAL.BY.X1.GW     1.00                             GW</span>
+<span class="co">#&gt; 1            VISUAL.BY.X1.GW     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;    GW</span>
 <span class="co">#&gt; 2            VISUAL.BY.X2.GW  0.58*** 0.11 0.00 [ 0.36,  0.79]    GW</span>
 <span class="co">#&gt; 3            VISUAL.BY.X3.GW  0.80*** 0.13 0.00 [ 0.54,  1.05]    GW</span>
-<span class="co">#&gt; 4           TEXTUAL.BY.X4.GW     1.00                             GW</span>
+<span class="co">#&gt; 4           TEXTUAL.BY.X4.GW     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;    GW</span>
 <span class="co">#&gt; 5           TEXTUAL.BY.X5.GW  1.12*** 0.07 0.00 [ 0.99,  1.25]    GW</span>
 <span class="co">#&gt; 6           TEXTUAL.BY.X6.GW  0.93*** 0.06 0.00 [ 0.82,  1.04]    GW</span>
-<span class="co">#&gt; 7             SPEED.BY.X7.GW     1.00                             GW</span>
+<span class="co">#&gt; 7             SPEED.BY.X7.GW     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;    GW</span>
 <span class="co">#&gt; 8             SPEED.BY.X8.GW  1.13*** 0.14 0.00 [ 0.86,  1.40]    GW</span>
 <span class="co">#&gt; 9             SPEED.BY.X9.GW  1.01*** 0.16 0.00 [ 0.70,  1.32]    GW</span>
 <span class="co">#&gt; 10    TEXTUAL.WITH.VISUAL.GW  0.43*** 0.10 0.00 [ 0.23,  0.62]    GW</span>
 <span class="co">#&gt; 11      SPEED.WITH.VISUAL.GW  0.33*** 0.08 0.00 [ 0.16,  0.49]    GW</span>
 <span class="co">#&gt; 12     SPEED.WITH.TEXTUAL.GW   0.24** 0.07 0.00 [ 0.09,  0.38]    GW</span>
-<span class="co">#&gt; 13           Means.VISUAL.GW     0.00                             GW</span>
-<span class="co">#&gt; 14          Means.TEXTUAL.GW     0.00                             GW</span>
-<span class="co">#&gt; 15            Means.SPEED.GW     0.00                             GW</span>
+<span class="co">#&gt; 13           Means.VISUAL.GW     0.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;    GW</span>
+<span class="co">#&gt; 14          Means.TEXTUAL.GW     0.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;    GW</span>
+<span class="co">#&gt; 15            Means.SPEED.GW     0.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;    GW</span>
 <span class="co">#&gt; 16          Intercepts.X1.GW  4.85*** 0.09 0.00 [ 4.67,  5.04]    GW</span>
 <span class="co">#&gt; 17          Intercepts.X2.GW  6.07*** 0.08 0.00 [ 5.92,  6.22]    GW</span>
 <span class="co">#&gt; 18          Intercepts.X3.GW  2.15*** 0.08 0.00 [ 1.99,  2.32]    GW</span>
@@ -562,13 +567,13 @@
 <span class="co">#&gt; 34  Residual.Variances.X7.GW  0.62*** 0.10 0.00 [ 0.42,  0.83]    GW</span>
 <span class="co">#&gt; 35  Residual.Variances.X8.GW  0.43*** 0.10 0.00 [ 0.24,  0.63]    GW</span>
 <span class="co">#&gt; 36  Residual.Variances.X9.GW  0.52*** 0.10 0.00 [ 0.32,  0.72]    GW</span>
-<span class="co">#&gt; 37          VISUAL.BY.X1.PAS     1.00                            PAS</span>
+<span class="co">#&gt; 37          VISUAL.BY.X1.PAS     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;   PAS</span>
 <span class="co">#&gt; 38          VISUAL.BY.X2.PAS  0.58*** 0.11 0.00 [ 0.36,  0.79]   PAS</span>
 <span class="co">#&gt; 39          VISUAL.BY.X3.PAS  0.80*** 0.13 0.00 [ 0.54,  1.05]   PAS</span>
-<span class="co">#&gt; 40         TEXTUAL.BY.X4.PAS     1.00                            PAS</span>
+<span class="co">#&gt; 40         TEXTUAL.BY.X4.PAS     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;   PAS</span>
 <span class="co">#&gt; 41         TEXTUAL.BY.X5.PAS  1.12*** 0.07 0.00 [ 0.99,  1.25]   PAS</span>
 <span class="co">#&gt; 42         TEXTUAL.BY.X6.PAS  0.93*** 0.06 0.00 [ 0.82,  1.04]   PAS</span>
-<span class="co">#&gt; 43           SPEED.BY.X7.PAS     1.00                            PAS</span>
+<span class="co">#&gt; 43           SPEED.BY.X7.PAS     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;   PAS</span>
 <span class="co">#&gt; 44           SPEED.BY.X8.PAS  1.13*** 0.14 0.00 [ 0.86,  1.40]   PAS</span>
 <span class="co">#&gt; 45           SPEED.BY.X9.PAS  1.01*** 0.16 0.00 [ 0.70,  1.32]   PAS</span>
 <span class="co">#&gt; 46   TEXTUAL.WITH.VISUAL.PAS  0.41*** 0.11 0.00 [ 0.20,  0.62]   PAS</span>
@@ -597,7 +602,7 @@
 <span class="co">#&gt; 69 Residual.Variances.X6.PAS  0.26*** 0.05 0.00 [ 0.16,  0.36]   PAS</span>
 <span class="co">#&gt; 70 Residual.Variances.X7.PAS  0.89*** 0.13 0.00 [ 0.64,  1.14]   PAS</span>
 <span class="co">#&gt; 71 Residual.Variances.X8.PAS  0.54*** 0.10 0.00 [ 0.35,  0.74]   PAS</span>
-<span class="co">#&gt; 72 Residual.Variances.X9.PAS  0.65*** 0.10 0.00 [ 0.46,  0.85]   PAS</span></pre></div>
+<span class="co">#&gt; 72 Residual.Variances.X9.PAS  0.65*** 0.10 0.00 [ 0.46,  0.85]   PAS</span></code></pre></div>
 </div>
   </div>
 

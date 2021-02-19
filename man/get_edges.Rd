@@ -9,11 +9,18 @@ get_edges(x, label = "est_sig", ...)
 \arguments{
 \item{x}{A model object of class \code{mplusObject} or \code{lavaan}.}
 
-\item{label}{Character, indicating which column to use for edge labels.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.}
+\item{label}{Either a character, indicating which column to use for edge
+labels, or an expression. See Details.
+Defaults to \code{"est_sig"},
+which labels edges with the estimated value with significance asterisks,
+as obtained from \code{\link{table_results}}. See Details and examples for
+more information.}
 
-\item{...}{Additional parameters to be passed to and from other functions.}
+\item{...}{Additional parameters passed to \code{\link{table_results}}. For
+example, users can pass the \code{digits} argument to control the number of
+digits in the edge label, or pass the \code{columns} argument to retain
+auxiliary columns in the \code{tidy_edges data.frame} for further processing
+(see Examples).}
 }
 \value{
 An object of class 'tidy_edges'
@@ -22,9 +29,39 @@ An object of class 'tidy_edges'
 Attempts to extract edges from a SEM model object, where edges
 are defined as regression paths and covariances between variables (nodes).
 }
+\details{
+The function \code{get_edges} identifies all regression paths,
+latent variable definitions, and covariances in the model as edges.
+The output of \code{table_results} for those
+paths is used to label the edges.
+
+## Custom labels
+
+One way to create custom edge labels is by passing an expression to
+\code{label}. When an expression is
+passed to \code{label}, it is evaluated in the context of a \code{data.frame}
+containing the results
+of a call to \code{\link{table_results}} on the \code{x} argument.
+
+Another way to create custom labels is by requesting auxiliary variables
+using the \code{columns} argument (which is passed to
+\code{\link{table_results}}), and then using these columns to construct a new
+label. See examples.
+}
 \examples{
+# Standard use
 library(lavaan)
 res <- sem("dist ~ speed", cars)
 get_edges(res)
+
+# Pass an expression to the 'label' argument for custom labels
+get_edges(res, label = paste(est_sig, confint))
+
+# Pass the argument 'columns' to table_results through '...' to retain
+# auxiliary columns for further processing
+edg <- get_edges(res, columns = c("est_sig", "confint"))
+edg
+edg <- within(edg, {label <- paste(est_sig, confint)})
+edg
 }
 \keyword{tidy_graph}

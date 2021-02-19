@@ -2,7 +2,7 @@
 title: "SEM graphing conventions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{sem_graph}
+  %\VignetteIndexEntry{SEM graphing conventions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
