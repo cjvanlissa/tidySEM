@@ -1,3 +1,8 @@
+# tidySEM 0.1.7
+
+* Added convenience functions to conditionally customize graphs based on
+  all_fun(), e.g.: colour_sig(plot, "green")
+
 # tidySEM 0.1.6
 
 * Fixed another faulty URI in README.md

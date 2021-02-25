@@ -288,7 +288,6 @@ prepare_graph.default <- function(edges = NULL,
                                   fix_coord = FALSE,
                                   ...
 ){
-
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_graph.default)
   for ( v in names(myfor)){
@@ -360,10 +359,6 @@ prepare_graph.default <- function(edges = NULL,
     if(!"curvature" %in% names(df_edges)){
       df_edges$curvature <- NA
     }
-    # if("color" %in% names(df_edges)){
-    #   message("Edges contained a column named 'color'. Currently, only the 'colour' argument is implemented. The column was renamed.")
-    #   names(df_edges)[which(names(df_edges) == "color")] <- "colour"
-    # }
   }
 
   # Defaults for missing columns --------------------------------------------
@@ -372,10 +367,6 @@ prepare_graph.default <- function(edges = NULL,
     stop("Arguments 'nodes' and 'layout' must both have a 'name' column.")
   }
   df_nodes <- merge(nodes, layout, by = "name")
-  # if("color" %in% names(df_nodes)){
-  #   message("Nodes contained a column named 'color'. Currently, only the 'colour' argument is implemented. The column was renamed.")
-  #   names(df_nodes)[which(names(df_nodes) == "color")] <- "colour"
-  # }
   if(!"label" %in% names(df_nodes)){
     df_nodes$label <- df_nodes$name
   }
@@ -448,11 +439,19 @@ prepare_graph.default <- function(edges = NULL,
   order_nodes <- c("name", "shape", "label", "group", "level","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")
   order_nodes <- order_nodes[which(order_nodes %in% names(df_nodes))]
   order_nodes <- c(order_nodes, names(df_nodes)[!names(df_nodes) %in% order_nodes])
-  out$nodes <- df_nodes[, order_nodes]
+  # Order and add 'show' column
+  if(nrow(df_nodes) > 0){
+    df_nodes <- cbind(df_nodes[, order_nodes], show = TRUE)
+  }
+  out$nodes <- df_nodes
   order_edges <- c("from", "to", "label", "group", "level","arrow", "curvature", "connect_from", "connect_to")
   order_edges <- order_edges[which(order_edges %in% names(df_edges))]
   order_edges <- c(order_edges, names(df_edges)[!names(df_edges) %in% order_edges])
-  out$edges <- df_edges[, order_edges]
+  # Order and add 'show' column
+  if(nrow(df_edges) > 0){
+    df_edges <- cbind(df_edges[, order_edges], show = TRUE)
+  }
+  out$edges <- df_edges
   out$layout <- NULL
   class(out) <- "sem_graph"
   out
@@ -512,6 +511,20 @@ prepare_graph_model <- function(model, ...) {
 plot.sem_graph <- function(x, y, ...){
   df_nodes <- x$nodes
   df_edges <- x$edges
+  if("show" %in% names(df_nodes)){
+    df_nodes <- df_nodes[df_nodes$show, , drop = FALSE]
+    if(!all(df_edges$from %in% df_nodes$name & df_edges$to %in% df_nodes$name)){
+      message("Some edges involve nodes with argument 'show = FALSE'. These were dropped.")
+      df_edges <- df_edges[df_edges$from %in% df_nodes$name & df_edges$to %in% df_nodes$name, , drop = FALSE]
+    }
+  }
+
+  if("show" %in% names(df_edges)){
+    df_edges <- df_edges[df_edges$show, , drop = FALSE]
+  }
+  if(nrow(df_nodes) == 0){
+    stop("No nodes left to plot.")
+  }
   rect_width <- x$rect_width
   rect_height <- x$rect_height
   ellipses_width <- x$ellipses_width
@@ -689,9 +702,9 @@ get_nodes.lavaan <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
   cl["columns"] <- list(NULL)
   cl[[1L]] <- quote(table_results)
   cl$x <- eval.parent(cl)
-  #cl$label <- force(label)
+
   if("columns" %in% names(dots)){
-    cl[["columns"]] <- dots[["columns"]]
+    cl["columns"] <- dots["columns"]
   }
   cl[[1L]] <- quote(get_nodes)
   eval.parent(cl)
@@ -743,8 +756,8 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
   # Keep only rows corresponding to the identified nodes
   node_rows <- match(nodes$name, node_df$lhs)
   if(any(!is.na(node_rows))){
-    node_df <- node_df[match(nodes$name, node_df$lhs), , drop = FALSE]
-    nodes <- merge(nodes, node_df, by.x = "name", by.y = "lhs", all.x = TRUE)
+    node_df$name <- node_df$lhs
+    nodes <- merge(nodes, node_df, by = "name", all.x = TRUE)
   }
   # If the user asked for a label
 
@@ -770,7 +783,12 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
   }
 
   # Retain all requested columns
-  keep_cols <- c(c("name", "shape", "label"), dots[["columns"]])
+  if(is.null(dots[["columns"]])){
+    keep_cols <- unique(c(c("name", "shape", "label"), names(node_df)[names(node_df) %in% names(nodes)]))
+  } else {
+    keep_cols <- c(c("name", "shape", "label"), dots[["columns"]])
+  }
+
   nodes <- nodes[, keep_cols, drop = FALSE]
   class(nodes) <- c("tidy_nodes", class(nodes))
   nodes
@@ -840,7 +858,7 @@ get_edges.lavaan <- function(x, label = "est_sig", ...){
   cl["columns"] <- list(NULL)
   cl$x <- eval.parent(cl)
   if("columns" %in% names(dots)){
-    cl[["columns"]] <- dots[["columns"]]
+    cl["columns"] <- dots["columns"]
   }
   cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
   eval.parent(cl)
@@ -888,6 +906,7 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
     x <- x[!x$se == "", ]
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
+  keep_cols <- names(x)
   x$from <- x$lhs
   x$to <- x$rhs
   x$arrow <- NA
@@ -903,28 +922,34 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
   if (inherits(suppressWarnings(try(label, silent = TRUE)), "try-error")) {
     label <- substitute(label)
   }
-  keep_cols <- dots[["columns"]]
+
+  if(!is.null(dots[["columns"]])){
+    keep_cols <- dots[["columns"]]
+  }
+
   if(is.character(label)){
     if(!is.null(x[[label]])){
       x[["label"]] <- x[[label]]
-      keep_cols <- c("label", dots[["columns"]])
+      keep_cols <- c("label", keep_cols)
     }
   } else {
     if(!is.null(label)){
       x[["label"]] <- tryCatch(eval(label, envir = x), error = function(e){
         message("Could not construct label in get_edges().")
       })
-      keep_cols <- c("label", dots[["columns"]])
+      keep_cols <- c("label", keep_cols)
     }
   }
 
 
 
-  tmp <- data.frame(as.list(x)[ c("from", "to", "arrow", keep_cols) ], check.names=FALSE)
-
+  tmp <- x #data.frame(as.list(x)[ c("from", "to", "arrow", keep_cols) ], check.names=FALSE)
+  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", keep_cols))
+  keep_cols <- keep_cols[keep_cols %in% names(tmp)]
 
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
+  tmp <- tmp[, keep_cols, drop = FALSE]
   class(tmp) <- c("tidy_edges", class(tmp))
   attr(tmp, "which_label") <- label
   row.names(tmp) <- NULL

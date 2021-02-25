@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-generate_svgs <- FALSE
+generate_svgs <- TRUE
 ```
 
 `tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programmatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
@@ -511,7 +511,7 @@ which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
 have an argument `columns` which adds auxiliary columns to the resulting data.frames.
 This can be used to customize visual aspects of the edges and nodes based on, for example, the value of the estimates:
 
-```{r, eval = FALSE}
+```{r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
 fit <- sem("mpg ~ cyl
            mpg ~ am", data = mtcars)
 
@@ -525,7 +525,7 @@ edges(p) %>%
 
 plot(p)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r, eval = FALSE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
 fit <- sem("mpg ~ cyl
            mpg ~ am", data = mtcars)
 set.seed(15)
@@ -539,6 +539,6 @@ edges(p) %>%
 
 p <- plot(p)
 
-if(generate_svgs) ggsave("pgfig8.svg", p, device = "svg", width= 4, height = 4)
+ggsave("pgfig8.svg", p, device = "svg", width= 4, height = 4)
 knitr::include_graphics("pgfig8.svg")
 ```
