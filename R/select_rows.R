@@ -1,3 +1,59 @@
+create_all_select_rows <- function(filename = "R/select_rows.R"){
+  txt <- readLines(filename)
+  out <- txt[1:grep("^# Automatically generated functions below here$", txt)]
+  # Prepare lists
+  fun_list <- list(
+    sig = 'as.numeric(pval) < .05',
+    non_sig = 'as.numeric(pval) >= .05',
+    fixed = 'is.na(pval)',
+    pos = 'as.numeric(est) > 0',
+    neg = 'as.numeric(est) < 0',
+    var = 'lhs == rhs & op == "~~"',
+    cov = 'lhs != rhs & op == "~~"',
+    reg = 'op == "~"',
+    loading = 'op == "=~"',
+    fixed_loading = 'op == "=~" & is.na(pval)',
+    mean = 'op == "~1"'
+  )
+  aes_list <- list(
+    colour = '"black"',
+    color = '"black"',
+    linetype = '1',
+    size = '1',
+    alpha = '1'
+  )
+
+  # Get templates
+  template <- txt[grepl("^#A?[XY]", txt)]
+  # Create aes templates
+  aes_temp <- template[grepl("^#A[XY]", template)]
+  # Remove from template
+  template <- template[!grepl("^#A", template)]
+  # Clean up
+  aes_temp <- gsub("^#A", "#", aes_temp)
+  # All iterations
+  add_aes <- vector("character")
+  for(i in 1:length(aes_list)){
+    add_aes <- c(add_aes,
+                 gsub("AES", names(aes_list)[i], gsub("AES_DEFAULT", aes_list[[i]], aes_temp)),
+                 ""
+    )
+  }
+  # Append to template
+  template <- c(template, add_aes)
+
+  template <- gsub("^#X ", "", template)
+  template <- gsub("^#Y", "#'", template)
+
+  for(i in 1:length(fun_list)){
+    out <- c(out,
+             gsub("COND", fun_list[[i]], gsub("NAME", names(fun_list)[i], template)),
+             ""
+    )
+  }
+  writeLines(out, "R/select_rows.R")
+}
+
 #' @title Apply an expression to an object based on a condition
 #' @description This function allows users to conditionally manipulate an
 #' object.
@@ -46,6 +102,7 @@ all_fun <- function(data, expr, condition, ...){
 #' @method all_fun data.frame
 #' @export
 all_fun.data.frame <- function(data, expr, condition, ...){
+  #browser()
   cl <- match.call()
   cl <- cl[c(1, match(c("data", "condition"), names(cl)))]
   names(cl)[which(names(cl) == "condition")] <- "expr"
@@ -67,11 +124,12 @@ all_fun.data.frame <- function(data, expr, condition, ...){
 }
 
 #' @method all_fun sem_graph
-#' @param element Character. The element of the \code{sem_graph} to edit,
-#' defaults to \code{"edges"}.
+#' @param element Character vector. The elements of the \code{sem_graph} to
+#' edit, defaults to \code{"edges"}.
 #' @rdname all_fun
 #' @export
 all_fun.sem_graph <- function(data, expr, condition, element = "edges", ...){
+  browser()
   cl <- match.call()
   cl[[1L]] <- str2lang(gsub("\\..*$", "", deparse(substitute(cl)[[1L]])))
   out <- data
@@ -84,25 +142,6 @@ all_fun.sem_graph <- function(data, expr, condition, element = "edges", ...){
   }
   out
 }
-
-
-# @title Set 'show' column of an object to FALSE based on a condition
-# @description This function allows users to conditionally set the 'show'
-# column of an object to \code{FALSE}. If no 'show' column exists yet, it will
-# be added.
-# @param data Object to manipulate.
-# @param ... Additional arguments passed to and from functions.
-# @return Object of the same class as \code{data}.
-# @examples
-# library(lavaan)
-# res <- sem("dist ~ speed", cars, meanstructure = TRUE)
-# hide_fun(table_results(res), {label = "bla"}, {pval < .05})
-# @rdname all_fun
-# @export
-# all_fun <- function(data, expr, condition, ...){
-#   UseMethod("all_fun", data)
-# }
-
 
 # Template function
 #Y @export
@@ -153,37 +192,6 @@ all_fun.sem_graph <- function(data, expr, condition, element = "edges", ...){
 #X   eval.parent(cl)
 #X }
 
-# @export
-# @param colour Atomic character vector, indicating which color to assign to
-# the selected elements.
-# @rdname all_fun
-# colour_NAME <- function(data, colour, ...){
-#   dots <- list(...)
-#   if(inherits(data, "sem_graph")){
-#     if("element" %in% names(dots)){
-#       these_elements <- dots[["element"]][dots[["element"]] %in% names(data)]
-#     } else {
-#       these_elements <- formals(get("all_fun.sem_graph"), envir = environment())$element
-#     }
-#     for(el in these_elements){
-#       if(all(!c("color", "colour") %in% names(data[[el]]))){
-#         data[[el]]$colour <- "black"
-#       }
-#     }
-#   }
-#   if(inherits(data, "data.frame")){
-#     if(all(!c("color", "colour") %in% names(data))){
-#       data$colour <- "black"
-#     }
-#   }
-#   cl <- match.call()
-#   cl[["data"]] <- data
-#   cl[["condition"]] <- substitute(COND)
-#   cl[["expr"]] <- str2lang(paste0("colour = '", colour, "'"))
-#   cl[[1L]] <- quote(all_fun)
-#   eval.parent(cl)
-# }
-
 #AY @export
 #AY @param AES Atomic character vector, indicating which AES to assign to
 #AY the selected elements.
@@ -216,122 +224,6 @@ all_fun.sem_graph <- function(data, expr, condition, element = "edges", ...){
 #AX }
 
 # End template
-#Fun list
-# sig = as.numeric(pval) < .05
-# non_sig = as.numeric(pval) >= .05
-# fixed = is.na(pval)
-# pos = as.numeric(est) > 0
-# neg = as.numeric(est) < 0
-# var = lhs == rhs & op == "~~"
-# cov = lhs != rhs & op == "~~"
-# reg = op == "~"
-# loading = op == "=~"
-# fixed_loading = op == "=~" & is.na(pval)
-# mean = op == "~1"
-# End fun list
-#Aes list
-# colour = "black"
-# color = "black"
-# linetype = 1
-# size = 1
-# alpha = 1
-# End aes list
-
-create_all_select_rows <- function(filename = "R/select_rows.R"){
-  txt <- readLines(filename)
-  out <- txt[1:grep("^# Automatically generated functions below here$", txt)]
-  # Prepare lists
-  fun_list <- list(
-    sig = 'as.numeric(pval) < .05',
-    non_sig = 'as.numeric(pval) >= .05',
-    fixed = 'is.na(pval)',
-    pos = 'as.numeric(est) > 0',
-    neg = 'as.numeric(est) < 0',
-    var = 'lhs == rhs & op == "~~"',
-    cov = 'lhs != rhs & op == "~~"',
-    reg = 'op == "~"',
-    loading = 'op == "=~"',
-    fixed_loading = 'op == "=~" & is.na(pval)',
-    mean = 'op == "~1"'
-  )
-  aes_list <- list(
-    colour = '"black"',
-    color = '"black"',
-    linetype = '1',
-    size = '1',
-    alpha = '1'
-  )
-
-  # Get templates
-  template <- txt[grepl("^#A?[XY]", txt)]
-  # Create aes templates
-  aes_temp <- template[grepl("^#A[XY]", template)]
-  # Remove from template
-  template <- template[!grepl("^#A", template)]
-  # Clean up
-  aes_temp <- gsub("^#A", "#", aes_temp)
-  # All iterations
-  add_aes <- vector("character")
-  for(i in 1:length(aes_list)){
-    add_aes <- c(add_aes,
-             gsub("AES", names(aes_list)[i], gsub("AES_DEFAULT", aes_list[[i]], aes_temp)),
-             ""
-    )
-  }
-  # Append to template
-  template <- c(template, add_aes)
-
-  template <- gsub("^#X ", "", template)
-  template <- gsub("^#Y", "#'", template)
-
-  for(i in 1:length(fun_list)){
-    out <- c(out,
-             gsub("COND", fun_list[[i]], gsub("NAME", names(fun_list)[i], template)),
-             ""
-             )
-  }
-  writeLines(out, "R/select_rows.R")
-}
-# Below code to generate functions
-# txt <- readLines("R/select_rows.R")
-# out <- txt[1:grep("^# Automatically generated functions below here$", txt)]
-# # Prepare lists
-# fun_list <- txt[(which(txt == "#Fun list")+1):(which(txt == "# End fun list")-1)]
-# fun_list <- gsub("# ", "", fun_list)
-# fun_list <- strsplit(fun_list, " = ")
-# aes_list <- txt[(which(txt == "#Aes list")+1):(which(txt == "# End aes list")-1)]
-# aes_list <- gsub("# ", "", aes_list)
-# aes_list <- strsplit(aes_list, " = ")
-# # Get templates
-# template <- txt[grepl("^#A?[XY]", txt)]
-# # Create aes templates
-# aes_temp <- template[grepl("^#A[XY]", template)]
-# # Remove from template
-# template <- template[!grepl("^#A", template)]
-# # Clean up
-# aes_temp <- gsub("^#A", "#", aes_temp)
-# # All iterations
-# add_aes <- vector("character")
-# for(i in aes_list){
-#   add_aes <- c(add_aes,
-#            gsub("AES", i[1], gsub("AES_DEFAULT", i[2], aes_temp)),
-#            ""
-#   )
-# }
-# # Append to template
-# template <- c(template, add_aes)
-#
-# template <- gsub("^#X ", "", template)
-# template <- gsub("^#Y", "#'", template)
-#
-# for(i in fun_list){
-#   out <- c(out,
-#            gsub("COND", i[2], gsub("NAME", i[1], template)),
-#            ""
-#            )
-# }
-# writeLines(out, "R/select_rows.R")
-
 
 # Automatically generated functions below here
 #' @export

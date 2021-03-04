@@ -48,10 +48,11 @@ test_that("all_fun and its derivatives work", {
   # plot(tmp)
   #
   # plot(colour_fixed(p, "red"))
-  # p$edges$pval[4] <- "0.5"
-  # plot(linetype_non_sig(p, 3))
-  # p$nodes$pval[3] <- "0.5"
-  # tmp <- linetype_non_sig(p, 2, elements = c("nodes", "edges"))
+#
+# tmp$edges$pval[4] <- "0.5"
+# plot(linetype_non_sig(tmp, 3))
+#   tmp$nodes$pval[3] <- "0.5"
+#   plot(linetype_non_sig(tmp, 2, elements = c("nodes", "edges")))
   # tmp$edges
   #
   # plot(tmp)

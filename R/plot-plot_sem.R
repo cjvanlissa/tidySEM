@@ -702,7 +702,9 @@ get_nodes.lavaan <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
   cl["columns"] <- list(NULL)
   cl[[1L]] <- quote(table_results)
   cl$x <- eval.parent(cl)
-
+  # if(!fit@Options[["meanstructure"]]){
+  #   message("Use the argument 'meanstructure = TRUE' in the lavaan call to obtain information about node means.")
+  # }
   if("columns" %in% names(dots)){
     cl["columns"] <- dots["columns"]
   }
@@ -854,6 +856,7 @@ get_edges <- function(x, label = "est_sig", ...){
 get_edges.lavaan <- function(x, label = "est_sig", ...){
   dots <- list(...)
   cl <- match.call()
+  cl[["label"]] <- force(label)
   cl[[1L]] <- quote(table_results)
   cl["columns"] <- list(NULL)
   cl$x <- eval.parent(cl)

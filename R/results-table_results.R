@@ -596,6 +596,9 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
                     names(results)[names(results) %in% last_cols])
     results <- results[, order_cols, drop = FALSE]
   }
+  if("label" %in% names(results)){
+    names(results)[names(results) == "label"] <- "lavaan_label"
+  }
   class(results) <- c("tidy_results", class(results))
   results
 }
