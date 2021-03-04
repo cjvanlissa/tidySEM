@@ -512,8 +512,12 @@ lav_getParameterLabels <-
 #' @export
 table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   # Rename dictionary for consistency with mplus
+  user_specified <- partable(x)
+  user_specified <- (user_specified$free != 0 | !is.na(user_specified$ustart))
+
   rename_dict <- c("pvalue" = "pval")
   pars_unst <- parameterEstimates(x)
+
   # Rename columns for consistency with mplus
   names(pars_unst)[match(names(rename_dict), names(pars_unst))] <- rename_dict[names(rename_dict) %in% names(pars_unst)]
   pars_unst$label <- lavaan_labels(pars_unst)
@@ -600,6 +604,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
     names(results)[names(results) == "label"] <- "lavaan_label"
   }
   class(results) <- c("tidy_results", class(results))
+  attr(results, "user_specified") <- user_specified
   results
 }
 

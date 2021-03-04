@@ -441,7 +441,9 @@ prepare_graph.default <- function(edges = NULL,
   order_nodes <- c(order_nodes, names(df_nodes)[!names(df_nodes) %in% order_nodes])
   # Order and add 'show' column
   if(nrow(df_nodes) > 0){
-    df_nodes <- cbind(df_nodes[, order_nodes], show = TRUE)
+    if(!"show" %in% names(df_nodes)){
+      df_nodes <- cbind(df_nodes[, order_nodes], show = TRUE)
+    }
   }
   out$nodes <- df_nodes
   order_edges <- c("from", "to", "label", "group", "level","arrow", "curvature", "connect_from", "connect_to")
@@ -449,7 +451,9 @@ prepare_graph.default <- function(edges = NULL,
   order_edges <- c(order_edges, names(df_edges)[!names(df_edges) %in% order_edges])
   # Order and add 'show' column
   if(nrow(df_edges) > 0){
-    df_edges <- cbind(df_edges[, order_edges], show = TRUE)
+    if(!"show" %in% names(df_edges)){
+      df_edges <- cbind(df_edges[, order_edges], show = TRUE)
+    }
   }
   out$edges <- df_edges
   out$layout <- NULL
@@ -885,6 +889,9 @@ get_edges.mplus.model <- get_edges.lavaan
 get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FALSE){
   dots <- list(...)
   cl <- match.call()
+  if(!is.null(attr(x, "user_specified"))){
+    x$show <- attr(x, "user_specified")
+  }
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
       cl$x <- x[x$group == i, -which(names(x) == "group")]
