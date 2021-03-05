@@ -91,7 +91,6 @@ edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
 #' @keywords tidy_graph
 #' @export
 graph_sem <- function(...){
-
   UseMethod("graph_sem")
 }
 
@@ -150,7 +149,6 @@ graph_sem.default <- function(edges = NULL,
                               ...){
   cl <- match.call()
 
-
   cl[[1L]] <- quote(prepare_graph)
   prep <- eval.parent(cl)
   plot(prep)
@@ -172,13 +170,22 @@ graph_sem.lavaan <- function(model,
                              nodes = get_nodes(x = model),
                              ...){
   dots <- list(...)
-  if("label" %in% names(dots)){
-    message("The function graph_sem() no longer has an argument 'label'; instead, a character label or expression can be passed to get_edges() or get_nodes().")
+  params_table_res <- c("label", "digits", "columns")
+  edges <- substitute(edges)
+  nodes <- substitute(nodes)
+  if(any(params_table_res %in% names(dots))){
+    # if("label" %in% names(dots)){
+    #   message("Note that the 'label' argument now has different default settings for get_edges() and get_nodes(). See ?get_edges and ?get_nodes.")
+    # }
+    for(thispar in params_table_res[params_table_res %in% names(dots)]){
+      edges[[thispar]] <- nodes[[thispar]] <- dots[[thispar]]
+    }
   }
+
   cl <- match.call()
-  cl$edges <- eval(edges, environment())
+  cl$edges <- eval(edges)
   cl$layout <- eval(layout, environment())
-  cl$nodes <- eval(nodes, environment())
+  cl$nodes <- eval(nodes)
   cl[["model"]] <- NULL
   cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
   eval.parent(cl)
@@ -480,9 +487,20 @@ prepare_graph.lavaan <- function(model,
                                  nodes = get_nodes(x = model),
                                  ...){
   dots <- list(...)
-  if("label" %in% names(dots)){
-    message("The function prepare_graph() no longer has an argument 'label'; instead, a character label or expression can be passed to get_edges() or get_nodes().")
+  params_table_res <- c("label", "digits", "columns")
+  edges <- substitute(edges)
+  nodes <- substitute(nodes)
+  if(any(params_table_res %in% names(dots))){
+    # if("label" %in% names(dots)){
+    #   message("Note that the 'label' argument now has different default settings for get_edges() and get_nodes(). See ?get_edges and ?get_nodes.")
+    #   }
+    for(thispar in params_table_res[params_table_res %in% names(dots)]){
+      edges[[thispar]] <- nodes[[thispar]] <- dots[[thispar]]
+    }
   }
+  edges <- eval(edges)
+  nodes <- eval(nodes)
+
   Args <- all_args()
   do.call(prepare_graph_model, Args)
 }
@@ -892,7 +910,7 @@ get_edges.mplus.model <- get_edges.lavaan
 
 #' @method get_edges tidy_results
 #' @export
-get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FALSE){
+get_edges.tidy_results <- function(x, label = "est_sig", ...){
   dots <- list(...)
   cl <- match.call()
   if(!is.null(attr(x, "user_specified"))){
@@ -917,9 +935,6 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
       tmp
     })
     return(do.call(rbind, x_list))
-  }
-  if(remove_fixed){
-    x <- x[!x$se == "", ]
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
   keep_cols <- names(x)
