@@ -129,7 +129,6 @@ all_fun.data.frame <- function(data, expr, condition, ...){
 #' @rdname all_fun
 #' @export
 all_fun.sem_graph <- function(data, expr, condition, element = "edges", ...){
-  browser()
   cl <- match.call()
   cl[[1L]] <- str2lang(gsub("\\..*$", "", deparse(substitute(cl)[[1L]])))
   out <- data

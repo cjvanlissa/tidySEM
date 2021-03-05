@@ -3,26 +3,24 @@ library(lavaan)
 test_that("all_fun and its derivatives work", {
   fit <- sem("mpg ~ cyl\nmpg ~ am", data = mtcars, meanstructure = TRUE)
 
-  p <- prepare_graph(model = fit,
-                     nodes = get_nodes(fit, columns = NULL),
-                     edges = get_edges(fit, columns = NULL))
+  p <- prepare_graph(model = fit)
 
   tmp <- hide_sig(p)
-  expect_equivalent(tmp$edges$show, c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE))
+  expect_true(all(!tmp$edges$show))
   expect_error(plot(tmp), NA)
 
   tmp <- hide_fixed(p)
-  expect_equivalent(tmp$edges$show, c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE))
+  expect_equivalent(tmp$edges$show, p$edges$show)
   expect_error(plot(tmp), NA)
 
   tmp <- hide_sig(p, element = c("nodes", "edges"))
-  expect_equivalent(tmp$edges$show, c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE))
+  expect_true(all(!tmp$edges$show))
   expect_equivalent(tmp$nodes$show, c(TRUE, TRUE, FALSE))
   expect_message(plot(tmp))
   expect_error(plot(tmp), NA)
 
   tmp <- hide_fixed(p, element = c("nodes", "edges"))
-  expect_equivalent(tmp$edges$show, c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE))
+  expect_equivalent(tmp$edges$show, !c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE))
   expect_equivalent(tmp$nodes$show, c(FALSE, FALSE, TRUE))
   expect_message(plot(tmp))
   expect_error(plot(tmp), NA)
@@ -38,7 +36,7 @@ test_that("all_fun and its derivatives work", {
   expect_error(plot(tmp), NA)
 
   tmp <- all_fun(p, {show = FALSE},  {grepl("3", confint_std)}, element = c("edges", "nodes"))
-  expect_equivalent(tmp$edges$show, c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE))
+  expect_equivalent(tmp$edges$show, c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE))
   expect_equivalent(tmp$nodes$show, c(FALSE, FALSE, TRUE))
   expect_error(plot(tmp), NA)
 

@@ -9,9 +9,9 @@ test_that("Multigroup labels are OK", {
              data = HolzingerSwineford1939,
              group = "school")
 
-  p <- prepare_graph(fit)$edges
+  p <- prepare_graph(fit)
 
 
-  expect_true(!any(grepl("Grant-White", p$label)))
-  expect_true(!any(grepl("TRUE", as.character(p$label))))
+  expect_true(!any(grepl("Grant-White", p$edges$label)))
+  expect_true(!any(grepl("TRUE", as.character(p$edges$label))))
 })

@@ -151,6 +151,9 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
                     names(results)[names(results) %in% last_cols])
     results <- results[, order_cols, drop = FALSE]
   }
+  if("label" %in% names(results)){
+    names(results)[names(results) == "label"] <- "lavaan_label"
+  }
   class(results) <- c("tidy_results", class(results))
   results
 }
@@ -507,7 +510,7 @@ table_cors.default <- function(x, value_column = "est_sig_std", digits = 2, ...)
 lav_getParameterLabels <-
   getFromNamespace("getParameterLabels", "lavaan")
 
-#' @importFrom lavaan parameterEstimates lavInspect standardizedsolution
+#' @importFrom lavaan parameterEstimates lavInspect standardizedsolution partable
 #' @method table_results lavaan
 #' @export
 table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){

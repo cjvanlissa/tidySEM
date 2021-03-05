@@ -160,18 +160,21 @@ graph_sem.default <- function(edges = NULL,
 #' @param model Instead of the edges argument, it is also possible to use the
 #' model argument and pass an object for which a method exists (e.g.,
 #' \code{mplus.model} or \code{lavaan}).
-#' @param label Character, indicating which column to use for node labels. Nodes
-#' are labeled with mean values of the observed/latent variables they represent.
-#' Defaults to 'est_sig', which consists of the estimate value with significance
-#' asterisks.
+# @param label Character, indicating which column to use for node labels. Nodes
+# are labeled with mean values of the observed/latent variables they represent.
+# Defaults to 'est_sig', which consists of the estimate value with significance
+# asterisks.
 #' @rdname graph_sem
 #' @export
 graph_sem.lavaan <- function(model,
-                             label = "est_sig",
-                             edges = get_edges(x = model, label = label),
+                             edges = get_edges(x = model),
                              layout = get_layout(x = model),
-                             nodes = get_nodes(x = model, label = label),
+                             nodes = get_nodes(x = model),
                              ...){
+  dots <- list(...)
+  if("label" %in% names(dots)){
+    message("The function graph_sem() no longer has an argument 'label'; instead, a character label or expression can be passed to get_edges() or get_nodes().")
+  }
   cl <- match.call()
   cl$edges <- eval(edges, environment())
   cl$layout <- eval(layout, environment())
@@ -465,18 +468,21 @@ prepare_graph.default <- function(edges = NULL,
 #' @param model Instead of the edges argument, it is also possible to use the
 #' model argument and pass an object for which a method exists (e.g.,
 #' \code{mplus.model} or \code{lavaan}).
-#' @param label Character, indicating which column to use for node labels. Nodes
-#' are labeled with mean values of the observed/latent variables they represent.
-#' Defaults to 'est_sig', which consists of the estimate value with significance
-#' asterisks.
+# @param label Character, indicating which column to use for node labels. Nodes
+# are labeled with mean values of the observed/latent variables they represent.
+# Defaults to 'est_sig', which consists of the estimate value with significance
+# asterisks.
 #' @rdname prepare_graph
 #' @export
 prepare_graph.lavaan <- function(model,
-                                 label = "est_sig",
-                                 edges = get_edges(x = model, label = label),
+                                 edges = get_edges(x = model),
                                  layout = get_layout(x = model),
-                                 nodes = get_nodes(x = model, label = label),
+                                 nodes = get_nodes(x = model),
                                  ...){
+  dots <- list(...)
+  if("label" %in% names(dots)){
+    message("The function prepare_graph() no longer has an argument 'label'; instead, a character label or expression can be passed to get_edges() or get_nodes().")
+  }
   Args <- all_args()
   do.call(prepare_graph_model, Args)
 }
@@ -860,7 +866,7 @@ get_edges <- function(x, label = "est_sig", ...){
 get_edges.lavaan <- function(x, label = "est_sig", ...){
   dots <- list(...)
   cl <- match.call()
-  cl[["label"]] <- force(label)
+  #cl[["label"]] <- force(label)
   cl[[1L]] <- quote(table_results)
   cl["columns"] <- list(NULL)
   cl$x <- eval.parent(cl)
@@ -954,11 +960,10 @@ get_edges.tidy_results <- function(x, label = "est_sig", ..., remove_fixed = FAL
 
 
   tmp <- x #data.frame(as.list(x)[ c("from", "to", "arrow", keep_cols) ], check.names=FALSE)
-  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", keep_cols))
-  keep_cols <- keep_cols[keep_cols %in% names(tmp)]
-
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
+  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", keep_cols))
+  keep_cols <- keep_cols[keep_cols %in% names(tmp)]
   tmp <- tmp[, keep_cols, drop = FALSE]
   class(tmp) <- c("tidy_edges", class(tmp))
   attr(tmp, "which_label") <- label
@@ -1097,7 +1102,7 @@ match.call.defaults <- function(...) {
 
   # Connect nodes -----------------------------------------------------------
 
-  curws <- df_edges$curvature
+  curws <- -1*df_edges$curvature
   # For columns
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
   xrange <- range(df_nodes$x)

@@ -306,8 +306,8 @@ environment of \code{data}.}
 
 \item{...}{Additional arguments passed to and from functions.}
 
-\item{element}{Character. The element of the \code{sem_graph} to edit,
-defaults to \code{"edges"}.}
+\item{element}{Character vector. The elements of the \code{sem_graph} to
+edit, defaults to \code{"edges"}.}
 
 \item{color}{Atomic character vector, indicating which color to assign to
 the selected elements.}
