@@ -109,13 +109,8 @@ table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "
 table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   Args <- list(x = x)
   cl <- match.call()
-  #cl <- cl[c(1, which(names(cl) %in% names(formals(internal_table_mplusmodel))))]
-  #cl[[1L]] <- str2lang("tidySEM:::internal_table_mplusmodel")
   get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
-  # all_res <- lapply(get_res, function(which_par){
-  #   cl[["parameters"]] <- which_par
-  #   eval.parent(cl)
-  #   })
+
   all_res <- lapply(get_res, function(which_par){do.call(internal_table_mplusmodel, c(Args, list(parameters = which_par, digits = digits)))})
   if(length(all_res) == 1){
     results <- all_res[[1]]
@@ -139,6 +134,10 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
   if("betweenwithin" %in% names(results)) names(results)[names(results) == "betweenwithin"] <- "level"
   # Drop id column
   results[["id"]] <- NULL
+  # Rename label to mplus_label
+  if("label" %in% names(results)){
+    names(results)[names(results) == "label"] <- "mplus_label"
+  }
   if(!is.null(columns)){
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
@@ -151,9 +150,7 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
                     names(results)[names(results) %in% last_cols])
     results <- results[, order_cols, drop = FALSE]
   }
-  if("label" %in% names(results)){
-    names(results)[names(results) == "label"] <- "lavaan_label"
-  }
+
   class(results) <- c("tidy_results", class(results))
   results
 }
@@ -520,10 +517,12 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 
   rename_dict <- c("pvalue" = "pval")
   pars_unst <- parameterEstimates(x)
-
+  if("label" %in% names(pars_unst)){
+    names(pars_unst)[names(pars_unst) == "label"] <- "lavaan_label"
+  }
   # Rename columns for consistency with mplus
   names(pars_unst)[match(names(rename_dict), names(pars_unst))] <- rename_dict[names(rename_dict) %in% names(pars_unst)]
-  pars_unst$label <- lavaan_labels(pars_unst)
+  pars_unst$mplus_label <- lavaan_labels(pars_unst)
 
   num_groups <- lavInspect(x, what = "ngroups")
   if(num_groups > 1){
@@ -533,10 +532,10 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
         pars_unst$group <- group_labels[pars_unst$group]
       }
     }
-    pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$group)
+    pars_unst$mplus_label <- paste0(pars_unst$mplus_label, ".", pars_unst$group)
   }
   if("level" %in% names(pars_unst)){
-    pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$level)
+    pars_unst$mplus_label <- paste0(pars_unst$mplus_label, ".", pars_unst$level)
   }
   # Unst
   # Call conf_int
@@ -591,20 +590,19 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   results[, value_columns] <- lapply(results[, value_columns],
                                        format_with_na, digits = digits, format = "f")
   results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
-
+  if("label" %in% names(results)){
+    names(results)[names(results) == "label"] <- "lavaan_label"
+  }
   if(!is.null(columns)){
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
     first_cols <- c("lhs", "op", "rhs", "est", "se", "pval", "est_sig", "confint",
                     "est_std", "se_std", "pval_std", "est_sig_std", "confint_std")
-    last_cols <- c("block", "group", "level", "label")
+    last_cols <- c("block", "group", "level", "lavaan_label", "mplus_label")
     order_cols <- c(names(results)[names(results) %in% first_cols],
                     names(results)[!names(results) %in% c(first_cols, last_cols)],
                     names(results)[names(results) %in% last_cols])
     results <- results[, order_cols, drop = FALSE]
-  }
-  if("label" %in% names(results)){
-    names(results)[names(results) == "label"] <- "lavaan_label"
   }
   class(results) <- c("tidy_results", class(results))
   attr(results, "user_specified") <- user_specified
