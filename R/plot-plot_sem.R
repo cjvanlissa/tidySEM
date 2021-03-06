@@ -758,6 +758,7 @@ get_nodes.mplus.model <- get_nodes.lavaan
 get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), label_name = TRUE, ...){
   dots <- list(...)
   cl <- match.call()
+  cl[[1L]] <- str2lang("tidySEM:::get_nodes.tidy_results")
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
       cl$x <- x[x$group == i, -which(names(x) == "group")]

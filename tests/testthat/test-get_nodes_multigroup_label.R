@@ -8,9 +8,6 @@ fit <- cfa(HS.model,
            data = HolzingerSwineford1939,
            group = "school")
 
-
-graph_sem(fit, nodes = get_nodes(fit, label = "name"))
-
 test_that("get_nodes correctly labels multigroup models", {
   expect_true(get_nodes(fit, label = "name")$label[1] == "speed")
 })
