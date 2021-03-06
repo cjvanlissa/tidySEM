@@ -757,9 +757,11 @@ get_nodes.mplus.model <- get_nodes.lavaan
 #' @export
 get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), label_name = TRUE, ...){
   dots <- list(...)
+  cl <- match.call()
   if("group" %in% names(x)){
     x_list <- lapply(unique(x$group), function(i){
-      tmp <- get_nodes(x = x[x$group == i, -which(names(x) == "group")])
+      cl$x <- x[x$group == i, -which(names(x) == "group")]
+      tmp <- eval(cl)
       tmp$group <- i
       tmp
     })
@@ -767,7 +769,8 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
   }
   if("level" %in% names(x)){
     x_list <- lapply(unique(x$level), function(i){
-      tmp <- get_nodes(x = x[x$level == i, -which(names(x) == "level")])
+      cl$x <- x[x$level == i, -which(names(x) == "level")]
+      tmp <- eval(cl)
       tmp$name <- paste0(tmp$name, ".", i)
       tmp$level <- i
       tmp
