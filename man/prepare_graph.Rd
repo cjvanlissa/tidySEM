@@ -29,19 +29,17 @@ prepare_graph(...)
 
 \method{prepare_graph}{lavaan}(
   model,
-  label = "est_sig",
-  edges = get_edges(x = model, label = label),
+  edges = get_edges(x = model),
   layout = get_layout(x = model),
-  nodes = get_nodes(x = model, label = label),
+  nodes = get_nodes(x = model),
   ...
 )
 
 \method{prepare_graph}{mplus.model}(
   model,
-  label = "est_sig",
-  edges = get_edges(x = model, label = label),
+  edges = get_edges(x = model),
   layout = get_layout(x = model),
-  nodes = get_nodes(x = model, label = label),
+  nodes = get_nodes(x = model),
   ...
 )
 }
@@ -100,11 +98,6 @@ Default: FALSE.}
 \item{model}{Instead of the edges argument, it is also possible to use the
 model argument and pass an object for which a method exists (e.g.,
 \code{mplus.model} or \code{lavaan}).}
-
-\item{label}{Character, indicating which column to use for node labels. Nodes
-are labeled with mean values of the observed/latent variables they represent.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.}
 }
 \value{
 Object of class 'sem_graph'
