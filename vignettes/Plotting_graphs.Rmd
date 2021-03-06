@@ -298,11 +298,11 @@ prepare_graph(fit) %>%
 ```
 
 Note that, by specifying both `"nodes"` and `"edges")`, both nodes and edges are edited - but in the preceding example, we actually want different labels for the nodes and edges (so that node labels are shown).
-For example, we can change the line color for both nodes and edges:
+For example, we can change the label color for both nodes and edges:
 
 ```{r}
 prepare_graph(fit) %>%
-  edit_graph({ color = "blue" }, element = c("nodes", "edges")) %>%
+  edit_graph({ label_color = "blue" }, element = c("nodes", "edges")) %>%
   plot()
 ```
 

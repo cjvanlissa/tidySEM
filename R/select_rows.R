@@ -45,7 +45,7 @@ create_all_select_rows <- function(filename = "R/select_rows.R"){
     label_location = '.5'
     )
   nodes_aes <- 'fill'
-  edges_aes <- grep('^label_', names(aes_list), value = TRUE)
+  edges_aes <- "label_location" #grep('^label_', names(aes_list), value = TRUE)
 
   # Get templates
   template <- txt[grepl("^#A?[XY]", txt)]
@@ -466,7 +466,7 @@ fill_sig <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_sig <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -480,7 +480,7 @@ label_colour_sig <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -492,7 +492,7 @@ label_colour_sig <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_sig <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -506,7 +506,7 @@ label_color_sig <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -518,7 +518,7 @@ label_color_sig <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_sig <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -532,7 +532,7 @@ label_fill_sig <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -544,7 +544,7 @@ label_fill_sig <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_sig <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -558,7 +558,7 @@ label_size_sig <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -570,7 +570,7 @@ label_size_sig <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_sig <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -584,7 +584,7 @@ label_alpha_sig <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -596,7 +596,7 @@ label_alpha_sig <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_sig <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -610,7 +610,7 @@ label_family_sig <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -622,7 +622,7 @@ label_family_sig <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_sig <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -636,7 +636,7 @@ label_fontface_sig <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -648,7 +648,7 @@ label_fontface_sig <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_sig <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -662,7 +662,7 @@ label_hjust_sig <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -674,7 +674,7 @@ label_hjust_sig <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_sig <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -688,7 +688,7 @@ label_vjust_sig <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -700,7 +700,7 @@ label_vjust_sig <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_sig <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -714,7 +714,7 @@ label_lineheight_sig <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -937,7 +937,7 @@ fill_nonsig <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_nonsig <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -951,7 +951,7 @@ label_colour_nonsig <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -963,7 +963,7 @@ label_colour_nonsig <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_nonsig <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -977,7 +977,7 @@ label_color_nonsig <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -989,7 +989,7 @@ label_color_nonsig <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_nonsig <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -1003,7 +1003,7 @@ label_fill_nonsig <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1015,7 +1015,7 @@ label_fill_nonsig <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_nonsig <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -1029,7 +1029,7 @@ label_size_nonsig <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1041,7 +1041,7 @@ label_size_nonsig <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_nonsig <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -1055,7 +1055,7 @@ label_alpha_nonsig <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1067,7 +1067,7 @@ label_alpha_nonsig <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_nonsig <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -1081,7 +1081,7 @@ label_family_nonsig <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1093,7 +1093,7 @@ label_family_nonsig <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_nonsig <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -1107,7 +1107,7 @@ label_fontface_nonsig <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1119,7 +1119,7 @@ label_fontface_nonsig <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_nonsig <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -1133,7 +1133,7 @@ label_hjust_nonsig <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1145,7 +1145,7 @@ label_hjust_nonsig <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_nonsig <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -1159,7 +1159,7 @@ label_vjust_nonsig <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1171,7 +1171,7 @@ label_vjust_nonsig <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_nonsig <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -1185,7 +1185,7 @@ label_lineheight_nonsig <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1408,7 +1408,7 @@ fill_fixed <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_fixed <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -1422,7 +1422,7 @@ label_colour_fixed <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1434,7 +1434,7 @@ label_colour_fixed <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_fixed <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -1448,7 +1448,7 @@ label_color_fixed <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1460,7 +1460,7 @@ label_color_fixed <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_fixed <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -1474,7 +1474,7 @@ label_fill_fixed <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1486,7 +1486,7 @@ label_fill_fixed <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_fixed <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -1500,7 +1500,7 @@ label_size_fixed <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1512,7 +1512,7 @@ label_size_fixed <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_fixed <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -1526,7 +1526,7 @@ label_alpha_fixed <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1538,7 +1538,7 @@ label_alpha_fixed <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_fixed <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -1552,7 +1552,7 @@ label_family_fixed <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1564,7 +1564,7 @@ label_family_fixed <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_fixed <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -1578,7 +1578,7 @@ label_fontface_fixed <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1590,7 +1590,7 @@ label_fontface_fixed <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_fixed <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -1604,7 +1604,7 @@ label_hjust_fixed <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1616,7 +1616,7 @@ label_hjust_fixed <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_fixed <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -1630,7 +1630,7 @@ label_vjust_fixed <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1642,7 +1642,7 @@ label_vjust_fixed <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_fixed <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -1656,7 +1656,7 @@ label_lineheight_fixed <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1879,7 +1879,7 @@ fill_pos <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_pos <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -1893,7 +1893,7 @@ label_colour_pos <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1905,7 +1905,7 @@ label_colour_pos <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_pos <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -1919,7 +1919,7 @@ label_color_pos <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1931,7 +1931,7 @@ label_color_pos <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_pos <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -1945,7 +1945,7 @@ label_fill_pos <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1957,7 +1957,7 @@ label_fill_pos <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_pos <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -1971,7 +1971,7 @@ label_size_pos <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -1983,7 +1983,7 @@ label_size_pos <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_pos <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -1997,7 +1997,7 @@ label_alpha_pos <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2009,7 +2009,7 @@ label_alpha_pos <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_pos <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -2023,7 +2023,7 @@ label_family_pos <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2035,7 +2035,7 @@ label_family_pos <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_pos <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -2049,7 +2049,7 @@ label_fontface_pos <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2061,7 +2061,7 @@ label_fontface_pos <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_pos <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -2075,7 +2075,7 @@ label_hjust_pos <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2087,7 +2087,7 @@ label_hjust_pos <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_pos <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -2101,7 +2101,7 @@ label_vjust_pos <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2113,7 +2113,7 @@ label_vjust_pos <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_pos <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -2127,7 +2127,7 @@ label_lineheight_pos <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2350,7 +2350,7 @@ fill_neg <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_neg <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -2364,7 +2364,7 @@ label_colour_neg <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2376,7 +2376,7 @@ label_colour_neg <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_neg <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -2390,7 +2390,7 @@ label_color_neg <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2402,7 +2402,7 @@ label_color_neg <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_neg <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -2416,7 +2416,7 @@ label_fill_neg <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2428,7 +2428,7 @@ label_fill_neg <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_neg <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -2442,7 +2442,7 @@ label_size_neg <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2454,7 +2454,7 @@ label_size_neg <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_neg <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -2468,7 +2468,7 @@ label_alpha_neg <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2480,7 +2480,7 @@ label_alpha_neg <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_neg <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -2494,7 +2494,7 @@ label_family_neg <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2506,7 +2506,7 @@ label_family_neg <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_neg <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -2520,7 +2520,7 @@ label_fontface_neg <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2532,7 +2532,7 @@ label_fontface_neg <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_neg <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -2546,7 +2546,7 @@ label_hjust_neg <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2558,7 +2558,7 @@ label_hjust_neg <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_neg <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -2572,7 +2572,7 @@ label_vjust_neg <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -2584,7 +2584,7 @@ label_vjust_neg <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_neg <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- c("edges", "nodes")
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -2598,7 +2598,7 @@ label_lineheight_neg <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4575,7 +4575,7 @@ fill_obs <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_obs <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -4589,7 +4589,7 @@ label_colour_obs <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4601,7 +4601,7 @@ label_colour_obs <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_obs <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -4615,7 +4615,7 @@ label_color_obs <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4627,7 +4627,7 @@ label_color_obs <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_obs <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -4641,7 +4641,7 @@ label_fill_obs <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4653,7 +4653,7 @@ label_fill_obs <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_obs <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -4667,7 +4667,7 @@ label_size_obs <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4679,7 +4679,7 @@ label_size_obs <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_obs <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -4693,7 +4693,7 @@ label_alpha_obs <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4705,7 +4705,7 @@ label_alpha_obs <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_obs <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -4719,7 +4719,7 @@ label_family_obs <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4731,7 +4731,7 @@ label_family_obs <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_obs <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -4745,7 +4745,7 @@ label_fontface_obs <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4757,7 +4757,7 @@ label_fontface_obs <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_obs <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -4771,7 +4771,7 @@ label_hjust_obs <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4783,7 +4783,7 @@ label_hjust_obs <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_obs <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -4797,7 +4797,7 @@ label_vjust_obs <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -4809,7 +4809,7 @@ label_vjust_obs <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_obs <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -4823,7 +4823,7 @@ label_lineheight_obs <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5046,7 +5046,7 @@ fill_latent <- function(data, fill = "white", ...){
 #' @rdname all_fun
 label_colour_latent <- function(data, label_colour = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_colour" %in% names(data[[el]])){
         data[[el]]$label_colour <- "black"
@@ -5060,7 +5060,7 @@ label_colour_latent <- function(data, label_colour = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5072,7 +5072,7 @@ label_colour_latent <- function(data, label_colour = "black", ...){
 #' @rdname all_fun
 label_color_latent <- function(data, label_color = "black", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_color" %in% names(data[[el]])){
         data[[el]]$label_color <- "black"
@@ -5086,7 +5086,7 @@ label_color_latent <- function(data, label_color = "black", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5098,7 +5098,7 @@ label_color_latent <- function(data, label_color = "black", ...){
 #' @rdname all_fun
 label_fill_latent <- function(data, label_fill = "white", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_fill" %in% names(data[[el]])){
         data[[el]]$label_fill <- "white"
@@ -5112,7 +5112,7 @@ label_fill_latent <- function(data, label_fill = "white", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5124,7 +5124,7 @@ label_fill_latent <- function(data, label_fill = "white", ...){
 #' @rdname all_fun
 label_size_latent <- function(data, label_size = 4, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_size" %in% names(data[[el]])){
         data[[el]]$label_size <- 4
@@ -5138,7 +5138,7 @@ label_size_latent <- function(data, label_size = 4, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5150,7 +5150,7 @@ label_size_latent <- function(data, label_size = 4, ...){
 #' @rdname all_fun
 label_alpha_latent <- function(data, label_alpha = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_alpha" %in% names(data[[el]])){
         data[[el]]$label_alpha <- 1
@@ -5164,7 +5164,7 @@ label_alpha_latent <- function(data, label_alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5176,7 +5176,7 @@ label_alpha_latent <- function(data, label_alpha = 1, ...){
 #' @rdname all_fun
 label_family_latent <- function(data, label_family = "sans", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_family" %in% names(data[[el]])){
         data[[el]]$label_family <- "sans"
@@ -5190,7 +5190,7 @@ label_family_latent <- function(data, label_family = "sans", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5202,7 +5202,7 @@ label_family_latent <- function(data, label_family = "sans", ...){
 #' @rdname all_fun
 label_fontface_latent <- function(data, label_fontface = "plain", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_fontface" %in% names(data[[el]])){
         data[[el]]$label_fontface <- "plain"
@@ -5216,7 +5216,7 @@ label_fontface_latent <- function(data, label_fontface = "plain", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5228,7 +5228,7 @@ label_fontface_latent <- function(data, label_fontface = "plain", ...){
 #' @rdname all_fun
 label_hjust_latent <- function(data, label_hjust = "center", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_hjust" %in% names(data[[el]])){
         data[[el]]$label_hjust <- "center"
@@ -5242,7 +5242,7 @@ label_hjust_latent <- function(data, label_hjust = "center", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5254,7 +5254,7 @@ label_hjust_latent <- function(data, label_hjust = "center", ...){
 #' @rdname all_fun
 label_vjust_latent <- function(data, label_vjust = "middle", ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_vjust" %in% names(data[[el]])){
         data[[el]]$label_vjust <- "middle"
@@ -5268,7 +5268,7 @@ label_vjust_latent <- function(data, label_vjust = "middle", ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5280,7 +5280,7 @@ label_vjust_latent <- function(data, label_vjust = "middle", ...){
 #' @rdname all_fun
 label_lineheight_latent <- function(data, label_lineheight = 1, ...){
   if(inherits(data, "sem_graph")){
-    these_elements <- "edges"
+    these_elements <- "nodes"
     for(el in these_elements){
       if(!"label_lineheight" %in% names(data[[el]])){
         data[[el]]$label_lineheight <- 1
@@ -5294,7 +5294,7 @@ label_lineheight_latent <- function(data, label_lineheight = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
-  cl[["element"]] <- "edges"
+  cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
   eval.parent(cl)
@@ -5485,6 +5485,266 @@ alpha_sig_nodes <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_sig_nodes <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_sig_nodes <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_sig_nodes <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_sig_nodes <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_sig_nodes <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_sig_nodes <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_sig_nodes <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_sig_nodes <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_sig_nodes <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_sig_nodes <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
 #' @rdname all_fun
 all_nonsig_nodes <- function(data, expr, ...){
   cl <- match.call()
@@ -5638,6 +5898,266 @@ alpha_nonsig_nodes <- function(data, alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_nonsig_nodes <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_nonsig_nodes <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_nonsig_nodes <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_nonsig_nodes <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_nonsig_nodes <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_nonsig_nodes <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_nonsig_nodes <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_nonsig_nodes <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_nonsig_nodes <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_nonsig_nodes <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
@@ -5803,6 +6323,266 @@ alpha_fixed_nodes <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_fixed_nodes <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_fixed_nodes <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_fixed_nodes <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_fixed_nodes <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_fixed_nodes <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_fixed_nodes <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_fixed_nodes <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_fixed_nodes <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_fixed_nodes <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_fixed_nodes <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
 #' @rdname all_fun
 all_pos_nodes <- function(data, expr, ...){
   cl <- match.call()
@@ -5956,6 +6736,266 @@ alpha_pos_nodes <- function(data, alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_pos_nodes <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_pos_nodes <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_pos_nodes <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_pos_nodes <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_pos_nodes <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_pos_nodes <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_pos_nodes <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_pos_nodes <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_pos_nodes <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_pos_nodes <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
@@ -6121,6 +7161,266 @@ alpha_neg_nodes <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_neg_nodes <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_neg_nodes <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_neg_nodes <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_neg_nodes <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_neg_nodes <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_neg_nodes <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_neg_nodes <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_neg_nodes <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_neg_nodes <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_neg_nodes <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
+  cl[["element"]] <- "nodes"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
 #' @rdname all_fun
 all_sig_edges <- function(data, expr, ...){
   cl <- match.call()
@@ -6274,6 +7574,266 @@ alpha_sig_edges <- function(data, alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_sig_edges <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_sig_edges <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_sig_edges <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_sig_edges <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_sig_edges <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_sig_edges <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_sig_edges <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_sig_edges <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_sig_edges <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_sig_edges <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) < .05)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
@@ -6439,6 +7999,266 @@ alpha_nonsig_edges <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_nonsig_edges <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_nonsig_edges <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_nonsig_edges <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_nonsig_edges <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_nonsig_edges <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_nonsig_edges <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_nonsig_edges <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_nonsig_edges <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_nonsig_edges <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_nonsig_edges <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
 #' @rdname all_fun
 all_fixed_edges <- function(data, expr, ...){
   cl <- match.call()
@@ -6592,6 +8412,266 @@ alpha_fixed_edges <- function(data, alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_fixed_edges <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_fixed_edges <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_fixed_edges <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_fixed_edges <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_fixed_edges <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_fixed_edges <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_fixed_edges <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_fixed_edges <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_fixed_edges <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_fixed_edges <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(is.na(pval))
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)
@@ -6757,6 +8837,266 @@ alpha_pos_edges <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_pos_edges <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_pos_edges <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_pos_edges <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_pos_edges <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_pos_edges <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_pos_edges <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_pos_edges <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_pos_edges <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_pos_edges <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_pos_edges <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) > 0)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
 #' @rdname all_fun
 all_neg_edges <- function(data, expr, ...){
   cl <- match.call()
@@ -6910,6 +9250,266 @@ alpha_neg_edges <- function(data, alpha = 1, ...){
   cl[["data"]] <- data
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_colour_neg_edges <- function(data, label_colour = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_color_neg_edges <- function(data, label_color = "black", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fill_neg_edges <- function(data, label_fill = "white", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_size_neg_edges <- function(data, label_size = 4, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_alpha_neg_edges <- function(data, label_alpha = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_family_neg_edges <- function(data, label_family = "sans", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_fontface_neg_edges <- function(data, label_fontface = "plain", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_hjust_neg_edges <- function(data, label_hjust = "center", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_vjust_neg_edges <- function(data, label_vjust = "middle", ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
+  cl[["element"]] <- "edges"
+  cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
+  cl[[1L]] <- quote(all_fun)
+  eval.parent(cl)
+}
+#' @export
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
+#' the selected elements.
+#' @rdname all_fun
+label_lineheight_neg_edges <- function(data, label_lineheight = 1, ...){
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
+    }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
+  }
+  cl <- match.call()
+  cl[["data"]] <- data
+  cl[["condition"]] <- substitute(as.numeric(est) < 0)
+  cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
   cl[[1L]] <- quote(all_fun)

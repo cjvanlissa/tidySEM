@@ -226,6 +226,16 @@
 \alias{linetype_sig_nodes}
 \alias{size_sig_nodes}
 \alias{alpha_sig_nodes}
+\alias{label_colour_sig_nodes}
+\alias{label_color_sig_nodes}
+\alias{label_fill_sig_nodes}
+\alias{label_size_sig_nodes}
+\alias{label_alpha_sig_nodes}
+\alias{label_family_sig_nodes}
+\alias{label_fontface_sig_nodes}
+\alias{label_hjust_sig_nodes}
+\alias{label_vjust_sig_nodes}
+\alias{label_lineheight_sig_nodes}
 \alias{all_nonsig_nodes}
 \alias{hide_nonsig_nodes}
 \alias{show_nonsig_nodes}
@@ -234,6 +244,16 @@
 \alias{linetype_nonsig_nodes}
 \alias{size_nonsig_nodes}
 \alias{alpha_nonsig_nodes}
+\alias{label_colour_nonsig_nodes}
+\alias{label_color_nonsig_nodes}
+\alias{label_fill_nonsig_nodes}
+\alias{label_size_nonsig_nodes}
+\alias{label_alpha_nonsig_nodes}
+\alias{label_family_nonsig_nodes}
+\alias{label_fontface_nonsig_nodes}
+\alias{label_hjust_nonsig_nodes}
+\alias{label_vjust_nonsig_nodes}
+\alias{label_lineheight_nonsig_nodes}
 \alias{all_fixed_nodes}
 \alias{hide_fixed_nodes}
 \alias{show_fixed_nodes}
@@ -242,6 +262,16 @@
 \alias{linetype_fixed_nodes}
 \alias{size_fixed_nodes}
 \alias{alpha_fixed_nodes}
+\alias{label_colour_fixed_nodes}
+\alias{label_color_fixed_nodes}
+\alias{label_fill_fixed_nodes}
+\alias{label_size_fixed_nodes}
+\alias{label_alpha_fixed_nodes}
+\alias{label_family_fixed_nodes}
+\alias{label_fontface_fixed_nodes}
+\alias{label_hjust_fixed_nodes}
+\alias{label_vjust_fixed_nodes}
+\alias{label_lineheight_fixed_nodes}
 \alias{all_pos_nodes}
 \alias{hide_pos_nodes}
 \alias{show_pos_nodes}
@@ -250,6 +280,16 @@
 \alias{linetype_pos_nodes}
 \alias{size_pos_nodes}
 \alias{alpha_pos_nodes}
+\alias{label_colour_pos_nodes}
+\alias{label_color_pos_nodes}
+\alias{label_fill_pos_nodes}
+\alias{label_size_pos_nodes}
+\alias{label_alpha_pos_nodes}
+\alias{label_family_pos_nodes}
+\alias{label_fontface_pos_nodes}
+\alias{label_hjust_pos_nodes}
+\alias{label_vjust_pos_nodes}
+\alias{label_lineheight_pos_nodes}
 \alias{all_neg_nodes}
 \alias{hide_neg_nodes}
 \alias{show_neg_nodes}
@@ -258,6 +298,16 @@
 \alias{linetype_neg_nodes}
 \alias{size_neg_nodes}
 \alias{alpha_neg_nodes}
+\alias{label_colour_neg_nodes}
+\alias{label_color_neg_nodes}
+\alias{label_fill_neg_nodes}
+\alias{label_size_neg_nodes}
+\alias{label_alpha_neg_nodes}
+\alias{label_family_neg_nodes}
+\alias{label_fontface_neg_nodes}
+\alias{label_hjust_neg_nodes}
+\alias{label_vjust_neg_nodes}
+\alias{label_lineheight_neg_nodes}
 \alias{all_sig_edges}
 \alias{hide_sig_edges}
 \alias{show_sig_edges}
@@ -266,6 +316,16 @@
 \alias{linetype_sig_edges}
 \alias{size_sig_edges}
 \alias{alpha_sig_edges}
+\alias{label_colour_sig_edges}
+\alias{label_color_sig_edges}
+\alias{label_fill_sig_edges}
+\alias{label_size_sig_edges}
+\alias{label_alpha_sig_edges}
+\alias{label_family_sig_edges}
+\alias{label_fontface_sig_edges}
+\alias{label_hjust_sig_edges}
+\alias{label_vjust_sig_edges}
+\alias{label_lineheight_sig_edges}
 \alias{all_nonsig_edges}
 \alias{hide_nonsig_edges}
 \alias{show_nonsig_edges}
@@ -274,6 +334,16 @@
 \alias{linetype_nonsig_edges}
 \alias{size_nonsig_edges}
 \alias{alpha_nonsig_edges}
+\alias{label_colour_nonsig_edges}
+\alias{label_color_nonsig_edges}
+\alias{label_fill_nonsig_edges}
+\alias{label_size_nonsig_edges}
+\alias{label_alpha_nonsig_edges}
+\alias{label_family_nonsig_edges}
+\alias{label_fontface_nonsig_edges}
+\alias{label_hjust_nonsig_edges}
+\alias{label_vjust_nonsig_edges}
+\alias{label_lineheight_nonsig_edges}
 \alias{all_fixed_edges}
 \alias{hide_fixed_edges}
 \alias{show_fixed_edges}
@@ -282,6 +352,16 @@
 \alias{linetype_fixed_edges}
 \alias{size_fixed_edges}
 \alias{alpha_fixed_edges}
+\alias{label_colour_fixed_edges}
+\alias{label_color_fixed_edges}
+\alias{label_fill_fixed_edges}
+\alias{label_size_fixed_edges}
+\alias{label_alpha_fixed_edges}
+\alias{label_family_fixed_edges}
+\alias{label_fontface_fixed_edges}
+\alias{label_hjust_fixed_edges}
+\alias{label_vjust_fixed_edges}
+\alias{label_lineheight_fixed_edges}
 \alias{all_pos_edges}
 \alias{hide_pos_edges}
 \alias{show_pos_edges}
@@ -290,6 +370,16 @@
 \alias{linetype_pos_edges}
 \alias{size_pos_edges}
 \alias{alpha_pos_edges}
+\alias{label_colour_pos_edges}
+\alias{label_color_pos_edges}
+\alias{label_fill_pos_edges}
+\alias{label_size_pos_edges}
+\alias{label_alpha_pos_edges}
+\alias{label_family_pos_edges}
+\alias{label_fontface_pos_edges}
+\alias{label_hjust_pos_edges}
+\alias{label_vjust_pos_edges}
+\alias{label_lineheight_pos_edges}
 \alias{all_neg_edges}
 \alias{hide_neg_edges}
 \alias{show_neg_edges}
@@ -298,6 +388,16 @@
 \alias{linetype_neg_edges}
 \alias{size_neg_edges}
 \alias{alpha_neg_edges}
+\alias{label_colour_neg_edges}
+\alias{label_color_neg_edges}
+\alias{label_fill_neg_edges}
+\alias{label_size_neg_edges}
+\alias{label_alpha_neg_edges}
+\alias{label_family_neg_edges}
+\alias{label_fontface_neg_edges}
+\alias{label_hjust_neg_edges}
+\alias{label_vjust_neg_edges}
+\alias{label_lineheight_neg_edges}
 \title{Apply a conditional expression to a sem_graph object}
 \usage{
 all_fun(data, expr, condition, ...)
@@ -750,6 +850,26 @@ size_sig_nodes(data, size = 1, ...)
 
 alpha_sig_nodes(data, alpha = 1, ...)
 
+label_colour_sig_nodes(data, label_colour = "black", ...)
+
+label_color_sig_nodes(data, label_color = "black", ...)
+
+label_fill_sig_nodes(data, label_fill = "white", ...)
+
+label_size_sig_nodes(data, label_size = 4, ...)
+
+label_alpha_sig_nodes(data, label_alpha = 1, ...)
+
+label_family_sig_nodes(data, label_family = "sans", ...)
+
+label_fontface_sig_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_sig_nodes(data, label_hjust = "center", ...)
+
+label_vjust_sig_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_sig_nodes(data, label_lineheight = 1, ...)
+
 all_nonsig_nodes(data, expr, ...)
 
 hide_nonsig_nodes(data, ...)
@@ -765,6 +885,26 @@ linetype_nonsig_nodes(data, linetype = 1, ...)
 size_nonsig_nodes(data, size = 1, ...)
 
 alpha_nonsig_nodes(data, alpha = 1, ...)
+
+label_colour_nonsig_nodes(data, label_colour = "black", ...)
+
+label_color_nonsig_nodes(data, label_color = "black", ...)
+
+label_fill_nonsig_nodes(data, label_fill = "white", ...)
+
+label_size_nonsig_nodes(data, label_size = 4, ...)
+
+label_alpha_nonsig_nodes(data, label_alpha = 1, ...)
+
+label_family_nonsig_nodes(data, label_family = "sans", ...)
+
+label_fontface_nonsig_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_nonsig_nodes(data, label_hjust = "center", ...)
+
+label_vjust_nonsig_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_nonsig_nodes(data, label_lineheight = 1, ...)
 
 all_fixed_nodes(data, expr, ...)
 
@@ -782,6 +922,26 @@ size_fixed_nodes(data, size = 1, ...)
 
 alpha_fixed_nodes(data, alpha = 1, ...)
 
+label_colour_fixed_nodes(data, label_colour = "black", ...)
+
+label_color_fixed_nodes(data, label_color = "black", ...)
+
+label_fill_fixed_nodes(data, label_fill = "white", ...)
+
+label_size_fixed_nodes(data, label_size = 4, ...)
+
+label_alpha_fixed_nodes(data, label_alpha = 1, ...)
+
+label_family_fixed_nodes(data, label_family = "sans", ...)
+
+label_fontface_fixed_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_fixed_nodes(data, label_hjust = "center", ...)
+
+label_vjust_fixed_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_fixed_nodes(data, label_lineheight = 1, ...)
+
 all_pos_nodes(data, expr, ...)
 
 hide_pos_nodes(data, ...)
@@ -797,6 +957,26 @@ linetype_pos_nodes(data, linetype = 1, ...)
 size_pos_nodes(data, size = 1, ...)
 
 alpha_pos_nodes(data, alpha = 1, ...)
+
+label_colour_pos_nodes(data, label_colour = "black", ...)
+
+label_color_pos_nodes(data, label_color = "black", ...)
+
+label_fill_pos_nodes(data, label_fill = "white", ...)
+
+label_size_pos_nodes(data, label_size = 4, ...)
+
+label_alpha_pos_nodes(data, label_alpha = 1, ...)
+
+label_family_pos_nodes(data, label_family = "sans", ...)
+
+label_fontface_pos_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_pos_nodes(data, label_hjust = "center", ...)
+
+label_vjust_pos_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_pos_nodes(data, label_lineheight = 1, ...)
 
 all_neg_nodes(data, expr, ...)
 
@@ -814,6 +994,26 @@ size_neg_nodes(data, size = 1, ...)
 
 alpha_neg_nodes(data, alpha = 1, ...)
 
+label_colour_neg_nodes(data, label_colour = "black", ...)
+
+label_color_neg_nodes(data, label_color = "black", ...)
+
+label_fill_neg_nodes(data, label_fill = "white", ...)
+
+label_size_neg_nodes(data, label_size = 4, ...)
+
+label_alpha_neg_nodes(data, label_alpha = 1, ...)
+
+label_family_neg_nodes(data, label_family = "sans", ...)
+
+label_fontface_neg_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_neg_nodes(data, label_hjust = "center", ...)
+
+label_vjust_neg_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_neg_nodes(data, label_lineheight = 1, ...)
+
 all_sig_edges(data, expr, ...)
 
 hide_sig_edges(data, ...)
@@ -829,6 +1029,26 @@ linetype_sig_edges(data, linetype = 1, ...)
 size_sig_edges(data, size = 1, ...)
 
 alpha_sig_edges(data, alpha = 1, ...)
+
+label_colour_sig_edges(data, label_colour = "black", ...)
+
+label_color_sig_edges(data, label_color = "black", ...)
+
+label_fill_sig_edges(data, label_fill = "white", ...)
+
+label_size_sig_edges(data, label_size = 4, ...)
+
+label_alpha_sig_edges(data, label_alpha = 1, ...)
+
+label_family_sig_edges(data, label_family = "sans", ...)
+
+label_fontface_sig_edges(data, label_fontface = "plain", ...)
+
+label_hjust_sig_edges(data, label_hjust = "center", ...)
+
+label_vjust_sig_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_sig_edges(data, label_lineheight = 1, ...)
 
 all_nonsig_edges(data, expr, ...)
 
@@ -846,6 +1066,26 @@ size_nonsig_edges(data, size = 1, ...)
 
 alpha_nonsig_edges(data, alpha = 1, ...)
 
+label_colour_nonsig_edges(data, label_colour = "black", ...)
+
+label_color_nonsig_edges(data, label_color = "black", ...)
+
+label_fill_nonsig_edges(data, label_fill = "white", ...)
+
+label_size_nonsig_edges(data, label_size = 4, ...)
+
+label_alpha_nonsig_edges(data, label_alpha = 1, ...)
+
+label_family_nonsig_edges(data, label_family = "sans", ...)
+
+label_fontface_nonsig_edges(data, label_fontface = "plain", ...)
+
+label_hjust_nonsig_edges(data, label_hjust = "center", ...)
+
+label_vjust_nonsig_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_nonsig_edges(data, label_lineheight = 1, ...)
+
 all_fixed_edges(data, expr, ...)
 
 hide_fixed_edges(data, ...)
@@ -861,6 +1101,26 @@ linetype_fixed_edges(data, linetype = 1, ...)
 size_fixed_edges(data, size = 1, ...)
 
 alpha_fixed_edges(data, alpha = 1, ...)
+
+label_colour_fixed_edges(data, label_colour = "black", ...)
+
+label_color_fixed_edges(data, label_color = "black", ...)
+
+label_fill_fixed_edges(data, label_fill = "white", ...)
+
+label_size_fixed_edges(data, label_size = 4, ...)
+
+label_alpha_fixed_edges(data, label_alpha = 1, ...)
+
+label_family_fixed_edges(data, label_family = "sans", ...)
+
+label_fontface_fixed_edges(data, label_fontface = "plain", ...)
+
+label_hjust_fixed_edges(data, label_hjust = "center", ...)
+
+label_vjust_fixed_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_fixed_edges(data, label_lineheight = 1, ...)
 
 all_pos_edges(data, expr, ...)
 
@@ -878,6 +1138,26 @@ size_pos_edges(data, size = 1, ...)
 
 alpha_pos_edges(data, alpha = 1, ...)
 
+label_colour_pos_edges(data, label_colour = "black", ...)
+
+label_color_pos_edges(data, label_color = "black", ...)
+
+label_fill_pos_edges(data, label_fill = "white", ...)
+
+label_size_pos_edges(data, label_size = 4, ...)
+
+label_alpha_pos_edges(data, label_alpha = 1, ...)
+
+label_family_pos_edges(data, label_family = "sans", ...)
+
+label_fontface_pos_edges(data, label_fontface = "plain", ...)
+
+label_hjust_pos_edges(data, label_hjust = "center", ...)
+
+label_vjust_pos_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_pos_edges(data, label_lineheight = 1, ...)
+
 all_neg_edges(data, expr, ...)
 
 hide_neg_edges(data, ...)
@@ -893,6 +1173,26 @@ linetype_neg_edges(data, linetype = 1, ...)
 size_neg_edges(data, size = 1, ...)
 
 alpha_neg_edges(data, alpha = 1, ...)
+
+label_colour_neg_edges(data, label_colour = "black", ...)
+
+label_color_neg_edges(data, label_color = "black", ...)
+
+label_fill_neg_edges(data, label_fill = "white", ...)
+
+label_size_neg_edges(data, label_size = 4, ...)
+
+label_alpha_neg_edges(data, label_alpha = 1, ...)
+
+label_family_neg_edges(data, label_family = "sans", ...)
+
+label_fontface_neg_edges(data, label_fontface = "plain", ...)
+
+label_hjust_neg_edges(data, label_hjust = "center", ...)
+
+label_vjust_neg_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_neg_edges(data, label_lineheight = 1, ...)
 }
 \arguments{
 \item{data}{Object to manipulate.}
