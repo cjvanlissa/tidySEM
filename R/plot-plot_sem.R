@@ -1107,7 +1107,8 @@ match.call.defaults <- function(...) {
   if(any(df$shape == "oval")){
     p <- .oval_node(p, df = df[df$shape == "oval", ], oval_width = ellipses_width, oval_height = ellipses_height, npoints = 360)
   }
-  p + geom_text(data = df, aes_string(x = "x", y = "y", label = "label"), size = text_size)
+  # Hier
+  .plot_label_internal(p = p, df = df, text_size = text_size)
 }
 
 .determine_connections <- function(df_nodes, df_edges, angle){

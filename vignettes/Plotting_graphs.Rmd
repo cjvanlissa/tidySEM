@@ -215,8 +215,12 @@ knitr::include_graphics("pgfig2_1.png")
 
 For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running `get_nodes()`:
 
-```{r}
+```{r, eval = TRUE}
 get_nodes(fit)
+```
+
+```{r, eval = FALSE, echo = FALSE, results= "asis"}
+knitr::kable(get_nodes(fit))
 ```
 
 And for the edges:
@@ -224,6 +228,10 @@ And for the edges:
 ```{r}
 get_edges(fit)
 ```
+
+Note that only the first few columns are used for plotting (specifically, `from`, `to`, `arrow`, `label`, `connect_from`, `connect_to`, and `curvature`).
+The remaining columns correspond to the output of `table_results(fit)`.
+These auxiliary columns can be used to conditionally customize the graph (e.g., changing the color or linetype for significant paths only).
 
 #### Customizing node and edge labels
 
@@ -236,8 +244,9 @@ This allows you to customize node and edge labels. For example, maybe you want t
 get_edges(fit, label = paste(est, confint))
 ```
 
-We can do the same for the nodes, but at this time, the mean structure is **not** part of the model, so `table_results()` will not retrieve any parameter estimates for the nodes.
-Unless `label = NULL`, `get_nodes()` will use the node name as a label when no further information is available.
+We can do the same for the nodes, but note that in the previous `lavaan` model, the mean structure was **not** part of the model.
+As the nodes represent means and intercepts, `table_results()` will not retrieve any parameter estimates for the nodes when the mean structure is not part of the model.
+In absence of additional information about the nodes, `get_nodes()` will use the node name as a label.To remove all node labels, specify `label = NULL`.
 
 We can re-run the model with a mean structure to get more information about the nodes:
 
@@ -250,30 +259,55 @@ Running `get_nodes()` now uses the estimated means in the label:
 ```{r}
 get_nodes(fit)
 ```
+
 These labels can be further customized as shown below:
 
 ```{r}
 get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
 ```
-<!--#### Customize labels 
+
+#### Customize labels of a `sem_graph`
 
 Instead of customizing the node and edge labels in the call to `get_nodes()` and `get_edges()`,
-it is also possible to request auxiliary columns, and use these to customize the labels (or other properties of the plot) later.
-By default, all available columns are included
-Below is an example for `get_edges()`, but the same mechanism applies to `get_nodes()`:
+it is also possible to use the auxiliary columns in the `nodes` and `edges` elements of a `sem_graph` object to customize the labels (or other properties of the plot) later.
+First, let's generate a `sem_graph` object and examine the `edges` element:
+<!-- Refer back to the output above of `get_edges(fit)` to see that, by default, -->
+<!-- all columns returned by `table_results()` are included. -->
+<!-- Let's use these columns  -->
 
-```r
-get_edges(fit, label = "est", columns = "pval")
+```{r}
+p <- prepare_graph(fit)
+edges(p)
 ```
 
-We can use this information to manually construct labels:
+All of the columns in the edges element can be used to manually construct labels, using the `edit_graph()` function:
 
-```r
-get_edges(fit, label = "est", columns = c("est", "pval")) %>%
-  within({ label[!is.na(pval)] = paste0(est[!is.na(pval)], ", p = ", pval[!is.na(pval)])})
+```{r}
+prepare_graph(fit) %>%
+  edit_graph({ label = paste(est_sig_std, "\n", confint_std) }) %>%
+  plot()
 ```
 
-The section on **Visual aspects** demonstrates how to use these auxiliary columns to customize visual properties of the graph.-->
+The same can be done for the node labels:
+
+```{r}
+prepare_graph(fit) %>%
+  edit_graph({ label = paste(est_sig_std, "\n", confint_std) }) %>%
+  edit_graph({ label = paste(name, "\n", est_sig_std, "\n", confint_std) }, element = "nodes") %>%
+  plot()
+```
+
+Note that, by specifying both `"nodes"` and `"edges")`, both nodes and edges are edited - but in the preceding example, we actually want different labels for the nodes and edges (so that node labels are shown).
+For example, we can change the line color for both nodes and edges:
+
+```{r}
+prepare_graph(fit) %>%
+  edit_graph({ color = "blue" }, element = c("nodes", "edges")) %>%
+  plot()
+```
+
+
+The section on **Visual aspects** further demonstrates how to use these auxiliary columns to customize visual properties of the graph.
 
 ### Optional step 5: accessing graph data before plotting
 
