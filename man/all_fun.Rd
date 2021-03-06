@@ -908,55 +908,72 @@ the environment of \code{data}.}
 \item{element}{Character vector. The elements of the \code{sem_graph} to
 edit, defaults to \code{"edges"}.}
 
-\item{colour}{Atomic character vector, indicating which colour to assign to
+\item{colour}{Atomic character vector,
+indicating which colour to assign to
 the selected elements.}
 
-\item{color}{Atomic character vector, indicating which color to assign to
+\item{color}{Atomic character vector,
+indicating which color to assign to
 the selected elements.}
 
-\item{linetype}{Atomic character vector, indicating which linetype to assign to
+\item{linetype}{Atomic character vector,
+indicating which linetype to assign to
 the selected elements.}
 
-\item{size}{Atomic character vector, indicating which size to assign to
+\item{size}{Atomic character vector,
+indicating which size to assign to
 the selected elements.}
 
-\item{alpha}{Atomic character vector, indicating which alpha to assign to
+\item{alpha}{Atomic character vector,
+indicating which alpha to assign to
 the selected elements.}
 
-\item{fill}{Atomic character vector, indicating which fill to assign to
+\item{fill}{Atomic character vector,
+indicating which fill to assign to
 the selected elements.}
 
-\item{label_colour}{Atomic character vector, indicating which label_colour to assign to
+\item{label_colour}{Atomic character vector,
+indicating which label_colour to assign to
 the selected elements.}
 
-\item{label_color}{Atomic character vector, indicating which label_color to assign to
+\item{label_color}{Atomic character vector,
+indicating which label_color to assign to
 the selected elements.}
 
-\item{label_fill}{Atomic character vector, indicating which label_fill to assign to
+\item{label_fill}{Atomic character vector,
+indicating which label_fill to assign to
 the selected elements.}
 
-\item{label_size}{Atomic character vector, indicating which label_size to assign to
+\item{label_size}{Atomic character vector,
+indicating which label_size to assign to
 the selected elements.}
 
-\item{label_alpha}{Atomic character vector, indicating which label_alpha to assign to
+\item{label_alpha}{Atomic character vector,
+indicating which label_alpha to assign to
 the selected elements.}
 
-\item{label_family}{Atomic character vector, indicating which label_family to assign to
+\item{label_family}{Atomic character vector,
+indicating which label_family to assign to
 the selected elements.}
 
-\item{label_fontface}{Atomic character vector, indicating which label_fontface to assign to
+\item{label_fontface}{Atomic character vector,
+indicating which label_fontface to assign to
 the selected elements.}
 
-\item{label_hjust}{Atomic character vector, indicating which label_hjust to assign to
+\item{label_hjust}{Atomic character vector,
+indicating which label_hjust to assign to
 the selected elements.}
 
-\item{label_vjust}{Atomic character vector, indicating which label_vjust to assign to
+\item{label_vjust}{Atomic character vector,
+indicating which label_vjust to assign to
 the selected elements.}
 
-\item{label_lineheight}{Atomic character vector, indicating which label_lineheight to assign to
+\item{label_lineheight}{Atomic character vector,
+indicating which label_lineheight to assign to
 the selected elements.}
 
-\item{label_location}{Atomic character vector, indicating which label_location to assign to
+\item{label_location}{Atomic character vector,
+indicating which label_location to assign to
 the selected elements.}
 }
 \value{

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7.1</span>
       </span>
     </div>
 
@@ -197,79 +197,79 @@ variable for multilevel models, if available.</p></td>
            data <span class='op'>=</span> <span class='va'>HolzingerSwineford1939</span>,
            group <span class='op'>=</span> <span class='st'>"school"</span><span class='op'>)</span>
 <span class='fu'>table_results</span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                              label est_sig   se pval       confint       group
-#&gt; 1             visual.BY.x1.Pasteur    1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur
-#&gt; 2             visual.BY.x2.Pasteur  0.39** 0.12 0.00  [0.15, 0.63]     Pasteur
-#&gt; 3             visual.BY.x3.Pasteur 0.57*** 0.14 0.00  [0.30, 0.84]     Pasteur
-#&gt; 4            textual.BY.x4.Pasteur    1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur
-#&gt; 5            textual.BY.x5.Pasteur 1.18*** 0.10 0.00  [0.98, 1.38]     Pasteur
-#&gt; 6            textual.BY.x6.Pasteur 0.87*** 0.08 0.00  [0.72, 1.03]     Pasteur
-#&gt; 7              speed.BY.x7.Pasteur    1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur
-#&gt; 8              speed.BY.x8.Pasteur 1.12*** 0.28 0.00  [0.58, 1.67]     Pasteur
-#&gt; 9              speed.BY.x9.Pasteur 0.92*** 0.22 0.00  [0.48, 1.36]     Pasteur
-#&gt; 10            Variances.x1.Pasteur    0.30 0.23 0.20 [-0.16, 0.75]     Pasteur
-#&gt; 11            Variances.x2.Pasteur 1.33*** 0.16 0.00  [1.02, 1.64]     Pasteur
-#&gt; 12            Variances.x3.Pasteur 0.99*** 0.14 0.00  [0.72, 1.26]     Pasteur
-#&gt; 13            Variances.x4.Pasteur 0.43*** 0.07 0.00  [0.29, 0.56]     Pasteur
-#&gt; 14            Variances.x5.Pasteur 0.46*** 0.09 0.00  [0.29, 0.62]     Pasteur
-#&gt; 15            Variances.x6.Pasteur 0.29*** 0.05 0.00  [0.19, 0.39]     Pasteur
-#&gt; 16            Variances.x7.Pasteur 0.82*** 0.12 0.00  [0.58, 1.06]     Pasteur
-#&gt; 17            Variances.x8.Pasteur 0.51*** 0.12 0.00  [0.28, 0.74]     Pasteur
-#&gt; 18            Variances.x9.Pasteur 0.68*** 0.10 0.00  [0.48, 0.88]     Pasteur
-#&gt; 19        Variances.visual.Pasteur 1.10*** 0.28 0.00  [0.55, 1.64]     Pasteur
-#&gt; 20       Variances.textual.Pasteur 0.89*** 0.15 0.00  [0.60, 1.19]     Pasteur
-#&gt; 21         Variances.speed.Pasteur  0.35** 0.13 0.01  [0.10, 0.60]     Pasteur
-#&gt; 22     visual.WITH.textual.Pasteur 0.48*** 0.11 0.00  [0.27, 0.69]     Pasteur
-#&gt; 23       visual.WITH.speed.Pasteur   0.19* 0.08 0.02  [0.03, 0.34]     Pasteur
-#&gt; 24      textual.WITH.speed.Pasteur  0.18** 0.07 0.01  [0.05, 0.32]     Pasteur
-#&gt; 25                Means.x1.Pasteur 4.94*** 0.09 0.00  [4.76, 5.13]     Pasteur
-#&gt; 26                Means.x2.Pasteur 5.98*** 0.10 0.00  [5.79, 6.18]     Pasteur
-#&gt; 27                Means.x3.Pasteur 2.49*** 0.09 0.00  [2.31, 2.67]     Pasteur
-#&gt; 28                Means.x4.Pasteur 2.82*** 0.09 0.00  [2.64, 3.00]     Pasteur
-#&gt; 29                Means.x5.Pasteur 4.00*** 0.10 0.00  [3.79, 4.20]     Pasteur
-#&gt; 30                Means.x6.Pasteur 1.92*** 0.08 0.00  [1.77, 2.08]     Pasteur
-#&gt; 31                Means.x7.Pasteur 4.43*** 0.09 0.00  [4.26, 4.60]     Pasteur
-#&gt; 32                Means.x8.Pasteur 5.56*** 0.08 0.00  [5.41, 5.72]     Pasteur
-#&gt; 33                Means.x9.Pasteur 5.42*** 0.08 0.00  [5.26, 5.57]     Pasteur
-#&gt; 34            Means.visual.Pasteur    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur
-#&gt; 35           Means.textual.Pasteur    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur
-#&gt; 36             Means.speed.Pasteur    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur
-#&gt; 37        visual.BY.x1.Grant-White    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White
-#&gt; 38        visual.BY.x2.Grant-White 0.74*** 0.15 0.00  [0.43, 1.04] Grant-White
-#&gt; 39        visual.BY.x3.Grant-White 0.92*** 0.17 0.00  [0.60, 1.25] Grant-White
-#&gt; 40       textual.BY.x4.Grant-White    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White
-#&gt; 41       textual.BY.x5.Grant-White 0.99*** 0.09 0.00  [0.82, 1.16] Grant-White
-#&gt; 42       textual.BY.x6.Grant-White 0.96*** 0.08 0.00  [0.80, 1.13] Grant-White
-#&gt; 43         speed.BY.x7.Grant-White    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White
-#&gt; 44         speed.BY.x8.Grant-White 1.23*** 0.19 0.00  [0.86, 1.59] Grant-White
-#&gt; 45         speed.BY.x9.Grant-White 1.06*** 0.16 0.00  [0.74, 1.38] Grant-White
-#&gt; 46        Variances.x1.Grant-White 0.71*** 0.13 0.00  [0.47, 0.96] Grant-White
-#&gt; 47        Variances.x2.Grant-White 0.90*** 0.12 0.00  [0.66, 1.14] Grant-White
-#&gt; 48        Variances.x3.Grant-White 0.56*** 0.10 0.00  [0.36, 0.76] Grant-White
-#&gt; 49        Variances.x4.Grant-White 0.32*** 0.06 0.00  [0.19, 0.44] Grant-White
-#&gt; 50        Variances.x5.Grant-White 0.42*** 0.07 0.00  [0.28, 0.56] Grant-White
-#&gt; 51        Variances.x6.Grant-White 0.41*** 0.07 0.00  [0.27, 0.54] Grant-White
-#&gt; 52        Variances.x7.Grant-White 0.60*** 0.09 0.00  [0.42, 0.78] Grant-White
-#&gt; 53        Variances.x8.Grant-White 0.40*** 0.09 0.00  [0.22, 0.59] Grant-White
-#&gt; 54        Variances.x9.Grant-White 0.53*** 0.09 0.00  [0.36, 0.71] Grant-White
-#&gt; 55    Variances.visual.Grant-White 0.60*** 0.16 0.00  [0.29, 0.92] Grant-White
-#&gt; 56   Variances.textual.Grant-White 0.94*** 0.15 0.00  [0.64, 1.24] Grant-White
-#&gt; 57     Variances.speed.Grant-White 0.46*** 0.12 0.00  [0.23, 0.69] Grant-White
-#&gt; 58 visual.WITH.textual.Grant-White 0.41*** 0.10 0.00  [0.22, 0.60] Grant-White
-#&gt; 59   visual.WITH.speed.Grant-White 0.28*** 0.08 0.00  [0.13, 0.42] Grant-White
-#&gt; 60  textual.WITH.speed.Grant-White  0.22** 0.07 0.00  [0.08, 0.37] Grant-White
-#&gt; 61            Means.x1.Grant-White 4.93*** 0.10 0.00  [4.74, 5.12] Grant-White
-#&gt; 62            Means.x2.Grant-White 6.20*** 0.09 0.00  [6.02, 6.38] Grant-White
-#&gt; 63            Means.x3.Grant-White 2.00*** 0.09 0.00  [1.83, 2.16] Grant-White
-#&gt; 64            Means.x4.Grant-White 3.32*** 0.09 0.00  [3.13, 3.50] Grant-White
-#&gt; 65            Means.x5.Grant-White 4.71*** 0.10 0.00  [4.52, 4.90] Grant-White
-#&gt; 66            Means.x6.Grant-White 2.47*** 0.09 0.00  [2.28, 2.65] Grant-White
-#&gt; 67            Means.x7.Grant-White 3.92*** 0.09 0.00  [3.75, 4.09] Grant-White
-#&gt; 68            Means.x8.Grant-White 5.49*** 0.09 0.00  [5.32, 5.66] Grant-White
-#&gt; 69            Means.x9.Grant-White 5.33*** 0.09 0.00  [5.16, 5.49] Grant-White
-#&gt; 70        Means.visual.Grant-White    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White
-#&gt; 71       Means.textual.Grant-White    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White
-#&gt; 72         Means.speed.Grant-White    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White</div></pre>
+</div><div class='output co'>#&gt;    est_sig   se pval       confint       group
+#&gt; 1     1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur
+#&gt; 2   0.39** 0.12 0.00  [0.15, 0.63]     Pasteur
+#&gt; 3  0.57*** 0.14 0.00  [0.30, 0.84]     Pasteur
+#&gt; 4     1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur
+#&gt; 5  1.18*** 0.10 0.00  [0.98, 1.38]     Pasteur
+#&gt; 6  0.87*** 0.08 0.00  [0.72, 1.03]     Pasteur
+#&gt; 7     1.00 0.00 &lt;NA&gt;  [1.00, 1.00]     Pasteur
+#&gt; 8  1.12*** 0.28 0.00  [0.58, 1.67]     Pasteur
+#&gt; 9  0.92*** 0.22 0.00  [0.48, 1.36]     Pasteur
+#&gt; 10    0.30 0.23 0.20 [-0.16, 0.75]     Pasteur
+#&gt; 11 1.33*** 0.16 0.00  [1.02, 1.64]     Pasteur
+#&gt; 12 0.99*** 0.14 0.00  [0.72, 1.26]     Pasteur
+#&gt; 13 0.43*** 0.07 0.00  [0.29, 0.56]     Pasteur
+#&gt; 14 0.46*** 0.09 0.00  [0.29, 0.62]     Pasteur
+#&gt; 15 0.29*** 0.05 0.00  [0.19, 0.39]     Pasteur
+#&gt; 16 0.82*** 0.12 0.00  [0.58, 1.06]     Pasteur
+#&gt; 17 0.51*** 0.12 0.00  [0.28, 0.74]     Pasteur
+#&gt; 18 0.68*** 0.10 0.00  [0.48, 0.88]     Pasteur
+#&gt; 19 1.10*** 0.28 0.00  [0.55, 1.64]     Pasteur
+#&gt; 20 0.89*** 0.15 0.00  [0.60, 1.19]     Pasteur
+#&gt; 21  0.35** 0.13 0.01  [0.10, 0.60]     Pasteur
+#&gt; 22 0.48*** 0.11 0.00  [0.27, 0.69]     Pasteur
+#&gt; 23   0.19* 0.08 0.02  [0.03, 0.34]     Pasteur
+#&gt; 24  0.18** 0.07 0.01  [0.05, 0.32]     Pasteur
+#&gt; 25 4.94*** 0.09 0.00  [4.76, 5.13]     Pasteur
+#&gt; 26 5.98*** 0.10 0.00  [5.79, 6.18]     Pasteur
+#&gt; 27 2.49*** 0.09 0.00  [2.31, 2.67]     Pasteur
+#&gt; 28 2.82*** 0.09 0.00  [2.64, 3.00]     Pasteur
+#&gt; 29 4.00*** 0.10 0.00  [3.79, 4.20]     Pasteur
+#&gt; 30 1.92*** 0.08 0.00  [1.77, 2.08]     Pasteur
+#&gt; 31 4.43*** 0.09 0.00  [4.26, 4.60]     Pasteur
+#&gt; 32 5.56*** 0.08 0.00  [5.41, 5.72]     Pasteur
+#&gt; 33 5.42*** 0.08 0.00  [5.26, 5.57]     Pasteur
+#&gt; 34    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur
+#&gt; 35    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur
+#&gt; 36    0.00 0.00 &lt;NA&gt;  [0.00, 0.00]     Pasteur
+#&gt; 37    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White
+#&gt; 38 0.74*** 0.15 0.00  [0.43, 1.04] Grant-White
+#&gt; 39 0.92*** 0.17 0.00  [0.60, 1.25] Grant-White
+#&gt; 40    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White
+#&gt; 41 0.99*** 0.09 0.00  [0.82, 1.16] Grant-White
+#&gt; 42 0.96*** 0.08 0.00  [0.80, 1.13] Grant-White
+#&gt; 43    1.00 0.00 &lt;NA&gt;  [1.00, 1.00] Grant-White
+#&gt; 44 1.23*** 0.19 0.00  [0.86, 1.59] Grant-White
+#&gt; 45 1.06*** 0.16 0.00  [0.74, 1.38] Grant-White
+#&gt; 46 0.71*** 0.13 0.00  [0.47, 0.96] Grant-White
+#&gt; 47 0.90*** 0.12 0.00  [0.66, 1.14] Grant-White
+#&gt; 48 0.56*** 0.10 0.00  [0.36, 0.76] Grant-White
+#&gt; 49 0.32*** 0.06 0.00  [0.19, 0.44] Grant-White
+#&gt; 50 0.42*** 0.07 0.00  [0.28, 0.56] Grant-White
+#&gt; 51 0.41*** 0.07 0.00  [0.27, 0.54] Grant-White
+#&gt; 52 0.60*** 0.09 0.00  [0.42, 0.78] Grant-White
+#&gt; 53 0.40*** 0.09 0.00  [0.22, 0.59] Grant-White
+#&gt; 54 0.53*** 0.09 0.00  [0.36, 0.71] Grant-White
+#&gt; 55 0.60*** 0.16 0.00  [0.29, 0.92] Grant-White
+#&gt; 56 0.94*** 0.15 0.00  [0.64, 1.24] Grant-White
+#&gt; 57 0.46*** 0.12 0.00  [0.23, 0.69] Grant-White
+#&gt; 58 0.41*** 0.10 0.00  [0.22, 0.60] Grant-White
+#&gt; 59 0.28*** 0.08 0.00  [0.13, 0.42] Grant-White
+#&gt; 60  0.22** 0.07 0.00  [0.08, 0.37] Grant-White
+#&gt; 61 4.93*** 0.10 0.00  [4.74, 5.12] Grant-White
+#&gt; 62 6.20*** 0.09 0.00  [6.02, 6.38] Grant-White
+#&gt; 63 2.00*** 0.09 0.00  [1.83, 2.16] Grant-White
+#&gt; 64 3.32*** 0.09 0.00  [3.13, 3.50] Grant-White
+#&gt; 65 4.71*** 0.10 0.00  [4.52, 4.90] Grant-White
+#&gt; 66 2.47*** 0.09 0.00  [2.28, 2.65] Grant-White
+#&gt; 67 3.92*** 0.09 0.00  [3.75, 4.09] Grant-White
+#&gt; 68 5.49*** 0.09 0.00  [5.32, 5.66] Grant-White
+#&gt; 69 5.33*** 0.09 0.00  [5.16, 5.49] Grant-White
+#&gt; 70    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White
+#&gt; 71    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White
+#&gt; 72    0.00 0.00 &lt;NA&gt;  [0.00, 0.00] Grant-White</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

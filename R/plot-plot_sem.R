@@ -57,13 +57,29 @@ edit_graph <- function(x, expr, element = "edges", ...){
 #' @method edit_graph sem_graph
 #' @export
 edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
-  if(!element %in% names(x)){
-    stop("Element ", element, " is not an element of the sem_graph object.", call. = FALSE)
+  if(!all(element %in% names(x))){
+    stop("Element ", element[!element %in% names(x)], " is not an element of the sem_graph object.", call. = FALSE)
   }
-  Args <- c(list(data = x[[element]]), as.list(match.call()[-c(1, which(names(as.list(match.call())) %in% c("x", "element")))]))
-  x[[element]] <- do.call(within, Args)
+  cl <- match.call()
+  for(el in element){
+    cl[[1L]] <- quote(edit_graph)
+    cl[["x"]] <- x[[el]]
+    cl <- cl[c(1, match(c("x", "expr"), names(cl)))]
+    x[[el]] <- eval.parent(cl)
+  }
   x
 }
+
+#' @method edit_graph data.frame
+#' @export
+edit_graph.data.frame <- function(x, expr, ...){
+  cl <- match.call()
+  cl[[1L]] <- quote(within)
+  names(cl)[names(cl) == "x"] <- "data"
+  eval.parent(cl)
+}
+
+
 
 #' @title Render a graph
 #' @description Render a graph based on a layout, and either nodes and edges, or

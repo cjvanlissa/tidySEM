@@ -77,7 +77,7 @@ a model object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7.1</span>
       </span>
     </div>
 
@@ -175,20 +175,18 @@ a model object.</p>
 <span class='co'># S3 method for lavaan</span>
 <span class='fu'>prepare_graph</span><span class='op'>(</span>
   <span class='va'>model</span>,
-  label <span class='op'>=</span> <span class='st'>"est_sig"</span>,
-  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
   layout <span class='op'>=</span> <span class='fu'><a href='get_layout.lavaan.html'>get_layout</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
-  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
   <span class='va'>...</span>
 <span class='op'>)</span>
 
 <span class='co'># S3 method for mplus.model</span>
 <span class='fu'>prepare_graph</span><span class='op'>(</span>
   <span class='va'>model</span>,
-  label <span class='op'>=</span> <span class='st'>"est_sig"</span>,
-  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
   layout <span class='op'>=</span> <span class='fu'><a href='get_layout.lavaan.html'>get_layout</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
-  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span>, label <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span>,
+  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -281,13 +279,6 @@ Default: FALSE.</p></td>
       <td><p>Instead of the edges argument, it is also possible to use the
 model argument and pass an object for which a method exists (e.g.,
 <code>mplus.model</code> or <code>lavaan</code>).</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>Character, indicating which column to use for node labels. Nodes
-are labeled with mean values of the observed/latent variables they represent.
-Defaults to 'est_sig', which consists of the estimate value with significance
-asterisks.</p></td>
     </tr>
     </table>
 

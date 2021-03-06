@@ -73,7 +73,7 @@ are defined as regression paths and covariances between variables (nodes)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7.1</span>
       </span>
     </div>
 
@@ -196,41 +196,53 @@ label. See examples.</p>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span><span class='op'>(</span><span class='st'>"dist ~ speed"</span>, <span class='va'>cars</span><span class='op'>)</span>
 <span class='fu'>get_edges</span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    from    to arrow     label connect_from connect_to curvature
-#&gt; 1 speed  dist  last   3.93***           NA         NA        NA
-#&gt; 2  dist  dist  both 227.07***           NA         NA        NA
-#&gt; 3 speed speed  both     27.40           NA         NA        NA</div><div class='input'>
+</div><div class='output co'>#&gt;    from    to arrow     label connect_from connect_to curvature   lhs op   rhs
+#&gt; 1 speed  dist  last   3.93***           NA         NA        NA  dist  ~ speed
+#&gt; 2  dist  dist  both 227.07***           NA         NA        NA  dist ~~  dist
+#&gt; 3 speed speed  both     27.40           NA         NA        NA speed ~~ speed
+#&gt;      est    se pval          confint   est_sig est_std se_std pval_std
+#&gt; 1   3.93  0.41 0.00     [3.13, 4.73]   3.93***    0.81   0.04     0.00
+#&gt; 2 227.07 45.41 0.00 [138.06, 316.08] 227.07***    0.35   0.07     0.00
+#&gt; 3  27.40  0.00 &lt;NA&gt;   [27.40, 27.40]     27.40    1.00   0.00     &lt;NA&gt;
+#&gt;    confint_std est_sig_std     mplus_label  show
+#&gt; 1 [0.73, 0.89]     0.81***   dist.ON.speed  TRUE
+#&gt; 2 [0.22, 0.48]     0.35***  Variances.dist  TRUE
+#&gt; 3 [1.00, 1.00]        1.00 Variances.speed FALSE</div><div class='input'>
 <span class='co'># Pass an expression to the 'label' argument for custom labels</span>
 <span class='fu'>get_edges</span><span class='op'>(</span><span class='va'>res</span>, label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>est_sig</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    from    to arrow                      label connect_from connect_to
 #&gt; 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA
 #&gt; 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA
 #&gt; 3 speed speed  both       27.40 [27.40, 27.40]           NA         NA
-#&gt;   curvature
-#&gt; 1        NA
-#&gt; 2        NA
-#&gt; 3        NA</div><div class='input'>
+#&gt;   curvature   lhs op   rhs    est    se pval          confint   est_sig est_std
+#&gt; 1        NA  dist  ~ speed   3.93  0.41 0.00     [3.13, 4.73]   3.93***    0.81
+#&gt; 2        NA  dist ~~  dist 227.07 45.41 0.00 [138.06, 316.08] 227.07***    0.35
+#&gt; 3        NA speed ~~ speed  27.40  0.00 &lt;NA&gt;   [27.40, 27.40]     27.40    1.00
+#&gt;   se_std pval_std  confint_std est_sig_std     mplus_label  show
+#&gt; 1   0.04     0.00 [0.73, 0.89]     0.81***   dist.ON.speed  TRUE
+#&gt; 2   0.07     0.00 [0.22, 0.48]     0.35***  Variances.dist  TRUE
+#&gt; 3   0.00     &lt;NA&gt; [1.00, 1.00]        1.00 Variances.speed FALSE</div><div class='input'>
 <span class='co'># Pass the argument 'columns' to table_results through '...' to retain</span>
 <span class='co'># auxiliary columns for further processing</span>
 <span class='va'>edg</span> <span class='op'>&lt;-</span> <span class='fu'>get_edges</span><span class='op'>(</span><span class='va'>res</span>, columns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"est_sig"</span>, <span class='st'>"confint"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>edg</span>
-</div><div class='output co'>#&gt;    from    to arrow     label   est_sig          confint connect_from
-#&gt; 1 speed  dist  last   3.93***   3.93***     [3.13, 4.73]           NA
-#&gt; 2  dist  dist  both 227.07*** 227.07*** [138.06, 316.08]           NA
-#&gt; 3 speed speed  both     27.40     27.40   [27.40, 27.40]           NA
-#&gt;   connect_to curvature
-#&gt; 1         NA        NA
-#&gt; 2         NA        NA
-#&gt; 3         NA        NA</div><div class='input'><span class='va'>edg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>edg</span>, <span class='op'>{</span><span class='va'>label</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>est_sig</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>}</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    from    to arrow     label connect_from connect_to curvature   est_sig
+#&gt; 1 speed  dist  last   3.93***           NA         NA        NA   3.93***
+#&gt; 2  dist  dist  both 227.07***           NA         NA        NA 227.07***
+#&gt; 3 speed speed  both     27.40           NA         NA        NA     27.40
+#&gt;            confint
+#&gt; 1     [3.13, 4.73]
+#&gt; 2 [138.06, 316.08]
+#&gt; 3   [27.40, 27.40]</div><div class='input'><span class='va'>edg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>edg</span>, <span class='op'>{</span><span class='va'>label</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>est_sig</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>}</span><span class='op'>)</span>
 <span class='va'>edg</span>
-</div><div class='output co'>#&gt;    from    to arrow                      label   est_sig          confint
-#&gt; 1 speed  dist  last       3.93*** [3.13, 4.73]   3.93***     [3.13, 4.73]
-#&gt; 2  dist  dist  both 227.07*** [138.06, 316.08] 227.07*** [138.06, 316.08]
-#&gt; 3 speed speed  both       27.40 [27.40, 27.40]     27.40   [27.40, 27.40]
-#&gt;   connect_from connect_to curvature
-#&gt; 1           NA         NA        NA
-#&gt; 2           NA         NA        NA
-#&gt; 3           NA         NA        NA</div></pre>
+</div><div class='output co'>#&gt;    from    to arrow                      label connect_from connect_to
+#&gt; 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA
+#&gt; 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA
+#&gt; 3 speed speed  both       27.40 [27.40, 27.40]           NA         NA
+#&gt;   curvature   est_sig          confint
+#&gt; 1        NA   3.93***     [3.13, 4.73]
+#&gt; 2        NA 227.07*** [138.06, 316.08]
+#&gt; 3        NA     27.40   [27.40, 27.40]</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

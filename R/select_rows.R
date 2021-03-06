@@ -250,11 +250,16 @@ all_fun.sem_graph <- function(data, expr, condition, element = "edges", ...){
 #AY the selected elements.
 #AY @rdname all_fun
 #AX AES_NAME <- function(data, AES = AES_DEFAULT, ...){
-#AX   these_elements <- c("edges", "nodes")
-#AX   for(el in these_elements){
-#AX     if(!"AES" %in% names(data[[el]])){
-#AX       data[[el]]$AES <- AES_DEFAULT
+#AX   if(inherits(data, "sem_graph")){
+#AX     these_elements <- c("edges", "nodes")
+#AX     for(el in these_elements){
+#AX       if(!"AES" %in% names(data[[el]])){
+#AX         data[[el]]$AES <- AES_DEFAULT
+#AX       }
 #AX     }
+#AX   }
+#AX   if(inherits(data, "data.frame")){
+#AX     data$AES <- AES_DEFAULT
 #AX   }
 #AX   cl <- match.call()
 #AX   cl[["data"]] <- data
@@ -299,15 +304,21 @@ show_sig <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_sig <- function(data, colour = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -319,15 +330,21 @@ colour_sig <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_sig <- function(data, color = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -339,15 +356,21 @@ color_sig <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_sig <- function(data, linetype = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -359,15 +382,21 @@ linetype_sig <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_sig <- function(data, size = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -379,15 +408,21 @@ size_sig <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_sig <- function(data, alpha = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -399,15 +434,21 @@ alpha_sig <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_sig <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -419,15 +460,21 @@ fill_sig <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_sig <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -439,15 +486,21 @@ label_colour_sig <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_sig <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -459,15 +512,21 @@ label_color_sig <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_sig <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -479,15 +538,21 @@ label_fill_sig <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_sig <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -499,15 +564,21 @@ label_size_sig <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_sig <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -519,15 +590,21 @@ label_alpha_sig <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_sig <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -539,15 +616,21 @@ label_family_sig <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_sig <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -559,15 +642,21 @@ label_fontface_sig <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_sig <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -579,15 +668,21 @@ label_hjust_sig <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_sig <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -599,15 +694,21 @@ label_vjust_sig <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_sig <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -619,15 +720,21 @@ label_lineheight_sig <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_sig <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -668,15 +775,21 @@ show_nonsig <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_nonsig <- function(data, colour = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -688,15 +801,21 @@ colour_nonsig <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_nonsig <- function(data, color = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -708,15 +827,21 @@ color_nonsig <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_nonsig <- function(data, linetype = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -728,15 +853,21 @@ linetype_nonsig <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_nonsig <- function(data, size = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -748,15 +879,21 @@ size_nonsig <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_nonsig <- function(data, alpha = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -768,15 +905,21 @@ alpha_nonsig <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_nonsig <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -788,15 +931,21 @@ fill_nonsig <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_nonsig <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -808,15 +957,21 @@ label_colour_nonsig <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_nonsig <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -828,15 +983,21 @@ label_color_nonsig <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_nonsig <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -848,15 +1009,21 @@ label_fill_nonsig <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_nonsig <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -868,15 +1035,21 @@ label_size_nonsig <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_nonsig <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -888,15 +1061,21 @@ label_alpha_nonsig <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_nonsig <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -908,15 +1087,21 @@ label_family_nonsig <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_nonsig <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -928,15 +1113,21 @@ label_fontface_nonsig <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_nonsig <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -948,15 +1139,21 @@ label_hjust_nonsig <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_nonsig <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -968,15 +1165,21 @@ label_vjust_nonsig <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_nonsig <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -988,15 +1191,21 @@ label_lineheight_nonsig <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_nonsig <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1037,15 +1246,21 @@ show_fixed <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_fixed <- function(data, colour = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1057,15 +1272,21 @@ colour_fixed <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_fixed <- function(data, color = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1077,15 +1298,21 @@ color_fixed <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_fixed <- function(data, linetype = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1097,15 +1324,21 @@ linetype_fixed <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_fixed <- function(data, size = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1117,15 +1350,21 @@ size_fixed <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_fixed <- function(data, alpha = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1137,15 +1376,21 @@ alpha_fixed <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_fixed <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1157,15 +1402,21 @@ fill_fixed <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_fixed <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1177,15 +1428,21 @@ label_colour_fixed <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_fixed <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1197,15 +1454,21 @@ label_color_fixed <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_fixed <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1217,15 +1480,21 @@ label_fill_fixed <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_fixed <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1237,15 +1506,21 @@ label_size_fixed <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_fixed <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1257,15 +1532,21 @@ label_alpha_fixed <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_fixed <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1277,15 +1558,21 @@ label_family_fixed <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_fixed <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1297,15 +1584,21 @@ label_fontface_fixed <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_fixed <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1317,15 +1610,21 @@ label_hjust_fixed <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_fixed <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1337,15 +1636,21 @@ label_vjust_fixed <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_fixed <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1357,15 +1662,21 @@ label_lineheight_fixed <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_fixed <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1406,15 +1717,21 @@ show_pos <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_pos <- function(data, colour = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1426,15 +1743,21 @@ colour_pos <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_pos <- function(data, color = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1446,15 +1769,21 @@ color_pos <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_pos <- function(data, linetype = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1466,15 +1795,21 @@ linetype_pos <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_pos <- function(data, size = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1486,15 +1821,21 @@ size_pos <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_pos <- function(data, alpha = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1506,15 +1847,21 @@ alpha_pos <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_pos <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1526,15 +1873,21 @@ fill_pos <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_pos <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1546,15 +1899,21 @@ label_colour_pos <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_pos <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1566,15 +1925,21 @@ label_color_pos <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_pos <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1586,15 +1951,21 @@ label_fill_pos <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_pos <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1606,15 +1977,21 @@ label_size_pos <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_pos <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1626,15 +2003,21 @@ label_alpha_pos <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_pos <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1646,15 +2029,21 @@ label_family_pos <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_pos <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1666,15 +2055,21 @@ label_fontface_pos <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_pos <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1686,15 +2081,21 @@ label_hjust_pos <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_pos <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1706,15 +2107,21 @@ label_vjust_pos <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_pos <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1726,15 +2133,21 @@ label_lineheight_pos <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_pos <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1775,15 +2188,21 @@ show_neg <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_neg <- function(data, colour = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1795,15 +2214,21 @@ colour_neg <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_neg <- function(data, color = "black", ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1815,15 +2240,21 @@ color_neg <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_neg <- function(data, linetype = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1835,15 +2266,21 @@ linetype_neg <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_neg <- function(data, size = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1855,15 +2292,21 @@ size_neg <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_neg <- function(data, alpha = 1, ...){
-  these_elements <- c("edges", "nodes")
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- c("edges", "nodes")
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1875,15 +2318,21 @@ alpha_neg <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_neg <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1895,15 +2344,21 @@ fill_neg <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_neg <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1915,15 +2370,21 @@ label_colour_neg <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_neg <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1935,15 +2396,21 @@ label_color_neg <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_neg <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1955,15 +2422,21 @@ label_fill_neg <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_neg <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1975,15 +2448,21 @@ label_size_neg <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_neg <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -1995,15 +2474,21 @@ label_alpha_neg <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_neg <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2015,15 +2500,21 @@ label_family_neg <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_neg <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2035,15 +2526,21 @@ label_fontface_neg <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_neg <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2055,15 +2552,21 @@ label_hjust_neg <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_neg <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2075,15 +2578,21 @@ label_vjust_neg <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_neg <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2095,15 +2604,21 @@ label_lineheight_neg <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_neg <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2144,15 +2659,21 @@ show_var <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_var <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2164,15 +2685,21 @@ colour_var <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_var <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2184,15 +2711,21 @@ color_var <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_var <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2204,15 +2737,21 @@ linetype_var <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_var <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2224,15 +2763,21 @@ size_var <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_var <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2244,15 +2789,21 @@ alpha_var <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_var <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2264,15 +2815,21 @@ label_colour_var <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_var <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2284,15 +2841,21 @@ label_color_var <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_var <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2304,15 +2867,21 @@ label_fill_var <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_var <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2324,15 +2893,21 @@ label_size_var <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_var <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2344,15 +2919,21 @@ label_alpha_var <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_var <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2364,15 +2945,21 @@ label_family_var <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_var <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2384,15 +2971,21 @@ label_fontface_var <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_var <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2404,15 +2997,21 @@ label_hjust_var <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_var <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2424,15 +3023,21 @@ label_vjust_var <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_var <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2473,15 +3078,21 @@ show_cov <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_cov <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2493,15 +3104,21 @@ colour_cov <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_cov <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2513,15 +3130,21 @@ color_cov <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_cov <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2533,15 +3156,21 @@ linetype_cov <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_cov <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2553,15 +3182,21 @@ size_cov <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_cov <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2573,15 +3208,21 @@ alpha_cov <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_cov <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2593,15 +3234,21 @@ label_colour_cov <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_cov <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2613,15 +3260,21 @@ label_color_cov <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_cov <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2633,15 +3286,21 @@ label_fill_cov <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_cov <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2653,15 +3312,21 @@ label_size_cov <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_cov <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2673,15 +3338,21 @@ label_alpha_cov <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_cov <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2693,15 +3364,21 @@ label_family_cov <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_cov <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2713,15 +3390,21 @@ label_fontface_cov <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_cov <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2733,15 +3416,21 @@ label_hjust_cov <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_cov <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2753,15 +3442,21 @@ label_vjust_cov <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_cov <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2773,15 +3468,21 @@ label_lineheight_cov <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_cov <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2822,15 +3523,21 @@ show_reg <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_reg <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2842,15 +3549,21 @@ colour_reg <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_reg <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2862,15 +3575,21 @@ color_reg <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_reg <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2882,15 +3601,21 @@ linetype_reg <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_reg <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2902,15 +3627,21 @@ size_reg <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_reg <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2922,15 +3653,21 @@ alpha_reg <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_reg <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2942,15 +3679,21 @@ label_colour_reg <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_reg <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2962,15 +3705,21 @@ label_color_reg <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_reg <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -2982,15 +3731,21 @@ label_fill_reg <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_reg <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3002,15 +3757,21 @@ label_size_reg <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_reg <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3022,15 +3783,21 @@ label_alpha_reg <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_reg <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3042,15 +3809,21 @@ label_family_reg <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_reg <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3062,15 +3835,21 @@ label_fontface_reg <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_reg <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3082,15 +3861,21 @@ label_hjust_reg <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_reg <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3102,15 +3887,21 @@ label_vjust_reg <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_reg <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3122,15 +3913,21 @@ label_lineheight_reg <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_reg <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3171,15 +3968,21 @@ show_load <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_load <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3191,15 +3994,21 @@ colour_load <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_load <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3211,15 +4020,21 @@ color_load <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_load <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3231,15 +4046,21 @@ linetype_load <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_load <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3251,15 +4072,21 @@ size_load <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_load <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3271,15 +4098,21 @@ alpha_load <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_load <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3291,15 +4124,21 @@ label_colour_load <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_load <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3311,15 +4150,21 @@ label_color_load <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_load <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3331,15 +4176,21 @@ label_fill_load <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_load <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3351,15 +4202,21 @@ label_size_load <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_load <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3371,15 +4228,21 @@ label_alpha_load <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_load <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3391,15 +4254,21 @@ label_family_load <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_load <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3411,15 +4280,21 @@ label_fontface_load <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_load <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3431,15 +4306,21 @@ label_hjust_load <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_load <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3451,15 +4332,21 @@ label_vjust_load <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_load <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3471,15 +4358,21 @@ label_lineheight_load <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_load <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3520,15 +4413,21 @@ show_obs <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_obs <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3540,15 +4439,21 @@ colour_obs <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_obs <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3560,15 +4465,21 @@ color_obs <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_obs <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3580,15 +4491,21 @@ linetype_obs <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_obs <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3600,15 +4517,21 @@ size_obs <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_obs <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3620,15 +4543,21 @@ alpha_obs <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_obs <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3640,15 +4569,21 @@ fill_obs <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_obs <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3660,15 +4595,21 @@ label_colour_obs <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_obs <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3680,15 +4621,21 @@ label_color_obs <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_obs <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3700,15 +4647,21 @@ label_fill_obs <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_obs <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3720,15 +4673,21 @@ label_size_obs <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_obs <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3740,15 +4699,21 @@ label_alpha_obs <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_obs <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3760,15 +4725,21 @@ label_family_obs <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_obs <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3780,15 +4751,21 @@ label_fontface_obs <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_obs <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3800,15 +4777,21 @@ label_hjust_obs <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_obs <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3820,15 +4803,21 @@ label_vjust_obs <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_obs <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3840,15 +4829,21 @@ label_lineheight_obs <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_obs <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3889,15 +4884,21 @@ show_latent <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_latent <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3909,15 +4910,21 @@ colour_latent <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_latent <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3929,15 +4936,21 @@ color_latent <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_latent <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3949,15 +4962,21 @@ linetype_latent <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_latent <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3969,15 +4988,21 @@ size_latent <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_latent <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -3989,15 +5014,21 @@ alpha_latent <- function(data, alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param fill Atomic character vector, indicating which fill to assign to
+#' @param fill Atomic character vector,
+#' indicating which fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 fill_latent <- function(data, fill = "white", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"fill" %in% names(data[[el]])){
-      data[[el]]$fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"fill" %in% names(data[[el]])){
+        data[[el]]$fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4009,15 +5040,21 @@ fill_latent <- function(data, fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_colour Atomic character vector, indicating which label_colour to assign to
+#' @param label_colour Atomic character vector,
+#' indicating which label_colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_colour_latent <- function(data, label_colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_colour" %in% names(data[[el]])){
-      data[[el]]$label_colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_colour" %in% names(data[[el]])){
+        data[[el]]$label_colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4029,15 +5066,21 @@ label_colour_latent <- function(data, label_colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_color Atomic character vector, indicating which label_color to assign to
+#' @param label_color Atomic character vector,
+#' indicating which label_color to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_color_latent <- function(data, label_color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_color" %in% names(data[[el]])){
-      data[[el]]$label_color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_color" %in% names(data[[el]])){
+        data[[el]]$label_color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4049,15 +5092,21 @@ label_color_latent <- function(data, label_color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fill Atomic character vector, indicating which label_fill to assign to
+#' @param label_fill Atomic character vector,
+#' indicating which label_fill to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fill_latent <- function(data, label_fill = "white", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fill" %in% names(data[[el]])){
-      data[[el]]$label_fill <- "white"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fill" %in% names(data[[el]])){
+        data[[el]]$label_fill <- "white"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fill <- "white"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4069,15 +5118,21 @@ label_fill_latent <- function(data, label_fill = "white", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_size Atomic character vector, indicating which label_size to assign to
+#' @param label_size Atomic character vector,
+#' indicating which label_size to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_size_latent <- function(data, label_size = 4, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_size" %in% names(data[[el]])){
-      data[[el]]$label_size <- 4
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_size" %in% names(data[[el]])){
+        data[[el]]$label_size <- 4
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_size <- 4
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4089,15 +5144,21 @@ label_size_latent <- function(data, label_size = 4, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_alpha Atomic character vector, indicating which label_alpha to assign to
+#' @param label_alpha Atomic character vector,
+#' indicating which label_alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_alpha_latent <- function(data, label_alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_alpha" %in% names(data[[el]])){
-      data[[el]]$label_alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_alpha" %in% names(data[[el]])){
+        data[[el]]$label_alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4109,15 +5170,21 @@ label_alpha_latent <- function(data, label_alpha = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_family Atomic character vector, indicating which label_family to assign to
+#' @param label_family Atomic character vector,
+#' indicating which label_family to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_family_latent <- function(data, label_family = "sans", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_family" %in% names(data[[el]])){
-      data[[el]]$label_family <- "sans"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_family" %in% names(data[[el]])){
+        data[[el]]$label_family <- "sans"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_family <- "sans"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4129,15 +5196,21 @@ label_family_latent <- function(data, label_family = "sans", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_fontface Atomic character vector, indicating which label_fontface to assign to
+#' @param label_fontface Atomic character vector,
+#' indicating which label_fontface to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_fontface_latent <- function(data, label_fontface = "plain", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_fontface" %in% names(data[[el]])){
-      data[[el]]$label_fontface <- "plain"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_fontface" %in% names(data[[el]])){
+        data[[el]]$label_fontface <- "plain"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_fontface <- "plain"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4149,15 +5222,21 @@ label_fontface_latent <- function(data, label_fontface = "plain", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_hjust Atomic character vector, indicating which label_hjust to assign to
+#' @param label_hjust Atomic character vector,
+#' indicating which label_hjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_hjust_latent <- function(data, label_hjust = "center", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_hjust" %in% names(data[[el]])){
-      data[[el]]$label_hjust <- "center"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_hjust" %in% names(data[[el]])){
+        data[[el]]$label_hjust <- "center"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_hjust <- "center"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4169,15 +5248,21 @@ label_hjust_latent <- function(data, label_hjust = "center", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_vjust Atomic character vector, indicating which label_vjust to assign to
+#' @param label_vjust Atomic character vector,
+#' indicating which label_vjust to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_vjust_latent <- function(data, label_vjust = "middle", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_vjust" %in% names(data[[el]])){
-      data[[el]]$label_vjust <- "middle"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_vjust" %in% names(data[[el]])){
+        data[[el]]$label_vjust <- "middle"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_vjust <- "middle"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4189,15 +5274,21 @@ label_vjust_latent <- function(data, label_vjust = "middle", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_lineheight Atomic character vector, indicating which label_lineheight to assign to
+#' @param label_lineheight Atomic character vector,
+#' indicating which label_lineheight to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_lineheight_latent <- function(data, label_lineheight = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_lineheight" %in% names(data[[el]])){
-      data[[el]]$label_lineheight <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_lineheight" %in% names(data[[el]])){
+        data[[el]]$label_lineheight <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_lineheight <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4209,15 +5300,21 @@ label_lineheight_latent <- function(data, label_lineheight = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param label_location Atomic character vector, indicating which label_location to assign to
+#' @param label_location Atomic character vector,
+#' indicating which label_location to assign to
 #' the selected elements.
 #' @rdname all_fun
 label_location_latent <- function(data, label_location = .5, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"label_location" %in% names(data[[el]])){
-      data[[el]]$label_location <- .5
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"label_location" %in% names(data[[el]])){
+        data[[el]]$label_location <- .5
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$label_location <- .5
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4258,15 +5355,21 @@ show_sig_nodes <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_sig_nodes <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4278,15 +5381,21 @@ colour_sig_nodes <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_sig_nodes <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4298,15 +5407,21 @@ color_sig_nodes <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_sig_nodes <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4318,15 +5433,21 @@ linetype_sig_nodes <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_sig_nodes <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4338,15 +5459,21 @@ size_sig_nodes <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_sig_nodes <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4387,15 +5514,21 @@ show_nonsig_nodes <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_nonsig_nodes <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4407,15 +5540,21 @@ colour_nonsig_nodes <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_nonsig_nodes <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4427,15 +5566,21 @@ color_nonsig_nodes <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_nonsig_nodes <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4447,15 +5592,21 @@ linetype_nonsig_nodes <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_nonsig_nodes <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4467,15 +5618,21 @@ size_nonsig_nodes <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_nonsig_nodes <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4516,15 +5673,21 @@ show_fixed_nodes <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_fixed_nodes <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4536,15 +5699,21 @@ colour_fixed_nodes <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_fixed_nodes <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4556,15 +5725,21 @@ color_fixed_nodes <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_fixed_nodes <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4576,15 +5751,21 @@ linetype_fixed_nodes <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_fixed_nodes <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4596,15 +5777,21 @@ size_fixed_nodes <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_fixed_nodes <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4645,15 +5832,21 @@ show_pos_nodes <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_pos_nodes <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4665,15 +5858,21 @@ colour_pos_nodes <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_pos_nodes <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4685,15 +5884,21 @@ color_pos_nodes <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_pos_nodes <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4705,15 +5910,21 @@ linetype_pos_nodes <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_pos_nodes <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4725,15 +5936,21 @@ size_pos_nodes <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_pos_nodes <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4774,15 +5991,21 @@ show_neg_nodes <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_neg_nodes <- function(data, colour = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4794,15 +6017,21 @@ colour_neg_nodes <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_neg_nodes <- function(data, color = "black", ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4814,15 +6043,21 @@ color_neg_nodes <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_neg_nodes <- function(data, linetype = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4834,15 +6069,21 @@ linetype_neg_nodes <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_neg_nodes <- function(data, size = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4854,15 +6095,21 @@ size_neg_nodes <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_neg_nodes <- function(data, alpha = 1, ...){
-  these_elements <- "nodes"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "nodes"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4903,15 +6150,21 @@ show_sig_edges <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_sig_edges <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4923,15 +6176,21 @@ colour_sig_edges <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_sig_edges <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4943,15 +6202,21 @@ color_sig_edges <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_sig_edges <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4963,15 +6228,21 @@ linetype_sig_edges <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_sig_edges <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -4983,15 +6254,21 @@ size_sig_edges <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_sig_edges <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5032,15 +6309,21 @@ show_nonsig_edges <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_nonsig_edges <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5052,15 +6335,21 @@ colour_nonsig_edges <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_nonsig_edges <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5072,15 +6361,21 @@ color_nonsig_edges <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_nonsig_edges <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5092,15 +6387,21 @@ linetype_nonsig_edges <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_nonsig_edges <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5112,15 +6413,21 @@ size_nonsig_edges <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_nonsig_edges <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5161,15 +6468,21 @@ show_fixed_edges <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_fixed_edges <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5181,15 +6494,21 @@ colour_fixed_edges <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_fixed_edges <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5201,15 +6520,21 @@ color_fixed_edges <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_fixed_edges <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5221,15 +6546,21 @@ linetype_fixed_edges <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_fixed_edges <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5241,15 +6572,21 @@ size_fixed_edges <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_fixed_edges <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5290,15 +6627,21 @@ show_pos_edges <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_pos_edges <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5310,15 +6653,21 @@ colour_pos_edges <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_pos_edges <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5330,15 +6679,21 @@ color_pos_edges <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_pos_edges <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5350,15 +6705,21 @@ linetype_pos_edges <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_pos_edges <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5370,15 +6731,21 @@ size_pos_edges <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_pos_edges <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5419,15 +6786,21 @@ show_neg_edges <- function(data, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param colour Atomic character vector, indicating which colour to assign to
+#' @param colour Atomic character vector,
+#' indicating which colour to assign to
 #' the selected elements.
 #' @rdname all_fun
 colour_neg_edges <- function(data, colour = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"colour" %in% names(data[[el]])){
-      data[[el]]$colour <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"colour" %in% names(data[[el]])){
+        data[[el]]$colour <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$colour <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5439,15 +6812,21 @@ colour_neg_edges <- function(data, colour = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param color Atomic character vector, indicating which color to assign to
+#' @param color Atomic character vector,
+#' indicating which color to assign to
 #' the selected elements.
 #' @rdname all_fun
 color_neg_edges <- function(data, color = "black", ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"color" %in% names(data[[el]])){
-      data[[el]]$color <- "black"
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"color" %in% names(data[[el]])){
+        data[[el]]$color <- "black"
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$color <- "black"
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5459,15 +6838,21 @@ color_neg_edges <- function(data, color = "black", ...){
   eval.parent(cl)
 }
 #' @export
-#' @param linetype Atomic character vector, indicating which linetype to assign to
+#' @param linetype Atomic character vector,
+#' indicating which linetype to assign to
 #' the selected elements.
 #' @rdname all_fun
 linetype_neg_edges <- function(data, linetype = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"linetype" %in% names(data[[el]])){
-      data[[el]]$linetype <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"linetype" %in% names(data[[el]])){
+        data[[el]]$linetype <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$linetype <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5479,15 +6864,21 @@ linetype_neg_edges <- function(data, linetype = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param size Atomic character vector, indicating which size to assign to
+#' @param size Atomic character vector,
+#' indicating which size to assign to
 #' the selected elements.
 #' @rdname all_fun
 size_neg_edges <- function(data, size = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"size" %in% names(data[[el]])){
-      data[[el]]$size <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"size" %in% names(data[[el]])){
+        data[[el]]$size <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$size <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data
@@ -5499,15 +6890,21 @@ size_neg_edges <- function(data, size = 1, ...){
   eval.parent(cl)
 }
 #' @export
-#' @param alpha Atomic character vector, indicating which alpha to assign to
+#' @param alpha Atomic character vector,
+#' indicating which alpha to assign to
 #' the selected elements.
 #' @rdname all_fun
 alpha_neg_edges <- function(data, alpha = 1, ...){
-  these_elements <- "edges"
-  for(el in these_elements){
-    if(!"alpha" %in% names(data[[el]])){
-      data[[el]]$alpha <- 1
+  if(inherits(data, "sem_graph")){
+    these_elements <- "edges"
+    for(el in these_elements){
+      if(!"alpha" %in% names(data[[el]])){
+        data[[el]]$alpha <- 1
+      }
     }
+  }
+  if(inherits(data, "data.frame")){
+    data$alpha <- 1
   }
   cl <- match.call()
   cl[["data"]] <- data

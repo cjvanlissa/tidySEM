@@ -241,7 +241,6 @@ Unless `label = NULL`, `get_nodes()` will use the node name as a label when no f
 
 We can re-run the model with a mean structure to get more information about the nodes:
 
-
 ```{r}
 fit <- cfa(HS.model, data=HolzingerSwineford1939, meanstructure = TRUE)
 ```
@@ -256,24 +255,25 @@ These labels can be further customized as shown below:
 ```{r}
 get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
 ```
-#### Auxiliary columns
+<!--#### Customize labels 
 
 Instead of customizing the node and edge labels in the call to `get_nodes()` and `get_edges()`,
 it is also possible to request auxiliary columns, and use these to customize the labels (or other properties of the plot) later.
+By default, all available columns are included
 Below is an example for `get_edges()`, but the same mechanism applies to `get_nodes()`:
 
-```{r}
+```r
 get_edges(fit, label = "est", columns = "pval")
 ```
 
 We can use this information to manually construct labels:
 
-```{r}
+```r
 get_edges(fit, label = "est", columns = c("est", "pval")) %>%
   within({ label[!is.na(pval)] = paste0(est[!is.na(pval)], ", p = ", pval[!is.na(pval)])})
 ```
 
-The section on **Visual aspects** demonstrates how to use these auxiliary columns to customize visual properties of the graph.
+The section on **Visual aspects** demonstrates how to use these auxiliary columns to customize visual properties of the graph.-->
 
 ### Optional step 5: accessing graph data before plotting
 
@@ -504,14 +504,63 @@ if(generate_pngs) ggsave("pgfig7.png", p, device = "png", width= 4, height = 1)
 knitr::include_graphics("pgfig7.png")
 ```
 
-### Using auxiliary columns to customize visual aspects
+### Conditionally customize visual aspects
 
-As explained before, the functions `get_edges()` and `get_nodes()`,
+The functions `get_edges()` and `get_nodes()` rely on `table_results()` to
+extract information about nodes and edges from SEM models.
+All of the columns returned by `table_results()` can be used to conditionally
+customize visual aspects of the graph.
+Let's estimate a model and look at all of the coluns extracted by `get_edges()`:
+
+```{r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+fit <- sem("mpg ~ cyl
+           mpg ~ am", data = mtcars, meanstructure = TRUE)
+get_edges(fit)
+```
+
+Any of these columns can be used to conditionally format the graph.
+For example, note that one of the regression paths is positive and the other negative.
+We might want to color positive edges green:
+
+```{r}
+prepare_graph(fit) %>%
+  color_pos_edges("green") %>%
+  plot()
+```
+
+However, the variance arrow is also colored green, because it is an edge as well.
+This is where other conditional formatting functions come in handy. 
+Imagine we want to color the negative regression path red, and color the variance black - and make the variance transparent as well, to reduce its visual importance:
+
+```{r}
+prepare_graph(fit) %>%
+  color_pos_edges("green") %>%
+  color_neg_edges("red") %>%
+  color_var("black") %>%
+  alpha_var(.2) %>%
+  plot()
+```
+There are many dedicated conditional customization functions like these.
+They make use of the generic function `all_fun()`, and are documented in its help file (see `?all_fun`).
+
+The function `all_fun()` takes an expression and a condition as arguments.
+This makes custom conditional formatting possible.
+For example, imagine that we want to color every graph element with the number "4" in the column `est` blue, you could use:
+
+```{r}
+prepare_graph(fit) %>%
+  edit_graph({ color = "black" }, element = c("nodes", "edges")) %>% # Add color column to the graph elements
+  all_fun({color = "blue"}, grepl("4", est), element = c("nodes", "edges")) %>% # Conditionally change color to blue when the column 'est' contains the number 4
+  plot()
+```
+
+
+<!--As explained before, the functions `get_edges()` and `get_nodes()`,
 which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
 have an argument `columns` which adds auxiliary columns to the resulting data.frames.
 This can be used to customize visual aspects of the edges and nodes based on, for example, the value of the estimates:
 
-```{r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
 fit <- sem("mpg ~ cyl
            mpg ~ am", data = mtcars)
 
@@ -525,7 +574,7 @@ edges(p) %>%
 
 plot(p)
 ```
-```{r, eval = FALSE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```r, eval = FALSE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
 fit <- sem("mpg ~ cyl
            mpg ~ am", data = mtcars)
 set.seed(15)
@@ -542,3 +591,4 @@ p <- plot(p)
 ggsave("pgfig8.png", p, device = "png", width= 4, height = 4)
 knitr::include_graphics("pgfig8.png")
 ```
+-->
