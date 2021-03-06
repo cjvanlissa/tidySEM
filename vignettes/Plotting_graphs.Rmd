@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-generate_svgs <- TRUE
+generate_pngs <- TRUE
 ```
 
 `tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programmatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
@@ -75,8 +75,8 @@ graph_sem(model = fit)
 ```
 ```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
 p <- graph_sem(model = fit, text_size = 2, fix_coord = TRUE)
-if(generate_svgs) ggsave("pgfig1.svg", p, device = "svg", width= 9.5, height = 3)
-knitr::include_graphics("pgfig1.svg")
+if(generate_pngs) ggsave("pgfig1.png", p, device = "png", width= 9.5, height = 3)
+knitr::include_graphics("pgfig1.png")
 ```
 
 This uses a default layout, provided by the `igraph` package. However, the node placement is not very aesthetically pleasing. One of the areas where `tidySEM` really excels is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.
@@ -207,8 +207,8 @@ graph_sem(fit, layout = lay)
 ```
 ```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
 p <- graph_sem(fit, layout = lay) + coord_fixed()
-if(generate_svgs) ggsave("pgfig2_1.svg", p, device = "svg", width= 9.5, height = 3)
-knitr::include_graphics("pgfig2_1.svg")
+if(generate_pngs) ggsave("pgfig2_1.png", p, device = "png", width= 9.5, height = 3)
+knitr::include_graphics("pgfig2_1.png")
 ```
 
 ### Step 4: Customize nodes and edges
@@ -325,8 +325,8 @@ plot(graph_data)
 ```
 ```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
 p <- plot(graph_data) + coord_fixed()
-if(generate_svgs) ggsave("pgfig2.svg", p, device = "svg", width= 9.5, height = 3)
-knitr::include_graphics("pgfig2.svg")
+if(generate_pngs) ggsave("pgfig2.png", p, device = "png", width= 9.5, height = 3)
+knitr::include_graphics("pgfig2.png")
 ```
 
 ## Connecting nodes
@@ -338,8 +338,8 @@ graph_sem(model = fit, layout = lay, angle = 170)
 ```
 ```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
 p <- graph_sem(model = fit, layout = lay, angle = 170)
-if(generate_svgs) ggsave("pgfig3.svg", p, device = "svg", width= 9.5, height = 3)
-knitr::include_graphics("pgfig3.svg")
+if(generate_pngs) ggsave("pgfig3.png", p, device = "png", width= 9.5, height = 3)
+knitr::include_graphics("pgfig3.png")
 ```
 
 ## Visual aspects
@@ -379,8 +379,8 @@ edg <- data.frame(from = "x",
 
 p <- graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 
-if(generate_svgs) ggsave("pgfig4.svg", p, device = "svg", width= 4, height = 1)
-knitr::include_graphics("pgfig4.svg")
+if(generate_pngs) ggsave("pgfig4.png", p, device = "png", width= 4, height = 1)
+knitr::include_graphics("pgfig4.png")
 ```
 
 ### Visual aspects of nodes
@@ -419,8 +419,8 @@ nod <- data.frame(name = c("x", "y"),
                     alpha = .5)
 p <- graph_sem(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
 
-if(generate_svgs) ggsave("pgfig5.svg", p, device = "svg", width= 4, height = 1)
-knitr::include_graphics("pgfig5.svg")
+if(generate_pngs) ggsave("pgfig5.png", p, device = "png", width= 4, height = 1)
+knitr::include_graphics("pgfig5.png")
 ```
 
 These aesthetics can also be passed to the `sem_graph` object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:
@@ -445,8 +445,8 @@ edges(graph_data) %>%
   mutate(alpha = replace(alpha, from == "visual" & to == "x2", .5)) -> edges(graph_data)
 p <- plot(graph_data)
 
-if(generate_svgs) ggsave("pgfig6.svg", p, device = "svg", width= 9.5, height = 3)
-knitr::include_graphics("pgfig6.svg")
+if(generate_pngs) ggsave("pgfig6.png", p, device = "png", width= 9.5, height = 3)
+knitr::include_graphics("pgfig6.png")
 ```
 
 ### Visual aspects of edge labels
@@ -500,8 +500,8 @@ edg <- data.frame(from = "x",
 
 p = graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 
-if(generate_svgs) ggsave("pgfig7.svg", p, device = "svg", width= 4, height = 1)
-knitr::include_graphics("pgfig7.svg")
+if(generate_pngs) ggsave("pgfig7.png", p, device = "png", width= 4, height = 1)
+knitr::include_graphics("pgfig7.png")
 ```
 
 ### Using auxiliary columns to customize visual aspects
@@ -539,6 +539,6 @@ edges(p) %>%
 
 p <- plot(p)
 
-ggsave("pgfig8.svg", p, device = "svg", width= 4, height = 4)
-knitr::include_graphics("pgfig8.svg")
+ggsave("pgfig8.png", p, device = "png", width= 4, height = 4)
+knitr::include_graphics("pgfig8.png")
 ```

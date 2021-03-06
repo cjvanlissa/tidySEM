@@ -1121,7 +1121,7 @@ match.call.defaults <- function(...) {
 
   # Connect nodes -----------------------------------------------------------
 
-  curws <- -1*df_edges$curvature
+  curws <- df_edges$curvature
   # For columns
   same_column <- df_nodes$x[match(df_edges$from, df_nodes$name)] == df_nodes$x[match(df_edges$to, df_nodes$name)]
   xrange <- range(df_nodes$x)
