@@ -1,6 +1,6 @@
 library(lavaan)
 
-test_that("all_fun and its derivatives work", {
+test_that("if_edit and its derivatives work", {
   fit <- sem("mpg ~ cyl\nmpg ~ am", data = mtcars, meanstructure = TRUE)
 
   p <- prepare_graph(model = fit)
@@ -34,8 +34,9 @@ test_that("all_fun and its derivatives work", {
   expect_equivalent(tmp$edges$show, c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE))
   expect_equivalent(tmp$nodes$show, c(FALSE, FALSE, TRUE))
   expect_error(plot(tmp), NA)
-
-  tmp <- all_fun(p, {show = FALSE},  {grepl("3", confint_std)}, element = c("edges", "nodes"))
+  p$edges$confint_std[4:6] <- "3"
+  p$nodes$confint_std[1:2] <- "3"
+  tmp <- if_edit(p, {grepl("3", confint_std)}, {show = FALSE},  element = c("edges", "nodes"))
   expect_equivalent(tmp$edges$show, c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE))
   expect_equivalent(tmp$nodes$show, c(FALSE, FALSE, TRUE))
   expect_error(plot(tmp), NA)

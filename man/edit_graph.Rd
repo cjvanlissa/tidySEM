@@ -2,9 +2,15 @@
 % Please edit documentation in R/plot-plot_sem.R
 \name{edit_graph}
 \alias{edit_graph}
+\alias{edit_nodes}
+\alias{edit_edges}
 \title{Edit graph elements}
 \usage{
-edit_graph(x, expr, element = "edges", ...)
+edit_graph(x, expr, element = c("edges", "nodes"), ...)
+
+edit_nodes(x, expr, ...)
+
+edit_edges(x, expr, ...)
 }
 \arguments{
 \item{x}{An object of class \code{sem_graph}.}
@@ -12,7 +18,7 @@ edit_graph(x, expr, element = "edges", ...)
 \item{expr}{expression to evaluate.}
 
 \item{element}{Character. The element of the \code{sem_graph} to edit,
-defaults to \code{"edges"}.}
+defaults to \code{c("edges", "nodes")}.}
 
 \item{...}{Arguments passed on to \code{\link{within}}.}
 }

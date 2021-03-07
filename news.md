@@ -2,7 +2,7 @@
 
 * Node labels can now be customized
 * Added convenience functions to conditionally customize graphs based on
-  all_fun(), e.g.: sig_colour(plot, "green")
+  if_edit(), e.g.: sig_colour(plot, "green")
 * Improved functionality of edit_graph() methods
 * Fixed bug where arguments were not passed from prepare_graph() and graph_sem()
   to get_nodes() and get_edges()

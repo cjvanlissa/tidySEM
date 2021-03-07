@@ -41,7 +41,7 @@ filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
 #' @param x An object of class \code{sem_graph}.
 #' @param expr expression to evaluate.
 #' @param element Character. The element of the \code{sem_graph} to edit,
-#' defaults to \code{"edges"}.
+#' defaults to \code{c("edges", "nodes")}.
 #' @param ... Arguments passed on to \code{\link{within}}.
 #' @return An object of class \code{sem_graph}.
 #' @examples
@@ -50,13 +50,13 @@ filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
 #' plot(p)
 #' @rdname edit_graph
 #' @export
-edit_graph <- function(x, expr, element = "edges", ...){
+edit_graph <- function(x, expr, element = c("edges", "nodes"), ...){
   UseMethod("edit_graph", x)
 }
 
 #' @method edit_graph sem_graph
 #' @export
-edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
+edit_graph.sem_graph <- function(x, expr, element = c("edges", "nodes"), ...){
   if(!all(element %in% names(x))){
     stop("Element ", element[!element %in% names(x)], " is not an element of the sem_graph object.", call. = FALSE)
   }
@@ -68,6 +68,24 @@ edit_graph.sem_graph <- function(x, expr, element = "edges", ...){
     x[[el]] <- eval.parent(cl)
   }
   x
+}
+
+#' @rdname edit_graph
+#' @export
+edit_nodes <- function(x, expr, ...){
+  cl <- match.call()
+  cl[[1L]] <- quote(edit_graph)
+  cl[["element"]] <- "nodes"
+  eval.parent(cl)
+}
+
+#' @rdname edit_graph
+#' @export
+edit_edges <- function(x, expr, ...){
+  cl <- match.call()
+  cl[[1L]] <- quote(edit_graph)
+  cl[["element"]] <- "edges"
+  eval.parent(cl)
 }
 
 #' @method edit_graph data.frame
@@ -615,9 +633,14 @@ plot.sem_graph <- function(x, y, ...){
     if("group" %in% names(df_nodes) & "group" %in% names(df_edges)){
       p <- p + facet_wrap(~group, scales = "free")
     } else {
-      if(fix_coord){
-        p <- p + coord_fixed(ratio = 1, xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
-      }
+
+    }
+  }
+  if(fix_coord){
+    if(!("level" %in% names(df_nodes) | "level" %in% names(df_edges) | "group" %in% names(df_nodes) | "group" %in% names(df_edges))){
+      p <- p + coord_fixed(ratio = 1, xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
+    } else {
+      p <- p+ theme(aspect.ratio = 1)
     }
   }
   p + theme(axis.line = element_blank(),

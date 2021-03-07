@@ -302,7 +302,7 @@ For example, we can change the label color for both nodes and edges:
 
 ```{r}
 prepare_graph(fit) %>%
-  edit_graph({ label_color = "blue" }, element = c("nodes", "edges")) %>%
+  edit_graph({ label_color = "blue" }) %>%
   plot()
 ```
 
@@ -556,17 +556,26 @@ Any of these columns can be used to conditionally format the graph.
 For example, note that one of the regression paths is positive and the other negative.
 We might want to color positive edges green:
 
-```{r}
+```{r, eval = FALSE, out.width="300px"}
+set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   plot()
+```
+```{r, echo = FALSE, out.width="300px"}
+set.seed(6)
+prepare_graph(fit) %>%
+  color_pos_edges("green") %>%
+  plot() -> p
+ggsave("pgfig8.png", p, device = "png", width= 4, height = 4)
+knitr::include_graphics("pgfig8.png")
 ```
 
 However, the variance arrow is also colored green, because it is an edge as well.
 This is where other conditional formatting functions come in handy. 
 Imagine we want to color the negative regression path red, and color the variance black - and make the variance transparent as well, to reduce its visual importance:
 
-```{r}
+```{r, eval = FALSE}
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   color_neg_edges("red") %>%
@@ -574,20 +583,44 @@ prepare_graph(fit) %>%
   alpha_var(.2) %>%
   plot()
 ```
-There are many dedicated conditional customization functions like these.
-They make use of the generic function `all_fun()`, and are documented in its help file (see `?all_fun`).
+```{r, echo = FALSE, out.width="300px"}
+set.seed(6)
+prepare_graph(fit) %>%
+  color_pos_edges("green") %>%
+  color_neg_edges("red") %>%
+  color_var("black") %>%
+  alpha_var(.2) %>%
+  plot() -> p
+ggsave("pgfig9.png", p, device = "png", width= 4, height = 4)
+knitr::include_graphics("pgfig9.png")
+```
 
-The function `all_fun()` takes an expression and a condition as arguments.
+There are many dedicated conditional customization functions like these.
+They make use of the generic function `if_edit()`, and are documented in its help file (see `?if_edit`).
+
+The function `if_edit()` takes an expression and a condition as arguments.
 This makes custom conditional formatting possible.
 For example, imagine that we want to color every graph element with the number "4" in the column `est` blue, you could use:
 
-```{r}
+```{r, eval = FALSE}
 prepare_graph(fit) %>%
-  edit_graph({ color = "black" }, element = c("nodes", "edges")) %>% # Add color column to the graph elements
-  all_fun({color = "blue"}, grepl("4", est), element = c("nodes", "edges")) %>% # Conditionally change color to blue when the column 'est' contains the number 4
+  # Add color column to the graph elements
+  edit_graph({ color = "black" }) %>% 
+  # Conditionally change color to blue when the column 'est' contains the number 4
+  if_edit(grepl("4", est), {color = "blue"}) %>%
   plot()
 ```
-
+```{r, echo = FALSE, out.width="300px"}
+set.seed(6)
+prepare_graph(fit) %>%
+  # Add color column to the graph elements
+  edit_graph({ color = "black" }) %>% 
+  # Conditionally change color to blue when the column 'est' contains the number 4
+  if_edit(grepl("4", est), {color = "blue"}) %>%
+  plot()->p
+ggsave("pgfig10.png", p, device = "png", width= 4, height = 4)
+knitr::include_graphics("pgfig10.png")
+```
 
 <!--As explained before, the functions `get_edges()` and `get_nodes()`,
 which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
