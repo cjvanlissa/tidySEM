@@ -513,6 +513,11 @@ lav_getParameterLabels <-
 table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   # Rename dictionary for consistency with mplus
   user_specified <- partable(x)
+  remthese <- which(
+      (user_specified$op == "==" & user_specified$user != 1L) |
+        (user_specified$op == "==" & user_specified$user == 1L) |
+        (user_specified$op %in% c("<", ">")))
+  if(length(remthese > 0)) user_specified <- user_specified[-remthese, , drop = FALSE]
   user_specified <- (user_specified$free != 0 | !is.na(user_specified$ustart))
 
   rename_dict <- c("pvalue" = "pval")
@@ -605,7 +610,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
     results <- results[, order_cols, drop = FALSE]
   }
   class(results) <- c("tidy_results", class(results))
-  attr(results, "user_specified") <- user_specified
+  if(length(user_specified) == nrow(results)) attr(results, "user_specified") <- user_specified
   results
 }
 
