@@ -1338,14 +1338,18 @@ match.call.defaults <- function(...) {
     aes_args <- c("id", "arrow", "linetype", "size", "colour", "color", "alpha")
     aes_args <- df_path[!duplicated(df_path$id), which(names(df_path) %in% aes_args)]
     Args <- list(
-      data = df_path,
+      data = df_path[, c("x", "y", "id")],
       mapping = aes_string(x = "x", y = "y", group = "id"),
       arrow = quote(ggplot2::arrow(angle = 25, length = unit(.1, "inches"), ends = "last", type = "closed")))
 
     for(this_path in unique(df_path$id)){
       Args$data <- df_path[df_path$id == this_path, ]
       Args$arrow[4] <- force(aes_args$arrow[aes_args$id == this_path])
-      p <- p + do.call(geom_path, c(Args, as.list(aes_args[aes_args$id == this_path, -c(1, 2), drop = FALSE])))
+      argslist <- c(Args, as.list(aes_args[aes_args$id == this_path, -c(1, 2), drop = FALSE]))
+      if(nchar(argslist$linetype) == 1){
+        argslist$linetype <- as.numeric(argslist$linetype)
+      }
+      p <- p + do.call(geom_path, argslist)
     }
   }
   if(any(df$arrow == "none")){
