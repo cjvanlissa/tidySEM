@@ -24,7 +24,7 @@
 * GitHub Actions (r-lib): ubuntu-20.04 (devel)
 * win-builder: release, R version 4.0.4 (2021-02-15)
 * win-builder: oldrelease: R version 3.6.3 (2020-02-29)
-* win-builder: R Under development (unstable) (2021-02-18 r80027)
+* win-builder: R Under development (unstable) (2021-03-05 r80073)
 * rhub check: Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * rhub check: Fedora Linux, R-devel, clang, gfortran
 * rhub check: Windows Server 2008 R2 SP1, R-devel, 32/64 bit
