@@ -88,5 +88,5 @@ a pull request with proposed features.
   - Make a pull request
     [here](https://github.com/cjvanlissa/tidySEM/pulls)
 
-By participating in this project, you agree to abide by the [Code of
-Merit](https://codeofmerit.org/CODE_OF_CONDUCT.md).
+By participating in this project, you agree to abide by the [Contributor
+Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html).

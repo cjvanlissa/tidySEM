@@ -1,8 +1,8 @@
 Package: tidySEM
 Type: Package
-Date: 2021-03-07
+Date: 2021-03-10
 Title: Tidy Structural Equation Modeling
-Version: 0.1.7.1
+Version: 0.1.7
 Authors@R: 
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",

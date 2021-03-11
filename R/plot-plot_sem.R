@@ -1344,7 +1344,7 @@ match.call.defaults <- function(...) {
 
     for(this_path in unique(df_path$id)){
       Args$data <- df_path[df_path$id == this_path, ]
-      Args$arrow[4] <- force(aes_args$arrow[aes_args$id == this_path])
+      Args$arrow[[4]] <- force(aes_args$arrow[aes_args$id == this_path])
       argslist <- c(Args, as.list(aes_args[aes_args$id == this_path, -c(1, 2), drop = FALSE]))
       if(nchar(argslist$linetype) == 1){
         argslist$linetype <- as.numeric(argslist$linetype)

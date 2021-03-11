@@ -5,6 +5,8 @@
   plotting. Renamed other "label" columns to "mplus_label" and "lavaan_label"
 * Fixed bug where arguments were not passed from prepare_graph() and graph_sem()
   to get_nodes() and get_edges(), e.g., digits was not passed on
+* Fixed bug where linetype did not work when using a mix of numeric (e.g., 1) 
+  and character (e.g., "dashed") values
 * Node labels can now be customized just like edge labels
 * Added convenience functions to conditionally customize graphs based on
   if_edit(), e.g.: sig_colour(plot, "green")
