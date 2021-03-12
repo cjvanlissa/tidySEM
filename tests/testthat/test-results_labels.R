@@ -5,7 +5,7 @@ fit <- sem("mpg ~ a * am", data = mtcars)
 tmp <- table_results(fit, columns = NULL)
 
 test_that("table_results() returns all labels", {
-  expect_true(all(c("lavaan_label", "mplus_label") %in% names(tmp)))
+  expect_true(all(c("lavaan_label", "label") %in% names(tmp)))
   expect_true(tmp$lavaan_label[1] == "a")
 })
 
@@ -38,7 +38,7 @@ if(isTRUE(mplusAvailable() == 0)){
 
     tb_mplus <- table_results(res_mplus, columns = NULL)
 
-    expect_true("mplus_label" %in% names(tmp))
+    expect_true("label" %in% names(tmp))
   })
 
 }

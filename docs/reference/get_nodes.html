@@ -73,7 +73,7 @@ are defined as observed or latent variables." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -211,9 +211,9 @@ label. See examples.</p>
 #&gt;             confint   est_sig est_std se_std pval_std      confint_std
 #&gt; 1 [-30.558, -4.600] -17.579**  -0.689  0.217    0.002 [-1.115, -0.263]
 #&gt; 2  [15.400, 15.400]    15.400   2.942  0.000     &lt;NA&gt;   [2.942, 2.942]
-#&gt;   est_sig_std mplus_label
-#&gt; 1    -0.689**  Means.dist
-#&gt; 2       2.942 Means.speed</div><div class='input'>
+#&gt;   est_sig_std label_results
+#&gt; 1    -0.689**    Means.dist
+#&gt; 2       2.942   Means.speed</div><div class='input'>
 <span class='co'># Pass an expression to the 'label' argument for custom labels</span>
 <span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>res</span>, label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>" "</span>, <span class='va'>est_sig</span>, <span class='st'>"\n"</span>, <span class='va'>confint</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    name shape                          label   lhs op rhs    est   se pval
@@ -222,9 +222,9 @@ label. See examples.</p>
 #&gt;           confint  est_sig est_std se_std pval_std    confint_std est_sig_std
 #&gt; 1 [-30.56, -4.60] -17.58**   -0.69   0.22     0.00 [-1.12, -0.26]     -0.69**
 #&gt; 2  [15.40, 15.40]    15.40    2.94   0.00     &lt;NA&gt;   [2.94, 2.94]        2.94
-#&gt;   mplus_label
-#&gt; 1  Means.dist
-#&gt; 2 Means.speed</div><div class='input'>
+#&gt;   label_results
+#&gt; 1    Means.dist
+#&gt; 2   Means.speed</div><div class='input'>
 <span class='co'># Pass the argument 'columns' to table_results through '...' to retain</span>
 <span class='co'># auxiliary columns for further processing</span>
 <span class='va'>nod</span> <span class='op'>&lt;-</span> <span class='fu'>get_nodes</span><span class='op'>(</span><span class='va'>res</span>, columns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"est_sig"</span>, <span class='st'>"confint"</span><span class='op'>)</span><span class='op'>)</span>

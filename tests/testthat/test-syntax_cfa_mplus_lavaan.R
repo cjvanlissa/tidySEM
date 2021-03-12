@@ -29,7 +29,7 @@ test_that("CFA gives same results in lavaan and Mplus", {
     tb_mplus <- table_results(res_mplus, columns = NULL)
 
 
-    expect_true(all(gsub("^intercepts", "means", gsub("^residual.", "", tolower(tb_mplus$mplus_label))) %in% tolower(tb_lav$mplus_label)))
+    expect_true(all(gsub("^intercepts", "means", gsub("^residual.", "", tolower(tb_mplus$label))) %in% tolower(tb_lav$label)))
 
 
   }

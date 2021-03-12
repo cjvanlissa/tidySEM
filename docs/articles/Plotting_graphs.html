@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -183,11 +183,11 @@
 <p>The <code><a href="../reference/get_layout.lavaan.html">get_layout()</a></code> function relies on <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html">igraph::layout_as_tree()</a></code> to place the nodes. Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span>
-<span class="co">#&gt;      [,1] [,2] [,3]      [,4]    [,5]</span>
-<span class="co">#&gt; [1,] NA   NA   NA        "x5"    NA  </span>
-<span class="co">#&gt; [2,] NA   "x6" "x4"      "x3"    NA  </span>
-<span class="co">#&gt; [3,] NA   "x7" "textual" "x1"    NA  </span>
-<span class="co">#&gt; [4,] "x8" "x9" "visual"  "speed" "x2"</span>
+<span class="co">#&gt;      [,1] [,2] [,3] [,4]     [,5]     </span>
+<span class="co">#&gt; [1,] NA   "x3" "x1" "speed"  NA       </span>
+<span class="co">#&gt; [2,] "x5" "x4" "x2" "visual" NA       </span>
+<span class="co">#&gt; [3,] NA   "x6" "x7" "x9"     "textual"</span>
+<span class="co">#&gt; [4,] NA   NA   "x8" NA       NA       </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span>
 <span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span>
@@ -341,7 +341,7 @@
 <span class="co">#&gt; 22 textual 0.41 0.07 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00</span>
 <span class="co">#&gt; 23   speed 0.26 0.06 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00</span>
 <span class="co">#&gt; 24   speed 0.17 0.05 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00</span>
-<span class="co">#&gt;     confint_std est_sig_std         mplus_label show</span>
+<span class="co">#&gt;     confint_std est_sig_std       label_results show</span>
 <span class="co">#&gt; 1  [0.66, 0.88]     0.77***        visual.BY.x1 TRUE</span>
 <span class="co">#&gt; 2  [0.31, 0.54]     0.42***        visual.BY.x2 TRUE</span>
 <span class="co">#&gt; 3  [0.47, 0.69]     0.58***        visual.BY.x3 TRUE</span>
@@ -424,7 +424,7 @@
 <span class="co">#&gt; 22  visual ~~ textual 0.41 0.07 0.00 [0.26, 0.55] 0.41***    0.46   0.06</span>
 <span class="co">#&gt; 23  visual ~~   speed 0.26 0.06 0.00 [0.15, 0.37] 0.26***    0.47   0.07</span>
 <span class="co">#&gt; 24 textual ~~   speed 0.17 0.05 0.00 [0.08, 0.27] 0.17***    0.28   0.07</span>
-<span class="co">#&gt;    pval_std  confint_std est_sig_std         mplus_label show</span>
+<span class="co">#&gt;    pval_std  confint_std est_sig_std       label_results show</span>
 <span class="co">#&gt; 1      0.00 [0.66, 0.88]     0.77***        visual.BY.x1 TRUE</span>
 <span class="co">#&gt; 2      0.00 [0.31, 0.54]     0.42***        visual.BY.x2 TRUE</span>
 <span class="co">#&gt; 3      0.00 [0.47, 0.69]     0.58***        visual.BY.x3 TRUE</span>
@@ -469,7 +469,7 @@
 <span class="co">#&gt; 10      x7  rect   x7\n4.19***      x7 ~1     4.19 0.06 0.00 [4.06, 4.31]</span>
 <span class="co">#&gt; 11      x8  rect   x8\n5.53***      x8 ~1     5.53 0.06 0.00 [5.41, 5.64]</span>
 <span class="co">#&gt; 12      x9  rect   x9\n5.37***      x9 ~1     5.37 0.06 0.00 [5.26, 5.49]</span>
-<span class="co">#&gt;    est_sig est_std se_std pval_std  confint_std est_sig_std   mplus_label</span>
+<span class="co">#&gt;    est_sig est_std se_std pval_std  confint_std est_sig_std label_results</span>
 <span class="co">#&gt; 1     0.00    0.00   0.00     &lt;NA&gt; [0.00, 0.00]        0.00   Means.speed</span>
 <span class="co">#&gt; 2     0.00    0.00   0.00     &lt;NA&gt; [0.00, 0.00]        0.00 Means.textual</span>
 <span class="co">#&gt; 3     0.00    0.00   0.00     &lt;NA&gt; [0.00, 0.00]        0.00  Means.visual</span>
@@ -511,7 +511,7 @@
 <span class="co">#&gt; 10 [4.06, 4.31] 4.19***    3.85   0.17     0.00 [3.52, 4.18]     3.85***</span>
 <span class="co">#&gt; 11 [5.41, 5.64] 5.53***    5.47   0.23     0.00 [5.02, 5.92]     5.47***</span>
 <span class="co">#&gt; 12 [5.26, 5.49] 5.37***    5.33   0.22     0.00 [4.89, 5.78]     5.33***</span>
-<span class="co">#&gt;      mplus_label</span>
+<span class="co">#&gt;    label_results</span>
 <span class="co">#&gt; 1    Means.speed</span>
 <span class="co">#&gt; 2  Means.textual</span>
 <span class="co">#&gt; 3   Means.visual</span>
@@ -583,7 +583,7 @@
 <span class="co">#&gt; 22 textual 0.41 0.07 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00</span>
 <span class="co">#&gt; 23   speed 0.26 0.06 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00</span>
 <span class="co">#&gt; 24   speed 0.17 0.05 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00</span>
-<span class="co">#&gt;     confint_std est_sig_std         mplus_label show</span>
+<span class="co">#&gt;     confint_std est_sig_std       label_results show</span>
 <span class="co">#&gt; 1  [0.66, 0.88]     0.77***        visual.BY.x1 TRUE</span>
 <span class="co">#&gt; 2  [0.31, 0.54]     0.42***        visual.BY.x2 TRUE</span>
 <span class="co">#&gt; 3  [0.47, 0.69]     0.58***        visual.BY.x3 TRUE</span>
@@ -669,7 +669,7 @@
 <span class="co">#&gt; 10      x7 ~1     4.19 0.06 0.00 [4.06, 4.31] 4.19***    3.85   0.17     0.00</span>
 <span class="co">#&gt; 11      x8 ~1     5.53 0.06 0.00 [5.41, 5.64] 5.53***    5.47   0.23     0.00</span>
 <span class="co">#&gt; 12      x9 ~1     5.37 0.06 0.00 [5.26, 5.49] 5.37***    5.33   0.22     0.00</span>
-<span class="co">#&gt;     confint_std est_sig_std   mplus_label show</span>
+<span class="co">#&gt;     confint_std est_sig_std label_results show</span>
 <span class="co">#&gt; 1  [0.00, 0.00]        0.00   Means.speed TRUE</span>
 <span class="co">#&gt; 2  [0.00, 0.00]        0.00 Means.textual TRUE</span>
 <span class="co">#&gt; 3  [0.00, 0.00]        0.00  Means.visual TRUE</span>
@@ -733,7 +733,7 @@
 <span class="co">#&gt; 22 textual 0.41 0.07 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00</span>
 <span class="co">#&gt; 23   speed 0.26 0.06 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00</span>
 <span class="co">#&gt; 24   speed 0.17 0.05 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00</span>
-<span class="co">#&gt;     confint_std est_sig_std         mplus_label show</span>
+<span class="co">#&gt;     confint_std est_sig_std       label_results show</span>
 <span class="co">#&gt; 1  [0.66, 0.88]     0.77***        visual.BY.x1 TRUE</span>
 <span class="co">#&gt; 2  [0.31, 0.54]     0.42***        visual.BY.x2 TRUE</span>
 <span class="co">#&gt; 3  [0.47, 0.69]     0.58***        visual.BY.x3 TRUE</span>
@@ -927,7 +927,7 @@
 #&gt; 4 0.00 &lt;NA&gt;   [3.09, 3.09]     3.09    1.00   0.00     &lt;NA&gt;   [1.00, 1.00]
 #&gt; 5 0.00 &lt;NA&gt; [-0.45, -0.45]    -0.45   -0.52   0.00     &lt;NA&gt; [-0.52, -0.52]
 #&gt; 6 0.00 &lt;NA&gt;   [0.24, 0.24]     0.24    1.00   0.00     &lt;NA&gt;   [1.00, 1.00]
-#&gt;   est_sig_std   mplus_label  show
+#&gt;   est_sig_std label_results  show
 #&gt; 1    -0.74***    mpg.ON.cyl  TRUE
 #&gt; 2       0.21*     mpg.ON.am  TRUE
 #&gt; 3     0.24*** Variances.mpg  TRUE

@@ -826,6 +826,9 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
 
   # Make a data.frame based on the information about node means
   node_df <- x[x$op == "~1", ]
+  if("label" %in% names(node_df)){
+    names(node_df)[names(node_df) == "label"] <- "label_results"
+  }
   # Keep only rows corresponding to the identified nodes
   node_rows <- match(nodes$name, node_df$lhs)
   if(any(!is.na(node_rows))){
@@ -833,7 +836,6 @@ get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), 
     nodes <- merge(nodes, node_df, by = "name", all.x = TRUE)
   }
   # If the user asked for a label
-
   # Check if the label is an expression. If it is, substitute it
   if (inherits(suppressWarnings(try(label, silent = TRUE)), "try-error")) {
     label <- substitute(label)
@@ -978,6 +980,9 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
       tmp
     })
     return(do.call(rbind, x_list))
+  }
+  if("label" %in% names(x)){
+    names(x)[names(x) == "label"] <- "label_results"
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
   keep_cols <- names(x)

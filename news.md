@@ -1,3 +1,8 @@
+# tidySEM 0.1.8
+
+* Fixed bug where table_results() was broken by renaming 'label' column to
+  'mplus_label'
+
 # tidySEM 0.1.7
 
 * Fixed several bugs in plotting, caused by multiple columns called "label" 
