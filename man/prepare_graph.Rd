@@ -5,6 +5,7 @@
 \alias{prepare_graph.default}
 \alias{prepare_graph.lavaan}
 \alias{prepare_graph.mplus.model}
+\alias{prepare_graph.mplusObject}
 \title{Prepare graph data}
 \usage{
 prepare_graph(...)
@@ -36,6 +37,14 @@ prepare_graph(...)
 )
 
 \method{prepare_graph}{mplus.model}(
+  model,
+  edges = get_edges(x = model),
+  layout = get_layout(x = model),
+  nodes = get_nodes(x = model),
+  ...
+)
+
+\method{prepare_graph}{mplusObject}(
   model,
   edges = get_edges(x = model),
   layout = get_layout(x = model),

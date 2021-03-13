@@ -230,6 +230,11 @@ graph_sem.lavaan <- function(model,
 #' @export
 graph_sem.mplus.model <- graph_sem.lavaan
 
+#' @method graph_sem mplusObject
+#' @rdname graph_sem
+#' @export
+graph_sem.mplusObject <- graph_sem.lavaan
+
 graph_model <- function(model, ...) {
   Args <- as.list(match.call()[-1])
   call_args <- list(x = model,
@@ -543,6 +548,11 @@ prepare_graph.lavaan <- function(model,
 #' @rdname prepare_graph
 #' @export
 prepare_graph.mplus.model <- prepare_graph.lavaan
+
+#' @method prepare_graph mplusObject
+#' @rdname prepare_graph
+#' @export
+prepare_graph.mplusObject <- prepare_graph.lavaan
 
 prepare_graph_model <- function(model, ...) {
   Args <- as.list(match.call()[-1])

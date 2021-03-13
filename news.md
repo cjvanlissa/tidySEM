@@ -1,3 +1,7 @@
+# tidySEM 0.1.9
+
+* Add methods for mplusObjects
+
 # tidySEM 0.1.8
 
 * Fixed bug where table_results() was broken by renaming 'label' column to

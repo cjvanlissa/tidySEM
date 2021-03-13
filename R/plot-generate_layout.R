@@ -112,6 +112,10 @@ get_layout.lavaan <- function(x, ..., layout_algorithm = "layout_as_tree"){
 #' @export
 get_layout.mplus.model <- get_layout.lavaan
 
+#' @method get_layout mplusObject
+#' @export
+get_layout.mplusObject <- get_layout.lavaan
+
 #' @method get_layout tidy_results
 #' @export
 #' @importFrom igraph graph.data.frame vertex.attributes

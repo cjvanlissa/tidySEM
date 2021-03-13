@@ -9,24 +9,24 @@
 #  #EXAMPLE1
 #  }
 # }
-# @rdname load_data
+# @rdname get_data
 # @export
-load_data <- function(x, ...){
-  UseMethod("load_data", x)
+get_data <- function(x, ...){
+  UseMethod("get_data", x)
 }
 
-# @method load_data mplusObject
+# @method get_data mplusObject
 # @export
-load_data.mplusObject <- function(x, ...){
+get_data.mplusObject <- function(x, ...){
   Args <- as.list(match.call()[-1])
   Args$x <- x$results
-  do.call(load_data, Args)
+  do.call(get_data, Args)
 }
 
-# @method load_data mplus.model
+# @method get_data mplus.model
 # @export
 #' @importFrom utils read.table
-load_data.mplus.model <- function(x, ...){
+get_data.mplus.model <- function(x, ...){
   df <- read.table(x$input$data$file, stringsAsFactors = FALSE)
   names(df) <- mplus_expand_names(x$input$variable$names) #strsplit(x$input$variable$names, split = "\\s+")[[1]]
   df
