@@ -1,8 +1,9 @@
 # tidySEM 0.1.8
 
+* NOTE: "Days since last update: 2". This is because a bug was detected in the
+  previous version. Sorry for the inconvenience!
 * Fixed bug where table_results() was broken by renaming 'label' column to
   'mplus_label'
-  
   
 ## Test environments
 
@@ -20,4 +21,6 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+Note: Days since last update: 2
