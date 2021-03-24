@@ -123,8 +123,7 @@ get_layout.mplusObject <- get_layout.lavaan
 #' layout_on_grid layout_randomly layout_with_dh layout_with_fr layout_with_gem
 #' layout_with_graphopt layout_with_kk layout_with_lgl layout_with_mds
 get_layout.tidy_results <- function(x, ..., layout_algorithm = "layout_as_tree"){
-  tab_res <- x
-  df <- tab_res[tab_res$op %in% c("~~", "~", "=~"), c("lhs", "rhs")]
+  df <- tidySEM:::get_edges.tidy_results(x)[c("from", "to")]
   g <- graph.data.frame(df, directed = TRUE)
   lo <- do.call(layout_algorithm, list(g))
   lo <- round(lo)
