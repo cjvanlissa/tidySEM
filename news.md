@@ -1,6 +1,8 @@
 # tidySEM 0.1.9
 
 * Add methods for mplusObjects
+* Fixed bug where nodes from multilevel models were incorrectly merged, due to
+  lack of within-level intercepts
 
 # tidySEM 0.1.8
 
