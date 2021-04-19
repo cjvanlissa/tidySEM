@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
       </span>
     </div>
 
@@ -135,9 +135,21 @@
       <small>Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidysem-019" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.9">
+<a href="#tidysem-019" class="anchor"></a>tidySEM 0.1.9<small> Unreleased </small>
+</h1>
+<ul>
+<li>Removed LazyData entry from DESCRIPTION (no data included in package)</li>
+<li>Add methods for mplusObjects</li>
+<li>Fixed bug where nodes from multilevel models were incorrectly merged, due to lack of within-level intercepts</li>
+<li>Fixed bug where get_layout did not work for multilevel models because it used table_results() instead of get_edges()</li>
+<li>Fixed bug in create_scales</li>
+</ul>
+</div>
     <div id="tidysem-018" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.8">
-<a href="#tidysem-018" class="anchor"></a>tidySEM 0.1.8<small> Unreleased </small>
+<a href="#tidysem-018" class="anchor"></a>tidySEM 0.1.8<small> 2021-03-13 </small>
 </h1>
 <ul>
 <li>Fixed bug where table_results() was broken by renaming ‘label’ column to ‘mplus_label’</li>

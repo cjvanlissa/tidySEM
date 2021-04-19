@@ -544,7 +544,7 @@ The functions `get_edges()` and `get_nodes()` rely on `table_results()` to
 extract information about nodes and edges from SEM models.
 All of the columns returned by `table_results()` can be used to conditionally
 customize visual aspects of the graph.
-Let's estimate a model and look at all of the coluns extracted by `get_edges()`:
+Let's estimate a model and look at all of the columns extracted by `get_edges()`:
 
 ```{r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
 fit <- sem("mpg ~ cyl

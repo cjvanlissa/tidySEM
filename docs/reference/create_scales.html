@@ -76,7 +76,7 @@ psych package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
       </span>
     </div>
 
@@ -229,14 +229,14 @@ These coefficients are marked with "(sb)".</p>
             <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span>, <span class='st'>"Petal.Length"</span>, <span class='st'>"Petal.Width"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Called from: create_scales.data.frame(iris, keys.list = list(scalename = c("Sepal.Length", 
 #&gt;     "Sepal.Width", "Petal.Length", "Petal.Width")))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#78: data &lt;- x
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#79: use_keys &lt;- keys.list &lt;- keys.list[!sapply(keys.list, length) &lt; 
+#&gt; debug: data &lt;- x
+#&gt; debug: use_keys &lt;- keys.list &lt;- keys.list[!sapply(keys.list, length) &lt; 
 #&gt;     2]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#81: scoredatanames &lt;- as.vector(unlist(keys.list))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#82: scoredatanames &lt;- unique(scoredatanames)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#83: data &lt;- data[, names(data) %in% scoredatanames]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#85: fas &lt;- matrix(nrow = length(keys.list), ncol = 2)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#86: for (i in seq_along(names(keys.list))) {
+#&gt; debug: scoredatanames &lt;- as.vector(unlist(keys.list))
+#&gt; debug: scoredatanames &lt;- unique(scoredatanames)
+#&gt; debug: data &lt;- data[, names(data) %in% scoredatanames]
+#&gt; debug: fas &lt;- matrix(nrow = length(keys.list), ncol = 2)
+#&gt; debug: for (i in seq_along(names(keys.list))) {
 #&gt;     scale_name &lt;- names(keys.list)[i]
 #&gt;     tryCatch({
 #&gt;         fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
@@ -262,8 +262,8 @@ These coefficients are marked with "(sb)".</p>
 #&gt;         fas[i, ] &lt;- c(NA, NA)
 #&gt;     })
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#87: scale_name &lt;- names(keys.list)[i]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#88: tryCatch({
+#&gt; debug: scale_name &lt;- names(keys.list)[i]
+#&gt; debug: tryCatch({
 #&gt;     fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
 #&gt;     rev_items &lt;- sign(fa_loadings) == -1
 #&gt;     if (reverse_items &amp; any(rev_items)) {
@@ -284,24 +284,24 @@ These coefficients are marked with "(sb)".</p>
 #&gt;         gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE)
 #&gt;     fas[i, ] &lt;- c(NA, NA)
 #&gt; })
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#89: fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='output co'>#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#108: keys &lt;- psych::make.keys(length(scoredatanames), keys.list = use_keys, 
+#&gt; debug: fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings</div><div class='output co'>#&gt; <span class='warning'>Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span></div><div class='output co'>#&gt; debug: keys &lt;- psych::make.keys(length(scoredatanames), keys.list = use_keys, 
 #&gt;     item.labels = scoredatanames)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#110: scores &lt;- psych::scoreItems(keys, data, missing = missing, impute = impute)</div><div class='output co'>#&gt; <span class='message'>Number of categories should be increased  in order to count frequencies. </span></div><div class='output co'>#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#112: table_descriptives &lt;- data.frame(Subscale = colnames(scores$scores), 
+#&gt; debug: scores &lt;- psych::scoreItems(keys, data, missing = missing, impute = impute)</div><div class='output co'>#&gt; <span class='message'>Number of categories should be increased  in order to count frequencies. </span></div><div class='output co'>#&gt; debug: table_descriptives &lt;- data.frame(Subscale = colnames(scores$scores), 
 #&gt;     Items = sapply(keys.list, length))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#114: desc &lt;- descriptives(scores$scores)[, c("n", "mean", "sd", "min", 
+#&gt; debug: desc &lt;- descriptives(scores$scores)[, c("n", "mean", "sd", "min", 
 #&gt;     "max")]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#115: table_descriptives &lt;- cbind(table_descriptives, desc, skew_kurtosis(scores$scores, 
+#&gt; debug: table_descriptives &lt;- cbind(table_descriptives, desc, skew_kurtosis(scores$scores, 
 #&gt;     verbose = FALSE, se = FALSE))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#119: table_descriptives$Reliability &lt;- as.vector(scores$alpha)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#120: two_items &lt;- table_descriptives$Items &lt; 3
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#121: if (any(two_items)) {
+#&gt; debug: table_descriptives$Reliability &lt;- as.vector(scores$alpha)
+#&gt; debug: two_items &lt;- table_descriptives$Items &lt; 3
+#&gt; debug: if (any(two_items)) {
 #&gt;     table_descriptives$Reliability[two_items] &lt;- sapply(keys.list[which(two_items)], 
 #&gt;         function(this_scale) {
 #&gt;             spearman_brown(data[this_scale])
 #&gt;         })
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#126: table_descriptives$Interpret = interpret(as.vector(scores$alpha))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#127: if (!is.null(omega)) {
+#&gt; debug: table_descriptives$Interpret = interpret(as.vector(scores$alpha))
+#&gt; debug: if (!is.null(omega)) {
 #&gt;     omegas &lt;- sapply(names(keys.list), function(scale_name) {
 #&gt;         tryCatch(omega(data[keys.list[[scale_name]]])[[omega]], 
 #&gt;             error = function(e) {
@@ -316,44 +316,44 @@ These coefficients are marked with "(sb)".</p>
 #&gt;     table_descriptives &lt;- data.frame(table_descriptives, Omega = omegas, 
 #&gt;         Interpret.O = interpret(omegas))
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#138: colnames(fas) &lt;- c("min_load", "max_load")
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#139: table_descriptives &lt;- cbind(table_descriptives, fas)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#140: table_descriptives[, sapply(table_descriptives, is.numeric)] &lt;- lapply(table_descriptives[, 
+#&gt; debug: colnames(fas) &lt;- c("min_load", "max_load")
+#&gt; debug: table_descriptives &lt;- cbind(table_descriptives, fas)
+#&gt; debug: table_descriptives[, sapply(table_descriptives, is.numeric)] &lt;- lapply(table_descriptives[, 
 #&gt;     sapply(table_descriptives, is.numeric)], format_with_na, 
 #&gt;     digits = digits, format = "f")
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#144: if (any(two_items)) {
+#&gt; debug: if (any(two_items)) {
 #&gt;     table_descriptives$Reliability[two_items] &lt;- paste0(table_descriptives$Reliability[two_items], 
 #&gt;         "(sb)")
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#148: cordat &lt;- data.frame(scores$scores)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#149: if (missing == FALSE) {
+#&gt; debug: cordat &lt;- data.frame(scores$scores)
+#&gt; debug: if (missing == FALSE) {
 #&gt;     cordat &lt;- cordat[complete.cases(cordat), ]
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#152: combos &lt;- expand.grid(names(cordat), names(cordat))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#153: cortab &lt;- matrix(mapply(function(x, y) {
+#&gt; debug: combos &lt;- expand.grid(names(cordat), names(cordat))
+#&gt; debug: cortab &lt;- matrix(mapply(function(x, y) {
 #&gt;     tmp &lt;- cor.test(cordat[[x]], cordat[[y]])
 #&gt;     paste0(format_with_na(tmp$estimate, digits = digits, format = "f"), 
 #&gt;         ifelse(tmp$p.value &lt; 0.05, "*", ""), ifelse(tmp$p.value &lt; 
 #&gt;             0.01, "*", ""), ifelse(tmp$p.value &lt; 0.001, "*", 
 #&gt;             ""))
 #&gt; }, x = combos$Var1, y = combos$Var2), nrow = ncol(cordat))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#160: colnames(cortab) &lt;- rownames(cortab) &lt;- names(cordat)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#161: cortab[upper.tri(cortab)] &lt;- ""
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#162: rownames(table_descriptives) &lt;- NULL
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#163: out &lt;- list(descriptives = table_descriptives, correlations = cortab, 
+#&gt; debug: colnames(cortab) &lt;- rownames(cortab) &lt;- names(cordat)
+#&gt; debug: cortab[upper.tri(cortab)] &lt;- ""
+#&gt; debug: rownames(table_descriptives) &lt;- NULL
+#&gt; debug: out &lt;- list(descriptives = table_descriptives, correlations = cortab, 
 #&gt;     scores = data.frame(scores$scores))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#165: class(out) &lt;- c("tidy_scales", class(out))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#166: return(out)</div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>descriptives</span>
+#&gt; debug: class(out) &lt;- c("tidy_scales", class(out))
+#&gt; debug: return(out)</div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>descriptives</span>
 </div><div class='output co'>#&gt;    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
 #&gt; 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20    -1.52
 #&gt;   Reliability  Interpret min_load max_load
 #&gt; 1        0.71 Acceptable       NA       NA</div><div class='input'><span class='va'>dict</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span><span class='op'>(</span><span class='va'>iris</span>, split <span class='op'>=</span> <span class='st'>"\\."</span><span class='op'>)</span>
 <span class='fu'>create_scales</span><span class='op'>(</span><span class='va'>dict</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Called from: create_scales.tidy_sem(dict)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#56: Args &lt;- as.list(match.call()[-1])
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#57: Args$x &lt;- x$data
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#58: scale_names &lt;- unique(c(NA, x$dictionary$scale))[-1]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#59: if (length(scale_names) &gt; 0) {
+#&gt; debug: Args &lt;- as.list(match.call()[-1])
+#&gt; debug: Args$x &lt;- x$data
+#&gt; debug: scale_names &lt;- unique(c(NA, x$dictionary$scale))[-1]
+#&gt; debug: if (length(scale_names) &gt; 0) {
 #&gt;     sl &lt;- lapply(scale_names, function(i) {
 #&gt;         x$dictionary$name[x$dictionary$scale == i &amp; !is.na(x$dictionary$scale)]
 #&gt;     })
@@ -365,12 +365,12 @@ These coefficients are marked with "(sb)".</p>
 #&gt;     colmsg("No scales found in dictionary.")
 #&gt;     return(NULL)
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#60: sl &lt;- lapply(scale_names, function(i) {
+#&gt; debug: sl &lt;- lapply(scale_names, function(i) {
 #&gt;     x$dictionary$name[x$dictionary$scale == i &amp; !is.na(x$dictionary$scale)]
 #&gt; })
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#61: names(sl) &lt;- scale_names
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#62: Args$keys.list &lt;- sl
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#63: do.call(create_scales, Args)
+#&gt; debug: names(sl) &lt;- scale_names
+#&gt; debug: Args$keys.list &lt;- sl
+#&gt; debug: do.call(create_scales, Args)
 #&gt; Called from: create_scales.data.frame(x = list(Sepal.Length = c(5.1, 4.9, 
 #&gt; 4.7, 4.6, 5, 5.4, 4.6, 5, 4.4, 4.9, 5.4, 4.8, 4.8, 4.3, 5.8, 
 #&gt; 5.7, 5.4, 5.1, 5.7, 5.1, 5.4, 5.1, 4.6, 5.1, 4.8, 5, 5, 5.2, 
@@ -429,14 +429,14 @@ These coefficients are marked with "(sb)".</p>
 #&gt; 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 
 #&gt; 3L, 3L, 3L, 3L, 3L)), keys.list = list(Sepal = c("Sepal.Length", 
 #&gt; "Sepal.Width"), Petal = c("Petal.Length", "Petal.Width")))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#78: data &lt;- x
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#79: use_keys &lt;- keys.list &lt;- keys.list[!sapply(keys.list, length) &lt; 
+#&gt; debug: data &lt;- x
+#&gt; debug: use_keys &lt;- keys.list &lt;- keys.list[!sapply(keys.list, length) &lt; 
 #&gt;     2]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#81: scoredatanames &lt;- as.vector(unlist(keys.list))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#82: scoredatanames &lt;- unique(scoredatanames)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#83: data &lt;- data[, names(data) %in% scoredatanames]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#85: fas &lt;- matrix(nrow = length(keys.list), ncol = 2)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#86: for (i in seq_along(names(keys.list))) {
+#&gt; debug: scoredatanames &lt;- as.vector(unlist(keys.list))
+#&gt; debug: scoredatanames &lt;- unique(scoredatanames)
+#&gt; debug: data &lt;- data[, names(data) %in% scoredatanames]
+#&gt; debug: fas &lt;- matrix(nrow = length(keys.list), ncol = 2)
+#&gt; debug: for (i in seq_along(names(keys.list))) {
 #&gt;     scale_name &lt;- names(keys.list)[i]
 #&gt;     tryCatch({
 #&gt;         fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
@@ -462,8 +462,8 @@ These coefficients are marked with "(sb)".</p>
 #&gt;         fas[i, ] &lt;- c(NA, NA)
 #&gt;     })
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#87: scale_name &lt;- names(keys.list)[i]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#88: tryCatch({
+#&gt; debug: scale_name &lt;- names(keys.list)[i]
+#&gt; debug: tryCatch({
 #&gt;     fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
 #&gt;     rev_items &lt;- sign(fa_loadings) == -1
 #&gt;     if (reverse_items &amp; any(rev_items)) {
@@ -484,9 +484,9 @@ These coefficients are marked with "(sb)".</p>
 #&gt;         gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE)
 #&gt;     fas[i, ] &lt;- c(NA, NA)
 #&gt; })
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#89: fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#90: rev_items &lt;- sign(fa_loadings) == -1
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#91: if (reverse_items &amp; any(rev_items)) {
+#&gt; debug: fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
+#&gt; debug: rev_items &lt;- sign(fa_loadings) == -1
+#&gt; debug: if (reverse_items &amp; any(rev_items)) {
 #&gt;     message("Some factor loadings were negative for scale '", 
 #&gt;         scale_name, "'. These items were automatically reversed: ", 
 #&gt;         paste0(keys.list[[scale_name]][rev_items], collapse = ", "))
@@ -495,12 +495,12 @@ These coefficients are marked with "(sb)".</p>
 #&gt; } else {
 #&gt;     fas[i, ] &lt;- range(as.numeric(fa_loadings))
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#92: message("Some factor loadings were negative for scale '", scale_name, 
+#&gt; debug: message("Some factor loadings were negative for scale '", scale_name, 
 #&gt;     "'. These items were automatically reversed: ", paste0(keys.list[[scale_name]][rev_items], 
-#&gt;         collapse = ", "))</div><div class='output co'>#&gt; <span class='message'>Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span></div><div class='output co'>#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#93: use_keys[[scale_name]][rev_items] &lt;- paste0("-", use_keys[[scale_name]][rev_items])
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#94: fas[i, ] &lt;- range(abs(as.numeric(fa_loadings)))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#87: scale_name &lt;- names(keys.list)[i]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#88: tryCatch({
+#&gt;         collapse = ", "))</div><div class='output co'>#&gt; <span class='message'>Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span></div><div class='output co'>#&gt; debug: use_keys[[scale_name]][rev_items] &lt;- paste0("-", use_keys[[scale_name]][rev_items])
+#&gt; debug: fas[i, ] &lt;- range(abs(as.numeric(fa_loadings)))
+#&gt; debug: scale_name &lt;- names(keys.list)[i]
+#&gt; debug: tryCatch({
 #&gt;     fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
 #&gt;     rev_items &lt;- sign(fa_loadings) == -1
 #&gt;     if (reverse_items &amp; any(rev_items)) {
@@ -521,9 +521,9 @@ These coefficients are marked with "(sb)".</p>
 #&gt;         gsub("^.+?(?=:)", "", w, perl = TRUE)), call. = FALSE)
 #&gt;     fas[i, ] &lt;- c(NA, NA)
 #&gt; })
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#89: fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#90: rev_items &lt;- sign(fa_loadings) == -1
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#91: if (reverse_items &amp; any(rev_items)) {
+#&gt; debug: fa_loadings &lt;- fa(data[keys.list[[scale_name]]])$loadings
+#&gt; debug: rev_items &lt;- sign(fa_loadings) == -1
+#&gt; debug: if (reverse_items &amp; any(rev_items)) {
 #&gt;     message("Some factor loadings were negative for scale '", 
 #&gt;         scale_name, "'. These items were automatically reversed: ", 
 #&gt;         paste0(keys.list[[scale_name]][rev_items], collapse = ", "))
@@ -532,29 +532,29 @@ These coefficients are marked with "(sb)".</p>
 #&gt; } else {
 #&gt;     fas[i, ] &lt;- range(as.numeric(fa_loadings))
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#96: fas[i, ] &lt;- range(as.numeric(fa_loadings))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#108: keys &lt;- psych::make.keys(length(scoredatanames), keys.list = use_keys, 
+#&gt; debug: fas[i, ] &lt;- range(as.numeric(fa_loadings))
+#&gt; debug: keys &lt;- psych::make.keys(length(scoredatanames), keys.list = use_keys, 
 #&gt;     item.labels = scoredatanames)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#110: scores &lt;- psych::scoreItems(keys, data, missing = missing, impute = impute)</div><div class='output co'>#&gt; <span class='message'>Number of categories should be increased  in order to count frequencies. </span></div><div class='output co'>#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#112: table_descriptives &lt;- data.frame(Subscale = colnames(scores$scores), 
+#&gt; debug: scores &lt;- psych::scoreItems(keys, data, missing = missing, impute = impute)</div><div class='output co'>#&gt; <span class='message'>Number of categories should be increased  in order to count frequencies. </span></div><div class='output co'>#&gt; debug: table_descriptives &lt;- data.frame(Subscale = colnames(scores$scores), 
 #&gt;     Items = sapply(keys.list, length))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#114: desc &lt;- descriptives(scores$scores)[, c("n", "mean", "sd", "min", 
+#&gt; debug: desc &lt;- descriptives(scores$scores)[, c("n", "mean", "sd", "min", 
 #&gt;     "max")]
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#115: table_descriptives &lt;- cbind(table_descriptives, desc, skew_kurtosis(scores$scores, 
+#&gt; debug: table_descriptives &lt;- cbind(table_descriptives, desc, skew_kurtosis(scores$scores, 
 #&gt;     verbose = FALSE, se = FALSE))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#119: table_descriptives$Reliability &lt;- as.vector(scores$alpha)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#120: two_items &lt;- table_descriptives$Items &lt; 3
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#121: if (any(two_items)) {
+#&gt; debug: table_descriptives$Reliability &lt;- as.vector(scores$alpha)
+#&gt; debug: two_items &lt;- table_descriptives$Items &lt; 3
+#&gt; debug: if (any(two_items)) {
 #&gt;     table_descriptives$Reliability[two_items] &lt;- sapply(keys.list[which(two_items)], 
 #&gt;         function(this_scale) {
 #&gt;             spearman_brown(data[this_scale])
 #&gt;         })
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#122: table_descriptives$Reliability[two_items] &lt;- sapply(keys.list[which(two_items)], 
+#&gt; debug: table_descriptives$Reliability[two_items] &lt;- sapply(keys.list[which(two_items)], 
 #&gt;     function(this_scale) {
 #&gt;         spearman_brown(data[this_scale])
 #&gt;     })
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#126: table_descriptives$Interpret = interpret(as.vector(scores$alpha))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#127: if (!is.null(omega)) {
+#&gt; debug: table_descriptives$Interpret = interpret(as.vector(scores$alpha))
+#&gt; debug: if (!is.null(omega)) {
 #&gt;     omegas &lt;- sapply(names(keys.list), function(scale_name) {
 #&gt;         tryCatch(omega(data[keys.list[[scale_name]]])[[omega]], 
 #&gt;             error = function(e) {
@@ -569,36 +569,36 @@ These coefficients are marked with "(sb)".</p>
 #&gt;     table_descriptives &lt;- data.frame(table_descriptives, Omega = omegas, 
 #&gt;         Interpret.O = interpret(omegas))
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#138: colnames(fas) &lt;- c("min_load", "max_load")
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#139: table_descriptives &lt;- cbind(table_descriptives, fas)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#140: table_descriptives[, sapply(table_descriptives, is.numeric)] &lt;- lapply(table_descriptives[, 
+#&gt; debug: colnames(fas) &lt;- c("min_load", "max_load")
+#&gt; debug: table_descriptives &lt;- cbind(table_descriptives, fas)
+#&gt; debug: table_descriptives[, sapply(table_descriptives, is.numeric)] &lt;- lapply(table_descriptives[, 
 #&gt;     sapply(table_descriptives, is.numeric)], format_with_na, 
 #&gt;     digits = digits, format = "f")
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#144: if (any(two_items)) {
+#&gt; debug: if (any(two_items)) {
 #&gt;     table_descriptives$Reliability[two_items] &lt;- paste0(table_descriptives$Reliability[two_items], 
 #&gt;         "(sb)")
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#145: table_descriptives$Reliability[two_items] &lt;- paste0(table_descriptives$Reliability[two_items], 
+#&gt; debug: table_descriptives$Reliability[two_items] &lt;- paste0(table_descriptives$Reliability[two_items], 
 #&gt;     "(sb)")
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#148: cordat &lt;- data.frame(scores$scores)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#149: if (missing == FALSE) {
+#&gt; debug: cordat &lt;- data.frame(scores$scores)
+#&gt; debug: if (missing == FALSE) {
 #&gt;     cordat &lt;- cordat[complete.cases(cordat), ]
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#152: combos &lt;- expand.grid(names(cordat), names(cordat))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#153: cortab &lt;- matrix(mapply(function(x, y) {
+#&gt; debug: combos &lt;- expand.grid(names(cordat), names(cordat))
+#&gt; debug: cortab &lt;- matrix(mapply(function(x, y) {
 #&gt;     tmp &lt;- cor.test(cordat[[x]], cordat[[y]])
 #&gt;     paste0(format_with_na(tmp$estimate, digits = digits, format = "f"), 
 #&gt;         ifelse(tmp$p.value &lt; 0.05, "*", ""), ifelse(tmp$p.value &lt; 
 #&gt;             0.01, "*", ""), ifelse(tmp$p.value &lt; 0.001, "*", 
 #&gt;             ""))
 #&gt; }, x = combos$Var1, y = combos$Var2), nrow = ncol(cordat))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#160: colnames(cortab) &lt;- rownames(cortab) &lt;- names(cordat)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#161: cortab[upper.tri(cortab)] &lt;- ""
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#162: rownames(table_descriptives) &lt;- NULL
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#163: out &lt;- list(descriptives = table_descriptives, correlations = cortab, 
+#&gt; debug: colnames(cortab) &lt;- rownames(cortab) &lt;- names(cordat)
+#&gt; debug: cortab[upper.tri(cortab)] &lt;- ""
+#&gt; debug: rownames(table_descriptives) &lt;- NULL
+#&gt; debug: out &lt;- list(descriptives = table_descriptives, correlations = cortab, 
 #&gt;     scores = data.frame(scores$scores))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#165: class(out) &lt;- c("tidy_scales", class(out))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/syntax-create_scales.R#166: return(out)</div><div class='output co'>#&gt; A tidy_scales object
+#&gt; debug: class(out) &lt;- c("tidy_scales", class(out))
+#&gt; debug: return(out)</div><div class='output co'>#&gt; A tidy_scales object
 #&gt; <span style='color: #00BB00;'>v  </span><span>  $descriptives
 #&gt; </span><span style='color: #00BB00;'>v  </span><span>  $correlations
 #&gt; </span><span style='color: #00BB00;'>v  </span><span>  $scores

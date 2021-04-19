@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
       </span>
     </div>
 
@@ -184,10 +184,10 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span>
 <span class="co">#&gt;      [,1] [,2] [,3] [,4]     [,5]     </span>
-<span class="co">#&gt; [1,] NA   "x3" "x1" "speed"  NA       </span>
-<span class="co">#&gt; [2,] "x5" "x4" "x2" "visual" NA       </span>
-<span class="co">#&gt; [3,] NA   "x6" "x7" "x9"     "textual"</span>
-<span class="co">#&gt; [4,] NA   NA   "x8" NA       NA       </span>
+<span class="co">#&gt; [1,] NA   "x2" NA   NA       NA       </span>
+<span class="co">#&gt; [2,] NA   "x3" "x1" "speed"  NA       </span>
+<span class="co">#&gt; [3,] NA   "x4" "x8" "visual" NA       </span>
+<span class="co">#&gt; [4,] "x5" "x6" "x7" "x9"     "textual"</span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span>
 <span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span>
@@ -912,7 +912,7 @@
 <div id="conditionally-customize-visual-aspects" class="section level3">
 <h3 class="hasAnchor">
 <a href="#conditionally-customize-visual-aspects" class="anchor"></a>Conditionally customize visual aspects</h3>
-<p>The functions <code><a href="../reference/get_edges.html">get_edges()</a></code> and <code><a href="../reference/get_nodes.html">get_nodes()</a></code> rely on <code><a href="../reference/table_results.html">table_results()</a></code> to extract information about nodes and edges from SEM models. All of the columns returned by <code><a href="../reference/table_results.html">table_results()</a></code> can be used to conditionally customize visual aspects of the graph. Let’s estimate a model and look at all of the coluns extracted by <code><a href="../reference/get_edges.html">get_edges()</a></code>:</p>
+<p>The functions <code><a href="../reference/get_edges.html">get_edges()</a></code> and <code><a href="../reference/get_nodes.html">get_nodes()</a></code> rely on <code><a href="../reference/table_results.html">table_results()</a></code> to extract information about nodes and edges from SEM models. All of the columns returned by <code><a href="../reference/table_results.html">table_results()</a></code> can be used to conditionally customize visual aspects of the graph. Let’s estimate a model and look at all of the columns extracted by <code><a href="../reference/get_edges.html">get_edges()</a></code>:</p>
 <pre><code>#&gt;   from  to arrow    label connect_from connect_to curvature lhs op rhs   est
 #&gt; 1  cyl mpg  last -2.50***           NA         NA        NA mpg  ~ cyl -2.50
 #&gt; 2   am mpg  last    2.57*           NA         NA        NA mpg  ~  am  2.57
