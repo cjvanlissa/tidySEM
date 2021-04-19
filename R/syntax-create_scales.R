@@ -52,7 +52,6 @@ create_scales.tidy_sem <- function(x, keys.list, missing = TRUE, impute = "none"
                           omega = NULL,
                           digits = 2, ...)
 {
-  browser()
   Args <- as.list(match.call()[-1])
   Args$x <- x$data
   scale_names <- unique(c(NA, x$dictionary$scale))[-1]
@@ -74,7 +73,6 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
                           omega = NULL,
                           digits = 2, reverse_items = TRUE, ...)
 {
-  browser()
   data <- x
   use_keys <- keys.list <- keys.list[!sapply(keys.list, length) < 2]
 

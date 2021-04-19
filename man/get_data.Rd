@@ -5,7 +5,7 @@
 \alias{get_data<-}
 \title{Extract data from tidy_sem}
 \usage{
-get_data(x, ...)
+get_data(x)
 
 get_data(x) <- value
 }
