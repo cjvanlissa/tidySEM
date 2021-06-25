@@ -86,13 +86,10 @@ create_all_select_rows <- function(filename = "R/select_rows.R"){
   nod_only <- c(paste0("_", nodes_cond), paste0("#X ", nodes_aes))
   not_allowed <- c(paste0(paste0("#X ", nodes_aes), edg_only), "label_location_latent", "label_location_obs", "label_location_var")
   out <- lapply(template, function(thisfun){
-    #if(any(grepl("fill", thisfun))) browser()
-    #thisfun = template[[1]]
     if(any(sapply(not_allowed, grepl, x = thisfun))){
       return(NULL)
     }
     if(any(sapply(edg_only, grepl, x = thisfun))){
-      #browser()
       if(any(grepl("_(nodes|edges) <-", thisfun))){
         return(NULL)
       } else {
@@ -100,7 +97,6 @@ create_all_select_rows <- function(filename = "R/select_rows.R"){
       }
     }
     if(any(sapply(nod_only, grepl, x = thisfun))){
-      #browser()
       if(any(grepl("_(nodes|edges) <-", thisfun))){
         return(NULL)
       } else {
@@ -179,7 +175,7 @@ if_edit.data.frame <- function(data, condition, expr, ...){
   cl <- cl[c(1, match(c("data", "condition"), names(cl)))]
   names(cl)[which(names(cl) == "condition")] <- "expr"
   cl[[1L]] <- quote(with)
-  condition_met <- which(eval.parent(cl))
+  condition_met <- tryCatch({which(eval.parent(cl))}, error = function(e){NULL})
   if(length(condition_met) > 0){
     cl <- match.call()
     cl <- cl[c(1, match(c("data", "expr"), names(cl)))]

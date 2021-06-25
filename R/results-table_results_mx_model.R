@@ -3,42 +3,40 @@
 #' @importFrom stats pnorm
 table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...)
 {
+  # Multigroup:
+  # attr(attr(fit,"runstate")$fitfunctions$mg.fitfunction, "groups")
   Args <- list(x = x)
   digits <- force(digits)
   sum_x <- summary(x)
-  use_ci <- FALSE
-  if (!is.null(x$output[["confidenceIntervals"]])) {
-    if (!all(is.na(x$output[["confidenceIntervals"]]))) {
-      ci_x <- data.frame(name = rownames(x$output$confidenceIntervals),
-                         x$output$confidenceIntervals)
-      rownames(ci_x) <- NULL
-      use_ci <- TRUE
-    }
-  }
   results <- sum_x$parameters
   results$est <- results$Estimate
-  if (use_ci) {
-    if (!nrow(ci_x) == nrow(results)) {
-      results <- merge(results, ci_x, by = "name", all.y = TRUE)
-      results$label <- gsub("^.+\\.(.+)\\[.+\\]$", "\\1",
-                            results$name)
-      results$est[is.na(results$est)] <- results$estimate[is.na(results$est)]
-      results$ubound <- results$ubound.x
-      results$ubound[is.na(results$ubound)] <- results$ubound.y
-      results$lbound <- results$lbound.x
-      results$lbound[is.na(results$lbound)] <- results$lbound.y
-      results <- results[, !grepl("\\.[xy]$", names(results))]
+  results$lhs <- results$row
+  results$op <- NA
+  results$op[results$matrix == "A"] <- "~"
+  results$op[results$matrix == "S"] <- "~~"
+  results$op[results$matrix == "M"] <- "~1"
+  results$rhs <- results$col
+  fac_load <- results$op == "~" & results$rhs %in% x$latentVars
+  results$rhs[fac_load] <- results$row[fac_load]
+  results$lhs[fac_load] <- results$col[fac_load]
+  results$op[fac_load] <- "=~"
+
+  results$confint <- conf_int(results$est, se = results$Std.Error)
+  if (!is.null(sum_x[["CI"]])) {
+    if (!all(is.na(sum_x[["CI"]]))) {
+      ci_x <- data.frame(name = rownames(sum_x$CI),
+                         sum_x$CI)
+      ci_x$CI <- NA
+      ci_x$CI[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)] <- conf_int(x= NULL, lb = ci_x$lbound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)], ub = ci_x$ubound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)])
+      ci_x <- ci_x[!is.na(ci_x$CI), ]
+
+      results$confint[match(ci_x$name, results$name)] <- ci_x$CI
     }
-  } else{
-    results$label <- gsub("^.+\\.(.+)\\[.+\\]$", "\\1",
-                          results$name)
   }
-  results$pvalue <- 2 * pnorm(-abs(results$est), mean = 0,
-                              sd = results$Std.Error)
+  results$pvalue <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
   results$est_sig <- est_sig(results$est, sig = results$pvalue)
-  results$confint <- conf_int(lb = results$lbound, ub = results$ubound)
   results[c("estimate", "Estimate")] <- NULL
-  names(results)[match("Std.Error", names(results))] <- "se"
+  names(results)[match(c("Std.Error", "name"), names(results))] <- c("se", "label")
   names(results) <- tolower(names(results))
   if(!is.null(columns)) {
     results[, na.omit(match(columns, names(results)))]

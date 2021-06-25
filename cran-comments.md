@@ -1,12 +1,9 @@
-# tidySEM 0.1.9
+# tidySEM 0.1.10
 
-* Removed LazyData entry from DESCRIPTION (no data included in package)
-* Add methods for mplusObjects
-* Fixed bug where nodes from multilevel models were incorrectly merged, due to
-  lack of within-level intercepts
-* Fixed bug where get_layout did not work for multilevel models because it used
-  table_results() instead of get_edges()
-* Fixed bug in create_scales
+* Apologies for the brief interval between submissions.
+  There was a remaining bug in the new functions:
+  if_edit() would fail when target column is available in nodes
+  or edges, but not in both
   
 ## Test environments
 

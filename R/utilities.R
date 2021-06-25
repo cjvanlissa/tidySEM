@@ -1,3 +1,31 @@
+#' @title Concatenate Strings while omitting NA
+#' @description Concatenate vectors after converting to character and removing
+#' \code{NA} values. See \code{\link{paste}}.
+#' @param ...	one or more R objects, to be converted to character vectors.
+#' @param sep	a character string to separate the terms.
+#' Not \code{NA_character_}.
+#' @param collapse an optional character string to separate the results.
+#' Not \code{NA_character_}.
+#' @param na.rm logical, indicating whether \code{NA} values should be stripped
+#' before concatenation.
+#' Not \code{NA_character_}.
+#' @return A character vector of the concatenated values.
+#' @examples
+#' paste2("word", NA)
+#' @rdname paste2
+#' @export
+paste2 <- function(..., sep = " ", collapse = NULL, na.rm = TRUE){
+  if(!na.rm) return(paste(..., sep = sep, collapse = collapse))
+  dots <- suppressWarnings(cbind(...))
+  res <- apply(dots, 1, function(...) {
+    if(all(is.na(c(...)))) return(NA)
+    do.call(paste, as.list(c(na.omit(c(...)), sep = sep)))
+  })
+  if(is.null(collapse)) res else
+    paste(na.omit(res), collapse = collapse)
+}
+
+
 # @title Longest common substring
 # @description Extract the longest common substring of two strings using
 # base R.

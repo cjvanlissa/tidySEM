@@ -1,3 +1,10 @@
+# tidySEM 0.1.10
+
+* Apologies for the brief interval between submissions.
+  There was a remaining bug in the new functions:
+  if_edit() would fail when target column is available in nodes
+  or edges, but not in both
+
 # tidySEM 0.1.9
 
 * Removed LazyData entry from DESCRIPTION (no data included in package)

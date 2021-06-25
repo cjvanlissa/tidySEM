@@ -225,6 +225,11 @@ graph_sem.lavaan <- function(model,
   eval.parent(cl)
 }
 
+#' @method graph_sem MxModel
+#' @rdname graph_sem
+#' @export
+graph_sem.MxModel <- graph_sem.lavaan
+
 #' @method graph_sem mplus.model
 #' @rdname graph_sem
 #' @export
@@ -544,6 +549,11 @@ prepare_graph.lavaan <- function(model,
   do.call(prepare_graph_model, Args)
 }
 
+#' @method prepare_graph MxModel
+#' @rdname prepare_graph
+#' @export
+prepare_graph.MxModel <- prepare_graph.lavaan
+
 #' @method prepare_graph mplus.model
 #' @rdname prepare_graph
 #' @export
@@ -758,7 +768,7 @@ globalVariables(c("name"))
 #' @rdname get_nodes
 #' @keywords tidy_graph
 #' @export
-get_nodes <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
+get_nodes <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   UseMethod("get_nodes", x)
 }
 
@@ -773,7 +783,7 @@ get_nodes <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
 #' @method get_nodes lavaan
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
-get_nodes.lavaan <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
+get_nodes.lavaan <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   dots <- list(...)
   cl <- match.call()
   cl["columns"] <- list(NULL)
@@ -794,6 +804,11 @@ get_nodes.lavaan <- function(x, label = paste(name, est_sig, sep = "\n"), ...){
 get_nodes.mplusObject <- get_nodes.lavaan
 
 
+#' @method get_nodes MxModel
+#' @export
+get_nodes.MxModel <- get_nodes.lavaan
+
+
 #' @method get_nodes mplus.object
 #' @export
 get_nodes.mplus.object <- get_nodes.lavaan
@@ -804,7 +819,7 @@ get_nodes.mplus.model <- get_nodes.lavaan
 
 #' @method get_nodes tidy_results
 #' @export
-get_nodes.tidy_results <- function(x, label = paste(name, est_sig, sep = "\n"), label_name = TRUE, ...){
+get_nodes.tidy_results <- function(x, label = paste2(name, est_sig, sep = "\n"), label_name = TRUE, ...){
   dots <- list(...)
   cl <- match.call()
   cl[[1L]] <- str2lang("tidySEM:::get_nodes.tidy_results")
@@ -954,6 +969,9 @@ get_edges.lavaan <- function(x, label = "est_sig", ...){
 #' @export
 get_edges.mplusObject <- get_edges.lavaan
 
+#' @method get_edges MxModel
+#' @export
+get_edges.MxModel <- get_edges.lavaan
 
 #' @method get_edges mplus.object
 #' @export

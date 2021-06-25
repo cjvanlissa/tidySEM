@@ -4,7 +4,7 @@
 \alias{get_nodes}
 \title{Extract nodes from a SEM model object}
 \usage{
-get_nodes(x, label = paste(name, est_sig, sep = "\\n"), ...)
+get_nodes(x, label = paste2(name, est_sig, sep = "\\n"), ...)
 }
 \arguments{
 \item{x}{A model object of class \code{mplusObject} or \code{lavaan}.}
