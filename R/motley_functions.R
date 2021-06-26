@@ -56,14 +56,10 @@ chisq_sb <- function(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1) {
 #' @export
 #' @method chisq_sb default
 chisq_sb.default <- function(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1) {
-  if (df1 == df2) {
-    warning("Models cannot be nested, DF are equal.")
-    return(c(
-      chisq = NA,
-      df = NA,
-      p = NA))
-  }
   tryCatch({
+    if ((is.na(df1) | is.na(df2)) | isFALSE(df1 == df2)) {
+      warning("Models cannot be nested, DF are equal.")
+    }
     which_full <- which.max(c(df1, df2))
     which_restricted <- which.min(c(df1, df2))
     dff <- c(df1, df2)[which_full]
