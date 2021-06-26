@@ -63,25 +63,34 @@ chisq_sb.default <- function(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1) {
       df = NA,
       p = NA))
   }
-  which_full <- which.max(c(df1, df2))
-  which_restricted <- which.min(c(df1, df2))
-  dff <- c(df1, df2)[which_full]
-  dfr <- c(df1, df2)[which_restricted]
-  c2f <- c(chisq1, chisq2)[which_full]
-  c2r <- c(chisq1, chisq2)[which_restricted]
-  scf <- c(scf1, scf2)[which_full]
-  scr <- c(scf1, scf2)[which_restricted]
+  tryCatch({
+    which_full <- which.max(c(df1, df2))
+    which_restricted <- which.min(c(df1, df2))
+    dff <- c(df1, df2)[which_full]
+    dfr <- c(df1, df2)[which_restricted]
+    c2f <- c(chisq1, chisq2)[which_full]
+    c2r <- c(chisq1, chisq2)[which_restricted]
+    scf <- c(scf1, scf2)[which_full]
+    scr <- c(scf1, scf2)[which_restricted]
 
-  delta_df <- abs(dff-dfr)
+    delta_df <- abs(dff-dfr)
 
-  TRd = abs(c2f * scf - c2r * scr) /
-    ((dff * scf - dfr * scr) / (dff - dfr))
+    TRd = abs(c2f * scf - c2r * scr) /
+      ((dff * scf - dfr * scr) / (dff - dfr))
 
-  return(c(
-    Dchisq = TRd,
-    Dchisq_df = delta_df,
-    Dchisq_p = pchisq(TRd, delta_df, lower.tail = FALSE)
-    ))
+    c(
+      Dchisq = TRd,
+      Dchisq_df = delta_df,
+      Dchisq_p = pchisq(TRd, delta_df, lower.tail = FALSE)
+    )
+  }, error = function(e){
+    c(
+      Dchisq = NA,
+      Dchisq_df = NA,
+      Dchisq_p = NA
+    )
+  })
+
 }
 
 #' @export
