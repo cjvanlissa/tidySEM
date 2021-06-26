@@ -4,10 +4,11 @@
 \alias{chisq_sb}
 \title{Satorra-Bentler corrected chi-square test}
 \usage{
-chisq_sb(chisq1, df1, scf1, chisq2, df2, scf2)
+chisq_sb(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1)
 }
 \arguments{
-\item{chisq1}{Chi square value of model 1.}
+\item{chisq1}{An object for which a method exists; e.g., a chi-square value,
+or a \code{data.frame}.}
 
 \item{df1}{Degrees of freedom of model 1.}
 
@@ -20,7 +21,7 @@ chisq_sb(chisq1, df1, scf1, chisq2, df2, scf2)
 \item{scf2}{Scale correction factor of model 2.}
 }
 \value{
-Named numeric vector with chi-square value, degrees of freedom, and
+Chi-square difference value with corresponding degrees of freedom and
 p-value.
 }
 \description{

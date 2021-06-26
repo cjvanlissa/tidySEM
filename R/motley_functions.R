@@ -29,13 +29,14 @@ report <- function(x, digits = 2, equals = TRUE){
 #' Satorra-Bentler corrected chi-square test
 #'
 #' Computes Satorra-Bentler corrected chi-square test.
-#' @param chisq1 Chi square value of model 1.
+#' @param chisq1 An object for which a method exists; e.g., a chi-square value,
+#' or a \code{data.frame}.
 #' @param df1 Degrees of freedom of model 1.
 #' @param scf1 Scale correction factor of model 1.
 #' @param chisq2 Chi square value of model 2.
 #' @param df2 Degrees of freedom of model 2.
 #' @param scf2 Scale correction factor of model 2.
-#' @return Named numeric vector with chi-square value, degrees of freedom, and
+#' @return Chi-square difference value with corresponding degrees of freedom and
 #' p-value.
 #' @details Reference:
 #' Satorra, A., & Bentler, P. M. (2001). A scaled difference chi-square test
@@ -48,37 +49,76 @@ report <- function(x, digits = 2, equals = TRUE){
 #' df <- data.frame(chi2 = c(23, 44, 65), df = c(78, 74, 70), scf = c(1.02, 1.12, 1.28))
 #' chisq_sb(24, 78, 1.02, 65, 70, 1.28)
 #' @importFrom stats pchisq
-chisq_sb <- function(chisq1, df1, scf1, chisq2, df2, scf2) {
+chisq_sb <- function(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1) {
+  UseMethod("chisq_sb", chisq1)
+}
+
+#' @export
+#' @method chisq_sb default
+chisq_sb.default <- function(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1) {
   if (df1 == df2) {
-    stop("Models cannot be nested, DF are equal")
+    warning("Models cannot be nested, DF are equal.")
     return(c(
-      chisq = NaN,
-      df = NaN,
-      p = NaN))
+      chisq = NA,
+      df = NA,
+      p = NA))
   }
+  which_full <- which.max(c(df1, df2))
+  which_restricted <- which.min(c(df1, df2))
+  dff <- c(df1, df2)[which_full]
+  dfr <- c(df1, df2)[which_restricted]
+  c2f <- c(chisq1, chisq2)[which_full]
+  c2r <- c(chisq1, chisq2)[which_restricted]
+  scf <- c(scf1, scf2)[which_full]
+  scr <- c(scf1, scf2)[which_restricted]
 
-  more_complex <- FALSE
-  fit_worse <- FALSE
+  delta_df <- abs(dff-dfr)
 
-  if (df2 > df1){ # If DF increased, model became more complex
-    more_complex <- TRUE
-  }
-  delta_df <- abs(df2-df1)
-
-  if (chisq2-chisq1 > 0){ # Fit became worse
-    fit_worse <- TRUE
-  }
-
-  TRd = abs(chisq1 * scf1 - chisq2 * scf2) /
-    ((df1 * scf1 - df2 * scf2) / (df1 - df2))
+  TRd = abs(c2f * scf - c2r * scr) /
+    ((dff * scf - dfr * scr) / (dff - dfr))
 
   return(c(
-    chisq = round(ifelse((more_complex&fit_worse)|(!more_complex&!fit_worse), 1, -1)*TRd, 2),
-    df = ifelse((more_complex&fit_worse)|(!more_complex&!fit_worse), 1, -1)*delta_df,
-    p = ifelse((more_complex&fit_worse)|(!more_complex&!fit_worse),
-               round(1-pchisq(TRd, delta_df, lower.tail = FALSE), 3),
-               round(pchisq(TRd, delta_df, lower.tail = FALSE), 3))
-  ))
+    Dchisq = TRd,
+    Dchisq_df = delta_df,
+    Dchisq_p = pchisq(TRd, delta_df, lower.tail = FALSE)
+    ))
+}
+
+#' @export
+#' @method chisq_sb data.frame
+chisq_sb.data.frame <- function(chisq1, df1, scf1 = 1, chisq2, df2, scf2 = 1) {
+  df <- chisq1
+  if(nrow(df) < 2) stop("Need a data.frame with at least two rows to perform chi-square difference test.")
+  chi1col <- which(names(df) %in% c("ChiSqM_Value"))
+  dfcol <- which(names(df) %in% c("ChiSqM_DF"))
+  scfcol <- which(names(df) %in% c("ChiSqM_ScalingCorrection"))
+  if(any(sapply(c(chi1col, dfcol, scfcol), length) > 1)){
+    stop("Multiple columns found that could be used for a chi-square difference test.")
+  }
+  if(any(sapply(c(chi1col, dfcol), length) == 0)){
+    stop("Could not find chi-square or df column.")
+  }
+
+  chisq1 <- df[[chi1col]][-1]
+  chisq2 <- df[[chi1col]][-nrow(df)]
+  df1 <- df[[dfcol]][-1]
+  df2 <- df[[dfcol]][-nrow(df)]
+  if(length(scfcol) > 0){
+    scf1 <- df[[scfcol]][-1]
+    scf2 <- df[[scfcol]][-nrow(df)]
+  } else {
+    scf1 <- scf2 <- rep(1, (nrow(df)-1))
+  }
+  out <- t(mapply(chisq_sb,
+         chisq1 = chisq1,
+         df1 = df1,
+         scf1 = scf1,
+         chisq2 = chisq2,
+         df2 = df2,
+         scf2 = scf2))
+  out <- rbind(c(NA, NA, NA), out)
+  rownames(out) <- NULL
+  cbind(df, out)
 }
 
 # Satorra-Bentler corrected chi-square tests for table
