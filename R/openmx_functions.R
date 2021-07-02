@@ -25,9 +25,10 @@ vnames <- getFromNamespace("vnames", "lavaan")
 
 
 #' @title Convert lavaan syntax to RAM specification
-#' @description Converts models specified using lavaan syntax to RAM models for
+#' @description Converts SEM models to RAM models for
 #' \code{OpenMx}.
-#' @details The procedure is as follows:
+#' @details For models specified using lavaan syntax, the procedure is as
+#' follows:
 #' \enumerate{
 #'  \item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
 #'  arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
@@ -37,23 +38,29 @@ vnames <- getFromNamespace("vnames", "lavaan")
 #'  \item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
 #'  an \code{OpenMx} model using RAM specification
 #' }
-#' @param x A character vector, describing the user-specified model using
+#' @param x An object for which a method exists, such as a \code{tidy_sem}
+#' object, or character vector describing the user-specified model using
 #' the lavaan model syntax.
 #' @param ... Parameters passed on to other functions.
-#' @return Returns a new MxModel object \code{\link[OpenMx]{mxModel}}.
+#' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @examples
-#' lsub("a{C}", 1:3)
-#' @rdname lsub
+#' as_ram("y ~ x")
+#' @rdname as_ram
 #' @export
 #' @importFrom lavaan lavaanify
 #' @importFrom OpenMx mxModel
-# @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
-# @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
-# @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
-# @importFrom lavaan mplus2lavaan.modelSyntax
-# @importFrom stats cutree dist hclust
-# @importFrom utils capture.output
+#' @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
+#' @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
+#' @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
+#' @importFrom lavaan mplus2lavaan.modelSyntax
+#' @importFrom stats cutree dist hclust
 as_ram <- function(x, ...){
+  UseMethod("as_ram", x)
+}
+
+#' @method as_ram character
+#' @export
+as_ram.character <- function(x, ...){
   defaults <- list(int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = FALSE,
                    auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
                    auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE)
@@ -69,9 +76,38 @@ as_ram <- function(x, ...){
   cl[["model"]] <- x
   cl[["x"]] <- NULL
   cl[[1L]] <- str2lang("lavaan::lavaanify")
-  lavtab <- eval.parent(cl)
+  x <- eval.parent(cl)
+  cl <- match.call()
+  cl[[1L]] <- quote(as_ram)
+  cl[["x"]] <- x
+  eval.parent(cl)
+}
+
+#' @method as_ram tidy_sem
+#' @export
+as_ram.tidy_sem <- function(x, ...){
+  cl <- match.call()
+  cl[[1L]] <- quote(as_ram)
+  cl[["x"]] <- x$syntax
+  eval.parent(cl)
+}
+
+#' @method as_ram data.frame
+#' @export
+as_ram.data.frame <- function(x, ...){
+  if(!all(c("lhs", "rhs", "op", "free", "ustart") %in% names(x))){
+    stop("Not a valid lavaan parameter table.")
+  }
+  dots <- list(...)
+  lavtab <- x
   # Remove defined parameters
-  lavtab <- lavtab[!(lavtab$group == 0), ]
+  if(any(lavtab$group == 0)){
+    stop("Develop")
+  }
+  defined_parameters <- which(lavtab$group == 0)
+  if(length(defined_parameters) > 0){
+    lavtab <- lavtab[-defined_parameters, ]
+  }
   # Starting values
   #lavtab$ustart[lavtab$op == "~1"] <- 0
   #lavtab$ustart[lavtab$op == "~~"] <- .5
@@ -106,7 +142,6 @@ as_ram <- function(x, ...){
     do.call(call, Args)
   })
   # mxModel-specific arguments
-
   mxmodel_args <- list(
     model = "model",
     type='RAM',
@@ -118,4 +153,56 @@ as_ram <- function(x, ...){
   }
   do.call(mxModel, c(mxmodel_args,
                      path_list))
+}
+
+#' @title Run an OpenMx model with sensible defaults
+#' @description Run an OpenMx model with sensible defaults.
+# @details The procedure is as follows:
+# \enumerate{
+#  \item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
+#  arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
+#  \code{\link[lavaan]{sem}} function.
+#  \item Convert each row of the resulting lavaan parameter table to a
+#  \code{\link[OpenMx]{mxPath}}.
+#  \item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
+#  an \code{OpenMx} model using RAM specification
+# }
+#' @param x An object for which a method exists.
+#' @param ... Parameters passed on to other functions.
+#' @return Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
+#' to their final values.
+#' @examples
+#' run_mx("y ~ x")
+#' @rdname run_mx
+#' @export
+# @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
+# @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
+# @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
+# @importFrom lavaan mplus2lavaan.modelSyntax
+# @importFrom stats cutree dist hclust
+# @importFrom utils capture.output
+run_mx <- function(x, ...){
+  UseMethod("run_mx", x)
+}
+
+#' @method run_mx tidy_sem
+#' @export
+run_mx.tidy_sem <- function(x, ...){
+  cl <- match.call()
+  cl[[1L]] <- quote(run_mx)
+  cl[["x"]] <- as_ram(x)
+  cl[["data"]] <- x$data
+  eval.parent(cl)
+}
+#mxRun(mxModel(tmp, mxData(dat, type = "raw"), mxFitFunctionML())) -> test
+
+#' @method run_mx MxModel
+#' @export
+run_mx.MxModel <- function(x, ...){
+  dots <- list(...)
+  # Determine type of model and what elements are available
+  if(!is.null(dots[["data"]])){
+    x <- mxModel(x, mxData(df, type = "raw"))
+  }
+  mxRun(x)
 }
