@@ -54,6 +54,7 @@ vnames <- getFromNamespace("vnames", "lavaan")
 #' @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
 #' @importFrom lavaan mplus2lavaan.modelSyntax
 #' @importFrom stats cutree dist hclust
+#' @importFrom methods formalArgs
 as_ram <- function(x, ...){
   UseMethod("as_ram", x)
 }
@@ -172,7 +173,9 @@ as_ram.data.frame <- function(x, ...){
 #' @return Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
 #' to their final values.
 #' @examples
-#' run_mx("y ~ x")
+#' df <- iris[1:3]
+#' names(df) <- paste0("X_", 1:3)
+#' run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
 #' @rdname run_mx
 #' @export
 # @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
@@ -190,7 +193,7 @@ run_mx <- function(x, ...){
 run_mx.tidy_sem <- function(x, ...){
   cl <- match.call()
   cl[[1L]] <- quote(run_mx)
-  cl[["x"]] <- as_ram(x)
+  cl[["x"]] <- as_ram(x$syntax)
   cl[["data"]] <- x$data
   eval.parent(cl)
 }
@@ -202,7 +205,7 @@ run_mx.MxModel <- function(x, ...){
   dots <- list(...)
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
-    x <- mxModel(x, mxData(df, type = "raw"))
+    x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
   }
   mxRun(x)
 }

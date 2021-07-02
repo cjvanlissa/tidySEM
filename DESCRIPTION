@@ -26,7 +26,8 @@ Imports:
     lavaan,
     MplusAutomation,
     igraph,
-    psych
+    psych,
+    methods
 Suggests: 
     testthat,
     knitr,

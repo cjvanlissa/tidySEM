@@ -19,5 +19,7 @@ to their final values.
 Run an OpenMx model with sensible defaults.
 }
 \examples{
-run_mx("y ~ x")
+df <- iris[1:3]
+names(df) <- paste0("X_", 1:3)
+run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
 }

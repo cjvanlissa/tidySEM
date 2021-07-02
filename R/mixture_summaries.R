@@ -70,7 +70,7 @@ make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
   if(!is.null(fits)) out["CLC"]     <- -2*ll + (2*unname(fits[1]))
   out["KIC"]                        <- -2*ll + (3*(parameters + 1))
   out["SABIC"]                      <- -2*ll + (parameters * log(((n+2)/24)))
-  if(!is.null(postprob)) out["ICL"] <- icl_default(postprob, BIC)
+  if(!is.null(postprob)) out["ICL"] <- icl_default(postprob, out["BIC"])
   c(out, fits)
 }
 
