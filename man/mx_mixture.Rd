@@ -4,7 +4,7 @@
 \alias{mx_mixture}
 \title{Estimate mixture models using OpenMx}
 \usage{
-mx_mixture(model, classes = 1L, data = NULL, ...)
+mx_mixture(model, classes = 1L, data = NULL, run = TRUE, ...)
 }
 \arguments{
 \item{model}{Syntax for the model; either a character string, or a list of
@@ -15,6 +15,8 @@ generate. Defaults to 1L. E.g., \code{classes = 1:6},
 \code{classes = c(1:4, 6:8)}.}
 
 \item{data}{The data.frame to be used for model fitting.}
+
+\item{run}{Logical, whether or not to run the model.}
 
 \item{...}{Additional arguments, passed to functions.}
 }

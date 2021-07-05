@@ -156,18 +156,13 @@ as_ram.data.frame <- function(x, ...){
                      path_list))
 }
 
-#' @title Run an OpenMx model with sensible defaults
-#' @description Run an OpenMx model with sensible defaults.
-# @details The procedure is as follows:
-# \enumerate{
-#  \item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
-#  arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
-#  \code{\link[lavaan]{sem}} function.
-#  \item Convert each row of the resulting lavaan parameter table to a
-#  \code{\link[OpenMx]{mxPath}}.
-#  \item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
-#  an \code{OpenMx} model using RAM specification
-# }
+#' @title Run as OpenMx model with sensible defaults
+#' @description This convenience function runs objects for which a method exists
+#' using OpenMx, with sensible defaults. It is intended for use with
+#' \code{tidySEM}. For instance, it will convert a \code{tidySEM} object to
+#' a \code{mxModel} and run it, and it will try to ensure convergence for
+#' mixture models created using \code{\link{mx_mixture}}.
+#' Knowledgeable users may want to run models manually.
 #' @param x An object for which a method exists.
 #' @param ... Parameters passed on to other functions.
 #' @return Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
@@ -206,6 +201,20 @@ run_mx.MxModel <- function(x, ...){
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
     x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
+  }
+
+# Different approaches based on model type --------------------------------
+  if(!is.null(attr(x, "tidySEM"))){
+    if(attr(x, "tidySEM") == "mixture"){
+      # maybe also try simulated annealing
+      return(mxTryHard(x,
+                extraTries = 100,
+                intervals=TRUE,
+                silent = TRUE,
+                verbose = FALSE,
+                bestInitsOutput = FALSE,
+                exhaustive = TRUE))
+    }
   }
   mxRun(x)
 }

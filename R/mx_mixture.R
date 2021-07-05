@@ -28,6 +28,7 @@
 #' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' \code{classes = c(1:4, 6:8)}.
 #' @param data The data.frame to be used for model fitting.
+#' @param run Logical, whether or not to run the model.
 #' @param ... Additional arguments, passed to functions.
 #  \link{mplusObject}, such as syntax
 # for other Mplus options.
@@ -77,6 +78,7 @@
 mx_mixture <- function(model,
                        classes = 1L,
                        data = NULL,
+                       run = TRUE,
                        ...){
   UseMethod("mx_mixture", model)
 }
@@ -93,9 +95,9 @@ mx_mixture <- function(model,
 #' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' \code{classes = c(1:4, 6:8)}.
 #' @param data The data.frame to be used for model fitting.
+#' @param run Logical, whether or not to run the model.
 #' @param ... Additional arguments, passed to functions.
-#' @return Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
-#' to their final values, or a list of OpenMx models.
+#' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
 #' @examples
@@ -118,7 +120,9 @@ mx_mixture <- function(model,
 mx_growth_mixture <- function(model,
                               classes = 1L,
                               data = NULL,
+                              run = TRUE,
                               ...){
+  browser()
   defaults <- list(meanstructure = TRUE, int.ov.free = FALSE,
                    int.lv.free = TRUE, auto.fix.first = TRUE,
                    auto.fix.single = TRUE, auto.var = TRUE,
@@ -138,6 +142,7 @@ mx_growth_mixture <- function(model,
 mx_mixture.character <- function(model,
                                  classes = 1L,
                                  data = NULL,
+                                 run = TRUE,
                                  ...){
   cl <- match.call()
   dots <- list(...)
@@ -148,7 +153,7 @@ mx_mixture.character <- function(model,
       cl[[1L]] <- quote(mx_mixture)
       eval.parent(cl)
       })
-    attr(out, "type") <- "list"
+    attr(out, "tidySEM") <- "list"
     return(out)
   } else {
     dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
@@ -163,8 +168,17 @@ mx_mixture.character <- function(model,
       })
     cl[["classes"]] <- classes
     cl[["model"]] <- model
-      cl[[1L]] <- str2lang("tidySEM:::estimate_mx_mixture")
-    eval.parent(cl)
+    cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
+    out <- eval.parent(cl)
+    if(run){
+      cl[["model"]] <- out
+      cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
+      cl[["model"]] <- eval.parent(cl)
+      cl[[1L]] <- str2lang("tidySEM:::run_mx")
+      return(eval.parent(cl))
+    } else {
+      out
+    }
   }
 }
 
@@ -173,6 +187,7 @@ mx_mixture.character <- function(model,
 mx_mixture.list <- function(model,
                             classes = 1L,
                             data = NULL,
+                            run = TRUE,
                             ...){
   cl <- match.call()
   dots <- list(...)
@@ -183,30 +198,159 @@ mx_mixture.list <- function(model,
   if(all(sapply(model, inherits, "character"))){
     dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
     dots_asram <- dots[dots_asram]
-    model <- lapply(1:length(model), function(i){
+    out <- lapply(1:length(model), function(i){
       do.call(as_ram, c(
         list(
-          x = model[[i]],
+          x = out[[i]],
           model = paste0("class", i)),
         dots_asram))
       })
   } else {
-    if(!all(sapply(model, inherits, "MxModel"))){
+    if(!all(sapply(out, inherits, "MxModel"))){
       stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
     }
   }
-  cl[["classes"]] <- classes
-  cl[["model"]] <- model
-  cl[[1L]] <- str2lang("tidySEM:::estimate_mx_mixture")
-  eval.parent(cl)
+  if(run){
+    cl[["model"]] <- out
+    cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
+    cl[["model"]] <- eval.parent(cl)
+    cl[[1L]] <- str2lang("tidySEM:::run_mx")
+    return(eval.parent(cl))
+  } else {
+    out
+  }
+}
+
+as_mx_mixture <- function(model,
+                          classes,
+                          data,
+                          ...){
+  # Prepare mixture model
+  mix <- mxModel(
+    model = paste0("mix", classes),
+    lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE)) }),
+    mxData(data, type = "raw"),
+    mxMatrix(values=1, nrow=1, ncol=classes, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
+    mxExpectationMixture(paste0("class", 1:classes), scale="softmax"),
+    mxFitFunctionML())
+  attr(mix, "tidySEM") <- "mixture"
+  mix
+}
+
+#' Automatically set starting values for an OpenMx mixture model
+#'
+#' Automatically set starting values for an OpenMx mixture model. This function
+#' was designed to work with mixture models created using \code{tidySEM}
+#' functions like \code{\link{mx_mixture}}, and may not work with other
+#' \code{mxModel}s.
+#' @param model A mixture model of class \code{mxModel}.
+#' @param splits Optional. A numeric vector of length equal to the number of
+#' rows in the \code{\link{mxData}} used in the \code{model} object. The data
+#' will be split by this vector. See Details for the default setting and
+#' possible alternatives.
+#' @param ... Additional arguments, passed to functions.
+#  \link{mplusObject}, such as syntax
+# for other Mplus options.
+#' @details Starting values are derived by the following procedure:
+#' \enumerate{
+#'   \item The mixture model is converted to a multi-group model.
+#'   \item The data are split along \code{splits}, and assigned to the
+#'   corresponding groups of the multi-group model.
+#'   \item The multi-group model is run, and the final values of each group are
+#'   assigned to the corresponding mixture component as starting values.
+#'   \item The mixture model is returned with these starting values.
+#' }
+#'
+#' If the argument \code{splits} is not provided, the function will call
+#' \code{cutree(hclust(dist(data)), k = classes))}, where \code{data} is
+#' extracted from the \code{model} argument.
+#'
+#' Other sensible ways to split the data include:
+#' \itemize{
+#'   \item Using K-means clustering: \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
+#'   \item Using agglomerative hierarchical clustering: \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
+#'   \item Using a random split: \code{\link{sample.int}}\code{(n = classes, size = nrow(data), replace = TRUE)}
+#' }
+#' @return Returns an \code{\link[OpenMx]{mxModel}} with starting values.
+#' @export
+#' @keywords mixture models openmx
+#' @examples
+#' \dontrun{
+#' df <- iris[, 1, drop = FALSE]
+#' names(df) <- "x"
+#' mod <- mx_mixture(model = "x ~ m{C}*1
+#'                            x ~~ v{C}*x",
+#'                            classes = 2,
+#'                            data = df,
+#'                            run = FALSE)
+#' mod <- mixture_starts(mod)
+#' }
+#' @importFrom OpenMx mxModel mxRun mxTryHard mxAutoStart
+#' @importFrom methods hasArg
+mixture_starts <- function(model,
+                           splits,
+                           ...){
+  stopifnot("mxModel is not a mixture model." = inherits(model@expectation, "MxExpectationMixture"))
+  stopifnot("mxModel must contain data to determine starting values." = !(is.null(model@data) | is.null(model@data$observed)))
+  classes <- length(model@submodels)
+  data <- model@data$observed
+  if(!hasArg(splits)){
+    splits <- cutree(hclust(dist(data)), k = classes)
+  }
+
+  if(!classes == length(unique(splits))){
+    stop("Argument 'splits' does not identify a number of groups equal to 'classes'.")
+  }
+  if(!all(unique(splits) %in% 1:classes)){
+    splits <- as.integer(as.factor(splits))
+  }
+
+  strts <- lapply(1:classes, function(i){
+    thissub <- names(model@submodels)[i]
+    mxModel(model[[thissub]],
+            mxData(data[splits == i, , drop = FALSE], type = "raw"),
+            mxFitFunctionML())
+    })
+  strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
+  strts <- mxAutoStart(strts, type = "ULS")
+  tryCatch({
+    strts <- mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
+  }, error = function(e){
+    tryCatch({
+      strts <- mxAutoStart(strts, type = "DWLS")
+      strts <<- mxTryHard(strts, extraTries = 100,
+                          silent = TRUE,
+                          verbose = FALSE,
+                          bestInitsOutput = FALSE)
+    }, error = function(e2){
+      stop("Could not derive suitable starting values for the ", classes, "-class model.")
+    })
+  })
+  # Insert start values into mixture model
+  for(i in names(model@submodels)){
+    if(!is.null(model[[i]][["M"]])){
+      model[[i]]$M$values <- strts[[i]]$M$values
+    }
+    if(!is.null(model[[i]][["S"]])){
+      model[[i]]$S$values <- strts[[i]]$S$values
+    }
+    if(!is.null(model[[i]][["A"]])){
+      model[[i]]$A$values <- strts[[i]]$A$values
+    }
+    if(!is.null(model[[i]][["F"]])){
+      model[[i]]$F$values <- strts[[i]]$F$values
+    }
+  }
+  return(model)
 }
 
 
 estimate_mx_mixture <- function(model,
-                                classes,
-                                data,
+                                classes = NULL,
+                                data = NULL,
                                 ...){
   # Prepare initial clustering
+  browser()
   clusts <- hclust(dist(data[model[[1]]$manifestVars]))
   splits <- cutree(tree = clusts, k = classes)
   strts <- lapply(1:classes, function(i){
@@ -220,11 +364,11 @@ estimate_mx_mixture <- function(model,
     strts <- mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
   }, error = function(e){
     tryCatch({
-        strts <- mxAutoStart(strts, type = "DWLS")
-        strts <<- mxTryHard(strts, extraTries = 100,
-                            silent = TRUE,
-                            verbose = FALSE,
-                            bestInitsOutput = FALSE)
+      strts <- mxAutoStart(strts, type = "DWLS")
+      strts <<- mxTryHard(strts, extraTries = 100,
+                          silent = TRUE,
+                          verbose = FALSE,
+                          bestInitsOutput = FALSE)
     }, error = function(e2){
       stop("Could not derive suitable starting values for the ", classes, "-class model.")
     })
@@ -261,6 +405,6 @@ estimate_mx_mixture <- function(model,
                        verbose = FALSE,
                        bestInitsOutput = FALSE,
                        exhaustive = TRUE)
-  attr(mix_fit, "type") <- "mixture"
+  attr(mix_fit, "tidySEM") <- "mixture"
   mix_fit
 }

@@ -4,7 +4,7 @@
 \alias{mx_growth_mixture}
 \title{Estimate growth mixture models using OpenMx}
 \usage{
-mx_growth_mixture(model, classes = 1L, data = NULL, ...)
+mx_growth_mixture(model, classes = 1L, data = NULL, run = TRUE, ...)
 }
 \arguments{
 \item{model}{Syntax for the model; either a character string, or a list of
@@ -17,11 +17,12 @@ generate. Defaults to 1L. E.g., \code{classes = 1:6},
 
 \item{data}{The data.frame to be used for model fitting.}
 
+\item{run}{Logical, whether or not to run the model.}
+
 \item{...}{Additional arguments, passed to functions.}
 }
 \value{
-Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
-to their final values, or a list of OpenMx models.
+Returns an \code{\link[OpenMx]{mxModel}}.
 }
 \description{
 This function is a wrapper around \code{\link{mx_mixture}}, adding the
