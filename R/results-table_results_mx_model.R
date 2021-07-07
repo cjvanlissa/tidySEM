@@ -142,16 +142,16 @@ has_submod <- function(x, depth = 0){
 get_algebras <- function(x, ...){
   cl <- match.call()
   cl[[1L]] <- str2lang(".get_algebras_internal")
-  Estimate <- unlist_mx(eval.parent(cl))
-  browser()
-  out <- data.frame(name = names(Estimate), matrix =  ":=", Estimate = Estimate, row.names = NULL)
+  algs <- eval.parent(cl)
+  Estimate <- unlist_mx(algs, "result")
+  out <- data.frame(name = names(Estimate),
+                    matrix =  unlist_mx(algs, element = "name"),
+                    row = unlist_mx(algs, element = "formula"),
+                    col = ":=",
+                    Estimate = Estimate, row.names = NULL)
 
-  out$Standard.Error <- unlist(lapply(out$matrix, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
-  #                         # name matrix row col    Estimate  Std.Error A
-  #                         # 1            b      A   m   y -0.03329943 0.02197091
-  #                         # 2            a      A   y   m -1.26191865 0.13250022
-  #                         # 3 model.A[1,3]      A   y   x  1.78033944 0.06392846
-
+  out$Standard.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out
 }
 
 .get_algebras_internal <- function(x, ...){
@@ -174,8 +174,8 @@ get_algebras <- function(x, ...){
   out
 }
 
-tmp <- get_algebras(resSD)
-alg_names <- names(unlist(tmp))
+# tmp <- get_algebras(resSD)
+# alg_names <- names(unlist(tmp))
 
 # unlist_mx <- function(x){
 #   lapply(x, function(i){
@@ -196,26 +196,24 @@ alg_names <- names(unlist(tmp))
 #   })
 #}
 
-unlist_mx <- function(i){
+unlist_mx <- function(i, element, ...){
   cl <- match.call()
   cl[[1L]] <- str2lang("unlist_mx2")
   out <- unlist(eval.parent(cl))
   names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
   out
 }
-unlist_mx2 <- function(i){
+unlist_mx2 <- function(i, element, ...){
   if(inherits(i, "list")){
-    out <- lapply(i, unlist_mx2)
-    #browser()
+    out <- lapply(i, unlist_mx2, element = element, ...)
     out
   } else {
     dims <- dim(i$result)
-    out <- as.vector(i$result)
+    if(element == "result") out <- as.vector(i$result)
+    if(element == "name") out <- rep(i$name, length(i$result))
+    if(element == "formula") out <- rep(deparse(i$formula), length(i$result))
     if(!sum(dims) == 2){
-      #names(out) <- i$name
-    #} else {
-      names(out) <- paste0(#i$name,
-                           "[",
+      names(out) <- paste0("[",
                            paste(rep(1:dims[1], dims[2]),
                                  rep(1:dims[2], each = dims[1]), sep = ","), "]")
     }
