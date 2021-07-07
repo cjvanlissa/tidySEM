@@ -16,32 +16,34 @@ generate. Defaults to 1L. E.g., \code{classes = 1:6},
 
 \item{data}{The data.frame to be used for model fitting.}
 
-\item{run}{Logical, whether or not to run the model.}
+\item{run}{Logical, whether or not to run the model. If \code{run = TRUE},
+the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.}
 
 \item{...}{Additional arguments, passed to functions.}
 }
 \value{
-Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
-to their final values.
+Returns an \code{\link[OpenMx]{mxModel}}.
 }
 \description{
 Dynamically creates a batch of mixture models, with intelligent
-defaults. This function is a wrapper around \code{mplusObject} and
-\code{mplusModeler}, and the respective arguments of those functions can be
-passed on using \code{...}. For instance, passing the argument
-\code{run = 1L} means that the models will be evaluated and returned.
+defaults. See Details for more information.
 }
 \details{
-In the arguments \code{model_class_specific} and \code{SAVEDATA}, the
-character string \dQuote{\{C\}} is substituted with the correct class number.
-The character string \dQuote{\{filename_stem\}} is substituted with the
-filename stem, for example, to name savedata in line with the input files.
-
-In all arguments to \code{mplusObject}, a double space (\dQuote{  }) is
-replaced with a newline character. This can be used to obtain nicely
-formatted Mplus syntax.
-
 Model syntax can be specified in three ways, for ease of use and
+flexibility:
+\enumerate{
+  \item An atomic character string with lavaan syntax. Within this syntax,
+  the character string \code{\{C\}} is dynamically substituted with the
+  correct class number using \code{\link{lsub}}, for example to set unique
+  parameter labels for each class, or to specify equality constraints. E.g.,
+  \code{x ~ m\{C\}*1} will be expanded to \code{x ~ m1*1} and \code{x ~ m2*1}
+  when \code{classes = 2}. The resulting syntax for each class will be
+  converted to an \code{mxModel} using \code{\link{as_ram}}.
+  \item A list of character strings with lavaan syntax. Each item of the list
+  will be converted to a class-specific \code{mxModel} using
+  \code{\link{as_ram}}.
+  \item A list of \code{mxModel} objects, specified by the user.
+}
 }
 \examples{
 \dontrun{

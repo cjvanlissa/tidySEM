@@ -65,6 +65,7 @@ as_ram.character <- function(x, ...){
   defaults <- list(int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = FALSE,
                    auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
                    auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE)
+  browser()
   dots <- list(...)
   cl <- match.call()
   cl[names(defaults)[!names(defaults) %in% names(cl)]] <- defaults[!names(defaults) %in% names(cl)]
@@ -102,12 +103,15 @@ as_ram.data.frame <- function(x, ...){
   dots <- list(...)
   lavtab <- x
   # Remove defined parameters
-  if(any(lavtab$group == 0)){
-    stop("Develop")
-  }
-  defined_parameters <- which(lavtab$group == 0)
+  # if(any(lavtab$group == 0)){
+  #   stop("Develop")
+  # }
+  defined <- NULL
+  defined_parameters <- which(lavtab$block == 0 & lavtab$plabel == "")
   if(length(defined_parameters) > 0){
+    defined <- lavtab[defined_parameters, , drop = FALSE]
     lavtab <- lavtab[-defined_parameters, ]
+
   }
   # Starting values
   #lavtab$ustart[lavtab$op == "~1"] <- 0
@@ -142,6 +146,18 @@ as_ram.data.frame <- function(x, ...){
     if(!path[["label"]] == "") Args$labels <- path[["label"]]
     do.call(call, Args)
   })
+  if(length(defined) > 0){
+    path_list <- c(
+      path_list,
+      lapply(1:nrow(defined), function(i){
+        path <- defined[i, ]
+        cl <- call(name = "mxAlgebra")
+        cl[["expression"]] <- str2lang(path$rhs)
+        cl[["name"]] <- path$lhs
+        eval(cl)
+      })
+    )
+  }
   # mxModel-specific arguments
   mxmodel_args <- list(
     model = "model",

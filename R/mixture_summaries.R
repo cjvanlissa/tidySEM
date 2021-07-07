@@ -16,6 +16,12 @@ get_fit <- function(x, ...) {
   UseMethod("get_fit", x)
 }
 
+#' @method get_fit mixture_list
+#' @export
+get_fit.mixture_list <- function(x, ...) {
+  sapply(x, get_fit)
+}
+
 #' @method get_fit MxModel
 #' @export
 get_fit.MxModel <- function(x, ...) {

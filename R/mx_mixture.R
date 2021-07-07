@@ -1,49 +1,33 @@
 #' Estimate mixture models using OpenMx
 #'
 #' Dynamically creates a batch of mixture models, with intelligent
-#' defaults. This function is a wrapper around \code{mplusObject} and
-#' \code{mplusModeler}, and the respective arguments of those functions can be
-#' passed on using \code{...}. For instance, passing the argument
-#' \code{run = 1L} means that the models will be evaluated and returned.
-#'
-#' In the arguments \code{model_class_specific} and \code{SAVEDATA}, the
-#' character string \dQuote{\{C\}} is substituted with the correct class number.
-#' The character string \dQuote{\{filename_stem\}} is substituted with the
-#' filename stem, for example, to name savedata in line with the input files.
-#'
-#' In all arguments to \code{mplusObject}, a double space (\dQuote{  }) is
-#' replaced with a newline character. This can be used to obtain nicely
-#' formatted Mplus syntax.
+#' defaults. See Details for more information.
 #' @param model Syntax for the model; either a character string, or a list of
 #' character strings, or a list of \code{mxModel} objects. See Details.
-# @param model_class_specific Character vector. Mplus syntax for the
-# class-specific model(s) of one or more categorical latent variables. Each
-# element of \code{model_class_specific} is used as the class-specific syntax
-# of a different categorical latent variable. This allows one to easily specify
-# latent transition analyses (see second example). The character string
-# \dQuote{\{C\}} is substituted with the correct class number, for example to
-# set unique parameter labels for each class, or to specify equality
-# constraints.
 #' @param classes A vector of integers, indicating which class solutions to
 #' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' \code{classes = c(1:4, 6:8)}.
 #' @param data The data.frame to be used for model fitting.
-#' @param run Logical, whether or not to run the model.
+#' @param run Logical, whether or not to run the model. If \code{run = TRUE},
+#' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
 #' @param ... Additional arguments, passed to functions.
-#  \link{mplusObject}, such as syntax
-# for other Mplus options.
 #' @details Model syntax can be specified in three ways, for ease of use and
-# flexibility:
-# \enumerate{
-#   \item An atomic character string with lavaan syntax. Within this syntax,
-#   the character string \code{\{C\}} is dynamically substituted with the
-#   correct class number using \code{\link{lsub}}, for example to set unique
-#   parameter labels for each class, or to specify equality constraints.
-#   \item
-# }
-#
-#' @return Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
-#' to their final values.
+#' flexibility:
+#' \enumerate{
+#'   \item An atomic character string with lavaan syntax. Within this syntax,
+#'   the character string \code{\{C\}} is dynamically substituted with the
+#'   correct class number using \code{\link{lsub}}, for example to set unique
+#'   parameter labels for each class, or to specify equality constraints. E.g.,
+#'   \code{x ~ m\{C\}*1} will be expanded to \code{x ~ m1*1} and \code{x ~ m2*1}
+#'   when \code{classes = 2}. The resulting syntax for each class will be
+#'   converted to an \code{mxModel} using \code{\link{as_ram}}.
+#'   \item A list of character strings with lavaan syntax. Each item of the list
+#'   will be converted to a class-specific \code{mxModel} using
+#'   \code{\link{as_ram}}.
+#'   \item A list of \code{mxModel} objects, specified by the user.
+#' }
+#'
+#' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
 #' @examples
@@ -83,25 +67,102 @@ mx_mixture <- function(model,
   UseMethod("mx_mixture", model)
 }
 
-#' Estimate growth mixture models using OpenMx
+#' Estimate latent profile analyses using OpenMx
 #'
-#' This function is a wrapper around \code{\link{mx_mixture}}, adding the
-#' default arguments of \code{\link[lavaan]{growth}}. This function is only
-#' useful if all the latent variables in the model are growth factors.
-#' @param model Syntax for the model; either a character string, or a list of
-#' character strings, or a list of \code{mxModel} objects.
-#' See \code{\link{mx_mixture}}.
+#' This function is a wrapper around \code{\link{mx_mixture}} to simplify the
+#' specification of latent profile models, also known as finite mixture models.
+#' By default, the function estimates free means for all observed variables
+#' across classes.
+#' @param variances Character vector. Specifies which variance components to
+#' estimate. Defaults to "equal" (constrain variances across classes); the
+#' other option is "varying" (estimate variances freely across classes). Each
+#' element of this vector refers to one of the models you wish to run.
+#' @param covariances Character vector. Specifies which covariance components to
+#' estimate. Defaults to "zero" (covariances constrained to zero; this
+#' corresponds
+#' to an assumption of conditional independence of the indicators); other
+#' options are "equal" (covariances between items constrained to be equal across
+#' classes), and "varying" (free covariances across classes).
 #' @param classes A vector of integers, indicating which class solutions to
 #' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' \code{classes = c(1:4, 6:8)}.
 #' @param data The data.frame to be used for model fitting.
-#' @param run Logical, whether or not to run the model.
+#' @param run Logical, whether or not to run the model. If \code{run = TRUE},
+#' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
 #' @param ... Additional arguments, passed to functions.
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
 #' @examples
 #' \dontrun{
+#' data("empathy")
+#' df <- empathy[1:6]
+#' mx_profiles(data = df,
+#'             classes = 2) -> res
+#' }
+mx_profiles <- function(data = NULL,
+                        variances = "equal",
+                        covariances = "zero",
+                        classes = 1L,
+                        run = TRUE,
+                        ...){
+  browser()
+  if(length(variances) > 0 & (!hasArg(covariances) | length(covariances) == 1)){
+    covariances <- rep(covariances, length(variances))
+  }
+  if(length(covariances) > 0 & (!hasArg(variances) | length(variances) == 1)){
+    variances <- rep(variances, length(covariances))
+  }
+  if (length(variances) != length(covariances)) {
+    stop(
+      "The 'variances' and 'covariances' arguments must be vectors of equal length. Together, they describe the models to be run."
+    )
+  }
+  cl <- match.call()
+  cl[[1L]] <- str2lang("tidySEM:::mx_mixture")
+  if("variances" %in% names(cl)) cl[["variances"]] <- NULL
+  if("covariances" %in% names(cl)) cl[["covariances"]] <- NULL
+  if(length(variances) == 1){
+    cl[["model"]] <- profile_syntax(variances, covariances, names(data))
+    out <- eval.parent(cl)
+  } else {
+    out <- mapply(function(v, c){
+      cl[["model"]] <- profile_syntax(variances = v, covariances = c, names(data))
+      eval.parent(cl)
+    }, v = variances, c = covariances, SIMPLIFY = FALSE)
+    out <- do.call(c, out)
+  }
+  class(out) <- c("mixture_list", class(out))
+  vlab <- paste0(c(varying = "free", equal = "equal")[variances], " var")
+  clab <- paste0(c(zero = "no", varying = "free", equal = "equal")[covariances], " cov")
+  clab[clab == "no cov"] <- NA
+  lbs <- gsub(", $", "", paste2(vlab, clab, sep = ", "))
+  names(out) <- paste(rep(lbs, each = length(classes)), rep(classes, length(lbs)))
+  out
+}
+
+
+#' Estimate growth mixture models using OpenMx
+#'
+#' This function is a wrapper around \code{\link{mx_mixture}}, adding the
+#' default arguments of \code{\link[lavaan]{growth}} to simplify the
+#' specification of growth mixture models. This function is only
+#' useful if all the latent variables in the model are growth factors.
+#' @param model Syntax for the model; either a character string, or a list of
+#' character strings, or a list of \code{mxModel} objects. See Details.
+#' @param classes A vector of integers, indicating which class solutions to
+#' generate. Defaults to 1L. E.g., \code{classes = 1:6},
+#' \code{classes = c(1:4, 6:8)}.
+#' @param data The data.frame to be used for model fitting.
+#' @param run Logical, whether or not to run the model. If \code{run = TRUE},
+#' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
+#' @param ... Additional arguments, passed to functions.
+#' @return Returns an \code{\link[OpenMx]{mxModel}}.
+#' @export
+#' @keywords mixture models openmx
+#' @examples
+#' \dontrun{
+#' data("empathy")
 #' df <- empathy[1:6]
 #' mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
 #'                            s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6
@@ -122,7 +183,6 @@ mx_growth_mixture <- function(model,
                               data = NULL,
                               run = TRUE,
                               ...){
-  browser()
   defaults <- list(meanstructure = TRUE, int.ov.free = FALSE,
                    int.lv.free = TRUE, auto.fix.first = TRUE,
                    auto.fix.single = TRUE, auto.var = TRUE,
@@ -173,7 +233,8 @@ mx_mixture.character <- function(model,
     if(run){
       cl[["model"]] <- out
       cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-      cl[["model"]] <- eval.parent(cl)
+      cl[["x"]] <- eval.parent(cl)
+      cl[["model"]] <- NULL
       cl[[1L]] <- str2lang("tidySEM:::run_mx")
       return(eval.parent(cl))
     } else {
@@ -209,11 +270,14 @@ mx_mixture.list <- function(model,
     if(!all(sapply(out, inherits, "MxModel"))){
       stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
     }
+    # Develop functionality for MxModels
+    browser()
   }
   if(run){
     cl[["model"]] <- out
     cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-    cl[["model"]] <- eval.parent(cl)
+    cl[["x"]] <- eval.parent(cl)
+    cl[["model"]] <- NULL
     cl[[1L]] <- str2lang("tidySEM:::run_mx")
     return(eval.parent(cl))
   } else {
@@ -350,7 +414,6 @@ estimate_mx_mixture <- function(model,
                                 data = NULL,
                                 ...){
   # Prepare initial clustering
-  browser()
   clusts <- hclust(dist(data[model[[1]]$manifestVars]))
   splits <- cutree(tree = clusts, k = classes)
   strts <- lapply(1:classes, function(i){
@@ -407,4 +470,22 @@ estimate_mx_mixture <- function(model,
                        exhaustive = TRUE)
   attr(mix_fit, "tidySEM") <- "mixture"
   mix_fit
+}
+
+#param_names <- selected_variables <- names(df)
+profile_syntax <- function(variances, covariances, parameters){
+  mean_syntax <- paste0(paste0(parameters, " ~ m{C}", 1:length(parameters), " *1"), collapse = "\n")
+
+  var_syntax <- switch(variances,
+                       "equal" = paste0(paste0(parameters, " ~~ v", 1:length(parameters), " * ", parameters), collapse = "\n"),
+                       "varying" = paste0(paste0(parameters, " ~~ v{C}", 1:length(parameters), " * ", parameters), collapse = "\n")
+  )
+  cor_syntax <- paste(syntax_cor_lavaan(parameters, generic_label = TRUE), collapse = "\n")
+  cor_syntax <- switch(covariances,
+                       "equal" = cor_syntax,
+                       "varying" = gsub("~~ c", "~~ c{C}", cor_syntax, fixed = TRUE),
+                       "zero" = gsub("~~ c\\d+", "~~ 0", cor_syntax)
+  )
+
+  paste(mean_syntax, var_syntax, cor_syntax, sep = "\n\n")
 }

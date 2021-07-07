@@ -1,0 +1,46 @@
+#' Simulated empathy data
+#'
+#' This simulated dataset, based on Van Lissa et al., 2014, contains six annual
+#' assessments of adolescents' mean scores on the empathic concern and
+#' perspective taking subscales of the Interpersonal Reactivity Index
+#' (Davis, 1983). The first measurement wave occurred when adolescents were, on
+#' average, 13 years old, and the last one when they were 18 years old.
+#'
+#' \tabular{lll}{
+#'   \strong{ec1} \tab \code{numeric} \tab Mean score of empathic concern in
+#'   wave 1\cr
+#'   \strong{ec2} \tab \code{numeric} \tab Mean score of empathic concern in
+#'   wave 2\cr
+#'   \strong{ec3} \tab \code{numeric} \tab Mean score of empathic concern in
+#'   wave 3\cr
+#'   \strong{ec4} \tab \code{numeric} \tab Mean score of empathic concern in
+#'   wave 4\cr
+#'   \strong{ec5} \tab \code{numeric} \tab Mean score of empathic concern in
+#'   wave 5\cr
+#'   \strong{ec6} \tab \code{numeric} \tab Mean score of empathic concern in
+#'   wave 6\cr
+#'   \strong{pt1} \tab \code{numeric} \tab Mean score of perspective taking in
+#'   wave 1\cr
+#'   \strong{pt2} \tab \code{numeric} \tab Mean score of perspective taking in
+#'   wave 2\cr
+#'   \strong{pt3} \tab \code{numeric} \tab Mean score of perspective taking in
+#'   wave 3\cr
+#'   \strong{pt4} \tab \code{numeric} \tab Mean score of perspective taking in
+#'   wave 4\cr
+#'   \strong{pt5} \tab \code{numeric} \tab Mean score of perspective taking in
+#'   wave 5\cr
+#'   \strong{pt6} \tab \code{numeric} \tab Mean score of perspective taking in
+#'   wave 6\cr
+#'   \strong{sex} \tab \code{factor} \tab Adolescent sex; M = male, F = female.
+#' }
+#' @docType data
+#' @keywords datasets
+#' @name empathy
+#' @usage data(empathy)
+#' @references Van Lissa, C. J., Hawk, S. T., Branje, S. J., Koot, H. M.,
+#' Van Lier, P. A., & Meeus, W. H. (2014). Divergence Between Adolescent and
+#' Parental Perceptions of Conflict in Relationship to Adolescent Empathy
+#' Development. Journal of Youth and Adolescence, (Journal Article), 1–14.
+#' \doi{10.1007/s10964-014-0152-5}
+#' @format A data frame with 467 rows and 13 variables.
+NULL

@@ -25,13 +25,19 @@ lgm.character <- function(y, loadings = 1:length(y), polynomials = 1, lv_name = 
 }
 
 
-syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE){
+syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE, generic_label = FALSE){
   if(all){
-    cors <- expand.grid(x, " ~~ ", y)
+    cors <- c(x, y)
+    cors <- unique(cors)
+    cors <- t(combn(cors, 2))
     if(label){
-      cors <- cbind(cors, " ~~ c", "*")[, c(1, 4, 1,3,5,3)]
+      if(!generic_label){
+        cors <- cbind(cors, " ~~ c", "*")[, c(1, 3, 1,2,4,2)]
+      } else {
+        cors <- cbind(cors, " ~~ ", paste0("c", 1:nrow(cors)), "*")[, c(1, 3, 4, 5, 2)]
+      }
+
     }
-    cors <- cors[!cors$Var1==cors$Var3, ]
     unname(apply(cors, 1, paste0, collapse = ""))
   } else {
     if(label){
@@ -42,6 +48,19 @@ syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE){
   }
 }
 
+
+syntax_cor_lav2 <- function(x, y = NULL, all = TRUE, label = TRUE){
+  if(is.null(y)){
+    y <- x
+  }
+  if(all){
+    m <- matrix(paste0(rep(y, each = length(x)), " ~~ ", c(paste0("c", 1:((length(x)*(length(y)-1))/2)), paste0("v", 1:length(x)), paste0("c", 1:((length(x)*(length(y)-1))/2))), rep(x, length(x)), ";\n"), ncol = length(x))
+    m[upper.tri(m)]
+    #apply(expand.grid(x, " WITH ", y, ";\n"), 1, paste, collapse = "")
+  } else {
+    paste(x, " WITH ", y, ";\n", collapse = "", sep = "")
+  }
+}
 
 syntax_cor_mplus <- function(x, y = NULL, all = TRUE){
   if(is.null(y)){

@@ -8,8 +8,7 @@ mx_growth_mixture(model, classes = 1L, data = NULL, run = TRUE, ...)
 }
 \arguments{
 \item{model}{Syntax for the model; either a character string, or a list of
-character strings, or a list of \code{mxModel} objects.
-See \code{\link{mx_mixture}}.}
+character strings, or a list of \code{mxModel} objects. See Details.}
 
 \item{classes}{A vector of integers, indicating which class solutions to
 generate. Defaults to 1L. E.g., \code{classes = 1:6},
@@ -17,7 +16,8 @@ generate. Defaults to 1L. E.g., \code{classes = 1:6},
 
 \item{data}{The data.frame to be used for model fitting.}
 
-\item{run}{Logical, whether or not to run the model.}
+\item{run}{Logical, whether or not to run the model. If \code{run = TRUE},
+the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.}
 
 \item{...}{Additional arguments, passed to functions.}
 }
@@ -26,11 +26,13 @@ Returns an \code{\link[OpenMx]{mxModel}}.
 }
 \description{
 This function is a wrapper around \code{\link{mx_mixture}}, adding the
-default arguments of \code{\link[lavaan]{growth}}. This function is only
+default arguments of \code{\link[lavaan]{growth}} to simplify the
+specification of growth mixture models. This function is only
 useful if all the latent variables in the model are growth factors.
 }
 \examples{
 \dontrun{
+data("empathy")
 df <- empathy[1:6]
 mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
                            s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6

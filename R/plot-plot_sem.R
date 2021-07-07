@@ -1443,6 +1443,7 @@ reposition_variances <- function(df_edges){
 
 
 bind_list <- function(L, ...){
+  L <- L[which(!sapply(L, is.null))]
   all_names <- unique(unlist(lapply(L, names)))
   L <- lapply(L, function(x){
     x[setdiff(all_names, names(x))] <- NA
