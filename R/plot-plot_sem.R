@@ -1445,26 +1445,28 @@ match.call.defaults <- function(...) {
 .plot_label_internal <- function(p, df, text_size){
   retain_cols <- c("x", "y", "label", "group", "level")
   retain_cols <- retain_cols[which(retain_cols %in% names(df))]
+  use_geom_text <- isTRUE("geom_text" %in% names(df))
   df <- df[, c(retain_cols, grep("^label_(fill|size|family|fontface|hjust|vjust|lineheight|colour|color|alpha)$", names(df), value = TRUE)), drop = FALSE]
   if(nrow(df) > 0){
     names(df) <- gsub("^label_", "", names(df))
     # Prepare aesthetics ------------------------------------------------------
-    # if(!"fill" %in% names(df)){
-    #   df$fill = "white"
-    # }
+    if(!"fill" %in% names(df)){
+      df$fill = "white"
+    }
     if(!"size" %in% names(df)){
       df$size <- text_size
     }
     #browser()
-    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha")
+    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha", "geom_text")
     Args <- as.list(df[which(names(df) %in% Args)])
     Args <- c(list(
       data = df,
-      mapping = aes_string(x = "x", y = "y", label = "label")#,
-      #label.size = NA
+      mapping = aes_string(x = "x", y = "y", label = "label"),
+      label.size = NA
       ),
       Args)
-    if(!"fill" %in% names(Args)){
+    if(use_geom_text){
+      Args[c("geom_text", "fill", "label.size")] <- NULL
       p <- p + do.call(geom_text, Args)
     } else {
       p <- p + do.call(geom_label, Args)
