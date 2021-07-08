@@ -65,7 +65,6 @@ as_ram.character <- function(x, ...){
   defaults <- list(int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = FALSE,
                    auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
                    auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE)
-  browser()
   dots <- list(...)
   cl <- match.call()
   cl[names(defaults)[!names(defaults) %in% names(cl)]] <- defaults[!names(defaults) %in% names(cl)]

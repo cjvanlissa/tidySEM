@@ -5,7 +5,6 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
 {
   # Multigroup:
   # attr(attr(fit,"runstate")$fitfunctions$mg.fitfunction, "groups")
-  browser()
   Args <- list(x = x)
   digits <- force(digits)
   sum_x <- summary(x)
@@ -141,7 +140,7 @@ has_submod <- function(x, depth = 0){
 
 get_algebras <- function(x, ...){
   cl <- match.call()
-  cl[[1L]] <- str2lang(".get_algebras_internal")
+  cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")
   algs <- eval.parent(cl)
   Estimate <- unlist_mx(algs, "result")
   out <- data.frame(name = names(Estimate),
@@ -150,7 +149,7 @@ get_algebras <- function(x, ...){
                     col = ":=",
                     Estimate = Estimate, row.names = NULL)
 
-  out$Standard.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
   out
 }
 
@@ -165,9 +164,9 @@ get_algebras <- function(x, ...){
     names(addthis) <- algs
     out <- c(out, addthis)
   }
-  if(tidySEM:::has_submod(x)){
+  if(has_submod(x)){
     subs <- names(attr(x, "submodels"))
-    fromsubs <- lapply(subs, function(thesub){get_algs(x[[thesub]])})
+    fromsubs <- lapply(subs, function(thesub){.get_algebras_internal(x[[thesub]])})
     names(fromsubs) <- subs
     out <- c(out, fromsubs)
   }
@@ -198,7 +197,7 @@ get_algebras <- function(x, ...){
 
 unlist_mx <- function(i, element, ...){
   cl <- match.call()
-  cl[[1L]] <- str2lang("unlist_mx2")
+  cl[[1L]] <- str2lang("tidySEM:::unlist_mx2")
   out <- unlist(eval.parent(cl))
   names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
   out
