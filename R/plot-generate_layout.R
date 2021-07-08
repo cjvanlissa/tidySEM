@@ -262,13 +262,24 @@ get_layout.default <- function(x, ..., rows = NULL){
   if("rows" %in% names(Args)){
     Args$rows <- NULL
   } else {
-    if(length(sapply(Args, is.numeric)) == 1){
+    if(sum(sapply(Args, is.numeric)) == 1){
       Args[which(sapply(Args, is.numeric))] <- NULL
     } else {
-      stop("Provide 'rows' argument.", call. = FALSE)
+      dots <- list(...)
+      cl <- match.call()
+      cl["columns"] <- list(NULL)
+      cl[[1L]] <- quote(table_results)
+      cl$x <- tryCatch(eval.parent(cl), error = function(e){
+        stop("Could not create layout for object.")
+      })
+      if("columns" %in% names(dots)){
+        cl["columns"] <- dots["columns"]
+      }
+      cl[[1L]] <- quote(get_layout)
+      return(eval.parent(cl))
     }
   }
-  if(!(length(Args) %% rows == 0)){
+  if(isFALSE(length(Args) %% rows == 0)){
     stop("Number of arguments is not a multiple of rows = ", rows, call. = FALSE)
   }
   vec <- do.call(c, Args)

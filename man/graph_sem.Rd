@@ -6,6 +6,7 @@
 \alias{graph_sem.lavaan}
 \alias{graph_sem.MxModel}
 \alias{graph_sem.mplus.model}
+\alias{graph_sem.character}
 \alias{graph_sem.mplusObject}
 \title{Render a graph}
 \usage{
@@ -46,6 +47,14 @@ graph_sem(...)
 )
 
 \method{graph_sem}{mplus.model}(
+  model,
+  edges = get_edges(x = model),
+  layout = get_layout(x = model),
+  nodes = get_nodes(x = model),
+  ...
+)
+
+\method{graph_sem}{character}(
   model,
   edges = get_edges(x = model),
   layout = get_layout(x = model),

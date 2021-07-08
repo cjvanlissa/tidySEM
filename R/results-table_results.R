@@ -611,6 +611,20 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 }
 
 
+#' @method table_results character
+#' @export
+table_results.character <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
+  cl <- match.call()
+  cl <- cl[-which(names(cl) %in% c("x", "columns", "digits"))]
+  cl[[1L]] <- str2lang("lavaan::lavaanify")
+  cl[["model"]] <- x
+  results <- eval.parent(cl)
+  if(length(unique(results$group)) == 1) results[["group"]] <- NULL
+  class(results) <- c("tidy_results", class(results))
+  results
+}
+# table_results("y ~ x")
+
 can_be_numeric <- function(x){
   sapply(x, function(col){ tryCatch(expr = {as.numeric(col); return(TRUE)}, warning= function(w){ return(FALSE) }) })
 }

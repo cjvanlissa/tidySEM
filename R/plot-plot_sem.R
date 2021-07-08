@@ -235,6 +235,11 @@ graph_sem.MxModel <- graph_sem.lavaan
 #' @export
 graph_sem.mplus.model <- graph_sem.lavaan
 
+#' @method graph_sem character
+#' @rdname graph_sem
+#' @export
+graph_sem.character <- graph_sem.lavaan
+
 #' @method graph_sem mplusObject
 #' @rdname graph_sem
 #' @export
@@ -554,6 +559,11 @@ prepare_graph.lavaan <- function(model,
 #' @export
 prepare_graph.MxModel <- prepare_graph.lavaan
 
+#' @method prepare_graph character
+#' @rdname prepare_graph
+#' @export
+prepare_graph.character <- prepare_graph.lavaan
+
 #' @method prepare_graph mplus.model
 #' @rdname prepare_graph
 #' @export
@@ -799,6 +809,23 @@ get_nodes.lavaan <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   eval.parent(cl)
 }
 
+#' @method get_nodes default
+#' @export
+get_nodes.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
+  dots <- list(...)
+  cl <- match.call()
+  cl["columns"] <- list(NULL)
+  cl[[1L]] <- quote(table_results)
+  cl$x <- tryCatch(eval.parent(cl), error = function(e){
+    stop("Could not extract nodes from object.")
+  })
+  if("columns" %in% names(dots)){
+    cl["columns"] <- dots["columns"]
+  }
+  cl[[1L]] <- quote(get_nodes)
+  eval.parent(cl)
+}
+
 #' @method get_nodes mplusObject
 #' @export
 get_nodes.mplusObject <- get_nodes.lavaan
@@ -947,6 +974,23 @@ get_nodes.tidy_results <- function(x, label = paste2(name, est_sig, sep = "\n"),
 #' @export
 get_edges <- function(x, label = "est_sig", ...){
   UseMethod("get_edges", x)
+}
+
+#' @method get_edges default
+#' @export
+get_edges.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
+  dots <- list(...)
+  cl <- match.call()
+  cl["columns"] <- list(NULL)
+  cl[[1L]] <- quote(table_results)
+  cl$x <- tryCatch(eval.parent(cl), error = function(e){
+    stop("Could not extract edges from object.")
+  })
+  if("columns" %in% names(dots)){
+    cl["columns"] <- dots["columns"]
+  }
+  cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
+  eval.parent(cl)
 }
 
 #' @method get_edges lavaan
