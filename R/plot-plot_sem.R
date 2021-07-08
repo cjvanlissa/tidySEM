@@ -1405,20 +1405,27 @@ match.call.defaults <- function(...) {
   if(nrow(df) > 0){
     names(df) <- gsub("^label_", "", names(df))
     # Prepare aesthetics ------------------------------------------------------
-    if(!"fill" %in% names(df)){
-      df$fill = "white"
-    }
+    # if(!"fill" %in% names(df)){
+    #   df$fill = "white"
+    # }
     if(!"size" %in% names(df)){
       df$size <- text_size
     }
+    #browser()
     Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha")
     Args <- as.list(df[which(names(df) %in% Args)])
     Args <- c(list(
       data = df,
-      mapping = aes_string(x = "x", y = "y", label = "label"),
-      label.size = NA),
+      mapping = aes_string(x = "x", y = "y", label = "label")#,
+      #label.size = NA
+      ),
       Args)
-    p <- p + do.call(geom_label, Args)
+    if(!"fill" %in% names(Args)){
+      p <- p + do.call(geom_text, Args)
+    } else {
+      p <- p + do.call(geom_label, Args)
+    }
+
   }
   p
 }
