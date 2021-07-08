@@ -40,25 +40,41 @@ run_mx.tidy_sem <- function(x, ...){
 #' @export
 run_mx.MxModel <- function(x, ...){
   dots <- list(...)
+  run_fun <- "mxRun"
+  run_args <- list()
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
     x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
+    dots[["data"]] <- NULL
+  }
+  if(length(mSD@intervals) > 0){
+    run_args[["intervals"]] <- TRUE
   }
 
   # Different approaches based on model type --------------------------------
   if(!is.null(attr(x, "tidySEM"))){
     if(attr(x, "tidySEM") == "mixture"){
       # maybe also try simulated annealing
-      return(mxTryHard(x,
-                       extraTries = 100,
-                       intervals=TRUE,
-                       silent = TRUE,
-                       verbose = FALSE,
-                       bestInitsOutput = FALSE,
-                       exhaustive = TRUE))
+      run_fun <- "mxTryHard"
+      run_args <- c(run_args,
+                    list(
+                      extraTries = 100,
+                      intervals=TRUE,
+                      silent = TRUE,
+                      verbose = FALSE,
+                      bestInitsOutput = FALSE,
+                      exhaustive = TRUE))
     }
   }
-  mxRun(x)
+  run_args <- c(
+    list(
+      "name" = run_fun,
+      "model" = x
+    ),
+    run_args,
+    dots)
+  cl <- do.call(call, run_args)
+  eval.parent(cl)
 }
 
 
