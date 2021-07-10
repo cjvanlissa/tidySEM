@@ -30,8 +30,9 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results$op[fac_load] <- "=~"
 
   results$confint <- conf_int(results$est, se = results$Std.Error)
-  if (!is.null(sum_x[["CI"]])) {
-    if (!all(is.na(sum_x[["CI"]]))) {
+  browser()
+  if(isTRUE(sum_x[["CI.Requested"]])){
+    if(!all(is.na(sum_x[["CI"]]))) {
       ci_x <- data.frame(name = rownames(sum_x$CI),
                          sum_x$CI)
       ci_x$CI <- NA
@@ -66,7 +67,6 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
 submodels <- function(x, results, cols = c("name", "matrix", "row", "col", "Estimate", "Std.Error", "lbound",
                                            "ubound", "lboundMet", "uboundMet"), ...){
   if(!has_submod(x, depth = 1)){
-    browser()
     submod <- names(attr(x, "submodels"))
     lapply(submod, function(i){ get_algebras(x[[i]]) })
     thisgroup <- rep(NA_character_, times = nrow(results))
@@ -138,6 +138,7 @@ has_submod <- function(x, depth = 0){
 #   paste(names(out), out, sep = ".")
 # }
 
+#' @importFrom OpenMx mxSE omxGetParameters
 get_algebras <- function(x, ...){
   cl <- match.call()
   cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")

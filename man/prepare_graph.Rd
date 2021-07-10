@@ -46,13 +46,7 @@ prepare_graph(...)
   ...
 )
 
-\method{prepare_graph}{character}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{prepare_graph}{character}(...)
 
 \method{prepare_graph}{mplus.model}(
   model,

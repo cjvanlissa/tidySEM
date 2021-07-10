@@ -24,7 +24,7 @@ lgm.character <- function(y, loadings = 1:length(y), polynomials = 1, lv_name = 
   out
 }
 
-
+#' @importFrom utils combn
 syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE, generic_label = FALSE){
   if(all){
     cors <- c(x, y)

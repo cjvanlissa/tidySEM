@@ -34,20 +34,19 @@ run_mx.tidy_sem <- function(x, ...){
   cl[["data"]] <- x$data
   eval.parent(cl)
 }
-#mxRun(mxModel(tmp, mxData(dat, type = "raw"), mxFitFunctionML())) -> test
 
 #' @method run_mx MxModel
 #' @export
 run_mx.MxModel <- function(x, ...){
   dots <- list(...)
-  run_fun <- "mxRun"
+  run_fun <- str2lang("OpenMx::mxRun")
   run_args <- list()
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
     x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
     dots[["data"]] <- NULL
   }
-  if(length(mSD@intervals) > 0){
+  if(length(x@intervals) > 0){
     run_args[["intervals"]] <- TRUE
   }
 
@@ -55,7 +54,7 @@ run_mx.MxModel <- function(x, ...){
   if(!is.null(attr(x, "tidySEM"))){
     if(attr(x, "tidySEM") == "mixture"){
       # maybe also try simulated annealing
-      run_fun <- "mxTryHard"
+      run_fun <- str2lang("OpenMx::mxTryHard")
       run_args <- c(run_args,
                     list(
                       extraTries = 100,
@@ -73,7 +72,7 @@ run_mx.MxModel <- function(x, ...){
     ),
     run_args,
     dots)
-  cl <- do.call(call, run_args)
+  cl <- as.call(run_args)
   eval.parent(cl)
 }
 
@@ -106,8 +105,8 @@ run_lavaan <- function(x, ...){
 #' @export
 run_lavaan.tidy_sem <- function(x, ...){
   cl <- match.call()
-  cl[[1L]] <- quote(lavaan)
-  cl[["model"]] <- as_lavaan(x$syntax)
+  cl[[1L]] <- str2lang("lavaan::lavaan")
+  cl[["model"]] <- as_lavaan(x)
   cl[["x"]] <- NULL
   cl[["data"]] <- x$data
   eval.parent(cl)

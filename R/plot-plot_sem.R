@@ -238,7 +238,15 @@ graph_sem.mplus.model <- graph_sem.lavaan
 #' @method graph_sem character
 #' @rdname graph_sem
 #' @export
-graph_sem.character <- graph_sem.lavaan
+graph_sem.character <- function(...){
+  cl <- match.call()
+  if(names(cl)[2L] == "model") cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
+  if(names(cl)[2L] %in% c("layout", "edges", "nodes")) cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
+  if(as.list(cl[[2L]])[[1]] == "matrix") cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
+  if(as.list(cl[[2L]])[[1]] == "character") cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
+  eval.parent(cl)
+}
+
 
 #' @method graph_sem mplusObject
 #' @rdname graph_sem
@@ -562,7 +570,14 @@ prepare_graph.MxModel <- prepare_graph.lavaan
 #' @method prepare_graph character
 #' @rdname prepare_graph
 #' @export
-prepare_graph.character <- prepare_graph.lavaan
+prepare_graph.character <- function(...){
+  cl <- match.call()
+  if(names(cl)[2L] == "model") cl[[1L]] <- str2lang("tidySEM:::prepare_graph.lavaan")
+  if(names(cl)[2L] %in% c("layout", "edges", "nodes")) cl[[1L]] <- str2lang("tidySEM:::prepare_graph.default")
+  if(as.list(cl[[2L]])[[1]] == "matrix") cl[[1L]] <- str2lang("tidySEM:::prepare_graph.default")
+  if(as.list(cl[[2L]])[[1]] == "character") cl[[1L]] <- str2lang("tidySEM:::prepare_graph.lavaan")
+  eval.parent(cl)
+}
 
 #' @method prepare_graph mplus.model
 #' @rdname prepare_graph

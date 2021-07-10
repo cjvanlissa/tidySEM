@@ -106,7 +106,6 @@ mx_profiles <- function(data = NULL,
                         classes = 1L,
                         run = TRUE,
                         ...){
-  browser()
   if(length(variances) > 0 & (!hasArg(covariances) | length(covariances) == 1)){
     covariances <- rep(covariances, length(variances))
   }

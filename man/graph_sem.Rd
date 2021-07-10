@@ -54,13 +54,7 @@ graph_sem(...)
   ...
 )
 
-\method{graph_sem}{character}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{graph_sem}{character}(...)
 
 \method{graph_sem}{mplusObject}(
   model,
