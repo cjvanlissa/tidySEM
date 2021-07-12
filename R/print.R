@@ -50,27 +50,27 @@ elms_tab <- function(x, elms = NULL, cols = 2){
   invisible(apply(out, 1, cat))
 }
 
-#' @method print mplusObject
-#' @export
-print.mplusObject <- function(x, ...){
-  if(!is.null(x[["summary"]][["ChiSqM_DF"]]))
-  print(summary(x))
-}
+# @method print mplusObject
+# @export
+# print.mplusObject <- function(x, ...){
+#   if(!is.null(x[["summary"]][["ChiSqM_DF"]]))
+#   print(summary(x))
+# }
 
-#' @method print mplus.model
-#' @export
-print.mplus.model <- print.mplusObject
+# @method print mplus.model
+# @export
+#print.mplus.model <- print.mplusObject
 
-#' @method summary mplus.model
-#' @export
-summary.mplus.model <- function(object, verbose = FALSE, ...)
-{
-  stopifnot(!is.null(object$summaries))
-  Args <- as.list(match.call()[-1])
-  Args$object <- list(results = object)
-  class(Args$object) <- c("mplusObject", class(Args$object))
-  do.call(summary, Args)
-}
+# @method summary mplus.model
+# @export
+# summary.mplus.model <- function(object, verbose = FALSE, ...)
+# {
+#   stopifnot(!is.null(object$summaries))
+#   Args <- as.list(match.call()[-1])
+#   Args$object <- list(results = object)
+#   class(Args$object) <- c("mplusObject", class(Args$object))
+#   do.call(summary, Args)
+# }
 
 
 #' @method print tidy_scales
