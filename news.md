@@ -1,9 +1,9 @@
 # tidySEM 0.1.10
 
-* Apologies for the brief interval between submissions.
-  There was a remaining bug in the new functions:
-  if_edit() would fail when target column is available in nodes
-  or edges, but not in both
+* Add functions for OpenMx
+* Add functions for mixture models
+* Add methods for chisq_sb()
+* Minor bugfixes and feature enhancements
 
 # tidySEM 0.1.9
 
