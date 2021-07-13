@@ -73,7 +73,7 @@ a model object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
       </span>
     </div>
 
@@ -173,6 +173,15 @@ a model object.</p>
   <span class='va'>...</span>
 <span class='op'>)</span>
 
+<span class='co'># S3 method for MxModel</span>
+<span class='fu'>graph_sem</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  edges <span class='op'>=</span> <span class='fu'><a href='get_edges.html'>get_edges</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
+  layout <span class='op'>=</span> <span class='fu'><a href='get_layout.lavaan.html'>get_layout</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
+  nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
 <span class='co'># S3 method for mplus.model</span>
 <span class='fu'>graph_sem</span><span class='op'>(</span>
   <span class='va'>model</span>,
@@ -181,6 +190,9 @@ a model object.</p>
   nodes <span class='op'>=</span> <span class='fu'><a href='get_nodes.html'>get_nodes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>,
   <span class='va'>...</span>
 <span class='op'>)</span>
+
+<span class='co'># S3 method for character</span>
+<span class='fu'>graph_sem</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for mplusObject</span>
 <span class='fu'>graph_sem</span><span class='op'>(</span>
@@ -295,7 +307,7 @@ model argument and pass an object for which a method exists (e.g.,
 the <code>model</code> argument.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lavaan.ugent.be'>lavaan</a></span><span class='op'>)</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></span><span class='op'>(</span><span class='st'>"dist ~ speed"</span>, <span class='va'>cars</span><span class='op'>)</span>
 <span class='fu'>graph_sem</span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
 </div><div class='img'><img src='graph_sem-1.png' alt='' width='700' height='433' /></div></pre>

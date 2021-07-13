@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
       </span>
     </div>
 
@@ -214,7 +214,7 @@ layout algorithm to apply to position the nodes. Defaults to
 #&gt; attr(,"class")
 #&gt; [1] "layout_matrix" "matrix"        "array"        </div><div class='input'>
 <span class='co'># Example 2</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://lavaan.org'>lavaan</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lavaan.ugent.be'>lavaan</a></span><span class='op'>)</span>
 <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span><span class='op'>(</span><span class='st'>' visual  =~ x1 + x2 + x3 '</span>,
            data <span class='op'>=</span> <span class='va'>HolzingerSwineford1939</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>50</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: lavaan WARNING: some estimated ov variances are negative</span></div><div class='input'><span class='fu'>get_layout</span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
 
       
 
-      </header><script src="Tabulating_results_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Tabulating_results_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Tabulating results from structural equation models</h1>
@@ -103,17 +103,11 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'tidySEM' was built under R version 4.0.5</span>
-<span class="co">#&gt; Registered S3 methods overwritten by 'tidySEM':</span>
-<span class="co">#&gt;   method              from           </span>
-<span class="co">#&gt;   print.mplus.model   MplusAutomation</span>
-<span class="co">#&gt;   print.mplusObject   MplusAutomation</span>
-<span class="co">#&gt;   summary.mplus.model MplusAutomation</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lavaan.org">lavaan</a></span><span class="op">)</span>
-<span class="co">#&gt; This is lavaan 0.6-7</span>
-<span class="co">#&gt; lavaan is BETA software! Please report any bugs.</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/michaelhallquist/MplusAutomation">MplusAutomation</a></span><span class="op">)</span>
-<span class="co">#&gt; Version:  0.8.1</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be">lavaan</a></span><span class="op">)</span>
+<span class="co">#&gt; This is lavaan 0.6-9</span>
+<span class="co">#&gt; lavaan is FREE software! Please report any bugs.</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://michaelhallquist.github.io/MplusAutomation/">MplusAutomation</a></span><span class="op">)</span>
+<span class="co">#&gt; Version:  1.0.0</span>
 <span class="co">#&gt; We work hard to write this free software. Please help us get credit by citing: </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.</span>
@@ -143,11 +137,11 @@
 <p>The results can be tabulated using the <code>lavaan</code> function <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
-<span class="co">#&gt; lavaan 0.6-7 ended normally after 57 iterations</span>
+<span class="co">#&gt; lavaan 0.6-9 ended normally after 57 iterations</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;   Estimator                                         ML</span>
 <span class="co">#&gt;   Optimization method                           NLMINB</span>
-<span class="co">#&gt;   Number of free parameters                         60</span>
+<span class="co">#&gt;   Number of model parameters                        60</span>
 <span class="co">#&gt;                                                       </span>
 <span class="co">#&gt;   Number of observations per group:                   </span>
 <span class="co">#&gt;     Pasteur                                        156</span>
@@ -361,7 +355,7 @@
 <a href="#output-from-mplus" class="anchor"></a>Output from Mplus</h2>
 <p>Now, we’ll reproduce the same analysis in ‘Mplus’. The <code>tidySEM</code> package has a function <code><a href="../reference/measurement.html">measurement()</a></code> to generate measurement models automatically. However, to illustrate the fact that <code>tidySEM</code> is compatible with existing solutions, we will specify the syntax for this example manually, using the package <code>MplusAutomation</code>. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html">mplusModeler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html">mplusObject</a></span><span class="op">(</span>VARIABLE <span class="op">=</span> <span class="st">"grouping IS school (1 = GW 2 = Pas);"</span>,
+<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusModeler.html">mplusModeler</a></span><span class="op">(</span><span class="fu"><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusObject.html">mplusObject</a></span><span class="op">(</span>VARIABLE <span class="op">=</span> <span class="st">"grouping IS school (1 = GW 2 = Pas);"</span>,
                                 MODEL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"visual BY x1 x2 x3;"</span>,
                                           <span class="st">"textual BY x4 x5 x6;"</span>,
                                           <span class="st">"speed BY x7 x8 x9;"</span><span class="op">)</span>,
@@ -444,7 +438,7 @@
 #&gt; 70 Residual.Variances      X7  0.888 0.127   7.006   0.000   PAS
 #&gt; 71 Residual.Variances      X8  0.541 0.099   5.483   0.000   PAS
 #&gt; 72 Residual.Variances      X9  0.654 0.101   6.476   0.000   PAS</code></pre>
-<p>The results can be tabulated using the <code>MplusAutomation</code> function <code><a href="https://rdrr.io/pkg/MplusAutomation/man/coef.mplus.model.html">coef.mplus.model()</a></code>:</p>
+<p>The results can be tabulated using the <code>MplusAutomation</code> function <code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/coef.mplus.model.html">coef.mplus.model()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; $GW</span>

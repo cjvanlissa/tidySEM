@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
       </span>
     </div>
 
@@ -141,14 +141,15 @@
     <p>Computes Satorra-Bentler corrected chi-square test.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chisq_sb</span><span class='op'>(</span><span class='va'>chisq1</span>, <span class='va'>df1</span>, <span class='va'>scf1</span>, <span class='va'>chisq2</span>, <span class='va'>df2</span>, <span class='va'>scf2</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>chisq_sb</span><span class='op'>(</span><span class='va'>chisq1</span>, <span class='va'>df1</span>, scf1 <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>chisq2</span>, <span class='va'>df2</span>, scf2 <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>chisq1</th>
-      <td><p>Chi square value of model 1.</p></td>
+      <td><p>An object for which a method exists; e.g., a chi-square value,
+or a <code>data.frame</code>.</p></td>
     </tr>
     <tr>
       <th>df1</th>
@@ -174,7 +175,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Named numeric vector with chi-square value, degrees of freedom, and
+    <p>Chi-square difference value with corresponding degrees of freedom and
 p-value.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -189,8 +190,8 @@ statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>chi2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>23</span>, <span class='fl'>44</span>, <span class='fl'>65</span><span class='op'>)</span>, df <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>78</span>, <span class='fl'>74</span>, <span class='fl'>70</span><span class='op'>)</span>, scf <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1.02</span>, <span class='fl'>1.12</span>, <span class='fl'>1.28</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>chisq_sb</span><span class='op'>(</span><span class='fl'>24</span>, <span class='fl'>78</span>, <span class='fl'>1.02</span>, <span class='fl'>65</span>, <span class='fl'>70</span>, <span class='fl'>1.28</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; chisq    df     p 
-#&gt; 46.79 -8.00  1.00 </div></pre>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Models cannot be nested, DF are equal.</span></div><div class='output co'>#&gt;    Dchisq Dchisq_df  Dchisq_p 
+#&gt; -46.78884   8.00000   1.00000 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
