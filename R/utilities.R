@@ -170,3 +170,18 @@ all_args <- function(orig_values = FALSE, ...) {
   }
   return(args)
 }
+
+
+imp_fun <- function(x){
+  if(is.data.frame(x)){
+    return(data.frame(sapply(x, imp_fun)))
+  } else {
+    out <- x
+    if(inherits(x, "numeric")){
+      out[is.na(out)] <- median(x[!is.na(out)])
+    } else {
+      out[is.na(out)] <- names(sort(table(out), decreasing = TRUE))[1]
+    }
+    out
+  }
+}
