@@ -20,7 +20,7 @@
 # @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
 # @importFrom lavaan mplus2lavaan.modelSyntax
 # @importFrom stats cutree dist hclust
-# @importFrom utils capture.output
+#' @importFrom OpenMx omxDefaultComputePlan mxComputeSimAnnealing
 run_mx <- function(x, ...){
   UseMethod("run_mx", x)
 }
@@ -39,7 +39,7 @@ run_mx.tidy_sem <- function(x, ...){
 #' @export
 run_mx.MxModel <- function(x, ...){
   dots <- list(...)
-  run_fun <- str2lang("OpenMx::mxRun")
+  run_fun <- "mxRun"
   run_args <- list()
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
@@ -53,28 +53,52 @@ run_mx.MxModel <- function(x, ...){
   # Different approaches based on model type --------------------------------
   if(!is.null(attr(x, "tidySEM"))){
     if(attr(x, "tidySEM") == "mixture"){
-      # maybe also try simulated annealing
-      run_fun <- str2lang("OpenMx::mxTryHard")
-      run_args <- c(run_args,
-                    list(
-                      extraTries = 100,
-                      intervals=TRUE,
-                      silent = TRUE,
-                      verbose = FALSE,
-                      bestInitsOutput = FALSE,
-                      exhaustive = TRUE))
+      mix_method <- "annealing"
+      if(!is.null(dots[["method"]])){
+        mix_method <- dots[["method"]]
+      }
+      switch(mix_method,
+             "hard" = {
+               # tryhard
+               run_fun <- "mxTryHard"
+               run_args <- c(run_args,
+                             list(
+                               extraTries = 100,
+                               intervals=TRUE,
+                               silent = TRUE,
+                               verbose = FALSE,
+                               bestInitsOutput = FALSE,
+                               exhaustive = TRUE))
+             },
+             {
+               # plan <- omxDefaultComputePlan()
+               # plan$steps <- list(
+               #   SA=mxComputeSimAnnealing(),
+               #   GD=plan$steps$GD,
+               #   ND=plan$steps$ND,
+               #   SE=plan$steps$SE,
+               #   HQ=plan$steps$HQ,
+               #   RD=plan$steps$RD,
+               #   RE=plan$steps$RE
+               # )
+               # x <- mxModel(x,
+               #              mxComputeSimAnnealing(plan = plan, method='tsallis1996', control=list(stepsPerTemp=3)))
+               x <- mxModel(x, mxComputeSimAnnealing())
+             })
     }
   }
   run_args <- c(
     list(
-      "name" = run_fun,
+      "name" = str2lang(run_fun),
       "model" = x
     ),
     run_args,
-    dots)
+    dots[which(names(dots) %in% formalArgs(run_fun))])
   cl <- as.call(run_args)
-  eval.parent(cl)
+  eval(cl)
 }
+
+
 
 
 #' @title Run as lavaan model
