@@ -46,7 +46,8 @@ table_results(fit)
 \seealso{
 Other Reporting tools: 
 \code{\link{conf_int}()},
-\code{\link{est_sig}()}
+\code{\link{est_sig}()},
+\code{\link{table_fit}()}
 }
 \author{
 Caspar J. van Lissa
