@@ -26,6 +26,7 @@ lgm.character <- function(y, loadings = 1:length(y), polynomials = 1, lv_name = 
 
 #' @importFrom utils combn
 syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE, generic_label = FALSE){
+  if(length(x) == 1 & !hasArg(y)) return(NULL)
   if(all){
     cors <- c(x, y)
     cors <- unique(cors)
@@ -35,6 +36,7 @@ syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE, generic_label 
         cors <- cbind(cors, " ~~ c", "*")[, c(1, 3, 1,2,4,2)]
       } else {
         cors <- cbind(cors, " ~~ ", paste0("c", 1:nrow(cors)), "*")[, c(1, 3, 4, 5, 2)]
+        if(!inherits(cors, "matrix")) cors <- t(matrix(cors))
       }
 
     }
