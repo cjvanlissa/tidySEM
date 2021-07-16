@@ -73,6 +73,9 @@ mx_mixture <- function(model,
 #' specification of latent profile models, also known as finite mixture models.
 #' By default, the function estimates free means for all observed variables
 #' across classes.
+#' @param data The data.frame to be used for model fitting.
+#' @param classes A vector of integers, indicating which class solutions to
+#' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' @param variances Character vector. Specifies which variance components to
 #' estimate. Defaults to "equal" (constrain variances across classes); the
 #' other option is "varying" (estimate variances freely across classes). Each
@@ -83,10 +86,7 @@ mx_mixture <- function(model,
 #' to an assumption of conditional independence of the indicators); other
 #' options are "equal" (covariances between items constrained to be equal across
 #' classes), and "varying" (free covariances across classes).
-#' @param classes A vector of integers, indicating which class solutions to
-#' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' \code{classes = c(1:4, 6:8)}.
-#' @param data The data.frame to be used for model fitting.
 #' @param run Logical, whether or not to run the model. If \code{run = TRUE},
 #' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
 #' @param ... Additional arguments, passed to functions.
@@ -101,9 +101,9 @@ mx_mixture <- function(model,
 #'             classes = 2) -> res
 #' }
 mx_profiles <- function(data = NULL,
+                        classes = 1L,
                         variances = "equal",
                         covariances = "zero",
-                        classes = 1L,
                         run = TRUE,
                         ...){
   if(length(variances) > 0 & (!hasArg(covariances) | length(covariances) == 1)){
@@ -121,6 +121,7 @@ mx_profiles <- function(data = NULL,
   cl[[1L]] <- str2lang("tidySEM:::mx_mixture")
   if("variances" %in% names(cl)) cl[["variances"]] <- NULL
   if("covariances" %in% names(cl)) cl[["covariances"]] <- NULL
+  browser()
   if(length(variances) == 1){
     cl[["model"]] <- profile_syntax(variances, covariances, names(data))
     out <- eval.parent(cl)
