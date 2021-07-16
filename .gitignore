@@ -12,3 +12,7 @@ dev/
 tests/test_local.R
 *.psd
 CRAN-RELEASE
+*.out
+*.inp
+*.dat
+*.log
