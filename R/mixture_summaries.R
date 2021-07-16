@@ -13,37 +13,24 @@
 #' }
 #' @export
 get_fit <- function(x, ...) {
-  UseMethod("get_fit", x)
+  message("This function will be deprecated in the next version of tidySEM; use table_fit() instead.")
+  UseMethod("table_fit", x)
 }
 
-#' @method get_fit mixture_list
-#' @export
-get_fit.mixture_list <- function(x, ...) {
-  sapply(x, get_fit)
-}
 
-#' @method get_fit MxModel
-#' @export
-get_fit.MxModel <- function(x, ...) {
-  if(is.null(attr(x, "type"))) attr(x, "type") <- "default"
-  switch(attr(x, "type"),
-         "list" = sapply(x, function(i){ get_fit(i, ...)}),
-         "mixture" = calc_fitindices(x, type = "mixture", ...),
-         calc_fitindices(x, ...))
-}
 
 calc_fitindices <- function(model, fitindices, ...){
   UseMethod("calc_fitindices", model)
 }
 
 calc_fitindices.MxModel <- function (model, type = NULL, ...){
-  sums <- summary(model)
-  ll <- sums$Minus2LogLikelihood/-2
-  parameters <- sums$estimatedParameters
-  n <- model$data$numObs
-  post_prob <- NULL
-  fits <- NULL
+  sums <- .table_fit_mx(model)
   if(isTRUE(type == "mixture")){
+    ll <- sums["Minus2LogLikelihood"]/-2
+    parameters <- sums["Parameters"]
+    n <- sums["n"]
+    post_prob <- NULL
+    fits <- NULL
     post_prob <- extract_postprob(model)
     class <- apply(post_prob, 1, which.max)
     class_tab <- table(class)
@@ -60,8 +47,11 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
       range(diag(classification_probs_mostlikely(post_prob, class))),
       prop_n)
     names(fits) <- c("Entropy", "prob_min", "prob_max", "n_min", "n_max")
+    c(sums, fits)
+  } else {
+    sums
   }
-  make_fitvector(ll = ll, parameters = parameters, n = n, postprob = post_prob, fits = fits)
+
 }
 
 make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
@@ -175,3 +165,43 @@ icl_default <- function(post_prob, BIC){
     }
   }, error = function(e){ NA })
 }
+
+#' @title Conduct Bootstrapped Likelihood Ratio Test
+#' @description Conduct Bootstrapped Likelihood Ratio Test to compare two
+#' mixture models.
+#' @param x An object for which a method exists.
+#' @param ... further arguments to be passed to or from other methods.
+#' @return A data.frame.
+#' @examples
+#' \dontrun{
+#' df <- iris[, 1, drop = FALSE]
+#' names(df) <- "x"
+#' res <- mx_mixture(model = "x ~ m{C}*1
+#'                            x ~~ v{C}*x", classes = 1, data = df)
+#' get_fit(res)
+#' }
+#' @export
+BLRT <- function(x, ...){
+  UseMethod("BLRT", x)
+}
+
+#' @method BLRT mixture_list
+BLRT.mixture_list <- function(x, ...){
+  if(length(x) > 1){
+    out <- mapply(function(k, km1){
+      tryCatch({
+        unlist(mxCompare(k, km1, boot = TRUE, ...)[2, c("diffLL", "diffdf", "p")])
+        },
+               error = function(e){
+                 NA
+               })
+    }, k = x[-1], km1 = x[-length(x)])
+    rbind(data.frame(diffLL = NA, diffdf = NA, p = NA),
+          t(out))
+  } else {
+    data.frame(diffLL = NA, diffdf = NA, p = NA)
+  }
+}
+
+#' @method BLRT list
+BLRT.list <- BLRT.mixture_list
