@@ -21,6 +21,17 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se")
       names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
     }
+    # Remove redundant correlations
+    remove_these <- results_std$name[endsWith(results_std$matrix, ".S")]
+    remove_these <- remove_these[!remove_these %in% results$name]
+    if(length(remove_these) > 0){
+      these_rows <- which(results_std$name %in% remove_these)
+      flip_S <- results_std[these_rows, , drop = FALSE]
+      names(flip_S)[match(c("row", "col"), names(flip_S))] <- c("col", "row")
+      flip_S$name <- gsub("\\[(\\d+),(\\d+)\\]$", "\\[\\2,\\1\\]", flip_S$name)
+      results_std[these_rows, ] <- flip_S[, names(results_std)]
+    }
+
     tab <- merge(results_std, results, by = "name", all = TRUE)
     dupcol <- table(gsub("\\.[xy]", "", names(tab)))
     unicol <- names(dupcol)[dupcol != 2]
