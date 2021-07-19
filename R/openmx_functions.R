@@ -41,6 +41,12 @@ vnames <- getFromNamespace("vnames", "lavaan")
 #' @param x An object for which a method exists, such as a \code{tidy_sem}
 #' object, or character vector describing the user-specified model using
 #' the lavaan model syntax.
+# @param groups Optional character vector for multi-group models, containing
+# either group names, or if
+# \code{x} is an object that contains data, the name of the column that
+# contains a grouping
+# variable.
+# @param data Optional data.frame to include in the model.
 #' @param ... Parameters passed on to other functions.
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @examples
@@ -55,27 +61,38 @@ vnames <- getFromNamespace("vnames", "lavaan")
 #' @importFrom lavaan mplus2lavaan.modelSyntax
 #' @importFrom stats cutree dist hclust
 #' @importFrom methods formalArgs
+#' @import OpenMx
 as_ram <- function(x, ...){
   UseMethod("as_ram", x)
 }
 
 #' @method as_ram character
 #' @export
-as_ram.character <- function(x, ...){
-  defaults <- list(int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = FALSE,
-                   auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
-                   auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE)
+as_ram.character <- function(x, groups = NULL, data = NULL, ...){
+  # defaults <- list(int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = FALSE,
+  #                  auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
+  #                  auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE,
+  #                  meanstructure = TRUE)
   dots <- list(...)
+  Args_lav <- lav_from_dots(...)
   cl <- match.call()
-  cl[names(defaults)[!names(defaults) %in% names(cl)]] <- defaults[!names(defaults) %in% names(cl)]
-  lavaan_dots <- formalArgs(lavaan::lavaanify)
-  lavaan_dots <- lavaan_dots[!lavaan_dots == "model"]
-  lavaan_dots <- names(dots)[names(dots) %in% lavaan_dots]
-  if(isFALSE(is.null(lavaan_dots))){
-    cl[lavaan_dots] <- dots[lavaan_dots]
-  }
+  # cl[names(defaults)[!names(defaults) %in% names(cl)]] <- defaults[!names(defaults) %in% names(cl)]
+  cl[names(Args_lav)] <- Args_lav
+  # lavaan_dots <- formalArgs(lavaan::lavaanify)
+  # lavaan_dots <- lavaan_dots[!lavaan_dots == "model"]
+  # lavaan_dots <- names(Args_lav)[names(Args_lav) %in% lavaan_dots]
+  # if(isFALSE(is.null(lavaan_dots))){
+  #   cl[lavaan_dots] <- dots[lavaan_dots]
+  # }
   cl[["model"]] <- x
-  cl[["x"]] <- NULL
+  if(!is.null(groups)){
+    if(length(groups) == 1 & !is.null(data)){
+      cl[["ngroups"]] <- length(unique(data[[groups]]))
+    } else {
+      cl[["ngroups"]] <- length(groups)
+    }
+  }
+  cl <- cl[c(1L, which(names(cl) %in% c("model", "ngroups", names(Args_lav))))]#lavaan_dots, names(defaults))))]
   cl[[1L]] <- str2lang("lavaan::lavaanify")
   x <- eval.parent(cl)
   cl <- match.call()
@@ -90,21 +107,57 @@ as_ram.tidy_sem <- function(x, ...){
   cl <- match.call()
   cl[[1L]] <- quote(as_ram)
   cl[["x"]] <- x$syntax
+  if(is.null(cl[["data"]])) cl[["data"]] <- x$data
+  gv <- group_var(x)
+  if(!is.null(gv)){
+    cl[["groups"]] <- gv
+  }
   eval.parent(cl)
 }
 
 #' @method as_ram data.frame
 #' @export
-as_ram.data.frame <- function(x, ...){
+as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   if(!all(c("lhs", "rhs", "op", "free", "ustart") %in% names(x))){
     stop("Not a valid lavaan parameter table.")
   }
   dots <- list(...)
+  groupnames <- groups
+  usedata <- FALSE
+  if(length(groups) == 1 & !is.null(data)){
+    groupnames <- as.character(unique(data[[groups]]))
+    usedata <- TRUE
+  }
+  if(!is.null(x[["group"]])){
+    if(length(unique(x[["group"]])) > 1){
+      cl <- match.call()
+      grps <- lapply(1:length(groupnames), function(i){
+        cl[["x"]] <- x[x$group == i, -which(names(x) == "group"), drop = FALSE]
+        cl[[1L]] <- str2lang("tidySEM::as_ram")
+        out <- eval.parent(cl)
+        Args <- list(
+          out,
+          name = groupnames[i],
+          mxFitFunctionML()
+        )
+        if(usedata) {
+          Args <-
+            c(Args, list(mxData(data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE], type = "raw")))
+        }
+        do.call(mxModel, Args)
+      })
+      grps <- do.call(mxModel, c(list(model = "mg", mxFitFunctionMultigroup(groupnames), grps)))
+      return(grps)
+      # mxModel(model,
+      #         name = grp_names[i],
+      #         mxData(data, type = "raw", weight = names(bchweights)[i]),
+      #         mxFitFunctionML())
+
+    }
+  }
+  dots <- list(...)
   lavtab <- x
-  # Remove defined parameters
-  # if(any(lavtab$group == 0)){
-  #   stop("Develop")
-  # }
+  # Parse defined parameters
   defined <- NULL
   defined_parameters <- which(lavtab$block == 0 & lavtab$plabel == "")
   if(length(defined_parameters) > 0){

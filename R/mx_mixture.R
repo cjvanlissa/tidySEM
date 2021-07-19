@@ -49,12 +49,6 @@
 #' df <- empathy[1:6]
 #' mx_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
 #'                     s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6",
-#'                     meanstructure = TRUE, int.ov.free = FALSE,
-#'                     int.lv.free = TRUE, auto.fix.first = TRUE,
-#'                     auto.fix.single = TRUE, auto.var = TRUE,
-#'                     auto.cov.lv.x = TRUE, auto.efa = TRUE,
-#'                     auto.th = TRUE, auto.delta = TRUE,
-#'                     auto.cov.y = TRUE,
 #'                     classes = 2,
 #'                     data = df) -> res
 #' }
@@ -121,7 +115,6 @@ mx_profiles <- function(data = NULL,
   cl[[1L]] <- str2lang("tidySEM:::mx_mixture")
   if("variances" %in% names(cl)) cl[["variances"]] <- NULL
   if("covariances" %in% names(cl)) cl[["covariances"]] <- NULL
-  browser()
   if(length(variances) == 1){
     cl[["model"]] <- profile_syntax(variances, covariances, names(data))
     out <- eval.parent(cl)
@@ -132,12 +125,18 @@ mx_profiles <- function(data = NULL,
     }, v = variances, c = covariances, SIMPLIFY = FALSE)
     out <- do.call(c, out)
   }
-  class(out) <- c("mixture_list", class(out))
   vlab <- paste0(c(varying = "free", equal = "equal")[variances], " var")
   clab <- paste0(c(zero = "no", varying = "free", equal = "equal")[covariances], " cov")
   clab[clab == "no cov"] <- NA
   lbs <- gsub(", $", "", paste2(vlab, clab, sep = ", "))
-  names(out) <- paste(rep(lbs, each = length(classes)), rep(classes, length(lbs)))
+  lbs <- paste(rep(lbs, each = length(classes)), rep(classes, length(lbs)))
+  if(inherits(out, "list")){
+    class(out) <- c("mixture_list", class(out))
+    names(out) <- lbs
+  }
+  if(inherits(out, "MxModel")){
+    out <- mxModel(out, name = lbs)
+  }
   out
 }
 
@@ -326,14 +325,20 @@ as_mx_mixture <- function(model,
 #' }
 #'
 #' If the argument \code{splits} is not provided, the function will call
-#' \code{cutree(hclust(dist(data)), k = classes))}, where \code{data} is
-#' extracted from the \code{model} argument.
+#' \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster},
+#' where \code{data} is extracted from the \code{model} argument.
 #'
-#' Other sensible ways to split the data include:
+#' Sensible ways to split the data include:
 #' \itemize{
-#'   \item Using K-means clustering: \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
-#'   \item Using agglomerative hierarchical clustering: \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
-#'   \item Using a random split: \code{\link{sample.int}}\code{(n = classes, size = nrow(data), replace = TRUE)}
+#'   \item Using Hierarchical clustering:
+#'    \code{cutree(hclust(dist(data)), k = classes))}
+#'   \item Using K-means clustering:
+#'   \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
+#'   \item Using agglomerative hierarchical clustering:
+#'   \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
+#'   \item Using a random split:
+#'   \code{\link{sample.int}}\code{(n = classes,
+#'   size = nrow(data), replace = TRUE)}
 #' }
 #' @return Returns an \code{\link[OpenMx]{mxModel}} with starting values.
 #' @export
@@ -349,8 +354,12 @@ as_mx_mixture <- function(model,
 #'                            run = FALSE)
 #' mod <- mixture_starts(mod)
 #' }
+#' @references Shireman, E., Steinley, D. & Brusco, M.J. Examining the effect of
+#' initialization strategies on the performance of Gaussian mixture modeling.
+#' Behav Res 49, 282–293 (2017). <doi:10.3758/s13428-015-0697-6>
 #' @importFrom OpenMx mxModel mxRun mxTryHard mxAutoStart
 #' @importFrom methods hasArg
+#' @importFrom stats kmeans
 mixture_starts <- function(model,
                            splits,
                            ...){
@@ -359,7 +368,8 @@ mixture_starts <- function(model,
   classes <- length(model@submodels)
   data <- model@data$observed
   if(!hasArg(splits)){
-    splits <- cutree(hclust(dist(data)), k = classes)
+    splits <- kmeans(x = data, centers = classes)$cluster
+    #cutree(hclust(dist(data)), k = classes)
   }
 
   if(!classes == length(unique(splits))){

@@ -70,11 +70,95 @@ make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
   c(out, fits)
 }
 
-extract_postprob <- function(model){
-  priors <- model$expectation$output$weights
-  mix_names <- names(model@submodels)
+#' @title Obtain latent class probabilities
+#' @description Obtain latent class probabilities for an object for which a
+#' method exists. See Details.
+#' @details The following types are available:
+#' \itemize{
+#'  \item{"sum.posterior"}{A summary table of the posterior class
+#'  probabilities; this indicates what proportion of your data contributes to
+#'  each class.}
+#'  \item{"sum.mostlikely"}{A summary table of the most likely class
+#'  membership, based on the highest posterior class probability. Note that
+#'  this is subject to measurement error.}
+#'  \item{"mostlikely.class"}{If C is the true class of an observation, and N is
+#'  the most likely class based on the model, then this table shows the
+#'  probability P(N==i|C==j). The diagonal represents the probability that
+#'  observations in each class will be correctly classified.}
+#'  \item{"avg.mostlikely"}{Average posterior probabilities for each class, for
+#'  the subset of observations with most likely class of 1:k, where k is the
+#'  number of classes.}
+#'  \item{"individual"}{The posterior probability matrix, with dimensions n
+#'  (number of cases in the data) x k (number of classes).}
+#' }
+#' @param x An object for which a method exists.
+#' @param type Character vector, indicating which types of probabilities to
+#' extract. See Details.
+#' @param ... Further arguments to be passed to or from other methods.
+#' @return A data.frame.
+#' @examples
+#' \dontrun{
+#' df <- iris[, 1, drop = FALSE]
+#' names(df) <- "x"
+#' res <- mx_mixture(model = "x ~ m{C}*1
+#'                            x ~~ v{C}*x", classes = 1, data = df)
+#' get_fit(res)
+#' }
+#' @export
+class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
+  UseMethod("class_prob", x)
+}
 
-  attr(model@submodels$class1, "fitfunction")$result
+#' @method class_prob MxModel
+#' @export
+class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
+  post_probs <- extract_postprob(x)
+  out <- lapply(type, function(thetype){
+    switch(thetype,
+           "mostlikely.class" = classification_probs_mostlikely(post_probs),
+           "avg.mostlikely" = avgprobs_mostlikely(post_probs),
+           "sum.posterior" = sum_postprob(x),
+           "sum.mostlikely" = sum_mostlikely(x),
+           post_probs)
+  })
+  names(out) <- type
+  out
+}
+
+sum_postprob <- function(model){
+  if(!inherits(model$expectation, "MxExpectationMixture")){
+    stop("Not a mixture model.")
+  }
+  weights_name <- model$expectation$weights
+  priors <- prop.table(model[[weights_name]]$values)
+  mix_names <- model$expectation$components
+  numObs <- model$data$numObs
+  data.frame(class = mix_names, count = as.vector(priors*numObs), proportion = as.vector(priors))
+}
+
+sum_mostlikely <- function(model){
+  if(!inherits(model$expectation, "MxExpectationMixture")){
+    stop("Not a mixture model.")
+  }
+  post_prob <- extract_postprob(model)
+  classif <- table(apply(post_prob, 1, which.max))
+  weights_name <- model$expectation$weights
+  mix_names <- model$expectation$components
+  data.frame(class = mix_names, count = as.vector(classif), proportion = as.vector(prop.table(classif)))
+}
+
+extract_postprob <- function(model){
+  UseMethod("extract_postprob", model)
+}
+
+extract_postprob.MxModel <- function(model){
+  if(!inherits(model$expectation, "MxExpectationMixture")){
+    stop("Not a mixture model.")
+  }
+  weights_name <- model$expectation$weights
+  priors <- model[[weights_name]]$values
+  mix_names <- model$expectation$components
+
   liks <- sapply(mix_names, function(x){ attr(model@submodels[[x]], "fitfunction")$result })
 
   #First calculate posteriors:
@@ -87,10 +171,15 @@ extract_postprob <- function(model){
   posteriors/rowSums(posteriors)
 }
 
-classification_probs_mostlikely <- function (post_prob, class)
+extract_postprob.mplus.model <- function(model){
+  model$savedata[grepl("^CPROB", names(model$savedata))]
+}
+
+classification_probs_mostlikely <- function (post_prob, class = NULL)
 {
   if (is.null(dim(post_prob)))
     return(1)
+  if(is.null(class)) class <- apply(post_prob, 1, which.max)
   avg_probs <- avgprobs_mostlikely(post_prob, class)
   avg_probs[is.na(avg_probs)] <- 0
   C <- dim(post_prob)[2]
@@ -102,40 +191,16 @@ classification_probs_mostlikely <- function (post_prob, class)
   matrix(tab, C, C, byrow = TRUE)
 }
 
-avgprobs_mostlikely <- function (post_prob, class)
+avgprobs_mostlikely <- function (post_prob, class = NULL)
 {
   if (is.null(dim(post_prob)))
     return(1)
+  if(is.null(class)) class <- apply(post_prob, 1, which.max)
   t(sapply(1:ncol(post_prob), function(i) {
     colMeans(post_prob[class == i, , drop = FALSE])
   }))
 }
 
-icl.MxModel <- function (object, ...)
-{
-
-}
-
-
-
-
-avgprobs_mostlikely <- function(post_prob, class){
-  if(is.null(dim(post_prob))) return(1)
-  t(sapply(1:ncol(post_prob), function(i){colMeans(post_prob[class == i, , drop = FALSE])}))
-}
-
-classification_probs_mostlikely <- function(post_prob, class){
-  if(is.null(dim(post_prob))) return(1)
-  avg_probs <- avgprobs_mostlikely(post_prob, class)
-  avg_probs[is.na(avg_probs)] <- 0
-  C <- dim(post_prob)[2]
-  N <- sapply(1:C, function(x) sum(class == x))
-  tab <- mapply(function(this_row, this_col){
-    (avg_probs[this_row, this_col]*N[this_row])/(sum(avg_probs[ , this_col] * N, na.rm = TRUE))
-  }, this_row = rep(1:C, C), this_col = rep(1:C, each = C))
-
-  matrix(tab, C, C, byrow = TRUE)
-}
 
 # ICL method for mplus.model ----------------------------------------------
 

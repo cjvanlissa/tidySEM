@@ -37,14 +37,20 @@ Starting values are derived by the following procedure:
 }
 
 If the argument \code{splits} is not provided, the function will call
-\code{cutree(hclust(dist(data)), k = classes))}, where \code{data} is
-extracted from the \code{model} argument.
+\code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster},
+where \code{data} is extracted from the \code{model} argument.
 
-Other sensible ways to split the data include:
+Sensible ways to split the data include:
 \itemize{
-  \item Using K-means clustering: \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
-  \item Using agglomerative hierarchical clustering: \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
-  \item Using a random split: \code{\link{sample.int}}\code{(n = classes, size = nrow(data), replace = TRUE)}
+  \item Using Hierarchical clustering:
+   \code{cutree(hclust(dist(data)), k = classes))}
+  \item Using K-means clustering:
+  \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
+  \item Using agglomerative hierarchical clustering:
+  \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
+  \item Using a random split:
+  \code{\link{sample.int}}\code{(n = classes,
+  size = nrow(data), replace = TRUE)}
 }
 }
 \examples{
@@ -58,6 +64,11 @@ mod <- mx_mixture(model = "x ~ m{C}*1
                            run = FALSE)
 mod <- mixture_starts(mod)
 }
+}
+\references{
+Shireman, E., Steinley, D. & Brusco, M.J. Examining the effect of
+initialization strategies on the performance of Gaussian mixture modeling.
+Behav Res 49, 282–293 (2017). <doi:10.3758/s13428-015-0697-6>
 }
 \keyword{mixture}
 \keyword{models}

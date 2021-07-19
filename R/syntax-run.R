@@ -29,8 +29,9 @@ run_mx <- function(x, ...){
 #' @export
 run_mx.tidy_sem <- function(x, ...){
   cl <- match.call()
+  cl[[1L]] <- quote(as_ram)
+  cl[["x"]] <- eval.parent(cl)
   cl[[1L]] <- quote(run_mx)
-  cl[["x"]] <- as_ram(x$syntax)
   cl[["data"]] <- x$data
   eval.parent(cl)
 }
@@ -43,7 +44,29 @@ run_mx.MxModel <- function(x, ...){
   run_args <- list()
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
-    x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
+    if(inherits(x$fitfunction, "MxFitFunctionMultigroup")){
+      if("groups" %in% names(dots)){
+        if(length(dots[["groups"]]) != 1 | !(dots[["groups"]][1] %in% names(dots[["data"]]))){
+          stop("The argument 'groups' should contain the name of a column in 'data'.")
+        }
+        groupnames <- as.character(unique(dots[["data"]][[dots[["groups"]]]]))
+        if(!length(groupnames) == length(x$fitfunction$groups)){
+          stop("The column indicated by 'groups' contains ", length(groupnames), " unique values, but the model was specified for ", length(x$fitfunction$groups), " groups.")
+        }
+        if(all(groupnames %in% x$fitfunction$groups)){
+          groupnames <- x$fitfunction$groups # To get correct order
+        }
+        for(i in 1:length(groupnames)){
+          x[[x$fitfunction$groups[i]]] <-
+            mxModel(x[[x$fitfunction$groups[i]]],
+                    mxData(dots[["data"]][dots[["data"]][[dots[["groups"]]]] == groupnames[i], -which(names(dots[["data"]]) == dots[["groups"]]), drop = FALSE],
+                           type = "raw"))
+        }
+      }
+    } else {
+      x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
+    }
+
     dots[["data"]] <- NULL
   }
   if(length(x@intervals) > 0){
@@ -86,6 +109,8 @@ run_mx.MxModel <- function(x, ...){
                x <- mxModel(x, mxComputeSimAnnealing())
              })
     }
+  } else {
+    x <- mxAutoStart(x)
   }
   run_args <- c(
     list(

@@ -15,6 +15,7 @@ R/data_types\.md
 ^.*\.dat$
 ^.*\.inp$
 ^.*\.out$
+^.*\.log$
 ^.*.ai$
 ^CRAN-RELEASE$
 ^cran-comments\.md$

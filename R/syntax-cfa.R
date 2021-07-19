@@ -31,15 +31,18 @@ measurement <- function(x, ...){
 
 #' @method measurement tidy_sem
 #' @export
-measurement.tidy_sem <- function(x, ...){
+measurement.tidy_sem <- function(x, groups = NULL, ...){
   out <- x
   Args_lav <- lav_from_dots(...)
-
   variables <- unique(c(NA, x$dictionary$scale))[-1]
   update_dict <- rbind(x$dictionary, data.frame(name = variables, scale = NA, type = "latent", label = variables))
   update_dict$type[update_dict$scale %in% variables] <- "indicator"
   out$dictionary <- update_dict
-
+  # Add groups
+  if(!is.null(groups)){
+    group_var(out) <- groups
+    Args_lav$ngroups <- group_var(out, "ngroups")
+  }
   out$syntax <- do.call(add_paths, c(list(model = NULL,
                                           do.call(syntax_measurement, list(x = x))),
                                      Args_lav))
@@ -157,3 +160,44 @@ measurement.data.frame <- function(x, ...){
 #   out <- do.call(measurement_mplus, Args)
 #   strsplit(mplus2lavaan.modelSyntax(paste0(out, collapse = "\n")), "\n")[[1]]
 # }
+
+group_var <- function(x, value = "name", ...){
+  UseMethod("group_var", x)
+}
+
+group_var.tidy_sem <- function(x, value = "name", ...){
+  groupvar <- x$dictionary$name[which(x$dictionary$type == "group")]
+  if(length(groupvar) == 0) return(NULL)
+  if(length(groupvar) > 1) stop("More than one variable in the data dictionary is declared as a grouping variable.")
+  if(!groupvar %in% names(x$data)) stop("Grouping variable from the data dictionary does not exist in the data.")
+  switch(value,
+         "name" = {
+           groupvar
+         },
+         "values" = {
+           as.character(unique(x$data[[groupvar]]))
+         },
+         "ngroups" = {
+           length(unique(x$data[[groupvar]]))
+         })
+}
+
+`group_var<-` <- function(x, value = NULL){
+  UseMethod("group_var<-", x)
+}
+
+`group_var<-.tidy_sem` <- function(x, value = NULL){
+  if(is.null(value)){
+    x$dictionary[["type"]][which(x$dictionary[["type"]] == "group")] <- "observed"
+  } else {
+    if(isTRUE(any(x$dictionary[["type"]] == "group"))){
+      oldgroup <- x$dictionary[["name"]][which(x$dictionary[["type"]] == "group")]
+      x$dictionary[["type"]][which(x$dictionary[["type"]] == "group")] <- "observed"
+      x$dictionary[["type"]][which(x$dictionary[["name"]] == value)] <- "group"
+      message("Existing grouping variable '", oldgroup, "' replaced by '", value, "'.")
+    } else {
+      x$dictionary[["type"]][which(x$dictionary[["name"]] == value)] <- "group"
+    }
+  }
+  return(x)
+}

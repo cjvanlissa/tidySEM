@@ -14,7 +14,7 @@ replace_ps <- function(vec, repl_nums){
 lav_from_dots <- function(...){
   dots <- list(...)
   # Get list of lavaan option names
-  lav_opts <- names(lavOptions())
+  lav_opts <- formalArgs(lavaanify)#names(lavOptions())
   # Check if any of these are passed in dots
   these_opts <- which(names(dots) %in% lav_opts)
   if(length(these_opts > 0)){
@@ -33,7 +33,8 @@ lav_from_dots <- function(...){
     auto.efa = TRUE,
     auto.th = TRUE,
     auto.delta = TRUE,
-    auto.cov.y = TRUE
+    auto.cov.y = TRUE,
+    meanstructure = TRUE
   )
   # If user did not specify default, overwrite
   for(this_arg in names(Args_lav_default)){

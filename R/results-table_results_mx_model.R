@@ -10,6 +10,32 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   sum_x <- summary(x)
   results <- sum_x$parameters
 
+# Add standardized --------------------------------------------------------
+  if(is.null(columns) | any(grepl("std_", columns))){ # Conditional, to save time
+    results_std <- mxStandardizeRAMPaths(x, SE = TRUE)
+    if(inherits(results_std, "list")){
+      for(n in names(results_std)){
+        results_std[[n]]$matrix <- paste(n, results_std[[n]]$matrix, sep = ".")
+      }
+      results_std <- bind_list(results_std)
+      renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se")
+      names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
+    }
+    tab <- merge(results_std, results, by = "name", all = TRUE)
+    dupcol <- table(gsub("\\.[xy]", "", names(tab)))
+    unicol <- names(dupcol)[dupcol != 2]
+    dupcol <- names(dupcol)[dupcol == 2]
+    mergtab <- data.frame(lapply(dupcol, function(thisc){
+      vals <- tab[, startsWith(names(tab), thisc)]
+      out <- vals[[1]]
+      miss <- rowSums(is.na(vals))
+      out[miss == 1 & is.na(out)] <- vals[[2]][miss == 1 & is.na(out)]
+      out
+    }))
+    names(mergtab) <- dupcol
+    results <- cbind(tab[names(tab) %in% unicol], mergtab)
+  }
+
 # Add algebras ------------------------------------------------------------
   results <- bind_list(list(results, get_algebras(x)))
   if(has_submod(x)) results <- submodels(x, results, cols = names(results))
@@ -24,13 +50,14 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   themns <- which(results$op == "~1")
   results$lhs[themns] <- results$col[themns]
   results$rhs[themns] <- results$row[themns]
-  fac_load <- results$op == "~" & results$rhs %in% x$latentVars & results$lhs %in% x$manifestVars
+  lvs <- unique(unlist(from_submodels(x, "latentVars")))
+  obsv <- unique(unlist(from_submodels(x, "manifestVars")))
+  fac_load <- results$op == "~" & results$rhs %in% lvs & results$lhs %in% obsv
   results$rhs[fac_load] <- results$row[fac_load]
   results$lhs[fac_load] <- results$col[fac_load]
   results$op[fac_load] <- "=~"
 
   results$confint <- conf_int(results$est, se = results$Std.Error)
-  browser()
   if(isTRUE(sum_x[["CI.Requested"]])){
     if(!all(is.na(sum_x[["CI"]]))) {
       ci_x <- data.frame(name = rownames(sum_x$CI),
@@ -110,6 +137,15 @@ submodels <- function(x, results, cols = c("name", "matrix", "row", "col", "Esti
   return(results)
 }
 
+from_submodels <- function(x, what = NULL, ...){
+  out <- do.call(`@`, list(x, what))
+  if(has_submod(x)){
+    submod <- names(attr(x, "submodels"))
+    out <- c(out, lapply(submod, function(i){ from_submodels(x[[i]], what = what) }))
+  }
+  return(out)
+}
+
 has_submod <- function(x, depth = 0){
   subs <- names(attr(x, "submodels"))
   if(depth == 0){
@@ -144,6 +180,7 @@ get_algebras <- function(x, ...){
   cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")
   algs <- eval.parent(cl)
   Estimate <- unlist_mx(algs, "result")
+  if(is.null(Estimate)) return(NULL)
   out <- data.frame(name = names(Estimate),
                     matrix =  unlist_mx(algs, element = "name"),
                     row = unlist_mx(algs, element = "formula"),
@@ -200,7 +237,7 @@ unlist_mx <- function(i, element, ...){
   cl <- match.call()
   cl[[1L]] <- str2lang("tidySEM:::unlist_mx2")
   out <- unlist(eval.parent(cl))
-  names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
+  if(!is.null(out)) names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
   out
 }
 unlist_mx2 <- function(i, element, ...){

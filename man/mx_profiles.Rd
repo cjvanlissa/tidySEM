@@ -6,15 +6,18 @@
 \usage{
 mx_profiles(
   data = NULL,
+  classes = 1L,
   variances = "equal",
   covariances = "zero",
-  classes = 1L,
   run = TRUE,
   ...
 )
 }
 \arguments{
 \item{data}{The data.frame to be used for model fitting.}
+
+\item{classes}{A vector of integers, indicating which class solutions to
+generate. Defaults to 1L. E.g., \code{classes = 1:6},}
 
 \item{variances}{Character vector. Specifies which variance components to
 estimate. Defaults to "equal" (constrain variances across classes); the
@@ -26,10 +29,7 @@ estimate. Defaults to "zero" (covariances constrained to zero; this
 corresponds
 to an assumption of conditional independence of the indicators); other
 options are "equal" (covariances between items constrained to be equal across
-classes), and "varying" (free covariances across classes).}
-
-\item{classes}{A vector of integers, indicating which class solutions to
-generate. Defaults to 1L. E.g., \code{classes = 1:6},
+classes), and "varying" (free covariances across classes).
 \code{classes = c(1:4, 6:8)}.}
 
 \item{run}{Logical, whether or not to run the model. If \code{run = TRUE},

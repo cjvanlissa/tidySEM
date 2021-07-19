@@ -64,12 +64,6 @@ mx_mixture(model = list("y ~ a*x",
 df <- empathy[1:6]
 mx_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
                     s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6",
-                    meanstructure = TRUE, int.ov.free = FALSE,
-                    int.lv.free = TRUE, auto.fix.first = TRUE,
-                    auto.fix.single = TRUE, auto.var = TRUE,
-                    auto.cov.lv.x = TRUE, auto.efa = TRUE,
-                    auto.th = TRUE, auto.delta = TRUE,
-                    auto.cov.y = TRUE,
                     classes = 2,
                     data = df) -> res
 }
