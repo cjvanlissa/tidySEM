@@ -30,39 +30,15 @@ graph_sem(...)
   ...
 )
 
-\method{graph_sem}{lavaan}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{graph_sem}{lavaan}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
-\method{graph_sem}{MxModel}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{graph_sem}{MxModel}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
-\method{graph_sem}{mplus.model}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{graph_sem}{mplus.model}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
 \method{graph_sem}{character}(...)
 
-\method{graph_sem}{mplusObject}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{graph_sem}{mplusObject}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 }
 \arguments{
 \item{...}{Additional arguments passed to and from functions.}

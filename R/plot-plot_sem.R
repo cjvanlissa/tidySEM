@@ -199,11 +199,17 @@ graph_sem.default <- function(edges = NULL,
 #' @rdname graph_sem
 #' @export
 graph_sem.lavaan <- function(model,
-                             edges = get_edges(x = model),
-                             layout = get_layout(x = model),
-                             nodes = get_nodes(x = model),
+                             edges = NULL,
+                             layout = NULL,
+                             nodes = NULL,
                              ...){
   dots <- list(...)
+  if(is.null(edges) | is.null(layout) | is.null(nodes)){
+    tabres <- table_results(model)
+    if(is.null(edges)) edges <- get_edges(x = model)
+    if(is.null(layout)) layout <- get_layout(x = model)
+    if(is.null(nodes)) nodes <- get_nodes(x = model)
+  }
   params_table_res <- c("label", "digits", "columns")
   edges <- substitute(edges)
   nodes <- substitute(nodes)
@@ -240,10 +246,19 @@ graph_sem.mplus.model <- graph_sem.lavaan
 #' @export
 graph_sem.character <- function(...){
   cl <- match.call()
-  if(names(cl)[2L] == "model") cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
-  if(names(cl)[2L] %in% c("layout", "edges", "nodes")) cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
-  if(as.list(cl[[2L]])[[1]] == "matrix") cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
-  if(as.list(cl[[2L]])[[1]] == "character") cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
+  cl_list <- as.list(cl)
+  if(isTRUE("model" %in% names(cl))){
+    if(inherits(cl_list[["model"]], "matrix")) cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
+    if(inherits(cl_list[["model"]], "character")) cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
+  } else {
+    if(any(c("layout", "edges", "nodes") %in% names(cl))){
+      cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
+    } else {
+      if(inherits(cl_list[[2L]], "matrix")) cl[[1L]] <- str2lang("tidySEM:::graph_sem.default")
+      if(inherits(cl_list[[2L]], "character")) cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
+    }
+  }
+  #if(names(cl)[2L] == "model") cl[[1L]] <- str2lang("tidySEM:::graph_sem.lavaan")
   eval.parent(cl)
 }
 
@@ -805,6 +820,23 @@ get_nodes <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
 #   do.call(get_nodes, Args)
 # }
 
+# @method get_nodes character
+# @export
+# get_nodes.character <- function(x, label = NULL, ...){
+#   dots <- list(...)
+#   cl <- match.call()
+#   cl["columns"] <- list(NULL)
+#   cl[[1L]] <- quote(table_results)
+#   cl$x <- eval.parent(cl)
+#   if("columns" %in% names(dots)){
+#     cl["columns"] <- dots["columns"]
+#   }
+#   cl[[1L]] <- quote(get_nodes)
+#   eval.parent(cl)
+# }
+
+
+
 #' @method get_nodes lavaan
 #' @export
 #' @importFrom lavaan parameterTable lavInspect
@@ -1007,6 +1039,21 @@ get_edges.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...)
   cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
   eval.parent(cl)
 }
+
+# @method get_edges character
+# @export
+# get_edges.character <- function(x, label = NULL, ...){
+#   dots <- list(...)
+#   cl <- match.call()
+#   cl["columns"] <- list(NULL)
+#   cl[[1L]] <- quote(table_results)
+#   cl$x <- eval.parent(cl)
+#   if("columns" %in% names(dots)){
+#     cl["columns"] <- dots["columns"]
+#   }
+#   cl[[1L]] <- quote(get_edges)
+#   eval.parent(cl)
+# }
 
 #' @method get_edges lavaan
 #' @export

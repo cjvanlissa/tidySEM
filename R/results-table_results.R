@@ -619,11 +619,10 @@ table_results.character <- function(x, columns = c("label", "est_sig", "se", "pv
   cl[[1L]] <- str2lang("lavaan::lavaanify")
   cl[["model"]] <- x
   results <- eval.parent(cl)
-  if(length(unique(results$group)) == 1) results[["group"]] <- NULL
   class(results) <- c("tidy_results", class(results))
   results
 }
-# table_results("y ~ x")
+# table_results.character("y ~ x", ngroups = 2)
 
 can_be_numeric <- function(x){
   sapply(x, function(col){ tryCatch(expr = {as.numeric(col); return(TRUE)}, warning= function(w){ return(FALSE) }) })
