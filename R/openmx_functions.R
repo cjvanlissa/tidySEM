@@ -129,6 +129,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
     usedata <- TRUE
   }
   if(!is.null(x[["group"]])){
+    x <- x[-which(x$group == 0), ]
     if(length(unique(x[["group"]])) > 1){
       cl <- match.call()
       grps <- lapply(1:length(groupnames), function(i){
