@@ -129,7 +129,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
     usedata <- TRUE
   }
   if(!is.null(x[["group"]])){
-    x <- x[-which(x$group == 0), ]
+    x <- x[!(x$group == 0), ]
     if(length(unique(x[["group"]])) > 1){
       cl <- match.call()
       grps <- lapply(1:length(groupnames), function(i){
@@ -149,11 +149,6 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
       })
       grps <- do.call(mxModel, c(list(model = "mg", mxFitFunctionMultigroup(groupnames), grps)))
       return(grps)
-      # mxModel(model,
-      #         name = grp_names[i],
-      #         mxData(data, type = "raw", weight = names(bchweights)[i]),
-      #         mxFitFunctionML())
-
     }
   }
   dots <- list(...)
@@ -166,12 +161,14 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
     lavtab <- lavtab[-defined_parameters, ]
 
   }
-  # Starting values
-  #lavtab$ustart[lavtab$op == "~1"] <- 0
-  #lavtab$ustart[lavtab$op == "~~"] <- .5
   # Identify observed and latent
   vnames <- vnames(partable = lavtab, type = "all")
-  latent <- unlist(vnames[["lv"]])
+
+  if(!is.null(vnames[["lv"]])){
+    latent <- unlist(vnames[["lv"]])
+  } else {
+    latent <- vector("character")
+  }
   obs <- unlist(vnames[["ov"]])
   # Intercept needs rhs
   lavtab$rhs[lavtab$op == "~1"] <- "one"
