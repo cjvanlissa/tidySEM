@@ -127,3 +127,15 @@ check_dots_cors <- function(dots){
   names(dots) <- c("x", "y")[1:length(dots)]
   dots
 }
+
+
+thresh <- function(x, ...){
+  UseMethod("thresh", x)
+}
+
+thresh.numeric <- function(x, ...){
+  paste0(unlist(lapply(names(x), function(v){
+    t <- x[v]
+    paste0(v, " | ", paste0("t", 1:t), collapse = "\n")
+  })), collapse = "\n")
+}

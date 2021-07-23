@@ -44,29 +44,9 @@ run_mx.MxModel <- function(x, ...){
   run_args <- list()
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
-    if(inherits(x$fitfunction, "MxFitFunctionMultigroup")){
-      if("groups" %in% names(dots)){
-        if(length(dots[["groups"]]) != 1 | !(dots[["groups"]][1] %in% names(dots[["data"]]))){
-          stop("The argument 'groups' should contain the name of a column in 'data'.")
-        }
-        groupnames <- as.character(unique(dots[["data"]][[dots[["groups"]]]]))
-        if(!length(groupnames) == length(x$fitfunction$groups)){
-          stop("The column indicated by 'groups' contains ", length(groupnames), " unique values, but the model was specified for ", length(x$fitfunction$groups), " groups.")
-        }
-        if(all(groupnames %in% x$fitfunction$groups)){
-          groupnames <- x$fitfunction$groups # To get correct order
-        }
-        for(i in 1:length(groupnames)){
-          x[[x$fitfunction$groups[i]]] <-
-            mxModel(x[[x$fitfunction$groups[i]]],
-                    mxData(dots[["data"]][dots[["data"]][[dots[["groups"]]]] == groupnames[i], -which(names(dots[["data"]]) == dots[["groups"]]), drop = FALSE],
-                           type = "raw"))
-        }
-      }
-    } else {
-      x <- mxModel(x, mxData(dots[["data"]], type = "raw"))
-    }
-
+    cl <- match.call()
+    cl[[1L]] <- str2lang("tidySEM:::mx_add_data")
+    x <- eval.parent(cl)
     dots[["data"]] <- NULL
   }
   if(length(x@intervals) > 0){
@@ -123,7 +103,31 @@ run_mx.MxModel <- function(x, ...){
   eval(cl)
 }
 
-
+mx_add_data <- function(x, data, ...){
+  dots <- list(...)
+  if(inherits(x$fitfunction, "MxFitFunctionMultigroup")){
+    if("groups" %in% names(dots)){
+      if(length(dots[["groups"]]) != 1 | !(dots[["groups"]][1] %in% names(data))){
+        stop("The argument 'groups' should contain the name of a column in 'data'.")
+      }
+      groupnames <- as.character(unique(data[[dots[["groups"]]]]))
+      if(!length(groupnames) == length(x$fitfunction$groups)){
+        stop("The column indicated by 'groups' contains ", length(groupnames), " unique values, but the model was specified for ", length(x$fitfunction$groups), " groups.")
+      }
+      if(all(groupnames %in% x$fitfunction$groups)){
+        groupnames <- x$fitfunction$groups # To get correct order
+      }
+      for(i in 1:length(groupnames)){
+        x[[x$fitfunction$groups[i]]] <-
+          mxModel(x[[x$fitfunction$groups[i]]],
+                  mxData(data[data[[dots[["groups"]]]] == groupnames[i], -which(names(data) == dots[["groups"]]), drop = FALSE],
+                         type = "raw"))
+      }
+    }
+  } else {
+    x <- mxModel(x, mxData(data, type = "raw"))
+  }
+}
 
 
 #' @title Run as lavaan model

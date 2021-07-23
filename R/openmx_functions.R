@@ -76,14 +76,7 @@ as_ram.character <- function(x, groups = NULL, data = NULL, ...){
   dots <- list(...)
   Args_lav <- lav_from_dots(...)
   cl <- match.call()
-  # cl[names(defaults)[!names(defaults) %in% names(cl)]] <- defaults[!names(defaults) %in% names(cl)]
   cl[names(Args_lav)] <- Args_lav
-  # lavaan_dots <- formalArgs(lavaan::lavaanify)
-  # lavaan_dots <- lavaan_dots[!lavaan_dots == "model"]
-  # lavaan_dots <- names(Args_lav)[names(Args_lav) %in% lavaan_dots]
-  # if(isFALSE(is.null(lavaan_dots))){
-  #   cl[lavaan_dots] <- dots[lavaan_dots]
-  # }
   cl[["model"]] <- x
   if(!is.null(groups)){
     if(length(groups) == 1 & !is.null(data)){
@@ -92,8 +85,8 @@ as_ram.character <- function(x, groups = NULL, data = NULL, ...){
       cl[["ngroups"]] <- length(groups)
     }
   }
-  cl <- cl[c(1L, which(names(cl) %in% c("model", "ngroups", names(Args_lav))))]#lavaan_dots, names(defaults))))]
-  cl[[1L]] <- str2lang("lavaan::lavaanify")
+  cl <- cl[c(1L, which(names(cl) %in% c("model", "ngroups", "data", names(Args_lav))))]#lavaan_dots, names(defaults))))]
+  cl[[1L]] <- str2lang("tidySEM:::tidysem_lavaanify")
   x <- eval.parent(cl)
   cl <- match.call()
   cl[[1L]] <- quote(as_ram)
@@ -123,10 +116,9 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   }
   dots <- list(...)
   groupnames <- groups
-  usedata <- FALSE
-  if(length(groups) == 1 & !is.null(data)){
+  usedata <- !is.null(data)
+  if(length(groups) == 1 & usedata){
     groupnames <- as.character(unique(data[[groups]]))
-    usedata <- TRUE
   }
   if(!is.null(x[["group"]])){
     x <- x[!(x$group == 0), ]
@@ -134,6 +126,9 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
       cl <- match.call()
       grps <- lapply(1:length(groupnames), function(i){
         cl[["x"]] <- x[x$group == i, -which(names(x) == "group"), drop = FALSE]
+        if(usedata){
+          cl[["data"]] <- data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE]
+        }
         cl[[1L]] <- str2lang("tidySEM::as_ram")
         out <- eval.parent(cl)
         Args <- list(
@@ -141,10 +136,10 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
           name = groupnames[i],
           mxFitFunctionML()
         )
-        if(usedata) {
-          Args <-
-            c(Args, list(mxData(data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE], type = "raw")))
-        }
+        # if(usedata) {
+        #   Args <-
+        #     c(Args, list(mxData(data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE], type = "raw")))
+        # }
         do.call(mxModel, Args)
       })
       grps <- do.call(mxModel, c(list(model = "mg", mxFitFunctionMultigroup(groupnames), grps)))
@@ -153,6 +148,29 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   }
   dots <- list(...)
   lavtab <- x
+  # Parse categorical variables
+  cats <- which(lavtab$op %in% c("|", "~*~"))
+  catlist <- NULL
+  if(length(cats) > 0){
+    cattab <- lavtab[cats, , drop = FALSE]
+    cattab$label[cattab$label == ""] <- NA
+    lavtab <- lavtab[-cats, ]
+    catlist <- lapply(unique(cattab$lhs), function(v){
+      vthres <- cattab[cattab$lhs == v & cattab$op == "|", ]
+      tvalues <- tryCatch(update_thresholds(vthres$ustart), error = function(e){
+        stop("Could not complete thresholds for variable '", v, "'; either specify all thresholds by hand, or remove constraints.")
+      })
+      vthres <- vthres[order(vthres$rhs), ]
+      Args <- list(
+        vars = v,
+        nThresh = nrow(vthres),
+        free = !(vthres$free == 0),
+        values = tvalues,
+        labels = vthres$label
+      )
+      do.call(mxThreshold, Args)
+    })
+  }
   # Parse defined parameters
   defined <- NULL
   defined_parameters <- which(lavtab$block == 0 & lavtab$plabel == "")
@@ -208,6 +226,9 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
       })
     )
   }
+  if(!is.null(catlist)){
+    path_list <- c(path_list, catlist)
+  }
   # mxModel-specific arguments
   mxmodel_args <- list(
     model = "model",
@@ -218,6 +239,14 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   if(isFALSE(is.null(mxmodel_dots))){
     mxmodel_args[mxmodel_dots] <- dots[mxmodel_dots]
   }
-  do.call(mxModel, c(mxmodel_args,
+  out <- do.call(mxModel, c(mxmodel_args,
                      path_list))
+  # Add data if available
+  if(usedata){
+    cl <- match.call()
+    cl[[1L]] <- str2lang("tidySEM:::mx_add_data")
+    cl[["x"]] <- out
+    out <- eval.parent(cl)
+  }
+  out
 }

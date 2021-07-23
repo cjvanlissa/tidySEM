@@ -121,7 +121,7 @@ add_paths.default <- function(model, ...){ #, strict_check = TRUE
   # Parse dots
   tab <- lavParseModelString(paste0(unlist(dots), collapse = ";"), as.data.frame. = TRUE)
   # Convert to lavaan
-  tab <- do.call(lavaanify, c(list(model = tab), Args_lav))
+  tab <- do.call(tidysem_lavaanify, c(list(model = tab), Args_lav))
   # Drop == rows
   tab <- tab[!tab$op == "==", , drop = FALSE]
   tab$free[!tab$free==0] <- 1
@@ -172,3 +172,46 @@ get_pid <- function(tab, pidcols = c("lhs", "rhs", "op", "block", "label")){
   apply(tab[, pidcols], 1, function(x){paste0(c(sort(x[c("lhs", "rhs")]), x[!names(x) %in% c("lhs", "rhs")]), collapse = "_X_")})
 }
 
+
+tidysem_lavaanify <- function(..., data = NULL){
+  cl <- match.call()
+  cl[["data"]] <- NULL
+  cl[[1L]] <- str2lang("lavaan::lavaanify")
+  x <- eval.parent(cl)
+  if(!is.null(data)){
+    obs <- vnames(x, type = "ov")
+    ord <- sapply(data[obs], inherits, "ordered")
+    cats <- sapply(data[obs], inherits, "factor") & !ord
+    if(any(ord)){
+      thres <- sapply(data[obs[ord]], function(i){length(levels(i))})-1
+      thres <- thresh(thres)
+      cl[["model"]] <- thres
+      thres <- eval.parent(cl)
+      x <- x[-which(x$op %in% c("~1", "|", "~*~", "~~") & x$lhs %in% obs[ord] & x$user == 0), ]
+      x <- lav_partable_merge(x, thres, remove.duplicated = TRUE, fromLast = FALSE, warn = FALSE)
+    }
+  }
+  return(x)
+}
+
+
+update_thresholds <- function(x, ...){
+  nax <- is.na(x)
+  if(any(!nax)){
+    if(!all(sign(diff(na.omit(x))) == 1)){
+      stop("The thresholds you are attempting to specify has starting values that are not strictly increasing, but type='RAM' models require them to be.")
+    }
+    out <- x
+    for(i in 1:10){
+      out[nax] <- sort(runif(length(x), min = min(out, na.rm = TRUE)-runif(1), max = max(out, na.rm = TRUE)+runif(1)))[nax]
+      inc <- sign(diff(na.omit(out))) == 1
+      if(all(inc)){
+        break
+      }
+      if(i == 10) stop("Could not complete thresholds; either specify all thresholds by hand, or remove constraints.")
+    }
+    return(out)
+  } else {
+    return(mxNormalQuantiles(length(x)))
+  }
+}
