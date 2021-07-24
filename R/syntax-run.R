@@ -74,19 +74,9 @@ run_mx.MxModel <- function(x, ...){
                                exhaustive = TRUE))
              },
              {
-               # plan <- omxDefaultComputePlan()
-               # plan$steps <- list(
-               #   SA=mxComputeSimAnnealing(),
-               #   GD=plan$steps$GD,
-               #   ND=plan$steps$ND,
-               #   SE=plan$steps$SE,
-               #   HQ=plan$steps$HQ,
-               #   RD=plan$steps$RD,
-               #   RE=plan$steps$RE
-               # )
-               # x <- mxModel(x,
-               #              mxComputeSimAnnealing(plan = plan, method='tsallis1996', control=list(stepsPerTemp=3)))
                x <- mxModel(x, mxComputeSimAnnealing())
+               x <- mxRun(x)
+               x@compute <- NULL
              })
     }
   } else {
@@ -127,6 +117,7 @@ mx_add_data <- function(x, data, ...){
   } else {
     x <- mxModel(x, mxData(data, type = "raw"))
   }
+  x
 }
 
 
