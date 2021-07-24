@@ -229,10 +229,11 @@ mx_mixture.character <- function(model,
     cl[["model"]] <- model
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     out <- eval.parent(cl)
+    cl[["model"]] <- out
+    cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
+    out <- eval.parent(cl)
     if(run){
-      cl[["model"]] <- out
-      cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-      cl[["x"]] <- eval.parent(cl)
+      cl[["x"]] <- out
       cl[["model"]] <- NULL
       cl[[1L]] <- str2lang("tidySEM:::run_mx")
       return(eval.parent(cl))

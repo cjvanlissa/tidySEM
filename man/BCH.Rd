@@ -31,7 +31,7 @@ in Bakk, Tekle, & Vermunt, 2013.
 dat <- data.frame(x = iris$Petal.Length)
 mixmod <- mx_profiles(dat,
                       classes = 2)
-res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Petal.Width))
+res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
 }
 \references{
 Bakk, Z., Tekle, F.B., & Vermunt, J.K. (2013). Estimating the

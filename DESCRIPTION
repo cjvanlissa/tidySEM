@@ -27,7 +27,8 @@ Imports:
     MplusAutomation,
     igraph,
     psych,
-    methods
+    methods,
+    gtable
 Suggests: 
     testthat,
     knitr,

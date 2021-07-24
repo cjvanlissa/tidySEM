@@ -9,7 +9,7 @@
 #' names(df) <- "x"
 #' res <- mx_mixture(model = "x ~ m{C}*1
 #'                            x ~~ v{C}*x", classes = 1, data = df)
-#' get_fit(res)
+#' table_fit(res)
 #' }
 #' @export
 get_fit <- function(x, ...) {
@@ -102,7 +102,7 @@ make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
 #' names(df) <- "x"
 #' res <- mx_mixture(model = "x ~ m{C}*1
 #'                            x ~~ v{C}*x", classes = 1, data = df)
-#' get_fit(res)
+#' class_prob(res)
 #' }
 #' @export
 class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
@@ -242,8 +242,8 @@ icl_default <- function(post_prob, BIC){
 #' df <- iris[, 1, drop = FALSE]
 #' names(df) <- "x"
 #' res <- mx_mixture(model = "x ~ m{C}*1
-#'                            x ~~ v{C}*x", classes = 1, data = df)
-#' get_fit(res)
+#'                            x ~~ v{C}*x", classes = 1:2, data = df)
+#' BLRT(res, replications = 4)
 #' }
 #' @export
 BLRT <- function(x, ...){
@@ -251,6 +251,7 @@ BLRT <- function(x, ...){
 }
 
 #' @method BLRT mixture_list
+#' @export
 BLRT.mixture_list <- function(x, ...){
   if(length(x) > 1){
     out <- mapply(function(k, km1){
@@ -258,7 +259,7 @@ BLRT.mixture_list <- function(x, ...){
         unlist(mxCompare(k, km1, boot = TRUE, ...)[2, c("diffLL", "diffdf", "p")])
         },
                error = function(e){
-                 NA
+                 c("diffLL" = NA, "diffdf" = NA, "p" = NA)
                })
     }, k = x[-1], km1 = x[-length(x)])
     rbind(data.frame(diffLL = NA, diffdf = NA, p = NA),
@@ -269,4 +270,5 @@ BLRT.mixture_list <- function(x, ...){
 }
 
 #' @method BLRT list
+#' @export
 BLRT.list <- BLRT.mixture_list

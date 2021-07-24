@@ -52,6 +52,6 @@ df <- iris[, 1, drop = FALSE]
 names(df) <- "x"
 res <- mx_mixture(model = "x ~ m{C}*1
                            x ~~ v{C}*x", classes = 1, data = df)
-get_fit(res)
+class_prob(res)
 }
 }

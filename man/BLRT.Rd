@@ -23,7 +23,7 @@ mixture models.
 df <- iris[, 1, drop = FALSE]
 names(df) <- "x"
 res <- mx_mixture(model = "x ~ m{C}*1
-                           x ~~ v{C}*x", classes = 1, data = df)
-get_fit(res)
+                           x ~~ v{C}*x", classes = 1:2, data = df)
+BLRT(res, replications = 4)
 }
 }

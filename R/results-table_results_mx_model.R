@@ -12,6 +12,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
 
 # Add standardized --------------------------------------------------------
   if(is.null(columns) | any(grepl("std_", columns))){ # Conditional, to save time
+    browser()
     results_std <- mxStandardizeRAMPaths(x, SE = TRUE)
     if(inherits(results_std, "list")){
       for(n in names(results_std)){

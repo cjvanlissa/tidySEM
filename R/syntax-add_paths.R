@@ -175,7 +175,7 @@ get_pid <- function(tab, pidcols = c("lhs", "rhs", "op", "block", "label")){
 
 tidysem_lavaanify <- function(..., data = NULL){
   cl <- match.call()
-  cl[["data"]] <- NULL
+  if(!is.null(data)) cl[["data"]] <- NULL
   cl[[1L]] <- str2lang("lavaan::lavaanify")
   x <- eval.parent(cl)
   if(!is.null(data)){
@@ -194,7 +194,7 @@ tidysem_lavaanify <- function(..., data = NULL){
   return(x)
 }
 
-
+#' @importFrom stats runif
 update_thresholds <- function(x, ...){
   nax <- is.na(x)
   if(any(!nax)){
