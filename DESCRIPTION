@@ -35,7 +35,8 @@ Suggests:
     rmarkdown,
     dplyr,
     stringr,
-    covr
+    covr,
+    tidyLPA
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

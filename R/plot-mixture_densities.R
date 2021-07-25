@@ -84,7 +84,7 @@ plot_density.default <-
         } else {
             if (length(variables) > 1) {
                 density_plot <- density_plot +
-                    facet_grid( ~ Variable, labeller = labeller(Variable = label_facets))
+                    facet_grid( ~ Variable, labeller = labeller(Variable = label_facets), scales = "free_x")
             }
         }
 
@@ -106,7 +106,6 @@ plot_density.mixture_list <-
              alpha = .2,
              facet_labels = NULL,
              ...) {
-        browser()
         cl <- match.call()
 
         # If no variables have been specified, use all variables
@@ -144,33 +143,7 @@ plot_density.MxModel <- function(x,
     cl[["x"]] <- x
     eval.parent(cl)
 }
-# plot_density.MxModel <-
-#     function(x,
-#              variables = NULL,
-#              bw = FALSE,
-#              conditional = FALSE,
-#              alpha = .2,
-#              facet_labels = NULL,
-#              ...) {
-#         Args <- as.list(match.call()[-c(1,2)])
-#
-#         # If no variables have been specified, use all variables
-#         var_names <-
-#             names(x$dff)[-grep("^(model_number|classes_number|CPROB\\d+|Class)$",
-#                                     names(x$dff))]
-#         if (is.null(variables)) {
-#             variables <- var_names
-#         } else {
-#             variables <- variables[which((variables) %in% (var_names))]
-#         }
-#         if (!length(variables))
-#             stop("No valid variables provided.")
-#
-#         Args[["variables"]] <- variables
-#         Args[["x"]] <- force(x)
-#         Args[["x"]] <- do.call(.extract_density_data, Args[c("x", "variables")])
-#         do.call("plot_density", Args)
-#     }
+
 
 .extract_density_data <- function(x,
                                   variables = NULL, longform = TRUE){

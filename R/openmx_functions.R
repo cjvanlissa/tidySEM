@@ -54,7 +54,7 @@ vnames <- getFromNamespace("vnames", "lavaan")
 #' @rdname as_ram
 #' @export
 #' @importFrom lavaan lavaanify
-#' @importFrom OpenMx mxModel
+#' @importFrom OpenMx mxModel imxReportProgress
 #' @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
 #' @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
 #' @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
