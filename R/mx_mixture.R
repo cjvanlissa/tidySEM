@@ -369,8 +369,15 @@ mixture_starts <- function(model,
   classes <- length(model@submodels)
   data <- model@data$observed
   if(!hasArg(splits)){
-    splits <- kmeans(x = data, centers = classes)$cluster
-    #cutree(hclust(dist(data)), k = classes)
+    splits <- try({kmeans(x = data, centers = classes)$cluster})
+    if(inherits(splits, "try-error")){
+      message("Could not initialize clusters using K-means.")
+      splits <- try({cutree(hclust(dist(data)), k = classes)})
+      if(inherits(splits, "try-error")){
+        stop("Could not initialize clusters using hierarchical clustering. Consider using a different clustering method, or imputing missing data.")
+      }
+    }
+    #
   }
 
   if(!classes == length(unique(splits))){
