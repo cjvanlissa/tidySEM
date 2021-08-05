@@ -1528,6 +1528,7 @@ match.call.defaults <- function(...) {
       ),
       Args)
     if(use_geom_text){
+      Args$mapping <- aes_string(x = "x", y = "y", label = "label", customdata = "label")
       Args[c("geom_text", "fill", "label.size")] <- NULL
       p <- p + do.call(geom_text, Args)
     } else {
