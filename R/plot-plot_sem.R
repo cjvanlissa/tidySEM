@@ -1096,7 +1096,7 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
     x$show <- attr(x, "user_specified")
   }
   if("group" %in% names(x)){
-    x_list <- lapply(unique(x$group), function(i){
+    x_list <- lapply(na.omit(unique(x$group)), function(i){
       cl$x <- x[x$group == i, -which(names(x) == "group")]
       tmp <- eval.parent(cl)
       tmp$group <- i
@@ -1105,7 +1105,7 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
     return(bind_list(x_list))
   }
   if("level" %in% names(x)){
-    x_list <- lapply(unique(x$level), function(i){
+    x_list <- lapply(na.omit(unique(x$level)), function(i){
       cl$x <- x[x$level == i, -which(names(x) == "level")]
       tmp <- eval.parent(cl)
       tmp$from <- paste0(tmp$from, ".", i)

@@ -530,13 +530,14 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
     group_labels <- lavInspect(x, what = "group.label")
     if(!all(group_labels %in% unique(pars_unst$group))){
       if(is.numeric(pars_unst$group)){
-        pars_unst$group <- group_labels[pars_unst$group]
+        pars_unst$group[pars_unst$group > 0] <- group_labels[pars_unst$group]
+        pars_unst$group[pars_unst$group == 0] <- NA
       }
     }
-    pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$group)
+    pars_unst$label <- paste2(pars_unst$label, pars_unst$group, sep = ".")
   }
   if("level" %in% names(pars_unst)){
-    pars_unst$label <- paste0(pars_unst$label, ".", pars_unst$level)
+    pars_unst$label <- paste2(pars_unst$label, pars_unst$level, sep = ".")
   }
   # Unst
   # Call conf_int
