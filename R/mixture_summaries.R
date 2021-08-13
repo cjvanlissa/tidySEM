@@ -26,9 +26,9 @@ calc_fitindices <- function(model, fitindices, ...){
 calc_fitindices.MxModel <- function (model, type = NULL, ...){
   sums <- .table_fit_mx(model)
   if(isTRUE(type == "mixture")){
-    ll <- sums["Minus2LogLikelihood"]/-2
-    parameters <- sums["Parameters"]
-    n <- sums["n"]
+    ll <- sums[["Minus2LogLikelihood"]]/-2
+    parameters <- sums[["estimatedParameters"]]
+    n <- sums[["numObs"]]
     post_prob <- NULL
     fits <- NULL
     post_prob <- extract_postprob(model)

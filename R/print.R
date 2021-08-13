@@ -88,3 +88,10 @@ print.tidy_scales <- function(x, ...){
   tmp <- head(x$descriptives, 5)
   print(tmp)
 }
+
+
+#' @method print mixture_list
+#' @export
+print.mixture_list <- function(x, ...){
+  print(table_fit(x), ...)
+}

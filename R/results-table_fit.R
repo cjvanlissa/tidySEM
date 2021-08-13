@@ -28,7 +28,8 @@ table_fit <- function(x, ...){
 #' @method table_fit mixture_list
 #' @export
 table_fit.mixture_list <- function(x, ...) {
-  out <- as.data.frame(t(sapply(x, table_fit)))
+  out <- lapply(x, table_fit)
+  out <- bind_list(out)
   if(!is.null(rownames(out))){
     out <- cbind(Name = rownames(out), out)
     rownames(out) <- NULL
@@ -100,12 +101,14 @@ table_fit.model.list <- table_fit.mplusObject
 #' @method table_fit MxModel
 #' @export
 table_fit.MxModel <- function(x, ...) {
-  if(is.null(attr(x, "type"))) attr(x, "type") <- "default"
-  out <- switch(attr(x, "type"),
+  if(is.null(attr(x, "tidySEM"))) attr(x, "tidySEM") <- "default"
+  out <- switch(attr(x, "tidySEM"),
                 "list" = sapply(x, function(i){ table_fit(i, ...)}),
                 "mixture" = calc_fitindices(x, type = "mixture", ...),
                 calc_fitindices(x, ...))
+  out <- as.data.frame(out)
   out <- out[, !colSums(is.na(out)) == nrow(out)]
+  if(!"LL" %in% names(out) & "Minus2LogLikelihood" %in% names(out)) out$LL <- out$Minus2LogLikelihood/-2
   .renamefits(out, "mx")
 }
 
@@ -134,10 +137,11 @@ table_fit.MxModel <- function(x, ...) {
       fits <- c(fits, out[["RMSEACI"]])
     }
   }
+  if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
   dropthese <- c("wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
                  "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
                  "timestamp", "frontendTime", "backendTime", "independentTime",
-                 "wallTime", "cpuTime", "optimizerEngine", "verbose"
+                 "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
   )
   fits <- fits[!names(fits) %in% dropthese]
   out <- as.data.frame(fits)
@@ -157,7 +161,7 @@ table_fit.lavaan <- function(x, ...){
 .fitmeasuretable <- data.frame(
   newname = c("Parameters", "LL", "n", "AIC", "BIC", "Name", "df"),
   lavaan = c("npar", "logl", "ntotal", "AIC", "BIC", "name", "df"),
-  mx = c("estimatedParameters", "LogLik", "numObs", "AIC.Mx", "BIC.Mx", "modelName", "degreesOfFreedom"),
+  mx = c("estimatedParameters", "LogLik", "numObs", "AIC.Mx", "BIC.Mx", "Name", "degreesOfFreedom"),
   mplus = c("Parameters", "LL", "Observations", "AIC", "BIC", "Title", "DF")
 )
 

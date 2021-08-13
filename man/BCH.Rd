@@ -25,7 +25,7 @@ by means of mixture modeling (see \code{\link{mx_mixture}}).
 
 The auxiliary model is treated as a multi-group model. All cases are used in
 all groups, but they are weighted by group-specific BCH weights as described
-in Bakk, Tekle, & Vermunt, 2013.
+in Bolck, Croon, & Hagenaars, 2004.
 }
 \examples{
 dat <- data.frame(x = iris$Petal.Length)
@@ -34,8 +34,7 @@ mixmod <- mx_profiles(dat,
 res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
 }
 \references{
-Bakk, Z., Tekle, F.B., & Vermunt, J.K. (2013). Estimating the
-association between latent class membership and external variables using bias
-adjusted three-step approaches. In T.F. Liao (ed.), Sociological Methodology.
-Thousand Oaks, CA: SAGE publications.
+Bolck, A., Croon, M., & Hagenaars, J. (2004). Estimating latent
+structure models with categorical variables: One-step versus three-step
+estimators. Political Analysis, 12(1), 3–27. <doi:10.2307/25791751>
 }
