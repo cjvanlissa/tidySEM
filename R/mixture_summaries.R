@@ -29,24 +29,26 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
     ll <- sums[["Minus2LogLikelihood"]]/-2
     parameters <- sums[["estimatedParameters"]]
     n <- sums[["numObs"]]
-    post_prob <- NULL
-    fits <- NULL
-    post_prob <- extract_postprob(model)
-    class <- apply(post_prob, 1, which.max)
-    class_tab <- table(class)
-    if (length(class_tab) == ncol(post_prob)) {
-      prop_n <- range(prop.table(class_tab))
+    if(length(names(model@submodels)) < 2){
+      fits = c("Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = n, "n_max" = n)
+    } else {
+      post_prob <- extract_postprob(model)
+      class <- apply(post_prob, 1, which.max)
+      class_tab <- table(class)
+      if (length(class_tab) == ncol(post_prob)) {
+        prop_n <- range(prop.table(class_tab))
+      }
+      else {
+        prop_n <- c(0, max(prop.table(class_tab)))
+      }
+      fits <- c(
+        ifelse(ncol(post_prob) == 1, 1, 1 + (1/(nrow(post_prob) *
+                                                  log(ncol(post_prob)))) * (sum(rowSums(post_prob *
+                                                                                          log(post_prob + 1e-12))))),
+        range(diag(classification_probs_mostlikely(post_prob, class))),
+        prop_n)
+      names(fits) <- c("Entropy", "prob_min", "prob_max", "n_min", "n_max")
     }
-    else {
-      prop_n <- c(0, max(prop.table(class_tab)))
-    }
-    fits <- c(
-      ifelse(ncol(post_prob) == 1, 1, 1 + (1/(nrow(post_prob) *
-                                                log(ncol(post_prob)))) * (sum(rowSums(post_prob *
-                                                                                        log(post_prob + 1e-12))))),
-      range(diag(classification_probs_mostlikely(post_prob, class))),
-      prop_n)
-    names(fits) <- c("Entropy", "prob_min", "prob_max", "n_min", "n_max")
     c(sums, fits)
   } else {
     sums
@@ -127,7 +129,7 @@ class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "m
 
 sum_postprob <- function(model){
   if(!inherits(model$expectation, "MxExpectationMixture")){
-    stop("Not a mixture model.")
+    return(data.frame(class = "class1", count = model$data$numObs, proportion = 1))
   }
   weights_name <- model$expectation$weights
   priors <- prop.table(model[[weights_name]]$values)
@@ -138,7 +140,7 @@ sum_postprob <- function(model){
 
 sum_mostlikely <- function(model){
   if(!inherits(model$expectation, "MxExpectationMixture")){
-    stop("Not a mixture model.")
+    return(return(data.frame(class = "class1", count = model$data$numObs, proportion = 1)))
   }
   post_prob <- extract_postprob(model)
   classif <- table(apply(post_prob, 1, which.max))
@@ -153,7 +155,7 @@ extract_postprob <- function(model){
 
 extract_postprob.MxModel <- function(model){
   if(!inherits(model$expectation, "MxExpectationMixture")){
-    stop("Not a mixture model.")
+    return(rep(1, model$data$numObs))
   }
   weights_name <- model$expectation$weights
   priors <- model[[weights_name]]$values

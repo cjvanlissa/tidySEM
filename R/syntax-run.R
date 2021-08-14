@@ -55,7 +55,7 @@ run_mx.MxModel <- function(x, ...){
 
   # Different approaches based on model type --------------------------------
   if(!is.null(attr(x, "tidySEM"))){
-    if(attr(x, "tidySEM") == "mixture"){
+    if(attr(x, "tidySEM") == "mixture" & length(names(x@submodels)) > 0){
       mix_method <- "annealing"
       if(!is.null(dots[["method"]])){
         mix_method <- dots[["method"]]
@@ -75,7 +75,13 @@ run_mx.MxModel <- function(x, ...){
              },
              {
                x <- mxModel(x, mxComputeSimAnnealing())
-               x <- mxRun(x)
+               res <- try(mxRun(x), silent = TRUE)
+               if(inherits(res, "try-error")){
+                 message("Simulated annealing failed, suggesting bad starting values or an overly complex model. Trying `mxTryHard()`.")
+                 x <- mxTryHard(x)
+               } else {
+                 x <- res
+               }
                x@compute <- NULL
              })
     }

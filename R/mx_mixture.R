@@ -290,13 +290,21 @@ as_mx_mixture <- function(model,
                           data,
                           ...){
   # Prepare mixture model
-  mix <- mxModel(
-    model = paste0("mix", classes),
-    lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE)) }),
-    mxData(data, type = "raw"),
-    mxMatrix(values=1, nrow=1, ncol=classes, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
-    mxExpectationMixture(paste0("class", 1:classes), scale="softmax"),
-    mxFitFunctionML())
+  if(classes > 1){
+    mix <- mxModel(
+      model = paste0("mix", classes),
+      lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE)) }),
+      mxData(data, type = "raw"),
+      mxMatrix(values=1, nrow=1, ncol=classes, lbound = 1e-4, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
+      mxExpectationMixture(paste0("class", 1:classes), scale="softmax"),
+      mxFitFunctionML())
+  } else {
+    mix <- mxModel(
+      model[[1]],
+      mxData(data, type = "raw"),
+      mxFitFunctionML(),
+      name = paste0("mix", classes))
+  }
   attr(mix, "tidySEM") <- "mixture"
   mix
 }
@@ -364,9 +372,12 @@ as_mx_mixture <- function(model,
 mixture_starts <- function(model,
                            splits,
                            ...){
-  stopifnot("mxModel is not a mixture model." = inherits(model@expectation, "MxExpectationMixture"))
+  stopifnot("mxModel is not a mixture model." = inherits(model@expectation, "MxExpectationMixture") | attr(model, "tidySEM") == "mixture")
   stopifnot("mxModel must contain data to determine starting values." = !(is.null(model@data) | is.null(model@data$observed)))
   classes <- length(model@submodels)
+  if(classes < 2){
+    return(mxAutoStart(model, type = "ULS"))
+  }
   data <- model@data$observed
   if(!hasArg(splits)){
     splits <- try({kmeans(x = data, centers = classes)$cluster})
@@ -378,6 +389,15 @@ mixture_starts <- function(model,
       }
     }
     #
+  } else {
+    stopifnot("Number of unique values in splits must be identical to the number of latent classes." = length(unique(splits) == names(model@submodels)))
+  }
+  tab_split <- table(splits)
+  if(any(tab_split) < 2){
+    small_cats <- which(tab_split < 2)
+    choose_from <- which(tab_split > 2 + length(small_cats))
+    if(length(choose_from) == 0) stop("Some clusters were too small to determine sensible starting values in `mixture_starts()`. Either specify splits manually, or reduce the number of classes.")
+    splits[sample(which(splits %in% choose_from), length(small_cats))] <- small_cats
   }
 
   if(!classes == length(unique(splits))){
