@@ -155,7 +155,7 @@ extract_postprob <- function(model){
 
 extract_postprob.MxModel <- function(model){
   if(!inherits(model$expectation, "MxExpectationMixture")){
-    return(rep(1, model$data$numObs))
+    return(matrix(1, nrow = model$data$numObs))
   }
   weights_name <- model$expectation$weights
   priors <- model[[weights_name]]$values
