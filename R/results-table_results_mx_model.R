@@ -318,12 +318,12 @@ mx_to_lavaan_labels <- function(x){
   out[these] <- paste0("Variances.", x$lhs[these])
   # covs
   these <- which(x$op == "~~" & !(x$rhs == x$lhs))
-  out[these] <- paste0(x$lhs[these], ".WITH.", x$rhs[these])
+  out[these] <- paste0("Covariances.", x$lhs[these], ".WITH.", x$rhs[these])
   # lv def
   these <- which(x$op == "=~")
-  out[these] <- paste0(x$lhs[these], ".BY.", x$rhs[these])
+  out[these] <- paste0("Loadings.", x$lhs[these], ".BY.", x$rhs[these])
   # reg
   these <- which(x$op == "~")
-  out[these] <- paste0(x$lhs[these], ".ON.", x$rhs[these])
+  out[these] <- paste0("Regressions.", x$lhs[these], ".ON.", x$rhs[these])
   out
 }
