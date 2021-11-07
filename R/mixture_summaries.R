@@ -30,7 +30,7 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
     parameters <- sums[["estimatedParameters"]]
     n <- sums[["numObs"]]
     if(length(names(model@submodels)) < 2){
-      fits = c("Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = n, "n_max" = n)
+      fits = c("Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
     } else {
       post_prob <- extract_postprob(model)
       class <- apply(post_prob, 1, which.max)
