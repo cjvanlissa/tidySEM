@@ -169,10 +169,11 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
 #' @method plot_profiles mixture_list
 #' @export
 plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = FALSE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), ...){
+    browser()
     Args <- as.list(match.call()[-1])
     names(x) <- make.unique(names(x))
     df_plot <- bind_list(lapply(names(x), function(n){
-        out <- cbind(table_results(x[[n]], columns = c("label", "lhs", "op","rhs", "est", "se", "class")), Model = n)
+        out <- cbind(table_results(x[[n]], columns = NULL), Model = n)
         out$Classes <- length(unique(na.omit(out$class)))
         out
     }))
@@ -215,6 +216,7 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
         df_raw$Class <- ordered(df_raw$Class_prob, labels = levels(df_plot$Class))
         variable_names <- paste("Value", names(df_raw)[match(variables, names(df_raw))], sep = "...")
         names(df_raw)[match(variables, names(df_raw))] <- variable_names
+        browser()
         df_raw <- reshape(
             df_raw,
             varying = c(Variable = variable_names),

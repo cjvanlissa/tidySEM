@@ -9,7 +9,10 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   digits <- force(digits)
   sum_x <- summary(x)
   results <- sum_x$parameters
-
+  results$openmx.label <- results$name
+  matrixnames <- grepl("\\[.+?\\]", results$name)
+  results$label[matrixnames] <- NA
+  results$name[!matrixnames] <- get_mx_names(x, results)[!matrixnames]
 # Add standardized --------------------------------------------------------
   if(is.null(columns) | any(grepl("std_", columns))){ # Conditional, to save time
     results_std <- mxStandardizeRAMPaths(x, SE = TRUE)
@@ -18,7 +21,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
         results_std[[n]]$matrix <- paste(n, results_std[[n]]$matrix, sep = ".")
       }
       results_std <- bind_list(results_std)
-      renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se")
+      renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se", "label" = "openmx.label")
       names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
     }
     # Remove redundant correlations
@@ -31,20 +34,9 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       flip_S$name <- gsub("\\[(\\d+),(\\d+)\\]$", "\\[\\2,\\1\\]", flip_S$name)
       results_std[these_rows, ] <- flip_S[, names(results_std)]
     }
-
-    tab <- merge(results_std, results, by = "name", all = TRUE)
-    dupcol <- table(gsub("\\.[xy]", "", names(tab)))
-    unicol <- names(dupcol)[dupcol != 2]
-    dupcol <- names(dupcol)[dupcol == 2]
-    mergtab <- data.frame(lapply(dupcol, function(thisc){
-      vals <- tab[, startsWith(names(tab), thisc)]
-      out <- vals[[1]]
-      miss <- rowSums(is.na(vals))
-      out[miss == 1 & is.na(out)] <- vals[[2]][miss == 1 & is.na(out)]
-      out
-    }))
-    names(mergtab) <- dupcol
-    results <- cbind(tab[names(tab) %in% unicol], mergtab)
+    # Clean up name vs label
+    tab <- merge(results, results_std, by = "name", all = TRUE)
+    results <- two_to_one(tab)
   }
 
 # Add algebras ------------------------------------------------------------
@@ -83,9 +75,12 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results$pvalue <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
   results$est_sig <- est_sig(results$est, sig = results$pvalue)
   results[c("estimate", "Estimate")] <- NULL
-  names(results)[match(c("Std.Error", "name"), names(results))] <- c("se", "openmx.label")
+  miscols <- colSums(is.na(results)) == nrow(results)
+  if(any(miscols)) results <- results[, !miscols, drop = FALSE]
+  names(results)[match(c("Std.Error"), names(results))] <- c("se")
   names(results) <- tolower(names(results))
-  results$label <- mx_to_lavaan_labels(results)
+  lav_labs <- mx_to_lavaan_labels(results)
+  results <- cbind(results, lav_labs)
   if(!is.null(columns)) {
     results[, na.omit(match(columns, names(results)))]
   }
@@ -310,20 +305,85 @@ unlist_mx2 <- function(i, element, ...){
 
 mx_to_lavaan_labels <- function(x){
   out <- x$openmx.label
+  cat <- rep(NA, length(out))
   # Means
   these <- which(x$op == "~1")
   out[these] <- paste0("Means.", x$lhs[these])
+  cat[these] <- "Means"
   # Vars
   these <- which(x$op == "~~" & (x$rhs == x$lhs))
   out[these] <- paste0("Variances.", x$lhs[these])
+  cat[these] <- "Variances"
   # covs
   these <- which(x$op == "~~" & !(x$rhs == x$lhs))
   out[these] <- paste0("Covariances.", x$lhs[these], ".WITH.", x$rhs[these])
+  cat[these] <- "Covariances"
   # lv def
   these <- which(x$op == "=~")
   out[these] <- paste0("Loadings.", x$lhs[these], ".BY.", x$rhs[these])
+  cat[these] <- "Loadings"
   # reg
   these <- which(x$op == "~")
   out[these] <- paste0("Regressions.", x$lhs[these], ".ON.", x$rhs[these])
-  out
+  cat[these] <- "Regressions"
+  cbind(label = out, Category = cat)
+}
+
+
+get_mx_names <- function(x, res){
+  out <- rep(NA, nrow(res))
+  if(length(x@submodels) > 0){
+    group_pars <- vector("numeric")
+    group_par_vals <- vector("character")
+    for(nam in names(x@submodels)){
+      group_pars_thisgrp <- which(startsWith(res$matrix, paste0(nam, ".")))
+      group_pars <- append(group_pars, group_pars_thisgrp)
+      resgrp <- res[group_pars_thisgrp, , drop = FALSE]
+      resgrp$matrix <- gsub(paste0("^", nam, "\\."), "", resgrp$matrix)
+      group_par_vals <- append(group_par_vals, get_mx_names(x[[nam]], resgrp))
+    }
+    if(length(group_pars) > 0){
+      out[group_pars] <- group_par_vals
+    }
+    res <- res[-group_pars, , drop = FALSE]
+  }
+  matcol <- which(names(res) == "matrix")
+  rowcol <- which(names(res) == "row")
+  colcol <- which(names(res) == "col")
+  res_par_vals <- apply(res, 1, function(thisrow){
+    tryCatch({
+      themat <- x[[thisrow[matcol]]]
+      if(!is.null(rownames(themat)) & !is.null(rownames(themat))){
+        return(paste0(x$name, ".", thisrow[matcol], "[", paste(match(thisrow[rowcol], rownames(themat$values)), match(thisrow[colcol], colnames(themat$values)), sep = ","), "]"))
+      }
+      if(is.null(rownames(themat)) & !is.null(colnames(themat)) & nrow(themat) == 1){
+        return(paste0(x$name, ".", thisrow[matcol], "[", paste(1, match(thisrow[colcol], colnames(themat$values)), sep = ","), "]"))
+      }
+      return(NA)
+    }, error = function(e){ NA })
+  })
+  if((length(x@submodels) > 0)){
+    if(length(group_pars) > 0){
+      out[-group_pars] <- res_par_vals
+      return(out)
+    }
+  } else {
+    return(res_par_vals)
+  }
+}
+
+
+two_to_one <- function(tab){
+  dupcol <- table(gsub("\\.[xy]", "", names(tab)))
+  unicol <- names(dupcol)[dupcol != 2]
+  dupcol <- names(dupcol)[dupcol == 2]
+  mergtab <- data.frame(lapply(dupcol, function(thisc){
+    vals <- tab[, startsWith(names(tab), thisc)]
+    out <- vals[[1]]
+    miss <- rowSums(is.na(vals))
+    out[miss == 1 & is.na(out)] <- vals[[2]][miss == 1 & is.na(out)]
+    out
+  }))
+  names(mergtab) <- dupcol
+  results <- cbind(tab[names(tab) %in% unicol], mergtab)
 }

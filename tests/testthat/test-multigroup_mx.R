@@ -59,5 +59,5 @@ run_mx(tmp) -> res_add
 tab <- table_results(res_add, NULL)
 
 test_that("multigroup tidysem can be updated", {
-  expect_true(sum(tab$openmx.label == "a") == 2 & sum(tab$openmx.label == "b") == 2)
+  expect_true(sum(tab$openmx.label == "a", na.rm = TRUE) == 2 & sum(tab$openmx.label == "b", na.rm = TRUE) == 2)
 })
