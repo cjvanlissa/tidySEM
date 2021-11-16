@@ -37,7 +37,8 @@
 #' mixmod <- mx_profiles(dat,
 #'                       classes = 1)
 #'
-#' plot_profiles(mixmod)
+#' plot_profiles(mixmod, variables = "x1", ci = NULL, sd = FALSE,
+#' rawdata = FALSE)
 #' @rdname plot_profiles
 #' @export
 plot_profiles <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = FALSE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), ...){
