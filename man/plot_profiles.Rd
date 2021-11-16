@@ -35,8 +35,8 @@ plot_profiles(
 \item{variables}{A character vectors with the names of the variables to be
 plotted (optional).}
 
-\item{ci}{Numeric. What confidence interval should the errorbars span?
-Defaults to a 95\% confidence interval. Set to NULL to remove errorbars.}
+\item{ci}{Numeric. What confidence interval should the error bars span?
+Defaults to a 95\% confidence interval. Set to NULL to remove erro rbars.}
 
 \item{sd}{Logical. Whether to display a box encompassing +/- 1SD Defaults to
 TRUE.}
@@ -51,7 +51,7 @@ TRUE might result in long plotting times.}
 
 \item{bw}{Logical. Should the plot be black and white (for print), or color?}
 
-\item{alpha_range}{The minimum and maximum values of alpha (transparancy) for
+\item{alpha_range}{The minimum and maximum values of alpha (transparency) for
 the raw data. Minimum should be 0; lower maximum values of alpha can help
 reduce overplotting.}
 
@@ -67,15 +67,16 @@ the visualization of classification uncertainty by showing:
 \item Bars reflecting a confidence interval for the class centroids
 \item Boxes reflecting the standard deviations within each class; a box
 encompasses +/- 64\% of the observations in a normal distribution
-\item Raw data, whose transparancy is weighted by the posterior class
-probability, such that each datapoint is most clearly visible for the class
+\item Raw data, whose transparency is weighted by the posterior class
+probability, such that each observation is most clearly visible for the class
 it is most likely to be a member of.
 }
 }
 \examples{
 dat <- data.frame(x1 = iris$Petal.Length, x2 = iris$Sepal.Width)
+dat <- dat[c(1:10, 140:150), ]
 mixmod <- mx_profiles(dat,
-                      classes = 1:2)
+                      classes = 1)
 
 plot_profiles(mixmod)
 }

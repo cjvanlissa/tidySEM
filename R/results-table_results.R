@@ -581,10 +581,10 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   pars_std[c("lhs", "op", "rhs", "group", "z", "ci.lower", "ci.upper")] <- NULL
 
   names(pars_std)[na.omit(match(c("se", "pval", "est_sig", "confint"), names(pars_std)))] <- paste0(names(pars_std)[na.omit(match(c("se", "pval", "est_sig", "confint"), names(pars_std)))], "_std")
-  names(pars_std)[match("est.std", names(pars_std))] <- "est_std"
-
+  if("est.std" %in% names(pars_std)) names(pars_std)[which(names(pars_std) == "est.std")] <- "est_std"
+  if("label" %in% names(pars_std)) names(pars_std)[which(names(pars_std) == "label")] <- "lavaan_label"
   results <- cbind(pars_unst, pars_std)
-
+  results <- two_to_one(results)
   # Apply digits
   fixed_parameters <- is.na(results$z)
   value_columns <- names(results)[can_be_numeric(results)]
@@ -592,9 +592,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   results[, value_columns] <- lapply(results[, value_columns],
                                        format_with_na, digits = digits, format = "f")
   results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
-  # if("label" %in% names(results)){
-  #   names(results)[names(results) == "label"] <- "lavaan_label"
-  # }
+
   if(!is.null(columns)){
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {

@@ -5,8 +5,8 @@
 #' @importFrom stats reshape
 .extract_rawdata.MxModel <- function(x, select_vars, wide = TRUE){
     df_raw <- .get_long_data(list(x))
-
-    df_raw <- df_raw[, c("Model", as.character(select_vars), "Class", "Class_prob", "Probability")]
+    if(inherits(select_vars, "factor")) select_vars <- levels(select_vars)
+    df_raw <- df_raw[, c("Model", select_vars, "Class", "Class_prob", "Probability")]
     df_raw$id <- 1:nrow(df_raw)
     if(!wide){
         variable_names <- paste("Value", names(df_raw)[-c(1,2, ncol(df_raw)-c(0:3))], sep = "...")
@@ -46,7 +46,7 @@ get_cordat.MxModel <- function(x){
         sds <- diag(tmp)
         tmp[upper.tri(tmp)] <- NA
         diag(tmp) <- NA
-        out <- as.data.frame.table(tmp)
+        out <- as.data.frame.table(tmp, stringsAsFactors = FALSE)
         out <- out[!is.na(out$Freq), ]
         names(out) <- c("xvar", "yvar", "Correlation")
         out$xmean <- x[[c]]@matrices$M$values[out$xvar]
@@ -113,19 +113,21 @@ plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = T
 #' @method plot_bivariate MxModel
 #' @export
 plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE){
-
-
     df_plot <- get_cordat(x)
     df_plot$Class <- ordered(df_plot$Class)
+    if(is.null(variables)){
+        variables <- unique(c(df_plot$xvar, df_plot$yvar))
+    }
+    if(length(variables) < 2) stop("Function plot_bivariate() requires at least two variables.")
     if (rawdata) {
-        df_raw <- .extract_rawdata(x, select_vars = unique(c(df_plot$xvar, df_plot$yvar)))
+        df_raw <- .extract_rawdata(x, select_vars = variables)
         df_raw$Class <- ordered(df_raw$Class, labels = levels(df_plot$Class))
     }
     # Basic plot
     p <- .base_plot(ifelse(bw, 0, max(df_plot$Classes)))
     Args <- list(
        x = list("model" = x),
-       variables = unique(c(df_plot$xvar, df_plot$yvar)),
+       variables = variables,
        longform = FALSE
     )
     df_density <- do.call(.extract_density_data, Args)

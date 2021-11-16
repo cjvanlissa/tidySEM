@@ -16,3 +16,5 @@ CRAN-RELEASE
 *.inp
 *.dat
 *.log
+/doc/
+/Meta/

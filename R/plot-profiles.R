@@ -6,15 +6,15 @@
 #' \item Bars reflecting a confidence interval for the class centroids
 #' \item Boxes reflecting the standard deviations within each class; a box
 #' encompasses +/- 64\% of the observations in a normal distribution
-#' \item Raw data, whose transparancy is weighted by the posterior class
-#' probability, such that each datapoint is most clearly visible for the class
+#' \item Raw data, whose transparency is weighted by the posterior class
+#' probability, such that each observation is most clearly visible for the class
 #' it is most likely to be a member of.
 #' }
 #' @param x An object containing the results of a mixture model analysis.
 #' @param variables A character vectors with the names of the variables to be
 #' plotted (optional).
-#' @param ci Numeric. What confidence interval should the errorbars span?
-#' Defaults to a 95\% confidence interval. Set to NULL to remove errorbars.
+#' @param ci Numeric. What confidence interval should the error bars span?
+#' Defaults to a 95\% confidence interval. Set to NULL to remove erro rbars.
 #' @param sd Logical. Whether to display a box encompassing +/- 1SD Defaults to
 #' TRUE.
 #' @param add_line Logical. Whether to display a line, connecting cluster
@@ -24,7 +24,7 @@
 #' @param rawdata Should raw data be plotted in the background? Setting this to
 #' TRUE might result in long plotting times.
 #' @param bw Logical. Should the plot be black and white (for print), or color?
-#' @param alpha_range The minimum and maximum values of alpha (transparancy) for
+#' @param alpha_range The minimum and maximum values of alpha (transparency) for
 #' the raw data. Minimum should be 0; lower maximum values of alpha can help
 #' reduce overplotting.
 #' @param ... Arguments passed to and from other functions.
@@ -33,8 +33,9 @@
 #' @keywords plot mixture
 #' @examples
 #' dat <- data.frame(x1 = iris$Petal.Length, x2 = iris$Sepal.Width)
+#' dat <- dat[c(1:10, 140:150), ]
 #' mixmod <- mx_profiles(dat,
-#'                       classes = 1:2)
+#'                       classes = 1)
 #'
 #' plot_profiles(mixmod)
 #' @rdname plot_profiles
@@ -169,7 +170,6 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
 #' @method plot_profiles mixture_list
 #' @export
 plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = FALSE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), ...){
-    browser()
     Args <- as.list(match.call()[-1])
     names(x) <- make.unique(names(x))
     df_plot <- bind_list(lapply(names(x), function(n){
@@ -179,15 +179,16 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     }))
 
     names(df_plot)[match(c("est", "lhs"), names(df_plot))] <- c("Value", "Variable")
-    df_plot$Class <- ordered(df_plot$class)
-
+    if(is.null(df_plot[["class"]])){
+        df_plot$Class <- "class1"
+        if(all(df_plot$Classes == 0)) df_plot$Classes <- 1
+    } else {
+        df_plot$Class <- ordered(df_plot$class)
+    }
     # if(!"Classes" %in% names(df_plot)){
     #     df_plot$Classes <- length(unique(df_plot$class))
     # }
     # Drop useless rows
-    df_plot$Category <- NA
-    df_plot$Category[startsWith(df_plot$label, "Means")] <- "Means"
-    df_plot$Category[startsWith(df_plot$label, "Variances")] <- "Variances"
     df_plot <- df_plot[!is.na(df_plot$Category), ]
     #table(df_plot$lhs, df_plot$op)
     df_plot$Variable <- ordered(df_plot$Variable, levels = unique(df_plot$Variable))
@@ -206,17 +207,19 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     df_plot <- df_plot[ , c("Variable", "Value", "se", "Class", "Classes", "Category", "Model", "idvar")]
     df_plot <- reshape(df_plot, idvar = "idvar", timevar = "Category", v.names = c("Value", "se"), direction = "wide")
 
-    df_plot <- df_plot[, -match("idvar", names(df_plot))]
+    df_plot[["idvar"]] <- NULL
     # Get some classy names
     names(df_plot) <- gsub("\\.Means", "", names(df_plot))
 
     if (rawdata) {
         df_raw <- .get_long_data(x)
         df_raw <- df_raw[, c("Model", variables, "Class", "Class_prob", "Probability", "id")]
-        df_raw$Class <- ordered(df_raw$Class_prob, labels = levels(df_plot$Class))
+        df_raw$Class <- ordered(df_raw$Class_prob, labels =
+                                    ifelse(is.null(levels(df_plot$Class)),
+                                           unique(df_plot$Class),
+                                           levels(df_plot$Class)))
         variable_names <- paste("Value", names(df_raw)[match(variables, names(df_raw))], sep = "...")
         names(df_raw)[match(variables, names(df_raw))] <- variable_names
-        browser()
         df_raw <- reshape(
             df_raw,
             varying = c(Variable = variable_names),

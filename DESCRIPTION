@@ -1,6 +1,6 @@
 Package: tidySEM
 Type: Package
-Date: 2021-07-14
+Date: 2021-11-16
 Title: Tidy Structural Equation Modeling
 Version: 0.2.0
 Authors@R: 
@@ -17,7 +17,7 @@ License: GPL (>= 3)
 URL: https://cjvanlissa.github.io/tidySEM/
 BugReports: https://github.com/cjvanlissa/tidySEM/issues
 Depends: 
-    R (>= 3.2.0),
+    R (>= 4.0.0),
     stats,
     utils,
     OpenMx

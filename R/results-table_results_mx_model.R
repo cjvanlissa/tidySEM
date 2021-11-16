@@ -9,7 +9,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   digits <- force(digits)
   sum_x <- summary(x)
   results <- sum_x$parameters
-  results$openmx.label <- results$name
+  results$openmx_label <- results$name
   matrixnames <- grepl("\\[.+?\\]", results$name)
   results$label[matrixnames] <- NA
   results$name[!matrixnames] <- get_mx_names(x, results)[!matrixnames]
@@ -21,7 +21,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
         results_std[[n]]$matrix <- paste(n, results_std[[n]]$matrix, sep = ".")
       }
       results_std <- bind_list(results_std)
-      renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se", "label" = "openmx.label")
+      renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se", "label" = "openmx_label")
       names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
     }
     # Remove redundant correlations
@@ -304,7 +304,7 @@ unlist_mx2 <- function(i, element, ...){
 # }
 
 mx_to_lavaan_labels <- function(x){
-  out <- x$openmx.label
+  out <- x$openmx_label
   cat <- rep(NA, length(out))
   # Means
   these <- which(x$op == "~1")
@@ -385,5 +385,10 @@ two_to_one <- function(tab){
     out
   }))
   names(mergtab) <- dupcol
-  results <- cbind(tab[names(tab) %in% unicol], mergtab)
+  if(nrow(mergtab) > 0){
+    return(cbind(tab[names(tab) %in% unicol], mergtab))
+  } else {
+    return(tab)
+  }
+
 }

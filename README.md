@@ -9,7 +9,7 @@ status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.or
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](https://r-pkg.org/pkg/tidySEM)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![R-CMD-check](https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions)
-[![codecov](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r)](https://codecov.io/gh/cjvanlissa/tidySEM)
+[![codecov](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r)](https://app.codecov.io/gh/cjvanlissa/tidySEM)
 [![Contributor
 Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)-->
@@ -64,7 +64,7 @@ tracks of `tidySEM` functions:
     results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
 3.  A [vignette about making
     graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
-      - An additional vignette describes the [graphing
+    -   An additional vignette describes the [graphing
         conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html)
         for structural equation models.
 
@@ -84,8 +84,8 @@ major contributor on this project, and smaller contributions are also
 welcome. You can contribute by opening an issue on ‘GitHub’, or sending
 a pull request with proposed features.
 
-  - File a ‘GitHub’ issue [here](https://github.com/cjvanlissa/tidySEM)
-  - Make a pull request
+-   File a ‘GitHub’ issue [here](https://github.com/cjvanlissa/tidySEM)
+-   Make a pull request
     [here](https://github.com/cjvanlissa/tidySEM/pulls)
 
 By participating in this project, you agree to abide by the [Contributor
