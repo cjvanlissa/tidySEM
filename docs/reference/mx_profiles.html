@@ -75,7 +75,7 @@ across classes." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -149,9 +149,9 @@ across classes.</p>
 
     <pre class="usage"><span class='fu'>mx_profiles</span><span class='op'>(</span>
   data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  classes <span class='op'>=</span> <span class='fl'>1L</span>,
   variances <span class='op'>=</span> <span class='st'>"equal"</span>,
   covariances <span class='op'>=</span> <span class='st'>"zero"</span>,
-  classes <span class='op'>=</span> <span class='fl'>1L</span>,
   run <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
@@ -162,6 +162,11 @@ across classes.</p>
     <tr>
       <th>data</th>
       <td><p>The data.frame to be used for model fitting.</p></td>
+    </tr>
+    <tr>
+      <th>classes</th>
+      <td><p>A vector of integers, indicating which class solutions to
+generate. Defaults to 1L. E.g., <code>classes = 1:6</code>,</p></td>
     </tr>
     <tr>
       <th>variances</th>
@@ -177,12 +182,7 @@ estimate. Defaults to "zero" (covariances constrained to zero; this
 corresponds
 to an assumption of conditional independence of the indicators); other
 options are "equal" (covariances between items constrained to be equal across
-classes), and "varying" (free covariances across classes).</p></td>
-    </tr>
-    <tr>
-      <th>classes</th>
-      <td><p>A vector of integers, indicating which class solutions to
-generate. Defaults to 1L. E.g., <code>classes = 1:6</code>,
+classes), and "varying" (free covariances across classes).
 <code>classes = c(1:4, 6:8)</code>.</p></td>
     </tr>
     <tr>

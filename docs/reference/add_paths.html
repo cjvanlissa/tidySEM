@@ -74,7 +74,7 @@ model.syntax, and separated by commas." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -173,7 +173,8 @@ relies on <code>lavaan <a href='https://rdrr.io/pkg/lavaan/man/model.syntax.html
 to <code>lavaan</code> parameter tables. By default, is uses the arguments
 <code>int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
 auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
-auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE</code>, akin
+auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE,
+meanstructure = TRUE</code>, in a similar way
 to <code><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></code> and <code><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -189,18 +190,17 @@ to <code><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></code> and <c
 <span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'>add_paths</span><span class='op'>(</span><span class='va'>model</span>, x <span class='op'>=</span><span class='op'>~</span> <span class='va'>a</span><span class='op'>*</span><span class='va'>x_1</span> <span class='op'>+</span> <span class='va'>b</span><span class='op'>*</span><span class='va'>x_2</span> <span class='op'>+</span> <span class='va'>a</span><span class='op'>*</span><span class='va'>x_3</span> <span class='op'>+</span> <span class='va'>b</span><span class='op'>*</span><span class='va'>x_4</span><span class='op'>)</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='estimate_lavaan.html'>estimate_lavaan</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: lavaan WARNING: some estimated ov variances are negative</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; lavaan 0.6-9 ended normally after 42 iterations
+</div><div class='output co'>#&gt; lavaan 0.6-9 ended normally after 31 iterations
 #&gt; 
 #&gt;   Estimator                                         ML
 #&gt;   Optimization method                           NLMINB
-#&gt;   Number of model parameters                         8
-#&gt;   Number of equality constraints                     1
+#&gt;   Number of model parameters                        11
 #&gt;                                                       
 #&gt;   Number of observations                           150
 #&gt;                                                       
 #&gt; Model Test User Model:
 #&gt;                                                       
-#&gt;   Test statistic                               356.543
+#&gt;   Test statistic                               359.420
 #&gt;   Degrees of freedom                                 3
 #&gt;   P-value (Chi-square)                           0.000
 #&gt; 
@@ -213,22 +213,26 @@ to <code><a href='https://rdrr.io/pkg/lavaan/man/sem.html'>sem</a></code> and <c
 #&gt; Latent Variables:
 #&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
 #&gt;   x =~                                                
-#&gt;     x_1               1.000                           
-#&gt;     x_2               0.948    0.052   18.314    0.000
-#&gt;     x_3               2.499    0.121   20.569    0.000
-#&gt;     x_4               0.948    0.052   18.314    0.000
+#&gt;     x_1        (a)    1.000                           
+#&gt;     x_2        (b)   -0.139    0.029   -4.717    0.000
+#&gt;     x_3        (a)    1.000                           
+#&gt;     x_4        (b)    0.752    0.038   19.760    0.000
+#&gt; 
+#&gt; Intercepts:
+#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
+#&gt;    .x_1               5.843    0.105   55.447    0.000
+#&gt;    .x_2               3.057    0.035   86.196    0.000
+#&gt;    .x_3               3.758    0.110   34.094    0.000
+#&gt;    .x_4               1.199    0.062   19.335    0.000
+#&gt;     x                 0.000                           
 #&gt; 
 #&gt; Variances:
 #&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)
-#&gt;    .x_1               0.175    0.021    8.334    0.000
-#&gt;    .x_2               0.923    0.106    8.742    0.000
-#&gt;    .x_3              -0.065    0.041   -1.585    0.113
-#&gt;    .x_4               0.053    0.008    6.359    0.000
-#&gt;     x                 0.506    0.076    6.639    0.000
-#&gt; 
-#&gt; Constraints:
-#&gt;                                                |Slack|
-#&gt;     .p2. - (.p4.)                                0.000
+#&gt;    .x_1               0.535    0.070    7.689    0.000
+#&gt;    .x_2               0.167    0.019    8.808    0.000
+#&gt;    .x_3               0.691    0.085    8.092    0.000
+#&gt;    .x_4              -0.063    0.021   -2.972    0.003
+#&gt;     x                 1.131    0.168    6.743    0.000
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -75,7 +75,7 @@ mxModels." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -184,14 +184,25 @@ possible alternatives.</p></td>
 </ol>
 
 <p>If the argument <code>splits</code> is not provided, the function will call
-<code>cutree(hclust(dist(data)), k = classes))</code>, where <code>data</code> is
-extracted from the <code>model</code> argument.</p>
-<p>Other sensible ways to split the data include:</p><ul>
-<li><p>Using K-means clustering: <code><a href='https://rdrr.io/r/stats/kmeans.html'>kmeans</a></code><code>(x = data, centers = classes)$cluster</code></p></li>
-<li><p>Using agglomerative hierarchical clustering: <code>hclass(</code><code><a href='https://mclust-org.github.io/mclust/reference/hc.html'>hc</a></code><code>(data = data), G = classes)[, 1]</code></p></li>
-<li><p>Using a random split: <code><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></code><code>(n = classes, size = nrow(data), replace = TRUE)</code></p></li>
+<code><a href='https://rdrr.io/r/stats/kmeans.html'>kmeans</a></code><code>(x = data, centers = classes)$cluster</code>,
+where <code>data</code> is extracted from the <code>model</code> argument.</p>
+<p>Sensible ways to split the data include:</p><ul>
+<li><p>Using Hierarchical clustering:
+   <code>cutree(hclust(dist(data)), k = classes))</code></p></li>
+<li><p>Using K-means clustering:
+  <code><a href='https://rdrr.io/r/stats/kmeans.html'>kmeans</a></code><code>(x = data, centers = classes)$cluster</code></p></li>
+<li><p>Using agglomerative hierarchical clustering:
+  <code>hclass(</code><code><a href='https://mclust-org.github.io/mclust/reference/hc.html'>hc</a></code><code>(data = data), G = classes)[, 1]</code></p></li>
+<li><p>Using a random split:
+  <code><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></code><code>(n = classes,
+  size = nrow(data), replace = TRUE)</code></p></li>
 </ul>
 
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Shireman, E., Steinley, D. &amp; Brusco, M.J. Examining the effect of
+initialization strategies on the performance of Gaussian mixture modeling.
+Behav Res 49, 282–293 (2017). &lt;doi:10.3758/s13428-015-0697-6&gt;</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

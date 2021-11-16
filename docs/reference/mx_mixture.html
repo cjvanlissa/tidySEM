@@ -73,7 +73,7 @@ defaults. See Details for more information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -214,12 +214,6 @@ flexibility:</p><ol>
 <span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>empathy</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span>
 <span class='fu'>mx_mixture</span><span class='op'>(</span>model <span class='op'>=</span> <span class='st'>"i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
                     s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6"</span>,
-                    meanstructure <span class='op'>=</span> <span class='cn'>TRUE</span>, int.ov.free <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                    int.lv.free <span class='op'>=</span> <span class='cn'>TRUE</span>, auto.fix.first <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                    auto.fix.single <span class='op'>=</span> <span class='cn'>TRUE</span>, auto.var <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                    auto.cov.lv.x <span class='op'>=</span> <span class='cn'>TRUE</span>, auto.efa <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                    auto.th <span class='op'>=</span> <span class='cn'>TRUE</span>, auto.delta <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                    auto.cov.y <span class='op'>=</span> <span class='cn'>TRUE</span>,
                     classes <span class='op'>=</span> <span class='fl'>2</span>,
                     data <span class='op'>=</span> <span class='va'>df</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>res</span>
 <span class='op'>}</span>

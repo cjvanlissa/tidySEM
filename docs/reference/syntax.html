@@ -74,7 +74,7 @@ syntax element." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -170,10 +170,12 @@ syntax element." />
     <pre class="examples"><div class='input'><span class='va'>dict</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span><span class='op'>(</span><span class='va'>iris</span>, split <span class='op'>=</span> <span class='st'>"\\."</span><span class='op'>)</span>
 <span class='va'>dict</span> <span class='op'>&lt;-</span> <span class='fu'><a href='add_paths.html'>add_paths</a></span><span class='op'>(</span><span class='va'>dict</span>, <span class='va'>Sepal.Width</span> <span class='op'>~</span><span class='op'>~</span> <span class='va'>Sepal.Length</span><span class='op'>)</span>
 <span class='fu'>syntax</span><span class='op'>(</span><span class='va'>dict</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;            lhs op          rhs block free label ustart plabel
-#&gt; 1  Sepal.Width ~~ Sepal.Length     1    1           NA   .p1.
-#&gt; 2  Sepal.Width ~~  Sepal.Width     1    1           NA   .p2.
-#&gt; 3 Sepal.Length ~~ Sepal.Length     1    1           NA   .p3.</div></pre>
+</div><div class='output co'>#&gt;            lhs op          rhs block group free label ustart plabel
+#&gt; 1  Sepal.Width ~~ Sepal.Length     1     1    1           NA   .p1.
+#&gt; 2  Sepal.Width ~~  Sepal.Width     1     1    1           NA   .p2.
+#&gt; 3 Sepal.Length ~~ Sepal.Length     1     1    1           NA   .p3.
+#&gt; 4  Sepal.Width ~1                  1     1    1           NA   .p4.
+#&gt; 5 Sepal.Length ~1                  1     1    1           NA   .p5.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
