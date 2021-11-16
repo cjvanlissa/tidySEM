@@ -1,4 +1,4 @@
-# tidySEM 0.1.10
+# tidySEM 0.2.0
 
 * Add functions for OpenMx
 * Add functions for mixture models
