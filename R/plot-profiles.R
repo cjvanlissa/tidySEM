@@ -32,13 +32,17 @@
 #' @author Caspar J. van Lissa
 #' @keywords plot mixture
 #' @examples
-#' dat <- data.frame(x1 = iris$Petal.Length, x2 = iris$Sepal.Width)
-#' dat <- dat[c(1:10, 140:150), ]
-#' mixmod <- mx_profiles(dat,
-#'                       classes = 1)
-#'
-#' plot_profiles(mixmod, variables = "x1", ci = NULL, sd = FALSE,
-#' rawdata = FALSE)
+#' df_plot <- data.frame(Variable = "x1",
+#' Class = "class1",
+#' Classes = 1,
+#' Model = "equal var 1",
+#' Value = 3.48571428571429,
+#' se = 0.426092805342181,
+#' Value.Variances = 3.81265306156537,
+#' se.Variances = 1.17660769119959)
+#' plot_profiles(list(df_plot = df_plot, df_raw = NULL),
+#' ci = NULL, sd = FALSE, add_line = FALSE,
+#' rawdata = FALSE, bw = FALSE)
 #' @rdname plot_profiles
 #' @export
 plot_profiles <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = FALSE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), ...){
@@ -49,6 +53,7 @@ plot_profiles <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = F
 #' @import ggplot2
 #' @export
 plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = FALSE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), ...){
+    browser()
     df_plot <- droplevels(x[["df_plot"]])
     if(rawdata){
         df_raw <- droplevels(x[["df_raw"]])
@@ -59,6 +64,9 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
         df_raw$Variable <- as.numeric(df_raw$Variable)
     }
 
+    if(!inherits(df_plot[["Variable"]], "factor")) {
+        df_plot$Variable <- factor(df_plot$Variable)
+    }
     level_labels <- levels(df_plot$Variable)
     df_plot$Variable <- as.numeric(df_plot$Variable)
 
@@ -239,7 +247,7 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     } else {
         df_raw <- NULL
     }
-
+browser()
     Args[["x"]] <- list(df_plot = df_plot, df_raw = df_raw)
 
     do.call(plot_profiles, Args)
