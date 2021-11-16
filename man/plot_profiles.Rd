@@ -78,7 +78,8 @@ dat <- dat[c(1:10, 140:150), ]
 mixmod <- mx_profiles(dat,
                       classes = 1)
 
-plot_profiles(mixmod)
+plot_profiles(mixmod, variables = "x1", ci = NULL, sd = FALSE,
+rawdata = FALSE)
 }
 \author{
 Caspar J. van Lissa
