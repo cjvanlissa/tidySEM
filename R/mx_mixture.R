@@ -271,7 +271,7 @@ mx_mixture.list <- function(model,
       stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
     }
     # Develop functionality for MxModels
-    browser()
+    stop("Function mx_mixture() cannot yet handle a list of MxModels.")
   }
   if(run){
     cl[["model"]] <- out

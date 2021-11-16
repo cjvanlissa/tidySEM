@@ -71,7 +71,7 @@ space_these <- function(these, n){
       the_seq <- seq(from = floor(cellsper/2), to = n-floor(cellsper/2), length.out = length(these))
     }
   } else {
-    browser() # Fix this
+    stop("Could not space nodes.")
   }
   out[the_seq] <- these
   out

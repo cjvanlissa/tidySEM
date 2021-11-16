@@ -1459,7 +1459,7 @@ match.call.defaults <- function(...) {
     df_edges$linetype <- 2
     df_edges$linetype[is.na(df_edges$curvature)] <- 1
   }
-  if(any(df_edges$arrow == "curve")) browser() # Dit mag niet meer!
+  if(any(df_edges$arrow == "curve")) stop("Arrow cannot be 'curve'.")
   p <- .plot_edges_internal(p, df_edges)
   # Add label and return ----------------------------------------------------
   .plot_label_internal(p, df_label, text_size)
