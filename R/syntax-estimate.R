@@ -1,3 +1,29 @@
+#' @title Estimate tidy_sem using 'OpenMx'
+#' @description This function is a wrapper for the \code{\link{as_ram}}
+#' and \code{\link{run_mx}} functions.
+#' @param x An object of class \code{tidy_sem}.
+#' @param ... Additional parameters passed to the estimating function.
+#' @return An object of class \code{MxModel}.
+#' @examples
+#' df <- iris[1:4]
+#' names(df) <- paste0("x_", 1:4)
+#' model <- tidy_sem(df)
+#' model <- measurement(model)
+#' res <- estimate_mx(model)
+#' summary(res)
+#' @rdname estimate_mx
+#' @export
+estimate_mx <- function(x, ...){
+  if(!has_data(x)) return(NULL)
+  if(!has_syntax(x)) return(NULL)
+  Args <- c(list(
+    x = as_ram(x$syntax),
+    data = x$data),
+    list(...))
+  do.call(run_mx, Args)
+}
+
+
 #' @title Estimate tidy_sem using 'lavaan'
 #' @description This function is a wrapper for the \code{\link[lavaan]{lavaan}}
 #' estimating functions. By default, the wrapper uses \code{\link[lavaan]{sem}},
