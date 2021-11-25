@@ -376,7 +376,15 @@ mixture_starts <- function(model,
   stopifnot("mxModel must contain data to determine starting values." = !(is.null(model@data) | is.null(model@data$observed)))
   classes <- length(model@submodels)
   if(classes < 2){
-    return(mxAutoStart(model, type = "ULS"))
+    strts <- try({mxAutoStart(model, type = "ULS")})
+    if(inherits(strts, "try-error")){
+      strts <- try({mxRun(model)})
+    }
+    if(inherits(strts, "try-error")){
+      stop("Could not derive suitable starting values for the 1-class model.")
+    } else{
+      return(strts)
+    }
   }
   data <- model@data$observed
   if(!hasArg(splits)){
@@ -414,33 +422,30 @@ mixture_starts <- function(model,
             mxFitFunctionML())
     })
   strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
-  strts <- mxAutoStart(strts, type = "ULS")
-  tryCatch({
-    strts <- mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
-  }, error = function(e){
-    tryCatch({
-      strts <- mxAutoStart(strts, type = "DWLS")
-      strts <<- mxTryHard(strts, extraTries = 100,
-                          silent = TRUE,
-                          verbose = FALSE,
-                          bestInitsOutput = FALSE)
-    }, error = function(e2){
-      stop("Could not derive suitable starting values for the ", classes, "-class model.")
+  strts <- try({
+    strts <- mxAutoStart(strts, type = "ULS")
+    mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
     })
-  })
+  if(inherits(strts, "try-error")){
+    strts <- try({
+    strts <- mxAutoStart(strts, type = "DWLS")
+    strts <<- mxTryHard(strts, extraTries = 100,
+                        silent = TRUE,
+                        verbose = FALSE,
+                        bestInitsOutput = FALSE)
+
+    })
+  }
+  if(inherits(strts, "try-error")){
+    strts <- try({mxRun(model)})
+  }
+  if(inherits(strts, "try-error")){
+    stop("Could not derive suitable starting values for the ", classes, "-class model.")
+  }
   # Insert start values into mixture model
   for(i in names(model@submodels)){
-    if(!is.null(model[[i]][["M"]])){
-      model[[i]]$M$values <- strts[[i]]$M$values
-    }
-    if(!is.null(model[[i]][["S"]])){
-      model[[i]]$S$values <- strts[[i]]$S$values
-    }
-    if(!is.null(model[[i]][["A"]])){
-      model[[i]]$A$values <- strts[[i]]$A$values
-    }
-    if(!is.null(model[[i]][["F"]])){
-      model[[i]]$F$values <- strts[[i]]$F$values
+    for(mtx in names(model[[i]]@matrices)){
+      model[[i]][[mtx]]$values <- strts[[i]][[mtx]]$values
     }
   }
   return(model)
