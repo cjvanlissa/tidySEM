@@ -37,8 +37,9 @@ The workflow underlying syntax generation in `tidySEM` is as follows:
 6. *Optionally*, modify the `dictionary`, `data`, and `syntax` elements in the `tidy_sem` object `dictionary(model) <- ...`, `get_data(model) <- ...`, and `syntax(model) <- ...`
 7. Run the analysis, either by:
     * Converting the `tidy_sem` object to `lavaan` syntax using `as_lavaan(model)` and using that as input for the `lavaan` functions `sem`, `lavaan`, or `cfa`
+    * Converting the `tidy_sem` object to `OpenMx` using `as_ram(model)`, and using that as input for `mxRun` or `run_mx``
     * Converting the `tidy_sem` object to `Mplus` using `as_mplus(model)`, and using that as input for `MplusAutomation::mplusObject()`
-    * Using the functions `estimate_lavaan(model)` or `estimate_mplus(model)`
+    * Using the functions `estimate_lavaan(model)`, `estimate_mx(model)`, or `estimate_mplus(model)`
 
 All elements of the `tidy_sem` object are "tidy" data, i.e., tabular `data.frames`, and can be modified using the familiar suite of functions in the 'tidyverse'. Thus, the data, dictionary, and syntax are all represented as `data.frame`s.
 
@@ -84,7 +85,7 @@ model
 We can automatically add basic syntax to the `sem_syntax` object, by passing it to a syntax-generating function like `measurement()`, which adds a measurement model for any scales in the object:
 
 ```{r, eval = TRUE}
-model %>%
+model |>
   measurement() -> model
 model
 ```
@@ -92,34 +93,38 @@ model
 
 ### Step 4: Run the model
 
-The resulting model can be evaluated as 'Mplus' syntax or 'lavaan' syntax, using the `as_mplus` and `as_lavaan` functions. For example, using lavaan:
+The resulting model can be evaluated as 'lavaan' syntax, 'OpenMx' syntax, or 'Mplus' syntax, using the `as_lavaan`, `as_ram`, and `as_mplus` functions. For example, using lavaan:
 
 ```{r}
-res <- lavaan(as_lavaan(model), data = df)
-summary(res, estimates = FALSE)
+model |>
+  estimate_lavaan()
 ```
 
-Or, alternatively, the model can be estimated using the `lavaan` wrapper `estimate_lavaan()`:
+The same model can be estimated in 'Mplus' through the R-package `MplusAutomation`. This requires 'Mplus' to be installed.
 
-```{r}
-model %>%
-  estimate_lavaan()
+```{r include=FALSE}
+model |>
+  estimate_mx() -> res_mx
+```
+```{r echo = TRUE, eval = FALSE}
+model |>
+  estimate_mx()
 ```
 
 The same model can be estimated in 'Mplus' through the R-package `MplusAutomation`. This requires 'Mplus' to be installed.
 
 ```{r echo = FALSE, eval = run_mplus, message=FALSE, warning=FALSE}
 library(MplusAutomation)
-model %>%
+model |>
   estimate_mplus() -> res
 #dput(capture.output(summary(res)))
 ```
 ```{r eval = FALSE, echo = TRUE}
 library(MplusAutomation)
-model %>%
+model |>
   estimate_mplus()
 ```
-```{r eval = TRUE, echo = FALSE}
+```{r eval = FALSE, echo = FALSE}
 # Display the results
 cat(c("Estimated using ML ", "Number of obs: 301, number of (free) parameters: 30 ", 
 "", "Model: Chi2(df = 24) = 85.306, p = 0 ", "Baseline model: Chi2(df = 36) = 918.852, p = 0 ", 
@@ -145,15 +150,15 @@ syntax(model)
 At this stage, we may want to modify the basic syntax slightly. The functions `dictionary(model) <- ...` and `syntax(model) <- ...` can be used to modify the dictionary and syntax:
 
 ```{r}
-dictionary(model) %>%
+dictionary(model) |>
   mutate(label = ifelse(label == "vis", "Visual", label))
 ```
 
 For example, imagine we want to change the model, so that all items of the "spe" subscale load on the "tex" latent variable. We would first replace the latent variable "spe" with "tex", and secondly remove all mention of the "spe" latent variable:
 
 ```{r}
-syntax(model) %>%
-  mutate(lhs = ifelse(lhs == "spe" & op == "=~", "tex", lhs)) %>%
+syntax(model) |>
+  mutate(lhs = ifelse(lhs == "spe" & op == "=~", "tex", lhs)) |>
   filter(!(lhs == "spe" | rhs == "spe")) -> syntax(model)
 ```
 
@@ -168,17 +173,17 @@ estimate_lavaan(model)
 In addition to the way of editing the `data.frame` with model syntax described in Step 6, it is also possible to add (or modify) paths by adding `lavaan` syntax. For example, imagine that - instead of having "vis" and "tex" correlate, we want to add a regression path between them:
 
 ```{r}
-model %>%
-  add_paths("vis ~ tex") %>%
-  estimate_lavaan() %>%
+model |>
+  add_paths("vis ~ tex") |>
+  estimate_lavaan() |>
   summary(estimates = TRUE)
 ```
 
 This function accepts both quoted (character) and unquoted arguments. So, for example, if we want to add a cross-loading from "spe_1" on "vis", in addition to the regression path before, we could use the following code:
 
 ```{r}
-model %>%
-  add_paths("vis ~ tex", vis =~ spe_1) %>%
+model |>
+  add_paths("vis ~ tex", vis =~ spe_1) |>
   estimate_lavaan()
 ```
 

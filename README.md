@@ -17,12 +17,14 @@ Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff6
 The package `tidySEM` provides a ‘tidy’ workflow for conducting,
 reporting, and plotting structural equation modeling analyses. It does
 not perform model estimation, but instead allows users to estimate
-models in a software-agnostic way, using either the R package `lavaan`,
-or the commercial stand-alone program `Mplus` (through
-`MplusAutomation`). The aim of `tidySEM` is to provide three specific
-functions:
+models in a software-agnostic way, using either the free open source R
+packages `lavaan` or `OpenMx`, or the commercial closed-source program
+`Mplus` (controlled through the R package `MplusAutomation`). The aim of
+`tidySEM` is to provide three specific functions:
 
 1.  Generate model syntax in a top-down, tidy way,
+    -   With particular attention to specifying mixture models in
+        `OpenMx`
 2.  Tabulate model output in a publication-ready, uniform manner,
 3.  Make easily customizable graphs for SEM-models.
 
@@ -72,9 +74,8 @@ tracks of `tidySEM` functions:
 
 You can cite the R-package with the following citation:
 
-> Van Lissa, C. J., (2019). *tidySEM: A tidy workflow for running,
-> reporting, and plotting structural equation models in lavaan or
-> Mplus.* R package version 0.1.6.
+> Van Lissa, C. J., (2019). *tidySEM: Tidy structural equation
+> modeling.* R package version 0.2.1.
 > <https://github.com/cjvanlissa/tidySEM/>
 
 ## Contributing and Contact Information
