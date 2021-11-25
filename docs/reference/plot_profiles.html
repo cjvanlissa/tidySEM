@@ -81,7 +81,7 @@ it is most likely to be a member of.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -256,21 +256,21 @@ rawdata <span class='op'>=</span> <span class='cn'>FALSE</span>, bw <span class=
 </div><div class='output co'>#&gt; Called from: plot_profiles.default(list(df_plot = df_plot, df_raw = NULL), 
 #&gt;     ci = NULL, sd = FALSE, add_line = FALSE, rawdata = FALSE, 
 #&gt;     bw = FALSE)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#52: df_plot &lt;- droplevels(x[["df_plot"]])
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#53: if (rawdata) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#57: df_plot &lt;- droplevels(x[["df_plot"]])
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#58: if (rawdata) {
 #&gt;     df_raw &lt;- droplevels(x[["df_raw"]])
 #&gt;     if (!all(unique(df_plot$Variable) %in% unique(df_raw$Variable))) {
 #&gt;         stop("Could not match raw data to model estimates.")
 #&gt;     }
 #&gt;     df_raw$Variable &lt;- as.numeric(df_raw$Variable)
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#62: if (!inherits(df_plot[["Variable"]], "factor")) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#67: if (!inherits(df_plot[["Variable"]], "factor")) {
 #&gt;     df_plot$Variable &lt;- factor(df_plot$Variable)
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#63: df_plot$Variable &lt;- factor(df_plot$Variable)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#65: level_labels &lt;- levels(df_plot$Variable)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#66: df_plot$Variable &lt;- as.numeric(df_plot$Variable)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#69: if (bw) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#68: df_plot$Variable &lt;- factor(df_plot$Variable)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#70: level_labels &lt;- levels(df_plot$Variable)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#71: df_plot$Variable &lt;- as.numeric(df_plot$Variable)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#74: if (bw) {
 #&gt;     classplot &lt;- ggplot(NULL, aes_string(x = "Variable", y = "Value", 
 #&gt;         group = "Class", linetype = "Class", shape = "Class"))
 #&gt; } else {
@@ -278,26 +278,26 @@ rawdata <span class='op'>=</span> <span class='cn'>FALSE</span>, bw <span class=
 #&gt;         group = "Class", linetype = "Class", shape = "Class", 
 #&gt;         colour = "Class")) + scale_colour_manual(values = get_palette(max(df_plot$Classes)))
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#80: classplot &lt;- ggplot(NULL, aes_string(x = "Variable", y = "Value", 
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#85: classplot &lt;- ggplot(NULL, aes_string(x = "Variable", y = "Value", 
 #&gt;     group = "Class", linetype = "Class", shape = "Class", colour = "Class")) + 
 #&gt;     scale_colour_manual(values = get_palette(max(df_plot$Classes)))
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#94: if (rawdata) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#99: if (rawdata) {
 #&gt;     classplot &lt;- classplot + geom_jitter(data = df_raw, width = 0.2, 
 #&gt;         aes_string(x = "Variable", y = "Value", shape = "Class", 
 #&gt;             alpha = "Probability")) + scale_alpha_continuous(range = alpha_range, 
 #&gt;         guide = "none")
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#108: classplot &lt;- classplot + geom_point(data = df_plot) + scale_x_continuous(breaks = 1:length(level_labels), 
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#113: classplot &lt;- classplot + geom_point(data = df_plot) + scale_x_continuous(breaks = 1:length(level_labels), 
 #&gt;     labels = level_labels) + theme_bw() + theme(panel.grid.minor.x = element_blank())
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#114: if (add_line) classplot &lt;- classplot + geom_line(data = df_plot)
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#117: if (!is.null(ci)) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#119: if (add_line) classplot &lt;- classplot + geom_line(data = df_plot)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#122: if (!is.null(ci)) {
 #&gt;     ci &lt;- qnorm(0.5 * (1 - ci))
 #&gt;     df_plot$error_min &lt;- df_plot$Value + ci * df_plot$se
 #&gt;     df_plot$error_max &lt;- df_plot$Value - ci * df_plot$se
 #&gt;     classplot &lt;- classplot + geom_errorbar(data = df_plot, aes_string(ymin = "error_min", 
 #&gt;         ymax = "error_max"), width = 0.4)
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#128: if (sd) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#133: if (sd) {
 #&gt;     df_plot$sd_xmin &lt;- df_plot$Variable - 0.2
 #&gt;     df_plot$sd_xmax &lt;- df_plot$Variable + 0.2
 #&gt;     df_plot$sd_ymin &lt;- df_plot$Value - sqrt(df_plot$Value.Variances)
@@ -315,10 +315,10 @@ rawdata <span class='op'>=</span> <span class='cn'>FALSE</span>, bw <span class=
 #&gt;             0), inherit.aes = FALSE)
 #&gt;     }
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#167: if (length(unique(df_plot$Model)) &gt; 1) {
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#172: if (length(unique(df_plot$Model)) &gt; 1) {
 #&gt;     classplot &lt;- classplot + facet_wrap(~Model, labeller = label_both)
 #&gt; }
-#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#170: suppressWarnings(print(classplot))</div><div class='img'><img src='plot_profiles-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#171: return(invisible(classplot))</div></pre>
+#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#175: suppressWarnings(print(classplot))</div><div class='img'><img src='plot_profiles-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; debug at C:/Git_Repositories/tidySEM/R/plot-profiles.R#176: return(invisible(classplot))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Automatically set starting values for an OpenMx mixture model — mixture_starts • tidySEM</title>
+<title>Estimate tidy_sem using 'OpenMx' — estimate_mx • tidySEM</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,9 @@
 
 
 
-<meta property="og:title" content="Automatically set starting values for an OpenMx mixture model — mixture_starts" />
-<meta property="og:description" content="Automatically set starting values for an OpenMx mixture model. This function
-was designed to work with mixture models created using tidySEM
-functions like mx_mixture, and may not work with other
-mxModels." />
+<meta property="og:title" content="Estimate tidy_sem using 'OpenMx' — estimate_mx" />
+<meta property="og:description" content="This function is a wrapper for the as_ram
+and run_mx functions." />
 
 
 
@@ -135,87 +133,43 @@ mxModels." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Automatically set starting values for an OpenMx mixture model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/mx_mixture.R'><code>R/mx_mixture.R</code></a></small>
-    <div class="hidden name"><code>mixture_starts.Rd</code></div>
+    <h1>Estimate tidy_sem using 'OpenMx'</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cjvanlissa/tidySEM/blob/master/R/syntax-estimate.R'><code>R/syntax-estimate.R</code></a></small>
+    <div class="hidden name"><code>estimate_mx.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Automatically set starting values for an OpenMx mixture model. This function
-was designed to work with mixture models created using <code>tidySEM</code>
-functions like <code><a href='mx_mixture.html'>mx_mixture</a></code>, and may not work with other
-<code>mxModel</code>s.</p>
+    <p>This function is a wrapper for the <code><a href='as_ram.html'>as_ram</a></code>
+and <code><a href='run_mx.html'>run_mx</a></code> functions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mixture_starts</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>splits</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>estimate_mx</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>model</th>
-      <td><p>A mixture model of class <code>mxModel</code>.</p></td>
-    </tr>
-    <tr>
-      <th>splits</th>
-      <td><p>Optional. A numeric vector of length equal to the number of
-rows in the <code>mxData</code> used in the <code>model</code> object. The data
-will be split by this vector. See Details for the default setting and
-possible alternatives.</p></td>
+      <th>x</th>
+      <td><p>An object of class <code>tidy_sem</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional arguments, passed to functions.</p></td>
+      <td><p>Additional parameters passed to the estimating function.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns an <code><a href='https://rdrr.io/pkg/OpenMx/man/mxModel.html'>mxModel</a></code> with starting values.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Starting values are derived by the following procedure:</p><ol>
-<li><p>The mixture model is converted to a multi-group model.</p></li>
-<li><p>The data are split along <code>splits</code>, and assigned to the
-  corresponding groups of the multi-group model.</p></li>
-<li><p>The multi-group model is run, and the final values of each group are
-  assigned to the corresponding mixture component as starting values.</p></li>
-<li><p>The mixture model is returned with these starting values.</p></li>
-</ol>
-
-<p>If the argument <code>splits</code> is not provided, the function will call
-<code><a href='https://rdrr.io/r/stats/kmeans.html'>kmeans</a></code><code>(x = data, centers = classes)$cluster</code>,
-where <code>data</code> is extracted from the <code>model</code> argument.</p>
-<p>Sensible ways to split the data include:</p><ul>
-<li><p>Using Hierarchical clustering:
-   <code>cutree(hclust(dist(data)), k = classes))</code></p></li>
-<li><p>Using K-means clustering:
-  <code><a href='https://rdrr.io/r/stats/kmeans.html'>kmeans</a></code><code>(x = data, centers = classes)$cluster</code></p></li>
-<li><p>Using agglomerative hierarchical clustering:
-  <code>hclass(</code><code><a href='https://mclust-org.github.io/mclust/reference/hc.html'>hc</a></code><code>(data = data), G = classes)[, 1]</code></p></li>
-<li><p>Using a random split:
-  <code><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></code><code>(n = classes,
-  size = nrow(data), replace = TRUE)</code></p></li>
-</ul>
-
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Shireman, E., Steinley, D. &amp; Brusco, M.J. Examining the effect of
-initialization strategies on the performance of Gaussian mixture modeling.
-Behav Res 49, 282–293 (2017). &lt;doi:10.3758/s13428-015-0697-6&gt;</p>
+    <p>An object of class <code>MxModel</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>iris</span><span class='op'>[</span>, <span class='fl'>1</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>]</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"x"</span>
-<span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mx_mixture.html'>mx_mixture</a></span><span class='op'>(</span>model <span class='op'>=</span> <span class='st'>"x ~ m{C}*1
-                           x ~~ v{C}*x"</span>,
-                           classes <span class='op'>=</span> <span class='fl'>2</span>,
-                           data <span class='op'>=</span> <span class='va'>df</span>,
-                           run <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>mod</span> <span class='op'>&lt;-</span> <span class='fu'>mixture_starts</span><span class='op'>(</span><span class='va'>mod</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>iris</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"x_"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tidy_sem.html'>tidy_sem</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span>
+<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='measurement.html'>measurement</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>estimate_mx</span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in estimate_mx(model): could not find function "estimate_mx"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'summary': object 'res' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

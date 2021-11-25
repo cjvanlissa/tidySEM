@@ -76,7 +76,7 @@ in Bolck, Croon, &amp;amp; Hagenaars, 2004." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -186,7 +186,262 @@ estimators. Political Analysis, 12(1), 3–27. &lt;doi:10.2307/25791751&gt;</p>
     <pre class="examples"><div class='input'><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Petal.Length</span><span class='op'>)</span>
 <span class='va'>mixmod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mx_profiles.html'>mx_profiles</a></span><span class='op'>(</span><span class='va'>dat</span>,
                       classes <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Running mix2 with 4 parameters</span></div><div class='output co'>#&gt; <span class='message'>Running mix2 with 4 parameters</span></div><div class='input'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>BCH</span><span class='op'>(</span><span class='va'>mixmod</span>, <span class='st'>"y ~ 1"</span>, data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Sepal.Length</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Called from: tidySEM:::mixture_starts(model = new("MxModel", name = "mix2", 
+#&gt;     matrices = list(weights = new("FullMatrix", name = "weights", 
+#&gt;         values = c(1, 1), labels = c(NA_character_, NA_character_
+#&gt;         ), free = c(FALSE, TRUE), lbound = c(1e-04, 1e-04), ubound = c(NA_real_, 
+#&gt;         NA_real_), .squareBrackets = numeric(0), .persist = TRUE, 
+#&gt;         .condenseSlots = FALSE, display = character(0), dependencies = integer(0), 
+#&gt;         joinModel = NA_character_, joinKey = NA_character_)), 
+#&gt;     algebras = list(), constraints = list(), intervals = list(), 
+#&gt;     latentVars = character(0), manifestVars = character(0), data = new("MxDataStatic", 
+#&gt;         observed = list(x = c(1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 
+#&gt;         1.5, 1.4, 1.5, 1.5, 1.6, 1.4, 1.1, 1.2, 1.5, 1.3, 1.4, 
+#&gt;         1.7, 1.5, 1.7, 1.5, 1, 1.7, 1.9, 1.6, 1.6, 1.5, 1.4, 
+#&gt;         1.6, 1.6, 1.5, 1.5, 1.4, 1.5, 1.2, 1.3, 1.4, 1.3, 1.5, 
+#&gt;         1.3, 1.3, 1.3, 1.6, 1.9, 1.4, 1.6, 1.4, 1.5, 1.4, 4.7, 
+#&gt;         4.5, 4.9, 4, 4.6, 4.5, 4.7, 3.3, 4.6, 3.9, 3.5, 4.2, 
+#&gt;         4, 4.7, 3.6, 4.4, 4.5, 4.1, 4.5, 3.9, 4.8, 4, 4.9, 4.7, 
+#&gt;         4.3, 4.4, 4.8, 5, 4.5, 3.5, 3.8, 3.7, 3.9, 5.1, 4.5, 
+#&gt;         4.5, 4.7, 4.4, 4.1, 4, 4.4, 4.6, 4, 3.3, 4.2, 4.2, 4.2, 
+#&gt;         4.3, 3, 4.1, 6, 5.1, 5.9, 5.6, 5.8, 6.6, 4.5, 6.3, 5.8, 
+#&gt;         6.1, 5.1, 5.3, 5.5, 5, 5.1, 5.3, 5.5, 6.7, 6.9, 5, 5.7, 
+#&gt;         4.9, 6.7, 4.9, 5.7, 6, 4.8, 4.9, 5.6, 5.8, 6.1, 6.4, 
+#&gt;         5.6, 5.1, 5.6, 6.1, 5.6, 5.5, 4.8, 5.4, 5.6, 5.1, 5.1, 
+#&gt;         5.9, 5.7, 5.2, 5, 5.2, 5.4, 5.1)), means = NA_real_, 
+#&gt;         type = "raw", numObs = 150, observedStats = list(), .isSorted = FALSE, 
+#&gt;         .needSort = TRUE, .parallel = TRUE, .noExoOptimize = TRUE, 
+#&gt;         primaryKey = NA_character_, weight = NA_character_, frequency = NA_character_, 
+#&gt;         minVariance = 1.49011611938477e-08, algebra = character(0), 
+#&gt;         warnNPDuseWeight = TRUE, exoFree = NULL, naAction = "pass", 
+#&gt;         verbose = 0L, name = "data"), submodels = list(class1 = new("MxRAMModel", 
+#&gt;         name = "class1", matrices = list(A = new("FullMatrix", 
+#&gt;             name = "A", values = 0, labels = NA_character_, free = FALSE, 
+#&gt;             lbound = NA_real_, ubound = NA_real_, .squareBrackets = numeric(0), 
+#&gt;             .persist = TRUE, .condenseSlots = FALSE, display = character(0), 
+#&gt;             dependencies = integer(0), joinModel = NA_character_, 
+#&gt;             joinKey = NA_character_), S = new("SymmMatrix", name = "S", 
+#&gt;             values = 0, labels = "v1", free = TRUE, lbound = NA_real_, 
+#&gt;             ubound = NA_real_, .squareBrackets = numeric(0), 
+#&gt;             .persist = TRUE, .condenseSlots = FALSE, display = character(0), 
+#&gt;             dependencies = integer(0), joinModel = NA_character_, 
+#&gt;             joinKey = NA_character_), F = new("FullMatrix", name = "F", 
+#&gt;             values = 1, labels = NA_character_, free = FALSE, 
+#&gt;             lbound = NA_real_, ubound = NA_real_, .squareBrackets = numeric(0), 
+#&gt;             .persist = TRUE, .condenseSlots = TRUE, display = character(0), 
+#&gt;             dependencies = integer(0), joinModel = NA_character_, 
+#&gt;             joinKey = NA_character_), M = new("FullMatrix", name = "M", 
+#&gt;             values = 0, labels = "m11", free = TRUE, lbound = NA_real_, 
+#&gt;             ubound = NA_real_, .squareBrackets = numeric(0), 
+#&gt;             .persist = TRUE, .condenseSlots = FALSE, display = character(0), 
+#&gt;             dependencies = integer(0), joinModel = NA_character_, 
+#&gt;             joinKey = NA_character_)), algebras = list(), constraints = list(), 
+#&gt;         intervals = list(), latentVars = character(0), manifestVars = "x", 
+#&gt;         data = NULL, submodels = list(), expectation = new("MxExpectationRAM", 
+#&gt;             A = "A", S = "S", F = "F", M = "M", thresholds = NA_character_, 
+#&gt;             dims = NA_character_, usePPML = FALSE, ppmlData = NULL, 
+#&gt;             UnfilteredExpCov = NA, numStats = numeric(0), between = NULL, 
+#&gt;             isProductNode = FALSE, verbose = 0L, .rampartCycleLimit = NA_integer_, 
+#&gt;             .rampartUnitLimit = NA_integer_, .useSufficientSets = TRUE, 
+#&gt;             .forceSingleGroup = FALSE, .analyzeDefVars = TRUE, 
+#&gt;             .maxDebugGroups = 0L, .optimizeMean = 2L, .useSparse = NA, 
+#&gt;             expectedCovariance = NULL, expectedMean = NULL, expectedFullCovariance = NULL, 
+#&gt;             expectedFullMean = NULL, threshnames = NA_character_, 
+#&gt;             discrete = NA_character_, discreteSpec = NULL, .discreteCheckCount = TRUE, 
+#&gt;             selectionPlan = NULL, selectionVector = NA_character_, 
+#&gt;             data = NA_integer_, dataColumns = integer(0), dataColumnNames = NULL, 
+#&gt;             .runDims = character(0), output = list(), debug = list(), 
+#&gt;             name = "expectation"), fitfunction = new("MxFitFunctionML", 
+#&gt;             fellner = NA, verbose = 0L, profileOut = character(0), 
+#&gt;             rowwiseParallel = NA, jointConditionOn = "auto", 
+#&gt;             components = character(0), info = list(), dependencies = integer(0), 
+#&gt;             expectation = integer(0), vector = TRUE, rowDiagnostics = FALSE, 
+#&gt;             result = numeric(0), name = "fitfunction"), compute = NULL, 
+#&gt;         independent = FALSE, options = list(), output = list(), 
+#&gt;         runstate = list(), .newobjects = FALSE, .resetdata = FALSE, 
+#&gt;         .wasRun = FALSE, .modifiedSinceRun = TRUE, .version = "2.19.6"), 
+#&gt;         class2 = new("MxRAMModel", name = "class2", matrices = list(
+#&gt;             A = new("FullMatrix", name = "A", values = 0, labels = NA_character_, 
+#&gt;                 free = FALSE, lbound = NA_real_, ubound = NA_real_, 
+#&gt;                 .squareBrackets = numeric(0), .persist = TRUE, 
+#&gt;                 .condenseSlots = FALSE, display = character(0), 
+#&gt;                 dependencies = integer(0), joinModel = NA_character_, 
+#&gt;                 joinKey = NA_character_), S = new("SymmMatrix", 
+#&gt;                 name = "S", values = 0, labels = "v1", free = TRUE, 
+#&gt;                 lbound = NA_real_, ubound = NA_real_, .squareBrackets = numeric(0), 
+#&gt;                 .persist = TRUE, .condenseSlots = FALSE, display = character(0), 
+#&gt;                 dependencies = integer(0), joinModel = NA_character_, 
+#&gt;                 joinKey = NA_character_), F = new("FullMatrix", 
+#&gt;                 name = "F", values = 1, labels = NA_character_, 
+#&gt;                 free = FALSE, lbound = NA_real_, ubound = NA_real_, 
+#&gt;                 .squareBrackets = numeric(0), .persist = TRUE, 
+#&gt;                 .condenseSlots = TRUE, display = character(0), 
+#&gt;                 dependencies = integer(0), joinModel = NA_character_, 
+#&gt;                 joinKey = NA_character_), M = new("FullMatrix", 
+#&gt;                 name = "M", values = 0, labels = "m21", free = TRUE, 
+#&gt;                 lbound = NA_real_, ubound = NA_real_, .squareBrackets = numeric(0), 
+#&gt;                 .persist = TRUE, .condenseSlots = FALSE, display = character(0), 
+#&gt;                 dependencies = integer(0), joinModel = NA_character_, 
+#&gt;                 joinKey = NA_character_)), algebras = list(), 
+#&gt;             constraints = list(), intervals = list(), latentVars = character(0), 
+#&gt;             manifestVars = "x", data = NULL, submodels = list(), 
+#&gt;             expectation = new("MxExpectationRAM", A = "A", S = "S", 
+#&gt;                 F = "F", M = "M", thresholds = NA_character_, 
+#&gt;                 dims = NA_character_, usePPML = FALSE, ppmlData = NULL, 
+#&gt;                 UnfilteredExpCov = NA, numStats = numeric(0), 
+#&gt;                 between = NULL, isProductNode = FALSE, verbose = 0L, 
+#&gt;                 .rampartCycleLimit = NA_integer_, .rampartUnitLimit = NA_integer_, 
+#&gt;                 .useSufficientSets = TRUE, .forceSingleGroup = FALSE, 
+#&gt;                 .analyzeDefVars = TRUE, .maxDebugGroups = 0L, 
+#&gt;                 .optimizeMean = 2L, .useSparse = NA, expectedCovariance = NULL, 
+#&gt;                 expectedMean = NULL, expectedFullCovariance = NULL, 
+#&gt;                 expectedFullMean = NULL, threshnames = NA_character_, 
+#&gt;                 discrete = NA_character_, discreteSpec = NULL, 
+#&gt;                 .discreteCheckCount = TRUE, selectionPlan = NULL, 
+#&gt;                 selectionVector = NA_character_, data = NA_integer_, 
+#&gt;                 dataColumns = integer(0), dataColumnNames = NULL, 
+#&gt;                 .runDims = character(0), output = list(), debug = list(), 
+#&gt;                 name = "expectation"), fitfunction = new("MxFitFunctionML", 
+#&gt;                 fellner = NA, verbose = 0L, profileOut = character(0), 
+#&gt;                 rowwiseParallel = NA, jointConditionOn = "auto", 
+#&gt;                 components = character(0), info = list(), dependencies = integer(0), 
+#&gt;                 expectation = integer(0), vector = TRUE, rowDiagnostics = FALSE, 
+#&gt;                 result = numeric(0), name = "fitfunction"), compute = NULL, 
+#&gt;             independent = FALSE, options = list(), output = list(), 
+#&gt;             runstate = list(), .newobjects = FALSE, .resetdata = FALSE, 
+#&gt;             .wasRun = FALSE, .modifiedSinceRun = TRUE, .version = "2.19.6")), 
+#&gt;     expectation = new("MxExpectationMixture", weights = "weights", 
+#&gt;         components = c("class1", "class2"), verbose = 0L, scale = "softmax", 
+#&gt;         data = NA_integer_, dataColumns = integer(0), dataColumnNames = NULL, 
+#&gt;         .runDims = character(0), output = list(), debug = list(), 
+#&gt;         name = "expectation"), fitfunction = new("MxFitFunctionML", 
+#&gt;         fellner = NA, verbose = 0L, profileOut = character(0), 
+#&gt;         rowwiseParallel = NA, jointConditionOn = "auto", components = character(0), 
+#&gt;         info = list(), dependencies = integer(0), expectation = integer(0), 
+#&gt;         vector = FALSE, rowDiagnostics = FALSE, result = numeric(0), 
+#&gt;         name = "fitfunction"), compute = NULL, independent = FALSE, 
+#&gt;     options = list(), output = list(), runstate = list(), .newobjects = FALSE, 
+#&gt;     .resetdata = FALSE, .wasRun = FALSE, .modifiedSinceRun = TRUE, 
+#&gt;     .version = "2.19.6"), classes = 2, data = dat)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#376: stopifnot(`mxModel is not a mixture model.` = inherits(model@expectation, 
+#&gt;     "MxExpectationMixture") | attr(model, "tidySEM") == "mixture")
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#377: stopifnot(`mxModel must contain data to determine starting values.` = !(is.null(model@data) | 
+#&gt;     is.null(model@data$observed)))
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#378: classes &lt;- length(model@submodels)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#379: if (classes &lt; 2) {
+#&gt;     strts &lt;- try({
+#&gt;         mxAutoStart(model, type = "ULS")
+#&gt;     })
+#&gt;     if (inherits(strts, "try-error")) {
+#&gt;         strts &lt;- try({
+#&gt;             mxRun(model)
+#&gt;         })
+#&gt;     }
+#&gt;     if (inherits(strts, "try-error")) {
+#&gt;         stop("Could not derive suitable starting values for the 1-class model.")
+#&gt;     }
+#&gt;     else {
+#&gt;         return(strts)
+#&gt;     }
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#390: data &lt;- model@data$observed
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#391: if (!hasArg(splits)) {
+#&gt;     splits &lt;- try({
+#&gt;         kmeans(x = data, centers = classes)$cluster
+#&gt;     })
+#&gt;     if (inherits(splits, "try-error")) {
+#&gt;         message("Could not initialize clusters using K-means.")
+#&gt;         splits &lt;- try({
+#&gt;             cutree(hclust(dist(data)), k = classes)
+#&gt;         })
+#&gt;         if (inherits(splits, "try-error")) {
+#&gt;             stop("Could not initialize clusters using hierarchical clustering. Consider using a different clustering method, or imputing missing data.")
+#&gt;         }
+#&gt;     }
+#&gt; } else {
+#&gt;     stopifnot(`Number of unique values in splits must be identical to the number of latent classes.` = length(unique(splits) == 
+#&gt;         names(model@submodels)))
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#392: splits &lt;- try({
+#&gt;     kmeans(x = data, centers = classes)$cluster
+#&gt; })
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#392: kmeans(x = data, centers = classes)$cluster
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#393: if (inherits(splits, "try-error")) {
+#&gt;     message("Could not initialize clusters using K-means.")
+#&gt;     splits &lt;- try({
+#&gt;         cutree(hclust(dist(data)), k = classes)
+#&gt;     })
+#&gt;     if (inherits(splits, "try-error")) {
+#&gt;         stop("Could not initialize clusters using hierarchical clustering. Consider using a different clustering method, or imputing missing data.")
+#&gt;     }
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#404: tab_split &lt;- table(splits)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#405: if (any(tab_split) &lt; 2) {
+#&gt;     small_cats &lt;- which(tab_split &lt; 2)
+#&gt;     choose_from &lt;- which(tab_split &gt; 2 + length(small_cats))
+#&gt;     if (length(choose_from) == 0) 
+#&gt;         stop("Some clusters were too small to determine sensible starting values in `mixture_starts()`. Either specify splits manually, or reduce the number of classes.")
+#&gt;     splits[sample(which(splits %in% choose_from), length(small_cats))] &lt;- small_cats
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#406: small_cats &lt;- which(tab_split &lt; 2)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#407: choose_from &lt;- which(tab_split &gt; 2 + length(small_cats))
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#408: if (length(choose_from) == 0) stop("Some clusters were too small to determine sensible starting values in `mixture_starts()`. Either specify splits manually, or reduce the number of classes.")
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#409: splits[sample(which(splits %in% choose_from), length(small_cats))] &lt;- small_cats
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#412: if (!classes == length(unique(splits))) {
+#&gt;     stop("Argument 'splits' does not identify a number of groups equal to 'classes'.")
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#415: if (!all(unique(splits) %in% 1:classes)) {
+#&gt;     splits &lt;- as.integer(as.factor(splits))
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#419: strts &lt;- lapply(1:classes, function(i) {
+#&gt;     thissub &lt;- names(model@submodels)[i]
+#&gt;     mxModel(model[[thissub]], mxData(data[splits == i, , drop = FALSE], 
+#&gt;         type = "raw"), mxFitFunctionML())
+#&gt; })
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#425: strts &lt;- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), 
+#&gt;     strts)))
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#426: strts &lt;- try({
+#&gt;     strts &lt;- mxAutoStart(strts, type = "ULS")
+#&gt;     mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
+#&gt; })
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#427: strts &lt;- mxAutoStart(strts, type = "ULS")
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#428: mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#430: if (inherits(strts, "try-error")) {
+#&gt;     strts &lt;- try({
+#&gt;         strts &lt;- mxAutoStart(strts, type = "DWLS")
+#&gt;         strts &lt;&lt;- mxTryHard(strts, extraTries = 100, silent = TRUE, 
+#&gt;             verbose = FALSE, bestInitsOutput = FALSE)
+#&gt;     })
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#440: if (inherits(strts, "try-error")) {
+#&gt;     strts &lt;- try({
+#&gt;         mxRun(model)
+#&gt;     })
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#443: if (inherits(strts, "try-error")) {
+#&gt;     stop("Could not derive suitable starting values for the ", 
+#&gt;         classes, "-class model.")
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#447: for (i in names(model@submodels)) {
+#&gt;     for (mtx in names(model[[i]]@matrices)) {
+#&gt;         model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt;     }
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#448: for (mtx in names(model[[i]]@matrices)) {
+#&gt;     model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#448: for (mtx in names(model[[i]]@matrices)) {
+#&gt;     model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; }
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#449: model[[i]][[mtx]]$values &lt;- strts[[i]][[mtx]]$values
+#&gt; debug at C:/Git_Repositories/tidySEM/R/mx_mixture.R#452: return(model)</div><div class='output co'>#&gt; <span class='message'>Running mix2 with 4 parameters</span></div><div class='output co'>#&gt; <span class='message'>Running mix2 with 4 parameters</span></div><div class='input'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>BCH</span><span class='op'>(</span><span class='va'>mixmod</span>, <span class='st'>"y ~ 1"</span>, data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>iris</span><span class='op'>$</span><span class='va'>Sepal.Length</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Running aux with 4 parameters</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -98,9 +98,14 @@
 <a href="#tidysem-" class="anchor"></a>tidySEM <a href="https://github.com/cjvanlissa/tidySEM"><img src="https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png" align="right" height="139"></a>
 </h1></div>
 
-<p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the R package <code>lavaan</code>, or the commercial stand-alone program <code>Mplus</code> (through <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
+<p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the free open source R packages <code>lavaan</code> or <code>OpenMx</code>, or the commercial closed-source program <code>Mplus</code> (controlled through the R package <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
 <ol>
-<li>Generate model syntax in a top-down, tidy way,</li>
+<li>Generate model syntax in a top-down, tidy way,
+<ul>
+<li>With particular attention to specifying mixture models in <code>OpenMx</code>
+</li>
+</ul>
+</li>
 <li>Tabulate model output in a publication-ready, uniform manner,</li>
 <li>Make easily customizable graphs for SEM-models.</li>
 </ol>
@@ -142,7 +147,7 @@ install.packages("tidySEM")
 <a href="#citing-tidysem" class="anchor"></a>Citing tidySEM</h2>
 <p>You can cite the R-package with the following citation:</p>
 <blockquote>
-<p>Van Lissa, C. J., (2019). <em>tidySEM: A tidy workflow for running, reporting, and plotting structural equation models in lavaan or Mplus.</em> R package version 0.1.6. <a href="https://github.com/cjvanlissa/tidySEM/" class="uri">https://github.com/cjvanlissa/tidySEM/</a></p>
+<p>Van Lissa, C. J., (2019). <em>tidySEM: Tidy structural equation modeling.</em> R package version 0.2.1. <a href="https://github.com/cjvanlissa/tidySEM/" class="uri">https://github.com/cjvanlissa/tidySEM/</a></p>
 </blockquote>
 </div>
 <div id="contributing-and-contact-information" class="section level2">
