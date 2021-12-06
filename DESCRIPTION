@@ -36,8 +36,11 @@ Suggests:
     dplyr,
     stringr,
     covr,
-    tidyLPA
+    tidyLPA,
+    poLCA,
+    umx
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.2
+LazyData: true

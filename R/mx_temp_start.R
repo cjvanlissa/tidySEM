@@ -28,7 +28,7 @@ simple_starts <- function (model, type = c("ULS", "DWLS"))
 }
 
 
-
+#' @importFrom stats coef cov
 asdhelper <- function (model, subname = model@name, type)
 {
   exps <-

@@ -40,26 +40,42 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   }
 
 # Add algebras ------------------------------------------------------------
-  results <- bind_list(list(results, get_algebras(x)))
-  if(has_submod(x)) results <- submodels(x, results, cols = names(results))
+  algs <- alg_to_res(x)
+  algs$openmx_label <- algs$name
+  results <- bind_list(list(results, algs))
+
+# Label groups ------------------------------------------------------------
+  results <- .label_groups_internal(x, results)
+  # if(has_submod(x)){
+  #   results <- submodels(x, results, cols = names(results))
+  # } else {
+  #   algs <- alg_to_res(x)
+  #   algs$openmx_label <- algs$name
+  #   results <- bind_list(list(results, algs))
+  # }
   results$est <- results$Estimate
   results$lhs <- results$row
   results$rhs <- results$col
   results$op <- NA
   results$op[results$matrix == "A"] <- "~"
+  if(!is.null(results[["formula"]])){
+    isalg <- !is.na(results$formula)
+    results$op[isalg] <- ":="
+  }
+
+  results$op[results$matrix == "Thresholds"] <- "|"
   results$op[results$matrix == "S"] <- "~~"
   results$op[results$matrix == "M"] <- "~1"
   results$op[is.na(results$matrix)] <- "="
-  themns <- which(results$op == "~1")
-  results$lhs[themns] <- results$col[themns]
-  results$rhs[themns] <- results$row[themns]
+  flip_lhsrhs <- which(results$op %in% c("~1", "|"))
+  results$lhs[flip_lhsrhs] <- results$col[flip_lhsrhs]
+  results$rhs[flip_lhsrhs] <- results$row[flip_lhsrhs]
   lvs <- unique(unlist(from_submodels(x, "latentVars")))
   obsv <- unique(unlist(from_submodels(x, "manifestVars")))
   fac_load <- results$op == "~" & results$rhs %in% lvs & results$lhs %in% obsv
   results$rhs[fac_load] <- results$row[fac_load]
   results$lhs[fac_load] <- results$col[fac_load]
   results$op[fac_load] <- "=~"
-
   results$confint <- conf_int(results$est, se = results$Std.Error)
   if(isTRUE(sum_x[["CI.Requested"]])){
     if(!all(is.na(sum_x[["CI"]]))) {
@@ -81,8 +97,11 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   names(results) <- tolower(names(results))
   lav_labs <- mx_to_lavaan_labels(results)
   results <- cbind(results, lav_labs)
+  # Drop internal stuff
+  internalstuff <- grepl("mat_dev", results$name)
+  if(any(internalstuff)) results <- results[!internalstuff, ]
   if(!is.null(columns)) {
-    results[, na.omit(match(columns, names(results)))]
+    results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   }
   else {
     order_cols <- c("label")
@@ -93,15 +112,17 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
     order_cols <- c(match(order_cols, names(results)), match(remaining_cols,
                                                              names(results)))
     class(results) <- c("tidy_results", class(results))
-    results[, order_cols]
+    results <- results[, order_cols, drop = FALSE]
   }
+  rownames(results) <- NULL
+  return(results)
 }
 
 submodels <- function(x, results, cols = c("name", "matrix", "row", "col", "Estimate", "Std.Error", "lbound",
                                            "ubound", "lboundMet", "uboundMet"), ...){
   if(!has_submod(x, depth = 1)){
     submod <- names(attr(x, "submodels"))
-    lapply(submod, function(i){ get_algebras(x[[i]]) })
+    lapply(submod, function(i){ alg_to_res(x[[i]]) })
     thisgroup <- rep(NA_character_, times = nrow(results))
     from_group <- grepl(paste0("(", paste0(submod, collapse = "|"), ")\\."), results$matrix)
     thisgroup[from_group] <- gsub(paste0("^.{0,}(", paste0(submod, collapse = "|"), ").{0,}$"), "\\1", results$matrix[from_group])
@@ -152,6 +173,50 @@ from_submodels <- function(x, what = NULL, ...){
   return(out)
 }
 
+.label_groups_internal <- function(x, results, ...){
+  cols <- names(results)
+  if(!has_submod(x, depth = 1)){
+    submod <- names(attr(x, "submodels"))
+    thisgroup <- rep(NA_character_, times = nrow(results))
+    from_group <- grepl(paste0("(", paste0(submod, collapse = "|"), ")\\."), results$matrix)
+    thisgroup[from_group] <- gsub(paste0("^.{0,}(", paste0(submod, collapse = "|"), ").{0,}$"), "\\1", results$matrix[from_group])
+    thename <- "group"
+    if(inherits(x$expectation, "MxExpectationMixture")){
+      thename <- "class"
+    }
+    existingnames <- sum(gregexpr(thename, paste0(names(results), collapse = ""))[[1]] > 0)
+    if(existingnames > 0) thename <- paste0(thename, ".", existingnames, collapse = "")
+    results[[thename]] <- thisgroup
+    results[["matrix"]][from_group] <- gsub(paste0("(", paste0(submod, collapse = "|"), ")\\."), "", results$matrix[from_group])
+    #results
+    #dup_pars <- table(names(unlist(lapply(submod, function(i){ omxGetParameters(x[[i]]) }))))
+    dup_pars <- table(names(unlist(lapply(submod, function(i){ omxGetParameters(x[[i]]) }))))
+    dup_pars <- names(dup_pars)[dup_pars > 1]
+    for(i in submod){
+      submodpars <- omxGetParameters(x[[i]])
+      if(any(dup_pars %in% names(submodpars))){
+        add_these <- results[results$name %in% dup_pars, ]
+        add_these <- add_these[!add_these[[thename]] == i, ]
+        if(nrow(add_these) > 0){
+          add_these[[thename]] <- i
+          results <- rbind(results, add_these)
+        }
+      }
+    }
+  } else {
+    subs <- names(attr(x, "submodels"))
+    results <- lapply(subs, function(i){.label_groups_internal(x[[i]], results, cols = cols)})
+    results <- do.call(data.frame, results)
+    remthese <- rowSums(sapply(paste0(cols, "."), grepl, x = names(results), fixed = TRUE)) > 0
+    results[remthese] <- NULL
+  }
+  # remove all of this stuff from $matrix
+  for(i in 1:nrow(results)){
+    results[["matrix"]][i] <- gsub(paste0("(", paste0(results[i, -which(names(results) %in% cols)], collapse = "|"), ")\\."), "", results[["matrix"]][i])
+  }
+  return(results)
+}
+
 has_submod <- function(x, depth = 0){
   subs <- names(attr(x, "submodels"))
   if(depth == 0){
@@ -192,8 +257,67 @@ get_algebras <- function(x, ...){
                     row = unlist_mx(algs, element = "formula"),
                     col = ":=",
                     Estimate = Estimate, row.names = NULL)
-
   out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out
+}
+
+alg_to_res <- function(x, ...){
+  out <- .alg_to_res_internal(x, ...)
+  out <- bind_list(flat(out))
+  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out
+}
+
+flat <- function(x){
+  repeat {
+    if(!any(vapply(x, is.list, logical(1)) & !vapply(x, is.data.frame, logical(1)))) return(x)
+    x <- Reduce(c, x)
+  }
+}
+
+.alg_to_res_internal <- function(x, ...){
+  algs <- names(x@algebras)
+  out <- list()
+  if(!is.null(algs)){
+    addthis <- list()
+    for(thisalg in algs){
+      val <- as.vector(x[[thisalg]]$result)
+      dims <- dim(x[[thisalg]]$result)
+      if(!sum(dims) == 2){
+        nams <- paste0(x[[thisalg]]$name, "[",
+                             paste(rep(1:dims[1], dims[2]),
+                                   rep(1:dims[2], each = dims[1]), sep = ","), "]")
+      } else {
+        nams = x[[thisalg]]$name
+      }
+      dimnam <- dimnames(x[[thisalg]])
+      rownam <- rep(dimnam[[1]], length(dimnam[[2]]))
+      colnam <- rep(dimnam[[2]], each = length(dimnam[[1]]))
+      addalg <- data.frame(name = nams,
+                 matrix =  x[[thisalg]]$name,
+                 row = rownam,
+                 col = colnam,
+                 Estimate = val,
+                 formula = deparse(x[[thisalg]]$formula),
+                 row.names = NULL)
+      addthis <- c(addthis, list(addalg))
+    }
+    names(addthis) <- algs
+    out <- c(out, addthis)
+  }
+  if(has_submod(x)){
+    subs <- names(attr(x, "submodels"))
+    fromsubs <- lapply(subs, function(thesub){.alg_to_res_internal(x[[thesub]])})
+    fromsubs <- lapply(1:length(fromsubs), function(i){
+      lapply(fromsubs[[i]], function(thedf){
+        thedf$name <- paste(subs[i], thedf$name, sep = ".")
+        thedf$matrix <- paste(subs[i], thedf$matrix, sep = ".")
+        thedf
+      })
+    })
+    names(fromsubs) <- subs
+    out <- c(out, fromsubs)
+  }
   out
 }
 
@@ -264,6 +388,33 @@ unlist_mx2 <- function(i, element, ...){
   }
 }
 
+attr_mx <- function(i, att, ...){
+  if(inherits(i, "list")){
+    out <- lapply(i, attr_mx, att = att, ...)
+    out
+  } else {
+    tryCatch({do.call(att, list(i))}, error = function(e){NULL})
+  }
+}
+
+threshdims_mx <- function(i, ...){
+  if(inherits(i, "list")){
+    out <- lapply(i, threshdims_mx, ...)
+    out
+  } else {
+    tryCatch({
+      out <- dimnames(i)
+      if(!all(startsWith(out[[1]], "th_"))){
+        stop()
+      }
+      cbind(rep(out[[2]], each = length(out[[1]])),
+                   rep(out[[1]], length(out[[2]]))
+                   )
+      }, error = function(e){NULL})
+  }
+}
+
+
 # m1 <- mxRename(mxModel(as_ram("y ~ a*m + x
 # m ~ b*y
 # ind1 := a * b", meanstructure= TRUE), mxData(df[1:75,], type = "raw")), "m1")
@@ -326,6 +477,10 @@ mx_to_lavaan_labels <- function(x){
   these <- which(x$op == "~")
   out[these] <- paste0("Regressions.", x$lhs[these], ".ON.", x$rhs[these])
   cat[these] <- "Regressions"
+  # thresh
+  these <- which(x$matrix == "Thresholds")
+  #out[these] <- paste0("Thresholds.", x$lhs[these], ".ON.", x$rhs[these])
+  cat[these] <- "Thresholds"
   cbind(label = out, Category = cat)
 }
 

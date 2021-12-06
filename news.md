@@ -1,3 +1,13 @@
+# tidySEM 0.2.1
+
+* Add mx_lca(), a dedicated function for estimating mixture models with
+  ordinal/binary data that avoids convergence problems when using mx_mixture()
+  with those data types
+* Add table_prob() to tabulate category probabilities for models with ordinal
+  indicators
+* Add plot_prob() to plot category probabilities for models with ordinal
+  indicators
+
 # tidySEM 0.2.0
 
 * Add functions for OpenMx

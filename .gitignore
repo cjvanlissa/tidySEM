@@ -16,5 +16,8 @@ CRAN-RELEASE
 *.inp
 *.dat
 *.log
+*.dgm
 /doc/
 /Meta/
+*.dgm]
+*.txt
