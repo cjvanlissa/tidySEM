@@ -106,7 +106,7 @@ table_fit.model.list <- table_fit.mplusObject
 #' @export
 table_fit.MxModel <- function(x, ...) {
   if(is.null(attr(x, "tidySEM"))) attr(x, "tidySEM") <- "default"
-  out <- switch(attr(x, "tidySEM"),
+  out <- switch(attr(x, "tidySEM")[1],
                 "list" = sapply(x, function(i){ table_fit(i, ...)}),
                 "mixture" = calc_fitindices(x, type = "mixture", ...),
                 calc_fitindices(x, ...))

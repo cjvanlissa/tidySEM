@@ -236,6 +236,7 @@ mx_lca <- function(data = NULL,
       eval.parent(cl)
     })
     attr(out, "tidySEM") <- "list"
+    class(out) <- c("mixture_list", class(out))
     return(out)
   } else {
     # One class model
@@ -271,7 +272,7 @@ mx_lca <- function(data = NULL,
       keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
       cl <- cl[c(1, keep_these)]
       out <- eval.parent(cl)
-      attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "latentclass")
+      attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "mixture")
       return(out)
     } else {
       out
