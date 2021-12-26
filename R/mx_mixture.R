@@ -195,6 +195,91 @@ mx_growth_mixture <- function(model,
   eval.parent(cl)
 }
 
+#' Estimate latent class analyses using OpenMx
+#'
+#' This function simplifies the specification of latent class models:
+#' models that estimate membership of a categorical latent variable based on
+#' binary or ordinal indicators.
+#' @param data The data.frame to be used for model fitting.
+#' @param classes A vector of integers, indicating which class solutions to
+#' generate. Defaults to 1L. E.g., \code{classes = 1:6},
+#' @param run Logical, whether or not to run the model. If \code{run = TRUE},
+#' the function calls \code{\link[OpenMx]{mxTryHardOrdinal}}.
+#' @param ... Additional arguments, passed to functions.
+#' @return Returns an \code{\link[OpenMx]{mxModel}}.
+#' @export
+#' @keywords mixture models openmx
+#' @examples
+#' \dontrun{
+#' df <- data_mixture_ordinal
+#' df[1:4] <- lapply(df, ordered)
+#' mx_lca(data = df,
+#'        classes = 2) -> res
+#' }
+# mx_lca(data = df,
+#        classes = 2, run = FALSE) -> res
+# res$class1 <- mxModel(model = res$class1,
+#                       mxAlgebra(pnorm(Thresholds), name = "Probscale"))
+mx_lca <- function(data = NULL,
+                   classes = 1L,
+                   run = TRUE,
+                   ...){
+  if(!all(sapply(data, inherits, what = "ordered"))) stop("Function mx_lca() only accepts data of an ordinal (binary or ordered categorical) level of measurement.")
+  cl <- match.call()
+  dots <- list(...)
+
+  # Recursive function
+  if(length(classes) > 1){
+    out <- lapply(classes, function(i){
+      cl[["classes"]] <- i
+      cl[[1L]] <- quote(mx_lca)
+      eval.parent(cl)
+    })
+    attr(out, "tidySEM") <- "list"
+    class(out) <- c("mixture_list", class(out))
+    return(out)
+  } else {
+    # One class model
+    thresh <- mx_thresholds(data)
+    dots_mxmod <- names(dots)[names(dots) %in% formalArgs(OpenMx::mxModel)]
+    dots_mxmod <- dots[dots_mxmod]
+    c1 <- do.call(mxModel, c(
+      list(
+        model = "class1",
+        type = "RAM",
+        manifestVars = names(data),
+        mxPath(from = "one", to = names(data), free = FALSE, values = 0),
+        mxPath(from = names(data), to = names(data), free = FALSE, values = 1, arrows = 2),
+        thresh),
+      dots_mxmod))
+    c1$expectation$thresholds <- "Thresholds"
+    model <- lapply(1:classes, function(i){
+      do.call(mxModel, list(
+        model = c1,
+        name = paste0("class", i)))
+    })
+    cl[["classes"]] <- classes
+    cl[["model"]] <- model
+    cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
+    out <- eval.parent(cl)
+    # cl[["model"]] <- out
+    # cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
+    # out <- eval.parent(cl)
+    if(run){
+      cl[["model"]] <- out
+      cl[["extraTries"]] <- 10
+      cl[[1L]] <- str2lang("OpenMx::mxTryHardOrdinal")
+      keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
+      cl <- cl[c(1, keep_these)]
+      out <- eval.parent(cl)
+      attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "mixture")
+      return(out)
+    } else {
+      out
+    }
+  }
+}
+
 
 #' @method mx_mixture character
 #' @export
@@ -296,7 +381,7 @@ as_mx_mixture <- function(model,
       lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE)) }),
       mxData(data, type = "raw"),
       mxMatrix(values=1, nrow=1, ncol=classes, lbound = 1e-4, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
-      mxExpectationMixture(paste0("class", 1:classes), scale="softmax"),
+      mxExpectationMixture(paste0("class", 1:classes), scale="sum"),
       mxFitFunctionML())
   } else {
     mix <- mxModel(
@@ -387,6 +472,7 @@ mixture_starts <- function(model,
     }
   }
   data <- model@data$observed
+  if(any(sapply(data, inherits, what = "factor"))) return(model)
   if(!hasArg(splits)){
     splits <- try({kmeans(x = data, centers = classes)$cluster})
     if(inherits(splits, "try-error")){
@@ -398,7 +484,7 @@ mixture_starts <- function(model,
     }
     #
   } else {
-    stopifnot("Number of unique values in splits must be identical to the number of latent classes." = length(unique(splits) == names(model@submodels)))
+    stopifnot("Number of unique values in splits must be identical to the number of latent classes." = length(unique(splits)) == length(names(model@submodels)))
   }
   tab_split <- table(splits)
   if(any(tab_split) < 2){
@@ -500,8 +586,8 @@ estimate_mx_mixture <- function(model,
     model = paste0("mix", classes),
     model,
     mxData(data, type = "raw"),
-    mxMatrix(values=1, nrow=1, ncol=classes, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
-    mxExpectationMixture(paste0("class", 1:classes), scale="softmax"),
+    mxMatrix(values=1, nrow=1, ncol=classes, free=c(FALSE,rep(TRUE, classes-1)), lbound = 1e-4, name="weights"),
+    mxExpectationMixture(paste0("class", 1:classes), scale="sum"),
     mxFitFunctionML())
   # Run analysis ------------------------------------------------------------
   mix_fit <- mxTryHard(mix,

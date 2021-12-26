@@ -34,7 +34,9 @@ table_fit.mixture_list <- function(x, ...) {
     out <- cbind(Name = rownames(out), out)
     rownames(out) <- NULL
   }
-  .renamefits(out, "mx")
+  out <- .renamefits(out, "mx")
+  class(out) <- c("tidy_fit", class(out))
+  out
 }
 
 #' @importFrom utils getFromNamespace
@@ -79,7 +81,9 @@ table_fit.mplusObject <- function(x, ...) {
     out <- out[[1]]
   }
   out <- out[, !colSums(is.na(out)) == nrow(out)]
-  .renamefits(out, "mplus")
+  out <- .renamefits(out, "mplus")
+  class(out) <- c("tidy_fit", class(out))
+  out
 }
 
 #' @method table_fit mplus.model.list
@@ -102,14 +106,16 @@ table_fit.model.list <- table_fit.mplusObject
 #' @export
 table_fit.MxModel <- function(x, ...) {
   if(is.null(attr(x, "tidySEM"))) attr(x, "tidySEM") <- "default"
-  out <- switch(attr(x, "tidySEM"),
+  out <- switch(attr(x, "tidySEM")[1],
                 "list" = sapply(x, function(i){ table_fit(i, ...)}),
                 "mixture" = calc_fitindices(x, type = "mixture", ...),
                 calc_fitindices(x, ...))
   out <- as.data.frame(out)
   out <- out[, !colSums(is.na(out)) == nrow(out)]
   if(!"LL" %in% names(out) & "Minus2LogLikelihood" %in% names(out)) out$LL <- out$Minus2LogLikelihood/-2
-  .renamefits(out, "mx")
+  out <- .renamefits(out, "mx")
+  class(out) <- c("tidy_fit", class(out))
+  out
 }
 
 .table_fit_mx <- function(x){
@@ -155,7 +161,9 @@ table_fit.MxModel <- function(x, ...) {
 table_fit.lavaan <- function(x, ...){
   out <- data.frame(Name = as.character(substitute(x)), t(as.data.frame(fitmeasures(x))))
   rownames(out) <- NULL
-  .renamefits(out)
+  out <- .renamefits(out)
+  class(out) <- c("tidy_fit", class(out))
+  out
 }
 
 .fitmeasuretable <- data.frame(

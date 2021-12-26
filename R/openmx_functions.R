@@ -250,3 +250,14 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   }
   out
 }
+
+
+.mx_thresholds_internal <- function(df, ...){
+  ord_vars <- sapply(df, inherits, what = "ordered")
+  ord_var_nam <- names(df)[ord_vars]
+  lapply(ord_var_nam, function(nam){
+    tab <- table(df[[nam]])
+    startvals <- qnorm(cumsum(prop.table(tab)[-length(tab)]))
+    mxThreshold(vars = nam, nThresh = (length(tab)-1), free = TRUE, values = startvals)
+  })
+}

@@ -32,6 +32,7 @@ table_fit(fit)
 Other Reporting tools: 
 \code{\link{conf_int}()},
 \code{\link{est_sig}()},
+\code{\link{table_prob}()},
 \code{\link{table_results}()}
 }
 \author{

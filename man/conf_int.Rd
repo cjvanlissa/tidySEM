@@ -41,6 +41,7 @@ table_results est_sig
 Other Reporting tools: 
 \code{\link{est_sig}()},
 \code{\link{table_fit}()},
+\code{\link{table_prob}()},
 \code{\link{table_results}()}
 }
 \author{

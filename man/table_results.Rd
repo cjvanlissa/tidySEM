@@ -47,7 +47,8 @@ table_results(fit)
 Other Reporting tools: 
 \code{\link{conf_int}()},
 \code{\link{est_sig}()},
-\code{\link{table_fit}()}
+\code{\link{table_fit}()},
+\code{\link{table_prob}()}
 }
 \author{
 Caspar J. van Lissa

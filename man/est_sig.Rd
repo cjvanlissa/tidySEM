@@ -29,6 +29,7 @@ table_results
 Other Reporting tools: 
 \code{\link{conf_int}()},
 \code{\link{table_fit}()},
+\code{\link{table_prob}()},
 \code{\link{table_results}()}
 }
 \author{

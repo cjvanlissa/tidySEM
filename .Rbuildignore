@@ -13,9 +13,11 @@ R/data_types\.md
 ^.*\.psd$
 ^badge\.png$
 ^.*\.dat$
+^.*\.txt$
 ^.*\.inp$
 ^.*\.out$
 ^.*\.log$
+^.*\.dgm$
 ^.*.ai$
 ^CRAN-RELEASE$
 ^cran-comments\.md$
