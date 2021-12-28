@@ -49,8 +49,8 @@ get_cordat.MxModel <- function(x){
         out <- as.data.frame.table(tmp, stringsAsFactors = FALSE)
         out <- out[!is.na(out$Freq), ]
         names(out) <- c("xvar", "yvar", "Correlation")
-        out$xmean <- x[[c]]@matrices$M$values[out$xvar]
-        out$ymean <- x[[c]]@matrices$M$values[out$yvar]
+        out$xmean <- x[[c]]@matrices$M$values[1, out$xvar]
+        out$ymean <- x[[c]]@matrices$M$values[1, out$yvar]
         out$xsd <- sds[out$xvar]
         out$ysd <- sds[out$yvar]
         out$Parameter <- paste0(out$xvar, ".WITH.", out$yvar)
