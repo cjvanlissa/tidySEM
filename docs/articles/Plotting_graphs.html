@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -73,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/cjvanlissa/tidySEM/">
+  <a href="https://github.com/cjvanlissa/tidySEM/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -88,13 +84,13 @@
 
       
 
-      </header><script src="Plotting_graphs_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Plotting graphs for structural equation models</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/master/vignettes/Plotting_graphs.Rmd"><code>vignettes/Plotting_graphs.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/vignettes/Plotting_graphs.Rmd" class="external-link"><code>vignettes/Plotting_graphs.Rmd</code></a></small>
       <div class="hidden name"><code>Plotting_graphs.Rmd</code></div>
 
     </div>
@@ -102,32 +98,32 @@
     
     
 <p><code>tidySEM</code> offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely <em>programmatic</em>, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as <code>data.frame</code>s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through <code><a href="../reference/table_results.html">table_results()</a></code>.</p>
-<p>For users wholly unfamiliar with SEM graphs, I recommend reading the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">vignette about SEM graphing conventions</a> first.</p>
+<p>For users wholly unfamiliar with SEM graphs, I recommend reading the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html" class="external-link">vignette about SEM graphing conventions</a> first.</p>
 <p>Let’s load the required packages:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be">lavaan</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
-<div id="the-tidysem-workflow" class="section level2">
-<h2 class="hasAnchor">
-<a href="#the-tidysem-workflow" class="anchor"></a>The tidySEM workflow</h2>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/" class="external-link">tidySEM</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="the-tidysem-workflow">The tidySEM workflow<a class="anchor" aria-label="anchor" href="#the-tidysem-workflow"></a>
+</h2>
 <p>The workflow underlying graphing in <code>tidySEM</code> is as follows:</p>
 <ol style="list-style-type: decimal">
-<li>Run an analysis, e.g., using <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html">lavaan::sem()</a></code> or <code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusModeler.html">MplusAutomation::mplusModeler()</a></code>, passing the output to an object, e.g., <code>fit</code>
+<li>Run an analysis, e.g., using <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> or <code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html" class="external-link">MplusAutomation::mplusModeler()</a></code>, passing the output to an object, e.g., <code>fit</code>
 </li>
 <li>Plot the graph using the function <code>graph(fit)</code>, or customize the graph further by following the optional steps below.</li>
 <li>
-<em>Optionally</em> Examine what nodes and edges can be extracted from the fit model object, by running <code><a href="../reference/get_nodes.html">get_nodes(fit)</a></code> and <code><a href="../reference/get_edges.html">get_edges(fit)</a></code>
+<em>Optionally</em> Examine what nodes and edges can be extracted from the fit model object, by running <code>get_nodes(fit)</code> and <code>get_edges(fit)</code>
 </li>
 <li>
-<em>Optionally</em> Specify a layout for the graph using <code><a href="../reference/get_layout.lavaan.html">get_layout()</a></code>
+<em>Optionally</em> Specify a layout for the graph using <code><a href="../reference/get_layout.html">get_layout()</a></code>
 </li>
 <li>
-<em>Optionally</em>, prepare graph data before plotting, by running <code><a href="../reference/prepare_graph.html">prepare_graph(fit, layout)</a></code>. Store the resulting graph data in an object, e.g., <code>graph_data</code>
+<em>Optionally</em>, prepare graph data before plotting, by running <code>prepare_graph(fit, layout)</code>. Store the resulting graph data in an object, e.g., <code>graph_data</code>
 </li>
 <li>
-<em>Optionally</em>, access the nodes and edges in <code>graph_data</code> using <code><a href="../reference/nodes.html">nodes(graph_data)</a></code> and <code><a href="../reference/edges.html">edges(graph_data)</a></code>
+<em>Optionally</em>, access the nodes and edges in <code>graph_data</code> using <code>nodes(graph_data)</code> and <code>edges(graph_data)</code>
 </li>
 <li>
 <em>Optionally</em>, modify the nodes and edges in <code>graph_data</code> using <code>nodes(graph_data) &lt;- ...</code>and <code>edges(graph_data) &lt;- ...</code>
@@ -135,63 +131,62 @@
 </ol>
 <p>This workflow ensures a high degree of transparency and customizability. Objects returned by all functions are “tidy” data, i.e., tabular <code>data.frames</code>, and can be modified using the familiar suite of functions in the ‘tidyverse’.</p>
 </div>
-<div id="example-graphing-a-cfa" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example-graphing-a-cfa" class="anchor"></a>Example: Graphing a CFA</h2>
-<div id="step-1-run-an-analysis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#step-1-run-an-analysis" class="anchor"></a>Step 1: Run an analysis</h3>
+<div class="section level2">
+<h2 id="example-graphing-a-cfa">Example: Graphing a CFA<a class="anchor" aria-label="anchor" href="#example-graphing-a-cfa"></a>
+</h2>
+<div class="section level3">
+<h3 id="step-1-run-an-analysis">Step 1: Run an analysis<a class="anchor" aria-label="anchor" href="#step-1-run-an-analysis"></a>
+</h3>
 <p>As an example, let’s make a graph for a classic <code>lavaan</code> tutorial example for CFA. First, we conduct the SEM analysis:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be">lavaan</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span>
 <span class="va">HS.model</span> <span class="op">&lt;-</span> <span class="st">' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '</span>
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span><span class="op">(</span><span class="va">HS.model</span>, data<span class="op">=</span><span class="va">HolzingerSwineford1939</span><span class="op">)</span></code></pre></div>
+<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></span><span class="op">(</span><span class="va">HS.model</span>, data<span class="op">=</span><span class="va">HolzingerSwineford1939</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="step-2-plot-the-graph" class="section level3">
-<h3 class="hasAnchor">
-<a href="#step-2-plot-the-graph" class="anchor"></a>Step 2: Plot the graph</h3>
+<div class="section level3">
+<h3 id="step-2-plot-the-graph">Step 2: Plot the graph<a class="anchor" aria-label="anchor" href="#step-2-plot-the-graph"></a>
+</h3>
 <p>At this point, we could simply plot the graph:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig1.png" width="100%"></p>
 <p>This uses a default layout, provided by the <code>igraph</code> package. However, the node placement is not very aesthetically pleasing. One of the areas where <code>tidySEM</code> really excels is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.</p>
 </div>
-<div id="optional-step-3-customizing-the-layout" class="section level3">
-<h3 class="hasAnchor">
-<a href="#optional-step-3-customizing-the-layout" class="anchor"></a>Optional step 3: Customizing the layout</h3>
+<div class="section level3">
+<h3 id="optional-step-3-customizing-the-layout">Optional step 3: Customizing the layout<a class="anchor" aria-label="anchor" href="#optional-step-3-customizing-the-layout"></a>
+</h3>
 <p>In <code>tidySEM</code>, the layout is specified as a matrix (grid) with node names and empty spaces (<code>NA</code> or <code>""</code>). There are essentially three ways to specify the layout:</p>
 <ol style="list-style-type: decimal">
 <li>Automatically, from the fit model</li>
 <li>Manually in R</li>
 <li>In a spreadsheet program</li>
 </ol>
-<div id="automatically-generate-layout-for-a-model" class="section level4">
-<h4 class="hasAnchor">
-<a href="#automatically-generate-layout-for-a-model" class="anchor"></a>Automatically generate layout for a model</h4>
+<div class="section level4">
+<h4 id="automatically-generate-layout-for-a-model">Automatically generate layout for a model<a class="anchor" aria-label="anchor" href="#automatically-generate-layout-for-a-model"></a>
+</h4>
 <p>The example above used an automatically generated layout for the fit model (<code>lavaan</code> or <code>Mplus</code>). If you open the help file for the function by running <code><a href="../reference/graph_sem.html">?graph_sem</a></code>, you can see that the default argument is <code>layout = get_layout(x = model)</code>, where model refers to the <code>model</code> argument of the same function.</p>
-<p>The <code><a href="../reference/get_layout.lavaan.html">get_layout()</a></code> function automatically generates a layout for a fit model object. To get this layout as a matrix, you can run:</p>
+<p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function automatically generates a layout for a fit model object. To get this layout as a matrix, you can run:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt;      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]</span>
 <span class="co">#&gt; [1,] NA   NA        NA   NA   NA      "visual" NA   NA  </span>
 <span class="co">#&gt; [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"</span>
 <span class="co">#&gt; [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></code></pre></div>
-<p>The <code><a href="../reference/get_layout.lavaan.html">get_layout()</a></code> function relies on <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html">igraph::layout_as_tree()</a></code> to place the nodes. Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
+<p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function relies on <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html" class="external-link">igraph::layout_as_tree()</a></code> to place the nodes. Other layout functions from the <code>igraph</code> package can be used by specifying the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span>
-<span class="co">#&gt;      [,1] [,2] [,3] [,4]     [,5]     </span>
-<span class="co">#&gt; [1,] NA   "x2" NA   NA       NA       </span>
-<span class="co">#&gt; [2,] NA   "x3" "x1" "speed"  "textual"</span>
-<span class="co">#&gt; [3,] NA   "x4" NA   "visual" NA       </span>
-<span class="co">#&gt; [4,] "x5" "x6" "x7" "x9"     NA       </span>
-<span class="co">#&gt; [5,] NA   NA   NA   "x8"     NA       </span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span>
+<span class="co">#&gt;      [,1] [,2] [,3]      [,4]    [,5]</span>
+<span class="co">#&gt; [1,] NA   NA   "x5"      NA      NA  </span>
+<span class="co">#&gt; [2,] "x8" "x6" "x4"      "x3"    "x2"</span>
+<span class="co">#&gt; [3,] NA   "x7" "textual" "x1"    NA  </span>
+<span class="co">#&gt; [4,] NA   "x9" "visual"  "speed" NA  </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span>
-<span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span>
 <span class="co">#&gt;      [,1]     [,2]      [,3]    [,4]</span>
 <span class="co">#&gt; [1,] "x6"     "x7"      "x8"    "x9"</span>
 <span class="co">#&gt; [2,] "x2"     "x3"      "x4"    "x5"</span>
@@ -199,53 +194,53 @@
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></code></pre></div>
 </div>
-<div id="specifying-layout-manually-in-r" class="section level4">
-<h4 class="hasAnchor">
-<a href="#specifying-layout-manually-in-r" class="anchor"></a>Specifying layout manually in R</h4>
+<div class="section level4">
+<h4 id="specifying-layout-manually-in-r">Specifying layout manually in R<a class="anchor" aria-label="anchor" href="#specifying-layout-manually-in-r"></a>
+</h4>
 <p>Manually specifying the layout can be done by providing node names and empty spaces (<code>NA</code> or <code>""</code>), and the number of rows of the desired layout matrix. For example:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="cn">NA</span>,  <span class="st">"d"</span>,
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="cn">NA</span>,  <span class="st">"d"</span>,
            <span class="cn">NA</span>,  <span class="st">"e"</span>, <span class="cn">NA</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] "c"  NA   "d" </span>
 <span class="co">#&gt; [2,] NA   "e"  NA  </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></code></pre></div>
-<p>Of course, it is also possible to simply define a matrix using <code><a href="https://rdrr.io/r/base/matrix.html">matrix()</a></code>.</p>
+<p>Of course, it is also possible to simply define a matrix using <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>.</p>
 </div>
-<div id="specifying-layout-in-a-spreadsheet-program" class="section level4">
-<h4 class="hasAnchor">
-<a href="#specifying-layout-in-a-spreadsheet-program" class="anchor"></a>Specifying layout in a spreadsheet program</h4>
+<div class="section level4">
+<h4 id="specifying-layout-in-a-spreadsheet-program">Specifying layout in a spreadsheet program<a class="anchor" aria-label="anchor" href="#specifying-layout-in-a-spreadsheet-program"></a>
+</h4>
 <p>Specifying the layout in a spreadsheet program is very user-friendly, because one can visually position the nodes, e.g.:</p>
 <p><img src="spreadsheet.png"></p>
 <p>To obtain the layout matrix, one can save the spreadsheet as <code>.csv</code> file and load it in R like this:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"example.csv"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"example.csv"</span><span class="op">)</span></code></pre></div>
 <p>Alternatively, one can select the layout as in the image above, copy it to the clipboard, and then read it into R from the clipboard. This works differently on Windows and Mac.</p>
 <p>On Windows, run:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"clipboard"</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"clipboard"</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></code></pre></div>
 <p>On Mac, run:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">pipe</a></span><span class="op">(</span><span class="st">"pbpaste"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt;   V1     V2 V3
-#&gt; 1 x1     x2 x3
-#&gt; 2    visual</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">pipe</a></span><span class="op">(</span><span class="st">"pbpaste"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">#&gt;   V1     V2 V3</span>
+<span class="co">#&gt; 1 x1     x2 x3</span>
+<span class="co">#&gt; 2    visual</span></code></pre>
 </div>
 </div>
-<div id="examples-of-user-defined-layout" class="section level3">
-<h3 class="hasAnchor">
-<a href="#examples-of-user-defined-layout" class="anchor"></a>Examples of user-defined layout</h3>
+<div class="section level3">
+<h3 id="examples-of-user-defined-layout">Examples of user-defined layout<a class="anchor" aria-label="anchor" href="#examples-of-user-defined-layout"></a>
+</h3>
 <p>We can specify a simple layout for two hypothetical nodes <code>x</code> and <code>y</code> is generated as follows:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
 <span class="co">#&gt;      [,1] [,2]</span>
 <span class="co">#&gt; [1,] "x"  "y" </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></code></pre></div>
 <p>For a mediation model, one might specify a layout like this:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"m"</span>, <span class="st">""</span>,
            <span class="st">"x"</span>, <span class="st">""</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "m"  ""  </span>
@@ -254,7 +249,7 @@
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></code></pre></div>
 <p>For a three-item CFA model, one might specify:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"F"</span>, <span class="st">""</span>,
            <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt;      [,1] [,2] [,3]</span>
 <span class="co">#&gt; [1,] ""   "F"  ""  </span>
@@ -263,16 +258,16 @@
 <span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></code></pre></div>
 <p>And for the CFA model we estimated above:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lay</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
+<code class="sourceCode R"><span class="va">lay</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">""</span>, <span class="st">"visual"</span>,<span class="st">""</span>,<span class="st">"textual"</span>,<span class="st">""</span>,<span class="st">"speed"</span>,<span class="st">""</span>, <span class="st">""</span>,
                   <span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span>, <span class="st">"x7"</span>, <span class="st">"x8"</span>, <span class="st">"x9"</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p>We could plot the CFA model with this custom layout as follows:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span><span class="va">fit</span>, layout <span class="op">=</span> <span class="va">lay</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig2_1.png" width="100%"></p>
 </div>
-<div id="step-4-customize-nodes-and-edges" class="section level3">
-<h3 class="hasAnchor">
-<a href="#step-4-customize-nodes-and-edges" class="anchor"></a>Step 4: Customize nodes and edges</h3>
+<div class="section level3">
+<h3 id="step-4-customize-nodes-and-edges">Step 4: Customize nodes and edges<a class="anchor" aria-label="anchor" href="#step-4-customize-nodes-and-edges"></a>
+</h3>
 <p>For the simple model above, it is easy to verify the names of the nodes and edges from the syntax above: The nodes consist of three latent variables (visual, textual, and speed), and nine observed variables (x1-x9). The edges are nine factor loadings - and three latent variable correlations, included by default. We can confirm which nodes are available by running <code><a href="../reference/get_nodes.html">get_nodes()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
@@ -367,14 +362,14 @@
 <span class="co">#&gt; 22 [0.33, 0.58]     0.46*** visual.WITH.textual TRUE</span>
 <span class="co">#&gt; 23 [0.33, 0.61]     0.47***   visual.WITH.speed TRUE</span>
 <span class="co">#&gt; 24 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE</span></code></pre></div>
-<p>Note that only the first few columns are used for plotting (specifically, <code>from</code>, <code>to</code>, <code>arrow</code>, <code>label</code>, <code>connect_from</code>, <code>connect_to</code>, and <code>curvature</code>). The remaining columns correspond to the output of <code><a href="../reference/table_results.html">table_results(fit)</a></code>. These auxiliary columns can be used to conditionally customize the graph (e.g., changing the color or linetype for significant paths only).</p>
-<div id="customizing-node-and-edge-labels" class="section level4">
-<h4 class="hasAnchor">
-<a href="#customizing-node-and-edge-labels" class="anchor"></a>Customizing node and edge labels</h4>
+<p>Note that only the first few columns are used for plotting (specifically, <code>from</code>, <code>to</code>, <code>arrow</code>, <code>label</code>, <code>connect_from</code>, <code>connect_to</code>, and <code>curvature</code>). The remaining columns correspond to the output of <code>table_results(fit)</code>. These auxiliary columns can be used to conditionally customize the graph (e.g., changing the color or linetype for significant paths only).</p>
+<div class="section level4">
+<h4 id="customizing-node-and-edge-labels">Customizing node and edge labels<a class="anchor" aria-label="anchor" href="#customizing-node-and-edge-labels"></a>
+</h4>
 <p>The <code><a href="../reference/get_nodes.html">get_nodes()</a></code> and <code><a href="../reference/get_edges.html">get_edges()</a></code> functions both call <code><a href="../reference/table_results.html">table_results()</a></code> on the fit model object to get information about the nodes and edges. Both functions have a <code>label</code> argument which can either be a character string referencing a column of the output of <code><a href="../reference/table_results.html">table_results()</a></code>, or an expression that is evaluated in the context of that output.</p>
 <p>This allows you to customize node and edge labels. For example, maybe you want to combine the parameter estimate and its confidence interval into an edge label:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span><span class="op">(</span><span class="va">fit</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">est</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span><span class="op">(</span><span class="va">fit</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;       from      to arrow             label connect_from connect_to curvature</span>
 <span class="co">#&gt; 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA        NA</span>
 <span class="co">#&gt; 2   visual      x2  last 0.55 [0.36, 0.75]           NA         NA        NA</span>
@@ -453,7 +448,7 @@
 <p>We can do the same for the nodes, but note that in the previous <code>lavaan</code> model, the mean structure was <strong>not</strong> part of the model. As the nodes represent means and intercepts, <code><a href="../reference/table_results.html">table_results()</a></code> will not retrieve any parameter estimates for the nodes when the mean structure is not part of the model. In absence of additional information about the nodes, <code><a href="../reference/get_nodes.html">get_nodes()</a></code> will use the node name as a label.To remove all node labels, specify <code>label = NULL</code>.</p>
 <p>We can re-run the model with a mean structure to get more information about the nodes:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span><span class="op">(</span><span class="va">HS.model</span>, data<span class="op">=</span><span class="va">HolzingerSwineford1939</span>, meanstructure <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></span><span class="op">(</span><span class="va">HS.model</span>, data<span class="op">=</span><span class="va">HolzingerSwineford1939</span>, meanstructure <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>Running <code><a href="../reference/get_nodes.html">get_nodes()</a></code> now uses the estimated means in the label:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
@@ -485,7 +480,7 @@
 <span class="co">#&gt; 12 5.37***    5.33   0.22     0.00 [4.89, 5.78]     5.33***      Means.x9</span></code></pre></div>
 <p>These labels can be further customized as shown below:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span><span class="op">(</span><span class="va">fit</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"\n"</span>, <span class="va">est</span>, <span class="st">" "</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_nodes.html">get_nodes</a></span><span class="op">(</span><span class="va">fit</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"\n"</span>, <span class="va">est</span>, <span class="st">" "</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;       name shape                      label     lhs op rhs  est   se pval</span>
 <span class="co">#&gt; 1    speed  oval   speed\n0.00 [0.00, 0.00]   speed ~1     0.00 0.00 &lt;NA&gt;</span>
 <span class="co">#&gt; 2  textual  oval textual\n0.00 [0.00, 0.00] textual ~1     0.00 0.00 &lt;NA&gt;</span>
@@ -526,9 +521,8 @@
 <span class="co">#&gt; 11      Means.x8</span>
 <span class="co">#&gt; 12      Means.x9</span></code></pre></div>
 </div>
-<div id="customize-labels-of-a-sem_graph" class="section level4">
-<h4 class="hasAnchor">
-<a href="#customize-labels-of-a-sem_graph" class="anchor"></a>Customize labels of a <code>sem_graph</code>
+<div class="section level4">
+<h4 id="customize-labels-of-a-sem_graph">Customize labels of a <code>sem_graph</code><a class="anchor" aria-label="anchor" href="#customize-labels-of-a-sem_graph"></a>
 </h4>
 <p>Instead of customizing the node and edge labels in the call to <code><a href="../reference/get_nodes.html">get_nodes()</a></code> and <code><a href="../reference/get_edges.html">get_edges()</a></code>, it is also possible to use the auxiliary columns in the <code>nodes</code> and <code>edges</code> elements of a <code>sem_graph</code> object to customize the labels (or other properties of the plot) later. First, let’s generate a <code>sem_graph</code> object and examine the <code>edges</code> element: <!-- Refer back to the output above of `get_edges(fit)` to see that, by default, --> <!-- all columns returned by `table_results()` are included. --> <!-- Let's use these columns  --></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -611,37 +605,37 @@
 <span class="co">#&gt; 24 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE</span></code></pre></div>
 <p>All of the columns in the edges element can be used to manually construct labels, using the <code><a href="../reference/edit_graph.html">edit_graph()</a></code> function:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">est_sig_std</span>, <span class="st">"\n"</span>, <span class="va">confint_std</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig_std</span>, <span class="st">"\n"</span>, <span class="va">confint_std</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
 <p>The same can be done for the node labels:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">est_sig_std</span>, <span class="st">"\n"</span>, <span class="va">confint_std</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"\n"</span>, <span class="va">est_sig_std</span>, <span class="st">"\n"</span>, <span class="va">confint_std</span><span class="op">)</span> <span class="op">}</span>, element <span class="op">=</span> <span class="st">"nodes"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig_std</span>, <span class="st">"\n"</span>, <span class="va">confint_std</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"\n"</span>, <span class="va">est_sig_std</span>, <span class="st">"\n"</span>, <span class="va">confint_std</span><span class="op">)</span> <span class="op">}</span>, element <span class="op">=</span> <span class="st">"nodes"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
 <p>Note that, by specifying both <code>"nodes"</code> and <code>"edges")</code>, both nodes and edges are edited - but in the preceding example, we actually want different labels for the nodes and edges (so that node labels are shown). For example, we can change the label color for both nodes and edges:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label_color</span> <span class="op">=</span> <span class="st">"blue"</span> <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">label_color</span> <span class="op">=</span> <span class="st">"blue"</span> <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="Plotting_graphs_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
 <p>The section on <strong>Visual aspects</strong> further demonstrates how to use these auxiliary columns to customize visual properties of the graph.</p>
 </div>
 </div>
-<div id="optional-step-5-accessing-graph-data-before-plotting" class="section level3">
-<h3 class="hasAnchor">
-<a href="#optional-step-5-accessing-graph-data-before-plotting" class="anchor"></a>Optional step 5: accessing graph data before plotting</h3>
+<div class="section level3">
+<h3 id="optional-step-5-accessing-graph-data-before-plotting">Optional step 5: accessing graph data before plotting<a class="anchor" aria-label="anchor" href="#optional-step-5-accessing-graph-data-before-plotting"></a>
+</h3>
 <p>One important feature of <code>tidySEM</code> graphing is that the data used to compose the plot can be conveniently accessed an modified before plotting. First, use <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> to assign the plot data to an object.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">graph_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span>, layout <span class="op">=</span> <span class="va">lay</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="optional-step-6-access-the-nodes-and-edges" class="section level3">
-<h3 class="hasAnchor">
-<a href="#optional-step-6-access-the-nodes-and-edges" class="anchor"></a>Optional step 6: Access the nodes and edges</h3>
-<p>The nodes and edges can be examined using <code><a href="../reference/nodes.html">nodes(graph_data)</a></code> and <code><a href="../reference/edges.html">edges(graph_data)</a></code>:</p>
+<div class="section level3">
+<h3 id="optional-step-6-access-the-nodes-and-edges">Optional step 6: Access the nodes and edges<a class="anchor" aria-label="anchor" href="#optional-step-6-access-the-nodes-and-edges"></a>
+</h3>
+<p>The nodes and edges can be examined using <code>nodes(graph_data)</code> and <code>edges(graph_data)</code>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span>
 <span class="co">#&gt;       name shape         label  x y node_xmin node_xmax node_ymin node_ymax</span>
@@ -760,45 +754,45 @@
 <span class="co">#&gt; 23 [0.33, 0.61]     0.47***   visual.WITH.speed TRUE</span>
 <span class="co">#&gt; 24 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE</span></code></pre></div>
 </div>
-<div id="optional-step-7-modify-the-nodes-and-edges" class="section level3">
-<h3 class="hasAnchor">
-<a href="#optional-step-7-modify-the-nodes-and-edges" class="anchor"></a>Optional step 7: Modify the nodes and edges</h3>
+<div class="section level3">
+<h3 id="optional-step-7-modify-the-nodes-and-edges">Optional step 7: Modify the nodes and edges<a class="anchor" aria-label="anchor" href="#optional-step-7-modify-the-nodes-and-edges"></a>
+</h3>
 <p>At this stage, we may want to improve the basic plot slightly. The functions <code>nodes(graph_data) &lt;- ...</code> and <code>edges(graph_data) &lt;- ...</code> can be used to modify the nodes and edges. These functions pair well with the general ‘tidyverse’ workflow. For example, we might want to print node labels for latent variables in <em>Title Case</em> instead of just using the variable names:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html">str_to_title</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span>
+<span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html" class="external-link">str_to_title</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Now, for the edges, we see that the default edging algorithm has connected some nodes side-to-side (based on the smallest possible Euclidian distance). However, in this simple graph, it makes more sense to connect all nodes top-to-bottom - except for the latent variable covariances. We can use the same conditional replacement for the edges:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>connect_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span><span class="op">(</span><span class="va">connect_from</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">curvature</span><span class="op">)</span>, <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>connect_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span><span class="op">(</span><span class="va">connect_to</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">curvature</span><span class="op">)</span>, <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>connect_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">connect_from</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">curvature</span><span class="op">)</span>, <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>connect_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">connect_to</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">curvature</span><span class="op">)</span>, <span class="st">"top"</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="plot-the-customized-graph" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot-the-customized-graph" class="anchor"></a>Plot the customized graph</h3>
-<p>We can plot a customized graph using <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot(graph_data)</a></code>; a generic plot method for <code>sem_graph</code> objects:</p>
+<div class="section level3">
+<h3 id="plot-the-customized-graph">Plot the customized graph<a class="anchor" aria-label="anchor" href="#plot-the-customized-graph"></a>
+</h3>
+<p>We can plot a customized graph using <code>plot(graph_data)</code>; a generic plot method for <code>sem_graph</code> objects:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig2.png" width="100%"></p>
 </div>
 </div>
-<div id="connecting-nodes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#connecting-nodes" class="anchor"></a>Connecting nodes</h2>
+<div class="section level2">
+<h2 id="connecting-nodes">Connecting nodes<a class="anchor" aria-label="anchor" href="#connecting-nodes"></a>
+</h2>
 <p>The functions <code><a href="../reference/graph_sem.html">graph_sem()</a></code> and <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> will always try to connect nodes in an aesthetically pleasing way. To do this, they connect nodes by one of the four sides (top, bottom, left and right), based on the shortest distance between two nodes. Alternatively, users can specify a value to the <code>angle</code> parameter. This parameter connects nodes top-to-bottom when they are within <code>angle</code> degrees above and below each other. Remaining nodes are connected side-to-side. Thus, by increasing <code>angle</code> to a larger number (up to 180 degrees), we can also ensure that all nodes are connected top to bottom:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span>, layout <span class="op">=</span> <span class="va">lay</span>, angle <span class="op">=</span> <span class="fl">170</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig3.png" width="100%"></p>
 </div>
-<div id="visual-aspects" class="section level2">
-<h2 class="hasAnchor">
-<a href="#visual-aspects" class="anchor"></a>Visual aspects</h2>
+<div class="section level2">
+<h2 id="visual-aspects">Visual aspects<a class="anchor" aria-label="anchor" href="#visual-aspects"></a>
+</h2>
 <p>The visual aspects of graphs created using <code><a href="../reference/graph_sem.html">graph_sem()</a></code> and <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> can be easily customized (see <code>?graph_sem()</code>). These functions construct a graph based on a data.frame of nodes, and a data.frame of edges. The visual aspects can be customized by adding <strong>extra columns</strong> to those data.frames.</p>
-<div id="visual-aspects-of-edges" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visual-aspects-of-edges" class="anchor"></a>Visual aspects of edges</h3>
+<div class="section level3">
+<h3 id="visual-aspects-of-edges">Visual aspects of edges<a class="anchor" aria-label="anchor" href="#visual-aspects-of-edges"></a>
+</h3>
 <p>Edges have the following aesthetics (see <code>?geom_path()</code>):</p>
 <ul>
 <li>
@@ -812,19 +806,19 @@
 </ul>
 <p>These aesthetics can be customized by adding columns to the edges data.frame, whose names correspond to the aesthetics. For example:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>,
+<code class="sourceCode R"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>,
                   to <span class="op">=</span> <span class="st">"y"</span>,
                   linetype <span class="op">=</span> <span class="fl">2</span>,
                   colour <span class="op">=</span> <span class="st">"red"</span>,
                   size <span class="op">=</span> <span class="fl">2</span>,
                   alpha <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, layout <span class="op">=</span> <span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, layout <span class="op">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig4.png" width="30%"></p>
 </div>
-<div id="visual-aspects-of-nodes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visual-aspects-of-nodes" class="anchor"></a>Visual aspects of nodes</h3>
+<div class="section level3">
+<h3 id="visual-aspects-of-nodes">Visual aspects of nodes<a class="anchor" aria-label="anchor" href="#visual-aspects-of-nodes"></a>
+</h3>
 <p>Nodes have the following aesthetics (see <code>?geom_polygon()</code>):</p>
 <ul>
 <li>
@@ -840,33 +834,33 @@
 </ul>
 <p>These, too, can be appended as extra columns to the nodes data.frame:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>,
+<code class="sourceCode R"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>,
                   to <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span>
-<span class="va">nod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>,
-                    shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"rect"</span>, <span class="st">"oval"</span><span class="op">)</span>,
-                    linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
-                    colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"blue"</span><span class="op">)</span>,
-                    fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"blue"</span><span class="op">)</span>,
-                    size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
+<span class="va">nod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>,
+                    shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rect"</span>, <span class="st">"oval"</span><span class="op">)</span>,
+                    linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
+                    colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"blue"</span><span class="op">)</span>,
+                    fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"blue"</span><span class="op">)</span>,
+                    size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
                     alpha <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>
-<span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, nodes <span class="op">=</span> <span class="va">nod</span>, layout <span class="op">=</span> <span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, nodes <span class="op">=</span> <span class="va">nod</span>, layout <span class="op">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig5.png" width="30%"></p>
 <p>These aesthetics can also be passed to the <code>sem_graph</code> object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span><span class="op">(</span><span class="va">colour</span>, <span class="va">from</span> <span class="op">==</span> <span class="st">"visual"</span> <span class="op">&amp;</span> <span class="va">to</span> <span class="op">==</span> <span class="st">"x2"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span><span class="op">(</span><span class="va">linetype</span>, <span class="va">from</span> <span class="op">==</span> <span class="st">"visual"</span> <span class="op">&amp;</span> <span class="va">to</span> <span class="op">==</span> <span class="st">"x2"</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span><span class="op">(</span><span class="va">alpha</span>, <span class="va">from</span> <span class="op">==</span> <span class="st">"visual"</span> <span class="op">&amp;</span> <span class="va">to</span> <span class="op">==</span> <span class="st">"x2"</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">colour</span>, <span class="va">from</span> <span class="op">==</span> <span class="st">"visual"</span> <span class="op">&amp;</span> <span class="va">to</span> <span class="op">==</span> <span class="st">"x2"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">linetype</span>, <span class="va">from</span> <span class="op">==</span> <span class="st">"visual"</span> <span class="op">&amp;</span> <span class="va">to</span> <span class="op">==</span> <span class="st">"x2"</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">alpha</span>, <span class="va">from</span> <span class="op">==</span> <span class="st">"visual"</span> <span class="op">&amp;</span> <span class="va">to</span> <span class="op">==</span> <span class="st">"x2"</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig6.png" width="100%"></p>
 </div>
-<div id="visual-aspects-of-edge-labels" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visual-aspects-of-edge-labels" class="anchor"></a>Visual aspects of edge labels</h3>
-<p>Like nodes and edges, edge labels can be customized. Labels have the same aesthetics as the ggplot function <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_label()</a></code> (see <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">?geom_label</a></code>). However, to disambiguate them from the edge aesthetics, all label aesthetics are prefaced by <code>"label_"</code>:</p>
+<div class="section level3">
+<h3 id="visual-aspects-of-edge-labels">Visual aspects of edge labels<a class="anchor" aria-label="anchor" href="#visual-aspects-of-edge-labels"></a>
+</h3>
+<p>Like nodes and edges, edge labels can be customized. Labels have the same aesthetics as the ggplot function <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_label()</a></code> (see <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">?geom_label</a></code>). However, to disambiguate them from the edge aesthetics, all label aesthetics are prefaced by <code>"label_"</code>:</p>
 <ul>
 <li>
 <code>label_colour</code> or <code>label_color</code>: The color of the label text (e.g., <code>label_colour = "red"</code>)</li>
@@ -880,7 +874,7 @@
 <code>label_family</code>: The font family of the label text. By default, three are available: <code>"serif"</code>, <code>"sans"</code> and <code>"mono"</code>
 </li>
 <li>
-<code>label_fontface</code>: The face of the label text: <code>"plain"</code>, <code>"bold"</code>, <code>"italic"</code>, or "<code>bold.italic"</code>
+<code>label_fontface</code>: The face of the label text: <code>"plain"</code>, <code>"bold"</code>, <code>"italic"</code>, or “<code>bold.italic"</code>
 </li>
 <li>
 <code>label_hjust</code>: Horizontal justification of label text; either a string (<code>"left"</code>, <code>"center"</code>, <code>"right"</code>) or a number between 0 and 1 (left = 0, center = 0.5, right = 1)</li>
@@ -892,7 +886,7 @@
 <code>label_location</code>: Where along the edge to plot the label; a number between 0 (beginning) and 1 (end)</li>
 </ul>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>,
+<code class="sourceCode R"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>,
                   to <span class="op">=</span> <span class="st">"y"</span>,
                   label <span class="op">=</span> <span class="st">"text"</span>,
                   label_colour <span class="op">=</span> <span class="st">"blue"</span>,
@@ -907,59 +901,59 @@
                   label_location <span class="op">=</span> <span class="fl">.2</span>
                   <span class="op">)</span>
 
-<span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, layout <span class="op">=</span> <span class="fu"><a href="../reference/get_layout.lavaan.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, layout <span class="op">=</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig7.png" width="30%"></p>
 </div>
-<div id="conditionally-customize-visual-aspects" class="section level3">
-<h3 class="hasAnchor">
-<a href="#conditionally-customize-visual-aspects" class="anchor"></a>Conditionally customize visual aspects</h3>
+<div class="section level3">
+<h3 id="conditionally-customize-visual-aspects">Conditionally customize visual aspects<a class="anchor" aria-label="anchor" href="#conditionally-customize-visual-aspects"></a>
+</h3>
 <p>The functions <code><a href="../reference/get_edges.html">get_edges()</a></code> and <code><a href="../reference/get_nodes.html">get_nodes()</a></code> rely on <code><a href="../reference/table_results.html">table_results()</a></code> to extract information about nodes and edges from SEM models. All of the columns returned by <code><a href="../reference/table_results.html">table_results()</a></code> can be used to conditionally customize visual aspects of the graph. Let’s estimate a model and look at all of the columns extracted by <code><a href="../reference/get_edges.html">get_edges()</a></code>:</p>
-<pre><code>#&gt;   from  to arrow    label connect_from connect_to curvature lhs op rhs   est
-#&gt; 1  cyl mpg  last -2.50***           NA         NA        NA mpg  ~ cyl -2.50
-#&gt; 2   am mpg  last    2.57*           NA         NA        NA mpg  ~  am  2.57
-#&gt; 3  mpg mpg  both  8.48***           NA         NA        NA mpg ~~ mpg  8.48
-#&gt; 4  cyl cyl  both     3.09           NA         NA        NA cyl ~~ cyl  3.09
-#&gt; 5  cyl  am  none    -0.45           NA         NA        60 cyl ~~  am -0.45
-#&gt; 6   am  am  both     0.24           NA         NA        NA  am ~~  am  0.24
-#&gt;     se pval        confint  est_sig est_std se_std pval_std    confint_std
-#&gt; 1 0.34 0.00 [-3.17, -1.83] -2.50***   -0.74   0.08     0.00 [-0.89, -0.59]
-#&gt; 2 1.23 0.04   [0.16, 4.98]    2.57*    0.21   0.10     0.03   [0.02, 0.41]
-#&gt; 3 2.12 0.00  [4.32, 12.64]  8.48***    0.24   0.06     0.00   [0.13, 0.36]
-#&gt; 4 0.00 &lt;NA&gt;   [3.09, 3.09]     3.09    1.00   0.00     &lt;NA&gt;   [1.00, 1.00]
-#&gt; 5 0.00 &lt;NA&gt; [-0.45, -0.45]    -0.45   -0.52   0.00     &lt;NA&gt; [-0.52, -0.52]
-#&gt; 6 0.00 &lt;NA&gt;   [0.24, 0.24]     0.24    1.00   0.00     &lt;NA&gt;   [1.00, 1.00]
-#&gt;   est_sig_std label_results  show
-#&gt; 1    -0.74***    mpg.ON.cyl  TRUE
-#&gt; 2       0.21*     mpg.ON.am  TRUE
-#&gt; 3     0.24*** Variances.mpg  TRUE
-#&gt; 4        1.00 Variances.cyl FALSE
-#&gt; 5       -0.52   cyl.WITH.am FALSE
-#&gt; 6        1.00  Variances.am FALSE</code></pre>
+<pre><code><span class="co">#&gt;   from  to arrow    label connect_from connect_to curvature lhs op rhs   est</span>
+<span class="co">#&gt; 1  cyl mpg  last -2.50***           NA         NA        NA mpg  ~ cyl -2.50</span>
+<span class="co">#&gt; 2   am mpg  last    2.57*           NA         NA        NA mpg  ~  am  2.57</span>
+<span class="co">#&gt; 3  mpg mpg  both  8.48***           NA         NA        NA mpg ~~ mpg  8.48</span>
+<span class="co">#&gt; 4  cyl cyl  both     3.09           NA         NA        NA cyl ~~ cyl  3.09</span>
+<span class="co">#&gt; 5  cyl  am  none    -0.45           NA         NA        60 cyl ~~  am -0.45</span>
+<span class="co">#&gt; 6   am  am  both     0.24           NA         NA        NA  am ~~  am  0.24</span>
+<span class="co">#&gt;     se pval        confint  est_sig est_std se_std pval_std    confint_std</span>
+<span class="co">#&gt; 1 0.34 0.00 [-3.17, -1.83] -2.50***   -0.74   0.08     0.00 [-0.89, -0.59]</span>
+<span class="co">#&gt; 2 1.23 0.04   [0.16, 4.98]    2.57*    0.21   0.10     0.03   [0.02, 0.41]</span>
+<span class="co">#&gt; 3 2.12 0.00  [4.32, 12.64]  8.48***    0.24   0.06     0.00   [0.13, 0.36]</span>
+<span class="co">#&gt; 4 0.00 &lt;NA&gt;   [3.09, 3.09]     3.09    1.00   0.00     &lt;NA&gt;   [1.00, 1.00]</span>
+<span class="co">#&gt; 5 0.00 &lt;NA&gt; [-0.45, -0.45]    -0.45   -0.52   0.00     &lt;NA&gt; [-0.52, -0.52]</span>
+<span class="co">#&gt; 6 0.00 &lt;NA&gt;   [0.24, 0.24]     0.24    1.00   0.00     &lt;NA&gt;   [1.00, 1.00]</span>
+<span class="co">#&gt;   est_sig_std label_results  show</span>
+<span class="co">#&gt; 1    -0.74***    mpg.ON.cyl  TRUE</span>
+<span class="co">#&gt; 2       0.21*     mpg.ON.am  TRUE</span>
+<span class="co">#&gt; 3     0.24*** Variances.mpg  TRUE</span>
+<span class="co">#&gt; 4        1.00 Variances.cyl FALSE</span>
+<span class="co">#&gt; 5       -0.52   cyl.WITH.am FALSE</span>
+<span class="co">#&gt; 6        1.00  Variances.am FALSE</span></code></pre>
 <p>Any of these columns can be used to conditionally format the graph. For example, note that one of the regression paths is positive and the other negative. We might want to color positive edges green:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>
-<span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/if_edit.html">color_pos_edges</a></span><span class="op">(</span><span class="st">"green"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>
+<span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/if_edit.html">color_pos_edges</a></span><span class="op">(</span><span class="st">"green"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig8.png" width="300px"></p>
 <p>However, the variance arrow is also colored green, because it is an edge as well. This is where other conditional formatting functions come in handy. Imagine we want to color the negative regression path red, and color the variance black - and make the variance transparent as well, to reduce its visual importance:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/if_edit.html">color_pos_edges</a></span><span class="op">(</span><span class="st">"green"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/if_edit.html">color_neg_edges</a></span><span class="op">(</span><span class="st">"red"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/if_edit.html">color_var</a></span><span class="op">(</span><span class="st">"black"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/if_edit.html">alpha_var</a></span><span class="op">(</span><span class="fl">.2</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/if_edit.html">color_pos_edges</a></span><span class="op">(</span><span class="st">"green"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/if_edit.html">color_neg_edges</a></span><span class="op">(</span><span class="st">"red"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/if_edit.html">color_var</a></span><span class="op">(</span><span class="st">"black"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/if_edit.html">alpha_var</a></span><span class="op">(</span><span class="fl">.2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig9.png" width="300px"></p>
 <p>There are many dedicated conditional customization functions like these. They make use of the generic function <code><a href="../reference/if_edit.html">if_edit()</a></code>, and are documented in its help file (see <code><a href="../reference/if_edit.html">?if_edit</a></code>).</p>
 <p>The function <code><a href="../reference/if_edit.html">if_edit()</a></code> takes an expression and a condition as arguments. This makes custom conditional formatting possible. For example, imagine that we want to color every graph element with the number “4” in the column <code>est</code> blue, you could use:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="co"># Add color column to the graph elements</span>
-  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">color</span> <span class="op">=</span> <span class="st">"black"</span> <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/edit_graph.html">edit_graph</a></span><span class="op">(</span><span class="op">{</span> <span class="va">color</span> <span class="op">=</span> <span class="st">"black"</span> <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="co"># Conditionally change color to blue when the column 'est' contains the number 4</span>
-  <span class="fu"><a href="../reference/if_edit.html">if_edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"4"</span>, <span class="va">est</span><span class="op">)</span>, <span class="op">{</span><span class="va">color</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="../reference/if_edit.html">if_edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"4"</span>, <span class="va">est</span><span class="op">)</span>, <span class="op">{</span><span class="va">color</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="pgfig10.png" width="300px"></p>
 <!--As explained before, the functions `get_edges()` and `get_nodes()`,
 which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
@@ -1013,11 +1007,13 @@ knitr::include_graphics("pgfig8.png")
 
 
       <footer><div class="copyright">
-  <p>Developed by Caspar J. van Lissa.</p>
+  <p></p>
+<p>Developed by Caspar J. van Lissa.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -1025,6 +1021,8 @@ knitr::include_graphics("pgfig8.png")
 
   
 
+
+  
 
   </body>
 </html>

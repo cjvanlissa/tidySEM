@@ -1,5 +1,6 @@
 # tidySEM 0.2.1
 
+* Fix CRAN check errors related to OpenMx
 * Add mx_lca(), a dedicated function for estimating mixture models with
   ordinal/binary data that avoids convergence problems when using mx_mixture()
   with those data types

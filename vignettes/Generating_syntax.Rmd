@@ -84,9 +84,13 @@ model
 
 We can automatically add basic syntax to the `sem_syntax` object, by passing it to a syntax-generating function like `measurement()`, which adds a measurement model for any scales in the object:
 
-```{r, eval = TRUE}
+```{r, eval = FALSE, echo = TRUE}
 model |>
   measurement() -> model
+model
+```
+```{r, echo = FALSE, eval = TRUE}
+model <- measurement(model)
 model
 ```
 
@@ -95,16 +99,18 @@ model
 
 The resulting model can be evaluated as 'lavaan' syntax, 'OpenMx' syntax, or 'Mplus' syntax, using the `as_lavaan`, `as_ram`, and `as_mplus` functions. For example, using lavaan:
 
-```{r}
+```{r, eval = FALSE, echo = TRUE}
 model |>
   estimate_lavaan()
+```
+```{r, echo = FALSE, eval = TRUE}
+estimate_lavaan(model)
 ```
 
 The same model can be estimated in 'Mplus' through the R-package `MplusAutomation`. This requires 'Mplus' to be installed.
 
 ```{r include=FALSE}
-model |>
-  estimate_mx() -> res_mx
+estimate_mx(model) -> res_mx
 ```
 ```{r echo = TRUE, eval = FALSE}
 model |>
@@ -149,17 +155,27 @@ syntax(model)
 
 At this stage, we may want to modify the basic syntax slightly. The functions `dictionary(model) <- ...` and `syntax(model) <- ...` can be used to modify the dictionary and syntax:
 
-```{r}
+```{r, eval = FALSE, echo = TRUE}
 dictionary(model) |>
   mutate(label = ifelse(label == "vis", "Visual", label))
+```
+```{r, echo = FALSE, eval = TRUE}
+tmp <- dictionary(model)
+mutate(tmp, label = ifelse(label == "vis", "Visual", label))
 ```
 
 For example, imagine we want to change the model, so that all items of the "spe" subscale load on the "tex" latent variable. We would first replace the latent variable "spe" with "tex", and secondly remove all mention of the "spe" latent variable:
 
-```{r}
+```{r, echo = TRUE, eval = FALSE}
 syntax(model) |>
   mutate(lhs = ifelse(lhs == "spe" & op == "=~", "tex", lhs)) |>
   filter(!(lhs == "spe" | rhs == "spe")) -> syntax(model)
+```
+```{r, eval = TRUE, echo = FALSE}
+tmp <- syntax(model)
+tmp <- mutate(tmp, lhs = ifelse(lhs == "spe" & op == "=~", "tex", lhs))
+tmp <- filter(tmp, !(lhs == "spe" | rhs == "spe"))
+syntax(model) <- tmp
 ```
 
 The modified model could then be run:
@@ -172,18 +188,28 @@ estimate_lavaan(model)
 
 In addition to the way of editing the `data.frame` with model syntax described in Step 6, it is also possible to add (or modify) paths by adding `lavaan` syntax. For example, imagine that - instead of having "vis" and "tex" correlate, we want to add a regression path between them:
 
-```{r}
+```{ry, echo = TRUE, eval = FALSE}
 model |>
   add_paths("vis ~ tex") |>
   estimate_lavaan() |>
   summary(estimates = TRUE)
 ```
+```{ry, eval = TRUE, echo = FALSE}
+tmp <- add_paths(model, "vis ~ tex")
+tmp <- estimate_lavaan(tmp)
+summary(tmp, estimates = TRUE)
+```
 
 This function accepts both quoted (character) and unquoted arguments. So, for example, if we want to add a cross-loading from "spe_1" on "vis", in addition to the regression path before, we could use the following code:
 
-```{r}
+```{r, echo = TRUE, eval = FALSE}
 model |>
   add_paths("vis ~ tex", vis =~ spe_1) |>
   estimate_lavaan()
+```
+
+```{r, eval = TRUE, echo = FALSE}
+tmp <- add_paths(model, "vis ~ tex", vis =~ spe_1)
+estimate_lavaan(tmp)
 ```
 

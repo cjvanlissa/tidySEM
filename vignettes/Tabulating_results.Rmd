@@ -25,29 +25,41 @@ library(MplusAutomation)
 
 Let's use a classic `lavaan` tutorial example for a multiple group model, using the `HolzingerSwineford1939` data. The `tidySEM` package has a function `measurement()` to generate measurement models automatically. It guesses which latent variable an observed variable belongs to by splitting the names (by default, at the last `_` symbol), so it helps to rename the variables:
 
-```{r}
+```{r, echo = TRUE, eval = FALSE}
 df <- HolzingerSwineford1939
 names(df)[7:15] <- paste0(rep(c("vis", "tex", "spe"), each = 3), "_", rep(1:3, 3))
 df |>
   subset(select = c("school", "vis_1", "vis_2", "vis_3", "tex_1", "tex_2", "tex_3", "spe_1", 
 "spe_2", "spe_3")) -> df
 ```
+```{r, echo = FALSE, eval = TRUE}
+df <- HolzingerSwineford1939
+names(df)[7:15] <- paste0(rep(c("vis", "tex", "spe"), each = 3), "_", rep(1:3, 3))
+subset(df, select = c("school", "vis_1", "vis_2", "vis_3", "tex_1", "tex_2", "tex_3", "spe_1", 
+"spe_2", "spe_3")) -> df
+```
 
 Now, let's construct the model.
 
-```{r}
+```{r, echo = TRUE, eval = FALSE}
 df |>
   tidy_sem() |>
   measurement() -> model
+```
+```{r, eval = TRUE, echo = FALSE}
+model <- measurement(tidy_sem(df))
 ```
 
 ## Output from lavaan
 
 Now, let's run the model in `lavaan`. You can either use `lavaan` to run it, 
 
-```{r}
+```{r, eval = FALSE, echo = TRUE}
 model |>
   estimate_lavaan() -> fit_lav
+```
+```{r, echo = FALSE, eval = TRUE}
+estimate_lavaan(model) -> fit_lav
 ```
 
 The results can be tabulated using `table_results()`:
@@ -61,9 +73,14 @@ table_fit(fit_lav)
 
 Now, we'll reproduce the same analysis in 'OpenMx'. First, we run the model:
 
-```{r}
+```{r, echo = TRUE, eval = FALSE}
 model |>
   estimate_mx() -> fit_mx
+table_results(fit_mx)
+table_fit(fit_mx)
+```
+```{r, eval = TRUE, echo = FALSE}
+estimate_mx(model) -> fit_mx
 table_results(fit_mx)
 table_fit(fit_mx)
 ```

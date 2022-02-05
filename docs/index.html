@@ -22,6 +22,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -34,18 +36,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -76,7 +72,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/cjvanlissa/tidySEM/">
+  <a href="https://github.com/cjvanlissa/tidySEM/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -93,13 +89,13 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="tidysem-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#tidysem-" class="anchor"></a>tidySEM <a href="https://github.com/cjvanlissa/tidySEM"><img src="https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png" align="right" height="139"></a>
+<div class="section level1">
+<div class="page-header"><h1 id="tidysem-">tidySEM <a href="https://github.com/cjvanlissa/tidySEM" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png" align="right" height="139"></a>
+<a class="anchor" aria-label="anchor" href="#tidysem-"></a>
 </h1></div>
 
 <p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the free open source R packages <code>lavaan</code> or <code>OpenMx</code>, or the commercial closed-source program <code>Mplus</code> (controlled through the R package <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>Generate model syntax in a top-down, tidy way,
 <ul>
 <li>With particular attention to specifying mixture models in <code>OpenMx</code>
@@ -109,10 +105,10 @@
 <li>Tabulate model output in a publication-ready, uniform manner,</li>
 <li>Make easily customizable graphs for SEM-models.</li>
 </ol>
-<p>These functions are designed with the <a href="https://tidyverse.tidyverse.org/articles/manifesto.html"><em>tidy tools manifesto</em> (Wickham, last updated 23-11-2019)</a> in mind, and interface with the existing suite of packages in the <a href="https://tidyverse.tidyverse.org/"><code>tidyverse</code></a>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<p>These functions are designed with the <a href="https://tidyverse.tidyverse.org/articles/manifesto.html" class="external-link"><em>tidy tools manifesto</em> (Wickham, last updated 23-11-2019)</a> in mind, and interface with the existing suite of packages in the <a href="https://tidyverse.tidyverse.org/" class="external-link"><code>tidyverse</code></a>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <!--You can install tidySEM from CRAN with:
 
 
@@ -122,101 +118,111 @@ install.packages("tidySEM")
 -->
 <p>You can install the development version of <code>tidySEM</code> from ‘GitHub’ with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"cjvanlissa/tidySEM"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"cjvanlissa/tidySEM"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="documentation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#documentation" class="anchor"></a>Documentation</h2>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
 <p>Every user-facing function in the package is documented, and the documentation can be accessed by running <code>?function_name</code> in the R console, e.g., <code><a href="reference/graph_sem.html">?graph_sem</a></code>.</p>
 <p>Furthermore, there are three main vignettes, describing the three main tracks of <code>tidySEM</code> functions:</p>
-<ol>
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html">vignette about generating syntax and estimating models</a>
+<ol style="list-style-type: decimal">
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html" class="external-link">vignette about generating syntax and estimating models</a>
 </li>
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html">vignette about tabulating results</a>
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html" class="external-link">vignette about tabulating results</a>
 </li>
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">vignette about making graphs</a>
+<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html" class="external-link">vignette about making graphs</a>
 <ul>
-<li>An additional vignette describes the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">graphing conventions</a> for structural equation models.</li>
+<li>An additional vignette describes the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html" class="external-link">graphing conventions</a> for structural equation models.</li>
 </ul>
 </li>
 </ol>
 </div>
-<div id="citing-tidysem" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citing-tidysem" class="anchor"></a>Citing tidySEM</h2>
+<div class="section level2">
+<h2 id="citing-tidysem">Citing tidySEM<a class="anchor" aria-label="anchor" href="#citing-tidysem"></a>
+</h2>
 <p>You can cite the R-package with the following citation:</p>
 <blockquote>
-<p>Van Lissa, C. J., (2019). <em>tidySEM: Tidy structural equation modeling.</em> R package version 0.2.1. <a href="https://github.com/cjvanlissa/tidySEM/" class="uri">https://github.com/cjvanlissa/tidySEM/</a></p>
+<p>Van Lissa, C. J., (2019). <em>tidySEM: Tidy structural equation modeling.</em> R package version 0.2.1. <a href="https://github.com/cjvanlissa/tidySEM/" class="external-link uri">https://github.com/cjvanlissa/tidySEM/</a></p>
 </blockquote>
 </div>
-<div id="contributing-and-contact-information" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contributing-and-contact-information" class="anchor"></a>Contributing and Contact Information</h2>
+<div class="section level2">
+<h2 id="contributing-and-contact-information">Contributing and Contact Information<a class="anchor" aria-label="anchor" href="#contributing-and-contact-information"></a>
+</h2>
 <p>If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on ‘GitHub’, or sending a pull request with proposed features.</p>
 <ul>
-<li>File a ‘GitHub’ issue <a href="https://github.com/cjvanlissa/tidySEM">here</a>
+<li>File a ‘GitHub’ issue <a href="https://github.com/cjvanlissa/tidySEM" class="external-link">here</a>
 </li>
-<li>Make a pull request <a href="https://github.com/cjvanlissa/tidySEM/pulls">here</a>
+<li>Make a pull request <a href="https://github.com/cjvanlissa/tidySEM/pulls" class="external-link">here</a>
 </li>
 </ul>
-<p>By participating in this project, you agree to abide by the <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html">Contributor Covenant</a>.</p>
+<p>By participating in this project, you agree to abide by the <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link">Contributor Covenant</a>.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=tidySEM">https://​cloud.r-project.org/​package=tidySEM</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/cjvanlissa/tidySEM/">https://​github.com/​cjvanlissa/​tidySEM/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/cjvanlissa/tidySEM/issues">https://​github.com/​cjvanlissa/​tidySEM/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=tidySEM" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/cjvanlissa/tidySEM/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/cjvanlissa/tidySEM/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 3)</li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Caspar J. van Lissa <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0808-5024" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing tidySEM</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=tidySEM"><img src="https://www.r-pkg.org/badges/version/tidySEM" alt="CRAN status"></a></li>
-<li><a href="https://r-pkg.org/pkg/tidySEM"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue" alt="CRAN RStudio mirror downloads"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
-<li><a href="https://github.com/cjvanlissa/tidySEM/actions"><img src="https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/cjvanlissa/tidySEM"><img src="https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r" alt="codecov"></a></li>
-<li><a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant"></a></li>
+<li>Caspar J. van Lissa <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0808-5024" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=tidySEM" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidySEM" alt="CRAN status"></a></li>
+<li><a href="https://r-pkg.org/pkg/tidySEM" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue" alt="CRAN RStudio mirror downloads"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://github.com/cjvanlissa/tidySEM/actions" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/cjvanlissa/tidySEM" class="external-link"><img src="https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r" alt="codecov"></a></li>
+<li><a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Caspar J. van Lissa.</p>
+  <p></p>
+<p>Developed by Caspar J. van Lissa.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -224,6 +230,8 @@ install.packages("tidySEM")
 
   
 
+
+  
 
   </body>
 </html>

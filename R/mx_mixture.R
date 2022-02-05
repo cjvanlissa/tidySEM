@@ -618,3 +618,72 @@ profile_syntax <- function(variances, covariances, parameters){
 
   paste(mean_syntax, var_syntax, cor_syntax, sep = "\n\n")
 }
+
+
+# @method mx_mixture data.frame
+# @export
+if(FALSE){
+mx_mixture.data.frame <- function(model,
+                                 classes = 1L,
+                                 data = NULL,
+                                 run = TRUE,
+                                 ...){
+  browser()
+  data <- model
+  vars_cont <- names(data)[sapply(data, inherits, what = "numeric")]
+  vars_bin <- names(data)[sapply(data, function(x){all(na.omit(x) %in% c(0, 1))})]
+  vars_nom <- sapply(data, inherits, what = c("factor", "character"))
+  vars_ord <- sapply(data, inherits, what = "ordered")
+  vars_nom <- names(data)[vars_nom & !vars_ord]
+  vars_ord <- names(data)[vars_ord]
+  if(length(vars_nom) > 0){
+    adddummies <- lapply(vars_nom, function(n){
+      model.matrix(~.-1, data = data[, n, drop = FALSE])
+    })
+    adddummies <- do.call(cbind, adddummies)
+    data <- cbind(data, adddummies)
+    data[vars_nom] <- NULL
+    vars_bin <- c(vars_bin, colnames(adddummies))
+  }
+  if(length(vars_bin) > 0){
+    data[vars_bin] <- lapply(data[vars_bin], ordered)
+  }
+  mix_all <- mx_profiles(data, classes = 2, run = FALSE)
+  mix_profiles <- mx_profiles(data[vars_cont], classes = 2, run = TRUE)
+  df_ord <- data[c(vars_bin, vars_ord)]
+  mix_ord <- mx_lca(df_ord, classes = 2, run = TRUE)
+  nam_prof <- names(mix_profiles@submodels)
+  nam_lca <- names(mix_ord@submodels)
+  if(!all(nam_prof == nam_lca)) stop("Could not merge continuous and categorical models.")
+  browser()
+  # Continuous
+  for(n in nam_prof){
+    for(m in names(mix_profiles[[n]]@matrices)){
+      for(i in c("values", "labels", "free", "lbound", "ubound")){
+        dims <- dim(mix_all[[n]][[m]][[i]])
+        end <- dim(mix_profiles[[n]][[m]][[i]])
+        start <- c(1, 1)
+        if(!(length(start) ==0 |length(end) == 0)){
+          mix_all[[n]][[m]][[i]][start[1]:end[1], start[2]:end[2]] <- mix_profiles[[n]][[m]][[i]]
+        }
+        end <- dim(mix_all[[n]][[m]][[i]])
+        end[1] <- min(c(dims[1], end[1]))
+        end[2] <- min(c(dims[2], end[2]))
+        start <- dim(mix_profiles[[n]][[m]][[i]])+1
+        start[1] <- min(c(dims[1], start[1]))
+        start[2] <- min(c(dims[2], start[2]))
+        if(!(length(start) ==0 |length(end) == 0)){
+          mix_all[[n]][[m]][[i]][start[1]:end[1], start[2]:end[2]] <- mix_ord[[n]][[m]][[i]]
+        }
+      }
+    }
+    for(i in c("mat_dev", "mat_ones", "Thresholds")){
+      mix_all[[n]][[i]] <- mix_ord[[n]][[i]]
+    }
+    mix_all[[n]]$expectation$thresholds <- mix_ord[[n]]$expectation$thresholds
+  }
+
+browser()
+
+}
+}
