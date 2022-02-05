@@ -36,7 +36,7 @@ plot_profiles(
 plotted (optional).}
 
 \item{ci}{Numeric. What confidence interval should the error bars span?
-Defaults to a 95\% confidence interval. Set to NULL to remove erro rbars.}
+Defaults to a 95\% confidence interval. Set to NULL to remove error bars.}
 
 \item{sd}{Logical. Whether to display a box encompassing +/- 1SD Defaults to
 TRUE.}

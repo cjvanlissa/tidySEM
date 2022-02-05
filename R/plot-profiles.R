@@ -14,7 +14,7 @@
 #' @param variables A character vectors with the names of the variables to be
 #' plotted (optional).
 #' @param ci Numeric. What confidence interval should the error bars span?
-#' Defaults to a 95\% confidence interval. Set to NULL to remove erro rbars.
+#' Defaults to a 95\% confidence interval. Set to NULL to remove error bars.
 #' @param sd Logical. Whether to display a box encompassing +/- 1SD Defaults to
 #' TRUE.
 #' @param add_line Logical. Whether to display a line, connecting cluster
