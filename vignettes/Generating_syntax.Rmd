@@ -188,13 +188,13 @@ estimate_lavaan(model)
 
 In addition to the way of editing the `data.frame` with model syntax described in Step 6, it is also possible to add (or modify) paths by adding `lavaan` syntax. For example, imagine that - instead of having "vis" and "tex" correlate, we want to add a regression path between them:
 
-```{ry, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval = FALSE}
 model |>
   add_paths("vis ~ tex") |>
   estimate_lavaan() |>
   summary(estimates = TRUE)
 ```
-```{ry, eval = TRUE, echo = FALSE}
+```{r, eval = TRUE, echo = FALSE}
 tmp <- add_paths(model, "vis ~ tex")
 tmp <- estimate_lavaan(tmp)
 summary(tmp, estimates = TRUE)

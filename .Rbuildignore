@@ -24,3 +24,4 @@ R/data_types\.md
 ^news\.md$
 ^\.github$
 CODE_OF_CONDUCT.md
+^CRAN-SUBMISSION$
