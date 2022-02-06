@@ -18,6 +18,7 @@ parM <- table_results(fitM, columns = NULL)
 
 test_that("mx approximately same results as lav", {
   skip_on_cran()
+  skip_on_ci()
   expect_equivalent(as.numeric(parL$est[parL$op == "=~" & grepl("^x\\d$", parL$rhs)]),parM$est[grepl("\\.BY\\.", parM$label)], tolerance = .01)
 })
 
@@ -29,6 +30,7 @@ parM <- table_results(fitM, columns = NULL)
 parL <- parL[order(parL$group), ]
 test_that("as_ram accepts groups and data", {
   skip_on_cran()
+  skip_on_ci()
   expect_equivalent(as.numeric(parL$est[parL$op == "=~"]),parM$est[grepl("\\.BY\\.", parM$label)], tolerance = .01)
 })
 
@@ -41,6 +43,7 @@ resM <- summary(tst)$parameters
 parL <- parL[order(parL$group, decreasing = T), ]
 test_that("measurement accepts groups argument", {
   skip_on_cran()
+  skip_on_ci()
   expect_equivalent(as.numeric(parL$est[parL$op == "=~" & grepl("^x[2-3,5-6,8-9]$", parL$rhs)]),
                     resM$Estimate[grepl("^(vis|tex|spd)_\\d$", resM$row) & resM$col %in% c("vis", "tex", "spd")], tolerance = .01)
 })
