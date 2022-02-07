@@ -86,10 +86,10 @@ get_cordat.MxModel <- function(x){
 #' @author Caspar J. van Lissa
 #' @export
 #' @examples
-#' iris_sample <- iris[, c("Sepal.Length", "Sepal.Width")]
+#' iris_sample <- iris[c(1:5, 145:150), c("Sepal.Length", "Sepal.Width")]
 #' names(iris_sample) <- c("x", "y")
 #' res <- mx_profiles(iris_sample, classes = 2)
-#' plot_bivariate(res)
+#' plot_bivariate(res, rawdata = FALSE)
 #' @keywords mixture correlation plot
 #' @rdname plot_bivariate
 #' @export

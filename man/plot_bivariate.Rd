@@ -48,10 +48,10 @@ Creates a faceted plot of two-dimensional correlation plots and
 unidimensional density plots for a single mixture model.
 }
 \examples{
-iris_sample <- iris[, c("Sepal.Length", "Sepal.Width")]
+iris_sample <- iris[c(1:5, 145:150), c("Sepal.Length", "Sepal.Width")]
 names(iris_sample) <- c("x", "y")
 res <- mx_profiles(iris_sample, classes = 2)
-plot_bivariate(res)
+plot_bivariate(res, rawdata = FALSE)
 }
 \author{
 Caspar J. van Lissa
