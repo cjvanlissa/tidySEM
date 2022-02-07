@@ -124,18 +124,12 @@ just the final plot. Defaults to FALSE.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">iris_sample</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span><span class="op">)</span><span class="op">]</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">iris_sample</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">145</span><span class="op">:</span><span class="fl">150</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span><span class="op">)</span><span class="op">]</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris_sample</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">iris_sample</span>, classes <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix2 with 7 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix2 with 7 parameters</span>
-<span class="r-in"><span class="fu">plot_bivariate</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: plot_bivariate.MxModel(res)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug at C:/Git_Repositories/tidySEM/R/plot-bivariate.R#212: plot_list &lt;- vector("list", length = length(model_mat))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug at C:/Git_Repositories/tidySEM/R/plot-bivariate.R#213: plot_list[diag(model_mat)] &lt;- dens_plotlist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug at C:/Git_Repositories/tidySEM/R/plot-bivariate.R#215: plot_list[which(lower.tri(model_mat))] &lt;- cor_plotlist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug at C:/Git_Repositories/tidySEM/R/plot-bivariate.R#216: if (return_list) return(plot_list)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug at C:/Git_Repositories/tidySEM/R/plot-bivariate.R#217: merge_corplots(plot_list)</span>
+<span class="r-in"><span class="fu">plot_bivariate</span><span class="op">(</span><span class="va">res</span>, rawdata <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="plot_bivariate-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

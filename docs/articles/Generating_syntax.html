@@ -333,12 +333,79 @@
 <h3 id="optional-step-7-adding-paths">Optional step 7: Adding paths<a class="anchor" aria-label="anchor" href="#optional-step-7-adding-paths"></a>
 </h3>
 <p>In addition to the way of editing the <code>data.frame</code> with model syntax described in Step 6, it is also possible to add (or modify) paths by adding <code>lavaan</code> syntax. For example, imagine that - instead of having “vis” and “tex” correlate, we want to add a regression path between them:</p>
-<pre class="ry"><code><span class="va">model</span> |&gt;
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model</span> |&gt;
   <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span><span class="op">)</span> |&gt;
   <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span> |&gt;
-  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>estimates <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre>
+  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>estimates <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">#&gt; lavaan 0.6-9 ended normally after 27 iterations</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Estimator                                         ML</span>
+<span class="co">#&gt;   Optimization method                           NLMINB</span>
+<span class="co">#&gt;   Number of model parameters                        27</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Number of observations                           301</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt; Model Test User Model:</span>
+<span class="co">#&gt;                                                       </span>
+<span class="co">#&gt;   Test statistic                               330.994</span>
+<span class="co">#&gt;   Degrees of freedom                                27</span>
+<span class="co">#&gt;   P-value (Chi-square)                           0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Parameter Estimates:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Standard errors                             Standard</span>
+<span class="co">#&gt;   Information                                 Expected</span>
+<span class="co">#&gt;   Information saturated (h1) model          Structured</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Latent Variables:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;   vis =~                                              </span>
+<span class="co">#&gt;     vis_1             1.000                           </span>
+<span class="co">#&gt;     vis_2             0.558    0.104    5.361    0.000</span>
+<span class="co">#&gt;     vis_3             0.711    0.116    6.143    0.000</span>
+<span class="co">#&gt;   tex =~                                              </span>
+<span class="co">#&gt;     tex_1             1.000                           </span>
+<span class="co">#&gt;     tex_2             1.448    0.099   14.657    0.000</span>
+<span class="co">#&gt;     tex_3             1.234    0.084   14.696    0.000</span>
+<span class="co">#&gt;     spe_1             1.000                           </span>
+<span class="co">#&gt;     spe_2             0.319    0.083    3.860    0.000</span>
+<span class="co">#&gt;     spe_3             0.437    0.082    5.326    0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Regressions:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;   vis ~                                               </span>
+<span class="co">#&gt;     tex               0.591    0.092    6.408    0.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Intercepts:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;    .vis_1             4.936    0.067   73.473    0.000</span>
+<span class="co">#&gt;    .vis_2             6.088    0.068   89.855    0.000</span>
+<span class="co">#&gt;    .vis_3             2.250    0.065   34.579    0.000</span>
+<span class="co">#&gt;    .tex_1             3.061    0.060   51.280    0.000</span>
+<span class="co">#&gt;    .tex_2             4.341    0.074   58.452    0.000</span>
+<span class="co">#&gt;    .tex_3             2.186    0.063   34.667    0.000</span>
+<span class="co">#&gt;    .spe_1             4.186    0.080   52.359    0.000</span>
+<span class="co">#&gt;    .spe_2             5.527    0.058   94.854    0.000</span>
+<span class="co">#&gt;    .spe_3             5.374    0.058   92.546    0.000</span>
+<span class="co">#&gt;    .vis               0.000                           </span>
+<span class="co">#&gt;     tex               0.000                           </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Variances:</span>
+<span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span>
+<span class="co">#&gt;    .vis_1             0.538    0.126    4.280    0.000</span>
+<span class="co">#&gt;    .vis_2             1.127    0.102   11.006    0.000</span>
+<span class="co">#&gt;    .vis_3             0.860    0.094    9.151    0.000</span>
+<span class="co">#&gt;    .tex_1             0.512    0.050   10.281    0.000</span>
+<span class="co">#&gt;    .tex_2             0.485    0.065    7.447    0.000</span>
+<span class="co">#&gt;    .tex_3             0.343    0.047    7.335    0.000</span>
+<span class="co">#&gt;    .spe_1             1.364    0.118   11.587    0.000</span>
+<span class="co">#&gt;    .spe_2             0.965    0.079   12.160    0.000</span>
+<span class="co">#&gt;    .spe_3             0.908    0.075   12.055    0.000</span>
+<span class="co">#&gt;    .vis               0.625    0.134    4.673    0.000</span>
+<span class="co">#&gt;     tex               0.560    0.073    7.638    0.000</span></code></pre>
 <p>This function accepts both quoted (character) and unquoted arguments. So, for example, if we want to add a cross-loading from “spe_1” on “vis”, in addition to the regression path before, we could use the following code:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> |&gt;
   <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span>, vis <span class="op">=</span><span class="op">~</span> <span class="va">spe_1</span><span class="op">)</span> |&gt;
   <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
