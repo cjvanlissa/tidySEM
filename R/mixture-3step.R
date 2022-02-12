@@ -35,7 +35,7 @@ BCH.MxModel <- function(x, model, data, ...){
   names(bchweights) <- paste0("w", cprobs$sum.posterior$class)
   data <- cbind(data, bchweights)
   model <- as_ram(model, meanstructure = TRUE)
-  grp_names <- paste("aux", cprobs$sum.posterior$class)
+  grp_names <- cprobs$sum.posterior$class
   grps <- lapply(1:ncol(bchweights), function(i){
     mxModel(model,
             name = grp_names[i],
