@@ -118,11 +118,15 @@ table_fit.MxModel <- function(x, ...) {
   out
 }
 
-.table_fit_mx <- function(x){
+.table_fit_mx <- function(x, type = NULL){
   out <- tryCatch({
     suppressMessages({
-    satmod <- mxRefModels(x, run = TRUE)
-    summary(x, refModels = satmod)
+      if(!type == "mixture"){
+        satmod <- mxRefModels(x, run = TRUE)
+        summary(x, refModels = satmod)
+      } else {
+        summary(x)
+      }
     })
   },
   error = function(e){
@@ -136,7 +140,11 @@ table_fit.MxModel <- function(x, ...) {
   is_char <- sapply(out, inherits, what = "character")
   atomvect <- sapply(out, function(i){ is.atomic(i) & length(i) == 1})
   fits <- out[atomvect]
-
+  if("informationCriteria" %in% names(out)){
+    add_ic <- out$informationCriteria[, "par"]
+    names(add_ic) <- gsub(":", "", names(add_ic), fixed = TRUE)
+    fits <- c(fits, add_ic)
+  }
   if(!is.null(out[["RMSEACI"]])){
     if(any(!is.na(out[["RMSEACI"]]))){
       names(out[["RMSEACI"]]) <- paste0("RMSEA.", names(out[["RMSEACI"]]))
@@ -144,7 +152,7 @@ table_fit.MxModel <- function(x, ...) {
     }
   }
   if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
-  dropthese <- c("wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
+  dropthese <- c("AIC.Mx", "BIC.Mx", "wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
                  "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
                  "timestamp", "frontendTime", "backendTime", "independentTime",
                  "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
