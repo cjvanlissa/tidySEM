@@ -24,6 +24,7 @@ Depends:
 Imports:
     ggplot2,
     lavaan,
+    blavaan,
     MplusAutomation,
     igraph,
     psych,

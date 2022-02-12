@@ -609,6 +609,81 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   results
 }
 
+#' @importFrom lavaan parameterEstimates standardizedsolution
+#' @importFrom blavaan blavInspect
+#' @method table_results blavaan
+#' @export
+table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
+  # Rename dictionary for consistency with mplus
+  user_specified <- blavInspect(x, "list")
+  remthese <- which(
+    (user_specified$op == "==" & user_specified$user != 1L) |
+      (user_specified$op == "==" & user_specified$user == 1L) |
+      (user_specified$op %in% c("<", ">")))
+  if(length(remthese > 0)) user_specified <- user_specified[-remthese, , drop = FALSE]
+  user_specified <- (user_specified$free != 0 | !is.na(user_specified$ustart))
+
+  pars_unst <- parameterEstimates(x)
+  if("label" %in% names(pars_unst)){
+    names(pars_unst)[names(pars_unst) == "label"] <- "lavaan_label"
+  }
+  # Rename columns for consistency with mplus
+  pars_unst$label <- lavaan_labels(pars_unst)
+
+  num_groups <- blavInspect(x, what = "ngroups")
+  if(num_groups > 1){
+    group_labels <- blavInspect(x, what = "group.label")
+    if(!all(group_labels %in% unique(pars_unst$group))){
+      if(is.numeric(pars_unst$group)){
+        pars_unst$group[pars_unst$group > 0] <- group_labels[pars_unst$group]
+        pars_unst$group[pars_unst$group == 0] <- NA
+      }
+    }
+    pars_unst$label <- paste2(pars_unst$label, pars_unst$group, sep = ".")
+  }
+  if("level" %in% names(pars_unst)){
+    pars_unst$label <- paste2(pars_unst$label, pars_unst$level, sep = ".")
+  }
+
+  pars_unst$est_sig <- pars_unst$est
+  pars_unst[c("z", "ci.lower", "ci.upper")] <- NULL
+
+  # Std
+  pars_std <- standardizedsolution(x)
+
+  pars_std$est_sig <- pars_std$est
+  # Remove redundant columns
+  pars_std[c("lhs", "op", "rhs", "group", "z", "ci.lower", "ci.upper")] <- NULL
+
+  names(pars_std)[na.omit(match(c("se", "pval", "est_sig", "confint"), names(pars_std)))] <- paste0(names(pars_std)[na.omit(match(c("se", "pval", "est_sig", "confint"), names(pars_std)))], "_std")
+  if("est.std" %in% names(pars_std)) names(pars_std)[which(names(pars_std) == "est.std")] <- "est_std"
+  if("label" %in% names(pars_std)) names(pars_std)[which(names(pars_std) == "label")] <- "lavaan_label"
+  results <- cbind(pars_unst, pars_std)
+  results <- two_to_one(results)
+  # Apply digits
+  fixed_parameters <- is.na(results$z)
+  value_columns <- names(results)[can_be_numeric(results)]
+
+  results[, value_columns] <- lapply(results[, value_columns],
+                                     format_with_na, digits = digits, format = "f")
+  results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
+
+  if(!is.null(columns)){
+    results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
+  } else {
+    first_cols <- c("lhs", "op", "rhs", "est", "se", "pval", "est_sig", "confint",
+                    "est_std", "se_std", "pval_std", "est_sig_std", "confint_std")
+    last_cols <- c("block", "group", "level", "lavaan_label", "mplus_label", "label")
+    order_cols <- c(names(results)[names(results) %in% first_cols],
+                    names(results)[!names(results) %in% c(first_cols, last_cols)],
+                    names(results)[names(results) %in% last_cols])
+    results <- results[, order_cols, drop = FALSE]
+  }
+  class(results) <- c("tidy_results", class(results))
+  if(length(user_specified) == nrow(results)) attr(results, "user_specified") <- user_specified
+  results
+}
+
 
 #' @method table_results character
 #' @export
