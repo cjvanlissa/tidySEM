@@ -34,8 +34,12 @@ BCH.MxModel <- function(x, model, data, ...){
   bchweights <- data.frame(Hmatinv[mostlikely, ])
   names(bchweights) <- paste0("w", cprobs$sum.posterior$class)
   data <- cbind(data, bchweights)
-  model <- as_ram(model, meanstructure = TRUE)
   grp_names <- cprobs$sum.posterior$class
+
+  if(inherits(model, "character")){
+    model <- as_ram(model, meanstructure = TRUE)
+  }
+  if(!inherits(model, "MxModel")) stop("Argument 'model' must be either an object of class 'MxModel', or a character string that can be coerced using as_ram().")
   grps <- lapply(1:ncol(bchweights), function(i){
     mxModel(model,
             name = grp_names[i],
@@ -43,7 +47,15 @@ BCH.MxModel <- function(x, model, data, ...){
             mxFitFunctionML())
   })
   grps <- do.call(mxModel, c(list(model = "aux", mxFitFunctionMultigroup(grp_names), grps)))
-  run_mx(grps)
+  out <- try(run_mx(grps), silent = TRUE)
+  if(!inherits(out, "try-error")){
+    return(out)
+  }
+  out <- try(mxRun(grps), silent = TRUE)
+  if(!inherits(out, "try-error")){
+    return(out)
+  }
+  NULL
 }
 
 
