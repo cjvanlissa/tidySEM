@@ -1,3 +1,8 @@
+# tidySEM 0.2.2
+
+* table_fit() now reports information criteria with parameter penalty
+* BCH() now accepts an MxModel as auxiliary model
+
 # tidySEM 0.2.1
 
 * Fix CRAN check errors related to OpenMx
