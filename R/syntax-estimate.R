@@ -80,9 +80,6 @@ estimate_lavaan <- function(x, func = "sem", ...){
 estimate_mplus <- function(x, ...){
   if(!has_data(x)) return(NULL)
   if(!has_syntax(x)) return(NULL)
-  if(!has_mplus(verbose = TRUE)){
-    return(NULL)
-  }
   dots <- list(...)
   Args_mplusobject <- dots[which(names(dots) %in% c("TITLE", "DATA", "VARIABLE", "DEFINE", "MONTECARLO", "MODELPOPULATION", "MODELMISSING", "ANALYSIS", "MODELINDIRECT", "MODELCONSTRAINT", "MODELTEST", "MODELPRIORS", "OUTPUT", "SAVEDATA", "PLOT", "usevariables", "autov", "imputed"))]
   Args_mplusobject$rdata <- x$data
@@ -102,7 +99,7 @@ estimate_mplus <- function(x, ...){
   if(is.null(Args_mplusmodeler[["run"]])){
     Args_mplusmodeler$run <- 1L
   }
-  out <- do.call(mplusModeler, Args_mplusmodeler)
+  out <- tryCatch({do.call(mplusModeler, Args_mplusmodeler)}, error = function(e){return(NULL)})
   if(run_in_temp){
     setwd(old_wd)
     unlink(tmpdir, recursive = TRUE)
