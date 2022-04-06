@@ -20,7 +20,7 @@ mplusModeler. Using this function requires
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
@@ -72,8 +72,8 @@ mplusModeler. Using this function requires
 
     <div class="ref-description">
     <p>This function is a wrapper for the functions
-<code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html" class="external-link">mplusObject</a></code> and
-<code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html" class="external-link">mplusModeler</a></code>. Using this function requires
+<code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusObject.html" class="external-link">mplusObject</a></code> and
+<code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusModeler.html" class="external-link">mplusModeler</a></code>. Using this function requires
 'Mplus' to be installed.</p>
     </div>
 
@@ -87,8 +87,8 @@ mplusModeler. Using this function requires
 <dd><p>An object of class <code>tidy_sem</code>.</p></dd>
 <dt>...</dt>
 <dd><p>Additional parameters passed to
-<code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html" class="external-link">mplusObject</a></code> and
-<code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusModeler.html" class="external-link">mplusModeler</a></code>. These arguments are matched to
+<code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusObject.html" class="external-link">mplusObject</a></code> and
+<code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusModeler.html" class="external-link">mplusModeler</a></code>. These arguments are matched to
 the correct function by name. The arguments <code>rdata</code>, and <code>MODEL</code>
 cannot be edited, as they are determined from the <code>tidy_sem</code> object.</p></dd>
 </dl></div>
@@ -105,7 +105,7 @@ optional. If these are not specified, the model will be run in
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/michaelhallquist/MplusAutomation" class="external-link">MplusAutomation</a></span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://michaelhallquist.github.io/MplusAutomation/" class="external-link">MplusAutomation</a></span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Version:  1.0.0</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> We work hard to write this free software. Please help us get credit by citing: </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -114,7 +114,7 @@ optional. If these are not specified, the model will be run in
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -- see citation("MplusAutomation").</span>
 <span class="r-in"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_sem.html">tidy_sem</a></span><span class="op">(</span><span class="va">iris</span>, <span class="st">"\\."</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="measurement.html">measurement</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusAvailable.html" class="external-link">mplusAvailable</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span></span>
+<span class="r-in"><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusAvailable.html" class="external-link">mplusAvailable</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span></span>
 <span class="r-in">  <span class="fu">estimate_mplus</span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span><span style="color: #000000;">Mplus is available.</span></span>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
@@ -124,7 +124,7 @@
 <li>Converting the <code>tidy_sem</code> object to <code>lavaan</code> syntax using <code>as_lavaan(model)</code> and using that as input for the <code>lavaan</code> functions <code>sem</code>, <code>lavaan</code>, or <code>cfa</code>
 </li>
 <li>Converting the <code>tidy_sem</code> object to <code>OpenMx</code> using <code>as_ram(model)</code>, and using that as input for <code>mxRun</code> or `run_mx``</li>
-<li>Converting the <code>tidy_sem</code> object to <code>Mplus</code> using <code>as_mplus(model)</code>, and using that as input for <code><a href="https://rdrr.io/pkg/MplusAutomation/man/mplusObject.html" class="external-link">MplusAutomation::mplusObject()</a></code>
+<li>Converting the <code>tidy_sem</code> object to <code>Mplus</code> using <code>as_mplus(model)</code>, and using that as input for <code><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusObject.html" class="external-link">MplusAutomation::mplusObject()</a></code>
 </li>
 <li>Using the functions <code>estimate_lavaan(model)</code>, <code>estimate_mx(model)</code>, or <code>estimate_mplus(model)</code>
 </li>
@@ -212,7 +212,7 @@
   <span class="fu"><a href="../reference/estimate_mx.html">estimate_mx</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>The same model can be estimated in ‘Mplus’ through the R-package <code>MplusAutomation</code>. This requires ‘Mplus’ to be installed.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/michaelhallquist/MplusAutomation" class="external-link">MplusAutomation</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://michaelhallquist.github.io/MplusAutomation/" class="external-link">MplusAutomation</a></span><span class="op">)</span>
 <span class="va">model</span> |&gt;
   <span class="fu"><a href="../reference/estimate_mplus.html">estimate_mplus</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
