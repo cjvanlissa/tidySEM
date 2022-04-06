@@ -39,7 +39,8 @@ Suggests:
     covr,
     tidyLPA,
     poLCA,
-    umx
+    umx,
+    mclust
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
