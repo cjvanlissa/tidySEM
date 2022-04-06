@@ -14,7 +14,7 @@ test_that("table_results has pval", {
 
   expect_equivalent(table_results(fit, columns = c("pval"))$pval[1:3], c("0.00", "0.04", "0.00"))
 
-  if(isTRUE(mplusAvailable() == 0)){
+  if(isTRUE(unname(Sys.info()["user"]) == "Lissa102")){
     res_mplus <- mplusModeler(mplusObject(MODEL = "mpg ON cyl am;", OUTPUT = "standardized;", rdata = mtcars), modelout = "test.inp", run = 1L)
 
     expect_equivalent(table_results(res_mplus, columns = c("pval"))$pval[1:3], c("0.00", "0.04", "0.00"))

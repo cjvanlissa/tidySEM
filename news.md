@@ -2,6 +2,7 @@
 
 * table_fit() now reports information criteria with parameter penalty
 * BCH() now accepts an MxModel as auxiliary model
+* Prevent Mplus tests from throwing error on CRAN
 
 # tidySEM 0.2.1
 

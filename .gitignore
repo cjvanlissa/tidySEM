@@ -21,3 +21,4 @@ CRAN-RELEASE
 /Meta/
 *.dgm]
 *.txt
+tests/test_local.txt

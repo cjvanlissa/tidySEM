@@ -19,7 +19,7 @@ test_that("get_nodes.lavaan handles custom label", {
 })
 
 
-if(isTRUE(mplusAvailable() == 0)){
+if(isTRUE(unname(Sys.info()["user"]) == "Lissa102")){
   the_test <- "get_nodes_label"
   old_wd <- getwd()
   test_dir <- file.path(tempdir(), the_test)

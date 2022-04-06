@@ -2,7 +2,6 @@ library(lavaan)
 library(MplusAutomation)
 
 test_that("get_edges handles columns argument", {
-
   fit <- sem("mpg ~ cyl\nmpg ~ am", data = mtcars, meanstructure = TRUE)
 
   out <- get_edges(fit, label = NULL, columns = c("est", "pval"))
@@ -15,7 +14,7 @@ test_that("get_edges handles columns argument", {
   out <- get_nodes(fit, label = NULL, columns = c("est", "pval"))
 
 
-  if(isTRUE(mplusAvailable() == 0)){
+  if(unname(Sys.info()["user"]) == "Lissa102"){
     the_test <- "get_edges_columns"
     old_wd <- getwd()
     test_dir <- file.path(tempdir(), the_test)

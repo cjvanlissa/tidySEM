@@ -23,7 +23,7 @@ test_that("CFA gives same results in lavaan and Mplus", {
   tb_lav <- table_results(res_lav, columns = NULL)
   expect_true(nrow(tb_lav) == 36)
 
-  if(isTRUE(mplusAvailable() == 0)){
+  if(isTRUE(unname(Sys.info()["user"]) == "Lissa102")){
     res_mplus <- mplusModeler(mplusObject(MODEL = as_mplus(model), OUTPUT = "standardized;", rdata = df), modelout = "test.inp", run = 1L)
 
     tb_mplus <- table_results(res_mplus, columns = NULL)

@@ -10,7 +10,7 @@ test_that("digits are respected in table_results", {
   expect_equivalent(sapply(out, function(x){max(nchar(x))}), c(13, 6, 16))
 
 
-  if(isTRUE(mplusAvailable() == 0)){
+  if(isTRUE(unname(Sys.info()["user"]) == "Lissa102")){
     the_test <- "digits"
     old_wd <- getwd()
     test_dir <- file.path(tempdir(), the_test)
