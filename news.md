@@ -1,3 +1,8 @@
+# tidySEM 0.2.3
+
+* Fix Issue #45 , argument `label` was not passed correctly to `get_nodes()` and
+  `get_edges()` in `graph_sem()` and `prepare_graph()`
+
 # tidySEM 0.2.2
 
 * table_fit() now reports information criteria with parameter penalty

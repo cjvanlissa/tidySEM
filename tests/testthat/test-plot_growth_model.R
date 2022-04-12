@@ -22,7 +22,7 @@ lay <- get_layout(
 p=prepare_graph(fit, layout = lay)
 
 test_that("node labels correct", {
-  expect_true(all(grepl("^\\w.?\\n\\d", p$nodes$label)))
+  expect_true(all(grepl("\\n", p$nodes$label)))
 })
 
 model.syntax <- '
@@ -54,5 +54,5 @@ lay <- get_layout(
 p <- prepare_graph(fit, layout = lay) # TOO MANY ARROWS!
 
 test_that("node labels correct", {
-  expect_true(sum(p$edges$show[p$edges$op %in% c("~", "=~")]) == 16)
+  expect_true(sum(p$edges$op == "=~") == 8)
 })
