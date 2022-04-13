@@ -18,7 +18,11 @@ lay <- get_layout(
   NA, "i", "s", NA,
   rows = 2
 )
+tmp <- fit
 
+# Check whether there are any errors related to the environment:
+p=prepare_graph(fit, nodes = get_nodes(tmp))
+# Then carry on with the regular tests
 p=prepare_graph(fit, layout = lay)
 
 test_that("node labels correct", {

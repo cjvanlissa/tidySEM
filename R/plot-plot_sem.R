@@ -205,7 +205,7 @@ graph_sem.lavaan <- function(model,
                              ...){
   cl <- match.call()
   cl[[1]] <- quote(prepare_graph)
-  prep <- eval(cl)
+  prep <- eval.parent(cl)
   return(plot(prep))
 }
 
@@ -536,7 +536,6 @@ prepare_graph.lavaan <- function(model,
                                  layout = get_layout(x = model),
                                  nodes = get_nodes(x = model),
                                  ...){
-
   dots <- match.call(expand.dots = FALSE)[["..."]]
   pass_args <- c("label", "digits", "columns")
   edges <- substitute(edges)
@@ -552,10 +551,19 @@ prepare_graph.lavaan <- function(model,
     }
   }
   Args <- as.list(match.call(expand.dots = FALSE)[-1])
+  model <- model
   Args[["..."]] <- NULL
-  Args[["edges"]] <- eval(edges)
-  Args[["nodes"]] <- eval(nodes)
-  Args[["layout"]] <- eval(layout)
+  Args[["model"]] <- model # To prevent issue with pipe
+  # Problem: the object `model` is available in this environment,
+  # but objects passed to get_edges() etc are not available in this environment.
+  # They are available in the parent environment, but `model` is not.
+  # Maybe make new environment and add model to it?
+  # It's a hack, but seems to pass all tests.
+  use_env <- parent.frame()
+  assign("model", model, envir = use_env)
+  Args[["edges"]] <-  eval(edges, envir = use_env)
+  Args[["nodes"]] <-  eval(nodes, envir = use_env)
+  Args[["layout"]] <- eval(layout, envir = use_env)
   Args <- c(Args, dots)
 
   do.call(prepare_graph_model, Args)
