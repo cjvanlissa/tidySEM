@@ -296,7 +296,7 @@ mx_mixture.character <- function(model,
       cl[["classes"]] <- i
       cl[[1L]] <- quote(mx_mixture)
       eval.parent(cl)
-      })
+    })
     attr(out, "tidySEM") <- "list"
     return(out)
   } else {
@@ -309,7 +309,7 @@ mx_mixture.character <- function(model,
           x = model[[i]],
           model = paste0("class", i)),
         dots_asram))
-      })
+    })
     cl[["classes"]] <- classes
     cl[["model"]] <- model
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
@@ -337,8 +337,10 @@ mx_mixture.list <- function(model,
                             ...){
   cl <- match.call()
   dots <- list(...)
-  if(length(classes) > 1 | classes != length(model)){
-    message("When calling mx_mixture() on a list, the number of classes is inferred from the length of the list. Argument 'classes = ", deparse(classes), "' was ignored.")
+  if(length(classes) > 1){
+    if(classes != length(model)){
+      message("When calling mx_mixture() on a list, the number of classes is inferred from the length of the list. Argument 'classes = ", deparse(classes), "' was ignored.")
+    }
   }
   classes <- length(model)
   if(all(sapply(model, inherits, "character"))){
@@ -347,10 +349,10 @@ mx_mixture.list <- function(model,
     out <- lapply(1:length(model), function(i){
       do.call(as_ram, c(
         list(
-          x = out[[i]],
+          x = model[[i]],
           model = paste0("class", i)),
         dots_asram))
-      })
+    })
   } else {
     if(!all(sapply(out, inherits, "MxModel"))){
       stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
@@ -360,6 +362,9 @@ mx_mixture.list <- function(model,
   }
   if(run){
     cl[["model"]] <- out
+    cl[["classes"]] <- classes
+    cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
+    cl[["model"]] <- eval.parent(cl)
     cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
     cl[["x"]] <- eval.parent(cl)
     cl[["model"]] <- NULL
@@ -506,19 +511,19 @@ mixture_starts <- function(model,
     mxModel(model[[thissub]],
             mxData(data[splits == i, , drop = FALSE], type = "raw"),
             mxFitFunctionML())
-    })
+  })
   strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
   strts <- try({
     strts <- mxAutoStart(strts, type = "ULS")
     mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
-    })
+  })
   if(inherits(strts, "try-error")){
     strts <- try({
-    strts <- mxAutoStart(strts, type = "DWLS")
-    strts <<- mxTryHard(strts, extraTries = 100,
-                        silent = TRUE,
-                        verbose = FALSE,
-                        bestInitsOutput = FALSE)
+      strts <- mxAutoStart(strts, type = "DWLS")
+      strts <<- mxTryHard(strts, extraTries = 100,
+                          silent = TRUE,
+                          verbose = FALSE,
+                          bestInitsOutput = FALSE)
 
     })
   }
@@ -623,67 +628,67 @@ profile_syntax <- function(variances, covariances, parameters){
 # @method mx_mixture data.frame
 # @export
 if(FALSE){
-mx_mixture.data.frame <- function(model,
-                                 classes = 1L,
-                                 data = NULL,
-                                 run = TRUE,
-                                 ...){
-  browser()
-  data <- model
-  vars_cont <- names(data)[sapply(data, inherits, what = "numeric")]
-  vars_bin <- names(data)[sapply(data, function(x){all(na.omit(x) %in% c(0, 1))})]
-  vars_nom <- sapply(data, inherits, what = c("factor", "character"))
-  vars_ord <- sapply(data, inherits, what = "ordered")
-  vars_nom <- names(data)[vars_nom & !vars_ord]
-  vars_ord <- names(data)[vars_ord]
-  if(length(vars_nom) > 0){
-    adddummies <- lapply(vars_nom, function(n){
-      model.matrix(~.-1, data = data[, n, drop = FALSE])
-    })
-    adddummies <- do.call(cbind, adddummies)
-    data <- cbind(data, adddummies)
-    data[vars_nom] <- NULL
-    vars_bin <- c(vars_bin, colnames(adddummies))
-  }
-  if(length(vars_bin) > 0){
-    data[vars_bin] <- lapply(data[vars_bin], ordered)
-  }
-  mix_all <- mx_profiles(data, classes = 2, run = FALSE)
-  mix_profiles <- mx_profiles(data[vars_cont], classes = 2, run = TRUE)
-  df_ord <- data[c(vars_bin, vars_ord)]
-  mix_ord <- mx_lca(df_ord, classes = 2, run = TRUE)
-  nam_prof <- names(mix_profiles@submodels)
-  nam_lca <- names(mix_ord@submodels)
-  if(!all(nam_prof == nam_lca)) stop("Could not merge continuous and categorical models.")
-  browser()
-  # Continuous
-  for(n in nam_prof){
-    for(m in names(mix_profiles[[n]]@matrices)){
-      for(i in c("values", "labels", "free", "lbound", "ubound")){
-        dims <- dim(mix_all[[n]][[m]][[i]])
-        end <- dim(mix_profiles[[n]][[m]][[i]])
-        start <- c(1, 1)
-        if(!(length(start) ==0 |length(end) == 0)){
-          mix_all[[n]][[m]][[i]][start[1]:end[1], start[2]:end[2]] <- mix_profiles[[n]][[m]][[i]]
-        }
-        end <- dim(mix_all[[n]][[m]][[i]])
-        end[1] <- min(c(dims[1], end[1]))
-        end[2] <- min(c(dims[2], end[2]))
-        start <- dim(mix_profiles[[n]][[m]][[i]])+1
-        start[1] <- min(c(dims[1], start[1]))
-        start[2] <- min(c(dims[2], start[2]))
-        if(!(length(start) ==0 |length(end) == 0)){
-          mix_all[[n]][[m]][[i]][start[1]:end[1], start[2]:end[2]] <- mix_ord[[n]][[m]][[i]]
+  mx_mixture.data.frame <- function(model,
+                                    classes = 1L,
+                                    data = NULL,
+                                    run = TRUE,
+                                    ...){
+    browser()
+    data <- model
+    vars_cont <- names(data)[sapply(data, inherits, what = "numeric")]
+    vars_bin <- names(data)[sapply(data, function(x){all(na.omit(x) %in% c(0, 1))})]
+    vars_nom <- sapply(data, inherits, what = c("factor", "character"))
+    vars_ord <- sapply(data, inherits, what = "ordered")
+    vars_nom <- names(data)[vars_nom & !vars_ord]
+    vars_ord <- names(data)[vars_ord]
+    if(length(vars_nom) > 0){
+      adddummies <- lapply(vars_nom, function(n){
+        model.matrix(~.-1, data = data[, n, drop = FALSE])
+      })
+      adddummies <- do.call(cbind, adddummies)
+      data <- cbind(data, adddummies)
+      data[vars_nom] <- NULL
+      vars_bin <- c(vars_bin, colnames(adddummies))
+    }
+    if(length(vars_bin) > 0){
+      data[vars_bin] <- lapply(data[vars_bin], ordered)
+    }
+    mix_all <- mx_profiles(data, classes = 2, run = FALSE)
+    mix_profiles <- mx_profiles(data[vars_cont], classes = 2, run = TRUE)
+    df_ord <- data[c(vars_bin, vars_ord)]
+    mix_ord <- mx_lca(df_ord, classes = 2, run = TRUE)
+    nam_prof <- names(mix_profiles@submodels)
+    nam_lca <- names(mix_ord@submodels)
+    if(!all(nam_prof == nam_lca)) stop("Could not merge continuous and categorical models.")
+    browser()
+    # Continuous
+    for(n in nam_prof){
+      for(m in names(mix_profiles[[n]]@matrices)){
+        for(i in c("values", "labels", "free", "lbound", "ubound")){
+          dims <- dim(mix_all[[n]][[m]][[i]])
+          end <- dim(mix_profiles[[n]][[m]][[i]])
+          start <- c(1, 1)
+          if(!(length(start) ==0 |length(end) == 0)){
+            mix_all[[n]][[m]][[i]][start[1]:end[1], start[2]:end[2]] <- mix_profiles[[n]][[m]][[i]]
+          }
+          end <- dim(mix_all[[n]][[m]][[i]])
+          end[1] <- min(c(dims[1], end[1]))
+          end[2] <- min(c(dims[2], end[2]))
+          start <- dim(mix_profiles[[n]][[m]][[i]])+1
+          start[1] <- min(c(dims[1], start[1]))
+          start[2] <- min(c(dims[2], start[2]))
+          if(!(length(start) ==0 |length(end) == 0)){
+            mix_all[[n]][[m]][[i]][start[1]:end[1], start[2]:end[2]] <- mix_ord[[n]][[m]][[i]]
+          }
         }
       }
+      for(i in c("mat_dev", "mat_ones", "Thresholds")){
+        mix_all[[n]][[i]] <- mix_ord[[n]][[i]]
+      }
+      mix_all[[n]]$expectation$thresholds <- mix_ord[[n]]$expectation$thresholds
     }
-    for(i in c("mat_dev", "mat_ones", "Thresholds")){
-      mix_all[[n]][[i]] <- mix_ord[[n]][[i]]
-    }
-    mix_all[[n]]$expectation$thresholds <- mix_ord[[n]]$expectation$thresholds
+
+    browser()
+
   }
-
-browser()
-
-}
 }
