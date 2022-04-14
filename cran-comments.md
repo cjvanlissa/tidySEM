@@ -2,6 +2,8 @@
 
 * Fix Issue #45 , argument `label` was not passed correctly to `get_nodes()` and
   `get_edges()` in `graph_sem()` and `prepare_graph()`
+* Fix Issue #47, list of character vectors was not properly converted to an
+  mxModel
 
 ## Test environments
 
