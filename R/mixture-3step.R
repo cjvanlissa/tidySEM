@@ -30,7 +30,7 @@ BCH.MxModel <- function(x, model, data, ...){
   cprobs <- class_prob(x)
   Hmat <- cprobs$mostlikely.class
   Hmatinv <- solve(Hmat)
-  mostlikely <- apply(cprobs$individual, 1, which.max)
+  mostlikely <- cprobs$individual[,"predicted"]
   bchweights <- data.frame(Hmatinv[mostlikely, ])
   names(bchweights) <- paste0("w", cprobs$sum.posterior$class)
   data <- cbind(data, bchweights)
