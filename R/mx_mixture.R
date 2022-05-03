@@ -298,6 +298,7 @@ mx_mixture.character <- function(model,
       eval.parent(cl)
     })
     attr(out, "tidySEM") <- "list"
+    class(out) <- c("mixture_list", class(out))
     return(out)
   } else {
     dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
