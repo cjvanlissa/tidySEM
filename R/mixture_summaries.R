@@ -115,13 +115,15 @@ class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikel
 #' @export
 class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
   post_probs <- extract_postprob(x)
+  post_probs_pred <- cbind(post_probs, predicted = apply(post_probs, 1, which.max) )
+
   out <- lapply(type, function(thetype){
     switch(thetype,
            "mostlikely.class" = classification_probs_mostlikely(post_probs),
            "avg.mostlikely" = avgprobs_mostlikely(post_probs),
            "sum.posterior" = sum_postprob(x),
            "sum.mostlikely" = sum_mostlikely(x),
-           post_probs)
+           post_probs_pred)
   })
   names(out) <- type
   out
