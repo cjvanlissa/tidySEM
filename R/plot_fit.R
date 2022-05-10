@@ -3,6 +3,7 @@
 plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) {
     statlow <- tolower(statistics)
     namelow <- tolower(names(x))
+    names(x) <- namelow
     if(!xaxis %in% names(x)) x$Name <- as.character(1:nrow(x))
     if(!all(statlow %in% namelow)){
         stop("Can not plot_fit the following statistics: ",
