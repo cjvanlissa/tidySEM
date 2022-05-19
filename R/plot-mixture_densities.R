@@ -109,7 +109,12 @@ plot_density.mixture_list <-
         cl <- match.call()
 
         # If no variables have been specified, use all variables
-        var_names <- x[[1]]@submodels[[1]]@manifestVars
+        if(length(x[[1]]@submodels) > 0){
+          var_names <- x[[1]]@submodels[[1]]@manifestVars
+        }else{
+          var_names <- x[[1]]@manifestVars
+        }
+
         if (is.null(variables)) {
             variables <- var_names
         } else {
