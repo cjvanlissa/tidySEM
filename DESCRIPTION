@@ -8,7 +8,12 @@ Authors@R:
              family = "van Lissa",
              role = c("aut", "cre"),
              email = "c.j.vanlissa@uu.nl",
-             comment = c(ORCID = "0000-0002-0808-5024")))
+             comment = c(ORCID = "0000-0002-0808-5024")),
+      person(given = c("Mauricio"),
+             family = "Garnier-Villarreal",
+             role = c("ctb"),
+             email = "mgv@pm.me",
+             comment = c(ORCID = "0000-0002-2951-6647")) )
 Description: A tidy workflow for generating, estimating, reporting,
     and plotting structural equation models using 'lavaan', 'OpenMx', or
     'Mplus'. Throughout this workflow, elements of syntax, results, and graphs
