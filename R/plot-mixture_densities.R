@@ -321,7 +321,8 @@ plot_density.MxModel <- function(x,
     }
     plot_df <- do.call(rbind, lapply(names(x), function(n){
         i <- x[[n]]
-        P <- class_prob(i, "individual")$individual
+        #P <- class_prob(i, "individual")$individual
+        P <- extract_postprob(i)
         colnames(P) <- 1:ncol(P)
         P <- cbind(P, Total = 1)
         P <- P/nrow(P)
