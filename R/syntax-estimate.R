@@ -41,6 +41,7 @@ estimate_mx <- function(x, ...){
 #' res <- estimate_lavaan(model)
 #' summary(res)
 #' @rdname estimate_lavaan
+#' @importFrom lavaan sem
 #' @export
 estimate_lavaan <- function(x, func = "sem", ...){
   if(!has_data(x)) return(NULL)
