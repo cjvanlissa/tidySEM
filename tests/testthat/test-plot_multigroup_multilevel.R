@@ -1,5 +1,5 @@
 test_that("multilevmultigroup works", {
-  skip_on_cran()
+  tidySEM:::skip_if_not_local()
   Galo <- read.csv("../testdata/galo.csv")
 
   L.in.G <- ' group: foo

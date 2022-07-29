@@ -23,10 +23,10 @@ BugReports: https://github.com/cjvanlissa/tidySEM/issues
 Depends: 
     R (>= 4.0.0),
     stats,
-    utils
+    utils,
+    OpenMx
 Imports:
     ggplot2,
-    OpenMx,
     lavaan,
     blavaan,
     MplusAutomation,
@@ -48,5 +48,5 @@ Suggests:
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 LazyData: true

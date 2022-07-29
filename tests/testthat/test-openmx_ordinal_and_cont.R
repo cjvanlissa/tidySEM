@@ -372,7 +372,7 @@ c2$M$values[1,4] = 0.962237983458882
 res_tidysem <- mxTryHardOrdinal(mix_tidysem, extraTries = 10)
 tmp_tidysem <- class_prob(res_tidysem)
 
-props_tidysem <- table_results(res_tidysem, columns=NULL)
+props_tidysem <- suppressWarnings(table_results(res_tidysem, columns=NULL))
 fit_tidysem <- table_fit(res_tidysem)
 
 # df_mp <- df
@@ -395,7 +395,7 @@ test_that("ordinal mixture model works with mx_threshold", {
   expect_equivalent(sort(tmp_tidysem$sum.posterior$proportion),
                     sort(c(0.52532, 0.47468)), tolerance = .02)
 
-  expect_equivalent(pnorm(props_tidysem$est[12:23][unlist(list(c(1:6), c(7:12))[order(tmp_tidysem$sum.posterior$proportion)])]),
+  expect_equivalent(pnorm(as.numeric(props_tidysem$est)[12:23][unlist(list(c(1:6), c(7:12))[order(tmp_tidysem$sum.posterior$proportion)])]),
                     pnorm(c(-0.477, 5.189, -0.231, 4.807, -1.296, 5.177, -5.473, 0.27,
                             -15, 0.311, -15, 0.286))
                     , tolerance = .12) # Note high tolerance!

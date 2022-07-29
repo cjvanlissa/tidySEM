@@ -62,14 +62,14 @@ table_fit.mplusObject <- function(x, ...) {
     cl["keepCols"] <- list(NULL)
   }
   if(any(!mixtures)){
-    cl[[1L]] <- quote(SummaryTable)
+    cl[[1L]] <- str2lang("MplusAutomation::SummaryTable")
     out[which(!mixtures)] <- lapply(which(!mixtures), function(i){
       cl[["modelList"]] <- modelList[[i]]
       eval.parent(cl)
     })
   }
   if(any(mixtures)){
-    cl[[1L]] <- quote(mixtureSummaryTable)
+    cl[[1L]] <- str2lang("MplusAutomation::mixtureSummaryTable")
     out[which(mixtures)] <- lapply(which(mixtures), function(i){
       cl[["modelList"]] <- modelList[[i]]
       eval.parent(cl)

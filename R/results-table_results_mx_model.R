@@ -21,8 +21,6 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
         results_std[[n]]$matrix <- paste(n, results_std[[n]]$matrix, sep = ".")
       }
       results_std <- bind_list(results_std)
-      renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se", "label" = "openmx_label")
-      names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
     }
     # Remove redundant correlations
     remove_these <- results_std$name[endsWith(results_std$matrix, ".S")]
@@ -34,6 +32,13 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       flip_S$name <- gsub("\\[(\\d+),(\\d+)\\]$", "\\[\\2,\\1\\]", flip_S$name)
       results_std[these_rows, ] <- flip_S[, names(results_std)]
     }
+    # Rename columns
+    renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se", "label" = "openmx_label")
+    names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
+
+    # Compute p-value and CI
+    results_std$pval_std <- 2*pnorm(abs(results_std$std_est)/results_std$std_se, lower.tail = FALSE)
+    results_std$confint_std <- conf_int(results_std$std_est, se = results_std$std_se)
     # Clean up name vs label
     tab <- merge(results, results_std, by = "name", all = TRUE)
     results <- two_to_one(tab)
@@ -88,8 +93,8 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       results$confint[match(ci_x$name, results$name)] <- ci_x$CI
     }
   }
-  results$pvalue <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
-  results$est_sig <- est_sig(results$est, sig = results$pvalue)
+  results$pval <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
+  results$est_sig <- est_sig(results$est, sig = results$pval)
   results[c("estimate", "Estimate")] <- NULL
   miscols <- colSums(is.na(results)) == nrow(results)
   if(any(miscols)) results <- results[, !miscols, drop = FALSE]
@@ -100,6 +105,19 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Drop internal stuff
   internalstuff <- grepl("mat_dev", results$name)
   if(any(internalstuff)) results <- results[!internalstuff, ]
+  # Make uniform column names
+  renam <- c(std.value = "est_std", std.se = "se_std")
+  if(any(names(renam) %in% names(results))) names(results)[match(names(renam), names(results))] <- renam
+  # Impose similar order to lavaan
+  firstcols <- c("lhs", "op", "rhs", "est", "se", "pval", "confint", "est_sig",
+    "est_std", "se_std", "pval_std", "confint_std", "est_sig_std",
+    "label")
+  results <- results[, c(firstcols[firstcols %in% names(results)], names(results)[!names(results) %in% firstcols]), drop = FALSE]
+  # Format using digits
+  value_columns <- names(results)[can_be_numeric(results)]
+  results[, value_columns] <- lapply(results[, value_columns],
+                                     format_with_na, digits = digits, format = "f")
+
   if(!is.null(columns)) {
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   }

@@ -1,5 +1,5 @@
 test_that("ordinal variable thresholds correct", {
-  skip_on_cran()
+  tidySEM:::skip_if_not_local()
   tmp <- 'structure(list(u1 = structure(c(1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
 1L, 1L, 3L, 3L, 2L, 3L, 1L, 2L, 1L, 2L, 2L, 3L, 1L, 1L, 1L, 3L,
 1L, 3L, 3L, 2L, 3L, 3L, 1L, 2L, 3L, 3L, 1L, 3L, 3L, 3L, 1L, 3L,
@@ -1346,8 +1346,8 @@ u4 | t42*t2", data = df)
   pars_lv$est[pars_lv$op == "|"]
   pars_mx <- table_results(res_mx, "est")
   expect_equivalent(
-    matrix(pars_mx$est, nrow = 2, byrow = F),
-    matrix(pars_lv$est[pars_lv$op == "|"], nrow = 2, byrow = T),
+    matrix(as.numeric(pars_mx$est), nrow = 2, byrow = F),
+    matrix(round(pars_lv$est[pars_lv$op == "|"], 2), nrow = 2, byrow = T),
     tolerance = 1e-4)
 
   # Mixture model
@@ -1369,7 +1369,7 @@ u4 | t42{C}*t2", classes = 2, data = df, run = FALSE)}, error = function(e){NULL
   probs_mx <- class_prob(res_mx)
   mat <- matrix(tmp$est[-1], ncol = 2, byrow = F)
   mat <- mat[, order(probs_mx$sum.posterior$proportion)]
-  mat[,] <- pnorm(mat)
+  mat[,] <- pnorm(as.numeric(mat))
   #tmp$est<-pnorm(tmp$est)
   fit <- table_fit(res_mx)
 

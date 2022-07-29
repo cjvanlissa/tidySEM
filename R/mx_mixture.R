@@ -94,6 +94,7 @@ mx_mixture <- function(model,
 #' mx_profiles(data = df,
 #'             classes = 2) -> res
 #' }
+#' @importFrom OpenMx imxReportProgress
 mx_profiles <- function(data = NULL,
                         classes = 1L,
                         variances = "equal",

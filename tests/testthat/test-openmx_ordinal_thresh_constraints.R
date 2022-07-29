@@ -1,4 +1,3 @@
-library(OpenMx)
 df <- data_mix_ordinal[1:2]
 df[1:2] <- lapply(df, ordered)
 
@@ -44,7 +43,7 @@ names(tabres_mx2)[1] <- "lavaan_label"
 tabres2 <- merge(tabres2, tabres_mx2, by = "lavaan_label")
 test_that("lavaan and openmx work with constrained thresholds",
           {
-            expect_equivalent(as.numeric(tabres2[[2]]), as.numeric(tabres2[[3]]), tolerance = .008)
+            expect_equivalent(as.numeric(tabres2[[2]]), as.numeric(tabres2[[3]]), tolerance = .02)
           })
 
 

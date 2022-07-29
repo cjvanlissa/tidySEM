@@ -105,6 +105,7 @@ table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "
 
 
 #' @method table_results mplus.model
+#' @importFrom MplusAutomation SummaryTable
 #' @export
 table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, ...){
   Args <- list(x = x)
@@ -699,7 +700,8 @@ table_results.character <- function(x, columns = c("label", "est_sig", "se", "pv
 # table_results.character("y ~ x", ngroups = 2)
 
 can_be_numeric <- function(x){
-  sapply(x, function(col){ tryCatch(expr = {as.numeric(col); return(TRUE)}, warning= function(w){ return(FALSE) }) })
+  out <- sapply(x, function(col){ tryCatch(expr = {as.numeric(col); return(TRUE)}, warning= function(w){ return(FALSE) }) })
+  out & !sapply(x, inherits, what = "logical")
 }
 
 format_with_na <- function(x, ...){

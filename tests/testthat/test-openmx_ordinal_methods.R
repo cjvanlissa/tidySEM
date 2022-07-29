@@ -1,8 +1,8 @@
 # Building model with umxThresholdMatrix works:
 test_that("ordinal mixture model works with different methods", {
-  skip_on_cran()
-  library(umx)
+  tidySEM:::skip_if_not_local()
   library(OpenMx)
+  library(umx)
   set.seed(1)
   df <- data_mix_ordinal
   df[1:4] <- lapply(df, ordered)
@@ -68,7 +68,7 @@ test_that("ordinal mixture model works with different methods", {
   expect_equivalent(sort(tmp$sum.posterior$proportion),
                     sort(c(0.5789, 0.4211)), tolerance = .001)
 
-  expect_equivalent(pnorm(mx_props$est[18:33][unlist(list(c(1:8), c(9:16))[order(tmp$sum.posterior$proportion)])]),
+  expect_equivalent(pnorm(as.numeric(mx_props$est)[18:33][unlist(list(c(1:8), c(9:16))[order(tmp$sum.posterior$proportion)])]),
                     pnorm(c(0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591,
                             -0.073, -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
                     )), tolerance = .12) # Note high tolerance!
@@ -107,7 +107,7 @@ test_that("ordinal mixture model works with different methods", {
   expect_failure(expect_equivalent(sort(tmp_mxthres$sum.posterior$proportion),
                                    sort(c(0.5789, 0.4211)), tolerance = .001))
 
-  expect_failure(expect_equivalent(pnorm(props_mxthres$est[2:17][unlist(list(c(1:8), c(9:16))[order(tmp_mxthres$sum.posterior$proportion)])]),
+  expect_failure(expect_equivalent(pnorm(as.numeric(props_mxthres$est)[2:17][unlist(list(c(1:8), c(9:16))[order(tmp_mxthres$sum.posterior$proportion)])]),
                                    pnorm(c(0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591,
                                            -0.073, -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
                                    )), tolerance = .12))
@@ -160,10 +160,10 @@ test_that("ordinal mixture model works with different methods", {
   expect_equivalent(sort(tmp_tidysem$sum.posterior$proportion),
                     sort(c(0.5789, 0.4211)), tolerance = .001)
 
-  expect_equivalent(pnorm(props_tidysem$est[-1][unlist(list(c(1:8), c(9:16))[order(tmp_tidysem$sum.posterior$proportion)])]),
+  expect_equivalent(pnorm(as.numeric(props_tidysem$est[-1][unlist(list(c(1:8), c(9:16))[order(tmp_tidysem$sum.posterior$proportion)])])),
                     pnorm(c( 0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591, -0.073,
                              -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
                     )), tolerance = .12) # Note high tolerance!
-  expect_equivalent(pnorm(props_tidysem$est[-1][unlist(list(c(1:8), c(9:16))[order(tmp_tidysem$sum.posterior$proportion)])]),
-                    pnorm(mx_props$est[18:33][unlist(list(c(1:8), c(9:16))[order(tmp$sum.posterior$proportion)])]), tolerance = 1e-5)
+  expect_equivalent(pnorm(as.numeric(props_tidysem$est[-1][unlist(list(c(1:8), c(9:16))[order(tmp_tidysem$sum.posterior$proportion)])])),
+                    pnorm(as.numeric(mx_props$est[18:33][unlist(list(c(1:8), c(9:16))[order(tmp$sum.posterior$proportion)])])), tolerance = 1e-5)
 })

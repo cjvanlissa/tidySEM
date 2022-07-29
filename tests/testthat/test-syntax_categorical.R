@@ -1,6 +1,5 @@
 if(FALSE){
 
-library(OpenMx)
 
 set.seed(1)
 

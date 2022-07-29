@@ -1,5 +1,5 @@
 test_that("multigroup_mx works", {
-  skip_on_cran()
+  tidySEM:::skip_if_not_local()
   library(lavaan)
   HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
@@ -18,8 +18,9 @@ test_that("multigroup_mx works", {
   fitM <- run_mx(tmp, data = HolzingerSwineford1939, groups = "school")
   parM <- table_results(fitM, columns = NULL)
 
-  skip_on_ci()
-  expect_equivalent(as.numeric(parL$est[parL$op == "=~" & grepl("^x\\d$", parL$rhs)]),parM$est[grepl("\\.BY\\.", parM$label)], tolerance = .01)
+  tidySEM:::skip_if_not_local()
+  expect_equivalent(as.numeric(parL$est[parL$op == "=~" & grepl("^x\\d$", parL$rhs)]),
+                    as.numeric(parM$est)[grepl("\\.BY\\.", parM$label)], tolerance = .01)
 
 
   tmp <- as_ram(HS.model, groups = c("school"), data = HolzingerSwineford1939)
@@ -28,7 +29,8 @@ test_that("multigroup_mx works", {
   parM <- table_results(fitM, columns = NULL)
   # Note: Order of groups is reversed by lavaan
   parL <- parL[order(parL$group), ]
-  expect_equivalent(as.numeric(parL$est[parL$op == "=~"]),parM$est[grepl("\\.BY\\.", parM$label)], tolerance = .01)
+  expect_equivalent(as.numeric(parL$est[parL$op == "=~"]),
+                    as.numeric(parM$est)[grepl("\\.BY\\.", parM$label)], tolerance = .01)
 
 
   dat <- HolzingerSwineford1939[c("school", paste0("x", 1:9))]

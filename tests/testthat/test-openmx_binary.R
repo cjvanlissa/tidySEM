@@ -153,7 +153,7 @@ pars_lv <- parameterestimates(res_lv)
 pars_lv <- pars_lv$est[pars_lv$op == "|"]
 pars_mx <- table_results(res_mx, columns = c("est"))$est
 test_that("binary variable thresholds correct", {
-  expect_equivalent(pars_mx, pars_lv, tolerance = 1e-4)
+  expect_equivalent(as.numeric(pars_mx), pars_lv, tolerance = 1e-2)
 })
 
 # Mixture model
@@ -192,7 +192,7 @@ table_results(res_mx, columns=c("label", "est")) ->tmp
 fit <- table_fit(res_mx)
 probs <- class_prob(res_mx)
 
-prop_mx <- pnorm(tmp$est[-1])
+prop_mx <- pnorm(as.numeric(tmp$est[-1]))
 prop_mx <- rbind(prop_mx[1:4], prop_mx[5:8])
 prop_mx <- prop_mx[order(probs$sum.posterior$proportion), ]
 
@@ -242,7 +242,7 @@ res_tidysem <- mxTryHardOrdinal(mix_tidysem)
 tmp_tidysem <- class_prob(res_tidysem)
 fit_tidysem <- table_fit(res_tidysem)
 props_tidysem <- table_results(res_tidysem, columns=c("label", "est"))
-props_tidysem <- pnorm(props_tidysem$est[-1])
+props_tidysem <- pnorm(as.numeric(props_tidysem$est[-1]))
 props_tidysem <- rbind(props_tidysem[1:4], props_tidysem[5:8])
 props_tidysem <- props_tidysem[order(tmp_tidysem$sum.posterior$proportion), ]
 
