@@ -181,7 +181,7 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     Args <- as.list(match.call()[-1])
     names(x) <- make.unique(names(x))
     df_plot <- bind_list(lapply(names(x), function(n){
-        out <- cbind(table_results(x[[n]], columns = NULL), Model = n)
+        out <- cbind(table_results(x[[n]], columns = NULL, format_numeric = FALSE), Model = n)
         out$Classes <- length(unique(na.omit(out$class)))
         out
     }))
@@ -202,10 +202,15 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     df_plot$Variable <- ordered(df_plot$Variable, levels = unique(df_plot$Variable))
     # Select only requested variables, or else, all variables
     if(is.null(variables)) {
-        variables <- unique(as.vector(sapply(unique(df_plot$Classes), function(c){
-            tab <- table(df_plot$Variable[df_plot$Classes == c], df_plot$op[df_plot$Classes == c])
-            rownames(tab)[all(apply(tab, 1, function(r){r == c}))]
-        })))
+      variables <- try({
+        vars <- x[[1]]$manifestVars
+        if(is.null(vars)){
+          vars <- x[[1]][[names(x[[1]]@submodels)[1]]]$manifestVars
+        }
+        if(is.null(vars)) stop()
+        vars
+      }, silent = TRUE)
+      if(inherits(variables, "try-error")) stop("Could not determine variables from object 'x'; specify variables argument by hand.")
     }
     df_plot <- df_plot[tolower(df_plot$Variable) %in% tolower(variables), ]
     df_plot$Variable <- droplevels(df_plot$Variable)
@@ -222,10 +227,12 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     if (rawdata) {
         df_raw <- .get_long_data(x)
         df_raw <- df_raw[, c("Model", variables, "Class", "Class_prob", "Probability", "id")]
-        df_raw$Class <- ordered(df_raw$Class_prob, labels =
-                                    ifelse(is.null(levels(df_plot$Class)),
-                                           unique(df_plot$Class),
-                                           levels(df_plot$Class)))
+        classlabs <- if(is.null(levels(df_plot$Class))){
+          unique(df_plot$Class)
+        } else {
+          levels(df_plot$Class)
+        }
+        df_raw$Class <- ordered(df_raw$Class_prob, labels = classlabs)
         variable_names <- paste("Value", names(df_raw)[match(variables, names(df_raw))], sep = "...")
         names(df_raw)[match(variables, names(df_raw))] <- variable_names
         df_raw <- reshape(
@@ -279,8 +286,8 @@ plot_profiles.MxModel <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
             #probs <- data.frame(probs)
 
             prob_names <- colnames(probs$individual)
-            dt <- cbind(dt, Model = thename, Class = apply(probs$individual, 1, which.max), id = 1:nrow(dt))
-            out <- lapply(1:ncol(probs$individual), function(c){
+            dt <- cbind(dt, Model = thename, Class = probs$individual[, "predicted"], id = 1:nrow(dt))
+            out <- lapply(1:(ncol(probs$individual)-1), function(c){
                 cbind(dt,
                       Class_prob = c,
                       Probability = probs$individual[, c])

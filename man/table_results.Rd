@@ -8,6 +8,7 @@ table_results(
   x,
   columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"),
   digits = 2,
+  format_numeric = TRUE,
   ...
 )
 }
@@ -24,6 +25,9 @@ formatted confidence interval, 6) grouping variable (if available), 7) level
 variable for multilevel models, if available.}
 
 \item{digits}{Number of digits to round to when formatting numeric columns.}
+
+\item{format_numeric}{Logical, indicating whether or not to format numeric
+columns. Defaults to `TRUE`.}
 
 \item{...}{Logical expressions used to filter the rows of results returned.}
 }

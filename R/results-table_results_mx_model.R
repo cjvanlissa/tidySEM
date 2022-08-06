@@ -1,7 +1,7 @@
 #' @method table_results MxModel
 #' @export
 #' @importFrom stats pnorm
-table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, ...)
+table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, ...)
 {
   # Multigroup:
   # attr(attr(fit,"runstate")$fitfunctions$mg.fitfunction, "groups")
@@ -115,8 +115,10 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results <- results[, c(firstcols[firstcols %in% names(results)], names(results)[!names(results) %in% firstcols]), drop = FALSE]
   # Format using digits
   value_columns <- names(results)[can_be_numeric(results)]
-  results[, value_columns] <- lapply(results[, value_columns],
-                                     format_with_na, digits = digits, format = "f")
+  if(format_numeric){
+    results[, value_columns] <- lapply(results[, value_columns],
+                                       format_with_na, digits = digits, format = "f")
+  }
 
   if(!is.null(columns)) {
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
@@ -231,6 +233,9 @@ from_submodels <- function(x, what = NULL, ...){
   # remove all of this stuff from $matrix
   for(i in 1:nrow(results)){
     results[["matrix"]][i] <- gsub(paste0("(", paste0(results[i, -which(names(results) %in% cols)], collapse = "|"), ")\\."), "", results[["matrix"]][i])
+  }
+  if(isTRUE(attr(x, "tidySEM") == "mixture") & length(names(x@submodels)) > 0){
+    results$Class <- "class1"
   }
   return(results)
 }
