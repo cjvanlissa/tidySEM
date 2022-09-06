@@ -42,6 +42,7 @@ plot_prob.MxModel <- function(x, variables = NULL, bars = c("Variable", "group",
 plot_prob.default <- function(x, variables = NULL, bars = c("Variable", "group", "class"), facet = c("group", "class", "Variable"), bw = FALSE, ...){
     cl <- match.call()
     df_plot <- x
+    if(inherits(df_plot$Category, "integer")) df_plot$Category <- ordered(df_plot$Category)
     if(!is.null(variables)) df_plot <- subset(x, subset = x$Variable %in% variables)
     bars <- bars[bars %in% names(df_plot)][1]
     facet <- facet[facet %in% names(df_plot)][1]
@@ -55,7 +56,8 @@ plot_prob.default <- function(x, variables = NULL, bars = c("Variable", "group",
         p <- p + aes_string(x = 1, y = "Probability", fill = "Category")
     }
     if(!is.na(facet)) p <- p + facet_wrap(facet, scales = "free")
-    p <- p + geom_bar(stat = "identity", position = position_fill(reverse = TRUE)) + ylab(NULL)  + scale_y_continuous(expand = c(0,0)) + theme_bw() + theme(legend.position = "none")
-    if(bw) p <- p + scale_fill_grey()
+    p <- p + geom_bar(stat = "identity", position = position_fill(reverse = TRUE)) + ylab(NULL)  + scale_y_continuous(expand = c(0,0)) + theme_bw() +
+      scale_fill_brewer(guide = guide_legend(reverse = TRUE))
+    if(bw) p <- p + scale_fill_grey(guide = guide_legend(reverse = TRUE))
     p
 }
