@@ -200,10 +200,14 @@ from_submodels <- function(x, what = NULL, ...){
     thisgroup <- rep(NA_character_, times = nrow(results))
     from_group <- grepl(paste0("(", paste0(submod, collapse = "|"), ")\\."), results$matrix)
     thisgroup[from_group] <- gsub(paste0("^.{0,}(", paste0(submod, collapse = "|"), ").{0,}$"), "\\1", results$matrix[from_group])
+    # Default name: group
     thename <- "group"
-    if(inherits(x$expectation, "MxExpectationMixture")){
+    # Alternative names:
+    if(inherits(x$expectation, "MxExpectationMixture") | isTRUE(attr(x, "tidySEM") == "mixture")){
       thename <- "class"
+      if(!inherits(x$expectation, "MxExpectationMixture")) thisgroup[results$matrix %in% c("S", "M")] <- "class1"
     }
+
     existingnames <- sum(gregexpr(thename, paste0(names(results), collapse = ""))[[1]] > 0)
     if(existingnames > 0) thename <- paste0(thename, ".", existingnames, collapse = "")
     results[[thename]] <- thisgroup
@@ -233,9 +237,6 @@ from_submodels <- function(x, what = NULL, ...){
   # remove all of this stuff from $matrix
   for(i in 1:nrow(results)){
     results[["matrix"]][i] <- gsub(paste0("(", paste0(results[i, -which(names(results) %in% cols)], collapse = "|"), ")\\."), "", results[["matrix"]][i])
-  }
-  if(isTRUE(attr(x, "tidySEM") == "mixture") & length(names(x@submodels)) > 0){
-    results$Class <- "class1"
   }
   return(results)
 }

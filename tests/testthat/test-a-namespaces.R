@@ -2,8 +2,8 @@ df <- iris[1:4]
 names(df) <- paste0("x", 1:4)
 tmp <- tidy_sem(df)
 tmp <- add_paths(tmp, "x1 ~ x2")
-if(mplusAvailable() == 0){
-  res <- estimate_mplus(tmp)
+if(MplusAutomation::mplusAvailable() == 0){
+  res <- suppressWarnings(estimate_mplus(tmp))
 
   test_that("table_fit does not give namespace error", {
     expect_error({table_fit(res)}, NA)
