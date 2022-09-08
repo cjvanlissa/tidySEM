@@ -517,6 +517,13 @@ mixture_starts <- function(model,
   strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
   strts <- try({
     strts <- mxAutoStart(strts, type = "ULS")
+    subnamz <- names(strts@submodels)
+    not_pd <- sapply(subnamz, function(n){ any(eigen(strts[[n]]$matrices$S$values)$values < 0)})
+    if(any(not_pd)){
+      for(n in names(not_pd)[not_pd]){
+        strts[[n]][["S"]]$values <- Matrix::nearPD(strts[[n]][["S"]]$values, keepDiag = TRUE)$mat
+      }
+    }
     mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
   })
   if(inherits(strts, "try-error")){
