@@ -1,3 +1,10 @@
+# tidySEM 0.2.4
+
+* Fixed bug in plot_profiles() when covariances are free
+* Documentation incorrectly referred to data_mixture_ordinal, instead of
+  data_mix_ordinal
+* Added legend to plot_probs()
+
 # tidySEM 0.2.3
 
 * Fix Issue #45 , argument `label` was not passed correctly to `get_nodes()` and

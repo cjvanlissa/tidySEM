@@ -204,7 +204,7 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     if(is.null(variables)) {
       variables <- try({
         vars <- x[[1]]$manifestVars
-        if(is.null(vars)){
+        if(isTRUE(length(vars) == 0 | is.null(vars))){
           vars <- x[[1]][[names(x[[1]]@submodels)[1]]]$manifestVars
         }
         if(is.null(vars)) stop()
@@ -218,6 +218,8 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
     df_plot$idvar <- paste0(df_plot$Model, df_plot$Classes, df_plot$Class, df_plot$Variable)
     # Drop useless columns
     df_plot <- df_plot[ , c("Variable", "Value", "se", "Class", "Classes", "Category", "Model", "idvar")]
+    # Drop useless rows
+    df_plot <- df_plot[df_plot$Category %in% c("Means", "Variances"), ]
     df_plot <- reshape(df_plot, idvar = "idvar", timevar = "Category", v.names = c("Value", "se"), direction = "wide")
 
     df_plot[["idvar"]] <- NULL
