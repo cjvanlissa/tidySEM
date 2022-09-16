@@ -98,10 +98,11 @@ has_data <- function(x){
 #' Mplus syntax file.
 #' @return Character vector of names.
 #' @examples
-#' mplus_expand_names("test1-test12")
+#' mplus_expand_names("test1-test12", "testa_testb")
 #' @rdname mplus_expand_names
 #' @keywords mplus utilities
 #' @export
+
 mplus_expand_names <- function(x){
   vnames <- strsplit(x, split = "(\\s+|\\n)")[[1]]
   vnames <- gsub(";", "", vnames)
@@ -109,19 +110,28 @@ mplus_expand_names <- function(x){
   exp_nam <- vnames[expand_these]
   exp_nam <- lapply(exp_nam, function(i){
     components <- strsplit(i, "-")[[1]]
-    name_stub <- gsub("\\d+$", "", components)
+    name_stub <- gsub("\\d+$|\\w$", "", components)
     if(!name_stub[1] == name_stub[2]){
       stop("Could not identify name stub for line ", i)
     } else {
       name_stub <- name_stub[1]
     }
-    nums <- as.numeric(gsub(name_stub, "", components))
-    paste0(name_stub, seq.int(nums[1], nums[2]))
+    last_char <- gsub(name_stub, "", components)
+    if(!all(last_char %in% letters)){
+      last_char_num <- as.numeric(gsub(name_stub, "", components))
+      paste0(name_stub, seq.int(last_char_num[1], last_char_num[2]))
+    }else{
+      last_char_ind <- match(last_char, letters)
+      exp_letter <- letters[seq.int(last_char_ind[1], last_char_ind[2])]
+      paste0(name_stub, exp_letter)
+    }
+   
   })
   vnames <- as.list(vnames)
   vnames[expand_these] <- exp_nam
   unlist(vnames)
 }
+
 
 is_cor <- function(x){
   !(x$lhs == x$rhs) & x$op == "~~"
