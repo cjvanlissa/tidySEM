@@ -98,7 +98,7 @@ has_data <- function(x){
 #' Mplus syntax file.
 #' @return Character vector of names.
 #' @examples
-#' mplus_expand_names("test1-test12", "testa_testb")
+#' mplus_expand_names("test1-test12", "testa-testb")
 #' @rdname mplus_expand_names
 #' @keywords mplus utilities
 #' @export
