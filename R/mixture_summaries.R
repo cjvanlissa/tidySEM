@@ -112,27 +112,21 @@ make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
 #' class_prob(res)
 #' }
 #' @export
-class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
+class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", 
+                                   "avg.mostlikely", "AvePP", "individual"), ...){
   UseMethod("class_prob", x)
 }
 
 #' @method class_prob MxModel
 #' @export
-class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
+class_prob.MxModel <- function(x, type = c("sum.posterior", 
+                                           "sum.mostlikely", 
+                                           "mostlikely.class", 
+                                           "avg.mostlikely", 
+                                           "AvePP",
+                                           "individual"), ...){
   post_probs <- extract_postprob(x)
   post_probs_pred <- cbind(post_probs, predicted = apply(post_probs, 1, which.max) )
-  
-  ## Add average posterior class probability (AvePP)
-  desc_k <- psych::describeBy(post_probs_pred[,1:ncol(post_probs_pred)-1], 
-                  group = post_probs_pred[,"predicted"])
-
-unq <- sort(unique(post_probs_pred[,"predicted"]))
-AvePP <- NULL
-for(j in 1:length(unq)){
-  temp <- desc_k[as.character(unq[j])][[1]][paste0("class",j),c("mean","sd","min","max")]
-  AvePP <- do.call(rbind, list(AvePP, temp))
-}
-####
   
   out <- lapply(type, function(thetype){
     switch(thetype,
@@ -140,11 +134,25 @@ for(j in 1:length(unq)){
            "avg.mostlikely" = avgprobs_mostlikely(post_probs),
            "sum.posterior" = sum_postprob(x),
            "sum.mostlikely" = sum_mostlikely(x),
-           AvePP,
-           post_probs_pred)
+           "AvePP"= avepp(post_probs_pred),
+           "individual"= post_probs_pred)
   })
   names(out) <- type
   out
+}
+
+avepp <- function(x){
+  ## Add average posterior class probability (AvePP)
+  desc_k <- psych::describeBy(x[,1:ncol(x)-1], 
+                              group = x[,"predicted"])
+  
+  unq <- sort(unique(x[,"predicted"]))
+  out <- NULL
+  for(j in 1:length(unq)){
+    temp <- desc_k[as.character(unq[j])][[1]][paste0("class",j),c("mean","sd","min","max")]
+    out <- do.call(rbind, list(out, temp))
+  }
+  return(out)
 }
 
 sum_postprob <- function(model){
