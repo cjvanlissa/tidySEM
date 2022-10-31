@@ -224,6 +224,7 @@ mx_growth_mixture <- function(model,
 mx_lca <- function(data = NULL,
                    classes = 1L,
                    run = TRUE,
+                   extraTries = 10,
                    ...){
   if(!all(sapply(data, inherits, what = "ordered"))) stop("Function mx_lca() only accepts data of an ordinal (binary or ordered categorical) level of measurement.")
   cl <- match.call()
@@ -268,7 +269,7 @@ mx_lca <- function(data = NULL,
     # out <- eval.parent(cl)
     if(run){
       cl[["model"]] <- out
-      cl[["extraTries"]] <- 10
+      cl[["extraTries"]] <- extraTries
       cl[[1L]] <- str2lang("OpenMx::mxTryHardOrdinal")
       keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
       cl <- cl[c(1, keep_these)]
