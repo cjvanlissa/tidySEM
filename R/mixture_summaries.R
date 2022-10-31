@@ -90,8 +90,13 @@ make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
 #'  \item{"avg.mostlikely"}{Average posterior probabilities for each class, for
 #'  the subset of observations with most likely class of 1:k, where k is the
 #'  number of classes.}
+#'  \item{"AvePP"}{Average posterior class probability (AvePP). 
+#'  the mean (sd, min and max) of the Class k posterior class probabilities 
+#'  across all individuals whose maximum posterior class probability is for Class k}
 #'  \item{"individual"}{The posterior probability matrix, with dimensions n
-#'  (number of cases in the data) x k (number of classes).}
+#'  (number of cases in the data) x k (number of classes), 
+#'  plus adding the predicted class in function of the class with the highest 
+#'  predicted probability.}
 #' }
 #' @param x An object for which a method exists.
 #' @param type Character vector, indicating which types of probabilities to
@@ -116,13 +121,26 @@ class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikel
 class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
   post_probs <- extract_postprob(x)
   post_probs_pred <- cbind(post_probs, predicted = apply(post_probs, 1, which.max) )
+  
+  ## Add average posterior class probability (AvePP)
+  desc_k <- psych::describeBy(post_probs_pred[,1:ncol(post_probs_pred)-1], 
+                  group = post_probs_pred[,"predicted"])
 
+unq <- sort(unique(post_probs_pred[,"predicted"]))
+AvePP <- NULL
+for(j in 1:length(unq)){
+  temp <- desc_k[as.character(unq[j])][[1]][paste0("class",j),c("mean","sd","min","max")]
+  AvePP <- do.call(rbind, list(AvePP, temp))
+}
+####
+  
   out <- lapply(type, function(thetype){
     switch(thetype,
            "mostlikely.class" = classification_probs_mostlikely(post_probs),
            "avg.mostlikely" = avgprobs_mostlikely(post_probs),
            "sum.posterior" = sum_postprob(x),
            "sum.mostlikely" = sum_mostlikely(x),
+           AvePP,
            post_probs_pred)
   })
   names(out) <- type
