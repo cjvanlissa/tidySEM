@@ -206,6 +206,9 @@ mx_growth_mixture <- function(model,
 #' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' @param run Logical, whether or not to run the model. If \code{run = TRUE},
 #' the function calls \code{\link[OpenMx]{mxTryHardOrdinal}}.
+#' @param extraTries Integer number of extra tries to run the model,
+#' running the model multiple times allows you to use the best fitting one,
+#' and prevent a local maxima soluation. Defaults to 10.
 #' @param ... Additional arguments, passed to functions.
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
