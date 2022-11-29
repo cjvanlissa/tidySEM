@@ -73,24 +73,24 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
     if (bw) {
         classplot <-
             ggplot(NULL,
-                   aes_string(
-                       x = "Variable",
-                       y = "Value",
-                       group = "Class",
-                       linetype = "Class",
-                       shape = "Class"
+                   aes(
+                       x = .data[["Variable"]],
+                       y = .data[["Value"]],
+                       group = .data[["Class"]],
+                       linetype = .data[["Class"]],
+                       shape = .data[["Class"]]
                    ))
     } else {
         classplot <-
             ggplot(
                 NULL,
-                aes_string(
-                    x = "Variable",
-                    y = "Value",
-                    group = "Class",
-                    linetype = "Class",
-                    shape = "Class",
-                    colour = "Class"
+                aes(
+                    x = .data[["Variable"]],
+                    y = .data[["Value"]],
+                    group = .data[["Class"]],
+                    linetype = .data[["Class"]],
+                    shape = .data[["Class"]],
+                    colour = .data[["Class"]]
                 )
             ) + scale_colour_manual(values = get_palette(max(df_plot$Classes)))
     }
@@ -100,11 +100,11 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
             geom_jitter(
                 data = df_raw,
                 width = .2,
-                aes_string(
-                    x = "Variable",
-                    y = "Value",
-                    shape = "Class",
-                    alpha = "Probability"
+                aes(
+                    x = .data[["Variable"]],
+                    y = .data[["Value"]],
+                    shape = .data[["Class"]],
+                    alpha = .data[["Probability"]]
                 )
             ) +
             scale_alpha_continuous(range = alpha_range, guide = "none")
@@ -125,8 +125,8 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
 
         classplot <-
             classplot + geom_errorbar(data = df_plot,
-                                      aes_string(ymin = "error_min",
-                                                 ymax = "error_max"),
+                                      aes(ymin = .data[["error_min"]],
+                                                 ymax = .data[["error_max"]]),
                                       width = .4)
     }
     if(sd){
@@ -139,12 +139,12 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
             classplot <-
                 classplot + geom_rect(
                     data = df_plot,
-                    aes_string(
-                        xmin = "sd_xmin",
-                        xmax = "sd_xmax",
-                        ymin = "sd_ymin",
-                        ymax = "sd_ymax",
-                        linetype = "Class"
+                    aes(
+                        xmin = .data[["sd_xmin"]],
+                        xmax = .data[["sd_xmax"]],
+                        ymin = .data[["sd_ymin"]],
+                        ymax = .data[["sd_ymax"]],
+                        linetype = .data[["Class"]]
                     ),
                     colour = "black",
                     fill=ggplot2::alpha("grey", 0),
@@ -154,12 +154,12 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
             classplot <-
                 classplot + geom_rect(
                     data = df_plot,
-                    aes_string(
-                        xmin = "sd_xmin",
-                        xmax = "sd_xmax",
-                        ymin = "sd_ymin",
-                        ymax = "sd_ymax",
-                        colour = "Class"
+                    aes(
+                        xmin = .data[["sd_xmin"]],
+                        xmax = .data[["sd_xmax"]],
+                        ymin = .data[["sd_ymin"]],
+                        ymax = .data[["sd_ymax"]],
+                        colour = .data[["Class"]]
                     ),
                     fill=ggplot2::alpha("grey", 0),
                     inherit.aes=FALSE

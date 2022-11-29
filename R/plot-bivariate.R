@@ -161,7 +161,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
       df_thiscor <- df_plot[df_plot$Parameter == paste0(yv, ".WITH.", xv), , drop = FALSE]
     }
     thisp <- p
-    thisp <- thisp + geom_point(data = df_thiscor, aes_string(x = "xmean", y = "ymean"))
+    thisp <- thisp + geom_point(data = df_thiscor, aes(x = .data[["xmean"]], y = .data[["ymean"]]))
     if(sd){
       df_sd <- df_thiscor
       df_sd$sdminx <- df_sd$xmean - df_sd$xsd
@@ -169,15 +169,15 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
       df_sd$sdminy <- df_sd$ymean - df_sd$ysd
       df_sd$sdmaxy <- df_sd$ymean + df_sd$ysd
       thisp <- thisp +
-        geom_errorbar(data = df_sd, aes_string(
-          x = "xmean",
-          ymin = "sdminy",
-          ymax = "sdmaxy"),
+        geom_errorbar(data = df_sd, aes(
+          x = .data[["xmean"]],
+          ymin = .data[["sdminy"]],
+          ymax = .data[["sdmaxy"]]),
           width = .0) +
-        geom_errorbarh(data = df_sd, aes_string(
-          y = "ymean",
-          xmin = "sdminx",
-          xmax = "sdmaxx"),
+        geom_errorbarh(data = df_sd, aes(
+          y = .data[["ymean"]],
+          xmin = .data[["sdminx"]],
+          xmax = .data[["sdmaxx"]]),
           height = .0)
     }
     if(cors){
@@ -187,17 +187,17 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
                            as.list(as.numeric(x[c(7:11)]))),
                    t(x[c(1:6)]))
       }))
-      thisp <- thisp + geom_path(data = df_ellipse, aes_string(x = "x",
-                                                       y = "y"))
+      thisp <- thisp + geom_path(data = df_ellipse, aes(x = .data[["x"]],
+                                                       y = .data[["y"]]))
     }
     if (rawdata) {
       thisp <- thisp +
         geom_point(
           data = df_raw,
-          aes_string(
-            x = as.character(df_thiscor$xvar[1]),
-            y = as.character(df_thiscor$yvar[1]),
-            alpha = "Probability"
+          aes(
+            x = .data[[as.character(df_thiscor$xvar[1])]],
+            y = .data[[as.character(df_thiscor$yvar[1])]],
+            alpha = .data[["Probability"]]
           )
         ) +
         scale_alpha_continuous(range = alpha_range, guide = "none")
@@ -218,13 +218,13 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
 
 .base_plot <- function(num_colors) {
   p <- ggplot(NULL,
-              aes_string(
-                group = "Class",
-                linetype = "Class",
-                shape = "Class"
+              aes(
+                group = .data[["Class"]],
+                linetype = .data[["Class"]],
+                shape = .data[["Class"]]
               ))
   if(num_colors > 0){
-    p <- p + aes_string(colour = "Class") +
+    p <- p + aes(colour = .data[["Class"]]) +
       scale_colour_manual(values = get_palette(num_colors))
   }
   p + theme(

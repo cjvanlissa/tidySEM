@@ -40,11 +40,11 @@ plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) 
         levels(plot_fitdat$Statistic) <- thelabels[match(statlow, levels(plot_fitdat$Statistic))]
         ggplot(
             plot_fitdat,
-            aes_string(
+            aes(
                 x = xaxis,
-                y = "Value",
-                color = "Statistic",
-                group = "Statistic"
+                y = .data[["Value"]],
+                color = .data[["Statistic"]],
+                group = .data[["Statistic"]]
             )
         ) +
             geom_line(na.rm = TRUE) +
@@ -54,7 +54,7 @@ plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) 
     } else {
         ggplot(
             plot_fitdat,
-            aes_string(
+            aes(
                 x = xaxis,
                 y = statlow,
                 group = 1

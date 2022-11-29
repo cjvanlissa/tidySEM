@@ -1,6 +1,6 @@
 skip_if_not_local <- function() {
 
-  if (Sys.info()[["user"]] %in% c("Lissa102")) {
+  if (Sys.info()[["user"]] %in% c("Lissa102", "vanlissa")) {
     return(invisible(TRUE))
   }
 

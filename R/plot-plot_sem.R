@@ -1253,7 +1253,7 @@ match.call.defaults <- function(...) {
     Args <- as.list(df_rect[which(names(df_rect) %in% Args)])
     Args <- c(list(
       data = df_rect,
-      mapping = aes_string(xmin = "node_xmin", xmax = "node_xmax", ymin = "node_ymin", ymax = "node_ymax")),
+      mapping = aes(xmin = .data[["node_xmin"]], xmax = .data[["node_xmax"]], ymin = .data[["node_ymin"]], ymax = .data[["node_ymax"]])),
       Args)
     p <- p + do.call(geom_rect, Args)
   }
@@ -1545,7 +1545,7 @@ match.call.defaults <- function(...) {
     aes_args <- df_path[!duplicated(df_path$id), which(names(df_path) %in% aes_args)]
     Args <- list(
       data = df_path[, c("x", "y", "id")],
-      mapping = aes_string(x = "x", y = "y", group = "id"),
+      mapping = aes(x = .data[["x"]], y = .data[["y"]], group = .data[["id"]]),
       arrow = quote(ggplot2::arrow(angle = 25, length = unit(.1, "inches"), ends = "last", type = "closed")))
 
     for(this_path in unique(df_path$id)){
@@ -1564,7 +1564,7 @@ match.call.defaults <- function(...) {
     Args <- as.list(df_path[which(names(df_path) %in% Args)])
     Args <- c(list(
       data = df_path,
-      mapping = aes_string(x = "x", y = "y", group = "id")),
+      mapping = aes(x = .data[["x"]], y = .data[["y"]], group = .data[["id"]])),
       Args)
     p <- p + do.call(geom_path, Args)
   }
@@ -1590,12 +1590,12 @@ match.call.defaults <- function(...) {
     Args <- as.list(df[which(names(df) %in% Args)])
     Args <- c(list(
       data = df,
-      mapping = aes_string(x = "x", y = "y", label = "label"),
+      mapping = aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]]),
       label.size = NA
       ),
       Args)
     if(use_geom_text){
-      Args$mapping <- aes_string(x = "x", y = "y", label = "label", customdata = "label")
+      Args$mapping <- aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]], customdata = .data[["label"]])
       Args[c("geom_text", "fill", "label.size")] <- NULL
       p <- p + do.call(geom_text, Args)
     } else {

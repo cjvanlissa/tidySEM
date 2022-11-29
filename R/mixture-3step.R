@@ -79,14 +79,14 @@ bch_continuous <- function(x, y){
   cl[["data"]] <- data.frame(y = y)
   bchmod <- eval.parent(cl)
   for(c in names(bchmod@submodels)){
-    res[[c]]$M$labels[1,1] <- paste0("m_", c)
-    res[[c]]$S$labels[1,1] <- "s"
+    bchmod[[c]]$M$labels[1,1] <- paste0("m_", c)
+    bchmod[[c]]$S$labels[1,1] <- "s"
   }
-  res <- mxRun(omxAssignFirstParameters(res))
+  bchmod <- mxRun(omxAssignFirstParameters(bchmod))
   params <- paste0("m_", names(bchmod@submodels))
   tests <- expand.grid(params, params)[which(upper.tri(matrix(nrow = length(params), ncol = length(params)))), ]
-  test_res <- do.call(rbind, suppressWarnings(lapply(paste0(tests$Var1, "=", tests$Var2), function(x){ car::linearHypothesis(model = res, x)[2, 1:3]})))
-  test_values <- table_results(res, columns = c("est", "openmx_label"))
+  test_res <- do.call(rbind, suppressWarnings(lapply(paste0(tests$Var1, "=", tests$Var2), function(x){ car::linearHypothesis(model = bchmod, x)[2, 1:3]})))
+  test_values <- table_results(bchmod, columns = c("est", "openmx_label"))
   tests <- data.frame(tests,
                       Value1 = test_values$est[match(tests$Var1, test_values$openmx_label)],
                       Value2 = test_values$est[match(tests$Var2, test_values$openmx_label)],
@@ -96,7 +96,7 @@ bch_continuous <- function(x, y){
   tests$Par2 <- substring(tests$Par2, first = 3)
 
   base <- run_mx(as_ram("y ~1"), data = data.frame(y = y))
-  test_comp <- mxCompare(res, base)
+  test_comp <- mxCompare(bchmod, base)
   test_comp <- data.frame("LL_baseline" = test_comp$minus2LL[1],
                           "LL_bch" = test_comp$minus2LL[2],
                           "LL_dif" = test_comp$diffLL[2],

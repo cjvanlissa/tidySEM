@@ -18,9 +18,9 @@ plot_thresholds <- function(x){
   thresholds$Threshold <- gsub("^.+?\\$", "", thresholds$param)
 
   #thresholds <- thresholds[1:3, ]
-  ggplot(data = data.frame(x = c(-3, 3)), aes_string(x = "x")) +
+  ggplot(data = data.frame(x = c(-3, 3)), aes(x = .data[["x"]])) +
     stat_function(fun = dnorm, n = 101, args = list(mean = 0, sd = 1)) +
-    geom_vline(data = thresholds, mapping = aes_string(xintercept = "est")) +
+    geom_vline(data = thresholds, mapping = aes(xintercept = .data[["est"]])) +
     facet_grid(Scale ~ Item) +
     theme_bw() +
     labs(x = NULL, y = NULL)

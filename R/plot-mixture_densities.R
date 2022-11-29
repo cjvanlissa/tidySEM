@@ -234,13 +234,13 @@ plot_density.MxModel <- function(x,
             plot_df <- plot_df[-which(plot_df$Class == "Total"),]
             density_plot <-
                 ggplot(plot_df,
-                       aes_string(x = "Value", y = "..count..", fill = "Class", weight = "Probability")) +
+                       aes(x = .data[["Value"]], y = ..count.., fill = .data[["Class"]], weight = .data[["Probability"]])) +
                 geom_density(position = "fill") + scale_fill_grey(start = 0.2, end = 0.8)
         } else {
             plot_df <- plot_df[-which(plot_df$Class == "Total"),]
             density_plot <-
                 ggplot(plot_df,
-                       aes_string(x = "Value", y = "..count..", fill = "Class", weight = "Probability")) +
+                       aes(x = .data[["Value"]], y = ..count.., fill = .data[["Class"]], weight = .data[["Probability"]])) +
                 scale_fill_manual(values = get_palette(length(levels(plot_df$Class))-1)) +
                 geom_density(position = "fill")
         }
@@ -252,9 +252,9 @@ plot_density.MxModel <- function(x,
         if (bw) {
             density_plot <-
                 ggplot(densities,
-                       aes_string(x = "x",
-                                  y = "y",
-                                  linetype = "Class"
+                       aes(x = .data[["x"]],
+                                  y = .data[["y"]],
+                                  linetype = .data[["Class"]]
                                   #size = "size"
                        )) + labs(x = "Value", y = "density")
             density_plot <- density_plot +
@@ -265,11 +265,11 @@ plot_density.MxModel <- function(x,
         } else{
             density_plot <-
                 ggplot(densities,
-                       aes_string(x = "x",
-                                  y = "y",
-                                  fill = "Class",
-                                  colour = "Class",
-                                  alpha = "alpha"#,
+                       aes(x = .data[["x"]],
+                                  y = .data[["y"]],
+                                  fill = .data[["Class"]],
+                                  colour = .data[["Class"]],
+                                  alpha = .data[["alpha"]]#,
                                   #size = "size"
                        )) + labs(x = "Value", y = "density")
             class_colors <- c(get_palette(length(levels(plot_df$Class))-1), "#000000")

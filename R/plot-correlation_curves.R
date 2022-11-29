@@ -8,11 +8,11 @@ if(FALSE){
     # Sapply or something
     cps <- data.frame(calcControlPoints(x1, y1, x2, y2, angle = 90, curvature = 0.5, ncp = 1))
     df_curves <- data.frame(x1, y1, x2, y2, cps, lab)
-    p + geom_curve(data = df_curves, aes_string(x = "x1", y = "y1", xend = "x", yend = "y"),
+    p + geom_curve(data = df_curves, aes(x = .data[["x1"]], y = .data[["y1"]], xend = .data[["x"]], yend = .data[["y"]]),
                    curvature = 0.5, angle = 90) +
-        geom_curve(data = df_curves, aes_string(x = "x", y = "y", xend = "x2", yend = "y2"),
+        geom_curve(data = df_curves, aes(x = .data[["x"]], y = .data[["y"]], xend = .data[["x2"]], yend = .data[["y2"]]),
                    curvature = 0.5, angle = 90) +
-        geom_label(data = df_curves, aes_string(x = "x", y = "y", label = "lab"))
+        geom_label(data = df_curves, aes(x = .data[["x"]], y = .data[["y"]], label = .data[["lab"]]))
     }
 
 
@@ -82,8 +82,8 @@ if(FALSE){
                            as.list(as.numeric(x[c(7:11)]))),
                    t(x[c(1:6)]))
     }))
-    p <- p + geom_path(data = df_ellipse, aes_string(x = "x",
-                                                     y = "y"))
+    p <- p + geom_path(data = df_ellipse, aes(x = .data[["x"]],
+                                              y = .data[["y"]]))
 }
 
 calcControlPoints <- function (x1, y1, x2, y2, curvature, angle, ncp, debug = FALSE)
