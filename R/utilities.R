@@ -98,11 +98,11 @@ has_data <- function(x){
 #' Mplus syntax file.
 #' @return Character vector of names.
 #' @examples
-#' mplus_expand_names("test1-test12", "testa-testb")
+#' mplus_expand_names("test1-test12")
+#' mplus_expand_names("testa-testb")
 #' @rdname mplus_expand_names
 #' @keywords mplus utilities
 #' @export
-
 mplus_expand_names <- function(x){
   vnames <- strsplit(x, split = "(\\s+|\\n)")[[1]]
   vnames <- gsub(";", "", vnames)
@@ -125,7 +125,7 @@ mplus_expand_names <- function(x){
       exp_letter <- letters[seq.int(last_char_ind[1], last_char_ind[2])]
       paste0(name_stub, exp_letter)
     }
-   
+
   })
   vnames <- as.list(vnames)
   vnames[expand_these] <- exp_nam

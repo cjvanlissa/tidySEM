@@ -19,6 +19,7 @@ names.
 }
 \examples{
 mplus_expand_names("test1-test12")
+mplus_expand_names("testa-testb")
 }
 \keyword{mplus}
 \keyword{utilities}

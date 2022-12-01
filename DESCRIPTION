@@ -36,7 +36,9 @@ Imports:
     gtable,
     dbscan,
     RANN,
-    Matrix
+    Matrix,
+    bain,
+    car
 Suggests: 
     testthat,
     knitr,
