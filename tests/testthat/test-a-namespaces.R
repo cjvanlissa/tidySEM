@@ -2,7 +2,7 @@ df <- iris[1:4]
 names(df) <- paste0("x", 1:4)
 tmp <- tidy_sem(df)
 tmp <- add_paths(tmp, "x1 ~ x2")
-if(getOption("test_mplus")){
+if(isTRUE(getOption("test_mplus"))){
   res <- suppressWarnings(estimate_mplus(tmp))
 
   test_that("table_fit does not give namespace error", {

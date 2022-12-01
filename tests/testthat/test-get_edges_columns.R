@@ -14,7 +14,7 @@ test_that("get_edges handles columns argument", {
   out <- get_nodes(fit, label = NULL, columns = c("est", "pval"))
 
 
-  if(getOption("test_mplus")){
+  if(isTRUE(getOption("test_mplus"))){
     the_test <- "get_edges_columns"
     old_wd <- getwd()
     test_dir <- file.path(tempdir(), the_test)

@@ -10,7 +10,7 @@ test_that("digits are respected in table_results", {
   expect_equivalent(sapply(out, function(x){max(nchar(x))}), c(13, 6, 16))
 
 
-  if(getOption("test_mplus")){
+  if(isTRUE(getOption("test_mplus"))){
     the_test <- "digits"
     old_wd <- getwd()
     test_dir <- file.path(tempdir(), the_test)

@@ -25,7 +25,7 @@ res_lav <- sem(as_lavaan(model), data = df)
 tb_lav <- table_results(res_lav, columns = NULL)
 expect_true(nrow(tb_lav) == 36)
 
-if(getOption("test_mplus")){
+if(isTRUE(getOption("test_mplus"))){
   test_that("table_results() returns all labels for mplus", {
     the_test <- "mplus_labels"
     old_wd <- getwd()

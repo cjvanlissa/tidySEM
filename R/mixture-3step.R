@@ -36,7 +36,7 @@ BCH.MxModel <- function(x, model, data, ...){
     } else {
       cl[[1L]] <- str2lang("bch_continuous")
     }
-    return(eval(cl))
+    return(eval.parent(cl))
   }
   cprobs <- class_prob(x)
   Hmat <- cprobs$mostlikely.class
