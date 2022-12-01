@@ -320,7 +320,7 @@ plot_density.MxModel <- function(x,
 
 .extract_density_data <- function (x, variables = NULL, longform = TRUE)
 {
-    if (inherits(x, "MxModel")) {
+    if (inherits(x, what = c("MxModel", "MxRAMModel"))) {
         x <- list(x)
         names(x) <- x[[1]]@name
     }

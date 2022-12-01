@@ -135,7 +135,7 @@ mx_profiles <- function(data = NULL,
     class(out) <- c("mixture_list", class(out))
     names(out) <- lbs
   }
-  if(inherits(out, "MxModel")){
+  if(inherits(out, what = c("MxModel", "MxRAMModel"))){
     out <- mxModel(out, name = lbs)
   }
   out
@@ -356,7 +356,7 @@ mx_mixture.list <- function(model,
         dots_asram))
     })
   } else {
-    if(!all(sapply(out, inherits, "MxModel"))){
+    if(!all(sapply(out, inherits, what = c("MxModel", "MxRAMModel")))){
       stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
     }
     # Develop functionality for MxModels

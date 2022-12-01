@@ -34,7 +34,9 @@ Imports:
     psych,
     methods,
     gtable,
-    dbscan
+    dbscan,
+    RANN,
+    Matrix
 Suggests: 
     testthat,
     knitr,

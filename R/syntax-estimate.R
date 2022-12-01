@@ -72,8 +72,8 @@ estimate_lavaan <- function(x, func = "sem", ...){
 #' library(MplusAutomation)
 #' model <- tidy_sem(iris, "\\.")
 #' model <- measurement(model)
-#' if(mplusAvailable() == 0){
-#'   estimate_mplus(model)
+#' \dontrun{
+#'   estimate_mplus(model, run = 0L)
 #' }
 #' @rdname estimate_mplus
 #' @export

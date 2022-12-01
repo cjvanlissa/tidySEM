@@ -96,7 +96,12 @@ run_mx.MxModel <- function(x, ...){
     run_args,
     dots[which(names(dots) %in% formalArgs(run_fun))])
   cl <- as.call(run_args)
-  eval(cl)
+  res <- eval(cl)
+  if(res$output$maxRelativeOrdinalError > mxOption(NULL, 'mvnRelEps')){
+    message("Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.")
+    res <- try(mxTryHardOrdinal(x), silent = TRUE)
+  }
+  return(res)
 }
 
 mx_add_data <- function(x, data, ...){

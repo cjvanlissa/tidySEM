@@ -739,7 +739,7 @@ matrix_to_nodes <- function(nodes, shape){
   nodes_long
 }
 
-globalVariables(c("name"))
+globalVariables(c("name", "..count.."))
 
 #' @title Extract nodes from a SEM model object
 #' @description Attempts to extract nodes from a SEM model object, where nodes
@@ -1290,6 +1290,7 @@ match.call.defaults <- function(...) {
   }
 }
 
+#' @importFrom RANN nn2
 .connect_nearest_neighbor <- function(df_nodes, df_edges, angle){
   is_variance <- df_edges$from == df_edges$to
   out <- matrix(NA_character_, nrow = 2, ncol = nrow(df_edges))

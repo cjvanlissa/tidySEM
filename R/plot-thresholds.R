@@ -51,7 +51,7 @@ plot_prob.default <- function(x, variables = NULL, bars = c("Variable", "group",
     if(is.na(bars) & is.na(facet)) stop("Cannot plot without either a valid 'bars' argument or 'facet' argument.")
     p <- ggplot(df_plot)
     if(!is.na(bars)){
-        p <- p + aes(x = bars, y = .data[["Probability"]], fill = .data[["Category"]]) + scale_x_discrete(expand = c(0,0))
+        p <- p + aes(x = .data[[bars]], y = .data[["Probability"]], fill = .data[["Category"]]) + scale_x_discrete(expand = c(0,0))
     } else {
         p <- p + aes(x = 1, y = .data[["Probability"]], fill = .data[["Category"]])
     }

@@ -7,7 +7,6 @@
 inst/doc
 doc
 Meta
-dev/
 *.RData
 tests/test_local.R
 *.psd

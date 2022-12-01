@@ -33,7 +33,7 @@ optional. If these are not specified, the model will be run in
 library(MplusAutomation)
 model <- tidy_sem(iris, "\\\\.")
 model <- measurement(model)
-if(mplusAvailable() == 0){
-  estimate_mplus(model)
+\dontrun{
+  estimate_mplus(model, run = 0L)
 }
 }

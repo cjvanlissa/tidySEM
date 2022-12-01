@@ -274,7 +274,7 @@ plot_profiles.MxModel <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
 
 .get_long_data <- function (x, ...)
 {
-    if (inherits(x, "MxModel")) {
+    if (inherits(x, what = c("MxModel", "MxRAMModel"))) {
         x <- list(x)
     }
     out <- lapply(1:length(x), function(i) {

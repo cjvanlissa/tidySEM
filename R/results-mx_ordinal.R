@@ -39,8 +39,11 @@ table_prob.MxModel <- function(x, ...){
   submods <- names(x@submodels)
   if(length(submods) == 0){
     if(!is.null(x[["Thresholds"]])){
-      out <- x$Thresholds$result
-      out <- pnorm(out)
+      out <- x$Thresholds$values
+      if(is.null(out)){
+        out <- x$Thresholds$result
+      }
+      out[] <- pnorm(out)
       out <- rbind(rep(0, ncol(out)), out, rep(1, ncol(out)))
       out <- apply(out, 2, diff)
       rownames(out) <- 1:nrow(out)
@@ -62,59 +65,3 @@ table_prob.MxModel <- function(x, ...){
   }
   out
 }
-
-
-# table_prob.MxModel <- function(x,
-#                                ...){
-#
-#
-#
-#   cl[[1L]] <- quote(table_results)
-#   cl["columns"] <- list(NULL)
-#   out <- eval.parent(cl)
-#   thresh <- out[which(out$Category == "Thresholds"), , drop = FALSE]
-#   probs <- data.frame(do.call(rbind, strsplit(thresh$name, split = "(\\[|,|\\])")))
-#   probs[2:3] <- lapply(probs[2:3], as.integer)
-#   probs$value <- thresh$est
-#   probs$vnam <- thresh$rwn
-#   lapply(unique(probs$X1), function(m){
-#     tmp <- probs[probs$X1 == m, , drop = FALSE]
-#     out <- as.matrix(Matrix::sparseMatrix(i = tmp$X2, j = tmp$X3, x = tmp$value))
-#     out <- pnorm(out)
-#     out <- rbind(rep(0, ncol(out)), out, rep(1, ncol(out)))
-#     out <- apply(out, 2, diff)
-#     cns <- tmp[,c("X3", "vnam")]
-#     colnames(out) <- tmp$rwn
-#     tmp
-#   })
-#
-#   thresh$matnam <- gsub(thresh$name, "\\")
-#   browser()
-# }
-# table_prob.MxModel <- function(x,
-#                        columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"),
-#                        digits = 2,
-#                        ...){
-#   cl <- match.call()
-#   cl[[1L]] <- quote(table_results)
-#   cl["columns"] <- list(NULL)
-#   out <- eval.parent(cl)
-#   thresh <- out[which(out$Category == "Thresholds"), , drop = FALSE]
-#   probs <- data.frame(do.call(rbind, strsplit(thresh$name, split = "(\\[|,|\\])")))
-#   probs[2:3] <- lapply(probs[2:3], as.integer)
-#   probs$value <- thresh$est
-#   probs$vnam <- thresh$rwn
-#   lapply(unique(probs$X1), function(m){
-#     tmp <- probs[probs$X1 == m, , drop = FALSE]
-#     out <- as.matrix(Matrix::sparseMatrix(i = tmp$X2, j = tmp$X3, x = tmp$value))
-#     out <- pnorm(out)
-#     out <- rbind(rep(0, ncol(out)), out, rep(1, ncol(out)))
-#     out <- apply(out, 2, diff)
-#     cns <- tmp[,c("X3", "vnam")]
-#     colnames(out) <- tmp$rwn
-#     tmp
-#   })
-#
-#   thresh$matnam <- gsub(thresh$name, "\\")
-#  browser()
-# }
