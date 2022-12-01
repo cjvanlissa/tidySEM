@@ -105,7 +105,7 @@ create_scales.data.frame <- function(x, keys.list, missing = TRUE, impute = "non
 
   keys <- psych::make.keys(length(scoredatanames), keys.list = use_keys,
                     item.labels = scoredatanames)
-  scores <- psych::scoreItems(keys, data, missing = missing, impute = impute)
+  scores <- psych::scoreItems(keys, data, missing = missing, impute = impute, ...)
 
   table_descriptives <- data.frame(Subscale = colnames(scores$scores),
                                    Items = sapply(keys.list, length))
