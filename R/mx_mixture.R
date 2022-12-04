@@ -330,6 +330,16 @@ mx_mixture.character <- function(model,
   }
 }
 
+#' @method mx_mixture MxModel
+#' @export
+mx_mixture.MxModel <- function(model,
+                            classes = 1L,
+                            data = NULL,
+                            run = TRUE,
+                            ...){
+  browser()
+}
+
 #' @method mx_mixture list
 #' @export
 mx_mixture.list <- function(model,
@@ -337,6 +347,7 @@ mx_mixture.list <- function(model,
                             data = NULL,
                             run = TRUE,
                             ...){
+  browser()
   cl <- match.call()
   dots <- list(...)
   if(length(classes) > 1){
@@ -348,7 +359,7 @@ mx_mixture.list <- function(model,
   if(all(sapply(model, inherits, "character"))){
     dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
     dots_asram <- dots[dots_asram]
-    out <- lapply(1:length(model), function(i){
+    model <- lapply(1:length(model), function(i){
       do.call(as_ram, c(
         list(
           x = model[[i]],
@@ -356,14 +367,17 @@ mx_mixture.list <- function(model,
         dots_asram))
     })
   } else {
-    if(!all(sapply(out, inherits, what = c("MxModel", "MxRAMModel")))){
+    if(!all(sapply(model, inherits, what = c("MxModel", "MxRAMModel")))){
       stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
     }
     # Develop functionality for MxModels
-    stop("Function mx_mixture() cannot yet handle a list of MxModels.")
+    model <- lapply(1:length(model), function(i){
+      mxModel(name = paste0("class", i),
+              model[[i]])
+    })
   }
   if(run){
-    cl[["model"]] <- out
+    cl[["model"]] <- model
     cl[["classes"]] <- classes
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     cl[["model"]] <- eval.parent(cl)

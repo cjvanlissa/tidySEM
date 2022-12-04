@@ -6,7 +6,7 @@ Authors@R:
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",
              role = c("aut", "cre"),
-             email = "c.j.vanlissa@uu.nl",
+             email = "c.j.vanlissa@tilburguniversity.edu",
              comment = c(ORCID = "0000-0002-0808-5024")),
       person(given = c("Mauricio"),
              family = "Garnier-Villarreal",
