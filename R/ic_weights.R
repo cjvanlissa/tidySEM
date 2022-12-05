@@ -1,9 +1,10 @@
 #' Compare Information Criteria
 #'
 #' IC weights quantify the evidence in favor of different models in a set.
-#' The weights sum to one; the model with the highest weight is most supported
-#' by the data. Relative support in favor of one model over another is given by
-#' the ratio of their weights.
+#' This function normalizes the IC values to obtain IC weights, which sum to 1.
+#' The model with the highest weight is most supported by the data.
+#' The ratio of different weights gives the relative support in favor of one
+#' model over another.
 #' @param x An object for which a method exists.
 #' @param ... Additional arguments.
 #' @return A `list` of class `ic_weights` with elements `$weights`, which

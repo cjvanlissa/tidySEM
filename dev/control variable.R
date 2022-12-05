@@ -5,6 +5,11 @@ library(tiySEM)
 
 mod <- as_ram("y1 ~ a*Species
               y1~~b*y1", fixed.x = TRUE)
+res <- run_mx(mod, data = df)
+mod <- as_ram("y1 ~ a*Species
+              y1~~b*y1
+              Species ~~ .25*Species", fixed.x = TRUE)
+res <- run_mx(mod, data = df)
 mods <- list(mod, mod)
 res4 <- mx_mixture(model = mods, data = df)
 mod$A

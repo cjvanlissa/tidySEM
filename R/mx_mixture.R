@@ -80,7 +80,6 @@ mx_mixture <- function(model,
 #' to an assumption of conditional independence of the indicators); other
 #' options are "equal" (covariances between items constrained to be equal across
 #' classes), and "varying" (free covariances across classes).
-#' \code{classes = c(1:4, 6:8)}.
 #' @param run Logical, whether or not to run the model. If \code{run = TRUE},
 #' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
 #' @param ... Additional arguments, passed to functions.
