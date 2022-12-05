@@ -158,6 +158,7 @@ table_fit.MxModel <- function(x, ...) {
                  "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
   )
   fits <- fits[!names(fits) %in% dropthese]
+  fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + log((fits[["numObs"]]+2)/24)
   out <- as.data.frame(fits)
   rownames(out) <- NULL
   out
