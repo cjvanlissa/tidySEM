@@ -336,7 +336,7 @@ mx_mixture.MxModel <- function(model,
                             data = NULL,
                             run = TRUE,
                             ...){
-  browser()
+  browser() # Develop this functionality
 }
 
 #' @method mx_mixture list
@@ -346,7 +346,7 @@ mx_mixture.list <- function(model,
                             data = NULL,
                             run = TRUE,
                             ...){
-  browser()
+  browser() # Check before CRAN
   cl <- match.call()
   dots <- list(...)
   if(length(classes) > 1){
@@ -386,7 +386,7 @@ mx_mixture.list <- function(model,
     cl[[1L]] <- str2lang("tidySEM:::run_mx")
     return(eval.parent(cl))
   } else {
-    out
+    model
   }
 }
 
@@ -481,9 +481,9 @@ mixture_starts <- function(model,
   stopifnot("mxModel must contain data to determine starting values." = !(is.null(model@data) | is.null(model@data$observed)))
   classes <- length(model@submodels)
   if(classes < 2){
-    strts <- try({mxAutoStart(model, type = "ULS")})
+    strts <- try({simple_starts(model, type = "ULS")})
     if(inherits(strts, "try-error")){
-      strts <- try({mxRun(model)})
+      strts <- try({mxTryHardWideSearch(model)})
     }
     if(inherits(strts, "try-error")){
       stop("Could not derive suitable starting values for the 1-class model.")
@@ -529,7 +529,7 @@ mixture_starts <- function(model,
   })
   strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
   strts <- try({
-    strts <- mxAutoStart(strts, type = "ULS")
+    strts <- simple_starts(strts, type = "ULS")
     subnamz <- names(strts@submodels)
     not_pd <- sapply(subnamz, function(n){ any(eigen(strts[[n]]$matrices$S$values)$values < 0)})
     if(any(not_pd)){
@@ -541,7 +541,7 @@ mixture_starts <- function(model,
   })
   if(inherits(strts, "try-error")){
     strts <- try({
-      strts <- mxAutoStart(strts, type = "DWLS")
+      strts <- simple_starts(strts, type = "DWLS")
       strts <<- mxTryHard(strts, extraTries = 100,
                           silent = TRUE,
                           verbose = FALSE,
@@ -655,7 +655,7 @@ if(FALSE){
                                     data = NULL,
                                     run = TRUE,
                                     ...){
-    browser()
+    browser() # Not run
     data <- model
     vars_cont <- names(data)[sapply(data, inherits, what = "numeric")]
     vars_bin <- names(data)[sapply(data, function(x){all(na.omit(x) %in% c(0, 1))})]
@@ -682,7 +682,7 @@ if(FALSE){
     nam_prof <- names(mix_profiles@submodels)
     nam_lca <- names(mix_ord@submodels)
     if(!all(nam_prof == nam_lca)) stop("Could not merge continuous and categorical models.")
-    browser()
+    browser()  # Not run
     # Continuous
     for(n in nam_prof){
       for(m in names(mix_profiles[[n]]@matrices)){
@@ -710,7 +710,7 @@ if(FALSE){
       mix_all[[n]]$expectation$thresholds <- mix_ord[[n]]$expectation$thresholds
     }
 
-    browser()
+    browser()  # Not run
 
   }
 }

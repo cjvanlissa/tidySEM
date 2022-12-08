@@ -1,11 +1,9 @@
 simple_starts <- function (model, type = c("ULS", "DWLS"))
 {
   # From omxBuildAutoStartModel
-  isMultiGroupModel <- is.null(model$expectation) && (class(model$fitfunction) %in%
-                                                        "MxFitFunctionMultigroup")
+  isMultiGroupModel <- (is.null(model$expectation) && inherits(model$fitfunction, "MxFitFunctionMultigroup"))
   if (isMultiGroupModel) {
-    submNames <- sapply(strsplit(model$fitfunction$groups,
-                                 ".", fixed = TRUE), "[", 1)
+    submNames <- names(model@submodels)
     wmodel <- model
     for (amod in submNames) {
       wmodel[[amod]] <- mxModel(model[[amod]], asdhelper(model,
@@ -24,6 +22,7 @@ simple_starts <- function (model, type = c("ULS", "DWLS"))
   newparams <- coef(wmodel)
   oldparams <- coef(model)
   model <- omxSetParameters(model, values = newparams, labels = names(oldparams))
+  model <- fix_x(wmodel = wmodel, model = model, multigroup = isMultiGroupModel)
   return(model)
 }
 
@@ -34,29 +33,71 @@ asdhelper <- function (model, subname = model@name, type)
   exps <-
     mxGetExpected(model, c("covariance", "means", "thresholds"),
                   subname = subname)
-  useVars <- dimnames(exps$covariance)[[1]]
+  useVars <- colnames(exps$means)
   data <- model[[subname]]$data$observed
   data <- data[, useVars, drop = FALSE]
-  if (type == "ULS" && !any(sapply(data, is.ordered))) {
-    os <- list(cov = cov(data, use = "pair"))
-    if (length(exps$means) > 0)
-      os$means <- colMeans(data, na.rm = TRUE)
+
+  if (type == "ULS") {
+    if(!any(sapply(data, is.ordered))){
+      os <- list(cov = cov(data, use = "pair"))
+      if (length(exps$means) > 0)
+        os$means <- colMeans(data, na.rm = TRUE)
+      return(list(
+        mxData(
+          data,
+          type = "raw",
+          numObs = nrow(data),
+          observedStats = os
+        ),
+        mxFitFunctionWLS("ULS",
+                         fullWeight = FALSE)
+      ))
+    }
     return(list(
       mxData(
         data,
-        type = "raw",
-        numObs = nrow(data),
-        observedStats = os
+        type = "raw"
       ),
       mxFitFunctionWLS("ULS",
                        fullWeight = FALSE)
     ))
   }
-  mdata <- mxData(data, "raw")
-  list(mdata, mxFitFunctionWLS(
+  mdata <- mxData(
+    data,
+    type = "raw"
+  )
+  return(list(mdata, mxFitFunctionWLS(
     type,
     ifelse(length(exps$means) >
              0, "marginals", "cumulants"),
     type != "ULS"
-  ))
+  )))
+}
+
+
+fix_x <- function(wmodel, model, multigroup){
+  if(multigroup){
+    submNames <- names(model@submodels)
+    for(n in submNames){
+      model[[n]] <- fix_x(wmodel = wmodel[[n]], model = model[[n]], multigroup = FALSE)
+    }
+  } else {
+    obsvars <- wmodel$manifestVars
+    fixedvar <- !diag(wmodel$S$free)[obsvars]
+    zerovar <- diag(wmodel$S$values)[obsvars] == 0
+    if(any(fixedvar & zerovar)){
+      diag(model$S$values)[which(fixedvar & zerovar)] <- diag(wmodel$data$observedStats$cov)[which(fixedvar & zerovar)]
+    }
+    # fixedvcov <- !wmodel$S$free[obsvars, obsvars]
+    # zerovcov <- wmodel$S$values[obsvars, obsvars] == 0
+    # if(any(fixedvcov & zerovcov)){
+    #   model$S$values[fixedvcov & zerovcov] <- wmodel$data$observedStats$cov[fixedvcov & zerovcov]
+    # }
+    # fixedmeans <- !wmodel$M$free[1, obsvars]
+    # zeromeans <- wmodel$M$values[1, obsvars] == 0
+    # if(any(fixedmeans & zeromeans)){
+    #   model$M$values[1, fixedmeans & zeromeans] <- wmodel$data$observedStats$means[fixedmeans & zeromeans]
+    # }
+  }
+  return(model)
 }

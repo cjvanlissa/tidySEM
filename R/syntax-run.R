@@ -86,7 +86,7 @@ run_mx.MxModel <- function(x, ...){
              })
     }
   } else {
-    x <- mxAutoStart(x)
+    x <- simple_starts(x, type = "ULS")
   }
   run_args <- c(
     list(

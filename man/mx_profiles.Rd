@@ -29,8 +29,7 @@ estimate. Defaults to "zero" (covariances constrained to zero; this
 corresponds
 to an assumption of conditional independence of the indicators); other
 options are "equal" (covariances between items constrained to be equal across
-classes), and "varying" (free covariances across classes).
-\code{classes = c(1:4, 6:8)}.}
+classes), and "varying" (free covariances across classes).}
 
 \item{run}{Logical, whether or not to run the model. If \code{run = TRUE},
 the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.}

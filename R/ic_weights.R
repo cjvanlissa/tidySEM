@@ -21,6 +21,8 @@ ic_weights <- function(x, ...){
   UseMethod("ic_weights", x)
 }
 
+#' @method ic_weights tidy_fit
+#' @export
 ic_weights.tidy_fit <- function(x, ic = "BIC", ...){
   if(!ic %in% names(x)){
     stop("The 'ic = ", ic, "' was not found in the tidy_fit table.")
@@ -34,6 +36,8 @@ ic_weights.tidy_fit <- function(x, ic = "BIC", ...){
   ic_weights(out)
 }
 
+#' @method ic_weights default
+#' @export
 ic_weights.default <- function(x, ...){
   if(!all(x > 0)) message("Negative IC values found; this may indicate a problem.")
   if(is.null(names(x))) names(x) <- paste0("Model ", 1:length(x))
