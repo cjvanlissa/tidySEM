@@ -28,15 +28,14 @@ BCH <- function(x, model, data, ...){
 #' @export
 BCH.MxModel <- function(x, model, data, ...){
   if(inherits(data, what = c("factor", "numeric", "integer"))){
-    cl <- match.call()
-    cl <- cl[c(1L, 2L, which(names(cl) == "data"))]
-    names(cl)[3] <- "y"
     if(inherits(data, what = "factor")){
-      cl[[1L]] <- str2lang("bch_categorical")
+      cats <- length(levels(data))
+      model <- paste0("y |t", 1:(cats-1), collapse = "\n")
+      data <- data.frame(y = mxFactor(data, levels = levels(data)))
     } else {
-      cl[[1L]] <- str2lang("bch_continuous")
+      model <- "y ~1"
+      data <- data.frame(y = data)
     }
-    return(eval.parent(cl))
   }
   cprobs <- class_prob(x)
   Hmat <- cprobs$mostlikely.class
