@@ -248,31 +248,38 @@ icl_default <- function(post_prob, BIC){
 #' res <- mx_mixture(model = "x ~ m{C}*1
 #'                            x ~~ v{C}*x", classes = 1:2, data = df)
 #' BLRT(res, replications = 4)
+#' res <- mx_mixture(model = "x ~ m{C}*1
+#'                            x ~~ v{C}*x", classes = 1, data = df)
+#' BLRT(res, replications = 4)      
 #' }
 #' @export
 BLRT <- function(x, ...){
   UseMethod("BLRT", x)
 }
 
-#' @method BLRT mixture_list
-#' @export
 BLRT.mixture_list <- function(x, ...){
   if(length(x) > 1){
     out <- mapply(function(k, km1){
       tryCatch({
         unlist(mxCompare(k, km1, boot = TRUE, ...)[2, c("diffLL", "diffdf", "p")])
-        },
-               error = function(e){
-                 c("diffLL" = NA, "diffdf" = NA, "p" = NA)
-               })
+      },
+      error = function(e){
+        c("diffLL" = NA, "diffdf" = NA, "p" = NA)
+      })
     }, k = x[-1], km1 = x[-length(x)])
-    rbind(data.frame(diffLL = NA, diffdf = NA, p = NA),
-          t(out))
+    res <- rbind(data.frame(diffLL = NA, diffdf = NA, p = NA), t(out))
+    if(all(is.na(res))) warning("Please check BLRT function, it should include specific argument name. e.g., BLRT(res, replications = 4), not BLRT(res, 4)")
   } else {
-    data.frame(diffLL = NA, diffdf = NA, p = NA)
+    res <- data.frame(diffLL = NA, diffdf = NA, p = NA)
   }
+  return(res)
 }
+
 
 #' @method BLRT list
 #' @export
 BLRT.list <- BLRT.mixture_list
+
+#' @method BLRT MxRAMModel
+#' @export
+BLRT.MxRAMModel <- BLRT.mixture_list
