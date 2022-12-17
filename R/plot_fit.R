@@ -2,15 +2,20 @@
 #' @export
 plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) {
     statlow <- tolower(statistics)
+    if(!xaxis %in% names(x)){
+      thename <- as.character(1:nrow(x))
+    } else {
+      thename <- x[[xaxis]]
+    }
     namelow <- tolower(names(x))
     names(x) <- namelow
-    if(!xaxis %in% names(x)) x$Name <- as.character(1:nrow(x))
     if(!all(statlow %in% namelow)){
         stop("Can not plot_fit the following statistics: ",
              paste(statistics[!(statlow %in% namelow)], collapse = ", "),
              ".")
     }
-    plot_fitdat <- x
+    plot_fitdat <- data.frame(Model = thename,
+                              x[, namelow %in% statlow, drop = FALSE])
     lowerbetter <- c(
         "LogLik" = " (lower is better)",
         "AIC" = " (lower is better)",
@@ -31,7 +36,7 @@ plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) 
     }
     if (length(statistics) > 1) {
         plot_fitdat <- do.call(rbind, lapply(1:length(statlow), function(i){
-            tmp <- plot_fitdat[, c(xaxis, names(plot_fitdat)[match(statlow[i], namelow)])]
+            tmp <- plot_fitdat[, c("Model", names(plot_fitdat)[match(statlow[i], names(plot_fitdat))])]
             tmp$Statistic <- names(tmp)[2]
             names(tmp)[2] <- "Value"
             tmp
@@ -41,7 +46,7 @@ plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) 
         ggplot(
             plot_fitdat,
             aes(
-                x = xaxis,
+                x = Model,
                 y = .data[["Value"]],
                 color = .data[["Statistic"]],
                 group = .data[["Statistic"]]
@@ -55,8 +60,8 @@ plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) 
         ggplot(
             plot_fitdat,
             aes(
-                x = xaxis,
-                y = statlow,
+                x = Model,
+                y = .data[[statlow]],
                 group = 1
             )
         ) +
