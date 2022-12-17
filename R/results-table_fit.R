@@ -35,8 +35,18 @@ table_fit.mixture_list <- function(x, ...) {
     rownames(out) <- NULL
   }
   out <- .renamefits(out, "mx")
+  remove_these <- c("saturatedDoF", "independenceDoF", "saturatedParameters",
+                    "independenceParameters", "ChiDoF", "satDoF", "indDoF", "RMSEANull",
+                    "TLI", "RMSEA", "RMSEASquared")
+
+  out <- out[, !names(out) %in% remove_these, drop = FALSE]
   class(out) <- c("tidy_fit", class(out))
-  out
+  tst <- try(lr_lmr(out))
+  if(!inherits(tst, what = "try-error")){
+    out$lmr_lr <- tst$lmr_lr
+    out$lmr_p <- tst$lmr_p
+  }
+  return(out)
 }
 
 #' @importFrom utils getFromNamespace

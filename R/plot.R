@@ -71,7 +71,7 @@ plot_modelstats <- function(x,
       plotdat,
       aes(
         x = .data[["Name"]],
-        y = statistics,
+        y = .data[[statistics]],
         group = 1
       )
     ) +
