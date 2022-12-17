@@ -21,18 +21,28 @@ parse_hypothesis <- getFromNamespace("parse_hypothesis", "bain")
 #' @importFrom car linearHypothesis
 wald_test <- function(x, hypothesis, ...){
   if(grepl("[><]", hypothesis)) stop("Can only evaluate equality constrained hypotheses. Hypotheses with '>' or '<' are not valid.")
-  varnames <- names(coef(x))
-  cl <- match.call()
-  cl[[1L]] <- quote(parse_hypothesis)
-  cl[["x"]] <- NULL
-  names(cl)[names(cl) == "hypothesis"] <- "hyp"
-  cl[["varnames"]] <- varnames
-  hyps <- eval(cl)
+  varnames_orig <- varnames <- names(coef(x))
+  hyp_orig <- hypothesis
+  if(any(grepl("\\[\\d+,\\d+\\]", varnames))){
+    uniqnams <- unique(varnames)
+    for(i in seq_along(uniqnams)){
+      varnames[which(varnames == uniqnams[i])] <- paste0("xxx", letters[i], "xxx")
+      hypothesis <- gsub(uniqnams[i], paste0("xxx", letters[i], "xxx"), hypothesis, fixed = TRUE)
+    }
+  }
+  hyps <- parse_hypothesis(varnames = varnames, hyp = hypothesis)
   test_res <- do.call(rbind, lapply(hyps$hyp_mat, function(h){
     as.data.frame(lapply(car::linearHypothesis(x, hypothesis.matrix = h[, -ncol(h), drop = FALSE], rhs = h[, ncol(h), drop = TRUE]), `[[`, 2))
   }))
   names(test_res) <- c("df", "chisq", "p")
   out <- data.frame(Hypothesis = hyps$original_hypothesis, test_res)
+  if(any(grepl("xxx.xxx", out$Hypothesis))){
+    for(i in seq_along(uniqnams)){
+      repthis <- paste0("xxx", letters[i], "xxx")
+      if(!any(grepl(repthis, out$Hypothesis, fixed = TRUE))) next
+      out$Hypothesis <- gsub(repthis, uniqnams[i], out$Hypothesis)
+    }
+  }
   class(out) <- c("wald_test", class(out))
   out
 }
