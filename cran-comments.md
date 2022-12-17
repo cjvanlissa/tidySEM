@@ -6,6 +6,8 @@
 * Documentation incorrectly referred to data_mixture_ordinal, instead of
   data_mix_ordinal
 * Added legend to plot_probs()
+* Add plot_growth()
+* Add LRT to table_fit for mixture models
 
 ## Test environments
 
