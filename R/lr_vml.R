@@ -24,19 +24,19 @@ lr_lmr.tidy_fit <- function(x, ...){
   if(!all(diff(numclass) > 0)){
     stop("Lo-Mendell-Rubin likelihood ratio test requires a strictly increasing number of classes.")
   }
-  if(!length(unique(tab$n)) == 1){
+  if(!length(unique(x$n)) == 1){
     stop("Number of participants is not identical across latent class analyses.")
   }
 
   out <- data.frame(do.call(rbind, lapply(2:length(numclass), function(i){
     calc_lrt_internal(
-      null = c(tab$LL[i-1],
-               tab$Parameters[i-1],
-               tab$n[1],
+      null = c(x$LL[i-1],
+               x$Parameters[i-1],
+               x$n[1],
                numclass[i-1]),
-      alt  = c(tab$LL[i],
-               tab$Parameters[i],
-               tab$n[1],
+      alt  = c(x$LL[i],
+               x$Parameters[i],
+               x$n[1],
                numclass[i])
     )
   })))
