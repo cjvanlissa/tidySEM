@@ -20,7 +20,7 @@ mxModels."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -29,13 +29,16 @@ mxModels."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -78,24 +81,31 @@ functions like <code><a href="mx_mixture.html">mx_mixture</a></code>, and may no
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mixture_starts</span><span class="op">(</span><span class="va">model</span>, <span class="va">splits</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mixture_starts</span><span class="op">(</span><span class="va">model</span>, <span class="va">splits</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>model</dt>
 <dd><p>A mixture model of class <code>mxModel</code>.</p></dd>
+
+
 <dt>splits</dt>
 <dd><p>Optional. A numeric vector of length equal to the number of
 rows in the <code>mxData</code> used in the <code>model</code> object. The data
 will be split by this vector. See Details for the default setting and
 possible alternatives.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments, passed to functions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns an <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></code> with starting values.</p>
+    
+
+<p>Returns an <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></code> with starting values.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -127,16 +137,16 @@ Behav Res 49, 282–293 (2017). &lt;doi:10.3758/s13428-015-0697-6&gt;</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"x"</span></span>
-<span class="r-in"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mx_mixture.html">mx_mixture</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"x ~ m{C}*1</span>
-<span class="r-in">                           x ~~ v{C}*x"</span>,</span>
-<span class="r-in">                           classes <span class="op">=</span> <span class="fl">2</span>,</span>
-<span class="r-in">                           data <span class="op">=</span> <span class="va">df</span>,</span>
-<span class="r-in">                           run <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mixture_starts</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"x"</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="mx_mixture.html">mx_mixture</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"x ~ m{C}*1</span></span></span>
+<span class="r-in"><span><span class="st">                           x ~~ v{C}*x"</span>,</span></span>
+<span class="r-in"><span>                           classes <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>                           data <span class="op">=</span> <span class="va">df</span>,</span></span>
+<span class="r-in"><span>                           run <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">mixture_starts</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -151,7 +161,7 @@ Behav Res 49, 282–293 (2017). &lt;doi:10.3758/s13428-015-0697-6&gt;</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

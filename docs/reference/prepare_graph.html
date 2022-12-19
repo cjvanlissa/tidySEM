@@ -22,7 +22,7 @@ a model object."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -31,13 +31,16 @@ a model object."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -82,135 +85,168 @@ a model object.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prepare_graph</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">prepare_graph</span><span class="op">(</span>
-  edges <span class="op">=</span> <span class="cn">NULL</span>,
-  layout <span class="op">=</span> <span class="cn">NULL</span>,
-  nodes <span class="op">=</span> <span class="cn">NULL</span>,
-  rect_width <span class="op">=</span> <span class="fl">1.2</span>,
-  rect_height <span class="op">=</span> <span class="fl">0.8</span>,
-  ellipses_width <span class="op">=</span> <span class="fl">1</span>,
-  ellipses_height <span class="op">=</span> <span class="fl">1</span>,
-  variance_diameter <span class="op">=</span> <span class="fl">0.8</span>,
-  spacing_x <span class="op">=</span> <span class="fl">2</span>,
-  spacing_y <span class="op">=</span> <span class="fl">2</span>,
-  text_size <span class="op">=</span> <span class="fl">4</span>,
-  curvature <span class="op">=</span> <span class="fl">60</span>,
-  angle <span class="op">=</span> <span class="cn">NULL</span>,
-  fix_coord <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for lavaan</span>
-<span class="fu">prepare_graph</span><span class="op">(</span>
-  <span class="va">model</span>,
-  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for MxModel</span>
-<span class="fu">prepare_graph</span><span class="op">(</span>
-  <span class="va">model</span>,
-  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for character</span>
-<span class="fu">prepare_graph</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for mplus.model</span>
-<span class="fu">prepare_graph</span><span class="op">(</span>
-  <span class="va">model</span>,
-  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for mplusObject</span>
-<span class="fu">prepare_graph</span><span class="op">(</span>
-  <span class="va">model</span>,
-  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prepare_graph</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">prepare_graph</span><span class="op">(</span></span>
+<span>  edges <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  layout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rect_width <span class="op">=</span> <span class="fl">1.2</span>,</span>
+<span>  rect_height <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  ellipses_width <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ellipses_height <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  variance_diameter <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  spacing_x <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  spacing_y <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  text_size <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  curvature <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  angle <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fix_coord <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for lavaan</span></span>
+<span><span class="fu">prepare_graph</span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for MxModel</span></span>
+<span><span class="fu">prepare_graph</span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for character</span></span>
+<span><span class="fu">prepare_graph</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mplus.model</span></span>
+<span><span class="fu">prepare_graph</span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mplusObject</span></span>
+<span><span class="fu">prepare_graph</span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  edges <span class="op">=</span> <span class="fu"><a href="get_edges.html">get_edges</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="fu"><a href="get_nodes.html">get_nodes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>...</dt>
 <dd><p>Additional arguments passed to and from functions.</p></dd>
+
+
 <dt>edges</dt>
 <dd><p>Object of class 'tidy_edges', or a <code>data.frame</code> with  (at
 least) the columns <code>c("from", "to")</code>, and optionally, <code>c("arrow",
 "label", "connect_from", "connect_to", "curvature")</code>.</p></dd>
+
+
 <dt>layout</dt>
 <dd><p>A matrix (or data.frame) that describes the layout; see
 <code><a href="get_layout.html">get_layout</a></code>.</p></dd>
+
+
 <dt>nodes</dt>
 <dd><p>Optional, object of class 'tidy_nodes', created with the
 <code><a href="get_nodes.html">get_nodes</a></code> function, or a <code>data.frame</code> with (at
 least) the column <code>c("name")</code>, and optionally, <code>c("shape",
 "label")</code>. If set to <code>NULL</code> (the default), nodes are inferred from the
 <code>layout</code> and <code>edges</code> arguments.</p></dd>
+
+
 <dt>rect_width</dt>
 <dd><p>Width of rectangles (used to display observed variables),
 Default: 1.2</p></dd>
+
+
 <dt>rect_height</dt>
 <dd><p>Height of rectangles (used to display observed variables),
 Default: 0.8</p></dd>
+
+
 <dt>ellipses_width</dt>
 <dd><p>Width of ellipses (used to display latent variables),
 Default: 1</p></dd>
+
+
 <dt>ellipses_height</dt>
 <dd><p>Height of ellipses (used to display latent variables),
 Default: 1</p></dd>
+
+
 <dt>variance_diameter</dt>
 <dd><p>Diameter of variance circles,
 Default: .8</p></dd>
+
+
 <dt>spacing_x</dt>
 <dd><p>Spacing between columns of the graph, Default: 1</p></dd>
+
+
 <dt>spacing_y</dt>
 <dd><p>Spacing between rows of the graph, Default: 1</p></dd>
+
+
 <dt>text_size</dt>
 <dd><p>Point size of text, Default: 4</p></dd>
+
+
 <dt>curvature</dt>
 <dd><p>Curvature of curved edges. The curve is a circle segment
 originating in a point that forms a triangle with the two connected points,
 with angles at the two connected points equal to <code>curvature</code>.
 To flip a curved edge, use a negative value for curvature. Default: 60</p></dd>
+
+
 <dt>angle</dt>
 <dd><p>Angle used to connect nodes by the top and bottom. Defaults to
 NULL, which means Euclidean distance is used to determine the shortest
 distance between node sides. A numeric value between 0-180 can be provided,
 where 0 means that only nodes with the same x-coordinates are connected
 top-to-bottom, and 180 means that all nodes are connected top-to-bottom.</p></dd>
+
+
 <dt>fix_coord</dt>
 <dd><p>Whether or not to fix the aspect ratio of the graph.
 Does not work with multi-group or multilevel models.
 Default: FALSE.</p></dd>
+
+
 <dt>model</dt>
 <dd><p>Instead of the edges argument, it is also possible to use the
 model argument and pass an object for which a method exists (e.g.,
 <code>mplus.model</code> or <code>lavaan</code>).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Object of class 'sem_graph'</p>
+    
+
+<p>Object of class 'sem_graph'</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="st">"dist ~ speed"</span>, <span class="va">cars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">prepare_graph</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="st">"dist ~ speed"</span>, <span class="va">cars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">prepare_graph</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A tidy_sem object with 3 edges and 2 nodes, and the following elements:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span>edges             <span style="color: #00BB00;">v  </span>nodes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span>rect_width        <span style="color: #00BB00;">v  </span>rect_height</span>
@@ -233,7 +269,7 @@ model argument and pass an object for which a method exists (e.g.,
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

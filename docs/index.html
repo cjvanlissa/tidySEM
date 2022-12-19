@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -54,6 +54,9 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -118,8 +121,8 @@ install.packages("tidySEM")
 -->
 <p>You can install the development version of <code>tidySEM</code> from ‘GitHub’ with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"cjvanlissa/tidySEM"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"cjvanlissa/tidySEM"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
@@ -149,7 +152,7 @@ install.packages("tidySEM")
 <div class="section level2">
 <h2 id="contributing-and-contact-information">Contributing and Contact Information<a class="anchor" aria-label="anchor" href="#contributing-and-contact-information"></a>
 </h2>
-<p>If you have ideas, please get involved. I am currently looking for a major contributor on this project, and smaller contributions are also welcome. You can contribute by opening an issue on ‘GitHub’, or sending a pull request with proposed features.</p>
+<p>If you have ideas, please get involved. You can contribute by opening an issue on ‘GitHub’, or sending a pull request with proposed features (see further instructions below).</p>
 <ul>
 <li>File a ‘GitHub’ issue <a href="https://github.com/cjvanlissa/tidySEM" class="external-link">here</a>
 </li>
@@ -157,6 +160,20 @@ install.packages("tidySEM")
 </li>
 </ul>
 <p>By participating in this project, you agree to abide by the <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link">Contributor Covenant</a>.</p>
+<div class="section level3">
+<h3 id="pull-requests">Pull requests<a class="anchor" aria-label="anchor" href="#pull-requests"></a>
+</h3>
+<ul>
+<li>Please always contribute via pull request instead of committing to master, so I can review the contribution.
+<ul>
+<li>You can either fork the repository to your own account and then submit a pull request, or make minor changes directly on this repository, and choose to commit them to a different branch and send a pull request when you save those changes</li>
+</ul>
+</li>
+<li>If you fix an issue, in your Commit message, please write “closes #issuenumber” so we can trace which commits fixed which issues</li>
+<li>Please add a line to NEWS.md for each bug fix or feature contribution</li>
+<li>Please increment the minor version number in DESCRIPTION, e.g.: 0.2.3.1 -&gt; 0.2.3.2</li>
+</ul>
+</div>
 </div>
 </div>
   </div>
@@ -196,6 +213,7 @@ install.packages("tidySEM")
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Caspar J. van Lissa <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0808-5024" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
@@ -222,7 +240,7 @@ install.packages("tidySEM")
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

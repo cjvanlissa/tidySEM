@@ -19,7 +19,7 @@ gsub to x using lapply."><!-- mathjax --><script src="https://cdnjs.cloudflare.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -28,13 +28,16 @@ gsub to x using lapply."><!-- mathjax --><script src="https://cdnjs.cloudflare.c
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -76,33 +79,44 @@ gsub to x using lapply."><!-- mathjax --><script src="https://cdnjs.cloudflare.c
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">lsub</span><span class="op">(</span><span class="va">x</span>, replacement <span class="op">=</span> <span class="cn">NULL</span>, pattern <span class="op">=</span> <span class="st">"{C}"</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lsub</span><span class="op">(</span><span class="va">x</span>, replacement <span class="op">=</span> <span class="cn">NULL</span>, pattern <span class="op">=</span> <span class="st">"{C}"</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A character vector where matches are sought.</p></dd>
+
+
 <dt>replacement</dt>
 <dd><p>a character vector of length 1 or more. Each element is
 applied to <code>x</code> in turn. Default: NULL</p></dd>
+
+
 <dt>pattern</dt>
 <dd><p>A character string containing a regular expression (or
 character string when <code>fixed = TRUE</code>). Default: <code>'{C}'</code>.</p></dd>
+
+
 <dt>fixed</dt>
 <dd><p>logical. If TRUE, pattern is a string to be matched as is.
 Default: TRUE</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Parameters passed on to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of results returned by <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></code>.</p>
+    
+
+<p>A list of results returned by <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">lsub</span><span class="op">(</span><span class="st">"a{C}"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">lsub</span><span class="op">(</span><span class="st">"a{C}"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -126,7 +140,7 @@ Default: TRUE</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

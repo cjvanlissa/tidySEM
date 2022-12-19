@@ -1,10 +1,11 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.1
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   Generating_syntax: Generating_syntax.html
+  LCGA: LCGA.html
   Plotting_graphs: Plotting_graphs.html
   sem_graph: sem_graph.html
   Tabulating_results: Tabulating_results.html
-last_built: 2022-04-06T21:00Z
+last_built: 2022-12-19T10:07Z
 

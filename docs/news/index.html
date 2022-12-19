@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -26,13 +26,16 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -67,7 +70,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2.2" id="tidysem-022">tidySEM 0.2.2<a class="anchor" aria-label="anchor" href="#tidysem-022"></a></h2>
+<h2 class="page-header" data-toc-text="0.2.4" id="tidysem-024">tidySEM 0.2.4<a class="anchor" aria-label="anchor" href="#tidysem-024"></a></h2>
+<ul><li>Fixed bug in plot_profiles() when covariances are free</li>
+<li>Improved starting values for mixture models with free covariances (check and fix non-positive definite vcov matrices)</li>
+<li>Documentation incorrectly referred to data_mixture_ordinal, instead of data_mix_ordinal</li>
+<li>Added legend to plot_probs()</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.3" id="tidysem-023">tidySEM 0.2.3<small>2022-04-14</small><a class="anchor" aria-label="anchor" href="#tidysem-023"></a></h2>
+<ul><li>Fix Issue <a href="https://github.com/cjvanlissa/tidySEM/issues/45" class="external-link">#45</a> , argument <code>label</code> was not passed correctly to <code><a href="../reference/get_nodes.html">get_nodes()</a></code> and <code><a href="../reference/get_edges.html">get_edges()</a></code> in <code><a href="../reference/graph_sem.html">graph_sem()</a></code> and <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code>
+</li>
+<li>Fix Issue <a href="https://github.com/cjvanlissa/tidySEM/issues/47" class="external-link">#47</a>, list of character vectors was not properly converted to an mxModel</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.2" id="tidysem-022">tidySEM 0.2.2<small>2022-04-06</small><a class="anchor" aria-label="anchor" href="#tidysem-022"></a></h2>
 <ul><li>table_fit() now reports information criteria with parameter penalty</li>
 <li>BCH() now accepts an MxModel as auxiliary model</li>
 <li>Prevent Mplus tests from throwing error on CRAN</li>
@@ -164,7 +180,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

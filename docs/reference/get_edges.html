@@ -18,7 +18,7 @@ are defined as regression paths and covariances between variables (nodes)."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -27,13 +27,16 @@ are defined as regression paths and covariances between variables (nodes)."><!--
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -74,13 +77,15 @@ are defined as regression paths and covariances between variables (nodes).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_edges</span><span class="op">(</span><span class="va">x</span>, label <span class="op">=</span> <span class="st">"est_sig"</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_edges</span><span class="op">(</span><span class="va">x</span>, label <span class="op">=</span> <span class="st">"est_sig"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A model object of class <code>mplusObject</code> or <code>lavaan</code>.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>Either a character, indicating which column to use for edge
 labels, or an expression. See Details.
@@ -88,16 +93,21 @@ Defaults to <code>"est_sig"</code>,
 which labels edges with the estimated value with significance asterisks,
 as obtained from <code><a href="table_results.html">table_results</a></code>. See Details and examples for
 more information.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters passed to <code><a href="table_results.html">table_results</a></code>. For
 example, users can pass the <code>digits</code> argument to control the number of
 digits in the edge label, or pass the <code>columns</code> argument to retain
 auxiliary columns in the <code>tidy_edges data.frame</code> for further processing
 (see Examples).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class 'tidy_edges'</p>
+    
+
+<p>An object of class 'tidy_edges'</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -119,10 +129,10 @@ label. See examples.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Standard use</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="st">"dist ~ speed"</span>, <span class="va">cars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Standard use</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="st">"dist ~ speed"</span>, <span class="va">cars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow     label connect_from connect_to curvature   lhs op   rhs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last   3.93***           NA         NA        NA  dist  ~ speed</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07***           NA         NA        NA  dist ~~  dist</span>
@@ -135,9 +145,9 @@ label. See examples.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 [0.73, 0.89]     0.81***   dist.ON.speed  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 [0.22, 0.48]     0.35***  Variances.dist  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 [1.00, 1.00]        1.00 Variances.speed FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Pass an expression to the 'label' argument for custom labels</span></span>
-<span class="r-in"><span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pass an expression to the 'label' argument for custom labels</span></span></span>
+<span class="r-in"><span><span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow                      label connect_from connect_to</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA</span>
@@ -150,11 +160,11 @@ label. See examples.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.04     0.00 [0.73, 0.89]     0.81***   dist.ON.speed  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   0.07     0.00 [0.22, 0.48]     0.35***  Variances.dist  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   0.00     &lt;NA&gt; [1.00, 1.00]        1.00 Variances.speed FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Pass the argument 'columns' to table_results through '...' to retain</span></span>
-<span class="r-in"><span class="co"># auxiliary columns for further processing</span></span>
-<span class="r-in"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"est_sig"</span>, <span class="st">"confint"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">edg</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pass the argument 'columns' to table_results through '...' to retain</span></span></span>
+<span class="r-in"><span><span class="co"># auxiliary columns for further processing</span></span></span>
+<span class="r-in"><span><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"est_sig"</span>, <span class="st">"confint"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">edg</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow     label connect_from connect_to curvature   est_sig</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last   3.93***           NA         NA        NA   3.93***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07***           NA         NA        NA 227.07***</span>
@@ -163,8 +173,8 @@ label. See examples.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     [3.13, 4.73]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 [138.06, 316.08]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   [27.40, 27.40]</span>
-<span class="r-in"><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">edg</span>, <span class="op">{</span><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig</span>, <span class="va">confint</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">edg</span></span>
+<span class="r-in"><span><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">edg</span>, <span class="op">{</span><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig</span>, <span class="va">confint</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">edg</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow                      label connect_from connect_to</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA</span>
@@ -187,7 +197,7 @@ label. See examples.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

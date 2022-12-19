@@ -10,6 +10,9 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/LCGA.html</loc>
+  </url>
+  <url>
     <loc>/articles/Plotting_graphs.html</loc>
   </url>
   <url>
@@ -145,6 +148,9 @@
     <loc>/reference/graph_sem.html</loc>
   </url>
   <url>
+    <loc>/reference/ic_weights.html</loc>
+  </url>
+  <url>
     <loc>/reference/if_edit.html</loc>
   </url>
   <url>
@@ -157,6 +163,12 @@
     <loc>/reference/lcs.html</loc>
   </url>
   <url>
+    <loc>/reference/lr_lmr.html</loc>
+  </url>
+  <url>
+    <loc>/reference/lr_test.html</loc>
+  </url>
+  <url>
     <loc>/reference/lsub.html</loc>
   </url>
   <url>
@@ -167,6 +179,9 @@
   </url>
   <url>
     <loc>/reference/mplus_expand_names.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mx_dummies.html</loc>
   </url>
   <url>
     <loc>/reference/mx_growth_mixture.html</loc>
@@ -190,10 +205,16 @@
     <loc>/reference/paste2.html</loc>
   </url>
   <url>
+    <loc>/reference/plas_depression.html</loc>
+  </url>
+  <url>
     <loc>/reference/plot_bivariate.html</loc>
   </url>
   <url>
     <loc>/reference/plot_density.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_growth.html</loc>
   </url>
   <url>
     <loc>/reference/plot_prob.html</loc>
@@ -251,5 +272,8 @@
   </url>
   <url>
     <loc>/reference/tidy_sem.html</loc>
+  </url>
+  <url>
+    <loc>/reference/wald_test.html</loc>
   </url>
 </urlset>

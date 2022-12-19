@@ -25,7 +25,7 @@ variables contained in $data.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -34,13 +34,16 @@ variables contained in $data.
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -85,7 +88,7 @@ variables contained in <code>$data</code>.</p></li>
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tidy_sem</span><span class="op">(</span><span class="va">x</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tidy_sem</span><span class="op">(</span><span class="va">x</span>, split <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -93,14 +96,19 @@ variables contained in <code>$data</code>.</p></li>
     <dl><dt>x</dt>
 <dd><p>An object for which a method exists, e.g., a vector of variable
 names, or a data.frame.</p></dd>
+
+
 <dt>split</dt>
 <dd><p>Character. Defining the regular expression used by
 <code><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></code> to separate variable names into 1) the
 name of the scale/construct and 2) the number (or name) of the item.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class "tidy_sem"</p>
+    
+
+<p>An object of class "tidy_sem"</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -122,28 +130,28 @@ character in regular expressions.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">tidy_sem</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bfi_1"</span>, <span class="st">"bfi_2"</span>, <span class="st">"bfi_3"</span>, <span class="st">"bfi_4"</span>, <span class="st">"bfi_5"</span>,</span>
-<span class="r-in"><span class="st">"macqj_1"</span>, <span class="st">"macqj_2"</span>, <span class="st">"macqj_3"</span>, <span class="st">"macqj_4"</span>, <span class="st">"macqj_5"</span>, <span class="st">"macqj_6"</span>,</span>
-<span class="r-in"><span class="st">"macqj_7"</span>, <span class="st">"macqj_8"</span>, <span class="st">"macqj_9"</span>, <span class="st">"macqj_10"</span>, <span class="st">"macqj_11"</span>,</span>
-<span class="r-in"><span class="st">"macqj_12"</span>, <span class="st">"macqj_13"</span>, <span class="st">"macqj_14"</span>, <span class="st">"macqj_15"</span>, <span class="st">"macqj_16"</span>,</span>
-<span class="r-in"><span class="st">"macqj_17"</span>, <span class="st">"macqj_18"</span>, <span class="st">"macqj_19"</span>, <span class="st">"macqj_20"</span>, <span class="st">"macqj_21"</span>,</span>
-<span class="r-in"><span class="st">"macqr_1"</span>, <span class="st">"macqr_2"</span>, <span class="st">"macqr_3"</span>, <span class="st">"macqr_4"</span>, <span class="st">"macqr_5"</span>, <span class="st">"macqr_6"</span>,</span>
-<span class="r-in"><span class="st">"macqr_7"</span>, <span class="st">"macqr_8"</span>, <span class="st">"macqr_9"</span>, <span class="st">"macqr_10"</span>, <span class="st">"macqr_11"</span>,</span>
-<span class="r-in"><span class="st">"macqr_12"</span>, <span class="st">"macqr_13"</span>, <span class="st">"macqr_14"</span>, <span class="st">"macqr_15"</span>, <span class="st">"macqr_16"</span>,</span>
-<span class="r-in"><span class="st">"macqr_17"</span>, <span class="st">"macqr_18"</span>, <span class="st">"macqr_19"</span>, <span class="st">"macqr_20"</span>, <span class="st">"macqr_21"</span>, <span class="st">"sex"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">tidy_sem</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bfi_1"</span>, <span class="st">"bfi_2"</span>, <span class="st">"bfi_3"</span>, <span class="st">"bfi_4"</span>, <span class="st">"bfi_5"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqj_1"</span>, <span class="st">"macqj_2"</span>, <span class="st">"macqj_3"</span>, <span class="st">"macqj_4"</span>, <span class="st">"macqj_5"</span>, <span class="st">"macqj_6"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqj_7"</span>, <span class="st">"macqj_8"</span>, <span class="st">"macqj_9"</span>, <span class="st">"macqj_10"</span>, <span class="st">"macqj_11"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqj_12"</span>, <span class="st">"macqj_13"</span>, <span class="st">"macqj_14"</span>, <span class="st">"macqj_15"</span>, <span class="st">"macqj_16"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqj_17"</span>, <span class="st">"macqj_18"</span>, <span class="st">"macqj_19"</span>, <span class="st">"macqj_20"</span>, <span class="st">"macqj_21"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqr_1"</span>, <span class="st">"macqr_2"</span>, <span class="st">"macqr_3"</span>, <span class="st">"macqr_4"</span>, <span class="st">"macqr_5"</span>, <span class="st">"macqr_6"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqr_7"</span>, <span class="st">"macqr_8"</span>, <span class="st">"macqr_9"</span>, <span class="st">"macqr_10"</span>, <span class="st">"macqr_11"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqr_12"</span>, <span class="st">"macqr_13"</span>, <span class="st">"macqr_14"</span>, <span class="st">"macqr_15"</span>, <span class="st">"macqr_16"</span>,</span></span>
+<span class="r-in"><span><span class="st">"macqr_17"</span>, <span class="st">"macqr_18"</span>, <span class="st">"macqr_19"</span>, <span class="st">"macqr_20"</span>, <span class="st">"macqr_21"</span>, <span class="st">"sex"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A tidy_sem object</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span>  $dictionary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB;">o  </span>  $data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB;">o  </span>  $syntax</span>
-<span class="r-in"><span class="fu">tidy_sem</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bfi_1"</span>, <span class="st">"bfi_2"</span>, <span class="st">"bfi_3"</span>, <span class="st">"bfi_4"</span>, <span class="st">"bfi_5"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_j_1"</span>, <span class="st">"mac_q_j_2"</span>, <span class="st">"mac_q_j_3"</span>, <span class="st">"mac_q_j_4"</span>, <span class="st">"mac_q_j_5"</span>, <span class="st">"mac_q_j_6"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_j_7"</span>, <span class="st">"mac_q_j_8"</span>, <span class="st">"mac_q_j_9"</span>, <span class="st">"mac_q_j_10"</span>, <span class="st">"mac_q_j_11"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_j_12"</span>, <span class="st">"mac_q_j_13"</span>, <span class="st">"mac_q_j_14"</span>, <span class="st">"mac_q_j_15"</span>, <span class="st">"mac_q_j_16"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_j_17"</span>, <span class="st">"mac_q_j_18"</span>, <span class="st">"mac_q_j_19"</span>, <span class="st">"mac_q_j_20"</span>, <span class="st">"mac_q_j_21"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_r_1"</span>, <span class="st">"mac_q_r_2"</span>, <span class="st">"mac_q_r_3"</span>, <span class="st">"mac_q_r_4"</span>, <span class="st">"mac_q_r_5"</span>, <span class="st">"mac_q_r_6"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_r_7"</span>, <span class="st">"mac_q_r_8"</span>, <span class="st">"mac_q_r_9"</span>, <span class="st">"mac_q_r_10"</span>, <span class="st">"mac_q_r_11"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_r_12"</span>, <span class="st">"mac_q_r_13"</span>, <span class="st">"mac_q_r_14"</span>, <span class="st">"mac_q_r_15"</span>, <span class="st">"mac_q_r_16"</span>,</span>
-<span class="r-in"><span class="st">"mac_q_r_17"</span>, <span class="st">"mac_q_r_18"</span>, <span class="st">"mac_q_r_19"</span>, <span class="st">"mac_q_r_20"</span>, <span class="st">"mac_q_r_21"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">tidy_sem</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bfi_1"</span>, <span class="st">"bfi_2"</span>, <span class="st">"bfi_3"</span>, <span class="st">"bfi_4"</span>, <span class="st">"bfi_5"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_j_1"</span>, <span class="st">"mac_q_j_2"</span>, <span class="st">"mac_q_j_3"</span>, <span class="st">"mac_q_j_4"</span>, <span class="st">"mac_q_j_5"</span>, <span class="st">"mac_q_j_6"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_j_7"</span>, <span class="st">"mac_q_j_8"</span>, <span class="st">"mac_q_j_9"</span>, <span class="st">"mac_q_j_10"</span>, <span class="st">"mac_q_j_11"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_j_12"</span>, <span class="st">"mac_q_j_13"</span>, <span class="st">"mac_q_j_14"</span>, <span class="st">"mac_q_j_15"</span>, <span class="st">"mac_q_j_16"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_j_17"</span>, <span class="st">"mac_q_j_18"</span>, <span class="st">"mac_q_j_19"</span>, <span class="st">"mac_q_j_20"</span>, <span class="st">"mac_q_j_21"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_r_1"</span>, <span class="st">"mac_q_r_2"</span>, <span class="st">"mac_q_r_3"</span>, <span class="st">"mac_q_r_4"</span>, <span class="st">"mac_q_r_5"</span>, <span class="st">"mac_q_r_6"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_r_7"</span>, <span class="st">"mac_q_r_8"</span>, <span class="st">"mac_q_r_9"</span>, <span class="st">"mac_q_r_10"</span>, <span class="st">"mac_q_r_11"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_r_12"</span>, <span class="st">"mac_q_r_13"</span>, <span class="st">"mac_q_r_14"</span>, <span class="st">"mac_q_r_15"</span>, <span class="st">"mac_q_r_16"</span>,</span></span>
+<span class="r-in"><span><span class="st">"mac_q_r_17"</span>, <span class="st">"mac_q_r_18"</span>, <span class="st">"mac_q_r_19"</span>, <span class="st">"mac_q_r_20"</span>, <span class="st">"mac_q_r_21"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Some variable names contained more than one splitting character. Ignored all but the last splitting character.FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A tidy_sem object</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span>  $dictionary</span>
@@ -163,7 +171,7 @@ character in regular expressions.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

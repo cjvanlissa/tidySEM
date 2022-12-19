@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -26,13 +26,16 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -72,13 +75,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for lavaan</span>
-<span class="fu">get_layout</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_as_tree"</span><span class="op">)</span>
-
-<span class="fu">get_layout</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">get_layout</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, rows <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for lavaan</span></span>
+<span><span class="fu">get_layout</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_as_tree"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_layout</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">get_layout</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, rows <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,20 +89,29 @@
     <dl><dt>x</dt>
 <dd><p>An object for which a method exists; currently, methods exist for
 <code>character</code>, <code>lavaan</code>, and <code>mplus.model</code> objects.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Character arguments corresponding to layout elements. Use node
 names, empty strings (""), or NA values.</p></dd>
+
+
 <dt>layout_algorithm</dt>
 <dd><p>Optional argument for fit model objects. Character
 string, indicating which <code>igraph</code>
 layout algorithm to apply to position the nodes. Defaults to
 <code>"layout_as_tree"</code>; see details for more options.</p></dd>
+
+
 <dt>rows</dt>
 <dd><p>Numeric, indicating the number of rows of the graph.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Object of class 'tidy_layout'</p>
+    
+
+<p>Object of class 'tidy_layout'</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -129,45 +141,45 @@ layout algorithm to apply to position the nodes. Defaults to
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1</span></span>
-<span class="r-in"><span class="fu">get_layout</span><span class="op">(</span><span class="st">"c"</span>, <span class="cn">NA</span>,  <span class="st">"d"</span>,</span>
-<span class="r-in">           <span class="cn">NA</span>,  <span class="st">"e"</span>, <span class="cn">NA</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example 1</span></span></span>
+<span class="r-in"><span><span class="fu">get_layout</span><span class="op">(</span><span class="st">"c"</span>, <span class="cn">NA</span>,  <span class="st">"d"</span>,</span></span>
+<span class="r-in"><span>           <span class="cn">NA</span>,  <span class="st">"e"</span>, <span class="cn">NA</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "c"  NA   "d" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] NA   "e"  NA  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "layout_matrix" "matrix"        "array"        </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Example 2</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></span><span class="op">(</span><span class="st">' visual  =~ x1 + x2 + x3 '</span>,</span>
-<span class="r-in">           data <span class="op">=</span> <span class="va">HolzingerSwineford1939</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example 2</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></span><span class="op">(</span><span class="st">' visual  =~ x1 + x2 + x3 '</span>,</span></span>
+<span class="r-in"><span>           data <span class="op">=</span> <span class="va">HolzingerSwineford1939</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>lavaan WARNING: some estimated ov variances are negative</span>
-<span class="r-in"><span class="fu">get_layout</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">get_layout</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2]     [,3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] NA   "visual" NA  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "x1" "x2"     "x3"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "layout_matrix" "matrix"        "array"        </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Example 3</span></span>
-<span class="r-in"><span class="co"># Here, we first write the layout to .csv, but you could create it in a</span></span>
-<span class="r-in"><span class="co"># spreadsheet program, and save the spreadsheet to .csv:</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">""</span>,  <span class="st">"d"</span>, <span class="st">""</span>,  <span class="st">"e"</span>, <span class="st">""</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span class="r-in">          file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example3.csv"</span><span class="op">)</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Now, we load the .csv:</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example3.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Example 4</span></span>
-<span class="r-in"><span class="co"># For this example, make your layout in a spreadsheet program, select it, and</span></span>
-<span class="r-in"><span class="co"># copy to clipboard. Reading from the clipboard works differently in Windows</span></span>
-<span class="r-in"><span class="co"># and Mac. For this example, I used Microsoft Excel.</span></span>
-<span class="r-in"><span class="co"># On Windows, run:</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"clipboard"</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># On Mac, run:</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">pipe</a></span><span class="op">(</span><span class="st">"pbpaste"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Example 3</span></span></span>
+<span class="r-in"><span><span class="co"># Here, we first write the layout to .csv, but you could create it in a</span></span></span>
+<span class="r-in"><span><span class="co"># spreadsheet program, and save the spreadsheet to .csv:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">""</span>,  <span class="st">"d"</span>, <span class="st">""</span>,  <span class="st">"e"</span>, <span class="st">""</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example3.csv"</span><span class="op">)</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Now, we load the .csv:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example3.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example 4</span></span></span>
+<span class="r-in"><span><span class="co"># For this example, make your layout in a spreadsheet program, select it, and</span></span></span>
+<span class="r-in"><span><span class="co"># copy to clipboard. Reading from the clipboard works differently in Windows</span></span></span>
+<span class="r-in"><span><span class="co"># and Mac. For this example, I used Microsoft Excel.</span></span></span>
+<span class="r-in"><span><span class="co"># On Windows, run:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"clipboard"</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># On Mac, run:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">pipe</a></span><span class="op">(</span><span class="st">"pbpaste"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -182,7 +194,7 @@ layout algorithm to apply to position the nodes. Defaults to
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

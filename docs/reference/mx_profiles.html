@@ -20,7 +20,7 @@ across classes."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -29,13 +29,16 @@ across classes."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -78,55 +81,67 @@ across classes.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mx_profiles</span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  classes <span class="op">=</span> <span class="fl">1L</span>,
-  variances <span class="op">=</span> <span class="st">"equal"</span>,
-  covariances <span class="op">=</span> <span class="st">"zero"</span>,
-  run <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mx_profiles</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  classes <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  variances <span class="op">=</span> <span class="st">"equal"</span>,</span>
+<span>  covariances <span class="op">=</span> <span class="st">"zero"</span>,</span>
+<span>  run <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>The data.frame to be used for model fitting.</p></dd>
+
+
 <dt>classes</dt>
 <dd><p>A vector of integers, indicating which class solutions to
 generate. Defaults to 1L. E.g., <code>classes = 1:6</code>,</p></dd>
+
+
 <dt>variances</dt>
 <dd><p>Character vector. Specifies which variance components to
 estimate. Defaults to "equal" (constrain variances across classes); the
 other option is "varying" (estimate variances freely across classes). Each
 element of this vector refers to one of the models you wish to run.</p></dd>
+
+
 <dt>covariances</dt>
 <dd><p>Character vector. Specifies which covariance components to
 estimate. Defaults to "zero" (covariances constrained to zero; this
 corresponds
 to an assumption of conditional independence of the indicators); other
 options are "equal" (covariances between items constrained to be equal across
-classes), and "varying" (free covariances across classes).
-<code>classes = c(1:4, 6:8)</code>.</p></dd>
+classes), and "varying" (free covariances across classes).</p></dd>
+
+
 <dt>run</dt>
 <dd><p>Logical, whether or not to run the model. If <code>run = TRUE</code>,
 the function calls <code><a href="mixture_starts.html">mixture_starts</a></code> and <code><a href="run_mx.html">run_mx</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments, passed to functions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns an <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></code>.</p>
+    
+
+<p>Returns an <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"empathy"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">empathy</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
-<span class="r-in"><span class="fu">mx_profiles</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>,</span>
-<span class="r-in">            classes <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">res</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"empathy"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">empathy</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu">mx_profiles</span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>,</span></span>
+<span class="r-in"><span>            classes <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">res</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -141,7 +156,7 @@ the function calls <code><a href="mixture_starts.html">mixture_starts</a></code>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

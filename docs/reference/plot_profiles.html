@@ -26,7 +26,7 @@ it is most likely to be a member of.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -35,13 +35,16 @@ it is most likely to be a member of.
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -87,65 +90,84 @@ it is most likely to be a member of.</p></li>
 </ol></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_profiles</span><span class="op">(</span>
-  <span class="va">x</span>,
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  ci <span class="op">=</span> <span class="fl">0.95</span>,
-  sd <span class="op">=</span> <span class="cn">TRUE</span>,
-  add_line <span class="op">=</span> <span class="cn">FALSE</span>,
-  rawdata <span class="op">=</span> <span class="cn">TRUE</span>,
-  bw <span class="op">=</span> <span class="cn">FALSE</span>,
-  alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">plot_profiles</span><span class="op">(</span>
-  <span class="va">x</span>,
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  ci <span class="op">=</span> <span class="fl">0.95</span>,
-  sd <span class="op">=</span> <span class="cn">TRUE</span>,
-  add_line <span class="op">=</span> <span class="cn">FALSE</span>,
-  rawdata <span class="op">=</span> <span class="cn">TRUE</span>,
-  bw <span class="op">=</span> <span class="cn">FALSE</span>,
-  alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_profiles</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ci <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  add_line <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rawdata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  bw <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">plot_profiles</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ci <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  add_line <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rawdata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  bw <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object containing the results of a mixture model analysis.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>A character vectors with the names of the variables to be
 plotted (optional).</p></dd>
+
+
 <dt>ci</dt>
 <dd><p>Numeric. What confidence interval should the error bars span?
 Defaults to a 95% confidence interval. Set to NULL to remove error bars.</p></dd>
+
+
 <dt>sd</dt>
 <dd><p>Logical. Whether to display a box encompassing +/- 1SD Defaults to
 TRUE.</p></dd>
+
+
 <dt>add_line</dt>
 <dd><p>Logical. Whether to display a line, connecting cluster
 centroids belonging to the same latent class. Defaults to FALSE, as it is not
 recommended to imply connectivity between the different variables on the
 X-axis.</p></dd>
+
+
 <dt>rawdata</dt>
 <dd><p>Should raw data be plotted in the background? Setting this to
 TRUE might result in long plotting times.</p></dd>
+
+
 <dt>bw</dt>
 <dd><p>Logical. Should the plot be black and white (for print), or color?</p></dd>
+
+
 <dt>alpha_range</dt>
 <dd><p>The minimum and maximum values of alpha (transparency) for
 the raw data. Minimum should be 0; lower maximum values of alpha can help
 reduce overplotting.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed to and from other functions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class 'ggplot'.</p>
+    
+
+<p>An object of class 'ggplot'.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -154,17 +176,17 @@ reduce overplotting.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Variable <span class="op">=</span> <span class="st">"x1"</span>,</span>
-<span class="r-in">Class <span class="op">=</span> <span class="st">"class1"</span>,</span>
-<span class="r-in">Classes <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">Model <span class="op">=</span> <span class="st">"equal var 1"</span>,</span>
-<span class="r-in">Value <span class="op">=</span> <span class="fl">3.48571428571429</span>,</span>
-<span class="r-in">se <span class="op">=</span> <span class="fl">0.426092805342181</span>,</span>
-<span class="r-in">Value.Variances <span class="op">=</span> <span class="fl">3.81265306156537</span>,</span>
-<span class="r-in">se.Variances <span class="op">=</span> <span class="fl">1.17660769119959</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">plot_profiles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df_plot <span class="op">=</span> <span class="va">df_plot</span>, df_raw <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
-<span class="r-in">ci <span class="op">=</span> <span class="cn">NULL</span>, sd <span class="op">=</span> <span class="cn">FALSE</span>, add_line <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">rawdata <span class="op">=</span> <span class="cn">FALSE</span>, bw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Variable <span class="op">=</span> <span class="st">"x1"</span>,</span></span>
+<span class="r-in"><span>Class <span class="op">=</span> <span class="st">"class1"</span>,</span></span>
+<span class="r-in"><span>Classes <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>Model <span class="op">=</span> <span class="st">"equal var 1"</span>,</span></span>
+<span class="r-in"><span>Value <span class="op">=</span> <span class="fl">3.48571428571429</span>,</span></span>
+<span class="r-in"><span>se <span class="op">=</span> <span class="fl">0.426092805342181</span>,</span></span>
+<span class="r-in"><span>Value.Variances <span class="op">=</span> <span class="fl">3.81265306156537</span>,</span></span>
+<span class="r-in"><span>se.Variances <span class="op">=</span> <span class="fl">1.17660769119959</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_profiles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df_plot <span class="op">=</span> <span class="va">df_plot</span>, df_raw <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>ci <span class="op">=</span> <span class="cn">NULL</span>, sd <span class="op">=</span> <span class="cn">FALSE</span>, add_line <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>rawdata <span class="op">=</span> <span class="cn">FALSE</span>, bw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_profiles-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -180,7 +202,7 @@ reduce overplotting.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

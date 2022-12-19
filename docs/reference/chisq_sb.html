@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -26,13 +26,16 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -72,7 +75,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">chisq_sb</span><span class="op">(</span><span class="va">chisq1</span>, <span class="va">df1</span>, scf1 <span class="op">=</span> <span class="fl">1</span>, <span class="va">chisq2</span>, <span class="va">df2</span>, scf2 <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">chisq_sb</span><span class="op">(</span><span class="va">chisq1</span>, <span class="va">df1</span>, scf1 <span class="op">=</span> <span class="fl">1</span>, <span class="va">chisq2</span>, <span class="va">df2</span>, scf2 <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,20 +83,33 @@
     <dl><dt>chisq1</dt>
 <dd><p>An object for which a method exists; e.g., a chi-square value,
 or a <code>data.frame</code>.</p></dd>
+
+
 <dt>df1</dt>
 <dd><p>Degrees of freedom of model 1.</p></dd>
+
+
 <dt>scf1</dt>
 <dd><p>Scale correction factor of model 1.</p></dd>
+
+
 <dt>chisq2</dt>
 <dd><p>Chi square value of model 2.</p></dd>
+
+
 <dt>df2</dt>
 <dd><p>Degrees of freedom of model 2.</p></dd>
+
+
 <dt>scf2</dt>
 <dd><p>Scale correction factor of model 2.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Chi-square difference value with corresponding degrees of freedom and
+    
+
+<p>Chi-square difference value with corresponding degrees of freedom and
 p-value.</p>
     </div>
     <div id="details">
@@ -110,8 +126,8 @@ statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>chi2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">23</span>, <span class="fl">44</span>, <span class="fl">65</span><span class="op">)</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">78</span>, <span class="fl">74</span>, <span class="fl">70</span><span class="op">)</span>, scf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.02</span>, <span class="fl">1.12</span>, <span class="fl">1.28</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">chisq_sb</span><span class="op">(</span><span class="fl">24</span>, <span class="fl">78</span>, <span class="fl">1.02</span>, <span class="fl">65</span>, <span class="fl">70</span>, <span class="fl">1.28</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>chi2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">23</span>, <span class="fl">44</span>, <span class="fl">65</span><span class="op">)</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">78</span>, <span class="fl">74</span>, <span class="fl">70</span><span class="op">)</span>, scf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.02</span>, <span class="fl">1.12</span>, <span class="fl">1.28</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">chisq_sb</span><span class="op">(</span><span class="fl">24</span>, <span class="fl">78</span>, <span class="fl">1.02</span>, <span class="fl">65</span>, <span class="fl">70</span>, <span class="fl">1.28</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Models cannot be nested, DF are equal.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Dchisq Dchisq_df  Dchisq_p </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -46.78884   8.00000   1.00000 </span>
@@ -129,7 +145,7 @@ statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

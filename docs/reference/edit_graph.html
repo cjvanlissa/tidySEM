@@ -18,7 +18,7 @@ of a sem_graph object, and return the modified sem_graph."><!-- mathjax --><scri
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -27,13 +27,16 @@ of a sem_graph object, and return the modified sem_graph."><!-- mathjax --><scri
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -74,35 +77,44 @@ of a <code>sem_graph</code> object, and return the modified <code>sem_graph</cod
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">edit_graph</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, element <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"edges"</span>, <span class="st">"nodes"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">edit_nodes</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">edit_edges</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edit_graph</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, element <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"edges"</span>, <span class="st">"nodes"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">edit_nodes</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">edit_edges</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code>sem_graph</code>.</p></dd>
+
+
 <dt>expr</dt>
 <dd><p>expression to evaluate.</p></dd>
+
+
 <dt>element</dt>
 <dd><p>Character. The element of the <code>sem_graph</code> to edit,
 defaults to <code>c("edges", "nodes")</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code>sem_graph</code>.</p>
+    
+
+<p>An object of class <code>sem_graph</code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="prepare_graph.html">prepare_graph</a></span><span class="op">(</span>layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">edit_graph</span><span class="op">(</span><span class="va">p</span>, <span class="op">{</span><span class="va">colour</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">}</span>, element <span class="op">=</span> <span class="st">"nodes"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="prepare_graph.html">prepare_graph</a></span><span class="op">(</span>layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">edit_graph</span><span class="op">(</span><span class="va">p</span>, <span class="op">{</span><span class="va">colour</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">}</span>, element <span class="op">=</span> <span class="st">"nodes"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="edit_graph-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -118,7 +130,7 @@ defaults to <code>c("edges", "nodes")</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

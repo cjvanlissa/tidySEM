@@ -21,7 +21,7 @@ psych package."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
       </span>
     </div>
 
@@ -30,13 +30,16 @@ psych package."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -80,26 +83,26 @@ It relies on several functions from the
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">create_scales</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">keys.list</span>,
-  missing <span class="op">=</span> <span class="cn">TRUE</span>,
-  impute <span class="op">=</span> <span class="st">"none"</span>,
-  omega <span class="op">=</span> <span class="cn">NULL</span>,
-  digits <span class="op">=</span> <span class="fl">2</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for tidy_sem</span>
-<span class="fu">create_scales</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">keys.list</span>,
-  missing <span class="op">=</span> <span class="cn">TRUE</span>,
-  impute <span class="op">=</span> <span class="st">"none"</span>,
-  omega <span class="op">=</span> <span class="cn">NULL</span>,
-  digits <span class="op">=</span> <span class="fl">2</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_scales</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">keys.list</span>,</span>
+<span>  missing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  impute <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  omega <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for tidy_sem</span></span>
+<span><span class="fu">create_scales</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">keys.list</span>,</span>
+<span>  missing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  impute <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  omega <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -107,28 +110,43 @@ It relies on several functions from the
     <dl><dt>x</dt>
 <dd><p>A <code>data.frame</code> containing all variables referenced in the
 <code>keys.list</code>, or an object of class <code>tidy_sem</code>.</p></dd>
+
+
 <dt>keys.list</dt>
 <dd><p>A named list, indicating which variables belong to which
 scale.</p></dd>
+
+
 <dt>missing</dt>
 <dd><p>Whether to use rows with partially missing values.
 Default: TRUE.</p></dd>
+
+
 <dt>impute</dt>
 <dd><p>Method for handling missing values, Default: 'none'. This
 default method uses all available data to calculate scale scores, which is
 acceptable for mean scales, but not for sum scales.</p></dd>
+
+
 <dt>omega</dt>
 <dd><p>Which of McDonald's <code><a href="https://rdrr.io/pkg/psych/man/omega.html" class="external-link">omega</a></code> coefficients to
 report. Default: NULL; valid options include: <code>"omega_h"</code>,
 <code>"omega.lim"</code>, <code>"alpha"</code>, <code>"omega.tot"</code>, <code>"G6"</code>.</p></dd>
+
+
 <dt>digits</dt>
 <dd><p>Number of digits for rounding, Default: 2</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters to pass to and from functions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>List with elements: <code>$descriptives</code>, <code>$correlations</code>, and
+    
+
+<p>List with elements: <code>$descriptives</code>, <code>$correlations</code>, and
 <code>$scores</code>.</p>
     </div>
     <div id="details">
@@ -144,17 +162,17 @@ These coefficients are marked with "(sb)".</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">create_scales</span><span class="op">(</span><span class="va">iris</span>, keys.list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>scalename <span class="op">=</span></span>
-<span class="r-in">            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span>, <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">create_scales</span><span class="op">(</span><span class="va">iris</span>, keys.list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>scalename <span class="op">=</span></span></span>
+<span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span>, <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Number of categories should be increased  in order to count frequencies. </span>
-<span class="r-in"><span class="va">out</span><span class="op">$</span><span class="va">descriptives</span></span>
+<span class="r-in"><span><span class="va">out</span><span class="op">$</span><span class="va">descriptives</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20    -1.52</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Reliability  Interpret min_load max_load</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.71 Acceptable       NA       NA</span>
-<span class="r-in"><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_sem.html">tidy_sem</a></span><span class="op">(</span><span class="va">iris</span>, split <span class="op">=</span> <span class="st">"\\."</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">create_scales</span><span class="op">(</span><span class="va">dict</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_sem.html">tidy_sem</a></span><span class="op">(</span><span class="va">iris</span>, split <span class="op">=</span> <span class="st">"\\."</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">create_scales</span><span class="op">(</span><span class="va">dict</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Some factor loadings were negative for scale 'Sepal'. These items were automatically reversed: Sepal.Length</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Number of categories should be increased  in order to count frequencies. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A tidy_scales object</span>
@@ -182,7 +200,7 @@ These coefficients are marked with "(sb)".</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
