@@ -1,3 +1,20 @@
+#' @method table_results mixture_list
+#' @export
+table_results.mixture_list <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, ...)
+{
+  cl <- match.call()
+  out <- suppressWarnings(lapply(x, function(thismod){
+    cl[[1L]] <- quote(table_results)
+    cl[["x"]] <- thismod
+    tmp <- eval.parent(cl)
+    tmp$model <- thismod$name
+    if(!"class" %in% names(tmp) & thismod$name == "mix1"){
+      tmp$class <- "class1"
+    }
+    tmp
+  }))
+  bind_list(out)
+}
 #' @method table_results MxModel
 #' @export
 #' @importFrom stats pnorm

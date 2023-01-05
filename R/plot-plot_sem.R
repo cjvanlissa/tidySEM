@@ -943,7 +943,7 @@ get_nodes.tidy_results <- function(x, label = paste2(name, est_sig, sep = "\n"),
         nodes[["name"]]
       })
     } else {
-    nodes[["label"]] <- ""
+      nodes[["label"]] <- ""
     }
   }
 
@@ -1497,12 +1497,12 @@ match.call.defaults <- function(...) {
       names(df_tmp) <- c('x', 'y')
       # Find the reflection of the midpoint
       midpoint_reflect <- .reflect_points(points = matrix(midpoint, nrow = 1),
-                      start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
-                      end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
+                                          start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
+                                          end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
       if(.flip_curve(otherpoints = df_tmp, candidatepoints = list(midpoint, midpoint_reflect))){
         out[, 1:2] <- .reflect_points(points = out[, 1:2],
-                        start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
-                        end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
+                                      start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
+                                      end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
       }
       out
     }
@@ -1593,8 +1593,8 @@ match.call.defaults <- function(...) {
       data = df,
       mapping = aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]]),
       label.size = NA
-      ),
-      Args)
+    ),
+    Args)
     if(use_geom_text){
       Args$mapping <- aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]], customdata = .data[["label"]])
       Args[c("geom_text", "fill", "label.size")] <- NULL
@@ -1620,7 +1620,7 @@ reposition_variances <- function(df_edges){
       tb <- names(tb)[which.min(tb)]
       return(tb[sample.int(length(tb), 1)])
     }
-    }, vv = variance_vars, vloc = df_edges$connect_from[variances])
+  }, vv = variance_vars, vloc = df_edges$connect_from[variances])
   df_edges$connect_from[variances] <- df_edges$connect_to[variances] <- new_loc
   return(df_edges)
 }

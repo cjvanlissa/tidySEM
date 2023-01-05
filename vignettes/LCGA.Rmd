@@ -10,6 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
   comment = "#>"
 )
 run_everything <- FALSE
@@ -285,10 +287,13 @@ knitr::include_graphics("plot_fit.png")
 
 Based on the aforementioned criteria,
 we selected a 3-class model for further analyses.
-The estimated parameters are reported below.
+First, to prevent label switching,
+we re-order these classes by the value of the intercept `i`.
+Then, we report the estimated parameters.
 
 ```{r tabres, results='asis'}
-tab_res <- table_results(res_step[[3]], columns = NULL)
+res_final <- mx_switch_labels(res_step[[3]], param = "M[1,7]", decreasing = FALSE)
+tab_res <- table_results(res_final, columns = NULL)
 # Select rows and columns
 tab_res <- tab_res[tab_res$Category %in% c("Means", "Variances"), c("Category", "lhs", "est", "se", "pval", "confint", "name")]
 knitr::kable(tab_res, digits = 2, caption = "Results from 3-class LCGA model")
@@ -316,7 +321,7 @@ we can use the `name` column of the results table above.
 Alternatively, to see all parameters in the model, run:
 
 ```{r params}
-names(coef(res_step[[3]]))
+names(coef(res_final))
 ```
 
 Next, specify equality constrained hypotheses.
@@ -329,12 +334,14 @@ When conducting many significance tests,
 consider correcting for multiple comparisons however.
 
 ```{r waldtests, results='asis'}
-wald_tests <- wald_test(res_step[[3]], 
+wald_tests <- wald_test(res_final, 
                    "class1.M[1,7] = class2.M[1,7]&class1.M[1,7] = class3.M[1,7];class1.M[1,8] = class2.M[1,8]&class1.M[1,8] = class3.M[1,8];class1.M[1,9] = class2.M[1,9]&class1.M[1,9] = class3.M[1,9]")
 # Rename the hypothesis
 wald_tests$Hypothesis <- c("Mean i", "Mean step", "Mean slope")
 knitr::kable(wald_tests, digits = 2, caption = "Wald tests")
 ```
+
+All Wald tests are significant, indicating that there are significant differences between the intercepts, step function, and slopes of the three classes.
 
 ## Trajectory plot
 

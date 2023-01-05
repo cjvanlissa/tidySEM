@@ -34,7 +34,7 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
     } else {
       post_prob <- extract_postprob(model)
       class <- apply(post_prob, 1, which.max)
-      class_tab <- table(class)
+      class_tab <- table(factor(class, levels = 1:length(names(model@submodels))))
       if (length(class_tab) == ncol(post_prob)) {
         prop_n <- range(prop.table(class_tab))
       }
@@ -183,26 +183,30 @@ classification_probs_mostlikely <- function (post_prob, class = NULL)
 {
   if (is.null(dim(post_prob)))
     return(1)
-  if(is.null(class)) class <- apply(post_prob, 1, which.max)
+  if (is.null(class))
+    class <- apply(post_prob, 1, which.max)
   avg_probs <- avgprobs_mostlikely(post_prob, class)
   avg_probs[is.na(avg_probs)] <- 0
-  C <- dim(post_prob)[2]
-  N <- sapply(1:C, function(x) sum(class == x))
-  tab <- mapply(function(this_row, this_col) {
-    (avg_probs[this_row, this_col] * N[this_row])/(sum(avg_probs[,
-                                                                 this_col] * N, na.rm = TRUE))
-  }, this_row = rep(1:C, C), this_col = rep(1:C, each = C))
-  matrix(tab, C, C, byrow = TRUE)
+  class_counts <- as.integer(table(ordered(class, levels = 1:ncol(post_prob)))) # Use ordered to ensure empty classes are included
+  tab <- avg_probs * class_counts
+  tab <- tab / matrix(colSums(avg_probs * class_counts), ncol = ncol(tab), nrow = nrow(tab), byrow = TRUE)
+  rownames(tab) <- paste0("assigned.", 1:nrow(tab))
+  colnames(tab) <- paste0("avgprob.", 1:nrow(tab))
+  return(t(tab))
 }
+
 
 avgprobs_mostlikely <- function (post_prob, class = NULL)
 {
   if (is.null(dim(post_prob)))
     return(1)
   if(is.null(class)) class <- apply(post_prob, 1, which.max)
-  t(sapply(1:ncol(post_prob), function(i) {
+  tab <- t(sapply(1:ncol(post_prob), function(i) {
     colMeans(post_prob[class == i, , drop = FALSE])
   }))
+  rownames(tab) <- paste0("assigned.", 1:nrow(tab))
+  colnames(tab) <- paste0("meanprob.", colnames(tab))
+  return(tab)
 }
 
 

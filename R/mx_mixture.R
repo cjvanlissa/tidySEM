@@ -507,19 +507,20 @@ mixture_starts <- function(model,
     stopifnot("Number of unique values in splits must be identical to the number of latent classes." = length(unique(splits)) == length(names(model@submodels)))
   }
   tab_split <- table(splits)
-  if(any(tab_split) < 2){
-    small_cats <- which(tab_split < 2)
-    choose_from <- which(tab_split > 2 + length(small_cats))
+  small_cats <- tab_split < 2
+  if(any(small_cats)){
+    which_small <- which(small_cats)
+    atleast <- 2+sum(tab_split[small_cats])
+    choose_from <- which(tab_split > atleast)
     if(length(choose_from) == 0) stop("Some clusters were too small to determine sensible starting values in `mixture_starts()`. Either specify splits manually, or reduce the number of classes.")
-    splits[sample(which(splits %in% choose_from), length(small_cats))] <- small_cats
+    splits[sample(which(splits %in% choose_from), sum(tab_split[small_cats]))] <- splits[splits %in% names(small_cats)[small_cats]]
   }
 
   if(!classes == length(unique(splits))){
     stop("Argument 'splits' does not identify a number of groups equal to 'classes'.")
   }
-  if(!all(unique(splits) %in% 1:classes)){
-    splits <- as.integer(as.factor(splits))
-  }
+  # Order splits from largest number to smallest
+  splits <- as.integer(ordered(splits, levels = names(sort(table(splits), decreasing = TRUE))))
 
   strts <- lapply(1:classes, function(i){
     thissub <- names(model@submodels)[i]
@@ -528,33 +529,35 @@ mixture_starts <- function(model,
             mxFitFunctionML())
   })
   strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
-  strts <- try({
-    strts <- simple_starts(strts, type = "ULS")
-    subnamz <- names(strts@submodels)
-    not_pd <- sapply(subnamz, function(n){ any(eigen(strts[[n]]$matrices$S$values)$values < 0)})
-    if(any(not_pd)){
-      for(n in names(not_pd)[not_pd]){
-        strts[[n]][["S"]]$values <- Matrix::nearPD(strts[[n]][["S"]]$values, keepDiag = TRUE)$mat
-      }
+  strts_vals <- try(simple_starts(strts, type = "ULS"))
+  if(inherits(strts_vals, "try-error")){
+    strts_vals <- simple_starts(strts, type = "DWLS")
+  }
+  strts <- strts_vals
+  subnamz <- names(strts@submodels)
+  not_pd <- sapply(subnamz, function(n){ any(eigen(strts[[n]]$matrices$S$values)$values < 0)})
+  if(any(not_pd)){
+    for(n in names(not_pd)[not_pd]){
+      strts[[n]][["S"]]$values <- Matrix::nearPD(strts[[n]][["S"]]$values, keepDiag = TRUE, maxit = 10000)$mat
     }
-    mxRun(strts, silent = TRUE, suppressWarnings = TRUE)
-  })
-  if(inherits(strts, "try-error")){
-    strts <- try({
-      strts <- simple_starts(strts, type = "DWLS")
-      strts <<- mxTryHard(strts, extraTries = 100,
-                          silent = TRUE,
-                          verbose = FALSE,
-                          bestInitsOutput = FALSE)
+  }
+  strts_vals <- try(mxRun(strts, silent = TRUE, suppressWarnings = TRUE), silent = TRUE)
+  if(inherits(strts_vals, "try-error")){
+    if(grepl("omxAssignFirstParameters", attr(strts_vals, "condition"), fixed = TRUE)){
+      strts <- omxAssignFirstParameters(strts)
+      strts_vals <- try(mxRun(strts, silent = TRUE, suppressWarnings = TRUE))
+    } else {
+      strts_vals <- try(mxTryHard(strts, extraTries = 100,
+                              silent = TRUE,
+                              verbose = FALSE,
+                              bestInitsOutput = FALSE))
+    }
+  }
 
-    })
-  }
-  if(inherits(strts, "try-error")){
-    strts <- try({mxRun(model)})
-  }
-  if(inherits(strts, "try-error")){
+  if(inherits(strts_vals, "try-error")){
     stop("Could not derive suitable starting values for the ", classes, "-class model.")
   }
+  strts <- strts_vals
   # Insert start values into mixture model
   for(i in names(model@submodels)){
     for(mtx in names(model[[i]]@matrices)){

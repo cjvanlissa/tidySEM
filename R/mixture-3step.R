@@ -58,6 +58,7 @@ BCH.MxModel <- function(x, model, data, ...){
             fitfunction = mxFitFunctionML())
   })
   grps <- do.call(mxModel, c(list(model = "aux", mxFitFunctionMultigroup(grp_names), grps)))
+
   out <- try(run_mx(grps), silent = TRUE)
   attr(out, "tidySEM") <- "BCH"
   if(!inherits(out, "try-error")){

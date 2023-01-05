@@ -3,6 +3,7 @@ names(df) <- c("x", "y")
 set.seed(1)
 mix <- mx_profiles(df[, "x", drop = FALSE], classes = 3)
 bch1 <- BCH(x = mix, data = df$y)
+
 test_that("bch works with continuous data", {
   tab <- table_results(bch1, columns = NULL)
   expect_equal(tab$est[tab$matrix == "M"], c("2.90", "3.16", "3.19"))

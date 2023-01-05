@@ -188,7 +188,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
                    t(x[c(1:6)]))
       }))
       thisp <- thisp + geom_path(data = df_ellipse, aes(x = .data[["x"]],
-                                                       y = .data[["y"]]))
+                                                        y = .data[["y"]]))
     }
     if (rawdata) {
       thisp <- thisp +

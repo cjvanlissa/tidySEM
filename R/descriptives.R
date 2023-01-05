@@ -3,8 +3,33 @@
 #' @param x An object for which a method exists.
 #' @param ... Additional arguments.
 #' @return A \code{data.frame} with descriptive statistics for \code{x}.
+#' Its elements are:
+#' #' \tabular{lll}{
+#'   \strong{name} \tab \code{Character} \tab Variable name\cr
+#'   \strong{type} \tab \code{character} \tab Data type in `R`, as obtained by `class(x)[1]`\cr
+#'   \strong{n} \tab \code{Integer} \tab Number of valid observations\cr
+#'   \strong{missing} \tab \code{Numeric} \tab Proportion missing\cr
+#'   \strong{unique} \tab \code{Integer} \tab Number of unique values\cr
+#'   \strong{mean} \tab \code{numeric} \tab Mean value of non-missing entries, only defined for variables that can be coerced to numeric\cr
+#'   \strong{median} \tab \code{numeric} \tab Median value of non-missing entries, only defined for numeric variables\cr
+#'   \strong{mode} \tab \code{Integer} \tab For numeric variables: The mode value. For factors: The frequency of the mode value\cr
+#'   \strong{mode_value} \tab \code{Character} \tab For factors: value of the mode\cr
+#'   \strong{sd} \tab \code{numeric} \tab Standard deviation of non-missing entries, only defined for variables that can be coerced to numeric\cr
+#'   \strong{v} \tab \code{numeric} \tab Variability coefficient V for factor
+#'   variables (Agresti, 1990). V is the probability that two independent
+#'   observations fall in different categories\cr
+#'   \strong{min} \tab \code{numeric} \tab Minimum value for numeric variables\cr
+#'   \strong{max} \tab \code{numeric} \tab Maximum value for numeric variables\cr
+#'   \strong{range} \tab \code{numeric} \tab Range (distance between min and max) for numeric variables\cr
+#'   \strong{skew} \tab \code{numeric} \tab Skewness. The normalized third central moment of a numeric variable, which reflects its skewness. A symmetric distribution has a skewness of zero\cr
+#'   \strong{skew_2se} \tab \code{numeric} \tab Skewness, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of 5%\cr
+#'   \strong{kurt} \tab \code{numeric} \tab Kurtosis. The normalized fourth central moment of a numeric variable, which reflects its peakedness. A heavy-tailed distribution has high kurtosis, a light-tailed distribution has low kurtosis (sometimes called platykurtic).\cr
+#'   \strong{kurt_2se} \tab \code{numeric} \tab Kurtosis, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of 5%
+#' }
 #' @examples
 #' descriptives(iris)
+#' @references Agresti, A. (2012). Categorical data analysis (Vol. 792).
+#' John Wiley & Sons.
 #' @rdname descriptives
 #' @export
 #' @importFrom stats median sd
@@ -176,12 +201,13 @@ skew_kurtosis.numeric <-
         if (n > 5000 &
             verbose)
           message("Sample size > 5000; skew and kurtosis will likely be significant.")
-        skew <- sum((x - mean(x)) ^ 3) / (n * sqrt(var(x)) ^ 3)
-        skew_se <- sqrt(6 * n * (n - 1) / (n - 2) / (n + 1) / (n + 3))
+        skew <- (sum((x - mean(x))^3)/n)/(sum((x - mean(x))^2)/n)^(3/2)
+        skew_se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3)))
         skew_2se <- skew / (2 * skew_se)
-        kurt <- sum((x - mean(x)) ^ 4) / (n * var(x) ^ 2) - 3
+        kurt <- n * (sum((x - mean(x)) ^ 4) / (sum((x - mean(x))^2)^2))
         kurt_se <- sqrt(24 * n * ((n - 1) ^ 2) / (n - 3) / (n - 2) / (n + 3) /
                           (n + 5))
+
         kurt_2se <- kurt / (2 * kurt_se)
         c(skew,
           skew_se,
