@@ -21,3 +21,4 @@ CRAN-RELEASE
 *.dgm]
 *.txt
 tests/test_local.txt
+!dev/lca_res.rdata

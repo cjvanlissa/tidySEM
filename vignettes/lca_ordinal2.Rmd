@@ -127,12 +127,14 @@ At the time of writing, there are two other wrapper functions for special cases:
 All of these functions have arguments `data` and number of `classes`.
 All variables in `data` are included in the analysis,
 so relevant variables must be selected first.
-Below, we fit 1 to 6 class solutions:
+
+We here consider 1-6 class models,
+but note that this may be overfit, as some of the indicators have only 5 response categories.
 
 ```{r fitlca, eval = run_everything, echo = FALSE}
 set.seed(123)
 res <- mx_lca(data = df, classes = 1:6)
-saveRDS(res, "lca_res.RData")
+saveRDS(res, "../dev/lca_res.RData")
 ```
 ```{r eval = FALSE, echo = TRUE}
 set.seed(123)
@@ -140,81 +142,65 @@ res <- mx_lca(data = df, classes = 1:4)
 table_fit(res)
 ```
 ```{r eval = FALSE, echo = FALSE}
-res <- readRDS("res.RData")
+res <- readRDS("lca_res.RData")
 ```
-
-In this example, all models converge without issues.
-If this is not the case, however, we can try to aid convergence using `mxTryHardOrdinal()`, which expands the search for optimal parameter values for models with ordinal indicators.
-It is part of the family of functions based on `mxTryHard()`.
 
 ## Class Enumeration
 
 In class enumeration, we want to compare a sequence of LCA models fitted
-to the data. To aid the process, we create a model fit table using
-`tidySEM::table_fit()` with the results object as the input. As the
-output contains a lot of information on each of the four fitted models,
-we select a subset of helpful model fit indices and classification
-diagnostics.
+to the data. 
+First, ascertain that all models converged without issues.
+If this is not the case, we can try to aid convergence using `mxTryHardOrdinal()`, which expands the search for optimal parameter values for models with ordinal indicators.
+It is part of the family of functions based on `mxTryHard()`.
+To aid class enumeration, we create a model fit table using
+`table_fit()` and retain relevant columns.
+We also determine whether any models can be disqualified.
 
 ```{r fit_table, include = TRUE, eval=F}
-fit_table <- table_fit(res) # model fit table
-fit_table[ , c("Name", "LL", "Parameters", 
-               "AIC", "BIC", "Entropy", 
-               "prob_min", "prob_max", 
-               "n_min", "n_max")] # our selection
+fit <- table_fit(res) # model fit table
+fit[ , c("Name", "LL", "Parameters", "n",
+         "BIC", "Entropy",
+         "prob_min", "prob_max", 
+         "n_min", "n_max",
+         "lmr_p")]
+```
+```{r tabfit, echo = FALSE, eval = run_everything}
+fit <- table_fit(res)
+fit <- fit[ , c("Name", "LL", "Parameters", "n",
+         "BIC", "Entropy",
+         "prob_min", "prob_max", 
+         "n_min", "n_max",
+         "lmr_p")]
+write.csv(fit, "lca_fit.csv", row.names = FALSE)
+```
+```{r tabfit, echo = FALSE, eval = TRUE, results='asis'}
+fit <- read.csv("lca_fit.csv", stringsAsFactors = FALSE)
+class(fit) <- c("tidy_fit", "data.frame")
+knitr::kable(fit[ , c("Name", "LL", "Parameters", "n",
+         "BIC", "Entropy",
+         "prob_min", "prob_max", 
+         "n_min", "n_max",
+         "lmr_p")], caption = "Model fit table")
 ```
 
-Our selection of fit indices and classification diagnostics includes:
+Next, we check for local identifiability by checking whether the size of the smallest class is consistently larger (about 5x as large) as the number of parameter per class.
+We can simply calculate this by running:
 
-```{r, echo=F}
-Selection <- c(
-    "Name", "LL", "Parameters", 
-    "AIC", "BIC", "prob_min", 
-    "prob_max", "n_min", "n_max")
-
-Description <- c(
-    "Number of classes $K$",
-    "Basic fit measure of the natural log of the likelihood of the data",
-    "Total number of model parameters (in all classes)",
-    "Relative fit measure: Akaike Information Criterion",
-    "Relative fit measure: Bayesian Information Criterion",
-    "Lowest average posterior class probability for class cases were assigned to",
-    "Highest average posterior class probability for class cases were assigned to",
-    "Proportion of cases in the smallest class based on posterior class probability",
-    "Proportion of cases in the largest class based on posterior class probability")
-
-selection <- cbind(Selection, Description)
-
-knitr::kable(selection, format = 'pipe', 
-             caption = "Selection of Fit Indices and 
-                        Classification Diagnostics")
+```{r, echo = TRUE, eval = TRUE}
+(fit$n_min * 439) / ((fit$Parameters)/1:6)
 ```
 
+The smallest class size occurs in the 5-class model,
+where the smallest class is assigned 7% of cases, or 38 cases.
+This model has 28 parameters, approximately 6 per class.
+We thus have at least five observations per parameter in every class,
+and do not disqualify the 5-class model.
 
-We discussed several possible strategies to select the final class
-solution. Here, we apply our own.
-
-To aid our interpretation of the results, we create an elbow plot
-showing the trends in information criteria across four models.
-
-```{r elbow_plot, include = TRUE, message=F, warning=F, eval=F}
-library(tidyverse) # for data-wrangling
-library(ggplot2) # for plots
-
-elbow_plot <- fit_table[ , c("Name", "AIC", "BIC")] # extract ICs
-elbow_plot <- pivot_longer(elbow_plot, cols = c("AIC", "BIC"), 
-                           names_to = "IC", values_to = "Value") # to long format
-
-ggplot(elbow_plot, aes(x = Name, y = Value, group = IC))+
-  geom_point(aes(color = IC))+
-  geom_line(aes(color = IC))+
-  labs(title="Elbow Plot of Information Criteria per Class Solution", 
-       x = "Class Solution", y = " Value")+
-  scale_color_manual(name = "Information Criterion", 
-                     values = c(AIC = 'blue', BIC = 'red'))+
-  theme_minimal()
-
-```
+Although this is a theory-driven LCA,
+no exact number of classes was hypothesized.
+There are concerns about theoretical interpretability of all solutions,
+as the entropies and minimum classification probabilities are all low.
+However, in this confirmatory use case, we address this when interpreting the results.
 
 From the elbow plot, we see that AIC has a lower penalty for model
 complexity. However, we are more interested in the BIC values, which are
