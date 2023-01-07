@@ -14,7 +14,7 @@ descriptives(x, ...)
 \value{
 A \code{data.frame} with descriptive statistics for \code{x}.
 Its elements are:
-#' \tabular{lll}{
+\tabular{lll}{
   \strong{name} \tab \code{Character} \tab Variable name\cr
   \strong{type} \tab \code{character} \tab Data type in `R`, as obtained by `class(x)[1]`\cr
   \strong{n} \tab \code{Integer} \tab Number of valid observations\cr

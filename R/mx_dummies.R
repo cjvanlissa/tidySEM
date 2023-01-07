@@ -11,6 +11,7 @@
 #' mx_dummies(iris[1:5,])
 #' @rdname mx_dummies
 #' @export
+#' @importFrom stats model.matrix
 mx_dummies <- function(x, ...){
   code_me <- sapply(x, inherits, what = "factor")
   if(!any(code_me)) return(x)

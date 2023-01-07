@@ -1,13 +1,15 @@
 ---
-title: "Latent Class Analysis for Ordinal Indicators"
+title: "Tutorial: Latent Class Analysis for Ordinal Indicators"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Latent Class Analysis for Ordinal Indicators}
+  %\VignetteIndexEntry{Tutorial: Latent Class Analysis for Ordinal Indicators}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE, cache = FALSE}
+library(yaml)
+library(scales)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -121,7 +123,7 @@ set.seed(123)
 res <- mx_lca(data = df, classes = 1:4)
 table_fit(res)
 ```
-```{r eval = TRUE, echo = FALSE}
+```{r eval = FALSE, echo = FALSE}
 res <- readRDS("res.RData")
 ```
 

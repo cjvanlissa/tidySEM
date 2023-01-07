@@ -1,13 +1,15 @@
 ---
-title: "Latent Class Growth Analysis"
+title: "Tutorial: Latent Class Growth Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Latent Class Growth Analysis}
+  %\VignetteIndexEntry{Tutorial: Latent Class Growth Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
+library(yaml)
+library(scales)
 knitr::opts_chunk$set(
   collapse = TRUE,
   message = FALSE,

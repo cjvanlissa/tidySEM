@@ -41,11 +41,31 @@ table_fit.mixture_list <- function(x, ...) {
 
   out <- out[, !names(out) %in% remove_these, drop = FALSE]
   class(out) <- c("tidy_fit", class(out))
-  tst <- try(lr_lmr(out))
+  tst <- try(lr_lmr(out), silent = TRUE)
   if(!inherits(tst, what = "try-error")){
     out$lmr_lr <- tst$lmr_lr
     out$lmr_p <- tst$lmr_p
   }
+  return(out)
+}
+
+#' @method table_fit list
+#' @export
+table_fit.list <- function(x, ...) {
+  if(all(sapply(x, inherits, what = "MxModel"))){
+    cl <- match.call()
+    cl[[1L]] <- quote(table_fit)
+    class(x) <- c("mixture_list", class(x))
+    cl[["x"]] <- x
+    return(eval.parent(cl))
+  }
+  out <- lapply(x, function(i){
+    tryCatch({
+      table_fit(i)
+    }, error = function(e){NULL})
+  })
+  out <- bind_list(out)
+  class(out) <- c("tidy_fit", class(out))
   return(out)
 }
 

@@ -4,7 +4,7 @@
 #' @param ... Additional arguments.
 #' @return A \code{data.frame} with descriptive statistics for \code{x}.
 #' Its elements are:
-#' #' \tabular{lll}{
+#' \tabular{lll}{
 #'   \strong{name} \tab \code{Character} \tab Variable name\cr
 #'   \strong{type} \tab \code{character} \tab Data type in `R`, as obtained by `class(x)[1]`\cr
 #'   \strong{n} \tab \code{Integer} \tab Number of valid observations\cr
@@ -92,17 +92,19 @@ descriptives.data.frame <- function(x, ...) {
 #' @method descriptives numeric
 #' @export
 descriptives.numeric <- function(x, ...) {
-  rng <- range(x, na.rm = TRUE)
-  sk <- skew_kurtosis(x)
+  missingx <- is.na(x)
+  completex <- x[!missingx]
+  rng <- range(completex)
+  sk <- skew_kurtosis(completex)
   cbind(
     data.frame(
-      n = sum(!is.na(x)),
-      missing = sum(is.na(x))/length(x),
-      unique = length(unique(x)),
-      mean = mean(x, na.rm = TRUE),
-      median = median(x, na.rm = TRUE),
-      mode = median(x, na.rm = TRUE),
-      sd = sd(x, na.rm = TRUE),
+      n = sum(!missingx),
+      missing = sum(missingx)/length(x),
+      unique = length(unique(completex)),
+      mean = mean(completex),
+      median = median(completex),
+      mode = median(completex),
+      sd = sd(completex),
       min = rng[1],
       max = rng[2],
       range = diff(rng)

@@ -301,7 +301,7 @@ plot_density.MxModel <- function(x,
                 data.frame(Title = titles,
                            Variable = vars,
                            Class = thisclass,
-                           suppressWarnings(density(as.numeric(thedf$Value), weights = thep))[c("x", "y")])
+                           suppressWarnings(density(as.numeric(thedf$Value), weights = thep, na.rm = TRUE))[c("x", "y")])
             })
             do.call(rbind, densities)
         } else {

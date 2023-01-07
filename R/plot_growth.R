@@ -141,11 +141,11 @@ plot_growth <- function(x,
     if (bw) {
       line_plot <- line_plot + geom_path(data = rawdata,
                                          aes(
-                                           x = Time,
-                                           y = Value,
-                                           group = ID,
-                                           linetype = Class,
-                                           alpha = Probability
+                                           x = .data[["Time"]],
+                                           y = .data[["Value"]],
+                                           group = .data[["ID"]],
+                                           linetype = .data[["Class"]],
+                                           alpha = .data[["Probability"]]
                                          )) +
         scale_alpha_continuous(range = alpha_range,
                                guide = "none")
@@ -154,12 +154,12 @@ plot_growth <- function(x,
       line_plot <- line_plot + geom_path(
         data = rawdata,
         aes(
-          x = Time,
-          y = Value,
-          group = ID,
-          linetype = Class,
-          colour = Class,
-          alpha = Probability
+          x = .data[["Time"]],
+          y = .data[["Value"]],
+          group = .data[["ID"]],
+          linetype = .data[["Class"]],
+          colour = .data[["Class"]],
+          alpha = .data[["Probability"]]
         )
       ) +
         scale_alpha_continuous(range = alpha_range, guide = "none")
@@ -170,19 +170,19 @@ plot_growth <- function(x,
       line_plot <- line_plot + geom_point(
         data = predicted_trajectories,
         aes(
-          x = Time,
-          y = Value,
-          group = Class,
-          shape = Class
+          x = .data[["Time"]],
+          y = .data[["Value"]],
+          group = .data[["Class"]],
+          shape = .data[["Class"]]
         ),
         size = 2
       ) + geom_line(
         data = predicted_trajectories,
         aes(
-          x = Time,
-          y = Value,
-          group = Class,
-          linetype = Class
+          x = .data[["Time"]],
+          y = .data[["Value"]],
+          group = .data[["Class"]],
+          linetype = .data[["Class"]]
         ),
         linewidth = 1
       )
@@ -202,11 +202,11 @@ plot_growth <- function(x,
         geom_line(
           data = predicted_trajectories,
           aes(
-            x = Time,
-            y = Value,
-            group = Class,
-            linetype = Class,
-            colour = Class
+            x = .data[["Time"]],
+            y = .data[["Value"]],
+            group = .data[["Class"]],
+            linetype = .data[["Class"]],
+            colour = .data[["Class"]]
           ),
           linewidth = 1
         )

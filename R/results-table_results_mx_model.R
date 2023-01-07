@@ -522,6 +522,9 @@ mx_to_lavaan_labels <- function(x){
   these <- which(x$matrix == "Thresholds")
   #out[these] <- paste0("Thresholds.", x$lhs[these], ".ON.", x$rhs[these])
   cat[these] <- "Thresholds"
+  these <- which(x$matrix == "weights")
+  #out[these] <- paste0("Thresholds.", x$lhs[these], ".ON.", x$rhs[these])
+  cat[these] <- "Weights"
   cbind(label = out, Category = cat)
 }
 
