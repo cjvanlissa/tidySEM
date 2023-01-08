@@ -2,19 +2,17 @@
 #'
 #' Creates a profile plot (ribbon plot) according to best practices, focusing on
 #' the visualization of classification uncertainty by showing:
-#' \enumerate{
-#' \item Bars reflecting a confidence interval for the class centroids
-#' \item Boxes reflecting the standard deviations within each class; a box
-#' encompasses +/- 64\% of the observations in a normal distribution
-#' \item Raw data, whose transparency is weighted by the posterior class
+#' 1. Bars reflecting a confidence interval for the class centroids
+#' 2. Boxes reflecting the standard deviations within each class; a box
+#' encompasses +/- 64 percent of the observations in a normal distribution
+#' 3. Raw data, whose transparency is weighted by the posterior class
 #' probability, such that each observation is most clearly visible for the class
 #' it is most likely to be a member of.
-#' }
 #' @param x An object containing the results of a mixture model analysis.
 #' @param variables A character vectors with the names of the variables to be
 #' plotted (optional).
 #' @param ci Numeric. What confidence interval should the error bars span?
-#' Defaults to a 95\% confidence interval. Set to NULL to remove error bars.
+#' Defaults to a 95 percent confidence interval. Set to NULL to remove error bars.
 #' @param sd Logical. Whether to display a box encompassing +/- 1SD Defaults to
 #' TRUE.
 #' @param add_line Logical. Whether to display a line, connecting cluster

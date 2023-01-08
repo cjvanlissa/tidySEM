@@ -24,13 +24,13 @@ Converts SEM models to RAM models for
 For models specified using lavaan syntax, the procedure is as
 follows:
 \enumerate{
- \item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
- arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
- \code{\link[lavaan]{sem}} function.
- \item Convert each row of the resulting lavaan parameter table to a
- \code{\link[OpenMx]{mxPath}}.
- \item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
- an \code{OpenMx} model using RAM specification
+\item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
+arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
+\code{\link[lavaan]{sem}} function.
+\item Convert each row of the resulting lavaan parameter table to a
+\code{\link[OpenMx]{mxPath}}.
+\item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
+an \code{OpenMx} model using RAM specification
 }
 }
 \examples{

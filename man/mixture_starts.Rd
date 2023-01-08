@@ -28,12 +28,12 @@ functions like \code{\link{mx_mixture}}, and may not work with other
 \details{
 Starting values are derived by the following procedure:
 \enumerate{
-  \item The mixture model is converted to a multi-group model.
-  \item The data are split along \code{splits}, and assigned to the
-  corresponding groups of the multi-group model.
-  \item The multi-group model is run, and the final values of each group are
-  assigned to the corresponding mixture component as starting values.
-  \item The mixture model is returned with these starting values.
+\item The mixture model is converted to a multi-group model.
+\item The data are split along \code{splits}, and assigned to the
+corresponding groups of the multi-group model.
+\item The multi-group model is run, and the final values of each group are
+assigned to the corresponding mixture component as starting values.
+\item The mixture model is returned with these starting values.
 }
 
 If the argument \code{splits} is not provided, the function will call
@@ -42,14 +42,14 @@ where \code{data} is extracted from the \code{model} argument.
 
 Sensible ways to split the data include:
 \itemize{
-  \item Using Hierarchical clustering:
-   \code{cutree(hclust(dist(data)), k = classes))}
-  \item Using K-means clustering:
-  \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
-  \item Using agglomerative hierarchical clustering:
-  \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
-  \item Using a random split:
-  \code{\link{sample.int}}\code{(n = classes,
+\item Using Hierarchical clustering:
+\code{cutree(hclust(dist(data)), k = classes))}
+\item Using K-means clustering:
+\code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
+\item Using agglomerative hierarchical clustering:
+\code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
+\item Using a random split:
+\code{\link{sample.int}}\code{(n = classes,
   size = nrow(data), replace = TRUE)}
 }
 }
@@ -68,7 +68,7 @@ mod <- mixture_starts(mod)
 \references{
 Shireman, E., Steinley, D. & Brusco, M.J. Examining the effect of
 initialization strategies on the performance of Gaussian mixture modeling.
-Behav Res 49, 282–293 (2017). <doi:10.3758/s13428-015-0697-6>
+Behav Res 49, 282–293 (2017). \url{doi:10.3758/s13428-015-0697-6}
 }
 \keyword{mixture}
 \keyword{models}

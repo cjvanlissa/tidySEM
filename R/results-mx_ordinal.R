@@ -39,17 +39,20 @@ table_prob.MxModel <- function(x, ...){
   submods <- names(x@submodels)
   if(length(submods) == 0){
     if(!is.null(x[["Thresholds"]])){
-      out <- x$Thresholds$values
-      if(is.null(out)){
-        out <- x$Thresholds$result
+      trsh <- x$Thresholds$values
+      if(is.null(trsh)){
+        trsh <- x$Thresholds$result
       }
-      out[] <- pnorm(out)
-      out <- rbind(rep(0, ncol(out)), out, rep(1, ncol(out)))
-      out <- apply(out, 2, diff)
-      rownames(out) <- 1:nrow(out)
-      out <- as.data.frame.table(out)
-      names(out) <- c("Category", "Variable", "Probability")
-      return(out[, c("Variable", "Category", "Probability")])
+      out <- do.call(rbind, lapply(1:ncol(trsh), function(i){
+        thiscol <- pnorm(trsh[x$mat_dev$free[, i],i])
+        thiscol <- c(0, thiscol, 1)
+        thiscol <- diff(thiscol)#[-1]
+        data.frame(Variable = colnames(trsh)[i],
+                   Category = 1:length(thiscol),
+                   Probability = thiscol)
+      }))
+      rownames(out) <- NULL
+      return(out)
     } else {
       return(NULL)
     }

@@ -22,9 +22,9 @@
 #'   \strong{max} \tab \code{numeric} \tab Maximum value for numeric variables\cr
 #'   \strong{range} \tab \code{numeric} \tab Range (distance between min and max) for numeric variables\cr
 #'   \strong{skew} \tab \code{numeric} \tab Skewness. The normalized third central moment of a numeric variable, which reflects its skewness. A symmetric distribution has a skewness of zero\cr
-#'   \strong{skew_2se} \tab \code{numeric} \tab Skewness, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of 5%\cr
+#'   \strong{skew_2se} \tab \code{numeric} \tab Skewness, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of .05\cr
 #'   \strong{kurt} \tab \code{numeric} \tab Kurtosis. The normalized fourth central moment of a numeric variable, which reflects its peakedness. A heavy-tailed distribution has high kurtosis, a light-tailed distribution has low kurtosis (sometimes called platykurtic).\cr
-#'   \strong{kurt_2se} \tab \code{numeric} \tab Kurtosis, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of 5%
+#'   \strong{kurt_2se} \tab \code{numeric} \tab Kurtosis, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of .05
 #' }
 #' @examples
 #' descriptives(iris)

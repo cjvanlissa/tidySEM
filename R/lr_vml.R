@@ -9,7 +9,15 @@
 #' normal mixture. Biometrika. 2001;88(3):767–778.
 #' <doi:10.1093/biomet/88.3.767>
 #' @examples
-#' lr_lmr(150L, -741.02, 8, 1, -488.91, 13, 2)
+#' lr_lmr(
+#'  x = list("-2LL" = -741.02,
+#'    "parameters" = 8,
+#'    "n" = 150,
+#'    "classes" = 1),
+#'  y = list("-2LL" = -488.91,
+#'    "parameters" = 13,
+#'    "n" = 150,
+#'    "classes" = 2))
 #' @rdname lr_lmr
 #' @export
 lr_lmr <- function(x, ...){
@@ -19,8 +27,13 @@ lr_lmr <- function(x, ...){
 #' @method lr_lmr tidy_fit
 #' @export
 lr_lmr.tidy_fit <- function(x, ...){
-  if(!all(grepl("^mix\\d+$", x$modelName))) stop("Lo-Mendell-Rubin likelihood ratio test is only suitable for latent class analyses.")
-  numclass <- as.integer(gsub("mix", "", x$modelName, fixed = TRUE))
+  numclass <- as.integer(x$Name)
+  if(length(numclass) == 0 | anyNA(numclass)){
+    numclass <- as.integer(gsub("^mix", "", x$modelName))
+  }
+  if(length(numclass) == 0 | anyNA(numclass)){
+    stop("Could not determine number of classes from fit table.")
+  }
   if(!all(diff(numclass) > 0)){
     stop("Lo-Mendell-Rubin likelihood ratio test requires a strictly increasing number of classes.")
   }
@@ -44,6 +57,32 @@ lr_lmr.tidy_fit <- function(x, ...){
   out
 }
 
+if(FALSE){
+lr_lmr.mixture_list <- function(x, ...){
+  mixmods <- sapply(x, function(i){
+    isTRUE(inherits(i@expectation, "MxExpectationMixture") | attr(i, "tidySEM")[1] == "mixture")
+  })
+  if(!all(mixmods)) stop("Lo-Mendell-Rubin likelihood ratio test is only suitable for latent class analyses.")
+  numclass <- sapply(x, function(i){
+    max(c(1, length(names(i@submodels))))
+  })
+  if(!all(diff(numclass) > 0)){
+    stop("Lo-Mendell-Rubin likelihood ratio test requires a strictly increasing number of classes.")
+  }
+}
+}
+
+#' @param y A list with elements
+#' `c("-2LL", "parameters", "n", "classes")`. Note that,
+#' if this argument is used, `x` must also be a list with the
+#' same elements.
+#' @rdname lr_lmr
+#' @method lr_lmr list
+#' @export
+lr_lmr.list <- function(x, y, ...){
+  calc_lrt_internal(unlist(x), unlist(y))
+}
+
 #' @importFrom stats pchisq
 calc_lrt_internal <- function(null, alt){
   # c(ll, parameters, n, class)
@@ -59,6 +98,7 @@ calc_lrt_internal <- function(null, alt){
   df <- (alt[2] - null[2])
   lmrt_p <- pchisq(q = modlr_test_stat, df = df, lower.tail = FALSE)
   out <- c(lr = lr_test_stat, lmr_lr = modlr_test_stat, df = df, lmr_p = lmrt_p)
+  names(out) <- c("lr", "lmr_lr", "df", "lmr_p")
   class(out) <- c("LRT", class(out))
   out
 }

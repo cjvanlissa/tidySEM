@@ -35,20 +35,20 @@ Generate a tidy_layout for a SEM graph.
 \details{
 There are three ways to generate a layout:
 \enumerate{
-  \item Specify the layout in the call to \code{get_layout()} by providing
-  node names and the number of
-  rows to create a layout matrix. Empty strings (\code{""})
-  or \code{NA} can be used for empty cells. See Example 1.
-  \item Call \code{get_layout()} on a model object or \code{tidy_results}
-  object. It will use the function
-  \code{\link[igraph]{layout_as_tree}}, or any other layout function
-  from the \code{igraph} package, to generate a rudimentary layout. See
-  Example 2.
-  \item Instead of using \code{get_layout()}, just use a \code{matrix} or
-  \code{data.frame} with your layout. For example, specify the layout in a
-  spreadsheet program, and load it into R (see Example 3). Or, copy the
-  layout to the clipboard from your spreadsheet program, and load it from the
-  clipboard (see Example 4)
+\item Specify the layout in the call to \code{get_layout()} by providing
+node names and the number of
+rows to create a layout matrix. Empty strings (\code{""})
+or \code{NA} can be used for empty cells. See Example 1.
+\item Call \code{get_layout()} on a model object or \code{tidy_results}
+object. It will use the function
+\code{\link[igraph]{layout_as_tree}}, or any other layout function
+from the \code{igraph} package, to generate a rudimentary layout. See
+Example 2.
+\item Instead of using \code{get_layout()}, just use a \code{matrix} or
+\code{data.frame} with your layout. For example, specify the layout in a
+spreadsheet program, and load it into R (see Example 3). Or, copy the
+layout to the clipboard from your spreadsheet program, and load it from the
+clipboard (see Example 4)
 }
 The layout algorithms imported from \code{igraph} are:
 \code{c("layout_as_star",

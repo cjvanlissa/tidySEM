@@ -15,10 +15,10 @@ equal in pairwise comparisons.}
 \item{...}{Additional arguments passed to other functions.}
 }
 \value{
-An object of class `lr_test` and `list`.
+An object of class \code{lr_test} and \code{list}.
 }
 \description{
-For a multigroup model of class `MxModel`,
+For a multigroup model of class \code{MxModel},
 conduct overall and pairwise likelihood ratio tests.
 All submodels must be identical.
 }

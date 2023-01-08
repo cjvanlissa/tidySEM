@@ -34,8 +34,7 @@ The function \code{get_edges} identifies all regression paths,
 latent variable definitions, and covariances in the model as edges.
 The output of \code{table_results} for those
 paths is used to label the edges.
-
-## Custom labels
+\subsection{Custom labels}{
 
 One way to create custom edge labels is by passing an expression to
 \code{label}. When an expression is
@@ -47,6 +46,7 @@ Another way to create custom labels is by requesting auxiliary variables
 using the \code{columns} argument (which is passed to
 \code{\link{table_results}}), and then using these columns to construct a new
 label. See examples.
+}
 }
 \examples{
 # Standard use

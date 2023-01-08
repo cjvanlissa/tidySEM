@@ -19,18 +19,18 @@ Symptom Checklist-90 (SCL-90).
 }
 \details{
 These data are inspired by the
-*Prospection in Stress-related Military Research (PRISMO)* study,
+\emph{Prospection in Stress-related Military Research (PRISMO)} study,
 which examined of psychological problems
 after deployment in more than 1,000 Dutch
 military personnel who were deployed to Afghanistan, from 2005-2019.
 
 \tabular{lll}{
-  \strong{scl.1} \tab \code{integer} \tab Sum score of SCL90 depression pre-deployment\cr
-  \strong{scl.2} \tab \code{integer} \tab Sum score of SCL90 depression 1 month post-deployment\cr
-  \strong{scl.3} \tab \code{integer} \tab Sum score of SCL90 depression 6 months post-deployment\cr
-  \strong{scl.4} \tab \code{integer} \tab Sum score of SCL90 depression 1 year post-deployment\cr
-  \strong{scl.5} \tab \code{integer} \tab Sum score of SCL90 depression 2 years post-deployment\cr
-  \strong{scl.6} \tab \code{integer} \tab Sum score of SCL90 depression 10 years post-deployment
+\strong{scl.1} \tab \code{integer} \tab Sum score of SCL90 depression pre-deployment\cr
+\strong{scl.2} \tab \code{integer} \tab Sum score of SCL90 depression 1 month post-deployment\cr
+\strong{scl.3} \tab \code{integer} \tab Sum score of SCL90 depression 6 months post-deployment\cr
+\strong{scl.4} \tab \code{integer} \tab Sum score of SCL90 depression 1 year post-deployment\cr
+\strong{scl.5} \tab \code{integer} \tab Sum score of SCL90 depression 2 years post-deployment\cr
+\strong{scl.6} \tab \code{integer} \tab Sum score of SCL90 depression 10 years post-deployment
 }
 }
 \references{

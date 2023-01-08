@@ -27,7 +27,7 @@ variable for multilevel models, if available.}
 \item{digits}{Number of digits to round to when formatting numeric columns.}
 
 \item{format_numeric}{Logical, indicating whether or not to format numeric
-columns. Defaults to `TRUE`.}
+columns. Defaults to \code{TRUE}.}
 
 \item{...}{Logical expressions used to filter the rows of results returned.}
 }

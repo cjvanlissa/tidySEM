@@ -20,10 +20,10 @@ plot_prob(
 plotted (optional).}
 
 \item{bars}{Atomic character, indicating what separate bars represent. One of
-`c("Variable", "group", "class")`.}
+\code{c("Variable", "group", "class")}.}
 
 \item{facet}{Atomic character, indicating what separate facets represent. One
-of `c("group", "class", "Variable")`.}
+of \code{c("group", "class", "Variable")}.}
 
 \item{bw}{Logical. Should the plot be black and white (for print), or color?}
 

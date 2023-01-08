@@ -49,9 +49,13 @@ Suggests:
     tidyLPA,
     poLCA,
     umx,
-    mclust
+    mclust,
+    MASS,
+    scales,
+    yaml
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 RoxygenNote: 7.2.2
 LazyData: true
+Roxygen: list(markdown = TRUE)

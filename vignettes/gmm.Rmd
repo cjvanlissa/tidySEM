@@ -2,7 +2,7 @@
 title: "Gaussian Mixture Model for Ocean Microplastics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Latent Class Analysis for Ordinal Indicators}
+  %\VignetteIndexEntry{Gaussian Mixture Model for Ocean Microplastics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

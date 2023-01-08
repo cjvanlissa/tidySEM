@@ -191,11 +191,11 @@ plot_growth <- function(x,
       line_plot <- line_plot + geom_point(
         data = predicted_trajectories,
         aes(
-          x = Time,
-          y = Value,
-          group = Class,
-          shape = Class,
-          colour = Class
+          x = .data[["Time"]],
+          y = .data[["Value"]],
+          group = .data[["Class"]],
+          shape = .data[["Class"]],
+          colour = .data[["Class"]]
         ),
         size = 2
       ) +

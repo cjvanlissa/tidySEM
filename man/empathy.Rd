@@ -19,31 +19,31 @@ average, 13 years old, and the last one when they were 18 years old.
 }
 \details{
 \tabular{lll}{
-  \strong{ec1} \tab \code{numeric} \tab Mean score of empathic concern in
-  wave 1\cr
-  \strong{ec2} \tab \code{numeric} \tab Mean score of empathic concern in
-  wave 2\cr
-  \strong{ec3} \tab \code{numeric} \tab Mean score of empathic concern in
-  wave 3\cr
-  \strong{ec4} \tab \code{numeric} \tab Mean score of empathic concern in
-  wave 4\cr
-  \strong{ec5} \tab \code{numeric} \tab Mean score of empathic concern in
-  wave 5\cr
-  \strong{ec6} \tab \code{numeric} \tab Mean score of empathic concern in
-  wave 6\cr
-  \strong{pt1} \tab \code{numeric} \tab Mean score of perspective taking in
-  wave 1\cr
-  \strong{pt2} \tab \code{numeric} \tab Mean score of perspective taking in
-  wave 2\cr
-  \strong{pt3} \tab \code{numeric} \tab Mean score of perspective taking in
-  wave 3\cr
-  \strong{pt4} \tab \code{numeric} \tab Mean score of perspective taking in
-  wave 4\cr
-  \strong{pt5} \tab \code{numeric} \tab Mean score of perspective taking in
-  wave 5\cr
-  \strong{pt6} \tab \code{numeric} \tab Mean score of perspective taking in
-  wave 6\cr
-  \strong{sex} \tab \code{factor} \tab Adolescent sex; M = male, F = female.
+\strong{ec1} \tab \code{numeric} \tab Mean score of empathic concern in
+wave 1\cr
+\strong{ec2} \tab \code{numeric} \tab Mean score of empathic concern in
+wave 2\cr
+\strong{ec3} \tab \code{numeric} \tab Mean score of empathic concern in
+wave 3\cr
+\strong{ec4} \tab \code{numeric} \tab Mean score of empathic concern in
+wave 4\cr
+\strong{ec5} \tab \code{numeric} \tab Mean score of empathic concern in
+wave 5\cr
+\strong{ec6} \tab \code{numeric} \tab Mean score of empathic concern in
+wave 6\cr
+\strong{pt1} \tab \code{numeric} \tab Mean score of perspective taking in
+wave 1\cr
+\strong{pt2} \tab \code{numeric} \tab Mean score of perspective taking in
+wave 2\cr
+\strong{pt3} \tab \code{numeric} \tab Mean score of perspective taking in
+wave 3\cr
+\strong{pt4} \tab \code{numeric} \tab Mean score of perspective taking in
+wave 4\cr
+\strong{pt5} \tab \code{numeric} \tab Mean score of perspective taking in
+wave 5\cr
+\strong{pt6} \tab \code{numeric} \tab Mean score of perspective taking in
+wave 6\cr
+\strong{sex} \tab \code{factor} \tab Adolescent sex; M = male, F = female.
 }
 }
 \references{

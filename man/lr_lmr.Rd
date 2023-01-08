@@ -2,14 +2,22 @@
 % Please edit documentation in R/lr_vml.R
 \name{lr_lmr}
 \alias{lr_lmr}
+\alias{lr_lmr.list}
 \title{Lo-Mendell-Rubin Likelihood Ratio Test}
 \usage{
 lr_lmr(x, ...)
+
+\method{lr_lmr}{list}(x, y, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists.}
 
 \item{...}{Additional arguments.}
+
+\item{y}{A list with elements
+\code{c("-2LL", "parameters", "n", "classes")}. Note that,
+if this argument is used, \code{x} must also be a list with the
+same elements.}
 }
 \value{
 A numeric vector containing the likelihood ratio LR, the ad-hoc
@@ -20,10 +28,18 @@ Implements the ad-hoc adjusted likelihood ratio test (LRT)
 described in Formula 15 of Lo, Mendell, & Rubin (2001), or LMR LRT.
 }
 \examples{
-lr_lmr(150L, -741.02, 8, 1, -488.91, 13, 2)
+lr_lmr(
+ x = list("-2LL" = -741.02,
+   "parameters" = 8,
+   "n" = 150,
+   "classes" = 1),
+ y = list("-2LL" = -488.91,
+   "parameters" = 13,
+   "n" = 150,
+   "classes" = 2))
 }
 \references{
 Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
 normal mixture. Biometrika. 2001;88(3):767–778.
-<doi:10.1093/biomet/88.3.767>
+\url{doi:10.1093/biomet/88.3.767}
 }

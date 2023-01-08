@@ -32,17 +32,17 @@ defaults. See Details for more information.
 Model syntax can be specified in three ways, for ease of use and
 flexibility:
 \enumerate{
-  \item An atomic character string with lavaan syntax. Within this syntax,
-  the character string \code{\{C\}} is dynamically substituted with the
-  correct class number using \code{\link{lsub}}, for example to set unique
-  parameter labels for each class, or to specify equality constraints. E.g.,
-  \code{x ~ m\{C\}*1} will be expanded to \code{x ~ m1*1} and \code{x ~ m2*1}
-  when \code{classes = 2}. The resulting syntax for each class will be
-  converted to an \code{mxModel} using \code{\link{as_ram}}.
-  \item A list of character strings with lavaan syntax. Each item of the list
-  will be converted to a class-specific \code{mxModel} using
-  \code{\link{as_ram}}.
-  \item A list of \code{mxModel} objects, specified by the user.
+\item An atomic character string with lavaan syntax. Within this syntax,
+the character string \code{\{C\}} is dynamically substituted with the
+correct class number using \code{\link{lsub}}, for example to set unique
+parameter labels for each class, or to specify equality constraints. E.g.,
+\code{x ~ m\{C\}*1} will be expanded to \code{x ~ m1*1} and \code{x ~ m2*1}
+when \code{classes = 2}. The resulting syntax for each class will be
+converted to an \code{mxModel} using \code{\link{as_ram}}.
+\item A list of character strings with lavaan syntax. Each item of the list
+will be converted to a class-specific \code{mxModel} using
+\code{\link{as_ram}}.
+\item A list of \code{mxModel} objects, specified by the user.
 }
 }
 \examples{

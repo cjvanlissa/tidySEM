@@ -12,8 +12,8 @@ ic_weights(x, ...)
 \item{...}{Additional arguments.}
 }
 \value{
-A `list` of class `ic_weights` with elements `$weights`, which
-contains the model weights, and `$comparison`, which contains the relative
+A \code{list} of class \code{ic_weights} with elements \verb{$weights}, which
+contains the model weights, and \verb{$comparison}, which contains the relative
 support in favor of each model over the others.
 }
 \description{
@@ -30,5 +30,5 @@ ic_weights(ics)
 \references{
 Wagenmakers, E. J., & Farrell, S. (2004). AIC model selection
 using Akaike weights. Psychonomic bulletin & review, 11(1), 192-196.
-<doi:10.3758/BF03206482>
+\url{doi:10.3758/BF03206482}
 }

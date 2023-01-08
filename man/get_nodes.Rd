@@ -33,8 +33,7 @@ The function \code{get_nodes} identifies all dependent and
 independent variables in the model as nodes. If a mean structure / intercepts
 are included in the model, the output of \code{table_results} for those
 means / intercepts is used to label the nodes.
-
-## Custom labels
+\subsection{Custom labels}{
 
 One way to create custom node labels is by passing an expression to
 \code{label}, as in the default value of the argument. When an expression is
@@ -47,6 +46,7 @@ Another way to create custom labels is by requesting auxiliary variables
 using the \code{columns} argument (which is passed to
 \code{\link{table_results}}), and then using these columns to construct a new
 label. See examples.
+}
 }
 \examples{
 # Standard use extracts node names and shape

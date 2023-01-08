@@ -8,9 +8,9 @@ cors(x, ...)
 }
 \arguments{
 \item{x}{Object for which a method exists. If \code{x} is an object of class
- \code{tidy_sem}, then correlations between all
- observed and latent variables in the data dictionary of that object are
- computed, by default. If
+\code{tidy_sem}, then correlations between all
+observed and latent variables in the data dictionary of that object are
+computed, by default. If
 \code{x} is a character vector, all elements of the vector are used.}
 
 \item{...}{Optional additional character vectors of variables to be

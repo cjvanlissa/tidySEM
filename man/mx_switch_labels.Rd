@@ -7,10 +7,10 @@
 mx_switch_labels(x, param = "weights", decreasing = TRUE, order = NULL)
 }
 \arguments{
-\item{x}{An `MxModel` estimated by `mx_mixture` or one of its wrappers.}
+\item{x}{An \code{MxModel} estimated by \code{mx_mixture} or one of its wrappers.}
 
 \item{param}{The parameter by which to order the classes,
-defaults to `'weights'`, which orders classes based on their sample size.}
+defaults to \code{'weights'}, which orders classes based on their sample size.}
 
 \item{decreasing}{logical. Should the classes be sorted in increasing
 or decreasing order? Default: TRUE}
@@ -19,7 +19,7 @@ or decreasing order? Default: TRUE}
 when NULL (default).}
 }
 \value{
-An `MxModel` with `"tidySEM"` attribute: `"mixture"`
+An \code{MxModel} with \code{"tidySEM"} attribute: \code{"mixture"}
 }
 \description{
 The order of class labels in LCA is arbitrary. This can
@@ -28,15 +28,16 @@ places between replications of an analysis. This function attempts to
 re-order classes in a substantively meaningful way.
 }
 \details{
-The argument `param` can accept either:
-
-1. The default string "weights", in which classes are sorted by size.
-2. The `OpenMx` matrix indicator for a specific model parameter; e.g.,
-the first mean is indicated by `"M[1,1]"`. These indicators can be viewed
-by running `table_results(x, columns = NULL)`.
-3. The letter indicating an `OpenMx` model matrix, e.g., `"M"` refers to
+The argument \code{param} can accept either:
+\enumerate{
+\item The default string "weights", in which classes are sorted by size.
+\item The \code{OpenMx} matrix indicator for a specific model parameter; e.g.,
+the first mean is indicated by \code{"M[1,1]"}. These indicators can be viewed
+by running \code{table_results(x, columns = NULL)}.
+\item The letter indicating an \code{OpenMx} model matrix, e.g., \code{"M"} refers to
 the matrix of means. To account for all elements of the matrix, Euclidean
 distance to the origin is used.
+}
 }
 \examples{
 \dontrun{

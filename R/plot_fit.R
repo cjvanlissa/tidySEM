@@ -60,7 +60,7 @@ plot.tidy_fit <- function(x, y = NULL, statistics = "BIC", xaxis = "Name", ...) 
         ggplot(
             plot_fitdat,
             aes(
-                x = Model,
+                x = .data[["Model"]],
                 y = .data[[statlow]],
                 group = 1
             )

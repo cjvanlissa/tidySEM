@@ -12,14 +12,14 @@ mx_dummies(x, ...)
 \item{...}{Arguments}
 }
 \value{
-A `data.frame`.
+A \code{data.frame}.
 }
 \description{
-For each variable *v* that inherits
-`factor`, create a number of new variables equal
-to `levels(v)` to indicate group membership (1)
+For each variable \emph{v} that inherits
+\code{factor}, create a number of new variables equal
+to \code{levels(v)} to indicate group membership (1)
 or non-membership (0) of that level.
-The resulting dummies have class `mxFactor`.
+The resulting dummies have class \code{mxFactor}.
 }
 \examples{
 mx_dummies(iris[1:5,])

@@ -16,14 +16,14 @@ contains four columns of integer data that should be treated as ordinal.
 }
 \details{
 \tabular{lll}{
-  \strong{u1} \tab \code{integer} \tab Indicator 1, should be treated as
-  ordinal.\cr
-  \strong{u2} \tab \code{integer} \tab Indicator 2, should be treated as
-  ordinal.\cr
-  \strong{u3} \tab \code{integer} \tab Indicator 3, should be treated as
-  ordinal.\cr
-  \strong{u4} \tab \code{integer} \tab Indicator 4, should be treated as
-  ordinal.
+\strong{u1} \tab \code{integer} \tab Indicator 1, should be treated as
+ordinal.\cr
+\strong{u2} \tab \code{integer} \tab Indicator 2, should be treated as
+ordinal.\cr
+\strong{u3} \tab \code{integer} \tab Indicator 3, should be treated as
+ordinal.\cr
+\strong{u4} \tab \code{integer} \tab Indicator 4, should be treated as
+ordinal.
 }
 }
 \references{

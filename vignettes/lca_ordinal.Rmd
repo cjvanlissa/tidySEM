@@ -54,21 +54,21 @@ We use `tidySEM::descriptives()` to describe the data numerically.
 Because all items are categorical,
 we remove columns for continuous data to de-clutter the table:
 
-```{r tabdesc, echo = TRUE, eval=FALSE, results='asis'}
+```{r echo = TRUE, eval=FALSE, results='asis'}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "missing", "unique", 
 "mode", "mode_value", "v")
 ]
 desc
 ```
-```{r tabdesc, echo = TRUE, eval=run_everything, results='asis'}
+```{r echo = FALSE, eval=run_everything, results='asis'}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "missing", "unique", 
 "mode", "mode_value", "v")
 ]
 write.csv(desc, "lca_desc.csv", row.names = FALSE)
 ```
-```{r tabdesc, echo = TRUE, eval=TRUE, results='asis'}
+```{r tabdesc, echo = FALSE, eval=TRUE, results='asis'}
 desc <- read.csv("lca_desc.csv", stringsAsFactors = FALSE)
 knitr::kable(desc, caption = "Descriptive statistics for ordinal items")
 ```
@@ -134,12 +134,11 @@ but note that this may be overfit, as some of the indicators have only 5 respons
 ```{r fitlca, eval = run_everything, echo = FALSE}
 set.seed(123)
 res <- mx_lca(data = df, classes = 1:6)
-saveRDS(res, "../dev/lca_res.RData")
+saveRDS(res, "lca_res.RData")
 ```
 ```{r eval = FALSE, echo = TRUE}
 set.seed(123)
-res <- mx_lca(data = df, classes = 1:4)
-table_fit(res)
+res <- mx_lca(data = df, classes = 1:6)
 ```
 ```{r eval = FALSE, echo = FALSE}
 res <- readRDS("lca_res.RData")
@@ -149,28 +148,25 @@ res <- readRDS("lca_res.RData")
 
 In class enumeration, we want to compare a sequence of LCA models fitted
 to the data. 
-First, ascertain that all models converged without issues.
-If this is not the case, we can try to aid convergence using `mxTryHardOrdinal()`, which expands the search for optimal parameter values for models with ordinal indicators.
+First, note that all models converged without issues.
+If this had not been the case,
+it is possible to aid convergence using `mxTryHardOrdinal()`, which expands the search for optimal parameter values for models with ordinal indicators.
 It is part of the family of functions based on `mxTryHard()`.
-To aid class enumeration, we create a model fit table using
+
+Next, we create a model fit table using
 `table_fit()` and retain relevant columns.
 We also determine whether any models can be disqualified.
 
-```{r fit_table, include = TRUE, eval=F}
-fit <- table_fit(res) # model fit table
+```{r echo = TRUE, eval=F}
+fit <- table_fit(res)
 fit[ , c("Name", "LL", "Parameters", "n",
          "BIC", "Entropy",
          "prob_min", "prob_max", 
          "n_min", "n_max",
          "lmr_p")]
 ```
-```{r tabfit, echo = FALSE, eval = run_everything}
+```{r echo = FALSE, eval = run_everything}
 fit <- table_fit(res)
-fit <- fit[ , c("Name", "LL", "Parameters", "n",
-         "BIC", "Entropy",
-         "prob_min", "prob_max", 
-         "n_min", "n_max",
-         "lmr_p")]
 write.csv(fit, "lca_fit.csv", row.names = FALSE)
 ```
 ```{r tabfit, echo = FALSE, eval = TRUE, results='asis'}
@@ -187,86 +183,146 @@ Next, we check for local identifiability by checking whether the size of the sma
 We can simply calculate this by running:
 
 ```{r, echo = TRUE, eval = TRUE}
-(fit$n_min * 439) / ((fit$Parameters)/1:6)
+(fit$n_min * 439) / ((fit$Parameters)/c(1:6))
 ```
 
-The smallest class size occurs in the 5-class model,
-where the smallest class is assigned 7% of cases, or 38 cases.
-This model has 28 parameters, approximately 6 per class.
-We thus have at least five observations per parameter in every class,
-and do not disqualify the 5-class model.
+Note that, for models of 3 or more classes, there are just a few observations per parameter in the smallest class.
+This is a good reason to disqualify those classes.
+Here, we will eliminate classes 4-6 on those criteria,
+but in real data applications, the 3-class solution might also be disqualified.
 
-Although this is a theory-driven LCA,
-no exact number of classes was hypothesized.
-There are concerns about theoretical interpretability of all solutions,
-as the entropies and minimum classification probabilities are all low.
-However, in this confirmatory use case, we address this when interpreting the results.
+In terms of classification diagnostics,
+note that the entropy is high for all models except the two-class model,
+and the minimum classification probabilities are high for all models.
+This indicates that all classes are distinct.
 
-From the elbow plot, we see that AIC has a lower penalty for model
-complexity. However, we are more interested in the BIC values, which are
-similar for the one, two and three-class solutions, but the four-class
-solution fits significantly worse. For this reason, we eliminate the
-four-class solution from the selection process.
+Based on the BIC, we would prefer the 2-class model.
+This decision is also validated by a scree plot of the BIC,
+obtained by running `plot(fit)`.
 
-Then we examine the model fit table. As expected, the -2\*log likelihood
-falls successively with each added class. As previously stated,
-classification diagnostics should not be used for model selection, but
-they can be used to disqualify certain solutions because they are
-uninterpretable. We see that prob_min and n_min for the four-class solution is
-low, knowing that this solution also has a high BIC, we disqualify this
-solution.
+Note that the LMR test indicates that adding classes keeps significantly improving model fit, up until 6 classes.
+However, due to the aforementioned concerns about low numbers of cases per parameter in the smallest classes,
+we will not consider solutions with more than 3 classes.
+We thus proceed with the 3-class solution.
 
-Out of the remaining three solutions, we notice that entropy is the
-highest for the three-class solution, and it has a satisfactory prob_min
-and n_min. Based on this, we retain the three class solution in model
-selection. Note that entropy for the one-class solution will always
-equal to one, as it is 100% true that every case is in that class. Based
-on the low entropy of the two-class solution, we eliminate this model.
-
-Finally, when comparing the one and three-class solutions, we inspect
-the information criteria. For BIC, the one-class solution fits better,
-but the difference is marginal. AIC tells us that the added complexity
-of having three classes still explains the data better than a one-class
-solution. Therefore, we select the three-class solution as our
-final-class solution.
+```{r echo = TRUE, eval = FALSE}
+res_final <- res[[3]]
+```
+```{r echo = FALSE, eval = run_everything}
+res_final <- res[[3]]
+```
 
 ## Interpreting the Final Class Solution
 
-To aid our understanding of the final class solution, we use
-`ggplot2::plot_prob()` with the results of the three-class model as the
-input. The resulting graph shows response patterns on all the indicators
-for each group.
-
-If we want to know the probability of each response option's endorsement
-for each class, we can use `tidySEM::table_prob`. These are thresholds
-for ordinal dependent variables in the probability scale.
-
-```{r plot_prob, include = TRUE, eval=F}
-plot_prob(res[[3]]) # visualizing the response patterns for the final model
-table_prob(res[[3]]) # tabulating the response patterns for the final model
+```{r, echo = FALSE, eval = run_everything}
+cp <- class_prob(res_final)
+out <- list(counts = cp$sum.posterior$proportion)
 ```
 
-In the plot, we can see the distributions of the response probabilities
-on the indicators for each of the three classes. For instance, we see
-that in Class 1 the most common response to u2 is 2, while in Class 2
-and Class 3 this is 0. We can also see that response 1 is a rare
-response not forming the majority in any class. Class 2 distinguishes
-itself because the majority scores the response 0 category of u3 and u4,
-while in Class 1 and 2 this is not the case. Class 3 distinguishes
-itself because the most common response to u3 and u4 is 3.
+The 3-class model yielded classes of reasonable size;
+the largest class comprised 33%,
+and the smallest comprised 16% of cases.
+The entropy was high, $S = .93$, indicating good class separability.
+Furthermore, the posterior classification probability ranged from $[.94, .99]$, which means that all classes had low classification error.
+We can produce a table of results using `table_results(res_final)`.
+However, the results are thresholds,
+indicating quantiles of a standardized normal distribution.
+These may be difficult to interpret.
+Therefore, we ask for the results in probability scale:
 
-We can also interpret the response patterns numerically. It is a matter of 
-preferences on how to interpret these probabilities. Here is where you would
-**name** each class, such that each response pattern is theoretically meaningful.
-
-## Extracting Posterior Class Probabilities
-
-Another step is to extract posterior class probabilities. This is done
-by the use of `tidySEM::class_prob` with the results of the final class
-solution as the input.
-
-```{r extract_Post_Class_Prob, include = TRUE, eval=F}
-probs <- class_prob(res[[3]]) # extracting the posterior class probabilities
-probs$mostlikely.class # posterior probabilities by most likely class membership
-probs$individual # individual posterior class probabilities
+```{r echo = TRUE, eval = FALSE}
+tab <- table_prob(res_final)
+reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
 ```
+```{r echo = FALSE, eval = run_everything}
+tab <- table_prob(res_final)
+tab <- reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
+write.csv(tab, "lca_tab_prob.csv", row.names = FALSE)
+```
+```{r, eval = TRUE, echo=FALSE, results='asis'}
+tab <- read.csv("lca_tab_prob.csv", stringsAsFactors = FALSE)
+knitr::kable(tab, caption = "Three-class model results in probability scale")
+```
+
+The results can also be interpreted by plotting the response probabilities:
+
+```{r echo = TRUE, eval = FALSE}
+plot_prob(res_final)
+```
+```{r echo = FALSE, eval = run_everything}
+p <- plot_prob(res_final)
+ggsave("lca_prob.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
+```
+```{r echo = FALSE, eval = TRUE, fig.cap="Probability plot", out.width="100%"}
+knitr::include_graphics("lca_prob.svg")
+```
+
+Note that the first class (33%) has relatively high identification with the ethnic indicators and relatively low identification with Belgian and Flemish identity.
+The second class (16%) has moderate identification with Belgian and Flemish identity,
+and relatively low identification with ethnic identity.
+Finally, the third class (50%) has high identification with all identities.
+
+Based on the probability plot, we can label class 1 as *ethic identifiers*,
+class 2 as *low identifiers*, and class 3 as *high identifiers*.
+
+## Auxiliary Analyses
+
+To address the remaining two hypotheses,
+we will perform auxiliary analyses.
+Hypothesis 2 stated that adolescents who are nationally integrated would have lower depressive feelings than students from students with other combinations of identifications (hypothesis 2).
+
+To test this hypothesis,
+we can call the BCH function and supply the auxiliary variable depression to the `data` argument, omitting the `model` argument.
+Below, we estimate an auxiliary model to compare depressive symptoms across classes:
+
+```{r echo = TRUE, eval=FALSE}
+aux_dep <- BCH(res_final, data = maene_identity$depression)
+```
+```{r echo = FALSE, eval=run_everything}
+aux_dep <- BCH(res_final, data = maene_identity$depression)
+saveRDS(aux_dep, "lca_aux_dep.RData")
+```
+```{r echo = FALSE, eval=FALSE}
+aux_dep <- readRDS("lca_aux_dep.RData")
+```
+
+To obtain an omnibus likelihood ratio test of the significance of depression differences across classes,
+as well as pairwise comparisons between classes,
+use `lr_test(aux_dep)`.
+The results indicate that there are no significant differences in depression across classes, $\Delta LL(5) = 4.32, p = .50$.
+
+Hypothesis 3 was that, for assimilated and separated adolescents, there would not be a significant effect of perceived teacher discrimination on depressive symptoms.
+To test this hypothesis, 
+we will compare the regression coefficient of discrimination on depressive symptoms across classes.
+
+```{r echo = TRUE, eval=FALSE}
+df_aux <- maene_identity[, c("vict_teacher", "depression")]
+# Dummy-code vict_teacher
+df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
+aux_model <- BCH(res_final, 
+                 model = "depression ~ vict_teacher",
+                 data = df_aux)
+```
+```{r echo = FALSE, eval=run_everything}
+df_aux <- maene_identity[, c("vict_teacher", "depression")]
+# Dummy-code vict_teacher
+df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
+aux_model <- BCH(res_final, 
+                 model = "depression ~ vict_teacher",
+                 data = df_aux)
+saveRDS(aux_model, "lca_aux_model.RData")
+```
+```{r echo = FALSE, eval=FALSE}
+aux_model <- readRDS("lca_aux_model.RData")
+```
+
+To view the coefficients of this model,
+we can use either `coef(aux_model)` or `table_results(aux_model, columns = NULL)`.
+As evident from the results table,
+the coefficients labeled `class1.A[1,2]` are the regression coefficients.
+
+There are two ways to test the difference in regression coefficients across classes:
+using `lr_test(aux_model, compare = "A")`,
+to compare the 'A matrix' (regression coefficients) across classes,
+or `wald_test(aux_model, "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]")`.
+The results indicate that there are no significant differences in the regression coefficients across classes, $\chi^2 (2) = 1.16, p = .56$.

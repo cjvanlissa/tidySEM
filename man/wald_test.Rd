@@ -10,16 +10,16 @@ wald_test(x, hypothesis, ...)
 \item{x}{An object for which a method exists.}
 
 \item{hypothesis}{A character string with equality constrained hypotheses,
-specified according to the [bain::bain()] syntax.}
+specified according to the \code{\link[bain:bain]{bain::bain()}} syntax.}
 
-\item{...}{Additional arguments passed to [car::linearHypothesis()].}
+\item{...}{Additional arguments passed to \code{\link[car:linearHypothesis]{car::linearHypothesis()}}.}
 }
 \value{
-A `data.frame` of class `wald_test`.
+A \code{data.frame} of class \code{wald_test}.
 }
 \description{
 This function is a wrapper for the function
-[car::linearHypothesis()], but which uses the [bain::bain()] syntax to parse
+\code{\link[car:linearHypothesis]{car::linearHypothesis()}}, but which uses the \code{\link[bain:bain]{bain::bain()}} syntax to parse
 equality constrained hypotheses.
 }
 \examples{

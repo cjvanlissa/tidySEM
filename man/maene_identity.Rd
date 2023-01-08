@@ -19,35 +19,35 @@ in perceived discrimination by teachers and depressive symptoms.
 }
 \details{
 \tabular{lll}{
-  \strong{Ethnic_1} \tab \code{ordered} \tab when I introduce myself,
-  I would definitely say I belong to this group, answered on a 5-point
-  Likert scale\cr
-  \strong{Ethnic_2} \tab \code{ordered} \tab I have a strong sense of
-  belonging to this group, answered on a 5-point Likert scale\cr
-  \strong{Ethnic_3} \tab \code{ordered} \tab I see myself as a member of
-  this group, answered on a 5-point Likert scale\cr
-  \strong{Belgian} \tab \code{ordered} \tab Do you feel a member of
-  the Belgian group, answered on a 10-point Likert scale\cr
-  \strong{Flemish} \tab \code{ordered} \tab Do you feel a member of
-  the Flemish group, answered on a 10-point Likert scale\cr
-  \strong{age} \tab \code{numeric} \tab Participant age\cr
-  \strong{sex} \tab \code{factor} \tab Participant sex\cr
-  \strong{ses} \tab \code{numeric} \tab Socio-economic status,
-  measured using the International Socio-Economic Index of Occupational
-  Status (ISEI)\cr
-  \strong{belgianborn} \tab \code{factor} \tab Whether or not the
-  participant was born in Belgium\cr
-  \strong{age_belgium} \tab \code{numeric} \tab Age at which the participant
-  migrated to Belgium\cr
-  \strong{vict_bully} \tab \code{factor} \tab Whether or not the
-  participant has ever been the victim of peer bullying for any reason\cr
-  \strong{vict_teacher} \tab \code{factor} \tab Whether or not the
-  participant has ever been insulted, threatened, pushed, treated unfairly
-  or excluded by teachers because of their foreign descent, language use,
-  and skin colour\cr
-  \strong{depression} \tab \code{numeric} \tab Scale scores of self-reported
-  depressive feelings, assessed using the a ten-item scale with 5-point
-  Likert-type response options
+\strong{Ethnic_1} \tab \code{ordered} \tab when I introduce myself,
+I would definitely say I belong to this group, answered on a 5-point
+Likert scale\cr
+\strong{Ethnic_2} \tab \code{ordered} \tab I have a strong sense of
+belonging to this group, answered on a 5-point Likert scale\cr
+\strong{Ethnic_3} \tab \code{ordered} \tab I see myself as a member of
+this group, answered on a 5-point Likert scale\cr
+\strong{Belgian} \tab \code{ordered} \tab Do you feel a member of
+the Belgian group, answered on a 10-point Likert scale\cr
+\strong{Flemish} \tab \code{ordered} \tab Do you feel a member of
+the Flemish group, answered on a 10-point Likert scale\cr
+\strong{age} \tab \code{numeric} \tab Participant age\cr
+\strong{sex} \tab \code{factor} \tab Participant sex\cr
+\strong{ses} \tab \code{numeric} \tab Socio-economic status,
+measured using the International Socio-Economic Index of Occupational
+Status (ISEI)\cr
+\strong{belgianborn} \tab \code{factor} \tab Whether or not the
+participant was born in Belgium\cr
+\strong{age_belgium} \tab \code{numeric} \tab Age at which the participant
+migrated to Belgium\cr
+\strong{vict_bully} \tab \code{factor} \tab Whether or not the
+participant has ever been the victim of peer bullying for any reason\cr
+\strong{vict_teacher} \tab \code{factor} \tab Whether or not the
+participant has ever been insulted, threatened, pushed, treated unfairly
+or excluded by teachers because of their foreign descent, language use,
+and skin colour\cr
+\strong{depression} \tab \code{numeric} \tab Scale scores of self-reported
+depressive feelings, assessed using the a ten-item scale with 5-point
+Likert-type response options
 }
 }
 \references{
