@@ -30,5 +30,5 @@ ic_weights(ics)
 \references{
 Wagenmakers, E. J., & Farrell, S. (2004). AIC model selection
 using Akaike weights. Psychonomic bulletin & review, 11(1), 192-196.
-\url{doi:10.3758/BF03206482}
+\doi{10.3758/BF03206482}
 }

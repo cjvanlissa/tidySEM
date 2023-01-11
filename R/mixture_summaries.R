@@ -30,7 +30,7 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
     parameters <- sums[["estimatedParameters"]]
     n <- sums[["numObs"]]
     if(length(names(model@submodels)) < 2){
-      fits = c("Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
+      fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
     } else {
       post_prob <- extract_postprob(model)
       class <- apply(post_prob, 1, which.max)
@@ -41,13 +41,13 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
       else {
         prop_n <- c(0, max(prop.table(class_tab)))
       }
-      fits <- c(
+      fits <- c("Classes" = length(names(model@submodels)),
         ifelse(ncol(post_prob) == 1, 1, 1 + (1/(nrow(post_prob) *
                                                   log(ncol(post_prob)))) * (sum(rowSums(post_prob *
                                                                                           log(post_prob + 1e-12))))),
         range(diag(classification_probs_mostlikely(post_prob, class))),
         prop_n)
-      names(fits) <- c("Entropy", "prob_min", "prob_max", "n_min", "n_max")
+      names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
     }
     c(sums, fits)
   } else {

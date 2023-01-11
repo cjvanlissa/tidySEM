@@ -82,6 +82,7 @@ mx_mixture <- function(model,
 #' classes), and "varying" (free covariances across classes).
 #' @param run Logical, whether or not to run the model. If \code{run = TRUE},
 #' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
+#' @param expand_grid Logical, whether or not to estimate all possible combinations of the `variances` and `covariances` arguments. Defaults to `FALSE`.
 #' @param ... Additional arguments, passed to functions.
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
@@ -99,7 +100,13 @@ mx_profiles <- function(data = NULL,
                         variances = "equal",
                         covariances = "zero",
                         run = TRUE,
+                        expand_grid = FALSE,
                         ...){
+  if(expand_grid){
+    grd <- expand.grid(variances, covariances, stringsAsFactors = FALSE)
+    variances <- grd[[1]]
+    covariances <- grd[[2]]
+  }
   if(length(variances) > 0 & (!hasArg(covariances) | length(covariances) == 1)){
     covariances <- rep(covariances, length(variances))
   }
@@ -470,7 +477,7 @@ as_mx_mixture <- function(model,
 #' }
 #' @references Shireman, E., Steinley, D. & Brusco, M.J. Examining the effect of
 #' initialization strategies on the performance of Gaussian mixture modeling.
-#' Behav Res 49, 282–293 (2017). <doi:10.3758/s13428-015-0697-6>
+#' Behav Res 49, 282–293 (2017). \doi{10.3758/s13428-015-0697-6}
 #' @importFrom OpenMx mxModel mxRun mxTryHard mxAutoStart
 #' @importFrom methods hasArg
 #' @importFrom stats kmeans

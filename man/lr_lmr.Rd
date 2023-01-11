@@ -41,5 +41,5 @@ lr_lmr(
 \references{
 Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
 normal mixture. Biometrika. 2001;88(3):767–778.
-\url{doi:10.1093/biomet/88.3.767}
+\doi{10.1093/biomet/88.3.767}
 }

@@ -13,7 +13,8 @@ data(alkema_microplastics)
 \description{
 These data were collected by Alkema during a cruise from 04/2018 to
 06/2018 traversing the Atlantic Ocean from South Africa to Norway.
-A 500 μm meshed Manta Trawl was towed outside the wake of the ship for 1 h
+A 500 micrometer meshed Manta Trawl was towed outside the
+wake of the ship for 1 h
 each day. Length, width, height and polymer type of 6.942 particles
 were measured using infrared spectroscopy and image analysis.
 }

@@ -7,7 +7,7 @@
 #' corrected LMR, degrees of freedom, and the LMR p-value.
 #' @references Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
 #' normal mixture. Biometrika. 2001;88(3):767–778.
-#' <doi:10.1093/biomet/88.3.767>
+#' \doi{10.1093/biomet/88.3.767}
 #' @examples
 #' lr_lmr(
 #'  x = list("-2LL" = -741.02,
@@ -27,22 +27,29 @@ lr_lmr <- function(x, ...){
 #' @method lr_lmr tidy_fit
 #' @export
 lr_lmr.tidy_fit <- function(x, ...){
-  numclass <- as.integer(x$Name)
-  if(length(numclass) == 0 | anyNA(numclass)){
-    numclass <- as.integer(gsub("^mix", "", x$modelName))
+  numclass <- x$Classes
+  if(is.null(x[["Classes"]])){
+    stop("Could not determine number of classes from fit table. Make sure the column 'Classes' is included.")
   }
-  if(length(numclass) == 0 | anyNA(numclass)){
-    stop("Could not determine number of classes from fit table.")
+  if(!any(diff(numclass) > 0)){
+    stop("Lo-Mendell-Rubin likelihood ratio test requires a strictly increasing number of classes. None of the rows in the fit table are in order of increasing number of classes.")
   }
-  if(!all(diff(numclass) > 0)){
-    stop("Lo-Mendell-Rubin likelihood ratio test requires a strictly increasing number of classes.")
+  # if(!length(unique(x$n)) == 1){
+  #   stop("Number of participants is not identical across latent class analyses.")
+  # }
+  if(!any(c("LL", "Minus2LogLikelihood", "-2LL") %in% names(x))){
+    stop("Lo-Mendell-Rubin likelihood ratio test requires a column containing the log-likelihood.")
   }
-  if(!length(unique(x$n)) == 1){
-    stop("Number of participants is not identical across latent class analyses.")
+  if(is.null(x[["LL"]])){
+    if(!is.null(x[["Minus2LogLikelihood"]])){
+      x$LL <- x[["Minus2LogLikelihood"]]/-2
+    }
+    if(!is.null(x[["-2LL"]])){
+      x$LL <- x[["-2LL"]]/-2
+    }
   }
-
   out <- data.frame(do.call(rbind, lapply(2:length(numclass), function(i){
-    calc_lrt_internal(
+    tryCatch(calc_lrt_internal(
       null = c(x$LL[i-1],
                x$Parameters[i-1],
                x$n[1],
@@ -51,7 +58,8 @@ lr_lmr.tidy_fit <- function(x, ...){
                x$Parameters[i],
                x$n[1],
                numclass[i])
-    )
+    ), error = function(e){NA})
+
   })))
   out <- rbind(rep(NA, ncol(out)), out)
   out

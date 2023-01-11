@@ -31,7 +31,7 @@ Computes Satorra-Bentler corrected chi-square test.
 Reference:
 Satorra, A., & Bentler, P. M. (2001). A scaled difference chi-square test
 statistic for moment structure analysis. Psychometrika, 66(4), 507-514.
-\url{doi:10.1007/BF02296192}
+\doi{10.1007/BF02296192}
 }
 \examples{
 df <- data.frame(chi2 = c(23, 44, 65), df = c(78, 74, 70), scf = c(1.02, 1.12, 1.28))
