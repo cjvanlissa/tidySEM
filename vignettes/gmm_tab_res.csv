@@ -1,0 +1,9 @@
+"label","est","se","confint","class"
+"mix2.weights[1,2]","0.46","0.02","[0.42, 0.50]",NA
+"Variances.length","0.11","0.00","[0.10, 0.11]","class1"
+"Covariances.length.WITH.width","0.08","0.00","[0.07, 0.08]","class1"
+"Variances.width","0.10","0.00","[0.09, 0.10]","class1"
+"Means.length","0.68","0.01","[0.66, 0.69]","class1"
+"Means.width","0.30","0.01","[0.29, 0.32]","class1"
+"Means.length","1.51","0.01","[1.49, 1.53]","class2"
+"Means.width","1.12","0.01","[1.10, 1.15]","class2"

@@ -10,6 +10,7 @@ mx_profiles(
   variances = "equal",
   covariances = "zero",
   run = TRUE,
+  expand_grid = FALSE,
   ...
 )
 }
@@ -33,6 +34,8 @@ classes), and "varying" (free covariances across classes).}
 
 \item{run}{Logical, whether or not to run the model. If \code{run = TRUE},
 the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.}
+
+\item{expand_grid}{Logical, whether or not to estimate all possible combinations of the \code{variances} and \code{covariances} arguments. Defaults to \code{FALSE}.}
 
 \item{...}{Additional arguments, passed to functions.}
 }

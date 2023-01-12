@@ -40,11 +40,15 @@ table_prob.MxModel <- function(x, ...){
   if(length(submods) == 0){
     if(!is.null(x[["Thresholds"]])){
       trsh <- x$Thresholds$values
+      freeval <- x$Thresholds$free
       if(is.null(trsh)){
         trsh <- x$Thresholds$result
       }
+      if(is.null(freeval)){
+        freeval <- x$mat_dev$free
+      }
       out <- do.call(rbind, lapply(1:ncol(trsh), function(i){
-        thiscol <- pnorm(trsh[x$mat_dev$free[, i],i])
+        thiscol <- pnorm(trsh[freeval[, i],i])
         thiscol <- c(0, thiscol, 1)
         thiscol <- diff(thiscol)#[-1]
         data.frame(Variable = colnames(trsh)[i],

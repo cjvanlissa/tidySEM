@@ -206,6 +206,9 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
     i <- i + 1
 
   }
+  if(max(dens_plotlist[[1]]$data$y) < 1){
+    dens_plotlist[[1]] <- suppressMessages({dens_plotlist[[1]] + scale_y_continuous(breaks= seq(0, max(dens_plotlist[[1]]$data$y), by = .2), labels = substring(sprintf("%4.1f", seq(0, max(dens_plotlist[[1]]$data$y), by = .2)), 3), expand = c(0, 0))})
+  }
   plot_list <- vector("list", length = length(model_mat))
   plot_list[diag(model_mat)] <- dens_plotlist
 
