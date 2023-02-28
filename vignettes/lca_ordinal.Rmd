@@ -10,6 +10,8 @@ vignette: >
 ```{r, include = FALSE, cache = FALSE}
 library(yaml)
 library(scales)
+library(tidySEM)
+data("maene_identity")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",

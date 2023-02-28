@@ -53,16 +53,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
-    </li>
-    <li>
       <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
+      <a href="../articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+    </li>
+    <li>
+      <a href="../articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -254,7 +254,7 @@ using lavaan:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.6-12 ended normally after 35 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.6.14 ended normally after 35 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -385,7 +385,7 @@ mention of the “spe” latent variable:</p>
 <p>The modified model could then be run:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lavaan 0.6-12 ended normally after 28 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6.14 ended normally after 28 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -412,7 +412,7 @@ path between them:</p>
 <span>  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>estimates <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.6-12 ended normally after 27 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.6.14 ended normally after 27 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -488,7 +488,7 @@ following code:</p>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov</span></span>
 <span><span class="co">#&gt; variances are negative</span></span>
-<span><span class="co">#&gt; lavaan 0.6-12 ended normally after 64 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6.14 ended normally after 64 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -522,7 +522,7 @@ following code:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
