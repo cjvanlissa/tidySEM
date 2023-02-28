@@ -35,7 +35,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -116,19 +125,19 @@ layout algorithm to apply to position the nodes. Defaults to
     <div id="details">
     <h2>Details</h2>
     <p>There are three ways to generate a layout:</p><ol><li><p>Specify the layout in the call to <code>get_layout()</code> by providing
-  node names and the number of
-  rows to create a layout matrix. Empty strings (<code>""</code>)
-  or <code>NA</code> can be used for empty cells. See Example 1.</p></li>
+node names and the number of
+rows to create a layout matrix. Empty strings (<code>""</code>)
+or <code>NA</code> can be used for empty cells. See Example 1.</p></li>
 <li><p>Call <code>get_layout()</code> on a model object or <code>tidy_results</code>
-  object. It will use the function
-  <code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html" class="external-link">layout_as_tree</a></code>, or any other layout function
-  from the <code>igraph</code> package, to generate a rudimentary layout. See
-  Example 2.</p></li>
+object. It will use the function
+<code><a href="https://rdrr.io/pkg/igraph/man/layout_as_tree.html" class="external-link">layout_as_tree</a></code>, or any other layout function
+from the <code>igraph</code> package, to generate a rudimentary layout. See
+Example 2.</p></li>
 <li><p>Instead of using <code>get_layout()</code>, just use a <code>matrix</code> or
-  <code>data.frame</code> with your layout. For example, specify the layout in a
-  spreadsheet program, and load it into R (see Example 3). Or, copy the
-  layout to the clipboard from your spreadsheet program, and load it from the
-  clipboard (see Example 4)</p></li>
+<code>data.frame</code> with your layout. For example, specify the layout in a
+spreadsheet program, and load it into R (see Example 3). Or, copy the
+layout to the clipboard from your spreadsheet program, and load it from the
+clipboard (see Example 4)</p></li>
 </ol><p>The layout algorithms imported from <code>igraph</code> are:
 <code>c("layout_as_star",
 "layout_as_tree", "layout_in_circle", "layout_nicely",

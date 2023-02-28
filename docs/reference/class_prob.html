@@ -36,7 +36,16 @@ method exists. See Details."><!-- mathjax --><script src="https://cdnjs.cloudfla
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -109,20 +118,20 @@ extract. See Details.</p></dd>
     <div id="details">
     <h2>Details</h2>
     <p>The following types are available:</p><ul><li><p>"sum.posterior"A summary table of the posterior class
- probabilities; this indicates what proportion of your data contributes to
- each class.</p></li>
+probabilities; this indicates what proportion of your data contributes to
+each class.</p></li>
 <li><p>"sum.mostlikely"A summary table of the most likely class
- membership, based on the highest posterior class probability. Note that
- this is subject to measurement error.</p></li>
+membership, based on the highest posterior class probability. Note that
+this is subject to measurement error.</p></li>
 <li><p>"mostlikely.class"If C is the true class of an observation, and N is
- the most likely class based on the model, then this table shows the
- probability P(N==i|C==j). The diagonal represents the probability that
- observations in each class will be correctly classified.</p></li>
+the most likely class based on the model, then this table shows the
+probability P(N==i|C==j). The diagonal represents the probability that
+observations in each class will be correctly classified.</p></li>
 <li><p>"avg.mostlikely"Average posterior probabilities for each class, for
- the subset of observations with most likely class of 1:k, where k is the
- number of classes.</p></li>
+the subset of observations with most likely class of 1:k, where k is the
+number of classes.</p></li>
 <li><p>"individual"The posterior probability matrix, with dimensions n
- (number of cases in the data) x k (number of classes).</p></li>
+(number of cases in the data) x k (number of classes).</p></li>
 </ul></div>
 
     <div id="ref-examples">

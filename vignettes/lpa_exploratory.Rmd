@@ -1,8 +1,8 @@
 ---
-title: "Gaussian Mixture Model for Ocean Microplastics"
+title: "Exploratory LPA for Ocean Microplastics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Gaussian Mixture Model for Ocean Microplastics}
+  %\VignetteIndexEntry{Exploratory LPA for Ocean Microplastics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,11 +18,18 @@ knitr::opts_chunk$set(
 )
 options(scipen = 1, digits = 2)
 run_everything = FALSE
+pkgdown <- FALSE
+```
+```{r eval = FALSE, echo = FALSE, results = "asis"}
+cat("This vignette has been stripped down to comply with CRAN package size policies. To view the complete vignette, including graphics, see the [package website](https://cjvanlissa.github.io/tidySEM).")
 ```
 
-This is an example of exploratory LCA with continuous indicators,
-or finite Gaussian mixture modeling, using `tidySEM`.
+This is an example of exploratory latent class analysis (LCA) with continuous indicators,
+otherwise known as latent profile analysis (LPA) or finite Gaussian mixture modeling, using `tidySEM`.
 The present example uses data collected by Alkema as part of a study on ocean microplastics.
+The purpose of this study was to provide a more nuanced model for the distribution of different sizes of ocean microplastics than the commonly used normal distribution.
+To this end, a mixture of normals was used.
+Since there is no theoretical reason to expect a certain number of classes, this is an exploratory LCA.
 To view its documentation,
 run the command `?tidySEM::alkema_microplastics` in the R console.
 The original analyses are available at https://github.com/cjvanlissa/lise_microplastics;
@@ -61,7 +68,7 @@ knitr::kable(desc, caption = "Descriptive statistics")
 ```
 
 Additionally, we can plot the data.
-The `ggplot2` function `geom_density()` is useful for continuous data:
+The `ggplot2` function `geom_density()` is useful to visualize continuous data:
 
 ```{r, echo = TRUE, eval = FALSE}
 df_plot <- df
@@ -84,7 +91,7 @@ p <- ggplot(df_plot, aes(x = Value)) +
   theme_bw()
 ggsave("plot_gmm_desc.svg", p, device = "svg", width = 100, height = 100, units = "mm")
 ```
-```{r figdesc, echo = FALSE, eval = TRUE}
+```{r figdesc, echo = FALSE, eval = pkgdown}
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
@@ -95,8 +102,7 @@ knitr::include_graphics("plot_gmm_desc.svg")
 The data are correctly coded as `numeric`.
 There are no missing values; if any variables had missing values, we would report an MCAR test with `mice::mcar()`,
 and explain that missing data are accounted for using FIML.
-Note that the data are extremely right-skewed and kurtotic,
-as also evident from the plot.
+Both the table above and the density plot indicate that the data are extremely right-skewed and kurtotic.
 With this in mind, it can be useful to transform and rescale the data.
 We will use a log transformation.
 
@@ -115,12 +121,12 @@ p <- ggplot(df_plot, aes(x = Value)) +
   theme_bw()
 ggsave("plot_gmm_desc_log.svg", p, device = "svg", width = 100, height = 100, units = "mm")
 ```
-```{r figdesclog, echo = FALSE, eval = TRUE}
+```{r figdesclog, echo = FALSE, eval = pkgdown}
 knitr::include_graphics("plot_gmm_desc_log.svg")
 ```
 
-The log transformation addresses all aforementioned concerns regarding skew and kurtosis.
-Let's reshape the data to wide format
+The log transformation addresses the aforementioned concerns regarding skew and kurtosis.
+To confirm this, reshape the data to wide format
 and examine a scatterplot:
 
 ```{r, eval = FALSE, echo = TRUE}
@@ -138,7 +144,7 @@ p <- ggplot(df, aes(x = length, y = width)) +
   theme_bw()
 ggsave("plot_gmm_scatter.svg", p, device = "svg", width = 100, height = 100, units = "mm")
 ```
-```{r figscatter, eval = TRUE, echo = FALSE}
+```{r figscatter, eval = pkgdown, echo = FALSE}
 knitr::include_graphics("plot_gmm_scatter.svg")
 ```
 
@@ -168,6 +174,7 @@ As this is an exploratory LCA,
 we will conduct a rather extensive search across model specifications and number of classes.
 We will set the maximum number of classes $K$ to four; depending on the results, we can always choose to increase it later.
 We set a seed to ensure replicable results.
+
 As the analysis takes a long time to compute,
 it is prudent to save the results to disk immediately, so as not to lose them.
 For this, we use the function `saveRDS()`.
@@ -194,12 +201,11 @@ res <- mx_profiles(data = df,
 saveRDS(res, "res_gmm.RData")
 fit <- table_fit(res)
 fit$par_ratio <- (5605*fit$n_min) / (fit$Parameters/fit$Classes)
-write.csv(fit, "gmm_tabfit.csv", row.names = FALSE)
+saveRDS(fit, "gmm_tabfit.RData")
 #"Warning: In model 'mix4' Optimizer returned a non-zero status code 6. The model does not satisfy the first-order optimality conditions to the required accuracy, and no improved point for the merit function could be found during the final linesearch (Mx status RED)"
 ```
 ```{r eval = TRUE, echo = FALSE}
-fit <- read.csv("gmm_tabfit.csv", stringsAsFactors = FALSE)
-class(fit) <- c("tidy_fit", "data.frame")
+fit <- readRDS("gmm_tabfit.RData")
 ```
 
 <!-- Note that one model (the most complex one) returns the following warning: -->
@@ -216,38 +222,21 @@ class(fit) <- c("tidy_fit", "data.frame")
 
 To compare the fit of the estimated models,
 we create a model fit table using
-`table_fit()` and retain relevant columns.
-We also determine whether any models can be disqualified.
+`table_fit()`.
 
-```{r include = TRUE, eval=F}
+```{r echo = TRUE, eval=F}
 fit <- table_fit(res)
 ```
 
-There were no indications of convergence problems during estimation.
+First, we determine whether any models can be disqualified.
+There were no indications of convergence problems during estimation,
+so this is not a reason to disqualify solutions.
 Next, we check for local identifiability.
 The sample size is `5605`.
-We can calculate the ratio of observations to parameters and append it to the fit table as follows:
+We can calculate the ratio of observations to parameters and append it to the fit table:
 
 ```{r echo = TRUE, eval = FALSE}
 fit$par_ratio <- (5605*fit$n_min) / (fit$Parameters/fit$Classes)
-```
-
-As can be seen from the fit table below,
-the lowest ratio of observations to parameters is 18, which is no cause for concern.
-However, these classes comprise a very small percentage of the total sample size.
-
-There are, however,
-concerns about the interpretability of all solutions,
-as many of the entropies and minimum classification probabilities are low.
-Only a few models have acceptable entropies around `.86` and minimum classification probabilities around `.94`.
-Note that the BIC and the entropy are strongly correlated.
-If we omit the 1-class models, for which entropy is technically not defined,
-we see that `cor(fit$BIC[!fit$Classes == 1], fit$Entropy[!fit$Classes == 1])` returns `0.85`.
-This strong correlation indicates that an increase in fit comes with a decrease in class separability.
-This illustrates why entropy should not be treated as a model fit criterion.
-
-
-```{r echo = TRUE, eval=F}
 fit[ , c("Name", "LL", "Parameters", "par_ratio",
          "BIC", "Entropy",
          "prob_min", "prob_max", 
@@ -255,6 +244,7 @@ fit[ , c("Name", "LL", "Parameters", "par_ratio",
          "lmr_p")]
 ```
 ```{r tabfit, echo = FALSE, eval = TRUE}
+fit$par_ratio <- (5605*fit$n_min) / (fit$Parameters/fit$Classes)
 knitr::kable(fit[ , c("Name", "LL", "Parameters", "par_ratio",
          "BIC", "Entropy",
          "prob_min", "prob_max", 
@@ -262,8 +252,34 @@ knitr::kable(fit[ , c("Name", "LL", "Parameters", "par_ratio",
          "lmr_p")], caption = "Model fit table")
 ```
 
+As can be seen from the fit table,
+the lowest ratio of observations to parameters is 18, which is no cause for concern.
 
-Next, we plot a scree plot for the BIC by calling `plot(fit)`:
+However, note that we have a very large sample, and for many models, the smallest class comprises only a very small percentage of the total sample.
+Since the purpose of this analysis is to better represent the distribution of ocean microplastics, we can wonder whether it makes sense to allow for classes that only describe a small percentage of the cases.
+We therefore set a lower bound for class size and only consider solutions that capture at least 10% of the sample.
+
+An interesting characteristic of this data is that
+the BIC and the entropy are strongly correlated.
+The raw correlation between these two metrics is .66, `cor(fit$BIC, fit$Entropy)`.
+If we omit the 1-class models, for which entropy is technically not defined,
+the correlation is even as high as .85, `cor(fit$BIC[!fit$Classes == 1], fit$Entropy[!fit$Classes == 1])`.
+
+This strong correlation indicates that an increase in fit comes with a decrease in class separability.
+This illustrates why entropy should not be treated as a model fit criterion.
+It also illustrates that criteria for class enumeration should be explicit,
+because we will likely come to a different decision depending on which criteria are used.
+
+As mentioned before, we drop models with < 10% of cases in the smallest class:
+
+```{r echo = TRUE, eval = run_everything}
+fit <- fit[!fit$n_min < .1, ]
+```
+
+If our strategy is to optimize fit,
+we can examine the fit table above,
+or plot a scree plot for the BIC by calling `plot(fit)`.
+Note that, due to the large sample size, all ICs give identical conclusions.
 
 ```{r echo = TRUE, eval = FALSE}
 plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -272,107 +288,60 @@ plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 p <- plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ggsave("gmm_plotfit.svg", p, device = "svg", width = 100, height = 100, units = "mm", scale = 1)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="100%"}
+```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
 knitr::include_graphics("gmm_plotfit.svg")
 ```
 
-It is not immediately clear which solution to prefer.
 Looking at the blocks of 1-4 class models for each model specification,
 it appears that the BIC keeps decreasing with the addition of more classes.
 Across the blocks, the BIC keeps decreasing with increasingly complex model specifications.
-Similarly, all LMR tests are significant.
-The function `ic_weights(fit)` allows us to compute IC weights for all models in the set;
-it prefers the most complex model with a posterior model probability of nearly 100%.
-However, the smallest class in this model contains only 85 cases, about 1.6% of the sample.
-We can wonder whether such a small class has a meaningful interpretation.
+Similarly, all LMR tests are significant, indicating a preference for more complex models.
 
-The analysis thus indicates support for increasingly complex models,
-and those complex models are ever less interpretable and relevant,
-as indicated by low entropy and class size, respectively.
-This suggests a potential risk of overfitting.
-We may instead choose the most parsimoneous model that fits the data well.
-To aid in this decision, we plot the BIC and the Entropy,
-omitting the 1-class solutions because there is clear evidence that more classes are needed:
-
-```{r echo = TRUE, eval = FALSE}
-df_plot <- fit
-df_plot <- df_plot[!df_plot$Classes == 1, ]
-ggplot(df_plot, aes(x = BIC, y = Entropy, label = Name)) +
-  geom_point() +
-  geom_label() +
-  theme_bw()
-```
-```{r echo = FALSE, eval = run_everything}
-df_plot <- fit
-df_plot <- df_plot[!df_plot$Classes == 1, ]
-ggplot(df_plot, aes(x = BIC, y = Entropy, label = Name)) +
-  geom_point() +
-  geom_label(size = 2) +
-  theme_bw() -> p
-ggsave("gmm_bic_entropy.svg", p, device = "svg", width = 100, height = 100, units = "mm", scale = 1)
-```
-```{r echo = FALSE, eval = TRUE, fig.cap="BIC and Entropy plot", out.width="100%"}
-knitr::include_graphics("gmm_bic_entropy.svg")
-```
-
-It appears that the 2-class model with equal variances and covariances has an above-average fit, and relatively high entropy.
-We thus proceed with this model.
-
-<!-- For each block of models, -->
-<!-- the decrease in BIC levels off after 2 classes. -->
-<!-- This suggests a preference for a 2-class model. -->
-<!-- Furthermore, we observe that the largest change in BIC is between models with equal variances, and those with free variances across classes. -->
-<!-- Differences in the BIC curve for models with free variances are negligible for models with zero, equal, or free covariances. -->
-<!-- We should thus prefer the simpler models. -->
-<!-- However, the fit table tells us that the classification diagnostics for the models with zero covariances are poor: entropies < .64 and minimum classification probabilities < .53. -->
-<!-- While these statistics are low for all models, this block is particularly low. -->
-<!-- We thus select the 2-class model out of the next block: with free variances and equal covariances. -->
+Out of the 16 models that remain after removing those with < 10% of cases in the smallest class,
+one model stands out:
+The 2-class model with free (co)variances.
+<!-- The function `ic_weights(fit)` allows us to compute IC weights for all models in the set; -->
+<!-- it prefers the most complex model out of the 16 models with a posterior model probability of nearly 100%. -->
+We thus select this as our final model. 
 
 ## Interpreting the Final Class Solution
 
-For convenience, we assign the final model to a separate object:
-
-```{r, echo = TRUE, eval =FALSE}
-res_final <- res[["equal var, equal cov 2"]]
-```
-```{r, echo = FALSE, eval = run_everything}
-res_final <- res[["equal var, equal cov 2"]]
-cp <- class_prob(res_final)
-```
-
-The 4-class model yielded classes of reasonable size;
-the largest class comprised 68%,
-and the smallest comprised 32% of cases.
-The entropy was relatively low, $S = .72$, indicating poor class separability.
-Furthermore, the posterior classification probability ranged from $[.86, .95]$, which means that classification error was non-negligible.
-We produce a table of the results below.
+and extract the classification probabilities and model results.
+We here request the estimates (`est`) and standardized estimates `std_est`, because the latter allows us to interpret the correlations between length and width.
+Note that there is little sense in requesting the standard errors and p-values: With a sample size of 5606, every parameter is significantly different from zero.
 
 ```{r echo = TRUE, eval = FALSE}
-table_results(res_final, columns = c("label", "est", "se", "confint", "class"))
+res_bic <- res[["free var, free cov 2"]]
+cp <- class_prob(res_bic)
+results <- table_results(res_bic, columns = c("label", "est", "std_est"))
+results
 ```
-```{r echo = FALSE, eval = run_everything}
-tab <- table_results(res_final, columns = c("label", "est", "se", "confint", "class"))
-write.csv(tab, "gmm_tab_res.csv", row.names = FALSE)
+```{r echo = TRUE, eval = run_everything}
+res_bic <- res[["free var, free cov 2"]]
+cp <- class_prob(res_bic)
+results <- table_results(res_bic, columns = c("label", "est", "est_std"))
+saveRDS(results, "gmm_results.RData")
 ```
-```{r, eval = TRUE, echo=FALSE}
-tab <- read.csv("gmm_tab_res.csv", stringsAsFactors = FALSE)
-knitr::kable(tab, caption = "Two-class model results")
+```{r eval = TRUE, echo = FALSE}
+results <- readRDS("gmm_results.RData")
+knitr::kable(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
 ```
 
-The results are best interpreted by examining a plot of the model and data, however.
+Interpreting the results is facilitated by examining a plot of the model and data.
 Relevant plot functions are `plot_bivariate()`, `plot_density()`, and `plot_profiles()`.
 However, we omit the density plots, because `plot_bivariate()` also includes them.
 
 ```{r echo = TRUE, eval = FALSE}
-plot_bivariate(res_final)
+plot_bivariate(res_bic)
 ```
 ```{r echo = FALSE, eval = run_everything}
-p <- plot_bivariate(res_final)
-ggsave("gmm_bivariate.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
+p <- plot_bivariate(res_bic)
+ggsave("gmm_bivariate_bic.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("gmm_bivariate.svg")
+```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
+knitr::include_graphics("gmm_bivariate_bic.svg")
 ```
+
 On the diagonal of the bivariate plot are weighted density plots:
 normal approximations of the density function of observed data,
 weighed by class probability.
@@ -382,10 +351,20 @@ class standard deviations indicated by lines,
 and covariances indicated by circles.
 
 The bivariate and marginal plots show that the classes are not clearly separable, as also evident from the low entropy.
-At the same time however, it is clear that the distributions are non-normal, and the second class accounts for some of this non-normality.
-The first class (68%) accounts for smaller fragments, and the second class (32%) accounts for some of the right-skew in fragments' length and width.
+At the same time however, it is clear that the distributions are non-normal, and the second class accounts for some of this non-normality (there is a smaller 'bump' to the right of the mode, which could be the mean of a second normal distribution).
+The first class (57%) accounts for smaller fragments, and the second class (43%) accounts for some of the right-skew in fragments' length and width.
 We can simply label class 1 as *small fragments*,
 and class 2 as *larger fragments*.
+
+It also appears that the correlation between length and width is stronger for small fragments than for large fragments.
+To test the difference, use `wald_test(res_bic, hypothesis = "c11 = c21")`.
+Results indicate that the correlation is indeed significantly larger for small fragments ($r = .92$) than for larger fragments ($r = .85$), $\chi^2(1) = 11.56, p < .001$.
+Thus, small fragments are more coextensive than large fragments.
+
+There are, however,
+concerns about the interpretability of this solutions:
+the entropy is `.56` and the minimum classification probability is`.81`.
+This is because of substantial overlap in the distributions of the two classes.
 
 ## Auxiliary Analyses
 
@@ -397,9 +376,9 @@ For example, we can test whether polymer type differs between the two classes:
 
 ```{r echo = TRUE, eval=FALSE}
 df_pt <- mx_dummies(df_analyze$poly_type)
-aux_pt <- BCH(res_final, model = "poly_typeOther | t1
-                                  poly_typePE | t1
-                                  poly_typePP | t1", data = df_pt)
+aux_pt <- BCH(res_bic, model = "poly_typeOther | t1
+                                poly_typePE | t1
+                                poly_typePP | t1", data = df_pt)
 aux_pt <- mxTryHardOrdinal(aux_pt)
 ```
 ```{r echo = FALSE, eval=run_everything}
@@ -416,7 +395,7 @@ aux_pt <- readRDS("gmm_aux_pt.RData")
 
 To obtain an omnibus likelihood ratio test of the significance of the differences in polymer type across classes,
 use `lr_test(aux_pt)`.
-The results indicate that there are significant differences in polymer types across classes, $\Delta LL(3) = 14.08, p = .003$.
+The results indicate that there are significant differences in polymer types across classes, $\Delta LL(3) = 17.14, p < .001$.
 The results can be reported in probability scale using `table_prob(aux_pt)`.
 To test differences for specific polymer types, we can use Wald tests:
 
@@ -425,6 +404,4 @@ wald_test(aux_pt, "class1.Thresholds[1,1] = class2.Thresholds[1,1];class1.Thresh
 ```
 
 The results indicate that there is no significant difference in the prevalence of "Other" polymer types across classes.
-However, PE is significantly more prevalent in class 2, and PP is significantly more prevalent in class 1.
-
-
+However, PE is significantly more prevalent in class 1, and PP is significantly more prevalent in class 2.

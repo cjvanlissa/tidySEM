@@ -38,7 +38,16 @@ large sample sizes, significant skew/kurtosis is common."><!-- mathjax --><scrip
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -113,15 +122,15 @@ Default: FALSE</p></dd>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">skew_kurtosis</span><span class="op">(</span><span class="fu">datasets</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/datasets/anscombe.html" class="external-link">anscombe</a></span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           skew   skew_2se       kurt   kurt_2se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x1  0.00000000  0.0000000 -1.5289256 -0.5975093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x2  0.00000000  0.0000000 -1.5289256 -0.5975093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x3  0.00000000  0.0000000 -1.5289256 -0.5975093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x4  2.46691100  1.8669273  4.5206612  1.7666896</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y1 -0.04837355 -0.0366085 -1.1991228 -0.4686212</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y2 -0.97869294 -0.7406626 -0.5143191 -0.2009976</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y3  1.38012040  1.0444578  1.2400439  0.4846133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y4  1.12077386  0.8481876  0.6287512  0.2457181</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           skew    skew_2se     kurt  kurt_2se</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x1  0.00000000  0.00000000 1.780000 0.6956300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x2  0.00000000  0.00000000 1.780000 0.6956300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x3  0.00000000  0.00000000 1.780000 0.6956300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x4  2.84604989  2.15385490 9.100000 3.5563107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y1 -0.05580807 -0.04223484 2.179061 0.8515845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y2 -1.12910800 -0.85449479 3.007674 1.1754091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y3  1.59223074  1.20498027 5.130453 2.0049984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y4  1.29302529  0.97854534 4.390789 1.7159351</span>
 </code></pre></div>
     </div>
   </div>

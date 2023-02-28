@@ -3,9 +3,12 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   Generating_syntax: Generating_syntax.html
+  gmm: gmm.html
+  lca_ordinal: lca_ordinal.html
   LCGA: LCGA.html
+  lpa: lpa.html
   Plotting_graphs: Plotting_graphs.html
   sem_graph: sem_graph.html
   Tabulating_results: Tabulating_results.html
-last_built: 2022-12-19T10:07Z
+last_built: 2023-01-12T15:44Z
 

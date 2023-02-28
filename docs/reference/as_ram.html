@@ -36,7 +36,16 @@ OpenMx."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -102,12 +111,12 @@ the lavaan model syntax.</p></dd>
     <h2>Details</h2>
     <p>For models specified using lavaan syntax, the procedure is as
 follows:</p><ol><li><p>Apply <code><a href="https://rdrr.io/pkg/lavaan/man/model.syntax.html" class="external-link">lavaanify</a></code> to the <code>model</code>. The default
- arguments to <code><a href="https://rdrr.io/pkg/lavaan/man/model.syntax.html" class="external-link">lavaanify</a></code> correspond to those of the
- <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></code> function.</p></li>
+arguments to <code><a href="https://rdrr.io/pkg/lavaan/man/model.syntax.html" class="external-link">lavaanify</a></code> correspond to those of the
+<code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></code> function.</p></li>
 <li><p>Convert each row of the resulting lavaan parameter table to a
- <code><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></code>.</p></li>
+<code><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></code>.</p></li>
 <li><p>Apply <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></code> to the <code>mxPath</code>s to create
- an <code>OpenMx</code> model using RAM specification</p></li>
+an <code>OpenMx</code> model using RAM specification</p></li>
 </ol></div>
 
     <div id="ref-examples">

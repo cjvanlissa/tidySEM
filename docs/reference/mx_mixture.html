@@ -36,7 +36,16 @@ defaults. See Details for more information."><!-- mathjax --><script src="https:
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -116,15 +125,15 @@ the function calls <code><a href="mixture_starts.html">mixture_starts</a></code>
     <h2>Details</h2>
     <p>Model syntax can be specified in three ways, for ease of use and
 flexibility:</p><ol><li><p>An atomic character string with lavaan syntax. Within this syntax,
-  the character string <code>{C}</code> is dynamically substituted with the
-  correct class number using <code><a href="lsub.html">lsub</a></code>, for example to set unique
-  parameter labels for each class, or to specify equality constraints. E.g.,
-  <code>x ~ m{C}*1</code> will be expanded to <code>x ~ m1*1</code> and <code>x ~ m2*1</code>
-  when <code>classes = 2</code>. The resulting syntax for each class will be
-  converted to an <code>mxModel</code> using <code><a href="as_ram.html">as_ram</a></code>.</p></li>
+the character string <code>{C}</code> is dynamically substituted with the
+correct class number using <code><a href="lsub.html">lsub</a></code>, for example to set unique
+parameter labels for each class, or to specify equality constraints. E.g.,
+<code>x ~ m{C}*1</code> will be expanded to <code>x ~ m1*1</code> and <code>x ~ m2*1</code>
+when <code>classes = 2</code>. The resulting syntax for each class will be
+converted to an <code>mxModel</code> using <code><a href="as_ram.html">as_ram</a></code>.</p></li>
 <li><p>A list of character strings with lavaan syntax. Each item of the list
-  will be converted to a class-specific <code>mxModel</code> using
-  <code><a href="as_ram.html">as_ram</a></code>.</p></li>
+will be converted to a class-specific <code>mxModel</code> using
+<code><a href="as_ram.html">as_ram</a></code>.</p></li>
 <li><p>A list of <code>mxModel</code> objects, specified by the user.</p></li>
 </ol></div>
 

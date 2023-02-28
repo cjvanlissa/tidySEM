@@ -36,7 +36,16 @@ are defined as observed or latent variables."><!-- mathjax --><script src="https
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -113,8 +122,10 @@ auxiliary columns in the <code>tidy_nodes data.frame</code> for further processi
     <p>The function <code>get_nodes</code> identifies all dependent and
 independent variables in the model as nodes. If a mean structure / intercepts
 are included in the model, the output of <code>table_results</code> for those
-means / intercepts is used to label the nodes.</p>
-<p>## Custom labels</p>
+means / intercepts is used to label the nodes.</p><div class="section">
+<h3 id="custom-labels">Custom labels<a class="anchor" aria-label="anchor" href="#custom-labels"></a></h3>
+
+
 <p>One way to create custom node labels is by passing an expression to
 <code>label</code>, as in the default value of the argument. When an expression is
 passed to <code>label</code>, it is evaluated in the context of a <code>data.frame</code>
@@ -125,6 +136,8 @@ additional column labeled <code>name</code>, which contains the node names.</p>
 using the <code>columns</code> argument (which is passed to
 <code><a href="table_results.html">table_results</a></code>), and then using these columns to construct a new
 label. See examples.</p>
+</div>
+
     </div>
 
     <div id="ref-examples">

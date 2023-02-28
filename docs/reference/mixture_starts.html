@@ -38,7 +38,16 @@ mxModels."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -111,28 +120,28 @@ possible alternatives.</p></dd>
     <h2>Details</h2>
     <p>Starting values are derived by the following procedure:</p><ol><li><p>The mixture model is converted to a multi-group model.</p></li>
 <li><p>The data are split along <code>splits</code>, and assigned to the
-  corresponding groups of the multi-group model.</p></li>
+corresponding groups of the multi-group model.</p></li>
 <li><p>The multi-group model is run, and the final values of each group are
-  assigned to the corresponding mixture component as starting values.</p></li>
+assigned to the corresponding mixture component as starting values.</p></li>
 <li><p>The mixture model is returned with these starting values.</p></li>
 </ol><p>If the argument <code>splits</code> is not provided, the function will call
 <code><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></code><code>(x = data, centers = classes)$cluster</code>,
 where <code>data</code> is extracted from the <code>model</code> argument.</p>
 <p>Sensible ways to split the data include:</p><ul><li><p>Using Hierarchical clustering:
-   <code>cutree(hclust(dist(data)), k = classes))</code></p></li>
+<code>cutree(hclust(dist(data)), k = classes))</code></p></li>
 <li><p>Using K-means clustering:
-  <code><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></code><code>(x = data, centers = classes)$cluster</code></p></li>
+<code><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></code><code>(x = data, centers = classes)$cluster</code></p></li>
 <li><p>Using agglomerative hierarchical clustering:
-  <code>hclass(</code><code><a href="https://mclust-org.github.io/mclust/reference/hc.html" class="external-link">hc</a></code><code>(data = data), G = classes)[, 1]</code></p></li>
+<code>hclass(</code><code><a href="https://rdrr.io/pkg/mclust/man/hc.html" class="external-link">hc</a></code><code>(data = data), G = classes)[, 1]</code></p></li>
 <li><p>Using a random split:
-  <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></code><code>(n = classes,
+<code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></code><code>(n = classes,
   size = nrow(data), replace = TRUE)</code></p></li>
 </ul></div>
     <div id="references">
     <h2>References</h2>
     <p>Shireman, E., Steinley, D. &amp; Brusco, M.J. Examining the effect of
 initialization strategies on the performance of Gaussian mixture modeling.
-Behav Res 49, 282–293 (2017). &lt;doi:10.3758/s13428-015-0697-6&gt;</p>
+Behav Res 49, 282–293 (2017). <a href="https://doi.org/10.3758/s13428-015-0697-6" class="external-link">doi:10.3758/s13428-015-0697-6</a></p>
     </div>
 
     <div id="ref-examples">

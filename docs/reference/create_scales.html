@@ -39,7 +39,16 @@ psych package."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -156,7 +165,8 @@ suitable as an estimate of reliability. For such scales, the Spearman-Brown
 reliability coefficient for two-item scales is computed, as described in
 Eisinga, R., Grotenhuis, M. te, &amp; Pelzer, B. (2012). The reliability of a
 two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal
-of Public Health, 58(4), 637–642. &lt;doi:10.1007/s00038-012-0416-3&gt;.
+of Public Health, 58(4), 637–642. <a href="https://doi.org/10.1007/s00038-012-0416-3" class="external-link">doi:10.1007/s00038-012-0416-3</a>
+.
 These coefficients are marked with "(sb)".</p>
     </div>
 
@@ -167,8 +177,8 @@ These coefficients are marked with "(sb)".</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Number of categories should be increased  in order to count frequencies. </span>
 <span class="r-in"><span><span class="va">out</span><span class="op">$</span><span class="va">descriptives</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.20    -1.52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Subscale Items      n mean   sd  min  max  skew skew_2se kurt kurt_2se</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 1.82     2.32</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Reliability  Interpret min_load max_load</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.71 Acceptable       NA       NA</span>
 <span class="r-in"><span><span class="va">dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="tidy_sem.html">tidy_sem</a></span><span class="op">(</span><span class="va">iris</span>, split <span class="op">=</span> <span class="st">"\\."</span><span class="op">)</span></span></span>
@@ -180,9 +190,9 @@ These coefficients are marked with "(sb)".</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span>  $correlations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">v  </span>  $scores</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Sepal  2.00 150.00 2.61 0.49 1.45 3.50  0.09     0.24 -1.04    -1.32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    Petal  2.00 150.00 2.48 1.25 0.60 4.60 -0.26    -0.65 -1.45    -1.84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Subscale Items      n mean   sd  min  max  skew skew_2se kurt kurt_2se</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Sepal  2.00 150.00 2.61 0.49 1.45 3.50  0.09     0.24 1.99     2.53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    Petal  2.00 150.00 2.48 1.25 0.60 4.60 -0.26    -0.66 1.57     1.99</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Reliability    Interpret min_load max_load</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   -0.27(sb) Unacceptable     0.34     0.34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    0.98(sb)         Good     0.98     0.98</span>

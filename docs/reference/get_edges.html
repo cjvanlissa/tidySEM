@@ -36,7 +36,16 @@ are defined as regression paths and covariances between variables (nodes)."><!--
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -114,8 +123,10 @@ auxiliary columns in the <code>tidy_edges data.frame</code> for further processi
     <p>The function <code>get_edges</code> identifies all regression paths,
 latent variable definitions, and covariances in the model as edges.
 The output of <code>table_results</code> for those
-paths is used to label the edges.</p>
-<p>## Custom labels</p>
+paths is used to label the edges.</p><div class="section">
+<h3 id="custom-labels">Custom labels<a class="anchor" aria-label="anchor" href="#custom-labels"></a></h3>
+
+
 <p>One way to create custom edge labels is by passing an expression to
 <code>label</code>. When an expression is
 passed to <code>label</code>, it is evaluated in the context of a <code>data.frame</code>
@@ -125,6 +136,8 @@ of a call to <code><a href="table_results.html">table_results</a></code> on the 
 using the <code>columns</code> argument (which is passed to
 <code><a href="table_results.html">table_results</a></code>), and then using these columns to construct a new
 label. See examples.</p>
+</div>
+
     </div>
 
     <div id="ref-examples">

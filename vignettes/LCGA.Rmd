@@ -17,6 +17,11 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 run_everything <- FALSE
+pkgdown <- FALSE
+```
+
+```{r eval = !pkgdown, echo = FALSE, results = "asis"}
+cat("This vignette has been stripped down to comply with CRAN package size policies. To view the complete vignette, including graphics, see the [package website](https://cjvanlissa.github.io/tidySEM).")
 ```
 
 This vignette illustrated `tidySEM`'s ability to perform latent class growth analysis, or growth mixture modeling [@mcardleGrowthCurveAnalysis2003].
@@ -64,8 +69,7 @@ p = ggplot(df_plot, aes(x = scl)) +
   facet_wrap(~time) + theme_bw()
 ggsave("plot_dist.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r, echo = FALSE, out.width="50%"}
-df_plot <- reshape(df, direction = "long", varying = names(df))
+```{r, echo = FALSE, out.width="50%", eval = pkgdown}
 knitr::include_graphics("plot_dist.png")
 ```
 
@@ -74,7 +78,7 @@ As this type of skew can result in convergence problems in LCGA,
 we compared several transformations to reduce skew:
 The square and cube root, log, inverse, and Box-Cox transformations.
 
-```{r transform, results='hide'}
+```{r echo = TRUE, eval = FALSE, results='hide'}
 df_scores <- df_plot
 # Store original range of SCL
 rng_scl <- range(df_scores$scl)
@@ -123,7 +127,36 @@ ggplot(df_plot, aes(x = Value, colour = Transformation)) +
   theme_bw()
 ```
 ```{r, eval = run_everything, echo = FALSE}
-# Make plot data
+df_plot <- reshape(df, direction = "long", varying = names(df))
+df_scores <- df_plot
+# Store original range of SCL
+rng_scl <- range(df_scores$scl)
+# Log-transform
+df_scores$log <- scales::rescale(log(df_scores$scl), to = c(0, 1))
+# Square root transform
+df_scores$sqrt <- scales::rescale(sqrt(df_scores$scl), to = c(0, 1))
+# Cube root transform
+df_scores$qrt <- scales::rescale(df_scores$scl^.33, to = c(0, 1))
+# Reciprocal transform
+df_scores$reciprocal <- scales::rescale(1/df_scores$scl, to = c(0, 1))
+# Define function for Box-Cox transformation
+bc <- function(x, lambda){
+  (((x ^ lambda) - 1) / lambda)
+}
+# Inverse Box-Cox transformation
+invbc <- function(x, lambda){
+  ((x*lambda)+1)^(1/lambda)
+}
+# Box-Cox transform
+b <- MASS::boxcox(lm(df_scores$scl ~ 1), plotit = FALSE)
+lambda <- b$x[which.max(b$y)]
+df_scores$boxcox <- bc(df_scores$scl, lambda)
+# Store range of Box-Cox transformed data
+rng_bc <- range(df_scores$boxcox)
+df_scores$boxcox <- scales::rescale(df_scores$boxcox, to = c(0, 1))
+# Rescale SCL
+df_scores$scl <- scales::rescale(df_scores$scl, to = c(0, 1))
+
 df_plot <- do.call(rbind, lapply(c("scl", "log", "sqrt", "qrt", "boxcox"), function(n){
   data.frame(df_scores[c("time", "id")],
              Value = df_scores[[n]],
@@ -138,7 +171,7 @@ p <- ggplot(df_plot, aes(x = Value, colour = Transformation)) +
   theme_bw()
 ggsave("plot_trans.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r, echo = FALSE, eval = TRUE, out.width="50%"}
+```{r, echo = FALSE, eval = pkgdown, out.width="50%"}
 knitr::include_graphics("plot_trans.png")
 ```
 
@@ -146,7 +179,7 @@ knitr::include_graphics("plot_trans.png")
 Evidently, the Box-Cox transformation reduced skew the most.
 Consequently, we proceeded with the Box-Cox transformed scores for analysis.
 
-```{r}
+```{r, echo = TRUE, eval = run_everything}
 dat <- df_scores[, c("id", "time", "boxcox")]
 dat <- reshape(dat, direction = "wide", v.names = "boxcox", timevar = "time", idvar = "id")
 names(dat) <- gsub("boxcox.", "scl", names(dat))
@@ -294,7 +327,7 @@ plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 p <- plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 ggsave("lcga_plot_fit.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r echo = FALSE, eval = TRUE, out.width="50%"}
+```{r echo = FALSE, eval = pkgdown, out.width="50%"}
 knitr::include_graphics("lcga_plot_fit.png")
 ```
 
@@ -406,7 +439,7 @@ labs <- round(invbc(scales::rescale(brks, from = c(0, 1), to = rng_bc), lambda))
 p <- p + scale_y_continuous(breaks = seq(0, 1, length.out = 5), labels = labs) + ylab("SCL (rescaled from Box-Cox)")
 ggsave("plot_traj.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r echo = FALSE, eval = TRUE, out.width="50%"}
+```{r echo = FALSE, eval = pkgdown, out.width="50%"}
 knitr::include_graphics("plot_traj.png")
 ```
 

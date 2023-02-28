@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Latent Class Growth Analysis • tidySEM</title>
+<title>Tutorial: Latent Class Growth Analysis • tidySEM</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Latent Class Growth Analysis">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Tutorial: Latent Class Growth Analysis">
 <meta property="og:description" content="tidySEM">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -53,7 +53,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -90,7 +99,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Latent Class Growth Analysis</h1>
+      <h1 data-toc-skip>Tutorial: Latent Class Growth Analysis</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/vignettes/LCGA.Rmd" class="external-link"><code>vignettes/LCGA.Rmd</code></a></small>
@@ -100,6 +109,8 @@
 
     
     
+<p>This vignette has been stripped down to comply with CRAN package size
+policies. To view the complete vignette, including graphics, see the <a href="https://cjvanlissa.github.io/tidySEM" class="external-link">package website</a>.</p>
 <p>This vignette illustrated <code>tidySEM</code>’s ability to perform
 latent class growth analysis, or growth mixture modeling <span class="citation">[@mcardleGrowthCurveAnalysis2003]</span>. The simulated
 data used for this example are inspired by work in progress by Plas and
@@ -112,7 +123,6 @@ after deployment in more than 1,000 Dutch military personnel from
 <p>First, we load all required packages:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/" class="external-link">tidySEM</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: OpenMx</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
@@ -143,63 +153,63 @@ scales:</p>
 <tbody>
 <tr class="odd">
 <td align="left">scl.1</td>
-<td align="right">20.76176</td>
+<td align="right">20.19836</td>
 <td align="right">20</td>
-<td align="right">2.640812</td>
-<td align="right">16</td>
+<td align="right">2.357834</td>
+<td align="right">17</td>
 <td align="right">38</td>
-<td align="right">12.71459</td>
-<td align="right">21.55561</td>
+<td align="right">14.52087</td>
+<td align="right">40.39063</td>
 </tr>
 <tr class="even">
 <td align="left">scl.2</td>
-<td align="right">20.92945</td>
-<td align="right">20</td>
-<td align="right">3.463826</td>
+<td align="right">20.42025</td>
+<td align="right">19</td>
+<td align="right">3.511391</td>
 <td align="right">16</td>
-<td align="right">39</td>
-<td align="right">14.61645</td>
-<td align="right">20.01393</td>
+<td align="right">64</td>
+<td align="right">25.90019</td>
+<td align="right">111.96229</td>
 </tr>
 <tr class="odd">
 <td align="left">scl.3</td>
-<td align="right">20.87628</td>
+<td align="right">20.48569</td>
 <td align="right">20</td>
-<td align="right">3.036798</td>
+<td align="right">3.410847</td>
 <td align="right">17</td>
-<td align="right">40</td>
-<td align="right">14.03546</td>
-<td align="right">22.89934</td>
+<td align="right">59</td>
+<td align="right">26.40663</td>
+<td align="right">107.36076</td>
 </tr>
 <tr class="even">
 <td align="left">scl.4</td>
-<td align="right">21.32822</td>
+<td align="right">20.61043</td>
 <td align="right">20</td>
-<td align="right">3.759075</td>
-<td align="right">17</td>
-<td align="right">49</td>
-<td align="right">15.97705</td>
-<td align="right">29.64083</td>
+<td align="right">3.359183</td>
+<td align="right">16</td>
+<td align="right">50</td>
+<td align="right">18.23101</td>
+<td align="right">54.25101</td>
 </tr>
 <tr class="odd">
 <td align="left">scl.5</td>
-<td align="right">21.44888</td>
+<td align="right">20.92740</td>
 <td align="right">20</td>
-<td align="right">3.853768</td>
+<td align="right">4.062189</td>
 <td align="right">16</td>
-<td align="right">52</td>
-<td align="right">15.64953</td>
-<td align="right">31.83717</td>
+<td align="right">64</td>
+<td align="right">24.53539</td>
+<td align="right">93.39585</td>
 </tr>
 <tr class="even">
 <td align="left">scl.6</td>
-<td align="right">21.57669</td>
-<td align="right">21</td>
-<td align="right">4.355581</td>
+<td align="right">21.06851</td>
+<td align="right">20</td>
+<td align="right">4.100879</td>
 <td align="right">16</td>
-<td align="right">64</td>
-<td align="right">20.74140</td>
-<td align="right">61.44299</td>
+<td align="right">58</td>
+<td align="right">20.44229</td>
+<td align="right">65.75813</td>
 </tr>
 </tbody>
 </table>
@@ -208,10 +218,9 @@ at the lower end of the scale.</p>
 <p>We can examine these distributions visually as well:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">df</span>, direction <span class="op">=</span> <span class="st">"long"</span>, varying <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">scl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_dist.png" width="50%"></p>
+<span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">scl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>As this type of skew can result in convergence problems in LCGA, we
 compared several transformations to reduce skew: The square and cube
 root, log, inverse, and Box-Cox transformations.</p>
@@ -220,13 +229,13 @@ root, log, inverse, and Box-Cox transformations.</p>
 <span><span class="co"># Store original range of SCL</span></span>
 <span><span class="va">rng_scl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">)</span></span>
 <span><span class="co"># Log-transform</span></span>
-<span><span class="va">df_scores</span><span class="op">$</span><span class="va">log</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">)</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_scores</span><span class="op">$</span><span class="va">log</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">)</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Square root transform</span></span>
-<span><span class="va">df_scores</span><span class="op">$</span><span class="va">sqrt</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">)</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_scores</span><span class="op">$</span><span class="va">sqrt</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">)</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Cube root transform</span></span>
-<span><span class="va">df_scores</span><span class="op">$</span><span class="va">qrt</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">^</span><span class="fl">.33</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_scores</span><span class="op">$</span><span class="va">qrt</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span><span class="op">^</span><span class="fl">.33</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Reciprocal transform</span></span>
-<span><span class="va">df_scores</span><span class="op">$</span><span class="va">reciprocal</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_scores</span><span class="op">$</span><span class="va">reciprocal</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Define function for Box-Cox transformation</span></span>
 <span><span class="va">bc</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">^</span> <span class="va">lambda</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="va">lambda</span><span class="op">)</span></span>
@@ -241,9 +250,9 @@ root, log, inverse, and Box-Cox transformations.</p>
 <span><span class="va">df_scores</span><span class="op">$</span><span class="va">boxcox</span> <span class="op">&lt;-</span> <span class="fu">bc</span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span>, <span class="va">lambda</span><span class="op">)</span></span>
 <span><span class="co"># Store range of Box-Cox transformed data</span></span>
 <span><span class="va">rng_bc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">boxcox</span><span class="op">)</span></span>
-<span><span class="va">df_scores</span><span class="op">$</span><span class="va">boxcox</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">boxcox</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_scores</span><span class="op">$</span><span class="va">boxcox</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">boxcox</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Rescale SCL</span></span>
-<span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">df_scores</span><span class="op">$</span><span class="va">scl</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We can plot these transformations:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make plot data</span></span>
@@ -253,13 +262,12 @@ root, log, inverse, and Box-Cox transformations.</p>
 <span>             Transformation <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Plot</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span>, colour <span class="op">=</span> <span class="va">Transformation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"scl (rescaled to 0-1)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_trans.png" width="50%"></p>
+<span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span>, colour <span class="op">=</span> <span class="va">Transformation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_continuous.html" class="external-link">scale_y_sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"scl (rescaled to 0-1)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Evidently, the Box-Cox transformation reduced skew the most.
 Consequently, we proceeded with the Box-Cox transformed scores for
 analysis.</p>
@@ -364,7 +372,7 @@ interpretability of the results</li>
 <col width="4%">
 </colgroup>
 <thead><tr class="header">
-<th align="left">Name</th>
+<th align="right">Name</th>
 <th align="right">Minus2LogLikelihood</th>
 <th align="right">Parameters</th>
 <th align="right">df</th>
@@ -381,7 +389,7 @@ interpretability of the results</li>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">1</td>
+<td align="right">1</td>
 <td align="right">-5184.64</td>
 <td align="right">9</td>
 <td align="right">5859</td>
@@ -397,7 +405,7 @@ interpretability of the results</li>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
-<td align="left">2</td>
+<td align="right">2</td>
 <td align="right">-7595.55</td>
 <td align="right">13</td>
 <td align="right">11723</td>
@@ -413,7 +421,7 @@ interpretability of the results</li>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td align="left">3</td>
+<td align="right">3</td>
 <td align="right">-8528.85</td>
 <td align="right">17</td>
 <td align="right">17587</td>
@@ -429,7 +437,7 @@ interpretability of the results</li>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">4</td>
+<td align="right">4</td>
 <td align="right">-8528.89</td>
 <td align="right">21</td>
 <td align="right">23451</td>
@@ -445,7 +453,7 @@ interpretability of the results</li>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td align="left">5</td>
+<td align="right">5</td>
 <td align="right">-8528.89</td>
 <td align="right">25</td>
 <td align="right">29315</td>
@@ -481,23 +489,25 @@ Moreover, the BIC increased after 3 classes. A three-class solution thus
 appears to be the most parsimonious solution with good fit.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tab_fit</span>, statistics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AIC"</span>, <span class="st">"BIC"</span>, <span class="st">"saBIC"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_fit.png" width="50%"></p>
 <p>Based on the aforementioned criteria, we selected a 3-class model for
-further analyses. The estimated parameters are reported below.</p>
+further analyses. First, to prevent label switching, we re-order these
+classes by the value of the intercept <code>i</code>. Then, we report
+the estimated parameters.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tab_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, columns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">res_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_switch_labels.html">mx_switch_labels</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, param <span class="op">=</span> <span class="st">"M[1,7]"</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">tab_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_final</span>, columns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="co"># Select rows and columns</span></span>
 <span><span class="va">tab_res</span> <span class="op">&lt;-</span> <span class="va">tab_res</span><span class="op">[</span><span class="va">tab_res</span><span class="op">$</span><span class="va">Category</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Means"</span>, <span class="st">"Variances"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Category"</span>, <span class="st">"lhs"</span>, <span class="st">"est"</span>, <span class="st">"se"</span>, <span class="st">"pval"</span>, <span class="st">"confint"</span>, <span class="st">"name"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">tab_res</span>, digits <span class="op">=</span> <span class="fl">2</span>, caption <span class="op">=</span> <span class="st">"Results from 3-class LCGA model"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">tab_res</span></span></code></pre></div>
 <table class="table">
 <caption>Results from 3-class LCGA model</caption>
 <thead><tr class="header">
 <th align="left"></th>
 <th align="left">Category</th>
 <th align="left">lhs</th>
-<th align="left">est</th>
-<th align="left">se</th>
-<th align="left">pval</th>
+<th align="right">est</th>
+<th align="right">se</th>
+<th align="right">pval</th>
 <th align="left">confint</th>
 <th align="left">name</th>
 </tr></thead>
@@ -506,9 +516,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">16</td>
 <td align="left">Means</td>
 <td align="left">i</td>
-<td align="left">0.35</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.35</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.35, 0.36]</td>
 <td align="left">class1.M[1,7]</td>
 </tr>
@@ -516,9 +526,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">17</td>
 <td align="left">Means</td>
 <td align="left">step</td>
-<td align="left">-0.03</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
+<td align="right">-0.03</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
 <td align="left">[-0.04, -0.02]</td>
 <td align="left">class1.M[1,8]</td>
 </tr>
@@ -526,9 +536,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">18</td>
 <td align="left">Means</td>
 <td align="left">s</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.00, 0.01]</td>
 <td align="left">class1.M[1,9]</td>
 </tr>
@@ -536,9 +546,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">19</td>
 <td align="left">Variances</td>
 <td align="left">scl1</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[1,1]</td>
 </tr>
@@ -546,9 +556,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">20</td>
 <td align="left">Variances</td>
 <td align="left">scl2</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[2,2]</td>
 </tr>
@@ -556,9 +566,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">21</td>
 <td align="left">Variances</td>
 <td align="left">scl3</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[3,3]</td>
 </tr>
@@ -566,9 +576,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">22</td>
 <td align="left">Variances</td>
 <td align="left">scl4</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[4,4]</td>
 </tr>
@@ -576,9 +586,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">23</td>
 <td align="left">Variances</td>
 <td align="left">scl5</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[5,5]</td>
 </tr>
@@ -586,9 +596,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">24</td>
 <td align="left">Variances</td>
 <td align="left">scl6</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class1.S[6,6]</td>
 </tr>
@@ -596,9 +606,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">40</td>
 <td align="left">Means</td>
 <td align="left">i</td>
-<td align="left">0.46</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
+<td align="right">0.46</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
 <td align="left">[0.44, 0.47]</td>
 <td align="left">class2.M[1,7]</td>
 </tr>
@@ -606,9 +616,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">41</td>
 <td align="left">Means</td>
 <td align="left">step</td>
-<td align="left">0.03</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
+<td align="right">0.03</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.04]</td>
 <td align="left">class2.M[1,8]</td>
 </tr>
@@ -616,9 +626,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">42</td>
 <td align="left">Means</td>
 <td align="left">s</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class2.M[1,9]</td>
 </tr>
@@ -626,9 +636,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">43</td>
 <td align="left">Variances</td>
 <td align="left">scl1</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[1,1]</td>
 </tr>
@@ -636,9 +646,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">44</td>
 <td align="left">Variances</td>
 <td align="left">scl2</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[2,2]</td>
 </tr>
@@ -646,9 +656,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">45</td>
 <td align="left">Variances</td>
 <td align="left">scl3</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[3,3]</td>
 </tr>
@@ -656,9 +666,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">46</td>
 <td align="left">Variances</td>
 <td align="left">scl4</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[4,4]</td>
 </tr>
@@ -666,9 +676,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">47</td>
 <td align="left">Variances</td>
 <td align="left">scl5</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[5,5]</td>
 </tr>
@@ -676,9 +686,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">48</td>
 <td align="left">Variances</td>
 <td align="left">scl6</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class2.S[6,6]</td>
 </tr>
@@ -686,9 +696,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">64</td>
 <td align="left">Means</td>
 <td align="left">i</td>
-<td align="left">0.63</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
+<td align="right">0.63</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
 <td align="left">[0.61, 0.65]</td>
 <td align="left">class3.M[1,7]</td>
 </tr>
@@ -696,9 +706,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">65</td>
 <td align="left">Means</td>
 <td align="left">step</td>
-<td align="left">0.07</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
+<td align="right">0.07</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
 <td align="left">[0.05, 0.10]</td>
 <td align="left">class3.M[1,8]</td>
 </tr>
@@ -706,9 +716,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">66</td>
 <td align="left">Means</td>
 <td align="left">s</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.13</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.13</td>
 <td align="left">[-0.00, 0.01]</td>
 <td align="left">class3.M[1,9]</td>
 </tr>
@@ -716,9 +726,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">67</td>
 <td align="left">Variances</td>
 <td align="left">scl1</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[1,1]</td>
 </tr>
@@ -726,9 +736,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">68</td>
 <td align="left">Variances</td>
 <td align="left">scl2</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[2,2]</td>
 </tr>
@@ -736,9 +746,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">69</td>
 <td align="left">Variances</td>
 <td align="left">scl3</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[3,3]</td>
 </tr>
@@ -746,9 +756,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">70</td>
 <td align="left">Variances</td>
 <td align="left">scl4</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[4,4]</td>
 </tr>
@@ -756,9 +766,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">71</td>
 <td align="left">Variances</td>
 <td align="left">scl5</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[5,5]</td>
 </tr>
@@ -766,9 +776,9 @@ further analyses. The estimated parameters are reported below.</p>
 <td align="left">72</td>
 <td align="left">Variances</td>
 <td align="left">scl6</td>
-<td align="left">0.01</td>
-<td align="left">0.00</td>
-<td align="left">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class3.S[6,6]</td>
 </tr>
@@ -794,13 +804,13 @@ parameters in the model, using the hypothesis syntax from the
 <code>name</code> column of the results table above. Alternatively, to
 see all parameters in the model, run:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "mix3.weights[1,2]" "mix3.weights[1,3]" "vscl1"            </span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;  [1] "mix3.weights[1,2]" "mix3.weights[1,3]" "vscl1"            </span></span>
 <span><span class="co">#&gt;  [4] "vscl2"             "vscl3"             "vscl4"            </span></span>
 <span><span class="co">#&gt;  [7] "vscl5"             "vscl6"             "class1.M[1,7]"    </span></span>
 <span><span class="co">#&gt; [10] "class1.M[1,8]"     "class1.M[1,9]"     "class2.M[1,7]"    </span></span>
 <span><span class="co">#&gt; [13] "class2.M[1,8]"     "class2.M[1,9]"     "class3.M[1,7]"    </span></span>
-<span><span class="co">#&gt; [16] "class3.M[1,8]"     "class3.M[1,9]"</span></span></code></pre></div>
+<span><span class="co">#&gt; [16] "class3.M[1,8]"     "class3.M[1,9]"</span></span></code></pre>
 <p>Next, specify equality constrained hypotheses. For example, a
 hypothesis that states that the mean intercept is equal across groups is
 specified as follows:</p>
@@ -808,8 +818,8 @@ specified as follows:</p>
 <p>It is also possible to consider comparisons between two classes at a
 time. When conducting many significance tests, consider correcting for
 multiple comparisons however.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">wald_tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, </span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">wald_tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">res_final</span>, </span>
 <span>                   <span class="st">"class1.M[1,7] = class2.M[1,7]&amp;class1.M[1,7] = class3.M[1,7];class1.M[1,8] = class2.M[1,8]&amp;class1.M[1,8] = class3.M[1,8];class1.M[1,9] = class2.M[1,9]&amp;class1.M[1,9] = class3.M[1,9]"</span><span class="op">)</span></span>
 <span><span class="co"># Rename the hypothesis</span></span>
 <span><span class="va">wald_tests</span><span class="op">$</span><span class="va">Hypothesis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mean i"</span>, <span class="st">"Mean step"</span>, <span class="st">"Mean slope"</span><span class="op">)</span></span>
@@ -843,6 +853,9 @@ multiple comparisons however.</p>
 </tr>
 </tbody>
 </table>
+<p>All Wald tests are significant, indicating that there are significant
+differences between the intercepts, step function, and slopes of the
+three classes.</p>
 </div>
 <div class="section level3">
 <h3 id="trajectory-plot">Trajectory plot<a class="anchor" aria-label="anchor" href="#trajectory-plot"></a>
@@ -850,14 +863,13 @@ multiple comparisons however.</p>
 <p>Finally, we can plot the growth trajectories. This can help interpret
 the results better, as well as the residual heterogeneity around class
 trajectories.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_growth.html">plot_growth</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span>, alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.05</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Add Y-axis breaks in original scale</span></span>
 <span><span class="va">brks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="va">labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">invbc</span><span class="op">(</span><span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">brks</span>, from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, to <span class="op">=</span> <span class="va">rng_bc</span><span class="op">)</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, labels <span class="op">=</span> <span class="va">labs</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"SCL (rescaled from Box-Cox)"</span><span class="op">)</span></span>
+<span><span class="va">labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">invbc</span><span class="op">(</span><span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scales/man/rescale.html" class="external-link">rescale</a></span><span class="op">(</span><span class="va">brks</span>, from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, to <span class="op">=</span> <span class="va">rng_bc</span><span class="op">)</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, labels <span class="op">=</span> <span class="va">labs</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"SCL (rescaled from Box-Cox)"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="plot_traj.png" width="50%"></p>
 <p>Note that the observed individual trajectories show very high
 variability within classes.</p>
 </div>

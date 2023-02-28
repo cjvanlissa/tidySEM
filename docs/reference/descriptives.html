@@ -35,7 +35,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Latent Class Growth Analysis</a>
+      <a href="../articles/gmm.html">Gaussian Mixture Model for Ocean Microplastics</a>
+    </li>
+    <li>
+      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+    </li>
+    <li>
+      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/lpa.html">Tutorial: Latent Profile Analysis</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -92,7 +101,14 @@
     <h2>Value</h2>
     
 
-<p>A <code>data.frame</code> with descriptive statistics for <code>x</code>.</p>
+<p>A <code>data.frame</code> with descriptive statistics for <code>x</code>.
+Its elements are:</p><table class="table table"><tr><td><strong>name</strong></td><td><code>Character</code></td><td>Variable name</td></tr><tr><td><strong>type</strong></td><td><code>character</code></td><td>Data type in <code>R</code>, as obtained by <code>class(x)[1]</code></td></tr><tr><td><strong>n</strong></td><td><code>Integer</code></td><td>Number of valid observations</td></tr><tr><td><strong>missing</strong></td><td><code>Numeric</code></td><td>Proportion missing</td></tr><tr><td><strong>unique</strong></td><td><code>Integer</code></td><td>Number of unique values</td></tr><tr><td><strong>mean</strong></td><td><code>numeric</code></td><td>Mean value of non-missing entries, only defined for variables that can be coerced to numeric</td></tr><tr><td><strong>median</strong></td><td><code>numeric</code></td><td>Median value of non-missing entries, only defined for numeric variables</td></tr><tr><td><strong>mode</strong></td><td><code>Integer</code></td><td>For numeric variables: The mode value. For factors: The frequency of the mode value</td></tr><tr><td><strong>mode_value</strong></td><td><code>Character</code></td><td>For factors: value of the mode</td></tr><tr><td><strong>sd</strong></td><td><code>numeric</code></td><td>Standard deviation of non-missing entries, only defined for variables that can be coerced to numeric</td></tr><tr><td><strong>v</strong></td><td><code>numeric</code></td><td>Variability coefficient V for factor
+variables (Agresti, 1990). V is the probability that two independent
+observations fall in different categories</td></tr><tr><td><strong>min</strong></td><td><code>numeric</code></td><td>Minimum value for numeric variables</td></tr><tr><td><strong>max</strong></td><td><code>numeric</code></td><td>Maximum value for numeric variables</td></tr><tr><td><strong>range</strong></td><td><code>numeric</code></td><td>Range (distance between min and max) for numeric variables</td></tr><tr><td><strong>skew</strong></td><td><code>numeric</code></td><td>Skewness. The normalized third central moment of a numeric variable, which reflects its skewness. A symmetric distribution has a skewness of zero</td></tr><tr><td><strong>skew_2se</strong></td><td><code>numeric</code></td><td>Skewness, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of .05</td></tr><tr><td><strong>kurt</strong></td><td><code>numeric</code></td><td>Kurtosis. The normalized fourth central moment of a numeric variable, which reflects its peakedness. A heavy-tailed distribution has high kurtosis, a light-tailed distribution has low kurtosis (sometimes called platykurtic).</td></tr><tr><td><strong>kurt_2se</strong></td><td><code>numeric</code></td><td>Kurtosis, divided by two times its standard error. Values greater than one can be considered "significant" according to a Z-test with significance level of .05</td></tr></table></div>
+    <div id="references">
+    <h2>References</h2>
+    <p>Agresti, A. (2012). Categorical data analysis (Vol. 792).
+John Wiley &amp; Sons.</p>
     </div>
 
     <div id="ref-examples">
@@ -104,12 +120,12 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 Petal.Length numeric 150       0     43 3.758000   4.35  4.35       &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  Petal.Width numeric 150       0     22 1.199333   1.30  1.30       &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5      Species  factor 150       0      4       NA     NA 50.00     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          sd         v min max range       skew   skew_2se       kurt   kurt_2se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.8280661        NA 4.3 7.9   3.6  0.3086407  0.7792448 -0.6058125 -0.7696120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4358663        NA 2.0 4.4   2.4  0.3126147  0.7892781  0.1387047  0.1762076</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.7652982        NA 1.0 6.9   5.9 -0.2694109 -0.6801988 -1.4168574 -1.7999470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.7622377        NA 0.1 2.5   2.4 -0.1009166 -0.2547904 -1.3581792 -1.7254034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA 0.6666667  NA  NA    NA         NA         NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          sd         v min max range       skew   skew_2se     kurt kurt_2se</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.8280661        NA 4.3 7.9   3.6  0.3117531  0.7871027 2.426432 3.082490</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4358663        NA 2.0 4.4   2.4  0.3157671  0.7972372 3.180976 4.041048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.7652982        NA 1.0 6.9   5.9 -0.2721277 -0.6870579 1.604464 2.038279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.7622377        NA 0.1 2.5   2.4 -0.1019342 -0.2573597 1.663933 2.113826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA 0.6666667  NA  NA    NA         NA         NA       NA       NA</span>
 </code></pre></div>
     </div>
   </div>

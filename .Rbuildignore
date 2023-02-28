@@ -25,3 +25,4 @@ R/data_types\.md
 ^\.github$
 CODE_OF_CONDUCT.md
 ^CRAN-SUBMISSION$
+^vignettes/*\.svg$

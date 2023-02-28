@@ -1,8 +1,8 @@
 ---
-title: "Tutorial: Latent Profile Analysis"
+title: "Confirmatory LPA for the Caregiver Compass"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tutorial: Latent Profile Analysis}
+  %\VignetteIndexEntry{Confirmatory LPA for the Caregiver Compass}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,6 +23,11 @@ if(!file.exists("lpa.yml")){
 } else {
   out <- yaml::read_yaml("lpa.yml")
 }
+pkgdown <- FALSE
+```
+
+```{r eval = !pkgdown, echo = FALSE, results = "asis"}
+cat("This vignette has been stripped down to comply with CRAN package size policies. To view the complete vignette, including graphics, see the [package website](https://cjvanlissa.github.io/tidySEM).")
 ```
 
 This is an example of confirmatory LPA using `tidySEM`.
@@ -124,7 +129,7 @@ p <- ggplot(df_plot, aes(x = Value)) +
   theme_bw()
 ggsave("plot_lpa_desc.svg", p, device = "svg", width = 100, height = 100, units = "mm")
 ```
-```{r figdesc, echo = FALSE, eval = TRUE}
+```{r figdesc, echo = FALSE, eval = pkgdown}
 knitr::include_graphics("plot_lpa_desc.svg")
 ```
 
@@ -294,7 +299,7 @@ p[[1]] <- p[[1]] + scale_y_continuous(breaks= c(0, .1, .2, .3), labels = c(".0",
 p <- tidySEM:::merge_corplots(p)
 ggsave("lpa_bivariate.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="100%"}
+```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
 knitr::include_graphics("lpa_bivariate.svg")
 ```
 On the diagonal of the bivariate plot are weighted density plots:
@@ -337,7 +342,7 @@ p2 <- p2 + theme(legend.position = "none")
 p <- ggpubr::ggarrange(p1, p2)
 ggsave("lpa_profiles.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="100%"}
+```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
 knitr::include_graphics("lpa_profiles.svg")
 ```
 
