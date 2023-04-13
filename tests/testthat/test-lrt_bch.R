@@ -27,7 +27,7 @@ test_that("bch works with ordinal data", {
 
 test_that("bch lrt works with ordinal data", {
   tst <- suppressWarnings(lr_test(bch1))
-  expect_equal(tst$overall$LL_dif, 1067.246, tolerance = .1)
+  expect_equal(tst$overall$LL_dif, 62.66664, tolerance = .1)
   expect_equal(tst$pairwise$LL_dif, c(49.8339753225328, 61.1695798706335, 0.0196484043474641)
                , tolerance = .1)
 })

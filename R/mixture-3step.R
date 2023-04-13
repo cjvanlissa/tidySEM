@@ -109,63 +109,48 @@ bch_categorical <- function(x, y){
 lr_test <- function(x, compare = c("All", "A", "S", "F", "M", "Thresholds"), ...){
   if(is.null(attr(x, "tidySEM"))) attr(x, "tidySEM") <- "other"
   if(isTRUE(attr(x, "tidySEM") == "mixture")) stop("No valid method to compute likelihood ratio tests for mixture models.")
-    submods <- names(x@submodels)
-    tests <- expand.grid(submods, submods, stringsAsFactors = FALSE)[which(upper.tri(matrix(nrow = length(submods), ncol = length(submods)))), ]
-    mats <- names(x[[submods[1]]]@matrices)
-    mats <- mats[sapply(mats, function(m){any(x[[submods[1]]][[m]]$free)})]
-    if(!compare[1] == "All") {
-      mats <- mats[mats %in% compare]
-      if(length(mats) < 1) stop("Argument 'compare' does not refer to any freely estimated parameters.")
-      mod_base <- x
-      for(m in mats){
-        for(c in submods){
-          mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
-          mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
-        }
-      }
-      mod_base <- omxAssignFirstParameters(mod_base)
-    } else {
-      args_mod <- list(name = "base",
-                       fitfunction = mxFitFunctionML()
-                       )
-      if(attr(x, "tidySEM") == "BCH"){
-        args_mod$data <- mxData(observed = x[[submods[1]]]$data$observed[, !grepl("^wclass\\d+$", names(x[[submods[1]]]$data$observed)), drop = FALSE], type = "raw")
-      } else {
-        if(inherits(x$fitfunction, what = "MxFitFunctionMultigroup")){
-          args_mod$data <- mxData(observed = do.call(rbind, lapply(submods, function(i){x[[i]]$data$observed})), type = "raw")
-        } else {
-          stop("Could not find data.")
-        }
-      }
-      args_mod$expectation = x[[submods[1]]]$expectation
-      args_mod <- c(args_mod, x[[submods[1]]]@matrices)
-      mod_base <- do.call(mxModel, args_mod)
-    }
-    mod_base <- mxRun(mod_base)
-    mod_test <- x
-
-    test_res <- do.call(rbind, lapply(1:nrow(tests), function(i){
-      tmp <- mod_test
-      for(m in mats){
-        tmp[[tests[i, 1]]][[m]]$labels[,] <- paste0(m, letters[1:length(tmp[[tests[i, 1]]][[m]]$labels)])
-        tmp[[tests[i, 2]]][[m]]$labels[,] <- paste0(m, letters[1:length(tmp[[tests[i, 1]]][[m]]$labels)])
-      }
-      tmp <- omxAssignFirstParameters(tmp)
-      tmp <- run_mx(tmp)
-
-      return(.lltest(mxCompare(x, tmp)))
-    }))
-    tests <- data.frame(tests,
-                        test_res)
-    names(tests)[1:2] <- c("Model1", "Model2")
-
-    # Overall test
-    test_comp <- .lltest(mxCompare(x, mod_base))
-    tests <- list(overall = test_comp,
-                  pairwise = tests)
-    class(tests) <- c("lr_test", class(tests))
-    return(tests)
+  submods <- names(x@submodels)
+  tests <- expand.grid(submods, submods, stringsAsFactors = FALSE)[which(upper.tri(matrix(nrow = length(submods), ncol = length(submods)))), ]
+  mats <- names(x[[submods[1]]]@matrices)
+  mats <- mats[sapply(mats, function(m){any(x[[submods[1]]][[m]]$free)})]
+  if(!compare[1] == "All") {
+    mats <- mats[mats %in% compare]
   }
+  if(length(mats) < 1) stop("Argument 'compare' does not refer to any freely estimated parameters.")
+  mod_test <- mod_base <- x
+  for(m in mats){
+    for(c in submods){
+      mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
+      mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
+    }
+  }
+  mod_base <- omxAssignFirstParameters(mod_base)
+
+  mod_base <- run_mx(mod_base)
+
+  test_res <- do.call(rbind, lapply(1:nrow(tests), function(i){
+    tmp <- mod_test
+    for(m in mats){
+      tmp[[tests[i, 1]]][[m]]$labels[,] <- paste0(m, letters[1:length(tmp[[tests[i, 1]]][[m]]$labels)])
+      tmp[[tests[i, 2]]][[m]]$labels[,] <- paste0(m, letters[1:length(tmp[[tests[i, 1]]][[m]]$labels)])
+    }
+    tmp <- omxAssignFirstParameters(tmp)
+    tmp <- run_mx(tmp)
+
+    return(.lltest(mxCompare(x, tmp)))
+  }))
+  tests <- data.frame(tests,
+                      test_res)
+  names(tests)[1:2] <- c("Model1", "Model2")
+
+  # Overall test
+  test_comp <- .lltest(mxCompare(x, mod_base))
+  tests <- list(overall = test_comp,
+                pairwise = tests)
+  class(tests) <- c("lr_test", class(tests))
+  return(tests)
+}
+
 
 .lltest <- function(x, ...){
   data.frame("LL_baseline" = x$minus2LL[1],
