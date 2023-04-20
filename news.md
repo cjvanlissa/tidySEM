@@ -6,6 +6,7 @@
 * Documentation incorrectly referred to data_mixture_ordinal, instead of
   data_mix_ordinal
 * Added legend to plot_probs()
+* Added np_ratio and np_local to table_fit() output for mixture models
 
 # tidySEM 0.2.3
 

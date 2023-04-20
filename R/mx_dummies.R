@@ -5,6 +5,8 @@
 #' or non-membership (0) of that level.
 #' The resulting dummies have class `mxFactor`.
 #' @param x An object for which a method exists.
+#' @param classes Character vector, indicating which classes to dummy code.
+#' Defaults to `c("factor", "character")`.
 #' @param ... Arguments
 #' @return A `data.frame`.
 #' @examples
@@ -12,13 +14,21 @@
 #' @rdname mx_dummies
 #' @export
 #' @importFrom stats model.matrix
-mx_dummies <- function(x, ...){
+mx_dummies <- function(x, classes = c("factor", "character"), ...){
   UseMethod("mx_dummies", x)
 }
 
 #' @method mx_dummies data.frame
 #' @export
-mx_dummies.data.frame <- function(x, ...){
+mx_dummies.data.frame <- function(x, classes = c("factor", "character"), ...){
+  if(any(!(classes == "factor"))){
+    for(c in classes[!(classes == "factor")]){
+      code_me <- sapply(x, inherits, what = c)
+      if(any(code_me)){
+        x[code_me] <- lapply(x[code_me], as.factor)
+      }
+    }
+  }
   code_me <- sapply(x, inherits, what = "factor")
   if(!any(code_me)) return(x)
   na_action <- getOption("na.action")
@@ -31,6 +41,8 @@ mx_dummies.data.frame <- function(x, ...){
   })
   options(na.action = na_action)
   coded <- do.call(cbind, coded)
+  uniqvals <- sapply(coded, function(i){min(prop.table(table(i)))})
+  if(any(uniqvals < .05)) warning("Some categories have fewer than 5% of cases: ", paste0(names(coded)[uniqvals < .05], collapse = ", "))
   is_unique <- sapply(coded, function(c){
     tb <- table(na.omit(c))
     length(tb[!tb == 0]) < 2

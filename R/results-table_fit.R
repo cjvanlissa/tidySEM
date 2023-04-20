@@ -46,11 +46,13 @@ table_fit.mixture_list <- function(x, ...) {
   out <- out[, c(ordr[ordr %in% names(out)], names(out)[!names(out) %in% ordr])]
 
   class(out) <- c("tidy_fit", class(out))
-  tst <- try(lr_lmr(out), silent = TRUE)
-  if(!inherits(tst, what = "try-error")){
-    out$lmr_lr <- tst$lmr_lr
-    out$lmr_p <- tst$lmr_p
-  }
+  # tst <- try(lr_lmr(out), silent = TRUE)
+  # if(!inherits(tst, what = "try-error")){
+  #   out$lmr_lr <- tst$lmr_lr
+  #   out$lmr_p <- tst$lmr_p
+  # }
+  out$np_ratio <- out$n / out$Parameters
+  out$np_local <- (out$n*out$n_min) / ((out$Parameters - (out$Classes-1))/out$Classes)
   return(out)
 }
 
