@@ -7,6 +7,7 @@
   data_mix_ordinal
 * Added legend to plot_probs()
 * Added np_ratio and np_local to table_fit() output for mixture models
+* Reimplement BLRT() to avoid slow OpenMx implementation
 
 # tidySEM 0.2.3
 

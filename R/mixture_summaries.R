@@ -243,6 +243,11 @@ icl_default <- function(post_prob, BIC){
 #' @description Conduct Bootstrapped Likelihood Ratio Test to compare two
 #' mixture models.
 #' @param x An object for which a method exists.
+#' @param replications Integer reflecting the number of bootstrapped
+#' replications, defaults to `100`.
+#' @param parallel Logical, indicating whether or not to paralellize the
+#' computations. Optionally, an integer number can be provided,
+#' corresponding to the number of cores to use. Defaults to `TRUE`.
 #' @param ... further arguments to be passed to or from other methods.
 #' @return A data.frame.
 #' @examples
@@ -254,27 +259,30 @@ icl_default <- function(post_prob, BIC){
 #' BLRT(res, replications = 4)
 #' }
 #' @export
-BLRT <- function(x, ...){
+BLRT <- function(x, replications = 100, parallel = TRUE, ...){
   UseMethod("BLRT", x)
 }
 
+# blrt_simple <- function(mod_simple, mod_complex, replications = 100, parallel = TRUE){
 #' @method BLRT mixture_list
 #' @export
-BLRT.mixture_list <- function(x, ...){
+#' @importFrom foreach %dopar%
+BLRT.mixture_list <- function(x, replications = 100, parallel = TRUE, ...){
+  df_empty <- data.frame(lr = NA, df = NA, blrt_p = NA)
   if(length(x) > 1){
-    out <- mapply(function(k, km1){
+    out <- mapply(function(smaller, bigger){
       tryCatch({
-        unlist(mxCompare(k, km1, boot = TRUE, ...)[2, c("diffLL", "diffdf", "p")])
-        },
-               error = function(e){
-                 c("diffLL" = NA, "diffdf" = NA, "p" = NA)
-               })
-    }, k = x[-1], km1 = x[-length(x)])
-    rbind(data.frame(diffLL = NA, diffdf = NA, p = NA),
-          t(out))
+        blrt_internal(smaller, bigger, replications = replications, parallel = parallel)
+      },
+      error = function(e){
+        df_empty })
+    }, bigger = x[-1], smaller = x[-length(x)], SIMPLIFY = FALSE)
+    out <- do.call(rbind, append(out, list(df_empty), 0))
   } else {
-    data.frame(diffLL = NA, diffdf = NA, p = NA)
+    out <- df_empty
   }
+  rownames(out) <- NULL
+  return(out)
 }
 
 #' @method BLRT list

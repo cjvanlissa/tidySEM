@@ -4,10 +4,13 @@
 \alias{mx_dummies}
 \title{Dummy Code Factor Variables}
 \usage{
-mx_dummies(x, ...)
+mx_dummies(x, classes = c("factor", "character"), ...)
 }
 \arguments{
 \item{x}{An object for which a method exists.}
+
+\item{classes}{Character vector, indicating which classes to dummy code.
+Defaults to \code{c("factor", "character")}.}
 
 \item{...}{Arguments}
 }

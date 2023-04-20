@@ -4,10 +4,17 @@
 \alias{BLRT}
 \title{Conduct Bootstrapped Likelihood Ratio Test}
 \usage{
-BLRT(x, ...)
+BLRT(x, replications = 100, parallel = TRUE, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists.}
+
+\item{replications}{Integer reflecting the number of bootstrapped
+replications, defaults to \code{100}.}
+
+\item{parallel}{Logical, indicating whether or not to paralellize the
+computations. Optionally, an integer number can be provided,
+corresponding to the number of cores to use. Defaults to \code{TRUE}.}
 
 \item{...}{further arguments to be passed to or from other methods.}
 }

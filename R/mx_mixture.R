@@ -501,10 +501,10 @@ mixture_starts <- function(model,
   data <- model@data$observed
   if(any(sapply(data, inherits, what = "factor"))) return(model)
   if(!hasArg(splits)){
-    splits <- try({kmeans(x = data, centers = classes)$cluster})
+    splits <- try({kmeans(x = data, centers = classes)$cluster}, silent = TRUE)
     if(inherits(splits, "try-error")){
-      message("Could not initialize clusters using K-means.")
-      splits <- try({cutree(hclust(dist(data)), k = classes)})
+      message("Could not initialize clusters using K-means, switching to hierarchical clustering.")
+      splits <- try({cutree(hclust(dist(data)), k = classes)}, silent = TRUE)
       if(inherits(splits, "try-error")){
         stop("Could not initialize clusters using hierarchical clustering. Consider using a different clustering method, or imputing missing data.")
       }
