@@ -38,7 +38,9 @@ Imports:
     RANN,
     Matrix,
     bain,
-    car
+    car,
+    future.apply,
+    progressr
 Suggests: 
     testthat,
     knitr,

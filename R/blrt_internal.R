@@ -1,41 +1,47 @@
-blrt_internal <- function(mod_simple, mod_complex, replications = 100, parallel = TRUE){
-  lrtest <- mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood
-  pb <- txtProgressBar(max = replications, style = 3)
-  progress <- function(n) setTxtProgressBar(pb, n)
-  if(isTRUE(parallel) | inherits(parallel, "integer")){
-    if(inherits(parallel, "logical")){
-      parallel <- parallel::detectCores()
-    } else {
-      parallel <- min(c(parallel::detectCores(), parallel))
-    }
-    cl <- parallel::makeCluster(parallel)
-    opts <- list(progress = progress)
-    doSNOW::registerDoSNOW(cl)
-    lrdist <- foreach(i = 1:replications, .combine = c,
-                      .options.snow = opts, .packages = "OpenMx") %dopar%
-      {
-        df_sim <- mxGenerateData(mod_simple)
-        mod_simple@data$observed <- df_sim
-        mod_simple <- mxRun(mod_simple, silent = TRUE)
-        mod_complex@data$observed <- df_sim
-        mod_complex <- mxRun(mod_complex, silent = TRUE)
-        mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood
+#' @importFrom future.apply future_lapply
+#' @importFrom progressr with_progress progressor
+blrt_internal <-
+  function(mod_simple, mod_complex, replications = 100) {
+    lrtest <-
+      mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood
+    progmsg <- paste0(mod_simple@name, " vs. ", mod_complex@name)
+    progressr::with_progress({
+      pgs <- progressr::progressor(steps = replications)
+    bootres <- future.apply::future_lapply(
+      X = 1:replications,
+      future.seed = TRUE,
+      FUN = function(i) {
+        pgs(sprintf(progmsg))
+        tryCatch({
+          df_sim <- mxGenerateData(mod_simple)
+          mod_simple@data$observed <-
+            df_sim
+          mod_complex@data$observed <-
+            df_sim
+          mod_simple <-
+            mxRun(mod_simple,
+                  silent = TRUE,
+                  suppressWarnings = TRUE)
+          mod_complex <-
+            mxRun(mod_complex,
+                  silent = TRUE,
+                  suppressWarnings = TRUE)
+          c(
+            mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood,
+            mod_simple@output$status$code + mod_complex@output$status$code
+          )
+        }, error = function(e) {
+          c(NA, 1)
+        })
       }
-    stopCluster(cl)
-  } else {
-    lrdist <- vector("numeric", length = replications)
-    for(i in 1:replications){
-        df_sim <- mxGenerateData(mod_simple)
-        mod_simple@data$observed <- df_sim
-        mod_simple <- mxRun(mod_simple, silent = TRUE)
-        mod_complex@data$observed <- df_sim
-        mod_complex <- mxRun(mod_complex, silent = TRUE)
-        setTxtProgressBar(pb,i)
-        lrdist[i] <- mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood
-      }
+    )})
+    bootres <- do.call(rbind, bootres)
+    isvalid <- bootres[, 2] == 0
+    lrdist <- bootres[isvalid, 1]
+    data.frame(
+      lr = lrtest,
+      df = length(omxGetParameters(mod_complex)) - length(omxGetParameters(mod_simple)),
+      blrt_p = sum(lrdist > lrtest) / length(lrdist),
+      samples = sum(isvalid)
+    )
   }
-  close(pb)
-  data.frame(lr = lrtest,
-             df = length(omxGetParameters(mod_complex)) - length(omxGetParameters(mod_simple)),
-             blrt_p = sum(lrdist > lrtest) / length(lrdist))
-}

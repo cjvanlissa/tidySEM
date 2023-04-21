@@ -245,9 +245,6 @@ icl_default <- function(post_prob, BIC){
 #' @param x An object for which a method exists.
 #' @param replications Integer reflecting the number of bootstrapped
 #' replications, defaults to `100`.
-#' @param parallel Logical, indicating whether or not to paralellize the
-#' computations. Optionally, an integer number can be provided,
-#' corresponding to the number of cores to use. Defaults to `TRUE`.
 #' @param ... further arguments to be passed to or from other methods.
 #' @return A data.frame.
 #' @examples
@@ -259,20 +256,19 @@ icl_default <- function(post_prob, BIC){
 #' BLRT(res, replications = 4)
 #' }
 #' @export
-BLRT <- function(x, replications = 100, parallel = TRUE, ...){
+BLRT <- function(x, replications = 100, ...){
   UseMethod("BLRT", x)
 }
 
 # blrt_simple <- function(mod_simple, mod_complex, replications = 100, parallel = TRUE){
 #' @method BLRT mixture_list
 #' @export
-#' @importFrom foreach %dopar%
-BLRT.mixture_list <- function(x, replications = 100, parallel = TRUE, ...){
-  df_empty <- data.frame(lr = NA, df = NA, blrt_p = NA)
+BLRT.mixture_list <- function(x, replications = 100, ...){
+  df_empty <- data.frame(lr = NA, df = NA, blrt_p = NA, samples = NA)
   if(length(x) > 1){
     out <- mapply(function(smaller, bigger){
       tryCatch({
-        blrt_internal(smaller, bigger, replications = replications, parallel = parallel)
+        tidySEM:::blrt_internal(smaller, bigger, replications = replications)
       },
       error = function(e){
         df_empty })
@@ -281,6 +277,9 @@ BLRT.mixture_list <- function(x, replications = 100, parallel = TRUE, ...){
   } else {
     out <- df_empty
   }
+  out <- data.frame(null = c(NA, sapply(x[-length(x)], function(x){x@name})),
+                    alt = c(NA, sapply(x[-1], function(x){x@name})),
+                    out)
   rownames(out) <- NULL
   return(out)
 }
