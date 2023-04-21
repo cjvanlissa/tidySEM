@@ -499,20 +499,24 @@ mixture_starts <- function(model,
     }
   }
   data <- model@data$observed
-  if(any(sapply(data, inherits, what = "factor"))) return(model)
   if(!hasArg(splits)){
-    splits <- try({kmeans(x = data, centers = classes)$cluster}, silent = TRUE)
+    df_split <- data
+    isfac <- sapply(df_split, inherits, what = "factor")
+    if(any(isfac)){
+      df_split[which(isfac)] <- lapply(df_split[which(isfac)], as.integer)
+    }
+    splits <- try({kmeans(x = df_split, centers = classes)$cluster}, silent = TRUE)
     if(inherits(splits, "try-error")){
       message("Could not initialize clusters using K-means, switching to hierarchical clustering.")
-      splits <- try({cutree(hclust(dist(data)), k = classes)}, silent = TRUE)
+      splits <- try({cutree(hclust(dist(df_split)), k = classes)}, silent = TRUE)
       if(inherits(splits, "try-error")){
         stop("Could not initialize clusters using hierarchical clustering. Consider using a different clustering method, or imputing missing data.")
       }
     }
     #
-  } else {
-    stopifnot("Number of unique values in splits must be identical to the number of latent classes." = length(unique(splits)) == length(names(model@submodels)))
   }
+  stopifnot("Number of unique values in splits must be identical to the number of latent classes." = length(unique(splits)) == length(names(model@submodels)))
+
   tab_split <- table(splits)
   small_cats <- tab_split < 2
   if(any(small_cats)){
@@ -527,12 +531,32 @@ mixture_starts <- function(model,
     stop("Argument 'splits' does not identify a number of groups equal to 'classes'.")
   }
   # Order splits from largest number to smallest
-  splits <- as.integer(ordered(splits, levels = names(sort(table(splits), decreasing = TRUE))))
+  tab_split <- sort(table(splits), decreasing = TRUE)
+  splits <- as.integer(ordered(splits, levels = names(tab_split)))
 
   strts <- lapply(1:classes, function(i){
     thissub <- names(model@submodels)[i]
+    data_split <- data[splits == i, , drop = FALSE]
+    if(any(isfac)){
+      tabfreq <- lapply(data_split[which(isfac)], table)
+      if(any(unlist(tabfreq) == 0)){
+        tabfreq <- lapply(tabfreq, function(t){t[t==0]})
+        tabfreq <- tabfreq[sapply(tabfreq, length) > 0]
+        for(thisfac in names(tabfreq)){
+          for(thislev in names(tabfreq[[thisfac]])){
+            addcases <- which(data[[thisfac]] == thislev)
+            if(length(addcases) == 1){
+              addcases <- data[addcases, , drop = FALSE]
+            } else {
+              addcases <- data[sample(x = addcases, size = 1), , drop = FALSE]
+            }
+            data_split <- rbind(data_split, addcases)
+          }
+        }
+      }
+    }
     mxModel(model[[thissub]],
-            mxData(data[splits == i, , drop = FALSE], type = "raw"),
+            mxData(data_split, type = "raw"),
             mxFitFunctionML())
   })
   strts <- do.call(mxModel, c(list(model = "mg_starts", mxFitFunctionMultigroup(names(model@submodels)), strts)))
@@ -571,6 +595,7 @@ mixture_starts <- function(model,
       model[[i]][[mtx]]$values <- strts[[i]][[mtx]]$values
     }
   }
+  model@matrices$weights$values[] <- tab_split/tab_split[1]
   return(model)
 }
 
