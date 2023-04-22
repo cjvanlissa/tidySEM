@@ -268,7 +268,7 @@ BLRT.mixture_list <- function(x, replications = 100, ...){
   if(length(x) > 1){
     out <- mapply(function(smaller, bigger){
       tryCatch({
-        tidySEM:::blrt_internal(smaller, bigger, replications = replications)
+        blrt_internal(smaller, bigger, replications = replications)
       },
       error = function(e){
         df_empty })

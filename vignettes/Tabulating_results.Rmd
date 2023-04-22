@@ -66,6 +66,9 @@ The results can be tabulated using `table_results()`:
 
 ```{r}
 table_results(fit_lav)
+```
+
+```{r}
 table_fit(fit_lav)
 ```
 

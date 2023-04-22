@@ -1170,10 +1170,10 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
 
 match.call.defaults <- function(...) {
   call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
-  formals <- evalq(formals(), parent.frame(1))
+  myfor <- evalq(formals(), parent.frame(1))
 
-  for(i in setdiff(names(formals), names(call)))
-    call[i] <- list( formals[[i]] )
+  for(i in setdiff(names(myfor), names(call)))
+    call[i] <- list( myfor[[i]] )
 
 
   match.call(sys.function(sys.parent()), call)

@@ -7,21 +7,25 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE, cache = FALSE}
+
+```{r setup, include = FALSE}
+library("papaja")
+r_refs("r-references.bib")
 library(yaml)
 library(scales)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE,
-  warning = FALSE
+  warning = FALSE,
+  results = "hide",
+  tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
+
 run_everything = FALSE
+
 pkgdown <- FALSE
-```
-```{r eval = FALSE, echo = FALSE, results = "asis"}
-cat("This vignette has been stripped down to comply with CRAN package size policies. To view the complete vignette, including graphics, see the [package website](https://cjvanlissa.github.io/tidySEM).")
 ```
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
@@ -41,32 +45,39 @@ To load the data, simply attach the `tidySEM` package.
 For convenience, we assign the variables used for analysis to an object called `df`.
 As explained in the paper, the classes are quite different for lines, films, and fragments.
 For this reason, we here only use data from fragments.
-The indicators are fragments' length and width.
+The indicators are fragments' length and width in millimeters.
+The sample size was not planned.
 
 ```{r, echo = TRUE, eval=TRUE}
 # Load required packages
 library(tidySEM) 
 library(ggplot2)
 # Load data
-df_analyze <- alkema_microplastics[alkema_microplastics$category == "Fragment", ]
+df_analyze <- 
+  alkema_microplastics[alkema_microplastics$category == "Fragment", ]
 df <- df_analyze[ ,c("length", "width")]
 ```
 
-## Examining the Data
+## Descriptive statistics
 
 As per the best practices,
 the first step in LCA is examining the observed data.
 We use `tidySEM::descriptives()` to describe the data numerically.
-Because all items are categorical,
-we remove columns for continuous data to de-clutter the table:
+Because all items are continuous,
+we remove columns for categorical data to de-clutter the table:
 
 ```{r tabdesc, echo = TRUE, eval=TRUE, results='asis'}
 desc <- tidySEM::descriptives(df)
-desc <- desc[, c("name", "type", "n", "missing", "unique", 
+desc <- desc[, c("name", "type", "n", "unique", 
 "mean", "median", "sd", "min", "max", "skew_2se", "kurt_2se")]
-knitr::kable(desc, caption = "Descriptive statistics")
+papaja::apa_table(desc, caption = "Descriptive statistics")
 ```
 
+The data are correctly coded as `numeric`
+and the distributional characteristics match the intended measurement level.
+The variable scales are comparable (both in millimeters and no large discrepancies between variances).
+There are no missing values; if any variables had missing values, we would report an MCAR test with `mice::mcar()`,
+and explain that missing data are accounted for using FIML.
 Additionally, we can plot the data.
 The `ggplot2` function `geom_density()` is useful to visualize continuous data:
 
@@ -89,19 +100,16 @@ p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("plot_gmm_desc.svg", p, device = "svg", width = 100, height = 100, units = "mm")
+ggsave("appendices/plot_gmm_desc.pdf", p, device = "pdf", width = 100, height = 100, units = "mm")
 ```
 ```{r figdesc, echo = FALSE, eval = pkgdown}
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
                    timevar = "Variable")
-knitr::include_graphics("plot_gmm_desc.svg")
+knitr::include_graphics("appendices/plot_gmm_desc.pdf")
 ```
 
-The data are correctly coded as `numeric`.
-There are no missing values; if any variables had missing values, we would report an MCAR test with `mice::mcar()`,
-and explain that missing data are accounted for using FIML.
 Both the table above and the density plot indicate that the data are extremely right-skewed and kurtotic.
 With this in mind, it can be useful to transform and rescale the data.
 We will use a log transformation.
@@ -119,10 +127,10 @@ p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("plot_gmm_desc_log.svg", p, device = "svg", width = 100, height = 100, units = "mm")
+ggsave("appendices/plot_gmm_desc_log.pdf", p, device = "pdf", width = 100, height = 100, units = "mm")
 ```
 ```{r figdesclog, echo = FALSE, eval = pkgdown}
-knitr::include_graphics("plot_gmm_desc_log.svg")
+knitr::include_graphics("appendices/plot_gmm_desc_log.pdf")
 ```
 
 The log transformation addresses the aforementioned concerns regarding skew and kurtosis.
@@ -142,10 +150,10 @@ names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
 p <- ggplot(df, aes(x = length, y = width)) +
   geom_point(alpha = .1) +
   theme_bw()
-ggsave("plot_gmm_scatter.svg", p, device = "svg", width = 100, height = 100, units = "mm")
+ggsave("appendices/plot_gmm_scatter.pdf", p, device = "pdf", width = 100, height = 100, units = "mm")
 ```
 ```{r figscatter, eval = pkgdown, echo = FALSE}
-knitr::include_graphics("plot_gmm_scatter.svg")
+knitr::include_graphics("appendices/plot_gmm_scatter.pdf")
 ```
 
 <!-- As evident from the scatterplot, there is a very strong linear tend in the data. -->
@@ -169,10 +177,12 @@ Its default settings are appropriate for LPA, assuming fixed variances across cl
 Its arguments are `data` and number of `classes`.
 All variables in `data` are included in the analysis,
 which is why we first selected the indicator variables.
+The models are estimated using simulated annealing,
+with start values determined via initial K-means clustering.
 
 As this is an exploratory LCA,
 we will conduct a rather extensive search across model specifications and number of classes.
-We will set the maximum number of classes $K$ to four; depending on the results, we can always choose to increase it later.
+We will set the maximum number of classes $K$ to four to limit computational demands.
 We set a seed to ensure replicable results.
 
 As the analysis takes a long time to compute,
@@ -198,14 +208,17 @@ res <- mx_profiles(data = df,
                    covariances = c("zero", "equal",
                                    "varying"),
                    expand_grid = TRUE)
-saveRDS(res, "res_gmm.RData")
+saveRDS(res, "appendices/res_gmm.RData")
 fit <- table_fit(res)
 fit$par_ratio <- (5605*fit$n_min) / (fit$Parameters/fit$Classes)
-saveRDS(fit, "gmm_tabfit.RData")
+saveRDS(fit, "appendices/gmm_tabfit.RData")
 #"Warning: In model 'mix4' Optimizer returned a non-zero status code 6. The model does not satisfy the first-order optimality conditions to the required accuracy, and no improved point for the merit function could be found during the final linesearch (Mx status RED)"
 ```
-```{r eval = TRUE, echo = FALSE}
-fit <- readRDS("gmm_tabfit.RData")
+```{r eval = FALSE, echo = FALSE}
+fit <- readRDS("appendices/gmm_tabfit.RData")
+fit$np_ratio <- fit$n / fit$Parameters
+fit$np_local <- (fit$n*fit$n_min) / ((fit$Parameters - (fit$Classes-1))/fit$Classes)
+fit[c("lmr_lr", "lmr_p")] <- NULL
 ```
 
 <!-- Note that one model (the most complex one) returns the following warning: -->
@@ -223,6 +236,7 @@ fit <- readRDS("gmm_tabfit.RData")
 To compare the fit of the estimated models,
 we create a model fit table using
 `table_fit()`.
+We will use the BIC for class enumeration.
 
 ```{r echo = TRUE, eval=F}
 fit <- table_fit(res)
@@ -231,11 +245,11 @@ fit <- table_fit(res)
 First, we determine whether any models can be disqualified.
 There were no indications of convergence problems during estimation,
 so this is not a reason to disqualify solutions.
-Next, we check for local identifiability.
-The sample size is `5605`.
-We can calculate the ratio of observations to parameters and append it to the fit table:
+Next, we check for global and local identifiability.
+The global ratio of observations per parametrer is large, as the minimum `np_ratio` is 244.
+The smallest ratio of class size to class-specific parameters is 18 (see `np_local`), which is no cause for concern.
 
-```{r echo = TRUE, eval = FALSE}
+```{r echo = FALSE, eval = FALSE}
 fit$par_ratio <- (5605*fit$n_min) / (fit$Parameters/fit$Classes)
 fit[ , c("Name", "LL", "Parameters", "par_ratio",
          "BIC", "Entropy",
@@ -243,23 +257,27 @@ fit[ , c("Name", "LL", "Parameters", "par_ratio",
          "n_min", "n_max",
          "lmr_p")]
 ```
-```{r tabfit, echo = FALSE, eval = TRUE}
-fit$par_ratio <- (5605*fit$n_min) / (fit$Parameters/fit$Classes)
-knitr::kable(fit[ , c("Name", "LL", "Parameters", "par_ratio",
+```{r tabfit, echo = TRUE, eval = FALSE}
+tbl <- fit[ , c("Name", "LL", "Parameters",
          "BIC", "Entropy",
-         "prob_min", "prob_max", 
-         "n_min", "n_max",
-         "lmr_p")], caption = "Model fit table")
+         "prob_min",
+         "n_min",
+         #"lmr_p"
+         "np_ratio", "np_local"
+         )]
+names(tbl) <- c("Name", "LL", "p", "BIC", "Ent.",
+         "p_min",
+         "n_min",
+         #"lmr_p", 
+         "np_ratio", "np_local")
+papaja::apa_table(tbl, caption = "Model fit table. Some columns removed to fit page.")
 ```
-
-As can be seen from the fit table,
-the lowest ratio of observations to parameters is 18, which is no cause for concern.
 
 However, note that we have a very large sample, and for many models, the smallest class comprises only a very small percentage of the total sample.
 Since the purpose of this analysis is to better represent the distribution of ocean microplastics, we can wonder whether it makes sense to allow for classes that only describe a small percentage of the cases.
-We therefore set a lower bound for class size and only consider solutions that capture at least 10% of the sample.
+We therefore only consider solutions that capture at least 10% of the sample.
 
-An interesting characteristic of this data is that
+Another interesting characteristic of this data is that
 the BIC and the entropy are strongly correlated.
 The raw correlation between these two metrics is .66, `cor(fit$BIC, fit$Entropy)`.
 If we omit the 1-class models, for which entropy is technically not defined,
@@ -286,16 +304,15 @@ plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 ```{r echo = FALSE, eval = run_everything}
 p <- plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("gmm_plotfit.svg", p, device = "svg", width = 100, height = 100, units = "mm", scale = 1)
+ggsave("appendices/gmm_plotfit.pdf", p, device = "pdf", width = 100, height = 100, units = "mm", scale = 1)
 ```
 ```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("gmm_plotfit.svg")
+knitr::include_graphics("appendices/gmm_plotfit.pdf")
 ```
 
 Looking at the blocks of 1-4 class models for each model specification,
 it appears that the BIC keeps decreasing with the addition of more classes.
 Across the blocks, the BIC keeps decreasing with increasingly complex model specifications.
-Similarly, all LMR tests are significant, indicating a preference for more complex models.
 
 Out of the 16 models that remain after removing those with < 10% of cases in the smallest class,
 one model stands out:
@@ -306,9 +323,9 @@ We thus select this as our final model.
 
 ## Interpreting the Final Class Solution
 
-and extract the classification probabilities and model results.
 We here request the estimates (`est`) and standardized estimates `std_est`, because the latter allows us to interpret the correlations between length and width.
-Note that there is little sense in requesting the standard errors and p-values: With a sample size of 5606, every parameter is significantly different from zero.
+Note that standard errors and p-values are relatively uninformative:
+With a sample size of 5606, every parameter is significantly different from zero.
 
 ```{r echo = TRUE, eval = FALSE}
 res_bic <- res[["free var, free cov 2"]]
@@ -316,15 +333,15 @@ cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est", "std_est"))
 results
 ```
-```{r echo = TRUE, eval = run_everything}
+```{r echo = FALSE, eval = run_everything}
 res_bic <- res[["free var, free cov 2"]]
 cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est", "est_std"))
-saveRDS(results, "gmm_results.RData")
+saveRDS(results, "appendices/gmm_results.RData")
 ```
-```{r eval = TRUE, echo = FALSE}
-results <- readRDS("gmm_results.RData")
-knitr::kable(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
+```{r eval = FALSE, echo = FALSE}
+results <- readRDS("appendices/gmm_results.RData")
+papaja::apa_table(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
 ```
 
 Interpreting the results is facilitated by examining a plot of the model and data.
@@ -336,10 +353,10 @@ plot_bivariate(res_bic)
 ```
 ```{r echo = FALSE, eval = run_everything}
 p <- plot_bivariate(res_bic)
-ggsave("gmm_bivariate_bic.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
+ggsave("appendices/gmm_bivariate_bic.pdf", p, device = "pdf", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
 ```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("gmm_bivariate_bic.svg")
+knitr::include_graphics("appendices/gmm_bivariate_bic.pdf")
 ```
 
 On the diagonal of the bivariate plot are weighted density plots:
@@ -351,9 +368,9 @@ class standard deviations indicated by lines,
 and covariances indicated by circles.
 
 The bivariate and marginal plots show that the classes are not clearly separable, as also evident from the low entropy.
-At the same time however, it is clear that the distributions are non-normal, and the second class accounts for some of this non-normality (there is a smaller 'bump' to the right of the mode, which could be the mean of a second normal distribution).
+At the same time however, it is clear that the observed distributions are non-normal, and the second class accounts for some of this non-normality (there is a smaller 'bump' to the right of the mode, which could be the mean of a second normal distribution).
 The first class (57%) accounts for smaller fragments, and the second class (43%) accounts for some of the right-skew in fragments' length and width.
-We can simply label class 1 as *small fragments*,
+We label class 1 as *small fragments*,
 and class 2 as *larger fragments*.
 
 It also appears that the correlation between length and width is stronger for small fragments than for large fragments.
@@ -372,7 +389,9 @@ Finally, we may want to compare the different classes on auxiliary variables or 
 The `BCH()` function applies three-step analysis,
 which compares the classes using a multi-group model,
 controlling for classification error.
-For example, we can test whether polymer type differs between the two classes:
+For example, we can test whether polymer type differs between the two classes.
+Because polymer type is a nominal variable,
+we must convert it to dummies and estimate a threshold for each dummy:
 
 ```{r echo = TRUE, eval=FALSE}
 df_pt <- mx_dummies(df_analyze$poly_type)
@@ -387,10 +406,10 @@ aux_pt <- BCH(res_final, model = "poly_typeOther | t1
                                   poly_typePE | t1
                                   poly_typePP | t1", data = df_pt)
 aux_pt <- mxTryHardOrdinal(aux_pt)
-saveRDS(aux_pt, "gmm_aux_pt.RData")
+saveRDS(aux_pt, "appendices/gmm_aux_pt.RData")
 ```
 ```{r echo = FALSE, eval=FALSE}
-aux_pt <- readRDS("gmm_aux_pt.RData")
+aux_pt <- readRDS("appendices/gmm_aux_pt.RData")
 ```
 
 To obtain an omnibus likelihood ratio test of the significance of the differences in polymer type across classes,
@@ -400,8 +419,18 @@ The results can be reported in probability scale using `table_prob(aux_pt)`.
 To test differences for specific polymer types, we can use Wald tests:
 
 ```{r echo = TRUE, eval = FALSE}
-wald_test(aux_pt, "class1.Thresholds[1,1] = class2.Thresholds[1,1];class1.Thresholds[1,2] = class2.Thresholds[1,2];class1.Thresholds[1,3] = class2.Thresholds[1,3]")
+wald_test(aux_pt, "class1.Thresholds[1,1] = class2.Thresholds[1,1];
+          class1.Thresholds[1,2] = class2.Thresholds[1,2];
+          class1.Thresholds[1,3] = class2.Thresholds[1,3]")
 ```
 
 The results indicate that there is no significant difference in the prevalence of "Other" polymer types across classes.
 However, PE is significantly more prevalent in class 1, and PP is significantly more prevalent in class 2.
+
+
+<!-- \newpage -->
+
+<!-- # References -->
+
+<!-- ::: {#refs custom-style="Bibliography"} -->
+<!-- ::: -->
