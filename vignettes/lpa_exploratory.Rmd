@@ -9,8 +9,6 @@ vignette: >
 
 
 ```{r setup, include = FALSE}
-library("papaja")
-r_refs("r-references.bib")
 library(yaml)
 library(scales)
 knitr::opts_chunk$set(
@@ -70,7 +68,7 @@ we remove columns for categorical data to de-clutter the table:
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "unique", 
 "mean", "median", "sd", "min", "max", "skew_2se", "kurt_2se")]
-papaja::apa_table(desc, caption = "Descriptive statistics")
+knitr::kable(desc, caption = "Descriptive statistics")
 ```
 
 The data are correctly coded as `numeric`
@@ -270,7 +268,7 @@ names(tbl) <- c("Name", "LL", "p", "BIC", "Ent.",
          "n_min",
          #"lmr_p", 
          "np_ratio", "np_local")
-papaja::apa_table(tbl, caption = "Model fit table. Some columns removed to fit page.")
+knitr::kable(tbl, caption = "Model fit table. Some columns removed to fit page.")
 ```
 
 However, note that we have a very large sample, and for many models, the smallest class comprises only a very small percentage of the total sample.
@@ -341,7 +339,7 @@ saveRDS(results, "appendices/gmm_results.RData")
 ```
 ```{r eval = FALSE, echo = FALSE}
 results <- readRDS("appendices/gmm_results.RData")
-papaja::apa_table(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
+knitr::kable(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
 ```
 
 Interpreting the results is facilitated by examining a plot of the model and data.

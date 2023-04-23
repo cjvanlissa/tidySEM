@@ -267,6 +267,7 @@ mx_lca <- function(data = NULL,
     })
     cl[["classes"]] <- classes
     cl[["model"]] <- model
+    cl[["data"]] <- data
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     out <- eval.parent(cl)
     # cl[["model"]] <- out
