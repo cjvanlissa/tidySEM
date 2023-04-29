@@ -1,37 +1,31 @@
 ---
-title: "Latent Class Analysis for Ordinal Indicators"
+title: "Tutorial: Latent Class Analysis for Ordinal Indicators"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Latent Class Analysis for Ordinal Indicators}
+  %\VignetteIndexEntry{Tutorial: Latent Class Analysis for Ordinal Indicators}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r, include = FALSE, cache = FALSE}
 library(yaml)
 library(scales)
+library(tidySEM)
+data("maene_identity")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE,
-  warning = FALSE,
-  results = "hide",
-  tidy.opts = list(width.cutoff = 60), tidy = TRUE
+  warning = FALSE
 )
 options(scipen = 1, digits = 2)
-if(!"build_site" %in% unlist(as.character(lapply(sys.calls(), `[[`, 1)))){
-  knitr::opts_chunk$set(
-  results = "markup"
-)
-}
-run_everything = isTRUE(getOption("run_everything"))
+run_everything = FALSE
 ```
 
 This is an example of exploratory LCA with ordinal indicators using `tidySEM`.
 The present example uses synthetic data based on a study by Maene and colleagues.
-In a convenience sample of Flemish (Belgian) high-school students with a migration background,
+In a sample of Flemish (Belgian) high-school students with a migration background,
 this study set out to identify distinct classes based on ordinal indicators of National, Regional, and Heritage identity.
-Sample size was not justified.
 
 The approach to class enumeration was semi-theory driven:
 The researchers expected to find profiles that were distinct on all three types of identity (national, regional, and heritage) - but the exact number of classes was not pre-specified (hypothesis 1).
@@ -56,6 +50,8 @@ df <- maene_identity[1:5]
 
 ## Examining the Data
 
+As per the best practices,
+the first step in LCA is examining the observed data.
 We use `tidySEM::descriptives()` to describe the data numerically.
 Because all items are categorical,
 we remove columns for continuous data to de-clutter the table:
@@ -67,14 +63,14 @@ desc <- desc[, c("name", "type", "n", "missing", "unique",
 ]
 desc
 ```
-```{r echo = FALSE, eval=run_everything}
+```{r echo = FALSE, eval=run_everything, results='asis'}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "missing", "unique", 
 "mode", "mode_value", "v")
 ]
 write.csv(desc, "lca_desc.csv", row.names = FALSE)
 ```
-```{r tabdesc, echo = FALSE, eval=TRUE}
+```{r tabdesc, echo = FALSE, eval=TRUE, results='asis'}
 desc <- read.csv("lca_desc.csv", stringsAsFactors = FALSE)
 knitr::kable(desc, caption = "Descriptive statistics for ordinal items")
 ```
@@ -99,11 +95,11 @@ p = ggplot(df_plot, aes(x = Value)) +
   geom_bar() +
   facet_wrap(~time, scales = "free")+
   theme_bw()
-ggsave("lca_plot_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave("lca_plot_desc.svg", p, device = "svg", width = 100, height = 100, units = "mm")
 ```
 
-```{r, echo = FALSE, eval=TRUE, fig.cap="Bar charts for ordinal indicators", out.width="80%"}
-knitr::include_graphics("lca_plot_desc.png")
+```{r, echo = FALSE, eval=TRUE, fig.cap="Bar charts for ordinal indicators"}
+knitr::include_graphics("lca_plot_desc.svg")
 ```
 
 As we can see, the `descriptives()` table provides invaluable information about the measurement level of the indicators,
@@ -111,15 +107,11 @@ which is used to specify the model correctly.
 If these data had not been coded as ordinal factors,
 these descriptive statistics would have revealed that each variable has only 5-10 unique values.
 The proportion of missing values is reported in the `"missing"` column.
-If any variables had missing values, we would report an MCAR test with `mice::mcar()`
+If any variables had missing values, we would report an MCAR test with `mice::mcar()`,
 and explain that missing data are accounted for using FIML.
 In our example, we see that there are no missing values, hence we
 proceed with our analysis.
-Note that the ethic identification variables are very right-skewed
-and some response categories have near-zero frequencies;
-this can cause problems in model specification and convergence.
-One potential solution would be to merge small adjacent categories.
-We will not do this here, however.
+Note that the ethic identification variables are very right-skewed.
 
 ## Conducting Latent Class Analysis
 
@@ -169,47 +161,51 @@ We also determine whether any models can be disqualified.
 
 ```{r echo = TRUE, eval=F}
 fit <- table_fit(res)
-fit[ , c("Name", "LL", "n", "Parameters", "BIC",
-"Entropy", "prob_min", "n_min", "np_ratio", 
-"np_local")]
+fit[ , c("Name", "LL", "Parameters", "n",
+         "BIC", "Entropy",
+         "prob_min", "prob_max", 
+         "n_min", "n_max",
+         "lmr_p")]
 ```
 ```{r echo = FALSE, eval = run_everything}
 fit <- table_fit(res)
 write.csv(fit, "lca_fit.csv", row.names = FALSE)
 ```
-```{r tabfit, echo = FALSE, eval = TRUE}
+```{r tabfit, echo = FALSE, eval = TRUE, results='asis'}
 fit <- read.csv("lca_fit.csv", stringsAsFactors = FALSE)
 class(fit) <- c("tidy_fit", "data.frame")
-knitr::kable(fit[ , c("Name", "LL", "n", "Parameters", "BIC",
-"Entropy", "prob_min", "n_min", "np_ratio", 
-"np_local")], caption = "Model fit table", digits = 2)
+knitr::kable(fit[ , c("Name", "LL", "Parameters", "n",
+         "BIC", "Entropy",
+         "prob_min", "prob_max", 
+         "n_min", "n_max",
+         "lmr_p")], caption = "Model fit table")
 ```
 
-Note that both the global and local ratio of cases to parameters is low;
-for models of 3 or more classes, there are just a few observations per parameter in the smallest class (see `np_local`).
+Next, we check for local identifiability by checking whether the size of the smallest class is consistently larger (about 5x as large) as the number of parameter per class.
+We can simply calculate this by running:
+
+```{r, echo = TRUE, eval = TRUE}
+(fit$n_min * 439) / ((fit$Parameters)/c(1:6))
+```
+
+Note that, for models of 3 or more classes, there are just a few observations per parameter in the smallest class.
 This is a good reason to disqualify those classes.
-We will eliminate classes 4-6 on those criteria,
+Here, we will eliminate classes 4-6 on those criteria,
 but in real data applications, the 3-class solution might also be disqualified.
 
 In terms of classification diagnostics,
-note that the entropy and the minimum classification probabilities are high for all models.
+note that the entropy is high for all models except the two-class model,
+and the minimum classification probabilities are high for all models.
 This indicates that all classes are distinct.
-
-## Class Enumeration
-
-### Using BIC
 
 Based on the BIC, we would prefer the 2-class model.
 This decision is also validated by a scree plot of the BIC,
 obtained by running `plot(fit)`.
 
-### Theoretical considerations
-
-Despite the BIC indicating that the 2-class model is best,
-upon examining the 2-class and 3-class solution,
-it was noted that theoretically crucial distinctions between ethnic, regional (Flemish), and national (Belgian) identity were not captured by the 2-class solution but were captured by the 3-class solution.
-Based on this theoretical consideration,
-the analysis proceeded with the 3-class solution.
+Note that the LMR test indicates that adding classes keeps significantly improving model fit, up until 6 classes.
+However, due to the aforementioned concerns about low numbers of cases per parameter in the smallest classes,
+we will not consider solutions with more than 3 classes.
+We thus proceed with the 3-class solution.
 
 ```{r echo = TRUE, eval = FALSE}
 res_final <- res[[3]]
@@ -245,7 +241,7 @@ tab <- table_prob(res_final)
 tab <- reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
 write.csv(tab, "lca_tab_prob.csv", row.names = FALSE)
 ```
-```{r, eval = TRUE, echo=FALSE}
+```{r, eval = TRUE, echo=FALSE, results='asis'}
 tab <- read.csv("lca_tab_prob.csv", stringsAsFactors = FALSE)
 knitr::kable(tab, caption = "Three-class model results in probability scale")
 ```
@@ -253,14 +249,14 @@ knitr::kable(tab, caption = "Three-class model results in probability scale")
 The results can also be interpreted by plotting the response probabilities:
 
 ```{r echo = TRUE, eval = FALSE}
-plot_prob(res_final, bw = TRUE)
+plot_prob(res_final)
 ```
 ```{r echo = FALSE, eval = run_everything}
-p <- plot_prob(res_final, bw = TRUE)
-ggsave("lca_prob.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
+p <- plot_prob(res_final)
+ggsave("lca_prob.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
 ```{r echo = FALSE, eval = TRUE, fig.cap="Probability plot", out.width="100%"}
-knitr::include_graphics("lca_prob.png")
+knitr::include_graphics("lca_prob.svg")
 ```
 
 Note that the first class (33%) has relatively high identification with the ethnic indicators and relatively low identification with Belgian and Flemish identity.
@@ -286,6 +282,7 @@ aux_dep <- BCH(res_final, data = maene_identity$depression)
 ```
 ```{r echo = FALSE, eval=run_everything}
 aux_dep <- BCH(res_final, data = maene_identity$depression)
+saveRDS(aux_dep, "lca_aux_dep.RData")
 ```
 ```{r echo = FALSE, eval=FALSE}
 aux_dep <- readRDS("lca_aux_dep.RData")
@@ -315,6 +312,7 @@ df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
 aux_model <- BCH(res_final, 
                  model = "depression ~ vict_teacher",
                  data = df_aux)
+saveRDS(aux_model, "lca_aux_model.RData")
 ```
 ```{r echo = FALSE, eval=FALSE}
 aux_model <- readRDS("lca_aux_model.RData")

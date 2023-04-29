@@ -1,15 +1,6 @@
 library(tidySEM)
 library(ggplot2)
-set.seed(1)
-n = 100
-C <- sample(c("Man", "Woman"), n, replace = TRUE, prob = c(.05, .95))
-means <- c(Man = 10, Woman = 7)
-X <- rnorm(n, mean = means[C], sd = 1)
-obsparam <- tapply(X, C, mean)
-est <- mx_profiles(data = data.frame(X), 1:3)
-ft <- table_fit(est)
-
-LBIC3 <- function(x){
+ics <- function(x){
   cp <- class_prob(x, type = "individual")
   m <- ordered(cp[["individual"]][, "predicted"], levels = 1:(ncol(cp[["individual"]])-1))
   ns <- table(m)
@@ -37,11 +28,69 @@ LBIC3 <- function(x){
   if(!p == length(coef(x))) stop("Incorrect parameter calculation.")
   locpen <- plocal * log(ns)
   weights <- 1/(ns/plocal)
+
+  # BIC
+  bic = x@output$Minus2LogLikelihood + p * log(n)
+  # ICL
+  z <- cp[["individual"]][, -ncol(cp[["individual"]]), drop = FALSE]
+  if(ncol(z) > 1){
+    C <- matrix(0, nrow = nrow(z), ncol = ncol(z))
+    m <- as.integer(as.character(m))
+    for(i in 1:nrow(z)){
+      C[i, m[i]] <- 1
+    }
+  } else {
+    C <- matrix(1, nrow = nrow(z), ncol = 1)
+  }
+  zlog <- log(z)
+  zlog[z <= 0] <- 0
+  icl <- bic - 2 * sum(C * zlog)
+
+  lbic = x@output$Minus2LogLikelihood + (p * log(n)) + (max(ns) / min(ns)) * sum(weights*locpen)
+  lbiclog = (x@output$Minus2LogLikelihood + (p * log(n)) + (log(max(ns) / min(ns)) * sum(weights*locpen)))
+  if(is.infinite(lbic)){
+    lbic <- -1*lbic
+    lbiclog <- -1*lbiclog
+  }
+
   c(
-    bic = x@output$Minus2LogLikelihood + p * log(n),
-    lbic = x@output$Minus2LogLikelihood + (p * log(n)) + (max(ns) / min(ns)) * sum(weights*locpen),
-    lbiclog = x@output$Minus2LogLikelihood + (p * log(n)) + (log(max(ns) / min(ns)) * sum(weights*locpen))
+    bic = bic,
+    lbic = lbic,
+    lbiclog = lbiclog,
+    icl = icl
   )
 }
 
-sapply(est, LBIC3)
+set.seed(2)
+C <- c(rep(1, 100), rep(2, 2))
+means <- c("1" = 0, "2" = 5)
+X <- data.frame(X = rnorm(length(C), mean = means[C], sd = 1))
+res <- mx_profiles(data = data.frame(X), 1:3)
+table_fit(res)
+apply(sapply(res, ics), 1, which.min)
+
+
+set.seed(2)
+C <- c(rep(1, 100), rep(2, 2))
+means <- c("1" = 0, "2" = 3)
+X <- data.frame(X = rnorm(length(C), mean = means[C], sd = 1))
+res <- mx_profiles(data = data.frame(X), 1:3)
+table_fit(res)
+apply(sapply(res, ics), 1, which.min)
+
+
+set.seed(2)
+C <- c(rep(1, 92), rep(2, 30))
+means <- c("1" = 0, "2" = 4)
+X <- data.frame(X = rnorm(length(C), mean = means[C], sd = 1))
+res <- mx_profiles(data = data.frame(X), 1:3)
+table_fit(res)
+apply(sapply(res, ics), 1, which.min)
+
+set.seed(2)
+C <- c(rep(1, 92), rep(2, 5))
+means <- c("1" = 0, "2" = 5)
+X <- data.frame(X = rnorm(length(C), mean = means[C], sd = 1))
+res <- mx_profiles(data = data.frame(X), 1:3)
+table_fit(res)
+apply(sapply(res, ics), 1, which.min)

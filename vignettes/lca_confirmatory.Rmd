@@ -7,27 +7,25 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE, cache = FALSE}
+```{r setup, include = FALSE}
 library(yaml)
 library(scales)
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE,
-  warning = FALSE
+  warning = FALSE,
+  results = "hide",
+  tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
-run_everything = FALSE
-if(!file.exists("lpa.yml")){
-  out <- list()
-} else {
-  out <- yaml::read_yaml("lpa.yml")
+if("build_site" %in% unlist(as.character(lapply(sys.calls(), `[[`, 1)))){
+  knitr::opts_chunk$set(
+  results = "markup"
+)
 }
-pkgdown <- FALSE
-```
-
-```{r eval = !pkgdown, echo = FALSE, results = "asis"}
-cat("This vignette has been stripped down to comply with CRAN package size policies. To view the complete vignette, including graphics, see the [package website](https://cjvanlissa.github.io/tidySEM).")
+run_everything = isTRUE(getOption("run_everything"))
 ```
 
 This is an example of confirmatory LPA using `tidySEM`.
@@ -35,8 +33,7 @@ The simulated data are based on work by Zegwaard and colleagues,
 who sought to establish a typology of caregivers who support a close other receiving outpatient psychological care.
 Qualitative research among experts resulted in a theory postulating the existence of four types of caregivers (translated from the original Dutch):
 
-
-**Balanced***
+**Balanced**
 
 > The balanced caregiver experiences relative balance between the costs and benefits of caring for a close other.
 
@@ -52,6 +49,8 @@ Qualitative research among experts resulted in a theory postulating the existenc
 
 > The entrapped caregiver strongly feels a sense of being entangled in responsibilities which are difficult to fulfill.
 
+The goal of this confirmatory study was to validate this hypothesized class solution in a sample of caregivers.
+A convenience sample was used, with no prior sample size justification.
 To view the data documentation,
 run the command `?tidySEM::zegwaard_carecompass` in the R console.
 
@@ -60,7 +59,6 @@ run the command `?tidySEM::zegwaard_carecompass` in the R console.
 To load the data, simply attach the `tidySEM` package.
 For convenience, we assign the variables used for analysis to an object called `df`.
 We first only use the four scales: `c("burdened", "trapped", "negaffect", "loneliness")`.
-`.
 
 ```{r, echo = TRUE, eval=TRUE}
 # Load required packages
@@ -70,22 +68,20 @@ library(ggplot2)
 df <- zegwaard_carecompass[, c("burdened", "trapped", "negaffect", "loneliness")]
 ```
 
-## Examining the Data
+## Descriptive statistics
 
-As per the best practices,
-the first step in LCA is examining the observed data.
 We use `tidySEM::descriptives()` to describe the data numerically.
 Because all scales are continuous,
 we select only columns for continuous data to de-clutter the table:
 
-```{r echo = TRUE, eval=FALSE, results='asis'}
+```{r echo = TRUE, eval=FALSE}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "n", "missing", "unique",
                  "mean", "median", "sd", "min", "max",
                  "skew_2se", "kurt_2se")]
 desc
 ```
-```{r tabdesc, echo = FALSE, eval=TRUE, results='asis'}
+```{r tabdesc, echo = FALSE, eval=TRUE}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "n", "missing", "unique",
                  "mean", "median", "sd", "min", "max",
@@ -127,13 +123,11 @@ p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("plot_lpa_desc.svg", p, device = "svg", width = 100, height = 100, units = "mm")
+ggsave("plot_lpa_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
-```{r figdesc, echo = FALSE, eval = pkgdown}
-knitr::include_graphics("plot_lpa_desc.svg")
+```{r figdesc, echo = FALSE, eval = TRUE, out.width="80%"}
+knitr::include_graphics("plot_lpa_desc.png")
 ```
-
-
 
 ## Conducting Latent Profile Analysis
 
@@ -167,7 +161,7 @@ fit <- read.csv("lpatabfit.csv", stringsAsFactors = FALSE)
 class(fit) <- c("tidy_fit", "data.frame")
 ```
 
-This analysis should produce some warnings about cluster initialization.
+This analysis should produce some messages about cluster initialization.
 These relate to the selection of starting values,
 which relies on the K-means algorithm and is not robust to missing data.
 The algorithm automatically switches to hierarchical clustering, no further action is required.
@@ -201,25 +195,82 @@ fit[ , c("Name", "LL", "Parameters", "n",
          "BIC", "Entropy",
          "prob_min", "prob_max", 
          "n_min", "n_max",
-         "lmr_p")]
+         "np_ratio", "np_local")]
 ```
 ```{r tabfit, echo = FALSE, eval = TRUE}
-knitr::kable(fit[ , c("Name", "LL", "Parameters", "n",
+tbl <- fit[ , c("Name", "LL", "Parameters", "n",
          "BIC", "Entropy",
          "prob_min", "prob_max", 
-         "n_min", "n_max",
-         "lmr_p")], caption = "Model fit table")
+         "n_min", "n_max")]
+names(tbl) <- c("Name", "LL", "p", "n",
+         "BIC", "Entropy",
+         "p_min", "p_max", 
+         "n_min", "n_max")
+knitr::kable(tbl, caption = "Model fit table")
 ```
 
-Class enumeration unambiguously indicates a preference for the 4-class solution:
+### Using ICs
+
 the 4-class solution has the lowest BIC,
 which means it is preferred over all other solutions including a 1-class solution and a solution with more classes.
-The p-values of the LMR LR test are significant for all pairwise model comparisons, except for the 5-class model.
 Note that a scree plot for the BIC can be plotted by calling `plot(fit)`.
 Following the elbow criterion, a three-class solution would also be defensible.
 The function `ic_weights(tab_compare)` allows us to compute IC weights;
 it indicates that, conditional on the set of models,
 the 4-class model has a posterior model probability of nearly 100%.
+
+### Using LMR tests
+
+If we conduct LMR tests, we find that the tests are significant for all pairwise model comparisons, except for the 5-class model:
+
+```{r lmr_table, echo = TRUE, eval=FALSE}
+lr_lmr(fit)
+```
+```{r tablmr, echo = FALSE, eval = TRUE}
+tbl <- lr_lmr(fit)
+tbl$Null <- c("", fit$Name[-nrow(fit)])
+tbl$Alt <- c(fit$Name)
+knitr::kable(tbl[, c("Null", "Alt", "lr", "lmr_lr", "df", "lmr_p")], caption = "LMR test table", digits = 2)
+```
+
+### Using BLRT tests
+
+We can also use the BLRT test.
+As it is very computationally expensive,
+we will use a low number of replications here.
+In practice, one might use a much higher number (1000+) for published research.
+Keep in mind that the p-value of the BLRT is subject to Monte Carlo error;
+if it fluctuates when analyses are replicated or its value is very close to the critical threshold, consider increasing the number of replications.
+
+To accelerate computations, we can use the `future` package for parallel computing (see `?plan` to select the appropriate back-end for your system).
+To track the function's progress,
+we use the `progressr` ecosystem,
+which allows users to choose how they want to be informed.
+The example below uses a progress bar:
+
+```{r eval = FALSE, echo = TRUE}
+library(future)
+library(progressr)
+plan(multisession) # Parallel processing for Windows
+handlers("progress") # Progress bar
+set.seed(1)
+res_blrt <- BLRT(res, replications = 20)
+```
+```{r eval = run_everything, echo = FALSE}
+library(future)
+library(progressr)
+plan(multisession) # Parallel processing for Windows
+handlers("progress") # Progress bar
+set.seed(1)
+res_blrt <- BLRT(res, replications = 20)
+write.csv(res_blrt, "appendixbresblrt.csv", row.names = FALSE)
+```
+```{r eval = TRUE, echo = FALSE}
+res_blrt <- read.csv("appendixbresblrt.csv", stringsAsFactors = FALSE)
+knitr::kable(res_blrt, caption = "BLRT test table", digits = 2)
+```
+
+In sum, across all class enumeration criteria, there is strong support for a 4-class solution.
 
 ## Optional: Alternative Model Specifications
 
@@ -268,7 +319,7 @@ out <- list(counts = cp$sum.posterior$proportion)
 ```
 
 The 4-class model yielded classes of reasonable size;
-the largest class comprised 33%,
+using `class_pro`the largest class comprised 33%,
 and the smallest comprised 16% of cases.
 However, the entropy was low, $S = .75$, indicating poor class separability.
 Furthermore, the posterior classification probability ranged from $[.81, .92]$, which means that at least some classes had a high classification error.
@@ -297,10 +348,10 @@ plot_bivariate(res_final)
 p <- plot_bivariate(res_final, return_list = TRUE)
 p[[1]] <- p[[1]] + scale_y_continuous(breaks= c(0, .1, .2, .3), labels = c(".0", ".1", ".2", ".3"))
 p <- tidySEM:::merge_corplots(p)
-ggsave("lpa_bivariate.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1.5)
+ggsave("lpa_bivariate.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
-```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("lpa_bivariate.svg")
+```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="80%"}
+knitr::include_graphics("lpa_bivariate.png")
 ```
 On the diagonal of the bivariate plot are weighted density plots:
 normal approximations of the density function of observed data,
@@ -330,6 +381,7 @@ this is why the entropy and classification probabilities are relatively low.
 Based on the bivariate plot, we can label class 1 as the *balanced* type (33%),
 class 2 as the *imbalanced* type (29%), class 3 as the *entrapped* type (22%),
 and class 4 as the *lonely* type (16%).
+Note however that the observed classes do not match the hypothesized pattern of class parameters exactly.
 
 ```{r echo = TRUE, eval = FALSE}
 plot_profiles(res_final)
@@ -340,15 +392,15 @@ p1 <- p1 + theme(legend.position = c(.85, .2))
 p2 <- plot_profiles(res_final)
 p2 <- p2 + theme(legend.position = "none")
 p <- ggpubr::ggarrange(p1, p2)
-ggsave("lpa_profiles.svg", p, device = "svg", width = 210, height = 100, units = "mm", scale = 1)
+ggsave("lpa_profiles.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1)
 ```
-```{r echo = FALSE, eval = pkgdown, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("lpa_profiles.svg")
+```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="80%"}
+knitr::include_graphics("lpa_profiles.png")
 ```
 
 ## Auxiliary Analyses
 
-Finally, we may want to compare the different classes on auxiliary variables or models.
+We may want to compare the different classes on auxiliary variables or models.
 The `BCH()` function applies three-step analysis,
 which compares the classes using a multi-group model,
 controlling for classification error.
@@ -381,7 +433,7 @@ It appears that the entrapped class disproportionately cares for female patients
 
 ### Comparing Auxiliary Models Across Classes
 
-Finally, we compare a simple model between classes.
+We can also compare a simple model between classes.
 Specifically, we will examine whether the distance predicts the frequency of visits differently across classes (treated as continuous).
 
 ```{r echo = TRUE, eval=FALSE}
@@ -407,7 +459,29 @@ use `lr_test(aux_model, compare = "A")`.
 The results indicate that there are no significant sex differences across classes, $\Delta LL(3) = 0.98, p = .81$.
 The results can be reported using `table_results(aux_model)`.
 
+## Predicting class membership
+
+This LCA model was developed to help classify care providers in a clinical context,
+so that mental healthcare professionals can provide tailored support to those who take care of their clients.
+In `tidySEM`, it is possible to predict class membership for new data.
+Imagine that we administer the care compass questionnaire to a new individual.
+We can assign their scale scores to a `data.frame`,
+and supply it to the `predict()` function via the `newdata` argument.
+The result includes the individual's most likely class,
+as well as posterior probabilities for all classes.
+
+```{r echo = TRUE, eval = FALSE}
+df_new <- data.frame(
+  burdened = 2,
+  trapped = 0.5,
+  negaffect = 1.5,
+  loneliness = 4
+)
+predict(res_final, newdata = df_new)
+```
 ```{r echo = FALSE, eval = TRUE}
-yaml::write_yaml(out, "lpa.yml")
+structure(c(0.000808074819286418, 1.35412723878036e-15, 0.999191879285034, 
+4.58956785816116e-08, 3), dim = c(1L, 5L), dimnames = list(NULL, 
+    c("class1", "class2", "class3", "class4", "predicted")))
 ```
 

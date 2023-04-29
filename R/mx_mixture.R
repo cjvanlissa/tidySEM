@@ -122,6 +122,7 @@ mx_profiles <- function(data = NULL,
   cl[[1L]] <- str2lang("tidySEM:::mx_mixture")
   if("variances" %in% names(cl)) cl[["variances"]] <- NULL
   if("covariances" %in% names(cl)) cl[["covariances"]] <- NULL
+  cl[["data"]] <- data
   if(length(variances) == 1){
     cl[["model"]] <- profile_syntax(variances, covariances, names(data))
     out <- eval.parent(cl)
@@ -321,6 +322,7 @@ mx_mixture.character <- function(model,
     })
     cl[["classes"]] <- classes
     cl[["model"]] <- model
+    cl[["data"]] <- data
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     out <- eval.parent(cl)
     cl[["model"]] <- out
@@ -386,6 +388,7 @@ mx_mixture.list <- function(model,
   if(run){
     cl[["model"]] <- model
     cl[["classes"]] <- classes
+    cl[["data"]] <- data
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     cl[["model"]] <- eval.parent(cl)
     cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
