@@ -24,7 +24,7 @@ if("build_site" %in% unlist(as.character(lapply(sys.calls(), `[[`, 1)))){
   results = "markup"
 )
 }
-run_everything = isTRUE(getOption("run_everything"))
+run_everything = as.logical(readLines("run_everything.txt"))
 ```
 
 This vignette illustrated `tidySEM`'s ability to perform latent class growth analysis, or growth mixture modeling.

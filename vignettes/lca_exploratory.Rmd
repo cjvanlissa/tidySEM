@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 )
 options(scipen = 1, digits = 2)
 
-run_everything = isTRUE(getOption("run_everything"))
+run_everything = as.logical(readLines("run_everything.txt"))
 ```
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
@@ -62,7 +62,7 @@ We use `tidySEM::descriptives()` to describe the data numerically.
 Because all items are continuous,
 we remove columns for categorical data to de-clutter the table:
 
-```{r tabdesc, echo = TRUE, eval=TRUE, results='asis'}
+```{r tabdesc, echo = TRUE, eval=TRUE}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "unique", 
 "mean", "median", "sd", "min", "max", "skew_2se", "kurt_2se")]
@@ -96,14 +96,14 @@ p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("appendices/plot_gmm_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave("plot_gmm_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
 ```{r figdesc, echo = FALSE, eval = TRUE}
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
                    timevar = "Variable")
-knitr::include_graphics("appendices/plot_gmm_desc.png")
+knitr::include_graphics("plot_gmm_desc.png")
 ```
 
 Both the table above and the density plot indicate that the data are extremely right-skewed and kurtotic.
@@ -123,10 +123,10 @@ p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("appendices/plot_gmm_desc_log.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave("plot_gmm_desc_log.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
 ```{r figdesclog, echo = FALSE, eval = TRUE}
-knitr::include_graphics("appendices/plot_gmm_desc_log.png")
+knitr::include_graphics("plot_gmm_desc_log.png")
 ```
 
 The log transformation addresses the aforementioned concerns regarding skew and kurtosis.
@@ -146,10 +146,10 @@ names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
 p <- ggplot(df, aes(x = length, y = width)) +
   geom_point(alpha = .1) +
   theme_bw()
-ggsave("appendices/plot_gmm_scatter.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave("plot_gmm_scatter.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
 ```{r figscatter, eval = TRUE, echo = FALSE}
-knitr::include_graphics("appendices/plot_gmm_scatter.png")
+knitr::include_graphics("plot_gmm_scatter.png")
 ```
 
 <!-- As evident from the scatterplot, there is a very strong linear tend in the data. -->
@@ -202,13 +202,13 @@ res <- mx_profiles(data = df,
                    variances = c("equal", "varying"),
                    covariances = c("equal", "varying"),
                    expand_grid = TRUE)
-saveRDS(res, "appendices/res_gmm.RData")
+saveRDS(res, "res_gmm.RData")
 fit <- table_fit(res)
-saveRDS(fit, "appendices/gmm_tabfit.RData")
+saveRDS(fit, "gmm_tabfit.RData")
 #"Warning: In model 'mix4' Optimizer returned a non-zero status code 6. The model does not satisfy the first-order optimality conditions to the required accuracy, and no improved point for the merit function could be found during the final linesearch (Mx status RED)"
 ```
 ```{r eval = TRUE, echo = FALSE}
-fit <- readRDS("appendices/gmm_tabfit.RData")
+fit <- readRDS("gmm_tabfit.RData")
 ```
 
 <!-- Note that one model (the most complex one) returns the following warning: -->
@@ -285,10 +285,10 @@ plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 ```{r echo = FALSE, eval = run_everything}
 p <- plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("appendices/gmm_plotfit.png", p, device = "png", width = 100, height = 100, units = "mm", scale = 1)
+ggsave("gmm_plotfit.png", p, device = "png", width = 100, height = 100, units = "mm", scale = 1)
 ```
 ```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("appendices/gmm_plotfit.png")
+knitr::include_graphics("gmm_plotfit.png")
 ```
 
 Looking at the blocks of 1-4 class models for each model specification,
@@ -318,10 +318,10 @@ results
 res_bic <- res[["free var, free cov 2"]]
 cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est", "est_std"))
-saveRDS(results, "appendices/gmm_results.RData")
+saveRDS(results, "gmm_results.RData")
 ```
 ```{r eval = TRUE, echo = FALSE}
-results <- readRDS("appendices/gmm_results.RData")
+results <- readRDS("gmm_results.RData")
 knitr::kable(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
 ```
 
@@ -334,10 +334,10 @@ plot_bivariate(res_bic)
 ```
 ```{r echo = FALSE, eval = run_everything}
 p <- plot_bivariate(res_bic)
-ggsave("appendices/gmm_bivariate_bic.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
+ggsave("gmm_bivariate_bic.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
 ```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("appendices/gmm_bivariate_bic.png")
+knitr::include_graphics("gmm_bivariate_bic.png")
 ```
 
 On the diagonal of the bivariate plot are weighted density plots:
@@ -383,14 +383,14 @@ aux_pt <- mxTryHardOrdinal(aux_pt)
 ```
 ```{r echo = FALSE, eval=run_everything}
 df_pt <- mx_dummies(df_analyze$poly_type)
-aux_pt <- BCH(res_final, model = "poly_typeOther | t1
+aux_pt <- BCH(res_bic, model = "poly_typeOther | t1
                                   poly_typePE | t1
                                   poly_typePP | t1", data = df_pt)
 aux_pt <- mxTryHardOrdinal(aux_pt)
-saveRDS(aux_pt, "appendices/gmm_aux_pt.RData")
+saveRDS(aux_pt, "gmm_aux_pt.RData")
 ```
 ```{r echo = FALSE, eval=FALSE}
-aux_pt <- readRDS("appendices/gmm_aux_pt.RData")
+aux_pt <- readRDS("gmm_aux_pt.RData")
 ```
 
 To obtain an omnibus likelihood ratio test of the significance of the differences in polymer type across classes,
@@ -407,17 +407,3 @@ wald_test(aux_pt, "class1.Thresholds[1,1] = class2.Thresholds[1,1];
 
 The results indicate that there is no significant difference in the prevalence of "Other" polymer types across classes.
 However, PE is significantly more prevalent in class 1, and PP is significantly more prevalent in class 2.
-
-
-<!-- \newpage -->
-
-<!-- # References -->
-
-<!-- ::: {#refs custom-style="Bibliography"} -->
-<!-- ::: -->
-
-## R session
-
-```{r echo = TRUE, eval=TRUE}
-sessionInfo()
-```
