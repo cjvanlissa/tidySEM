@@ -208,11 +208,12 @@ res <- mx_profiles(data = df,
                    expand_grid = TRUE)
 saveRDS(res, "res_gmm.RData")
 fit <- table_fit(res)
-saveRDS(fit, "gmm_tabfit.RData")
+write.csv(fit, "gmm_tabfit.csv", row.names = FALSE)
 #"Warning: In model 'mix4' Optimizer returned a non-zero status code 6. The model does not satisfy the first-order optimality conditions to the required accuracy, and no improved point for the merit function could be found during the final linesearch (Mx status RED)"
 ```
 ```{r eval = TRUE, echo = FALSE}
-fit <- readRDS("gmm_tabfit.RData")
+fit <- read.csv("gmm_tabfit.csv", stringsAsFactors = FALSE)
+class(fit) <- c("tidy_fit", "data.frame")
 ```
 
 <!-- Note that one model (the most complex one) returns the following warning: -->

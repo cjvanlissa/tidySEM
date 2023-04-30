@@ -265,7 +265,7 @@ s ~~ 0*step", classes = 1:5,
 res_step[[1]] <- mxTryHardWideSearch(res_step[[1]], extraTries = 50)
 saveRDS(res_step, "res_step.RData")
 fit <- table_fit(res_step)
-saveRDS(fit, "lcga_fit.RData")
+write.csv(fit, "lcga_fit.csv", row.names = FALSE)
 ```
 ```{r, echo = FALSE, eval = FALSE}
 res_step <- readRDS("res_step.RData")
@@ -303,7 +303,8 @@ tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy", "prob_min",
 ```
 ```{r tabfit, eval = TRUE, echo = FALSE}
 # Get fit table fit
-tab_fit <- readRDS("lcga_fit.RData")
+tab_fit <- read.csv("lcga_fit.csv", stringsAsFactors = FALSE)
+class(tab_fit) <- c("tidy_fit", "data.frame")
 knitr::kable(tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy", "prob_min", "n_min")], digits = 2, caption = "Fit of LCGA models")
 ```
 
