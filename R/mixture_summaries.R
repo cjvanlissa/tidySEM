@@ -19,7 +19,7 @@ get_fit <- function(x, ...) {
 
 
 
-calc_fitindices <- function(model, fitindices, ...){
+calc_fitindices <- function(model, ...){
   UseMethod("calc_fitindices", model)
 }
 

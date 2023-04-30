@@ -207,7 +207,7 @@ internal_table_mplusmodel <- function(x, parameters, digits = 2, format_numeric 
   value_columns <- names(results)[can_be_numeric(results)]
   var_classes <- sapply(results[value_columns], class)
   results[value_columns[which(var_classes == "character")]] <- lapply(results[value_columns[which(var_classes == "character")]], as.numeric)
-  results[value_columns[which(var_classes == "factor")]] <- lapply(results[value_columns[which(var_classes == "factor")]], as.numeric.factor)
+  results[value_columns[which(var_classes == "factor")]] <- lapply(results[value_columns[which(var_classes == "factor")]], as_numeric_factor)
 
   constrained_rows <- results$pval == 999
 

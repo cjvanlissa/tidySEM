@@ -126,29 +126,29 @@ as_lavaan.tidy_sem <- function(x, ...){
   tab[, -drop_args]
 }
 
-as_lavaan.tidy_sem3 <- function(x, ...){
-  if("group" %in% names(x$syntax)){
-    stop("Develop")
-  }
-  if("level" %in% names(x$syntax)){
-    stop("Develop")
-  }
-  x$syntax$label <- paste0("lab", 1:nrow(x$syntax))
-  x$syntax$rhs[x$syntax$op == "~1"] <- 1
-  x$syntax$op[x$syntax$op == "~1"] <- "~"
-  paste0(x$syntax[["lhs"]], " ", x$syntax[["op"]], " ", ifelse(x$syntax[["free"]], x$syntax[["label"]], x$syntax[["value"]]), " * ", x$syntax[["rhs"]])
-}
-
-as_lavaan.tidy_sem2 <- function(x, ...){
-  Args <- as.list(match.call()[-1])
-  mplus_syntax <- do.call(as_mplus, Args)
-  out <- paste0(mplus_syntax, collapse = "\n")
-  out <- mplus2lavaan.modelSyntax(out)
-  out <- strsplit(out, "\n")[[1]]
-  means <- grepl("^0 ~", out)
-  if(any(means)){
-    mplus_syntax[means]
-    out[means] <- gsub("^0", gsub("^\\[(.+)[@\\*].*$", "\\1", mplus_syntax[means]), out[means])
-  }
-  out
-}
+# as_lavaan.tidy_sem3 <- function(x, ...){
+#   if("group" %in% names(x$syntax)){
+#     stop("Develop")
+#   }
+#   if("level" %in% names(x$syntax)){
+#     stop("Develop")
+#   }
+#   x$syntax$label <- paste0("lab", 1:nrow(x$syntax))
+#   x$syntax$rhs[x$syntax$op == "~1"] <- 1
+#   x$syntax$op[x$syntax$op == "~1"] <- "~"
+#   paste0(x$syntax[["lhs"]], " ", x$syntax[["op"]], " ", ifelse(x$syntax[["free"]], x$syntax[["label"]], x$syntax[["value"]]), " * ", x$syntax[["rhs"]])
+# }
+#
+# as_lavaan.tidy_sem2 <- function(x, ...){
+#   Args <- as.list(match.call()[-1])
+#   mplus_syntax <- do.call(as_mplus, Args)
+#   out <- paste0(mplus_syntax, collapse = "\n")
+#   out <- mplus2lavaan.modelSyntax(out)
+#   out <- strsplit(out, "\n")[[1]]
+#   means <- grepl("^0 ~", out)
+#   if(any(means)){
+#     mplus_syntax[means]
+#     out[means] <- gsub("^0", gsub("^\\[(.+)[@\\*].*$", "\\1", mplus_syntax[means]), out[means])
+#   }
+#   out
+# }

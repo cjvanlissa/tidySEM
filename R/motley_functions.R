@@ -215,7 +215,7 @@ format_numeric <- function(x, digits = 2) {
 #   print(sort(theloadings))
 # }
 
-as.numeric.factor <- function(x){
+as_numeric_factor <- function(x){
   as.numeric(levels(x))[x]
 }
 
