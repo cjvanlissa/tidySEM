@@ -323,10 +323,10 @@ results
 res_bic <- res[["free var, free cov 2"]]
 cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est", "est_std"))
-saveRDS(results, "gmm_results.RData")
+write.csv(results, "gmm_results.csv", row.names = FALSE)
 ```
 ```{r eval = TRUE, echo = FALSE}
-results <- readRDS("gmm_results.RData")
+results <- read.csv("gmm_results.csv", stringsAsFactors = FALSE)
 knitr::kable(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
 ```
 
