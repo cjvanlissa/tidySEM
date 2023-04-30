@@ -9,7 +9,8 @@ status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.or
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](https://r-pkg.org/pkg/tidySEM)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![R-CMD-check](https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r)](https://app.codecov.io/gh/cjvanlissa/tidySEM)
+[![Codecov test
+coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://app.codecov.io/gh/cjvanlissa/tidySEM?branch=master)
 [![Contributor
 Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)-->

@@ -26,3 +26,4 @@ R/data_types\.md
 CODE_OF_CONDUCT.md
 ^CRAN-SUBMISSION$
 ^vignettes/*\.svg$
+^codecov\.yml$
