@@ -18,7 +18,7 @@ mixture models."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -36,16 +36,16 @@ mixture models."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+      <a href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+      <a href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
-      <a href="../articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+      <a href="../articles/lca_lcga.html">Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="../articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
+      <a href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -76,7 +76,7 @@ mixture models."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Conduct Bootstrapped Likelihood Ratio Test</h1>
-    <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/R/mixture_summaries.R" class="external-link"><code>R/mixture_summaries.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/R/blrt.R" class="external-link"><code>R/blrt.R</code></a></small>
     <div class="hidden name"><code>BLRT.Rd</code></div>
     </div>
 
@@ -86,13 +86,18 @@ mixture models.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BLRT</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BLRT</span><span class="op">(</span><span class="va">x</span>, replications <span class="op">=</span> <span class="fl">100</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object for which a method exists.</p></dd>
+
+
+<dt>replications</dt>
+<dd><p>Integer reflecting the number of bootstrapped
+replications, defaults to <code>100</code>.</p></dd>
 
 
 <dt>...</dt>
@@ -129,7 +134,7 @@ mixture models.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

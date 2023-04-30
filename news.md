@@ -1,13 +1,13 @@
 # tidySEM 0.2.4
 
-* Fixed bug in plot_profiles() when covariances are free
-* Improved starting values for mixture models with free covariances (check and 
-  fix non-positive definite vcov matrices)
-* Documentation incorrectly referred to data_mixture_ordinal, instead of
-  data_mix_ordinal
-* Added legend to plot_probs()
-* Added np_ratio and np_local to table_fit() output for mixture models
-* Reimplement BLRT() to avoid slow OpenMx implementation
+* Fixed bug in `plot_profiles()` when covariances are free
+* Improved starting values for latent class analysis
+* Documentation incorrectly referred to `data_mixture_ordinal`, instead of
+  `data_mix_ordinal`
+* Added legend to `plot_probs()`
+* Added `np_ratio` and `np_local` to `table_fit()` output for mixture models
+* Reimplement `BLRT()` to avoid slow OpenMx implementation
+* Add functions `lr_test()` and `lr_lmr()`
 
 # tidySEM 0.2.3
 

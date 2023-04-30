@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -53,16 +53,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+      <a href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+      <a href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
-      <a href="../articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+      <a href="../articles/lca_lcga.html">Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="../articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
+      <a href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -113,8 +113,11 @@ models</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/" class="external-link">tidySEM</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: OpenMx</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'tidySEM':</span></span>
+<span><span class="co">#&gt;   method          from  </span></span>
+<span><span class="co">#&gt;   predict.MxModel OpenMx</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; This is lavaan 0.6-14</span></span>
+<span><span class="co">#&gt; This is lavaan 0.6-12</span></span>
 <span><span class="co">#&gt; lavaan is FREE software! Please report any bugs.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://michaelhallquist.github.io/MplusAutomation/" class="external-link">MplusAutomation</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Version:  1.1.0</span></span>
@@ -193,31 +196,30 @@ it helps to rename the variables:</p>
 <span><span class="co">#&gt; 33     Means.spe_3 5.37*** 0.06 0.00 [5.26, 5.49]</span></span>
 <span><span class="co">#&gt; 34       Means.vis    0.00 0.00 &lt;NA&gt; [0.00, 0.00]</span></span>
 <span><span class="co">#&gt; 35       Means.tex    0.00 0.00 &lt;NA&gt; [0.00, 0.00]</span></span>
-<span><span class="co">#&gt; 36       Means.spe    0.00 0.00 &lt;NA&gt; [0.00, 0.00]</span></span>
-<span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">fit_lav</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 36       Means.spe    0.00 0.00 &lt;NA&gt; [0.00, 0.00]</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">fit_lav</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      Name Parameters      fmin    chisq df       pvalue baseline.chisq</span></span>
 <span><span class="co">#&gt; 1 fit_lav         30 0.1417035 85.30552 24 8.502553e-09       918.8516</span></span>
 <span><span class="co">#&gt;   baseline.df baseline.pvalue       cfi       tli      nnfi       rfi       nfi</span></span>
 <span><span class="co">#&gt; 1          36               0 0.9305597 0.8958395 0.8958395 0.8607411 0.9071607</span></span>
 <span><span class="co">#&gt;        pnfi       ifi       rni        LL unrestricted.logl     aic      bic</span></span>
 <span><span class="co">#&gt; 1 0.6047738 0.9314908 0.9305597 -3737.745         -3695.092 7535.49 7646.703</span></span>
-<span><span class="co">#&gt;     n    bic2      rmsea rmsea.ci.lower rmsea.ci.upper rmsea.ci.level</span></span>
-<span><span class="co">#&gt; 1 301 7551.56 0.09212148     0.07141849       0.113678            0.9</span></span>
-<span><span class="co">#&gt;   rmsea.pvalue rmsea.close.h0 rmsea.notclose.pvalue rmsea.notclose.h0</span></span>
-<span><span class="co">#&gt; 1 0.0006612368           0.05             0.8395529              0.08</span></span>
-<span><span class="co">#&gt;          rmr rmr_nomean      srmr srmr_bentler srmr_bentler_nomean       crmr</span></span>
-<span><span class="co">#&gt; 1 0.07502369 0.08218433 0.0595238    0.0595238          0.06520506 0.06520506</span></span>
-<span><span class="co">#&gt;   crmr_nomean srmr_mplus srmr_mplus_nomean    cn_05   cn_01       gfi      agfi</span></span>
-<span><span class="co">#&gt; 1  0.07290147  0.0595238        0.06520506 129.4902 152.654 0.9960745 0.9911676</span></span>
-<span><span class="co">#&gt;        pgfi       mfi      ecvi</span></span>
-<span><span class="co">#&gt; 1 0.4426998 0.9031773 0.4827426</span></span></code></pre></div>
+<span><span class="co">#&gt;     n    bic2      rmsea rmsea.ci.lower rmsea.ci.upper rmsea.pvalue        rmr</span></span>
+<span><span class="co">#&gt; 1 301 7551.56 0.09212148     0.07141849       0.113678 0.0006612368 0.07502369</span></span>
+<span><span class="co">#&gt;   rmr_nomean      srmr srmr_bentler srmr_bentler_nomean       crmr crmr_nomean</span></span>
+<span><span class="co">#&gt; 1 0.08218433 0.0595238    0.0595238          0.06520506 0.06520506  0.07290147</span></span>
+<span><span class="co">#&gt;   srmr_mplus srmr_mplus_nomean    cn_05   cn_01       gfi      agfi      pgfi</span></span>
+<span><span class="co">#&gt; 1  0.0595238        0.06520506 129.4902 152.654 0.9960745 0.9911676 0.4426998</span></span>
+<span><span class="co">#&gt;         mfi      ecvi</span></span>
+<span><span class="co">#&gt; 1 0.9031773 0.4827426</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="output-from-openmx">Output from OpenMx<a class="anchor" aria-label="anchor" href="#output-from-openmx"></a>
 </h2>
 <p>Now, we’ll reproduce the same analysis in ‘OpenMx’. First, we run the
 model:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_mx.html">estimate_mx</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">fit_mx</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span>
@@ -258,8 +260,8 @@ model:</p>
 <span><span class="co">#&gt; 1             7475.49 301         30               2709 2679         2655</span></span>
 <span><span class="co">#&gt;   independenceDoF saturatedParameters independenceParameters ChiDoF satDoF</span></span>
 <span><span class="co">#&gt; 1            2691                  54                     18     24   2655</span></span>
-<span><span class="co">#&gt;   indDoF RMSEANull modelName     AIC      BIC    saBIC        LL</span></span>
-<span><span class="co">#&gt; 1   2691      0.05     model 7535.49 7646.703 7478.026 -3737.745</span></span></code></pre>
+<span><span class="co">#&gt;   indDoF RMSEANull modelName     AIC      BIC   saBIC        LL</span></span>
+<span><span class="co">#&gt; 1   2691      0.05     model 7535.49 7646.703 7551.56 -3737.745</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="output-from-mplus">Output from Mplus<a class="anchor" aria-label="anchor" href="#output-from-mplus"></a>
@@ -270,7 +272,7 @@ will specify the syntax for this example manually, using the package
 <code>MplusAutomation</code>. This code will only work on your machine
 if you have Mplus installed and R can find it. First, we run the
 model:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_mplus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusModeler.html" class="external-link">mplusModeler</a></span><span class="op">(</span><span class="fu"><a href="https://michaelhallquist.github.io/MplusAutomation/reference/mplusObject.html" class="external-link">mplusObject</a></span><span class="op">(</span>VARIABLE <span class="op">=</span> <span class="st">"grouping IS school (1 = GW 2 = Pas);"</span>,</span>
 <span>                                MODEL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visual BY vis_1 vis_2 vis_3;"</span>,</span>
 <span>                                          <span class="st">"textual BY tex_1 tex_2 tex_3;"</span>,</span>
@@ -280,7 +282,7 @@ model:</p>
 <span>                    modelout <span class="op">=</span> <span class="st">"example.inp"</span>,</span>
 <span>                    run <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit_mplus</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit_mplus</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Calculated confidence intervals from est and se.</span></span>
 <span><span class="co">#&gt;                           label  est_sig   se pval        confint group</span></span>
@@ -389,7 +391,7 @@ model:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -56,16 +56,16 @@
       <a href="articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+      <a href="articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a>
     </li>
     <li>
-      <a href="articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+      <a href="articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
-      <a href="articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+      <a href="articles/lca_lcga.html">Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
+      <a href="articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -105,7 +105,7 @@
 <div class="page-header"><h1 id="tidysem-">tidySEM <a href="https://github.com/cjvanlissa/tidySEM" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png" align="right" height="139"></a>
 <a class="anchor" aria-label="anchor" href="#tidysem-"></a>
 </h1></div>
-<p><a href="https://cran.r-project.org/package=tidySEM" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidySEM" alt="CRAN status"></a> <a href="https://r-pkg.org/pkg/tidySEM" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue" alt="CRAN RStudio mirror downloads"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a> <a href="https://github.com/cjvanlissa/tidySEM/actions" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/cjvanlissa/tidySEM" class="external-link"><img src="https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r" alt="codecov"></a> <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant"></a> <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)--></p>
+
 <p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the free open source R packages <code>lavaan</code> or <code>OpenMx</code>, or the commercial closed-source program <code>Mplus</code> (controlled through the R package <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
 <ol style="list-style-type: decimal">
 <li>Generate model syntax in a top-down, tidy way,
@@ -226,7 +226,17 @@ install.packages("tidySEM")
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=tidySEM" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidySEM" alt="CRAN status"></a></li>
+<li><a href="https://r-pkg.org/pkg/tidySEM" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue" alt="CRAN RStudio mirror downloads"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/cjvanlissa/tidySEM" class="external-link"><img src="https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg?token=0GfxUZIC9r" alt="codecov"></a></li>
+<li><a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
@@ -239,7 +249,7 @@ install.packages("tidySEM")
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

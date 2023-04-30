@@ -29,7 +29,7 @@
 #' @param estimated Logical. Should the Mplus estimates growth trajectories be
 #' displayed? Defaults to TRUE.
 #' @param alpha_range Numeric vector. The minimum and maximum values of alpha
-#' (transparancy) for the raw data. Minimum should be 0; lower maximum values of
+#' (transparency) for the raw data. Minimum should be 0; lower maximum values of
 #' alpha can help reduce overplotting.
 #' @param jitter_lines Numeric. Indicate the amount (expressed in fractions of a
 #' standard deviation of all observed data) by which the observed trajectories

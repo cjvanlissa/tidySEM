@@ -20,7 +20,11 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
-
+if(as.logical(readLines("pkgdown.txt"))){
+  knitr::opts_chunk$set(
+  results = "markup"
+)
+}
 run_everything = as.logical(readLines("run_everything.txt"))
 ```
 
@@ -236,7 +240,7 @@ First, we determine whether any models can be disqualified.
 There were no indications of convergence problems during estimation,
 so this is not a reason to disqualify solutions.
 Next, we check for global and local identifiability.
-The global ratio of observations per parametrer is large, as the minimum `np_ratio` is 244.
+The global ratio of observations per parameter is large, as the minimum `np_ratio` is 244.
 The smallest ratio of class size to class-specific parameters is 18 (see `np_local`), which is no cause for concern.
 
 ```{r tabfit, echo = TRUE, eval = TRUE}

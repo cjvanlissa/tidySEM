@@ -21,7 +21,7 @@ The resulting dummies have class mxFactor."><!-- mathjax --><script src="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -39,16 +39,16 @@ The resulting dummies have class mxFactor."><!-- mathjax --><script src="https:/
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+      <a href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+      <a href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
-      <a href="../articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+      <a href="../articles/lca_lcga.html">Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="../articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
+      <a href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -92,13 +92,18 @@ The resulting dummies have class <code>mxFactor</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mx_dummies</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mx_dummies</span><span class="op">(</span><span class="va">x</span>, classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"factor"</span>, <span class="st">"character"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object for which a method exists.</p></dd>
+
+
+<dt>classes</dt>
+<dd><p>Character vector, indicating which classes to dummy code.
+Defaults to <code>c("factor", "character")</code>.</p></dd>
 
 
 <dt>...</dt>
@@ -115,6 +120,7 @@ The resulting dummies have class <code>mxFactor</code>.</p>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">mx_dummies</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Some categories have fewer than 5% of cases: Species.csetosa, Species.cversicolor, Species.cvirginica</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2</span>
@@ -135,7 +141,7 @@ The resulting dummies have class <code>mxFactor</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -1,0 +1,6 @@
+"name","type","n","missing","unique","mode","mode_value","v"
+"Ethnic_1","ordered, factor",439,0,6,269,"5",0.533963605419233
+"Ethnic_2","ordered, factor",439,0,6,272,"5",0.521199039025327
+"Ethnic_3","ordered, factor",439,0,6,262,"5",0.543677129114108
+"Belgian","ordered, factor",439,0,11,88,"7",0.858235480305727
+"Flemish","ordered, factor",439,0,11,90,"7",0.866765946627508

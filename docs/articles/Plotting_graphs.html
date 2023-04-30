@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -53,16 +53,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+      <a href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+      <a href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
-      <a href="../articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+      <a href="../articles/lca_lcga.html">Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="../articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
+      <a href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -240,11 +240,11 @@ functions from the <code>igraph</code> package can be used by specifying
 the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      [,1] [,2] [,3]      [,4]    [,5]</span></span>
-<span><span class="co">#&gt; [1,] NA   NA   NA        "x5"    NA  </span></span>
-<span><span class="co">#&gt; [2,] NA   "x6" "x4"      "x3"    NA  </span></span>
-<span><span class="co">#&gt; [3,] "x8" "x7" "textual" "x1"    "x2"</span></span>
-<span><span class="co">#&gt; [4,] NA   "x9" "visual"  "speed" NA  </span></span>
+<span><span class="co">#&gt;      [,1] [,2] [,3] [,4]     [,5]     </span></span>
+<span><span class="co">#&gt; [1,] NA   NA   NA   "x2"     NA       </span></span>
+<span><span class="co">#&gt; [2,] NA   "x3" "x1" "speed"  NA       </span></span>
+<span><span class="co">#&gt; [3,] "x5" "x4" "x8" "visual" NA       </span></span>
+<span><span class="co">#&gt; [4,] NA   "x6" "x7" "x9"     "textual"</span></span>
 <span><span class="co">#&gt; attr(,"class")</span></span>
 <span><span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></span>
 <span><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span></span>
@@ -883,6 +883,7 @@ names:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'stringr' was built under R version 4.2.3</span></span>
 <span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html" class="external-link">str_to_title</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now, for the edges, we see that the default edging algorithm has
@@ -1209,7 +1210,7 @@ knitr::include_graphics("pgfig8.png")
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tutorial: Latent Class Analysis for Ordinal Indicators • tidySEM</title>
+<title>Latent Class Analysis for Ordinal Indicators • tidySEM</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Tutorial: Latent Class Analysis for Ordinal Indicators">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Latent Class Analysis for Ordinal Indicators">
 <meta property="og:description" content="tidySEM">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -53,16 +53,16 @@
       <a href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a>
     </li>
     <li>
-      <a href="../articles/lca_ordinal.html">Tutorial: Latent Class Analysis for Ordinal Indicators</a>
+      <a href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a>
     </li>
     <li>
-      <a href="../articles/LCGA.html">Tutorial: Latent Class Growth Analysis</a>
+      <a href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
     </li>
     <li>
-      <a href="../articles/lpa_confiratory.html">Confirmatory LPA for the Caregiver Compass</a>
+      <a href="../articles/lca_lcga.html">Latent Class Growth Analysis</a>
     </li>
     <li>
-      <a href="../articles/lpa_exploratory.html">Exploratory LPA for Ocean Microplastics</a>
+      <a href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a>
     </li>
     <li>
       <a href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a>
@@ -99,7 +99,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Tutorial: Latent Class Analysis for Ordinal
+      <h1 data-toc-skip>Latent Class Analysis for Ordinal
 Indicators</h1>
             
       
@@ -112,10 +112,11 @@ Indicators</h1>
     
 <p>This is an example of exploratory LCA with ordinal indicators using
 <code>tidySEM</code>. The present example uses synthetic data based on a
-study by Maene and colleagues. In a sample of Flemish (Belgian)
-high-school students with a migration background, this study set out to
-identify distinct classes based on ordinal indicators of National,
-Regional, and Heritage identity.</p>
+study by Maene and colleagues. In a convenience sample of Flemish
+(Belgian) high-school students with a migration background, this study
+set out to identify distinct classes based on ordinal indicators of
+National, Regional, and Heritage identity. Sample size was not
+justified.</p>
 <p>The approach to class enumeration was semi-theory driven: The
 researchers expected to find profiles that were distinct on all three
 types of identity (national, regional, and heritage) - but the exact
@@ -144,10 +145,9 @@ convenience, we assign the indicator data to an object called
 <div class="section level2">
 <h2 id="examining-the-data">Examining the Data<a class="anchor" aria-label="anchor" href="#examining-the-data"></a>
 </h2>
-<p>As per the best practices, the first step in LCA is examining the
-observed data. We use <code><a href="../reference/descriptives.html">tidySEM::descriptives()</a></code> to describe
-the data numerically. Because all items are categorical, we remove
-columns for continuous data to de-clutter the table:</p>
+<p>We use <code><a href="../reference/descriptives.html">tidySEM::descriptives()</a></code> to describe the data
+numerically. Because all items are categorical, we remove columns for
+continuous data to de-clutter the table:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="fu">tidySEM</span><span class="fu">::</span><span class="fu"><a href="../reference/descriptives.html">descriptives</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
 <span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"type"</span>, <span class="st">"n"</span>, <span class="st">"missing"</span>, <span class="st">"unique"</span>, </span>
@@ -240,7 +240,9 @@ columns for continuous data to de-clutter the table:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="lca_plot_desc.svg" alt=""><p class="caption">Bar charts for ordinal indicators</p>
+<img src="lca_plot_desc.png" alt="Bar charts for ordinal indicators" width="80%"><p class="caption">
+Bar charts for ordinal indicators
+</p>
 </div>
 <p>As we can see, the <code><a href="../reference/descriptives.html">descriptives()</a></code> table provides
 invaluable information about the measurement level of the indicators,
@@ -249,10 +251,13 @@ coded as ordinal factors, these descriptive statistics would have
 revealed that each variable has only 5-10 unique values. The proportion
 of missing values is reported in the <code>"missing"</code> column. If
 any variables had missing values, we would report an MCAR test with
-<code><a href="https://amices.org/mice/reference/mcar.html" class="external-link">mice::mcar()</a></code>, and explain that missing data are accounted
+<code><a href="https://amices.org/mice/reference/mcar.html" class="external-link">mice::mcar()</a></code> and explain that missing data are accounted
 for using FIML. In our example, we see that there are no missing values,
 hence we proceed with our analysis. Note that the ethic identification
-variables are very right-skewed.</p>
+variables are very right-skewed and some response categories have
+near-zero frequencies; this can cause problems in model specification
+and convergence. One potential solution would be to merge small adjacent
+categories. We will not do this here, however.</p>
 </div>
 <div class="section level2">
 <h2 id="conducting-latent-class-analysis">Conducting Latent Class Analysis<a class="anchor" aria-label="anchor" href="#conducting-latent-class-analysis"></a>
@@ -292,146 +297,143 @@ retain relevant columns. We also determine whether any models can be
 disqualified.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
-<span><span class="va">fit</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"Parameters"</span>, <span class="st">"n"</span>,</span>
-<span>         <span class="st">"BIC"</span>, <span class="st">"Entropy"</span>,</span>
-<span>         <span class="st">"prob_min"</span>, <span class="st">"prob_max"</span>, </span>
-<span>         <span class="st">"n_min"</span>, <span class="st">"n_max"</span>,</span>
-<span>         <span class="st">"lmr_p"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<span><span class="va">fit</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"n"</span>, <span class="st">"Parameters"</span>, <span class="st">"BIC"</span>,</span>
+<span><span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>, <span class="st">"n_min"</span>, <span class="st">"np_ratio"</span>, </span>
+<span><span class="st">"np_local"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<table class="table">
 <caption>Model fit table</caption>
 <colgroup>
 <col width="6%">
 <col width="8%">
-<col width="14%">
 <col width="5%">
+<col width="15%">
 <col width="6%">
-<col width="10%">
+<col width="11%">
+<col width="12%">
+<col width="8%">
 <col width="12%">
 <col width="12%">
-<col width="8%">
-<col width="8%">
-<col width="8%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Name</th>
 <th align="right">LL</th>
-<th align="right">Parameters</th>
 <th align="right">n</th>
+<th align="right">Parameters</th>
 <th align="right">BIC</th>
 <th align="right">Entropy</th>
 <th align="right">prob_min</th>
-<th align="right">prob_max</th>
 <th align="right">n_min</th>
-<th align="right">n_max</th>
-<th align="right">lmr_p</th>
+<th align="right">np_ratio</th>
+<th align="right">np_local</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">-3076</td>
-<td align="right">30</td>
 <td align="right">439</td>
+<td align="right">30</td>
 <td align="right">6334</td>
 <td align="right">1.00</td>
 <td align="right">1.00</td>
 <td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="right">NA</td>
+<td align="right">14.6</td>
+<td align="right">14.6</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">-2849</td>
-<td align="right">61</td>
 <td align="right">439</td>
+<td align="right">61</td>
 <td align="right">6070</td>
 <td align="right">0.89</td>
 <td align="right">0.96</td>
-<td align="right">0.99</td>
 <td align="right">0.46</td>
-<td align="right">0.54</td>
-<td align="right">0</td>
+<td align="right">7.2</td>
+<td align="right">6.7</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="right">-2747</td>
-<td align="right">92</td>
 <td align="right">439</td>
+<td align="right">92</td>
 <td align="right">6054</td>
 <td align="right">0.93</td>
 <td align="right">0.94</td>
-<td align="right">0.99</td>
 <td align="right">0.15</td>
-<td align="right">0.53</td>
-<td align="right">0</td>
+<td align="right">4.8</td>
+<td align="right">2.2</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="right">-2659</td>
-<td align="right">123</td>
 <td align="right">439</td>
+<td align="right">123</td>
 <td align="right">6066</td>
 <td align="right">0.93</td>
 <td align="right">0.94</td>
-<td align="right">0.98</td>
 <td align="right">0.11</td>
-<td align="right">0.33</td>
-<td align="right">0</td>
+<td align="right">3.6</td>
+<td align="right">1.6</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="right">-2619</td>
-<td align="right">154</td>
 <td align="right">439</td>
+<td align="right">154</td>
 <td align="right">6174</td>
 <td align="right">0.95</td>
 <td align="right">0.96</td>
-<td align="right">1.00</td>
 <td align="right">0.10</td>
-<td align="right">0.35</td>
-<td align="right">0</td>
+<td align="right">2.8</td>
+<td align="right">1.5</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
 <td align="right">-2578</td>
-<td align="right">185</td>
 <td align="right">439</td>
+<td align="right">185</td>
 <td align="right">6281</td>
 <td align="right">0.92</td>
 <td align="right">0.94</td>
-<td align="right">0.97</td>
 <td align="right">0.10</td>
-<td align="right">0.29</td>
-<td align="right">0</td>
+<td align="right">2.4</td>
+<td align="right">1.5</td>
 </tr>
 </tbody>
 </table>
-<p>Next, we check for local identifiability by checking whether the size
-of the smallest class is consistently larger (about 5x as large) as the
-number of parameter per class. We can simply calculate this by
-running:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">n_min</span> <span class="op">*</span> <span class="fl">439</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">Parameters</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 14.6  6.6  2.2  1.6  1.4  1.4</span></span></code></pre></div>
-<p>Note that, for models of 3 or more classes, there are just a few
-observations per parameter in the smallest class. This is a good reason
-to disqualify those classes. Here, we will eliminate classes 4-6 on
-those criteria, but in real data applications, the 3-class solution
+<p>Note that both the global and local ratio of cases to parameters is
+low; for models of 3 or more classes, there are just a few observations
+per parameter in the smallest class (see <code>np_local</code>). This is
+a good reason to disqualify those classes. We will eliminate classes 4-6
+on those criteria, but in real data applications, the 3-class solution
 might also be disqualified.</p>
-<p>In terms of classification diagnostics, note that the entropy is high
-for all models except the two-class model, and the minimum
-classification probabilities are high for all models. This indicates
-that all classes are distinct.</p>
+<p>In terms of classification diagnostics, note that the entropy and the
+minimum classification probabilities are high for all models. This
+indicates that all classes are distinct.</p>
+</div>
+<div class="section level2">
+<h2 id="class-enumeration-1">Class Enumeration<a class="anchor" aria-label="anchor" href="#class-enumeration-1"></a>
+</h2>
+<div class="section level3">
+<h3 id="using-bic">Using BIC<a class="anchor" aria-label="anchor" href="#using-bic"></a>
+</h3>
 <p>Based on the BIC, we would prefer the 2-class model. This decision is
 also validated by a scree plot of the BIC, obtained by running
 <code>plot(fit)</code>.</p>
-<p>Note that the LMR test indicates that adding classes keeps
-significantly improving model fit, up until 6 classes. However, due to
-the aforementioned concerns about low numbers of cases per parameter in
-the smallest classes, we will not consider solutions with more than 3
-classes. We thus proceed with the 3-class solution.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+</div>
+<div class="section level3">
+<h3 id="theoretical-considerations">Theoretical considerations<a class="anchor" aria-label="anchor" href="#theoretical-considerations"></a>
+</h3>
+<p>Despite the BIC indicating that the 2-class model is best, upon
+examining the 2-class and 3-class solution, it was noted that
+theoretically crucial distinctions between ethnic, regional (Flemish),
+and national (Belgian) identity were not captured by the 2-class
+solution but were captured by the 3-class solution. Based on this
+theoretical consideration, the analysis proceeded with the 3-class
+solution.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_final</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="interpreting-the-final-class-solution">Interpreting the Final Class Solution<a class="anchor" aria-label="anchor" href="#interpreting-the-final-class-solution"></a>
@@ -447,7 +449,7 @@ error. We can produce a table of results using
 thresholds, indicating quantiles of a standardized normal distribution.
 These may be difficult to interpret. Therefore, we ask for the results
 in probability scale:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">tab</span>, direction <span class="op">=</span> <span class="st">"wide"</span>, v.names <span class="op">=</span> <span class="st">"Probability"</span>, timevar <span class="op">=</span> <span class="st">"group"</span>, idvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Category"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -470,256 +472,256 @@ in probability scale:</p>
 <tr class="odd">
 <td align="left">Ethnic_1</td>
 <td align="right">1</td>
-<td align="right">0.00</td>
 <td align="right">0.01</td>
+<td align="right">0.00</td>
 <td align="right">0.00</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_1</td>
 <td align="right">2</td>
 <td align="right">0.01</td>
-<td align="right">0.01</td>
 <td align="right">0.00</td>
+<td align="right">0.01</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_1</td>
 <td align="right">3</td>
-<td align="right">0.01</td>
 <td align="right">0.20</td>
 <td align="right">0.06</td>
+<td align="right">0.01</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_1</td>
 <td align="right">4</td>
-<td align="right">0.12</td>
 <td align="right">0.57</td>
 <td align="right">0.24</td>
+<td align="right">0.12</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_1</td>
 <td align="right">5</td>
-<td align="right">0.85</td>
 <td align="right">0.21</td>
 <td align="right">0.70</td>
+<td align="right">0.85</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_2</td>
 <td align="right">1</td>
 <td align="right">0.00</td>
-<td align="right">0.00</td>
 <td align="right">0.01</td>
+<td align="right">0.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_2</td>
 <td align="right">2</td>
-<td align="right">0.00</td>
 <td align="right">0.03</td>
+<td align="right">0.00</td>
 <td align="right">0.00</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_2</td>
 <td align="right">3</td>
-<td align="right">0.00</td>
 <td align="right">0.14</td>
 <td align="right">0.13</td>
+<td align="right">0.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_2</td>
 <td align="right">4</td>
-<td align="right">0.03</td>
 <td align="right">0.74</td>
 <td align="right">0.22</td>
+<td align="right">0.03</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_2</td>
 <td align="right">5</td>
-<td align="right">0.97</td>
 <td align="right">0.09</td>
 <td align="right">0.63</td>
+<td align="right">0.97</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_3</td>
 <td align="right">1</td>
-<td align="right">0.01</td>
 <td align="right">0.02</td>
 <td align="right">0.00</td>
+<td align="right">0.01</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_3</td>
 <td align="right">2</td>
-<td align="right">0.00</td>
 <td align="right">0.02</td>
 <td align="right">0.03</td>
+<td align="right">0.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_3</td>
 <td align="right">3</td>
-<td align="right">0.01</td>
 <td align="right">0.15</td>
 <td align="right">0.11</td>
+<td align="right">0.01</td>
 </tr>
 <tr class="even">
 <td align="left">Ethnic_3</td>
 <td align="right">4</td>
-<td align="right">0.04</td>
 <td align="right">0.74</td>
 <td align="right">0.24</td>
+<td align="right">0.04</td>
 </tr>
 <tr class="odd">
 <td align="left">Ethnic_3</td>
 <td align="right">5</td>
-<td align="right">0.94</td>
 <td align="right">0.07</td>
 <td align="right">0.61</td>
+<td align="right">0.94</td>
 </tr>
 <tr class="even">
 <td align="left">Belgian</td>
 <td align="right">1</td>
-<td align="right">0.16</td>
 <td align="right">0.05</td>
 <td align="right">0.00</td>
+<td align="right">0.16</td>
 </tr>
 <tr class="odd">
 <td align="left">Belgian</td>
 <td align="right">2</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="right">0.04</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
 </tr>
 <tr class="even">
 <td align="left">Belgian</td>
 <td align="right">3</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
 <td align="right">0.06</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Belgian</td>
 <td align="right">4</td>
 <td align="right">0.02</td>
-<td align="right">0.02</td>
 <td align="right">0.00</td>
+<td align="right">0.02</td>
 </tr>
 <tr class="even">
 <td align="left">Belgian</td>
 <td align="right">5</td>
-<td align="right">0.20</td>
 <td align="right">0.19</td>
 <td align="right">0.00</td>
+<td align="right">0.20</td>
 </tr>
 <tr class="odd">
 <td align="left">Belgian</td>
 <td align="right">6</td>
-<td align="right">0.05</td>
 <td align="right">0.13</td>
 <td align="right">0.00</td>
+<td align="right">0.05</td>
 </tr>
 <tr class="even">
 <td align="left">Belgian</td>
 <td align="right">7</td>
-<td align="right">0.17</td>
 <td align="right">0.34</td>
 <td align="right">0.00</td>
+<td align="right">0.17</td>
 </tr>
 <tr class="odd">
 <td align="left">Belgian</td>
 <td align="right">8</td>
-<td align="right">0.20</td>
 <td align="right">0.25</td>
 <td align="right">0.00</td>
+<td align="right">0.20</td>
 </tr>
 <tr class="even">
 <td align="left">Belgian</td>
 <td align="right">9</td>
-<td align="right">0.09</td>
 <td align="right">0.01</td>
 <td align="right">0.18</td>
+<td align="right">0.09</td>
 </tr>
 <tr class="odd">
 <td align="left">Belgian</td>
 <td align="right">10</td>
-<td align="right">0.00</td>
 <td align="right">0.02</td>
 <td align="right">0.82</td>
+<td align="right">0.00</td>
 </tr>
 <tr class="even">
 <td align="left">Flemish</td>
 <td align="right">1</td>
-<td align="right">0.19</td>
 <td align="right">0.10</td>
 <td align="right">0.00</td>
+<td align="right">0.19</td>
 </tr>
 <tr class="odd">
 <td align="left">Flemish</td>
 <td align="right">2</td>
+<td align="right">0.01</td>
+<td align="right">0.01</td>
 <td align="right">0.05</td>
-<td align="right">0.01</td>
-<td align="right">0.01</td>
 </tr>
 <tr class="even">
 <td align="left">Flemish</td>
 <td align="right">3</td>
-<td align="right">0.07</td>
 <td align="right">0.02</td>
 <td align="right">0.00</td>
+<td align="right">0.07</td>
 </tr>
 <tr class="odd">
 <td align="left">Flemish</td>
 <td align="right">4</td>
-<td align="right">0.08</td>
 <td align="right">0.05</td>
 <td align="right">0.00</td>
+<td align="right">0.08</td>
 </tr>
 <tr class="even">
 <td align="left">Flemish</td>
 <td align="right">5</td>
-<td align="right">0.17</td>
 <td align="right">0.14</td>
 <td align="right">0.02</td>
+<td align="right">0.17</td>
 </tr>
 <tr class="odd">
 <td align="left">Flemish</td>
 <td align="right">6</td>
-<td align="right">0.13</td>
 <td align="right">0.11</td>
+<td align="right">0.13</td>
 <td align="right">0.13</td>
 </tr>
 <tr class="even">
 <td align="left">Flemish</td>
 <td align="right">7</td>
-<td align="right">0.17</td>
 <td align="right">0.30</td>
 <td align="right">0.10</td>
+<td align="right">0.17</td>
 </tr>
 <tr class="odd">
 <td align="left">Flemish</td>
 <td align="right">8</td>
-<td align="right">0.12</td>
 <td align="right">0.22</td>
 <td align="right">0.17</td>
+<td align="right">0.12</td>
 </tr>
 <tr class="even">
 <td align="left">Flemish</td>
 <td align="right">9</td>
-<td align="right">0.02</td>
 <td align="right">0.03</td>
+<td align="right">0.02</td>
 <td align="right">0.02</td>
 </tr>
 <tr class="odd">
 <td align="left">Flemish</td>
 <td align="right">10</td>
-<td align="right">0.00</td>
 <td align="right">0.01</td>
 <td align="right">0.55</td>
+<td align="right">0.00</td>
 </tr>
 </tbody>
 </table>
 <p>The results can also be interpreted by plotting the response
 probabilities:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_final</span>, bw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="lca_prob.svg" alt="Probability plot" width="100%"><p class="caption">
+<img src="lca_prob.png" alt="Probability plot" width="100%"><p class="caption">
 Probability plot
 </p>
 </div>
@@ -744,7 +746,7 @@ students with other combinations of identifications (hypothesis 2).</p>
 auxiliary variable depression to the <code>data</code> argument,
 omitting the <code>model</code> argument. Below, we estimate an
 auxiliary model to compare depressive symptoms across classes:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aux_dep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">res_final</span>, data <span class="op">=</span> <span class="va">maene_identity</span><span class="op">$</span><span class="va">depression</span><span class="op">)</span></span></code></pre></div>
 <p>To obtain an omnibus likelihood ratio test of the significance of
 depression differences across classes, as well as pairwise comparisons
@@ -756,7 +758,7 @@ there would not be a significant effect of perceived teacher
 discrimination on depressive symptoms. To test this hypothesis, we will
 compare the regression coefficient of discrimination on depressive
 symptoms across classes.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_aux</span> <span class="op">&lt;-</span> <span class="va">maene_identity</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vict_teacher"</span>, <span class="st">"depression"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co"># Dummy-code vict_teacher</span></span>
 <span><span class="va">df_aux</span><span class="op">$</span><span class="va">vict_teacher</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">df_aux</span><span class="op">$</span><span class="va">vict_teacher</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
@@ -794,7 +796,7 @@ regression coefficients across classes, <span class="math inline">\(\chi^2 (2) =
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
-if(!"build_site" %in% unlist(as.character(lapply(sys.calls(), `[[`, 1)))){
+if(as.logical(readLines("pkgdown.txt"))){
   knitr::opts_chunk$set(
   results = "markup"
 )

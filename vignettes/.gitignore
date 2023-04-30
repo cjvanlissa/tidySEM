@@ -2,3 +2,5 @@
 *.R
 !tabres_1.R
 !mplusfit.R
+!run_everything.txt
+!pkgdown.txt
