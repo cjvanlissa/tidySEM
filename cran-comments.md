@@ -1,5 +1,6 @@
 # tidySEM 0.2.4
 
+* Update maintainer email address
 * Fixed bug in `plot_profiles()` when covariances are free
 * Improved starting values for latent class analysis
 * Documentation incorrectly referred to `data_mixture_ordinal`, instead of
@@ -26,4 +27,7 @@
 
 ## R CMD check results
 
-OK
+1 NOTE:
+
+* New maintainer: Caspar J. van Lissa <c.j.vanlissa@tilburguniversity.edu>
+  + I have updated my email address because my affiliation changed.

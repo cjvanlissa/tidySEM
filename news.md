@@ -1,5 +1,6 @@
 # tidySEM 0.2.4
 
+* Update maintainer email address
 * Fixed bug in `plot_profiles()` when covariances are free
 * Improved starting values for latent class analysis
 * Documentation incorrectly referred to `data_mixture_ordinal`, instead of
