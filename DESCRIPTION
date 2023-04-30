@@ -54,7 +54,8 @@ Suggests:
     mclust,
     MASS,
     scales,
-    yaml
+    yaml,
+    formatR
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

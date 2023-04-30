@@ -301,7 +301,7 @@ tab_fit <- table_fit(res_step)
 # Select columns
 tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy", "prob_min", "n_min", "warning", "lmr_p")]
 ```
-```{r tabfit, eval = TRUE, echo = FALSE, results = "asis"}
+```{r tabfit, eval = TRUE, echo = FALSE}
 # Get fit table fit
 tab_fit <- readRDS("lcga_fit.RData")
 knitr::kable(tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy", "prob_min", "n_min")], digits = 2, caption = "Fit of LCGA models")
