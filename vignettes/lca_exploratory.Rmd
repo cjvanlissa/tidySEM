@@ -20,12 +20,12 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
-if(as.logical(readLines("pkgdown.txt"))){
+if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
   knitr::opts_chunk$set(
   results = "markup"
 )
 }
-run_everything = as.logical(readLines("run_everything.txt"))
+run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
 ```
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
