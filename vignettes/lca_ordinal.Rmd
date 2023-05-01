@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
+eval_results <- FALSE
 if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
+  eval_results <- TRUE
   knitr::opts_chunk$set(
   results = "markup"
 )
@@ -74,7 +76,7 @@ desc <- desc[, c("name", "type", "n", "missing", "unique",
 ]
 write.csv(desc, "lca_desc.csv", row.names = FALSE)
 ```
-```{r tabdesc, echo = FALSE, eval=TRUE}
+```{r tabdesc, echo = FALSE, eval=eval_results}
 desc <- read.csv("lca_desc.csv", stringsAsFactors = FALSE)
 knitr::kable(desc, caption = "Descriptive statistics for ordinal items")
 ```
@@ -102,7 +104,7 @@ p = ggplot(df_plot, aes(x = Value)) +
 ggsave("lca_plot_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
 
-```{r, echo = FALSE, eval=TRUE, fig.cap="Bar charts for ordinal indicators", out.width="80%"}
+```{r, echo = FALSE, eval=eval_results, fig.cap="Bar charts for ordinal indicators", out.width="80%"}
 knitr::include_graphics("lca_plot_desc.png")
 ```
 
@@ -177,7 +179,7 @@ fit[ , c("Name", "LL", "n", "Parameters", "BIC",
 fit <- table_fit(res)
 write.csv(fit, "lca_fit.csv", row.names = FALSE)
 ```
-```{r tabfit, echo = FALSE, eval = TRUE}
+```{r tabfit, echo = FALSE, eval = eval_results}
 fit <- read.csv("lca_fit.csv", stringsAsFactors = FALSE)
 class(fit) <- c("tidy_fit", "data.frame")
 knitr::kable(fit[ , c("Name", "LL", "n", "Parameters", "BIC",
@@ -245,7 +247,7 @@ tab <- table_prob(res_final)
 tab <- reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
 write.csv(tab, "lca_tab_prob.csv", row.names = FALSE)
 ```
-```{r, eval = TRUE, echo=FALSE}
+```{r, eval = eval_results, echo=FALSE}
 tab <- read.csv("lca_tab_prob.csv", stringsAsFactors = FALSE)
 knitr::kable(tab, caption = "Three-class model results in probability scale")
 ```
@@ -259,7 +261,7 @@ plot_prob(res_final, bw = TRUE)
 p <- plot_prob(res_final, bw = TRUE)
 ggsave("lca_prob.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Probability plot", out.width="100%"}
+```{r echo = FALSE, eval = eval_results, fig.cap="Probability plot", out.width="100%"}
 knitr::include_graphics("lca_prob.png")
 ```
 

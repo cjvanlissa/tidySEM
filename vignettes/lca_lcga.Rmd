@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
+eval_results <- FALSE
 if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
+  eval_results <- TRUE
   knitr::opts_chunk$set(
   results = "markup"
 )
@@ -72,7 +74,7 @@ p = ggplot(df_plot, aes(x = scl)) +
   facet_wrap(~time) + theme_bw()
 ggsave("plot_dist.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r, echo = FALSE, out.width="80%", eval = TRUE}
+```{r, echo = FALSE, out.width="80%", eval = eval_results}
 knitr::include_graphics("plot_dist.png")
 ```
 
@@ -174,7 +176,7 @@ p <- ggplot(df_plot, aes(x = Value, colour = Transformation)) +
   theme_bw()
 ggsave("plot_trans.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r, echo = FALSE, eval = TRUE, out.width="80%"}
+```{r, echo = FALSE, eval = eval_results, out.width="80%"}
 knitr::include_graphics("plot_trans.png")
 ```
 
@@ -301,7 +303,7 @@ tab_fit <- table_fit(res_step)
 # Select columns
 tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy", "prob_min", "n_min", "warning", "lmr_p")]
 ```
-```{r tabfit, eval = TRUE, echo = FALSE}
+```{r tabfit, eval = eval_results, echo = FALSE}
 # Get fit table fit
 tab_fit <- read.csv("lcga_fit.csv", stringsAsFactors = FALSE)
 class(tab_fit) <- c("tidy_fit", "data.frame")
@@ -332,7 +334,7 @@ plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 p <- plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 ggsave("lcga_plot_fit.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r echo = FALSE, eval = TRUE, out.width="80%"}
+```{r echo = FALSE, eval = eval_results, out.width="80%"}
 knitr::include_graphics("lcga_plot_fit.png")
 ```
 
@@ -353,7 +355,7 @@ res_final <- mx_switch_labels(res_step[[3]], param = "M[1,7]", decreasing = FALS
 tab_res <- table_results(res_final, columns = NULL)
 write.csv(tab_res, "lcga_tab_res.csv", row.names = FALSE)
 ```
-```{r tabres, echo=FALSE, eval = TRUE}
+```{r tabres, echo=FALSE, eval = eval_results}
 tab_res <- read.csv("lcga_tab_res.csv", stringsAsFactors = FALSE)
 class(tab_res) <- c("tidy_results", "data.frame")
 tab_res <- tab_res[tab_res$Category %in% c("Means", "Variances"), c("Category", "lhs", "est", "se", "pval", "confint", "name")]
@@ -420,7 +422,7 @@ wald_tests <- wald_test(res_final,
 wald_tests$Hypothesis <- c("Mean i", "Mean step", "Mean slope")
 write.csv(wald_tests, "lcga_wald_tests.csv", row.names = FALSE)
 ```
-```{r waldtests, echo = FALSE, eval = TRUE}
+```{r waldtests, echo = FALSE, eval = eval_results}
 wald_tests <- read.csv("lcga_wald_tests.csv", stringsAsFactors = FALSE)
 class(wald_tests) <- c("wald_test", "data.frame")
 knitr::kable(wald_tests, digits = 2, caption = "Wald tests")
@@ -450,7 +452,7 @@ labs <- round(invbc(scales::rescale(brks, from = c(0, 1), to = rng_bc), lambda))
 p <- p + scale_y_continuous(breaks = seq(0, 1, length.out = 5), labels = labs) + ylab("SCL (rescaled from Box-Cox)")
 ggsave("plot_traj.png", p, width = 150, height = 120, units = "mm")
 ```
-```{r echo = FALSE, eval = TRUE, out.width="80%"}
+```{r echo = FALSE, eval = eval_results, out.width="80%"}
 knitr::include_graphics("plot_traj.png")
 ```
 

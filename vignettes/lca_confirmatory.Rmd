@@ -20,7 +20,9 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = TRUE
 )
 options(scipen = 1, digits = 2)
+eval_results <- FALSE
 if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
+  eval_results <- TRUE
   knitr::opts_chunk$set(
   results = "markup"
 )
@@ -125,7 +127,7 @@ p <- ggplot(df_plot, aes(x = Value)) +
   theme_bw()
 ggsave("plot_lpa_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
-```{r figdesc, echo = FALSE, eval = TRUE, out.width="80%"}
+```{r figdesc, echo = FALSE, eval = eval_results, out.width="80%"}
 knitr::include_graphics("plot_lpa_desc.png")
 ```
 
@@ -156,7 +158,7 @@ set.seed(123)
 res <- mx_profiles(data = df,
                    classes = 1:5)
 ```
-```{r eval = TRUE, echo = FALSE}
+```{r eval = eval_results, echo = FALSE}
 fit <- read.csv("lpatabfit.csv", stringsAsFactors = FALSE)
 class(fit) <- c("tidy_fit", "data.frame")
 ```
@@ -197,7 +199,7 @@ fit[ , c("Name", "LL", "Parameters", "n",
          "n_min", "n_max",
          "np_ratio", "np_local")]
 ```
-```{r tabfit, echo = FALSE, eval = TRUE}
+```{r tabfit, echo = FALSE, eval = eval_results}
 tbl <- fit[ , c("Name", "LL", "Parameters", "n",
          "BIC", "Entropy",
          "prob_min", "prob_max", 
@@ -226,7 +228,7 @@ If we conduct LMR tests, we find that the tests are significant for all pairwise
 ```{r lmr_table, echo = TRUE, eval=FALSE}
 lr_lmr(fit)
 ```
-```{r tablmr, echo = FALSE, eval = TRUE}
+```{r tablmr, echo = FALSE, eval = eval_results}
 tbl <- lr_lmr(fit)
 tbl$Null <- c("", fit$Name[-nrow(fit)])
 tbl$Alt <- c(fit$Name)
@@ -265,7 +267,7 @@ set.seed(1)
 res_blrt <- BLRT(res, replications = 20)
 write.csv(res_blrt, "appendixbresblrt.csv", row.names = FALSE)
 ```
-```{r eval = TRUE, echo = FALSE}
+```{r eval = eval_results, echo = FALSE}
 res_blrt <- read.csv("appendixbresblrt.csv", stringsAsFactors = FALSE)
 knitr::kable(res_blrt, caption = "BLRT test table", digits = 2)
 ```
@@ -291,7 +293,7 @@ res_alt <- mx_profiles(df, classes = 4, variances = "varying")
 compare <- list(res[[4]], res_alt)
 table_fit(compare)
 ```
-```{r tabfitcomp, echo = FALSE, eval = TRUE}
+```{r tabfitcomp, echo = FALSE, eval = eval_results}
 fit_compare <- read.csv("lpa_fit_compare.csv", stringsAsFactors = FALSE)
 class(fit_compare) <- c("tidy_fit", "data.frame")
 knitr::kable(fit_compare[ , c("Name", "LL", "Parameters",
@@ -332,7 +334,7 @@ table_results(res_final, columns = c("label", "est", "se", "confint", "class"))
 tab <- table_results(res_final, columns = c("label", "est", "se", "confint", "class"))
 write.csv(tab, "lpa_tab_res.csv", row.names = FALSE)
 ```
-```{r, eval = TRUE, echo=FALSE}
+```{r, eval = eval_results, echo=FALSE}
 tab <- read.csv("lpa_tab_res.csv", stringsAsFactors = FALSE)
 knitr::kable(tab, caption = "Four-class model results")
 ```
@@ -350,7 +352,7 @@ p[[1]] <- p[[1]] + scale_y_continuous(breaks= c(0, .1, .2, .3), labels = c(".0",
 p <- tidySEM:::merge_corplots(p)
 ggsave("lpa_bivariate.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="80%"}
+```{r echo = FALSE, eval = eval_results, fig.cap="Bivariate profile plot", out.width="80%"}
 knitr::include_graphics("lpa_bivariate.png")
 ```
 On the diagonal of the bivariate plot are weighted density plots:
@@ -394,7 +396,7 @@ p2 <- p2 + theme(legend.position = "none")
 p <- ggpubr::ggarrange(p1, p2)
 ggsave("lpa_profiles.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1)
 ```
-```{r echo = FALSE, eval = TRUE, fig.cap="Bivariate profile plot", out.width="80%"}
+```{r echo = FALSE, eval = eval_results, fig.cap="Bivariate profile plot", out.width="80%"}
 knitr::include_graphics("lpa_profiles.png")
 ```
 
