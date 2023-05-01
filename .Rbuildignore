@@ -27,3 +27,5 @@ CODE_OF_CONDUCT.md
 ^CRAN-SUBMISSION$
 ^vignettes/*\.svg$
 ^codecov\.yml$
+^vignettes/plot_traj.png$
+^vignettes/lpa_bivariate.png$
