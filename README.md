@@ -36,19 +36,29 @@ mind, and interface with the existing suite of packages in the
 
 ## Installation
 
-<!--You can install tidySEM from CRAN with:
-
-
-```r
-install.packages("tidySEM")
-```
--->
-
-You can install the development version of `tidySEM` from ‘GitHub’ with:
+You can install the public release of `tidySEM` from CRAN with:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("cjvanlissa/tidySEM")
+install.packages("tidySEM")
+```
+
+If you want access to the latest developer version, including features
+that may not yet be finalized, you can install the development version
+of `tidySEM` from R-universe with:
+
+``` r
+install.packages('tidySEM',
+                 repos = c('https://cjvanlissa.r-universe.dev',
+                           'https://cloud.r-project.org'))
+```
+
+And if you are a developer and want to contribute to `tidySEM`, or want
+to install a specific historical version of the package, you can install
+directly from GitHub with:
+
+``` r
+install.packages("remotes")
+remotes::install_github('cjvanlissa/tidySEM')
 ```
 
 ## Documentation
