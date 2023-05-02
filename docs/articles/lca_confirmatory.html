@@ -148,10 +148,11 @@ called <code>df</code>. We first only use the four scales:
 <code>c("burdened", "trapped", "negaffect", "loneliness")</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/" class="external-link">tidySEM</a></span><span class="op">)</span> </span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/" class="external-link">tidySEM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="co"># Load data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"burdened"</span>, <span class="st">"trapped"</span>, <span class="st">"negaffect"</span>, <span class="st">"loneliness"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"burdened"</span>, <span class="st">"trapped"</span>, <span class="st">"negaffect"</span>,</span>
+<span>    <span class="st">"loneliness"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="descriptive-statistics">Descriptive statistics<a class="anchor" aria-label="anchor" href="#descriptive-statistics"></a>
@@ -161,9 +162,8 @@ numerically. Because all scales are continuous, we select only columns
 for continuous data to de-clutter the table:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="fu">tidySEM</span><span class="fu">::</span><span class="fu"><a href="../reference/descriptives.html">descriptives</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"n"</span>, <span class="st">"missing"</span>, <span class="st">"unique"</span>,</span>
-<span>                 <span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"sd"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>,</span>
-<span>                 <span class="st">"skew_2se"</span>, <span class="st">"kurt_2se"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"n"</span>, <span class="st">"missing"</span>, <span class="st">"unique"</span>, <span class="st">"mean"</span>, <span class="st">"median"</span>,</span>
+<span>    <span class="st">"sd"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>, <span class="st">"skew_2se"</span>, <span class="st">"kurt_2se"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">desc</span></span></code></pre></div>
 <table class="table">
 <caption>Descriptive statistics</caption>
@@ -264,11 +264,9 @@ table: the data are kurtotic (peaked).</p>
 <code class="sourceCode R"><span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="va">df</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Value."</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">df_plot</span>, varying <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span>, direction <span class="op">=</span> <span class="st">"long"</span>,</span>
-<span>                   timevar <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Variable</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>    timevar <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Variable</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="plot_lpa_desc.png" width="80%"></p>
 </div>
 <div class="section level2">
@@ -288,8 +286,7 @@ more than the theoretically expected number. We set a seed to ensure
 replicable results.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>,</span>
-<span>                   classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>This analysis should produce some messages about cluster
 initialization. These relate to the selection of starting values, which
 relies on the K-means algorithm and is not robust to missing data. The
@@ -318,12 +315,9 @@ solutions, as the entropies and minimum classification probabilities are
 all low. However, in this confirmatory use case, we address this when
 interpreting the results.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span> <span class="co"># model fit table</span></span>
-<span><span class="va">fit</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"Parameters"</span>, <span class="st">"n"</span>,</span>
-<span>         <span class="st">"BIC"</span>, <span class="st">"Entropy"</span>,</span>
-<span>         <span class="st">"prob_min"</span>, <span class="st">"prob_max"</span>, </span>
-<span>         <span class="st">"n_min"</span>, <span class="st">"n_max"</span>,</span>
-<span>         <span class="st">"np_ratio"</span>, <span class="st">"np_local"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>  <span class="co"># model fit table</span></span>
+<span><span class="va">fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"Parameters"</span>, <span class="st">"n"</span>, <span class="st">"BIC"</span>, <span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>,</span>
+<span>    <span class="st">"prob_max"</span>, <span class="st">"n_min"</span>, <span class="st">"n_max"</span>, <span class="st">"np_ratio"</span>, <span class="st">"np_local"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <table class="table">
 <caption>Model fit table</caption>
 <colgroup>
@@ -505,8 +499,8 @@ bar:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://progressr.futureverse.org" class="external-link">progressr</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span> <span class="co"># Parallel processing for Windows</span></span>
-<span><span class="fu"><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">handlers</a></span><span class="op">(</span><span class="st">"progress"</span><span class="op">)</span> <span class="co"># Progress bar</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>  <span class="co"># Parallel processing for Windows</span></span>
+<span><span class="fu"><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">handlers</a></span><span class="op">(</span><span class="st">"progress"</span><span class="op">)</span>  <span class="co"># Progress bar</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BLRT.html">BLRT</a></span><span class="op">(</span><span class="va">res</span>, replications <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -649,7 +643,8 @@ ranged from <span class="math inline">\([.81, .92]\)</span>, which means
 that at least some classes had a high classification error. We produce a
 table of the results below.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_final</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est"</span>, <span class="st">"se"</span>, <span class="st">"confint"</span>, <span class="st">"class"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_final</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est"</span>, <span class="st">"se"</span>, <span class="st">"confint"</span>,</span>
+<span>    <span class="st">"class"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Four-class model results</caption>
 <thead><tr class="header">
@@ -908,8 +903,7 @@ differently across classes (treated as continuous).</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_aux</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"freqvisit"</span>, <span class="st">"distance"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">df_aux</span><span class="op">$</span><span class="va">freqvisit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">df_aux</span><span class="op">$</span><span class="va">freqvisit</span><span class="op">)</span></span>
-<span><span class="va">aux_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">res_final</span>, model <span class="op">=</span> <span class="st">"freqvisit ~ distance"</span>,</span>
-<span>                 data <span class="op">=</span> <span class="va">df_aux</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">aux_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">res_final</span>, model <span class="op">=</span> <span class="st">"freqvisit ~ distance"</span>, data <span class="op">=</span> <span class="va">df_aux</span><span class="op">)</span></span></code></pre></div>
 <p>To obtain an omnibus likelihood ratio test of the difference in
 regression coefficients across classes and pairwise comparisons between
 classes, use <code>lr_test(aux_model, compare = "A")</code>. The results
@@ -932,12 +926,8 @@ function via the <code>newdata</code> argument. The result includes the
 individual’s most likely class, as well as posterior probabilities for
 all classes.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_new</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  burdened <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  trapped <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  negaffect <span class="op">=</span> <span class="fl">1.5</span>,</span>
-<span>  loneliness <span class="op">=</span> <span class="fl">4</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">df_new</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>burdened <span class="op">=</span> <span class="fl">2</span>, trapped <span class="op">=</span> <span class="fl">0.5</span>, negaffect <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    loneliness <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">res_final</span>, newdata <span class="op">=</span> <span class="va">df_new</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;       class1  class2 class3  class4 predicted</span></span>
 <span><span class="co">#&gt; [1,] 0.00081 1.4e-15      1 4.6e-08         3</span></span></code></pre>
@@ -961,7 +951,7 @@ all classes.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -132,7 +132,7 @@ where <code>data</code> is extracted from the <code>model</code> argument.</p>
 <li><p>Using K-means clustering:
 <code><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></code><code>(x = data, centers = classes)$cluster</code></p></li>
 <li><p>Using agglomerative hierarchical clustering:
-<code>hclass(</code><code>hc</code><code>(data = data), G = classes)[, 1]</code></p></li>
+<code>hclass(</code><code><a href="https://mclust-org.github.io/mclust/reference/hc.html" class="external-link">hc</a></code><code>(data = data), G = classes)[, 1]</code></p></li>
 <li><p>Using a random split:
 <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></code><code>(n = classes,
   size = nrow(data), replace = TRUE)</code></p></li>
@@ -170,7 +170,7 @@ Behav Res 49, 282–293 (2017). <a href="https://doi.org/10.3758/s13428-015-0697
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
