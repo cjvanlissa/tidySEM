@@ -1649,6 +1649,16 @@ bind_list <- function(L, ...){
 }
 
 .reflect_points <- function(points, start, end){
+  out <- points
+  colnames(out) <- c("x", "y")
+  if(end[1] == start[1]){
+    out[1] <- end[1] - (out[1]-end[1])
+    return(out)
+  }
+  if(end[2] == start[2]){
+    out[2] <- end[2] - (out[2]-end[2])
+    return(out)
+  }
   b <- (end[1] * start[2] - start[1] * end[2])/(end[1] - start[1])
   m <- (end[2]-start[2])/(end[1]-start[1])
   m3 <- m1 <- diag(3)
