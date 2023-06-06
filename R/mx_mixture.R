@@ -541,6 +541,7 @@ mixture_starts <- function(model,
   strts <- lapply(1:classes, function(i){
     thissub <- names(model@submodels)[i]
     data_split <- data[splits == i, , drop = FALSE]
+    isfac <- sapply(data_split, inherits, what = "factor")
     if(any(isfac)){
       tabfreq <- lapply(data_split[which(isfac)], table)
       if(any(unlist(tabfreq) == 0)){
