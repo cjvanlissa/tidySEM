@@ -86,9 +86,9 @@ run_bifactor <- function(x,
 #' @method run_bifactor tidy_sem_bifactor
 #' @export
 run_bifactor.tidy_sem_bifactor <- function(x,
-                                           total_variance = c("modelled", "observed"),
+                                           total_variance_calculation = c("modelled", "observed"),
                                            ...) {
-  total_variance <- match.arg(total_variance,
+  total_variance_calculation <- match.arg(total_variance_calculation,
                               choices = c("modelled", "observed"),
                               several.ok = F)
 
@@ -144,7 +144,7 @@ run_bifactor.tidy_sem_bifactor <- function(x,
   # This total variance depends slightly on model fit.
   # A more conservative way is to base it on the cor matrix, see below
   # lavaan::lavInspect(f, "cor.ov") %>% sum()
-  if (total_variance == "modelled") {
+  if (total_variance_calculation == "modelled") {
     total_variance <- explained_variance + error_variance
   } else {
     # TODO: This breaks with missing values...
@@ -152,7 +152,7 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     total_variance <- lavaan::lavInspect(f, "data") %>% cor() %>% sum()
   }
 
-  if (total_variance == "modelled") {
+  if (total_variance_calculation == "modelled") {
     total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
       vg <- subfactor_G_loading_variances[sf]
       vs <- factor_loading_variances[sf]
@@ -204,6 +204,7 @@ run_bifactor.tidy_sem_bifactor <- function(x,
 
   # The interpretability of this one is disputed and not returning it.
   # Can be informative if residual error in a set of items is high.
+  # Or if a single item loads on a subfactor.
   omegah_group_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
@@ -218,7 +219,8 @@ run_bifactor.tidy_sem_bifactor <- function(x,
       omega = omega_G,
       omega_subfactor = omega_subfactor,
       omegah = omegah_G,
-      omegah_subfactor = omegah_subfactor
+      omegah_subfactor = omegah_subfactor,
+      omegah_group_subfactor = omegah_group_subfactor
     )
   )
 
