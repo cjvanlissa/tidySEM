@@ -21,20 +21,20 @@ bifactor <- function(x, ...) {
 #' @method bifactor tidy_sem
 #' @export
 bifactor.tidy_sem <- function(x, ...) {
-  ts$dictionary %>% filter(type == "observed") %>% pull(name) -> ids
+  x$dictionary %>% filter(type == "observed") %>% pull(name) -> ids
 
   if ("G" %in% ids) {
     stop("Illegal factor name: G. G is a reserved name representing the general factor.")
   }
 
-  ts$dictionary <- rbind(ts$dictionary, data.frame(
+  x$dictionary <- rbind(x$dictionary, data.frame(
     name = ids,
     scale = "G",
     type = "observed",
     label = ids
   ))
 
-  m <- measurement(ts,
+  m <- measurement(x,
                    std.lv = T,
                    auto.fix.single = T,
                    auto.fix.first = F,
@@ -92,15 +92,15 @@ run_bifactor.tidy_sem_bifactor <- function(x,
                               choices = c("modelled", "observed"),
                               several.ok = F)
 
-  f <- run_lavaan(bf, ...)
+  f <- run_lavaan(x, ...)
   p <- lavaan::standardizedSolution(f, type = "std.all") %>%
-    left_join(bf$syntax, by = c("lhs", "op", "rhs"))
+    left_join(x$syntax, by = c("lhs", "op", "rhs"))
 
-  subfactors <- bf$dictionary %>%
+  subfactors <- x$dictionary %>%
     filter(type == "latent", name != "G") %>%
     pull(name)
 
-  subfactors_dictionary <- bf$dictionary %>%
+  subfactors_dictionary <- x$dictionary %>%
     filter(type == "indicator", name != "G", scale != "G")
 
   factor_loading_variances <- p %>%
