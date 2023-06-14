@@ -221,11 +221,16 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   plot_list[diag(model_mat)] <- dens_plotlist
 
   plot_list[which(lower.tri(model_mat))] <- cor_plotlist
+  class(plot_list) <- c("plot_list", class(list))
   if (return_list) return(plot_list)
   merge_corplots(plot_list)
 }
 
-
+#' @export
+#' @method plot plot_list
+plot.plot_list <- function(x, y, ...){
+  plot(merge_corplots(x))
+}
 
 .base_plot <- function(num_colors) {
   p <- ggplot(NULL,
