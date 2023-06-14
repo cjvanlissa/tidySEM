@@ -12,7 +12,8 @@ plot_bivariate(
   rawdata = TRUE,
   bw = FALSE,
   alpha_range = c(0, 0.1),
-  return_list = FALSE
+  return_list = FALSE,
+  ...
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ the transparency of geom_density and geom_point.}
 
 \item{return_list}{Logical. Whether to return a list of ggplot objects, or
 just the final plot. Defaults to FALSE.}
+
+\item{...}{Additional arguments.}
 }
 \value{
 An object of class 'ggplot'.

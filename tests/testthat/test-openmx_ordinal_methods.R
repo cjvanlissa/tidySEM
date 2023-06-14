@@ -38,9 +38,9 @@ test_that("ordinal mixture model works with different methods", {
   res <- mxTryHardOrdinal(mix, extraTries = 10)
   tmp <- class_prob(res)
 
-  mx_props <- table_results(res, columns=c("label", "est"))
+  mx_props <- table_results(res, columns=c("lhs", "op", "rhs", "est", "matrix"))
   mx_fit <- table_fit(res)
-  mat <- matrix(mx_props$est[18:33], nrow = 2, byrow = F)
+  mat <- matrix(as.numeric(mx_props$est[mx_props$matrix == "threshMat"]), nrow = 2, byrow = F)
   mat <- mat[, unlist(list(c(1:4), c(5:8))[order(tmp$sum.posterior$proportion)])]
 
   # df_mp <- df
@@ -68,10 +68,10 @@ test_that("ordinal mixture model works with different methods", {
   expect_equivalent(sort(tmp$sum.posterior$proportion),
                     sort(c(0.5789, 0.4211)), tolerance = .001)
 
-  expect_equivalent(pnorm(as.numeric(mx_props$est)[18:33][unlist(list(c(1:8), c(9:16))[order(tmp$sum.posterior$proportion)])]),
-                    pnorm(c(0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591,
-                            -0.073, -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
-                    )), tolerance = .12) # Note high tolerance!
+  expect_equivalent(sort(pnorm(mat)),
+                    sort(pnorm(c(0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591,
+                                 -0.073, -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
+                    ))), tolerance = .12) # Note high tolerance!
 
 
   # Building model with mxThreshold, does NOT work:
@@ -98,19 +98,19 @@ test_that("ordinal mixture model works with different methods", {
   res_mxthres <- mxTryHardOrdinal(mix_mxthres, extraTries = 10)
   tmp_mxthres <- class_prob(res_mxthres)
 
-  props_mxthres <- table_results(res_mxthres, columns=c("label", "est"))
+  props_mxthres <- table_results(res_mxthres, columns=c("label", "matrix", "est"))
   fit_mxthres <- table_fit(res_mxthres)
-  mat_mxthres <- matrix(props_mxthres$est[-1], nrow = 2, byrow = F)
+  mat_mxthres <- matrix(as.numeric(props_mxthres$est[props_mxthres$matrix == "Thresholds"]), nrow = 2, byrow = F)
 
   # ordinal mixture model works with mxThreshold
   expect_failure(expect_equal(-19300.165, fit_mxthres$LL, tolerance = 1e-3))
   expect_failure(expect_equivalent(sort(tmp_mxthres$sum.posterior$proportion),
                                    sort(c(0.5789, 0.4211)), tolerance = .001))
 
-  expect_failure(expect_equivalent(pnorm(as.numeric(props_mxthres$est)[2:17][unlist(list(c(1:8), c(9:16))[order(tmp_mxthres$sum.posterior$proportion)])]),
-                                   pnorm(c(0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591,
-                                           -0.073, -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
-                                   )), tolerance = .12))
+  expect_failure(expect_equivalent(sort(pnorm(mat_mxthres)),
+                                   sort(pnorm(c(0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591,
+                                                -0.073, -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
+                                   ))), tolerance = .12))
 
 
 
@@ -151,7 +151,8 @@ test_that("ordinal mixture model works with different methods", {
   res_tidysem <- mxTryHardOrdinal(mix_tidysem, extraTries = 10)
   tmp_tidysem <- class_prob(res_tidysem)
 
-  props_tidysem <- table_results(res_tidysem, columns=c("label", "est"))
+  props_tidysem <- table_results(res_tidysem, columns=c("label", "matrix", "est"))
+  props_tidysem <- as.numeric(props_tidysem$est[props_tidysem$matrix == "Thresholds"])
   fit_tidysem <- table_fit(res_tidysem)
 
 
@@ -160,10 +161,10 @@ test_that("ordinal mixture model works with different methods", {
   expect_equivalent(sort(tmp_tidysem$sum.posterior$proportion),
                     sort(c(0.5789, 0.4211)), tolerance = .001)
 
-  expect_equivalent(pnorm(as.numeric(props_tidysem$est[-1][unlist(list(c(1:8), c(9:16))[order(tmp_tidysem$sum.posterior$proportion)])])),
-                    pnorm(c( 0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591, -0.073,
-                             -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
-                    )), tolerance = .12) # Note high tolerance!
-  expect_equivalent(pnorm(as.numeric(props_tidysem$est[-1][unlist(list(c(1:8), c(9:16))[order(tmp_tidysem$sum.posterior$proportion)])])),
-                    pnorm(as.numeric(mx_props$est[18:33][unlist(list(c(1:8), c(9:16))[order(tmp$sum.posterior$proportion)])])), tolerance = 1e-5)
+  expect_equivalent(sort(pnorm(props_tidysem)),
+                    sort(pnorm(c( 0.797, 1.289, 0.152, 0.601, -0.667, -0.204, -0.591, -0.073,
+                                  -0.672, -0.054, -0.111, 0.367, 0.37, 0.894, 0.327, 0.777
+                    ))), tolerance = .12) # Note high tolerance!
+  expect_equivalent(sort(pnorm(props_tidysem)),
+                    sort(pnorm(mat)), tolerance = 1e-5)
 })
