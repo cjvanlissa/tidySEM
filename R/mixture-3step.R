@@ -29,9 +29,17 @@ BCH <- function(x, model, data, ...){
 BCH.MxModel <- function(x, model, data, ...){
   if(inherits(data, what = c("factor", "numeric", "integer"))){
     if(inherits(data, what = "factor")){
-      cats <- length(levels(data))
-      model <- paste0("y |t", 1:(cats-1), collapse = "\n")
-      data <- data.frame(y = mxFactor(data, levels = levels(data)))
+      if(!inherits(data, what = c("ordered"))){
+        data <- mx_dummies(data)
+        model <- paste0(
+          names(data), " | t1",
+          collapse = "\n"
+        )
+      } else {
+        cats <- length(levels(data))
+        model <- paste0("y |t", 1:(cats-1), collapse = "\n")
+        data <- data.frame(y = mxFactor(data, levels = levels(data)))
+      }
     } else {
       model <- "y ~1"
       data <- data.frame(y = data)

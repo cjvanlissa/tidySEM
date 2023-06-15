@@ -115,6 +115,7 @@ plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = T
 #' @export
 plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
   dots <- list(...)
+  browser()
   df_plot <- get_cordat(x)
   if("label_class" %in% names(dots)){
     df_plot$Class <- dots$label_class[df_plot$Class]
@@ -147,7 +148,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   n_vars <- length(Args$variables)
   model_mat <- matrix(1L:(n_vars*n_vars), nrow = n_vars)
   df_density <- do.call(.extract_density_data, Args)
-
+  df_density$Class <- ordered(df_density$Class, levels = c(seq_along(levels(df_plot$Class)), "Total"), labels = c(levels(df_plot$Class), "Total"))
   args_dens <- list(plot_df = df_density,
                     variables = NULL)
 
@@ -221,7 +222,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   plot_list[diag(model_mat)] <- dens_plotlist
 
   plot_list[which(lower.tri(model_mat))] <- cor_plotlist
-  class(plot_list) <- c("plot_list", class(list))
+  class(plot_list) <- c("plot_list", class(plot_list))
   if (return_list) return(plot_list)
   merge_corplots(plot_list)
 }
