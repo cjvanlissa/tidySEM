@@ -12,6 +12,7 @@ library(tidyverse)
 #' @examples
 #' dict <- tidy_sem(c("a_1", "a_2", "a_3", "b_4", "b_5"))
 #' bifactor(dict)
+#' @note Currently does not support cross loadings.
 #' @rdname bifactor
 #' @export
 bifactor <- function(x, ...) {
@@ -21,20 +22,37 @@ bifactor <- function(x, ...) {
 #' @method bifactor tidy_sem
 #' @export
 bifactor.tidy_sem <- function(x, ...) {
-  x$dictionary %>% filter(type == "observed") %>% pull(name) -> ids
 
-  if ("G" %in% ids) {
-    stop("Illegal factor name: G. G is a reserved name representing the general factor.")
+  # Pull the indicator names from the dictionary of `x`
+  ## Tidyverse code:
+  ### x$dictionary %>% filter(type == "observed") %>% pull(name) -> ids
+  with(x, {
+    dictionary[dictionary$type == "observed","name"]
+  }) -> ids
+
+  ## G is not an allowed scale name
+  with(x, {
+    dictionary[dictionary$name == "G" | dictionary$scale == "G",]
+  }) -> Gs
+
+  if (nrow(Gs) > 0) {
+    stop("Illegal indicator or factor name: 'G'. G is a reserved name representing the general factor.")
   }
 
-  x$dictionary <- rbind(x$dictionary, data.frame(
+  ## Add latent variable G to the dictionary such that
+  ## the `measurement` function picks up on it.
+  xG <- x
+  xG$dictionary <- rbind(data.frame(
     name = ids,
     scale = "G",
     type = "observed",
     label = ids
-  ))
+  ), xG$dictionary)
 
-  m <- measurement(x,
+  ## Measurement function picks up on the new G latent variable.
+  ## However, it does not pick up on auto.fix.single because the x$dictionary
+  ## has the G factor added, leading to two latent factors per observed variable
+  m <- measurement(xG,
                    std.lv = T,
                    auto.fix.single = T,
                    auto.fix.first = F,
@@ -45,19 +63,28 @@ bifactor.tidy_sem <- function(x, ...) {
                     ...
                    )
 
-  # auto.fix.single doesn't work because each item loads on the general factor and (at least) another latent variable. Doing it manual here in two steps
-  # Step 1
-  m$dictionary %>% group_by(scale) %>% mutate(n = n()) %>% ungroup() %>% filter(n == 1, type == "indicator") -> singles
+  ## Because auto.fix.single doesn't work because each item loads on the general factor
+  ## and (at least) another latent variable. I am fixing it manually here in two steps
+  ### Step 1: find the factors that only have one indicator variable
+  ### Tidyverse code:
+  ### m$dictionary %>% group_by(scale) %>% mutate(n = n()) %>% ungroup() %>% filter(n == 1, type == "indicator") -> singles
+  with(xG, {
+    table(dictionary$scale) -> scales_tabs
+    dictionary[scales_tabs[dictionary$scale] == 1,]
+  }) -> singles
 
   # Step 2
   # Can be out of the sapply loop I guess, haven't checked all edge cases so I am using this safer version:
-  for(i in seq_len(nrow(singles))) {
-    m$syntax[m$syntax$lhs == singles$name[[i]] & m$syntax$op == "~~" & m$syntax$rhs == singles$name[[i]],c("free", "ustart")] <- 0
-  }
+  m_mod <- m
+  within(m, {
+    singles_covs <- with(syntax, lhs == singles$name & op == "~~" & rhs == singles$name)
+    syntax[singles_covs, c("free", "ustart")] <- 0
+    rm(singles_covs)
+  }) -> m_mod
 
-  class(m) <- c("tidy_sem_bifactor", class(m))
+  class(m_mod) <- c("tidy_sem_bifactor", class(m_mod))
 
-  m
+  m_mod
 }
 
 #' @title Run a bifactor model
@@ -88,12 +115,14 @@ run_bifactor <- function(x,
 run_bifactor.tidy_sem_bifactor <- function(x,
                                            total_variance_calculation = c("modelled", "observed"),
                                            ...) {
+
   total_variance_calculation <- match.arg(total_variance_calculation,
                               choices = c("modelled", "observed"),
                               several.ok = F)
 
   f <- run_lavaan(x, ...)
-  p <- lavaan::standardizedSolution(f, type = "std.all") %>%
+  # I use std.lv here because we restrict the variances of the latent variables to be 1
+  p <- lavaan::standardizedSolution(f, type = "std.lv") %>%
     left_join(x$syntax, by = c("lhs", "op", "rhs"))
 
   subfactors <- x$dictionary %>%
@@ -137,22 +166,19 @@ run_bifactor.tidy_sem_bifactor <- function(x,
       setNames(pull(., variance), pull(., subfactor))
     }
 
-  explained_variance <- sum(factor_loading_variances)
+  # TODO: is this summing valid?
 
-  error_variance <- sum(item_error_variances_by_subfactor)
 
   # This total variance depends slightly on model fit.
   # A more conservative way is to base it on the cor matrix, see below
   # lavaan::lavInspect(f, "cor.ov") %>% sum()
   if (total_variance_calculation == "modelled") {
-    total_variance <- explained_variance + error_variance
-  } else {
-    # TODO: This breaks with missing values...
-    # does lavaan give the cor matrix with missing values imputed ?
-    total_variance <- lavaan::lavInspect(f, "data") %>% cor() %>% sum()
-  }
+    explained_variance <- sum(factor_loading_variances)
 
-  if (total_variance_calculation == "modelled") {
+    error_variance <- sum(item_error_variances_by_subfactor)
+
+    total_variance <- explained_variance + error_variance
+
     total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
       vg <- subfactor_G_loading_variances[sf]
       vs <- factor_loading_variances[sf]
@@ -160,7 +186,6 @@ run_bifactor.tidy_sem_bifactor <- function(x,
 
       vg + vs + ve
     }) %>% setNames(subfactors)
-
     ## We could also do:
     # r <- lavaan::lavInspect(f, "cor.ov") # Model implied correlation matrix
     # total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
@@ -168,8 +193,22 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     #     pull(name)
     #   sum(r[sf_indicators, sf_indicators])
     # }) %>% setNames(subfactors)
+
   } else {
-    r <- lavaan::lavInspect(f, "data") %>% cor()
+    r <- cov2cor(lavInspect(f, "sampstat")$cov)
+    total_variance <- sum(r)
+
+    error_variance <- p %>%
+      filter(op == "=~") %>%
+      mutate(est.std = abs(est.std)) %>%
+      group_by(rhs) %>%
+      summarise(variance = sum(est.std^2)) %>%
+      rename(indicator = rhs) %>% {
+        setNames(pull(., variance), pull(., indicator))
+      } %>% sum() %>% {tr(r) - .}
+
+    explained_variance <- total_variance - error_variance
+
     total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
       sf_indicators <- subfactors_dictionary %>% filter(scale == sf) %>%
         pull(name)
@@ -177,14 +216,11 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     }) %>% setNames(subfactors)
   }
 
-
-
-  # For formulas see this publication and its corrections:
-  #
+  # For formulas see references of this function
 
   omega_G <- (explained_variance / total_variance) %>% setNames("G")
 
-  omega_subfactor <- sapply(X = subfactors, FUN = function(sf) {
+  omegaS_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
     ve <- item_error_variances_by_subfactor[sf]
@@ -192,9 +228,19 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     (vg + vs) / total_variance_subfactor[sf]
   }) %>% setNames(subfactors)
 
-  omegah_G <- (factor_loading_variances[["G"]] / total_variance) %>% setNames("G")
+  omegaH_G <- (factor_loading_variances[["G"]] / total_variance) %>% setNames("G")
 
-  omegah_subfactor <- sapply(X = subfactors, FUN = function(sf) {
+  omegaH_subfactor <- sapply(X = subfactors, FUN = function(sf) {
+    vg <- subfactor_G_loading_variances[sf]
+    vs <- factor_loading_variances[sf]
+    ve <- item_error_variances_by_subfactor[sf]
+
+    (vg) / total_variance_subfactor[sf]
+  }) %>% setNames(subfactors)
+
+  omegaHS_G <- (sum(factor_loading_variances[-which(names(factor_loading_variances) == "G")]) / total_variance) %>% setNames("G")
+
+  omegaHS_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
     ve <- item_error_variances_by_subfactor[sf]
@@ -202,9 +248,11 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     (vs) / total_variance_subfactor[sf]
   }) %>% setNames(subfactors)
 
+
   # The interpretability of this one is disputed and not returning it.
   # Can be informative if residual error in a set of items is high.
   # Or if a single item loads on a subfactor.
+  omegah_group_G <- (factor_loading_variances[["G"]] / explained_variance) %>% setNames("G")
   omegah_group_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
@@ -212,16 +260,24 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     (vs) / (vg + vs)
   }) %>% setNames(subfactors)
 
+  o_df <- data.frame(
+    omega = c(omega_G, omegaS_subfactor),
+    omegaH = c(omegaH_G, omegaH_subfactor),
+    omegaHS = c(omegaHS_G, omegaHS_subfactor),
+    relativeVariance = c(omegah_group_G, omegah_group_subfactor),
+
+    row.names = c("G", subfactors),
+    stringsAsFactors = F
+  )
+
+  attr(o_df$omega, "label") <- "For G: the proportion of variance in all the items that is explained by the general factor and subfactors (explained variance). For subfactors: the proportion of variance in the subfactor's items explained by the general factor (the items loadings on the general factor) and subfactors (loadings of the items on the subfactor)."
+  attr(o_df$omegaH, "label") <- "For G: The proportion of variance in all items that is explained by the general factor (). For subfactors: The proportion of variance in subfactor's items that is explained by the general factor ()"
+  attr(o_df$omegaHS, "label") <- "For G: the proportion of the variance in all items that is explained by the subfactors. For subfactors: The proportion of the variance in subfactor's items that is explained by the subfactor."
+  attr(o_df$relativeVariance, "label") <- "The proportion of explained variance in items (i.e. excluding error) explained by the subfactor."
 
   list(
     lavaan_fit = f,
-    omegas = list(
-      omega = omega_G,
-      omega_subfactor = omega_subfactor,
-      omegah = omegah_G,
-      omegah_subfactor = omegah_subfactor,
-      omegah_group_subfactor = omegah_group_subfactor
-    )
+    omega = o_df
   )
 
 }
