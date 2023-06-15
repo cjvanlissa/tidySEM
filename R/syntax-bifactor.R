@@ -73,8 +73,7 @@ bifactor.tidy_sem <- function(x, ...) {
     dictionary[scales_tabs[dictionary$scale] == 1,]
   }) -> singles
 
-  # Step 2
-  # Can be out of the sapply loop I guess, haven't checked all edge cases so I am using this safer version:
+  ### Step 2: set the error variance of these items to 0
   m_mod <- m
   within(m, {
     singles_covs <- with(syntax, lhs == singles$name & op == "~~" & rhs == singles$name)
@@ -82,6 +81,7 @@ bifactor.tidy_sem <- function(x, ...) {
     rm(singles_covs)
   }) -> m_mod
 
+  ### This class is used by run_bifactor
   class(m_mod) <- c("tidy_sem_bifactor", class(m_mod))
 
   m_mod
@@ -113,25 +113,33 @@ run_bifactor <- function(x,
 #' @method run_bifactor tidy_sem_bifactor
 #' @export
 run_bifactor.tidy_sem_bifactor <- function(x,
-                                           total_variance_calculation = c("modelled", "observed"),
+                                           total_variance_calculation = c("observed", "modelled"),
                                            ...) {
 
+  # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
+  # It is more conservative to use the observed variance for omega calculation.
   total_variance_calculation <- match.arg(total_variance_calculation,
-                              choices = c("modelled", "observed"),
+                              choices = c("observed", "modelled"),
                               several.ok = F)
 
+  # Run the lavaan model. TODO: check as_lavaan and as_ram output
   f <- run_lavaan(x, ...)
-  # I use std.lv here because we restrict the variances of the latent variables to be 1
+
+  # List the parameter estimates
+  ## I use std.lv here because we restrict the variances of the latent variables to be 1
   p <- lavaan::standardizedSolution(f, type = "std.lv") %>%
     left_join(x$syntax, by = c("lhs", "op", "rhs"))
 
+  # Store the subfactors in a lookup table
   subfactors <- x$dictionary %>%
     filter(type == "latent", name != "G") %>%
     pull(name)
 
+  # Store a dictionary of the subfactor indicators without the G factor
   subfactors_dictionary <- x$dictionary %>%
     filter(type == "indicator", name != "G", scale != "G")
 
+  # Compute the variances explained by each factor by summing and squaring loadings
   factor_loading_variances <- p %>%
     filter(op == "=~") %>%
     mutate(est.std = abs(est.std)) %>%
@@ -141,6 +149,8 @@ run_bifactor.tidy_sem_bifactor <- function(x,
       setNames(pull(., variance), pull(., latent))
     }
 
+  # Compute the variances explained by the general factor for each subfactor
+  # by summing and squaring loadings
   subfactor_G_loading_variances <- p %>%
     filter(op == "=~", lhs == "G") %>%
     left_join(subfactors_dictionary,
@@ -153,6 +163,7 @@ run_bifactor.tidy_sem_bifactor <- function(x,
       setNames(pull(., variance), pull(., subfactor))
     }
 
+  # Compute the error variances for each subfactor by summing error variances
   item_error_variances_by_subfactor <- p %>%
     filter(op == "~~", lhs == rhs, lhs %in% subfactors_dictionary$name) %>%
     left_join(subfactors_dictionary,
@@ -166,12 +177,8 @@ run_bifactor.tidy_sem_bifactor <- function(x,
       setNames(pull(., variance), pull(., subfactor))
     }
 
-  # TODO: is this summing valid?
-
-
-  # This total variance depends slightly on model fit.
-  # A more conservative way is to base it on the cor matrix, see below
-  # lavaan::lavInspect(f, "cor.ov") %>% sum()
+  # The explained and total variances depend on model fit.
+  # A more conservative way is to base it on the observed cor matrix, see below
   if (total_variance_calculation == "modelled") {
     explained_variance <- sum(factor_loading_variances)
 
@@ -248,23 +255,19 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     (vs) / total_variance_subfactor[sf]
   }) %>% setNames(subfactors)
 
-
-  # The interpretability of this one is disputed and not returning it.
-  # Can be informative if residual error in a set of items is high.
-  # Or if a single item loads on a subfactor.
-  omegah_group_G <- (factor_loading_variances[["G"]] / explained_variance) %>% setNames("G")
-  omegah_group_subfactor <- sapply(X = subfactors, FUN = function(sf) {
+  ecv_G <- (factor_loading_variances[["G"]] / explained_variance) %>% setNames("G")
+  ecv_subfactors <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
 
-    (vs) / (vg + vs)
+    (vg) / (vg + vs)
   }) %>% setNames(subfactors)
 
   o_df <- data.frame(
     omega = c(omega_G, omegaS_subfactor),
     omegaH = c(omegaH_G, omegaH_subfactor),
     omegaHS = c(omegaHS_G, omegaHS_subfactor),
-    relativeVariance = c(omegah_group_G, omegah_group_subfactor),
+    ECV = c(ecv_G, ecv_subfactors),
 
     row.names = c("G", subfactors),
     stringsAsFactors = F
@@ -273,7 +276,7 @@ run_bifactor.tidy_sem_bifactor <- function(x,
   attr(o_df$omega, "label") <- "For G: the proportion of variance in all the items that is explained by the general factor and subfactors (explained variance). For subfactors: the proportion of variance in the subfactor's items explained by the general factor (the items loadings on the general factor) and subfactors (loadings of the items on the subfactor)."
   attr(o_df$omegaH, "label") <- "For G: The proportion of variance in all items that is explained by the general factor (). For subfactors: The proportion of variance in subfactor's items that is explained by the general factor ()"
   attr(o_df$omegaHS, "label") <- "For G: the proportion of the variance in all items that is explained by the subfactors. For subfactors: The proportion of the variance in subfactor's items that is explained by the subfactor."
-  attr(o_df$relativeVariance, "label") <- "The proportion of explained variance in items (i.e. excluding error) explained by the subfactor."
+  attr(o_df$ECV, "label") <- "The proportion of explained variance in items (i.e. excluding error variance) explained by the general factor."
 
   list(
     lavaan_fit = f,
