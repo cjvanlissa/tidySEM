@@ -19,6 +19,9 @@ An object of class \code{tidy_sem_bifactor} and \code{tidy_sem} which can be pas
 \description{
 Generate syntax for a bifactor model for latent variables.
 }
+\note{
+Currently does not support cross loadings.
+}
 \examples{
 dict <- tidy_sem(c("a_1", "a_2", "a_3", "b_4", "b_5"))
 bifactor(dict)

@@ -92,9 +92,12 @@ bifactor.tidy_sem <- function(x, ...) {
 #' This function relies on \code{\link{run_lavaan}} to run the model.
 #' @param x An object of class  \code{tidy_sem_bifactor}
 #' (generated using \code{\link[tidySEM]{bifactor}}).
-#' @param total_variance whether to compute total variances with the
+#' @param total_variance_calculation whether to compute total variances with the
 #' model implied or the observed correlation matrix.
-#' Default: "modelled"
+#' Default: "observed"
+#' @param standardization_method whether to base omega on the completely standardized
+#' solution or the solution in which latent variables are standardized (see lavaan)
+#' Default: "std.all"
 #' @param ... Additional parameters passed to \code{\link{run_lavaan}}.
 #' @return A list containing a \code{lavaan} fit object (\code{fit}) and omega
 #' statistics (\code{omega}, \code{omega_subfactor},
@@ -102,10 +105,21 @@ bifactor.tidy_sem <- function(x, ...) {
 #' @references
 #' 10.1080/00223891.2015.1089249
 #' 10.1080/00223891.2015.1117928
+#' @note If setting total_variance_calculation to "observed" and standardization_method
+#' to "std.all", there is a
+#' discrepancy in results with psych::omegaFromSem if you do not feed
+#' lavaan a correlation matrix, because omegaFromSem extracts unstandardized
+#' loadings when computing omega, and does not take into
+#' account that loadings can exceed 1.0 if the model is
+#' based on anything else than a
+#' correlation matrix. The current implementation avoids this issue by using
+#' the covariance matrix when standardization_method is "std.lv".
+#'
 #' @rdname run_bifactor
 #' @export
 run_bifactor <- function(x,
-                         total_variance = c("modelled", "observed"),
+                         total_variance_calculation = c("observed", "modelled"),
+                         standardization_method = c("std.all", "std.lv"),
                          ...) {
   UseMethod("run_bifactor")
 }
@@ -114,6 +128,7 @@ run_bifactor <- function(x,
 #' @export
 run_bifactor.tidy_sem_bifactor <- function(x,
                                            total_variance_calculation = c("observed", "modelled"),
+                                           standardization_method = c("std.all", "std.lv"),
                                            ...) {
 
   # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
@@ -122,12 +137,48 @@ run_bifactor.tidy_sem_bifactor <- function(x,
                               choices = c("observed", "modelled"),
                               several.ok = F)
 
+  # A discrepancy in results compared to psych::omegaFromSem occurs for "std.all".
+  # I think std.all is still more appropriate given the computation formulas used.
+  # Note this is not important for when the total variance calculation is based on the modelled variance.
+  standardization_method <- match.arg(standardization_method,
+                                          choices = c("std.all", "std.lv"),
+                                          several.ok = F)
+
   # Run the lavaan model. TODO: check as_lavaan and as_ram output
   f <- run_lavaan(x, ...)
 
+  list(
+    lavaan_fit = f,
+    omega = compute_omega(x,
+                          f,
+                          total_variance_calculation = total_variance_calculation,
+                          standardization_method = standardization_method)
+  )
+
+}
+
+# Computes omega given an appropriate lavaan fit object and a tidysem object
+compute_omega <- function(x,
+                          f,
+                          total_variance_calculation = c("observed", "modelled"),
+                          standardization_method = c("std.all", "std.lv")) {
+
+  # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
+  # It is more conservative to use the observed variance for omega calculation.
+  total_variance_calculation <- match.arg(total_variance_calculation,
+                                          choices = c("observed", "modelled"),
+                                          several.ok = F)
+
+  # A discrepancy in results compared to psych::omegaFromSem occurs for "std.all".
+  # I think std.all is still more appropriate given the computation formulas used.
+  # Note this is not important for when the total variance calculation is based on the modelled variance.
+  standardization_method <- match.arg(standardization_method,
+                                      choices = c("std.all", "std.lv"),
+                                      several.ok = F)
+
   # List the parameter estimates
   ## I use std.lv here because we restrict the variances of the latent variables to be 1
-  p <- lavaan::standardizedSolution(f, type = "std.lv") %>%
+  p <- lavaan::standardizedSolution(f, type = standardization_method) %>%
     left_join(x$syntax, by = c("lhs", "op", "rhs"))
 
   # Store the subfactors in a lookup table
@@ -202,7 +253,15 @@ run_bifactor.tidy_sem_bifactor <- function(x,
     # }) %>% setNames(subfactors)
 
   } else {
-    r <- cov2cor(lavInspect(f, "sampstat")$cov)
+    if (standardization_method == "std.lv") {
+      r <- lavInspect(f, "sampstat")$cov
+    } else {
+      # std.all, so we use a correlation matrix.
+      # Note: I have no idea why psych::omegaFromSem uses "std.lv" or
+      # even unstandardized indicator parameters and still does a cov2cor...
+      r <- cov2cor(lavInspect(f, "sampstat")$cov)
+    }
+
     total_variance <- sum(r)
 
     error_variance <- p %>%
@@ -274,14 +333,10 @@ run_bifactor.tidy_sem_bifactor <- function(x,
   )
 
   attr(o_df$omega, "label") <- "For G: the proportion of variance in all the items that is explained by the general factor and subfactors (explained variance). For subfactors: the proportion of variance in the subfactor's items explained by the general factor (the items loadings on the general factor) and subfactors (loadings of the items on the subfactor)."
-  attr(o_df$omegaH, "label") <- "For G: The proportion of variance in all items that is explained by the general factor (). For subfactors: The proportion of variance in subfactor's items that is explained by the general factor ()"
+  attr(o_df$omegaH, "label") <- "For G: The proportion of variance in all items that is explained by the general factor. For subfactors: The proportion of variance in subfactor's items that is explained by the general factor."
   attr(o_df$omegaHS, "label") <- "For G: the proportion of the variance in all items that is explained by the subfactors. For subfactors: The proportion of the variance in subfactor's items that is explained by the subfactor."
   attr(o_df$ECV, "label") <- "The proportion of explained variance in items (i.e. excluding error variance) explained by the general factor."
 
-  list(
-    lavaan_fit = f,
-    omega = o_df
-  )
-
+  o_df
 }
 

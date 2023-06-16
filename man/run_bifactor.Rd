@@ -4,15 +4,24 @@
 \alias{run_bifactor}
 \title{Run a bifactor model}
 \usage{
-run_bifactor(x, total_variance = c("modelled", "observed"), ...)
+run_bifactor(
+  x,
+  total_variance_calculation = c("observed", "modelled"),
+  standardization_method = c("std.all", "std.lv"),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class  \code{tidy_sem_bifactor}
 (generated using \code{\link[tidySEM]{bifactor}}).}
 
-\item{total_variance}{whether to compute total variances with the
+\item{total_variance_calculation}{whether to compute total variances with the
 model implied or the observed correlation matrix.
-Default: "modelled"}
+Default: "observed"}
+
+\item{standardization_method}{whether to base omega on the completely standardized
+solution or the solution in which latent variables are standardized (see lavaan)
+Default: "std.all"}
 
 \item{...}{Additional parameters passed to \code{\link{run_lavaan}}.}
 }
@@ -25,6 +34,18 @@ statistics (\code{omega}, \code{omega_subfactor},
 Run a bifactor model using lavaan.
 This function relies on \code{\link{run_lavaan}} to run the model.
 }
+\note{
+If setting total_variance_calculation to "observed" and standardization_method
+to "std.all", there is a
+discrepancy in results with psych::omegaFromSem if you do not feed
+lavaan a correlation matrix, because omegaFromSem extracts unstandardized
+loadings when computing omega, and does not take into
+account that loadings can exceed 1.0 if the model is
+based on anything else than a
+correlation matrix. The current implementation avoids this issue by using
+the covariance matrix when standardization_method is "std.lv".
+}
 \references{
-10.1080/00223891.2015.1089249; 10.1080/00223891.2015.1117928
+10.1080/00223891.2015.1089249
+10.1080/00223891.2015.1117928
 }
