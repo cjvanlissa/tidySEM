@@ -16,13 +16,13 @@ test_that("bch lrt works with continuous data", {
 , tolerance = .1)
 })
 
-df$y <- factor(cut(df$y, 3))
+df$y <- factor(cut(df$y, 3), labels = letters[1:3])
 set.seed(1)
 bch1 <- suppressWarnings(BCH(x = mix, data = df$y))
 
 test_that("bch works with ordinal data", {
   tab <- table_results(bch1, columns = NULL)
-  expect_equal(as.numeric(tab$est[tab$matrix == "Thresholds"]), as.numeric(c("-0.25", "8.20", "-0.76", "0.86", "-0.70", "0.89")), tolerance = .1)
+  expect_equal(as.numeric(tab$est[tab$matrix == "Thresholds"]), as.numeric(c("0.24", "-0.26", "8.29", "0.76", "-0.20", "0.86", "0.70", "-0.18", "0.89")), tolerance = .1)
 })
 
 test_that("bch lrt works with ordinal data", {

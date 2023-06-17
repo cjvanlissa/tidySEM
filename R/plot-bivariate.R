@@ -115,7 +115,6 @@ plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = T
 #' @export
 plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
   dots <- list(...)
-  browser()
   df_plot <- get_cordat(x)
   if("label_class" %in% names(dots)){
     df_plot$Class <- dots$label_class[df_plot$Class]
