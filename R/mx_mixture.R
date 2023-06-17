@@ -503,9 +503,9 @@ mixture_starts <- function(model,
     }
   }
   data <- model@data$observed
+  isfac <- sapply(data, inherits, what = "factor")
   if(!hasArg(splits)){
     df_split <- data
-    isfac <- sapply(df_split, inherits, what = "factor")
     if(any(isfac)){
       df_split[which(isfac)] <- lapply(df_split[which(isfac)], as.integer)
     }
