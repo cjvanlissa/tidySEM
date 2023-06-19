@@ -7,6 +7,7 @@ library(tidyverse)
 #' @param x An object for which a method exists, including \code{tidy_sem}
 #' (generated using \code{\link[tidySEM]{dictionary}}, or \code{data.frame} (for
 #' which \code{\link[tidySEM]{dictionary}} will be run first).
+#' @param G The name to use for the general factor. Default: "G".
 #' @param ... Additional parameters passed to \code{\link{measurement}}.
 #' @return An object of class \code{tidy_sem_bifactor} and \code{tidy_sem} which can be passed to \code{\link{run_bifactor}}.
 #' @examples
@@ -15,13 +16,15 @@ library(tidyverse)
 #' @note Currently does not support cross loadings.
 #' @rdname bifactor
 #' @export
-bifactor <- function(x, ...) {
+bifactor <- function(x,
+                     generalFactorName = "G", ...) {
   UseMethod("bifactor")
 }
 
 #' @method bifactor tidy_sem
 #' @export
-bifactor.tidy_sem <- function(x, ...) {
+bifactor.tidy_sem <- function(x,
+                              generalFactorName = "G", ...) {
 
   # Pull the indicator names from the dictionary of `x`
   ## Tidyverse code:
@@ -32,11 +35,11 @@ bifactor.tidy_sem <- function(x, ...) {
 
   ## G is not an allowed scale name
   with(x, {
-    dictionary[dictionary$name == "G" | dictionary$scale == "G",]
+    dictionary[dictionary$name == generalFactorName | dictionary$scale == generalFactorName,]
   }) -> Gs
 
   if (nrow(Gs) > 0) {
-    stop("Illegal indicator or factor name: 'G'. G is a reserved name representing the general factor.")
+    stop(paste0("Illegal indicator or factor name: '", generalFactorName, "'. This is a reserved name representing the general factor. You can change it using the 'generalFactorName' argument"))
   }
 
   ## Add latent variable G to the dictionary such that
@@ -74,24 +77,20 @@ bifactor.tidy_sem <- function(x, ...) {
   }) -> singles
 
   ### Step 2: set the error variance of these items to 0
-  m_mod <- m
   within(m, {
     singles_covs <- with(syntax, lhs == singles$name & op == "~~" & rhs == singles$name)
     syntax[singles_covs, c("free", "ustart")] <- 0
     rm(singles_covs)
   }) -> m_mod
 
-  ### This class is used by run_bifactor
-  class(m_mod) <- c("tidy_sem_bifactor", class(m_mod))
-
   m_mod
 }
 
-#' @title Run a bifactor model
-#' @description Run a bifactor model using lavaan.
-#' This function relies on \code{\link{run_lavaan}} to run the model.
-#' @param x An object of class  \code{tidy_sem_bifactor}
-#' (generated using \code{\link[tidySEM]{bifactor}}).
+
+#' @title Compute omega
+#' @description Compute omega based on a model fit object
+#' @param f A model fit object
+#' (fit object generated using \code{\link[tidySEM]{bifactor}}).
 #' @param total_variance_calculation whether to compute total variances with the
 #' model implied or the observed correlation matrix.
 #' Default: "observed"
@@ -115,53 +114,23 @@ bifactor.tidy_sem <- function(x, ...) {
 #' correlation matrix. The current implementation avoids this issue by using
 #' the covariance matrix when standardization_method is "std.lv".
 #'
-#' @rdname run_bifactor
+#' @rdname omega
 #' @export
-run_bifactor <- function(x,
-                         total_variance_calculation = c("observed", "modelled"),
-                         standardization_method = c("std.all", "std.lv"),
-                         ...) {
-  UseMethod("run_bifactor")
+omega <- function(f,
+                  total_variance_calculation = c("observed", "modelled"),
+                  standardization_method = c("std.all", "std.lv"),
+                  generalFactorName = "G") {
+  UseMethod("omega", f)
 }
 
-#' @method run_bifactor tidy_sem_bifactor
+#' @param parameters A data.frame containing columns 'lhs', 'op', 'rhs', and an 'estimate'
+#' @param covariance_matrix The covariance matrix
+#' @method omega default
 #' @export
-run_bifactor.tidy_sem_bifactor <- function(x,
-                                           total_variance_calculation = c("observed", "modelled"),
-                                           standardization_method = c("std.all", "std.lv"),
-                                           ...) {
-
-  # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
-  # It is more conservative to use the observed variance for omega calculation.
-  total_variance_calculation <- match.arg(total_variance_calculation,
-                              choices = c("observed", "modelled"),
-                              several.ok = F)
-
-  # A discrepancy in results compared to psych::omegaFromSem occurs for "std.all".
-  # I think std.all is still more appropriate given the computation formulas used.
-  # Note this is not important for when the total variance calculation is based on the modelled variance.
-  standardization_method <- match.arg(standardization_method,
-                                          choices = c("std.all", "std.lv"),
-                                          several.ok = F)
-
-  # Run the lavaan model. TODO: check as_lavaan and as_ram output
-  f <- run_lavaan(x, ...)
-
-  list(
-    lavaan_fit = f,
-    omega = compute_omega(x,
-                          f,
-                          total_variance_calculation = total_variance_calculation,
-                          standardization_method = standardization_method)
-  )
-
-}
-
-# Computes omega given an appropriate lavaan fit object and a tidysem object
-compute_omega <- function(x,
-                          f,
+omega.default <- function(parameters,
+                          covariance_matrix,
                           total_variance_calculation = c("observed", "modelled"),
-                          standardization_method = c("std.all", "std.lv")) {
+                          generalFactorName = generalFactorName) {
 
   # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
   # It is more conservative to use the observed variance for omega calculation.
@@ -169,33 +138,48 @@ compute_omega <- function(x,
                                           choices = c("observed", "modelled"),
                                           several.ok = F)
 
-  # A discrepancy in results compared to psych::omegaFromSem occurs for "std.all".
-  # I think std.all is still more appropriate given the computation formulas used.
-  # Note this is not important for when the total variance calculation is based on the modelled variance.
-  standardization_method <- match.arg(standardization_method,
-                                      choices = c("std.all", "std.lv"),
-                                      several.ok = F)
+  subfactors <- parameters %>%
+    filter(op == "=~", lhs != generalFactorName) %>% pull(lhs) %>% sort() %>% unique()
 
-  # List the parameter estimates
-  ## I use std.lv here because we restrict the variances of the latent variables to be 1
-  p <- lavaan::standardizedSolution(f, type = standardization_method) %>%
-    left_join(x$syntax, by = c("lhs", "op", "rhs"))
+  p_complete <- parameters
 
-  # Store the subfactors in a lookup table
-  subfactors <- x$dictionary %>%
-    filter(type == "latent", name != "G") %>%
-    pull(name)
+  if (total_variance_calculation == "modelled") {
+    p <- parameters
+
+
+
+  } else {
+
+    # These shenanigans are required because when cross loadings are modelled,
+    # they do count towards error variance of an item (or all items for a subfactor)
+    # but they only count towards the variance of one subfactor.
+    # This shenagigan stuff shows the downsides of basing the computation on
+    # observed covariances in items.
+    # source: psych function implementation
+    parameters %>%
+      filter(op == "=~", lhs != generalFactorName) %>%
+      group_by(rhs) %>%
+      mutate(is_max = estimate == max(abs(estimate))) %>%
+      ungroup() -> no_cross
+
+    parameters %>%
+      left_join(select(no_cross, lhs, op, rhs, is_max), by = c("lhs", "op", "rhs")) %>%
+      filter(is.na(is_max) | is_max) -> p
+
+  }
+
+  r <- covariance_matrix
 
   # Store a dictionary of the subfactor indicators without the G factor
-  subfactors_dictionary <- x$dictionary %>%
-    filter(type == "indicator", name != "G", scale != "G")
+  subfactors_dictionary <- p %>%
+    filter(op == "=~", lhs != generalFactorName) %>% select(scale = lhs, -op, name = rhs)
 
   # Compute the variances explained by each factor by summing and squaring loadings
   factor_loading_variances <- p %>%
     filter(op == "=~") %>%
-    mutate(est.std = abs(est.std)) %>%
+    mutate(estimate = abs(estimate)) %>%
     group_by(lhs) %>%
-    summarise(variance = sum(est.std)^2) %>%
+    summarise(variance = sum(estimate)^2) %>%
     rename(latent = lhs) %>% {
       setNames(pull(., variance), pull(., latent))
     }
@@ -203,34 +187,39 @@ compute_omega <- function(x,
   # Compute the variances explained by the general factor for each subfactor
   # by summing and squaring loadings
   subfactor_G_loading_variances <- p %>%
-    filter(op == "=~", lhs == "G") %>%
+    filter(op == "=~", lhs == generalFactorName) %>%
     left_join(subfactors_dictionary,
               by = c("rhs" = "name"),
               suffix = c("", "_subfactors")) %>%
-    mutate(est.std = abs(est.std)) %>%
+    mutate(estimate = abs(estimate)) %>%
     group_by(scale) %>%
-    summarise(variance = sum(est.std)^2) %>%
+    summarise(variance = sum(estimate)^2) %>%
     rename(subfactor = scale) %>% {
       setNames(pull(., variance), pull(., subfactor))
     }
 
   # Compute the error variances for each subfactor by summing error variances
+  # Note that
   item_error_variances_by_subfactor <- p %>%
     filter(op == "~~", lhs == rhs, lhs %in% subfactors_dictionary$name) %>%
     left_join(subfactors_dictionary,
               by = c("rhs" = "name"),
               suffix = c("", "_subfactors")) %>%
-    mutate(est.std = abs(est.std)) %>%
+    mutate(estimate = abs(estimate)) %>%
     group_by(scale) %>%
     # No squaring because they are already variances
-    summarise(variance = sum(est.std)) %>%
+    summarise(variance = sum(estimate)) %>%
     rename(subfactor = scale) %>% {
       setNames(pull(., variance), pull(., subfactor))
     }
 
+
+
   # The explained and total variances depend on model fit.
   # A more conservative way is to base it on the observed cor matrix, see below
   if (total_variance_calculation == "modelled") {
+
+
     explained_variance <- sum(factor_loading_variances)
 
     error_variance <- sum(item_error_variances_by_subfactor)
@@ -244,6 +233,7 @@ compute_omega <- function(x,
 
       vg + vs + ve
     }) %>% setNames(subfactors)
+
     ## We could also do:
     # r <- lavaan::lavInspect(f, "cor.ov") # Model implied correlation matrix
     # total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
@@ -253,28 +243,23 @@ compute_omega <- function(x,
     # }) %>% setNames(subfactors)
 
   } else {
-    if (standardization_method == "std.lv") {
-      r <- lavInspect(f, "sampstat")$cov
-    } else {
-      # std.all, so we use a correlation matrix.
-      # Note: I have no idea why psych::omegaFromSem uses "std.lv" or
-      # even unstandardized indicator parameters and still does a cov2cor...
-      r <- cov2cor(lavInspect(f, "sampstat")$cov)
-    }
 
     total_variance <- sum(r)
 
-    error_variance <- p %>%
+    # Note the usage of p_complete here to include cross loadings
+    error_variance <- p_complete %>%
       filter(op == "=~") %>%
-      mutate(est.std = abs(est.std)) %>%
+      mutate(estimate = abs(estimate)) %>%
       group_by(rhs) %>%
-      summarise(variance = sum(est.std^2)) %>%
+      summarise(variance = sum(estimate^2)) %>%
       rename(indicator = rhs) %>% {
         setNames(pull(., variance), pull(., indicator))
       } %>% sum() %>% {tr(r) - .}
 
     explained_variance <- total_variance - error_variance
 
+    # This code requires cross loadings to be excluded from the subfactors_dictionary
+    # or else we are counting the variance of that item twice
     total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
       sf_indicators <- subfactors_dictionary %>% filter(scale == sf) %>%
         pull(name)
@@ -284,7 +269,7 @@ compute_omega <- function(x,
 
   # For formulas see references of this function
 
-  omega_G <- (explained_variance / total_variance) %>% setNames("G")
+  omega_G <- (explained_variance / total_variance) %>% setNames(generalFactorName)
 
   omegaS_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
@@ -294,7 +279,7 @@ compute_omega <- function(x,
     (vg + vs) / total_variance_subfactor[sf]
   }) %>% setNames(subfactors)
 
-  omegaH_G <- (factor_loading_variances[["G"]] / total_variance) %>% setNames("G")
+  omegaH_G <- (factor_loading_variances[[generalFactorName]] / total_variance) %>% setNames(generalFactorName)
 
   omegaH_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
@@ -304,7 +289,7 @@ compute_omega <- function(x,
     (vg) / total_variance_subfactor[sf]
   }) %>% setNames(subfactors)
 
-  omegaHS_G <- (sum(factor_loading_variances[-which(names(factor_loading_variances) == "G")]) / total_variance) %>% setNames("G")
+  omegaHS_G <- (sum(factor_loading_variances[-which(names(factor_loading_variances) == generalFactorName)]) / total_variance) %>% setNames(generalFactorName)
 
   omegaHS_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
@@ -314,7 +299,7 @@ compute_omega <- function(x,
     (vs) / total_variance_subfactor[sf]
   }) %>% setNames(subfactors)
 
-  ecv_G <- (factor_loading_variances[["G"]] / explained_variance) %>% setNames("G")
+  ecv_G <- (factor_loading_variances[[generalFactorName]] / explained_variance) %>% setNames(generalFactorName)
   ecv_subfactors <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
@@ -328,7 +313,7 @@ compute_omega <- function(x,
     omegaHS = c(omegaHS_G, omegaHS_subfactor),
     ECV = c(ecv_G, ecv_subfactors),
 
-    row.names = c("G", subfactors),
+    row.names = c(generalFactorName, subfactors),
     stringsAsFactors = F
   )
 
@@ -338,5 +323,66 @@ compute_omega <- function(x,
   attr(o_df$ECV, "label") <- "The proportion of explained variance in items (i.e. excluding error variance) explained by the general factor."
 
   o_df
+
+}
+
+#' @method omega lavaan
+#' @export
+omega.lavaan <- function(f,
+                  total_variance_calculation = c("observed", "modelled"),
+                  standardization_method = c("std.all", "std.lv", "psych"),
+                  generalFactorName = "G") {
+
+  # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
+  # It is more conservative to use the observed variance for omega calculation.
+  total_variance_calculation <- match.arg(total_variance_calculation,
+                                          choices = c("observed", "modelled"),
+                                          several.ok = F)
+
+  # A discrepancy in results compared to psych::omegaFromSem occurs for "std.all".
+  # I think std.all is still more appropriate given the computation formulas used.
+  # Note this is not important for when the total variance calculation is based on the modelled variance.
+  standardization_method <- match.arg(standardization_method,
+                                      choices = c("std.all", "std.lv", "psych"),
+                                      several.ok = F)
+
+
+
+  if (total_variance_calculation == "observed") {
+    if (standardization_method == "std.lv") {
+      # List the parameter estimates
+      ## I use std.lv here because we restrict the variances of the latent variables to be 1
+      p <- lavaan::standardizedSolution(f, type = standardization_method) %>%
+        select(lhs, op, rhs, estimate = est.std)
+
+      r <- lavInspect(f, "sampstat")$cov
+    } else if(standardization_method == "psych") {
+      # List the parameter estimates
+      ## I use std.lv here because we restrict the variances of the latent variables to be 1
+      p <- lavaan::standardizedSolution(f, type = "std.lv") %>%
+        select(lhs, op, rhs, estimate = est.std)
+
+      r <- cov2cor(lavInspect(f, "sampstat")$cov)
+    } else {
+      # List the parameter estimates
+      ## I use std.lv here because we restrict the variances of the latent variables to be 1
+      p <- lavaan::standardizedSolution(f, type = standardization_method) %>%
+        select(lhs, op, rhs, estimate = est.std)
+
+      # std.all, so we use a correlation matrix.
+      # Note: I have no idea why psych::omegaFromSem uses "std.lv" or
+      # even unstandardized indicator parameters and still does a cov2cor...
+      r <- cov2cor(lavInspect(f, "sampstat")$cov)
+    }
+  } else {
+    # Model implied correlation matrix
+    r <- lavaan::lavInspect(f, "cor.ov")
+  }
+
+  omega.default(parameters = p,
+                covariance_matrix = r,
+                total_variance_calculation = total_variance_calculation,
+                generalFactorName = generalFactorName)
+
 }
 

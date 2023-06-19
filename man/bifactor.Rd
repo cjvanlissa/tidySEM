@@ -4,7 +4,7 @@
 \alias{bifactor}
 \title{Generate syntax for a bifactor model}
 \usage{
-bifactor(x, ...)
+bifactor(x, generalFactorName = "G", ...)
 }
 \arguments{
 \item{x}{An object for which a method exists, including \code{tidy_sem}
@@ -12,6 +12,8 @@ bifactor(x, ...)
 which \code{\link[tidySEM]{dictionary}} will be run first).}
 
 \item{...}{Additional parameters passed to \code{\link{measurement}}.}
+
+\item{G}{The name to use for the general factor. Default: "G".}
 }
 \value{
 An object of class \code{tidy_sem_bifactor} and \code{tidy_sem} which can be passed to \code{\link{run_bifactor}}.
