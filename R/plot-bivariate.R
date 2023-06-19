@@ -117,7 +117,15 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   dots <- list(...)
   df_plot <- get_cordat(x)
   if("label_class" %in% names(dots)){
-    df_plot$Class <- dots$label_class[df_plot$Class]
+    classlabs <- dots[["label_class"]]
+    origlabs <- unique(df_plot$Class)
+    if(isFALSE(length(classlabs) == length(origlabs))){
+      stop("The vector 'label_class' must be the same length as the number of classes.")
+    }
+    if(isFALSE(all(names(classlabs) %in% unique(df_plot$Class)))){
+      stop("The names of the vector 'label_class' must correspond to the class names.")
+    }
+    df_plot$Class <- classlabs[df_plot$Class]
   }
   df2 <- df_plot
   df2$Parameter <- paste0(df2$yvar, ".WITH.", df2$xvar)
@@ -133,7 +141,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   if (rawdata) {
     df_raw <- .extract_rawdata(x, select_vars = variables)
     if("label_class" %in% names(dots)){
-      df_raw$Class <- dots$label_class[df_raw$Class]
+      df_raw$Class <- classlabs[df_raw$Class]
     }
     df_raw$Class <- ordered(df_raw$Class, labels = levels(df_plot$Class))
   }
