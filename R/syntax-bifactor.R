@@ -199,7 +199,7 @@ omega.default <- function(parameters,
     }
 
   # Compute the error variances for each subfactor by summing error variances
-  # Note that
+  # TODO: Should this include cross loadings?
   item_error_variances_by_subfactor <- p %>%
     filter(op == "~~", lhs == rhs, lhs %in% subfactors_dictionary$name) %>%
     left_join(subfactors_dictionary,
@@ -263,6 +263,7 @@ omega.default <- function(parameters,
     total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
       sf_indicators <- subfactors_dictionary %>% filter(scale == sf) %>%
         pull(name)
+
       sum(r[sf_indicators, sf_indicators])
     }) %>% setNames(subfactors)
   }
