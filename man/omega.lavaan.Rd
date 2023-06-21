@@ -18,10 +18,15 @@ Compute omega based on a lavaan model fit object
 If setting total_variance_calculation to "observed" and standardization_method
 to "std.all", there is a
 discrepancy in results with psych::omegaFromSem if you do not feed
-lavaan a correlation matrix, because omegaFromSem extracts unstandardized
-loadings when computing omega, and does not take into
+\code{lavaan()} a correlation matrix, because omegaFromSem extracts unstandardized
+loadings when computing omega and uses the correlation matrix for variance calculations.
+
+psych::omegaFromSem also does not take into
 account that loadings can exceed 1.0 if the model is
-based on anything else than a
-correlation matrix. The current implementation avoids this issue by using
+based on anything else than a correlation matrix.
+The current implementation avoids this issue by using
 the covariance matrix when standardization_method is "std.lv".
+
+Also note that standardization_method "psych" was implemented to produce identical results
+to psych::omegaFromSem (when lavaan was given a correlation matrix)
 }

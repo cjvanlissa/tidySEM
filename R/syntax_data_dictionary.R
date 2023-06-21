@@ -66,7 +66,11 @@ tidy_sem.character <- function(x, split = "_"){
 #' @export
 tidy_sem.data.frame <- function(x, split = "_"){
   Args <- as.list(match.call()[-1])
+
+  if(anyNA(names(x))) stop("data frame 'x' has missing variable names")
+
   Args$x <- names(x)
+
   out <- list(dictionary = do.call(.dict_internal, Args),
               data = x,
               syntax = NULL)

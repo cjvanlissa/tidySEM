@@ -26,6 +26,10 @@ bifactor <- function(x,
 bifactor.tidy_sem <- function(x,
                               generalFactorName = "G", ...) {
 
+  if (anyNA(names(x$data))) {
+    stop("Some variable names in x$data are missing")
+  }
+
   # Pull the indicator names from the dictionary of `x`
   ## Tidyverse code:
   ### x$dictionary %>% filter(type == "observed") %>% pull(name) -> ids
@@ -55,6 +59,10 @@ bifactor.tidy_sem <- function(x,
   ## Measurement function picks up on the new G latent variable.
   ## However, it does not pick up on auto.fix.single because the x$dictionary
   ## has the G factor added, leading to two latent factors per observed variable
+
+  # An issue occurs because I am not specifying a mean structure.
+  # The tidysem as_ram does not like that.
+  # So we specify a meanstructure = TRUE, but set int.ov.free and int.lv.free to FALSE
   m <- measurement(xG,
                    std.lv = T,
                    auto.fix.single = T,
@@ -62,7 +70,7 @@ bifactor.tidy_sem <- function(x,
                    orthogonal = T,
                    int.ov.free = F,
                    int.lv.free = F,
-                   meanstructure = F,
+                   meanstructure = T,
                     ...
                    )
 
@@ -150,7 +158,7 @@ omega.default <- function(parameters,
     parameters %>%
       filter(op == "=~", lhs != generalFactorName) %>%
       group_by(rhs) %>%
-      mutate(is_max = estimate == max(abs(estimate))) %>%
+      mutate(is_max = abs(estimate) == max(abs(estimate))) %>%
       ungroup() -> no_cross
 
     parameters %>%
@@ -322,12 +330,17 @@ omega.default <- function(parameters,
 #' @note If setting total_variance_calculation to "observed" and standardization_method
 #' to "std.all", there is a
 #' discrepancy in results with psych::omegaFromSem if you do not feed
-#' lavaan a correlation matrix, because omegaFromSem extracts unstandardized
-#' loadings when computing omega, and does not take into
+#' \code{lavaan()} a correlation matrix, because omegaFromSem extracts unstandardized
+#' loadings when computing omega and uses the correlation matrix for variance calculations.
+#'
+#' psych::omegaFromSem also does not take into
 #' account that loadings can exceed 1.0 if the model is
-#' based on anything else than a
-#' correlation matrix. The current implementation avoids this issue by using
+#' based on anything else than a correlation matrix.
+#' The current implementation avoids this issue by using
 #' the covariance matrix when standardization_method is "std.lv".
+#'
+#' Also note that standardization_method "psych" was implemented to produce identical results
+#' to psych::omegaFromSem (when lavaan was given a correlation matrix)
 #' @method omega lavaan
 #' @export
 omega.lavaan <- function(f,
@@ -364,6 +377,7 @@ omega.lavaan <- function(f,
       p <- lavaan::standardizedSolution(f, type = "std.lv") %>%
         select(lhs, op, rhs, estimate = est.std)
 
+      # This is the odd thing that psych::omegaFromSem does...
       r <- cov2cor(lavInspect(f, "sampstat")$cov)
     } else {
       # List the parameter estimates
@@ -388,3 +402,39 @@ omega.lavaan <- function(f,
 
 }
 
+#' @title Compute omega (openMx)
+#' @description Compute omega based on a openMx model
+#' @method omega MxRAMModel
+#' @export
+omega.MxRAMModel <- function(f,
+                             total_variance_calculation = c("observed", "modelled"),
+                             generalFactorName = "G"
+                             ) {
+
+  # Does openmx provide different standardization methods like lavaan?
+  p <- mxStandardizeRAMpaths(f) %>%
+    transmute(lhs = col,
+              op = case_when(matrix == "A" ~ "=~", matrix == "S" ~ "~~", T ~ NA_character_),
+              rhs = row,
+              estimate = Std.Value)
+
+  # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
+  # It is more conservative to use the observed variance for omega calculation.
+  total_variance_calculation <- match.arg(total_variance_calculation,
+                                          choices = c("observed", "modelled"),
+                                          several.ok = F)
+
+  if (total_variance_calculation == "observed") {
+    # This fails with missing data. Does openMx provide a non-missing cov matrix
+    # like lavaan does?
+    r <- cor(f$data$observed)
+  } else if (total_variance_calculation == "modelled") {
+    r <- cov2cor(f$expectation$output$covariance)
+  }
+
+  omega.default(parameters = p,
+                covariance_matrix = r,
+                total_variance_calculation = total_variance_calculation,
+                generalFactorName = generalFactorName)
+
+}
