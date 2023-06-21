@@ -22,27 +22,14 @@ Default: "observed"}
 \item{standardization_method}{whether to base omega on the completely standardized
 solution or the solution in which latent variables are standardized (see lavaan)
 Default: "std.all"}
-
-\item{...}{Additional parameters passed to \code{\link{run_lavaan}}.}
 }
 \value{
-A list containing a \code{lavaan} fit object (\code{fit}) and omega
-statistics (\code{omega}, \code{omega_subfactor},
-\code{omegah}, \code{omegah_subfactor}).
+A dataframe containing omega statistics for the general factor
+and the subfactors
+(\code{omega} and \code{omegaS}, \code{omegaH} and \code{omegaHS}, and \code{ECV}).
 }
 \description{
 Compute omega based on a model fit object
-}
-\note{
-If setting total_variance_calculation to "observed" and standardization_method
-to "std.all", there is a
-discrepancy in results with psych::omegaFromSem if you do not feed
-lavaan a correlation matrix, because omegaFromSem extracts unstandardized
-loadings when computing omega, and does not take into
-account that loadings can exceed 1.0 if the model is
-based on anything else than a
-correlation matrix. The current implementation avoids this issue by using
-the covariance matrix when standardization_method is "std.lv".
 }
 \references{
 10.1080/00223891.2015.1089249
