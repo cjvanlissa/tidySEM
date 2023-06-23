@@ -393,11 +393,14 @@ omega.lavaan <- function(f,
     # std.lv is valid with a covariance matrix because the model standardized latent variable variances.
     # needs testing with real data
     if (standardization_method == "std.lv") {
+      # This option primarily exists to compare results with other packages.
+
       # List the parameter estimates
-      ## I use std.lv here because we restrict the variances of the latent variables to be 1
       p <- lavaan::standardizedSolution(f, type = standardization_method)[,c("lhs", "op", "rhs", "est.std")]
       colnames(p) <- c("lhs", "op", "rhs", "estimate")
 
+      # This cov matrix is under the assumption that f was built with a correlation matrix!
+      # This assumption is in place because bifactor standardizes latent variances to 1
       r <- lavInspect(f, "sampstat")$cov
     } else if(standardization_method == "psych") {
       # List the parameter estimates
