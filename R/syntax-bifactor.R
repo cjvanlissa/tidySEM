@@ -30,68 +30,65 @@ bifactor.tidy_sem <- function(x,
     stop("Some variable names in x$data are missing")
   }
 
-  # Pull the indicator names from the dictionary of `x`
-  ## Tidyverse code:
-  ### x$dictionary %>% filter(type == "observed") %>% pull(name) -> ids
-  with(x, {
-    dictionary[dictionary$type == "observed","name"]
-  }) -> ids
-
-  ## G is not an allowed scale name
-  with(x, {
-    dictionary[dictionary$name == generalFactorName | dictionary$scale == generalFactorName,]
-  }) -> Gs
-
-  if (nrow(Gs) > 0) {
-    stop(paste0("Illegal indicator or factor name: '", generalFactorName, "'. This is a reserved name representing the general factor. You can change it using the 'generalFactorName' argument"))
+  if (anyNA(x$dictionary$name)) {
+    stop("Some variables in tidy_sem model or data don't load on any factor")
   }
 
-  ## Add latent variable G to the dictionary such that
-  ## the `measurement` function picks up on it.
-  xG <- x
-  xG$dictionary <- rbind(data.frame(
-    name = ids,
-    scale = "G",
-    type = "observed",
-    label = ids
-  ), xG$dictionary)
+  lav_syntax <- c()
 
-  ## Measurement function picks up on the new G latent variable.
-  ## However, it does not pick up on auto.fix.single because the x$dictionary
-  ## has the G factor added, leading to two latent factors per observed variable
+  single_indicators <- c()
 
-  # An issue occurs because I am not specifying a mean structure.
-  # The tidysem as_ram does not like that.
-  # So we specify a meanstructure = TRUE, but set int.ov.free and int.lv.free to FALSE
-  m <- measurement(xG,
-                   std.lv = T,
-                   auto.fix.single = T,
-                   auto.fix.first = F,
-                   orthogonal = T,
-                   int.ov.free = F,
-                   int.lv.free = F,
-                   meanstructure = T,
-                    ...
-                   )
+
+  # G
+  synt <- paste0(generalFactorName, "=~", x$dictionary$name)
+  lav_syntax <- c(lav_syntax, synt)
+
+  # Subscales
+  for(scale in unique(c(x$dictionary$scale))) {
+    sub_dict <- with(x, {
+      dictionary[dictionary$scale == scale,]
+    })
+
+    synt <- paste0(sub_dict$scale, "=~", sub_dict$name)
+
+    if (nrow(sub_dict) < 3) {
+      if (nrow(sub_dict) < 2) {
+        # Fix error to zero, auto.fix.single doesn't do the trick because of G
+        # Do this later
+        single_indicators <- c(single_indicators, sub_dict$name)
+      } else {
+        # Fix loadings to equality
+        loading_name <- paste0(scale, "_eq")
+        synt <- paste0(sub_dict$scale, "=~", loading_name, "*", sub_dict$name)
+
+      }
+    } else {
+
+    }
+
+
+    lav_syntax <- c(lav_syntax, synt)
+  }
+
+
+
+  syntax <- add_paths(NULL, lav_syntax,
+                      std.lv = T,
+                      auto.fix.single = T,
+                      auto.fix.first = F,
+                      orthogonal = T,
+                      int.ov.free = F,
+                      int.lv.free = F,
+                      meanstructure = T)
 
   ## Because auto.fix.single doesn't work because each item loads on the general factor
-  ## and (at least) another latent variable. I am fixing it manually here in two steps
-  ### Step 1: find the factors that only have one indicator variable
-  ### Tidyverse code:
-  ### m$dictionary %>% group_by(scale) %>% mutate(n = n()) %>% ungroup() %>% filter(n == 1, type == "indicator") -> singles
-  with(xG, {
-    table(dictionary$scale) -> scales_tabs
-    dictionary[scales_tabs[dictionary$scale] == 1,]
-  }) -> singles
+  ## and (at least) another latent variable. I am fixing it (to zero) manually here
+  single_rows <- with(syntax, lhs %in% single_indicators & op == "~~" & rhs %in% single_indicators)
+  syntax[single_rows, c("free", "ustart")] <- 0
 
-  ### Step 2: set the error variance of these items to 0
-  within(m, {
-    singles_covs <- with(syntax, lhs == singles$name & op == "~~" & rhs == singles$name)
-    syntax[singles_covs, c("free", "ustart")] <- 0
-    rm(singles_covs)
-  }) -> m_mod
+  x$syntax <- syntax
 
-  m_mod
+  x
 }
 
 
@@ -149,10 +146,10 @@ omega.default <- function(parameters,
 
   } else {
 
-    # These shenanigans are required because when cross loadings are modelled,
+    # This logic is required because when cross loadings are modelled,
     # they do count towards error variance of an item (or all items for a subfactor)
     # but they only count towards the variance of one subfactor.
-    # This shenagigan stuff shows the downsides of basing the computation on
+    # This stuff shows a downside of basing the computation on
     # observed covariances in items.
     # source: psych function implementation
     parameters %>%

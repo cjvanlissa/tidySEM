@@ -105,10 +105,10 @@ test_that("Bifactor gives highly similar results in lavaan, psych, and openMx", 
       # At this point I can safely say that the standardization_method "psych"
       # together with total_variance_calculation = "observed"
       # is identical to psych::omegaFromSem
-      b <- omega(f_lavaan, standardization_method = "psych", total_variance_calculation = "observed")[,-4]
+      b <- omega(f_lavaan, standardization_method = "psych", total_variance_calculation = "observed", generalFactorName = "Z")[,-4]
       bstd <- b[order(b[,1], decreasing = T),]
 
-      mx <- omega(f_openmx, total_variance_calculation = "observed")[,-4]
+      mx <- omega(f_openmx, total_variance_calculation = "observed", generalFactorName = "Z")[,-4]
       cstd <- mx[order(mx[,1], decreasing = T),]
 
       a_b <- abs(astd - bstd)
@@ -132,6 +132,7 @@ test_that("Bifactor gives highly similar results in lavaan, psych, and openMx", 
 
   }
 
+  expect_true(all(na.omit(results_psych_data$a_b < 0.000001)))
   expect_true(all(na.omit(results_psych_data$max_error_margin < error_margin)))
 })
 
