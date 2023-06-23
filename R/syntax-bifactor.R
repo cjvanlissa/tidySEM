@@ -1,6 +1,4 @@
 
-# TODO: remove this to do proper importing of functions. Don't rely on tidyverse
-library(tidyverse)
 
 #' @title Generate syntax for a bifactor model
 #' @description Generate syntax for a bifactor model for latent variables.
@@ -134,8 +132,9 @@ omega.default <- function(parameters,
                                           choices = c("observed", "modelled"),
                                           several.ok = F)
 
-  subfactors <- parameters %>%
-    filter(op == "=~", lhs != generalFactorName) %>% pull(lhs) %>% sort() %>% unique()
+  subfactors <- with(parameters, {
+    sort(unique(lhs[op == "=~" & lhs != generalFactorName]))
+  })
 
   p_complete <- parameters
 
@@ -152,63 +151,77 @@ omega.default <- function(parameters,
     # This stuff shows a downside of basing the computation on
     # observed covariances in items.
     # source: psych function implementation
-    parameters %>%
-      filter(op == "=~", lhs != generalFactorName) %>%
-      group_by(rhs) %>%
-      mutate(is_max = abs(estimate) == max(abs(estimate))) %>%
-      ungroup() -> no_cross
 
-    parameters %>%
-      left_join(select(no_cross, lhs, op, rhs, is_max), by = c("lhs", "op", "rhs")) %>%
-      filter(is.na(is_max) | is_max) -> p
+    subfactor_loadings <- with(parameters, {
+      parameters[op == "=~" & lhs != generalFactorName,]
+    })
+    subfactor_loadings$estimate <- abs(subfactor_loadings$estimate)
+    subfactor_loadings$is_max <- sapply(1:nrow(subfactor_loadings), function(i){
+      subfactor_loadings$estimate[i] == max(with(subfactor_loadings, {estimate[rhs == rhs[i]]}))
+    })
+
+    subfactor_loadings$key = with(subfactor_loadings, paste0(lhs, op, rhs))
+
+    pa <- parameters
+    pa$key <- with(pa, paste0(lhs, op, rhs))
+
+    pa$is_max <- subfactor_loadings[match(pa$key, subfactor_loadings$key),]$is_max
+
+    p <- pa[is.na(pa$is_max) | pa$is_max,]
 
   }
 
   r <- covariance_matrix
 
   # Store a dictionary of the subfactor indicators without the G factor
-  subfactors_dictionary <- p %>%
-    filter(op == "=~", lhs != generalFactorName) %>% select(scale = lhs, -op, name = rhs)
+  subfactors_dictionary <- p[p$op == "=~" & p$lhs != generalFactorName,c("lhs", "rhs")]
+  names(subfactors_dictionary) <- c("scale", "name")
 
   # Compute the variances explained by each factor by summing and squaring loadings
-  factor_loading_variances <- p %>%
-    filter(op == "=~") %>%
-    mutate(estimate = abs(estimate)) %>%
-    group_by(lhs) %>%
-    summarise(variance = sum(estimate)^2) %>%
-    rename(latent = lhs) %>% {
-      setNames(pull(., variance), pull(., latent))
-    }
+  p_loadings_abs <- within(p[p$op == "=~",], {
+    estimate <- abs(estimate)
+  })
+
+  factor_loading_variances <- sapply(unique(p_loadings_abs$lhs), function(l) {
+    l_est <- with(p_loadings_abs, {
+      estimate[lhs == l]
+    })
+    sum(l_est)^2
+  })
+
+
 
   # Compute the variances explained by the general factor for each subfactor
   # by summing and squaring loadings
-  subfactor_G_loading_variances <- p %>%
-    filter(op == "=~", lhs == generalFactorName) %>%
-    left_join(subfactors_dictionary,
-              by = c("rhs" = "name"),
-              suffix = c("", "_subfactors")) %>%
-    mutate(estimate = abs(estimate)) %>%
-    group_by(scale) %>%
-    summarise(variance = sum(estimate)^2) %>%
-    rename(subfactor = scale) %>% {
-      setNames(pull(., variance), pull(., subfactor))
-    }
+  p_loadings_general_abs <- within(p[p$op == "=~" & p$lhs == generalFactorName,], {
+    estimate <- abs(estimate)
+  })
+
+  lookup <- match(p_loadings_general_abs$rhs, table = subfactors_dictionary$name)
+  p_loadings_general_abs_scale <- cbind(p_loadings_general_abs, scale = subfactors_dictionary[lookup,"scale"])
+
+  subfactor_G_loading_variances <- sapply(unique(p_loadings_general_abs_scale$scale), function(l) {
+    l_est <- with(p_loadings_general_abs_scale, {
+      estimate[scale == l]
+    })
+    sum(l_est)^2
+  })
+
 
   # Compute the error variances for each subfactor by summing error variances
-  item_error_variances_by_subfactor <- p %>%
-    filter(op == "~~", lhs == rhs, lhs %in% subfactors_dictionary$name) %>%
-    left_join(subfactors_dictionary,
-              by = c("rhs" = "name"),
-              suffix = c("", "_subfactors")) %>%
-    mutate(estimate = abs(estimate)) %>%
-    group_by(scale) %>%
-    # No squaring because they are already variances
-    summarise(variance = sum(estimate)) %>%
-    rename(subfactor = scale) %>% {
-      setNames(pull(., variance), pull(., subfactor))
-    }
+  p_error <- within(p[p$op == "~~" & p$lhs == p$rhs & p$lhs %in% subfactors_dictionary$name,], {
+    estimate <- abs(estimate)
+  })
 
+  lookup <- match(p_error$rhs, table = subfactors_dictionary$name)
+  p_error_scale <- cbind(p_error, scale = subfactors_dictionary[lookup,"scale"])
 
+  item_error_variances_by_subfactor <- sapply(unique(p_error_scale$scale), function(l) {
+    l_est <- with(p_error_scale, {
+      estimate[scale == l]
+    })
+    sum(l_est)
+  })
 
   # The explained and total variances depend on model fit.
   # A more conservative way is to base it on the observed cor matrix, see below
@@ -227,7 +240,8 @@ omega.default <- function(parameters,
       ve <- item_error_variances_by_subfactor[sf]
 
       vg + vs + ve
-    }) %>% setNames(subfactors)
+    })
+    names(total_variance_subfactor) <- subfactors
 
     ## We could also do:
     # r <- lavaan::lavInspect(f, "cor.ov") # Model implied correlation matrix
@@ -242,30 +256,37 @@ omega.default <- function(parameters,
     total_variance <- sum(r)
 
     # Note the usage of p_complete here to include cross loadings
-    error_variance <- p_complete %>%
-      filter(op == "=~") %>%
-      mutate(estimate = abs(estimate)) %>%
-      group_by(rhs) %>%
-      summarise(variance = sum(estimate^2)) %>%
-      rename(indicator = rhs) %>% {
-        setNames(pull(., variance), pull(., indicator))
-      } %>% sum() %>% {tr(r) - .}
+    p_complete_loadings_abs <- within(p_complete[p_complete$op == "=~",], {
+      estimate <- abs(estimate)
+    })
+
+    error_variance_indicators <- sapply(unique(p_complete_loadings_abs$rhs), function(l) {
+      l_est <- with(p_complete_loadings_abs, {
+        estimate[rhs == l]^2
+      })
+      sum(l_est)
+    })
+
+    error_variance <- tr(r) - sum(error_variance_indicators)
 
     explained_variance <- total_variance - error_variance
 
     # This code requires cross loadings to be excluded from the subfactors_dictionary
     # or else we are counting the variance of that item twice
     total_variance_subfactor <- sapply(X = subfactors, FUN = function(sf) {
-      sf_indicators <- subfactors_dictionary %>% filter(scale == sf) %>%
-        pull(name)
+      sf_indicators <- with(subfactors_dictionary, {
+        name[scale == sf]
+      })
 
       sum(r[sf_indicators, sf_indicators])
-    }) %>% setNames(subfactors)
+    })
+
   }
 
   # For formulas see references of this function
 
-  omega_G <- (explained_variance / total_variance) %>% setNames(generalFactorName)
+  omega_G <- (explained_variance / total_variance)
+  names(omega_G) <- generalFactorName
 
   omegaS_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
@@ -273,9 +294,11 @@ omega.default <- function(parameters,
     ve <- item_error_variances_by_subfactor[sf]
 
     (vg + vs) / total_variance_subfactor[sf]
-  }) %>% setNames(subfactors)
+  })
+  names(omegaS_subfactor) <- subfactors
 
-  omegaH_G <- (factor_loading_variances[[generalFactorName]] / total_variance) %>% setNames(generalFactorName)
+  omegaH_G <- (factor_loading_variances[[generalFactorName]] / total_variance)
+  names(omegaH_G) <- generalFactorName
 
   omegaH_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
@@ -283,9 +306,11 @@ omega.default <- function(parameters,
     ve <- item_error_variances_by_subfactor[sf]
 
     (vg) / total_variance_subfactor[sf]
-  }) %>% setNames(subfactors)
+  })
+  names(omegaH_subfactor) <- subfactors
 
-  omegaHS_G <- (sum(factor_loading_variances[-which(names(factor_loading_variances) == generalFactorName)]) / total_variance) %>% setNames(generalFactorName)
+  omegaHS_G <- (sum(factor_loading_variances[-which(names(factor_loading_variances) == generalFactorName)]) / total_variance)
+  names(omegaHS_G) <- generalFactorName
 
   omegaHS_subfactor <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
@@ -293,15 +318,19 @@ omega.default <- function(parameters,
     ve <- item_error_variances_by_subfactor[sf]
 
     (vs) / total_variance_subfactor[sf]
-  }) %>% setNames(subfactors)
+  })
+  names(omegaHS_subfactor) <- subfactors
 
-  ecv_G <- (factor_loading_variances[[generalFactorName]] / explained_variance) %>% setNames(generalFactorName)
+  ecv_G <- (factor_loading_variances[[generalFactorName]] / explained_variance)
+  names(ecv_G) <- generalFactorName
+
   ecv_subfactors <- sapply(X = subfactors, FUN = function(sf) {
     vg <- subfactor_G_loading_variances[sf]
     vs <- factor_loading_variances[sf]
 
     (vg) / (vg + vs)
-  }) %>% setNames(subfactors)
+  })
+  names(ecv_subfactors) <- subfactors
 
   o_df <- data.frame(
     omega = c(omega_G, omegaS_subfactor),
@@ -361,26 +390,28 @@ omega.lavaan <- function(f,
 
 
   if (total_variance_calculation == "observed") {
+    # std.lv is valid with a covariance matrix because the model standardized latent variable variances.
+    # needs testing with real data
     if (standardization_method == "std.lv") {
       # List the parameter estimates
       ## I use std.lv here because we restrict the variances of the latent variables to be 1
-      p <- lavaan::standardizedSolution(f, type = standardization_method) %>%
-        select(lhs, op, rhs, estimate = est.std)
+      p <- lavaan::standardizedSolution(f, type = standardization_method)[,c("lhs", "op", "rhs", "est.std")]
+      colnames(p) <- c("lhs", "op", "rhs", "estimate")
 
       r <- lavInspect(f, "sampstat")$cov
     } else if(standardization_method == "psych") {
       # List the parameter estimates
       ## I use std.lv here because we restrict the variances of the latent variables to be 1
-      p <- lavaan::standardizedSolution(f, type = "std.lv") %>%
-        select(lhs, op, rhs, estimate = est.std)
+      p <- lavaan::standardizedSolution(f, type = "std.lv")[,c("lhs", "op", "rhs", "est.std")]
+      colnames(p) <- c("lhs", "op", "rhs", "estimate")
 
       # This is the odd thing that psych::omegaFromSem does...
       r <- cov2cor(lavInspect(f, "sampstat")$cov)
     } else {
       # List the parameter estimates
       ## I use std.lv here because we restrict the variances of the latent variables to be 1
-      p <- lavaan::standardizedSolution(f, type = standardization_method) %>%
-        select(lhs, op, rhs, estimate = est.std)
+      p <- lavaan::standardizedSolution(f, type = standardization_method)[,c("lhs", "op", "rhs", "est.std")]
+      colnames(p) <- c("lhs", "op", "rhs", "estimate")
 
       # std.all, so we use a correlation matrix.
       # Note: I have no idea why psych::omegaFromSem uses "std.lv" or
@@ -409,11 +440,12 @@ omega.MxRAMModel <- function(f,
                              ) {
 
   # Does openmx provide different standardization methods like lavaan?
-  p <- mxStandardizeRAMpaths(f) %>%
-    transmute(lhs = col,
-              op = case_when(matrix == "A" ~ "=~", matrix == "S" ~ "~~", T ~ NA_character_),
-              rhs = row,
-              estimate = Std.Value)
+  p <- mxStandardizeRAMpaths(f)[,c("col", "matrix", "row", "Std.Value")]
+  colnames(p) <- c("lhs", "op", "rhs", "estimate")
+
+  p$op <- ifelse(p$op == "A", "=~", p$op)
+  p$op <- ifelse(p$op == "S", "~~", p$op)
+
 
   # A discrepancy in results can occur if model fit is not adequate (unmodelled error variance).
   # It is more conservative to use the observed variance for omega calculation.
@@ -427,6 +459,8 @@ omega.MxRAMModel <- function(f,
     r <- cor(f$data$observed)
   } else if (total_variance_calculation == "modelled") {
     r <- cov2cor(f$expectation$output$covariance)
+    rownames(r) <- names(f$data$observed)
+    colnames(r) <- names(f$data$observed)
   }
 
   omega.default(parameters = p,
