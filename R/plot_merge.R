@@ -15,8 +15,8 @@ merge.sem_graph <- function(..., nrow = NULL, ncol = NULL, distance_x = 1, dista
   if(!(nrow*ncol)>=n) stop("Specify nrow and/or ncol.")
   m <- matrix(nrow = nrow, ncol = ncol)
   m[1:n] <- 1:n
-  edges <- p1$edges
-  nodes <- p1$nodes
+  edges <- dots[[1]]$edges
+  nodes <- dots[[1]]$nodes
   xwidths <- apply(m, 2, function(x){
     max(unlist(lapply(dots[as.vector(x)], function(d){d$nodes$node_xmax})))
   })
@@ -25,16 +25,17 @@ merge.sem_graph <- function(..., nrow = NULL, ncol = NULL, distance_x = 1, dista
   })
 
   for(i in 2:n){
-    if(any(dots[[i]]$nodes$name %in% p1$nodes$name)){
-      repthese <- dots[[i]]$nodes$name[dots[[i]]$nodes$name %in% p1$nodes$name]
-      names(repthese) <- paste0(repthese, ".", i)
-      dots[[i]]$nodes$name[match(dots[[i]]$nodes$name, repthese)] <- names(repthese)
-      dots[[i]]$edges$from[dots[[i]]$edges$from %in% repthese] <- names(repthese)[match(dots[[i]]$edges$from, repthese)]
-      dots[[i]]$edges$to[dots[[i]]$edges$to %in% repthese] <- names(repthese)[match(dots[[i]]$edges$to, repthese)]
+    if(any(dots[[i]]$nodes$name %in% dots[[1]]$nodes$name)){
+      repthese <- dots[[i]]$nodes$name[dots[[i]]$nodes$name %in% dots[[1]]$nodes$name]
+      names(repthese) <- repthese
+      repthese[] <- paste0(repthese, ".", i)
+      dots[[i]]$nodes$name[dots[[i]]$nodes$name %in% names(repthese)] <- repthese[dots[[i]]$nodes$name[dots[[i]]$nodes$name %in% names(repthese)]]
+      dots[[i]]$edges$from[dots[[i]]$edges$from %in% names(repthese)] <- repthese[dots[[i]]$edges$from[dots[[i]]$edges$from %in% names(repthese)]]
+      dots[[i]]$edges$to[dots[[i]]$edges$to %in% names(repthese)] <- repthese[dots[[i]]$edges$to[dots[[i]]$edges$to %in% names(repthese)]]
     }
     thisrow <- which(apply(m, 1, function(x){any(x==i)}))
     thiscol <- which(apply(m, 2, function(x){any(x==i)}))
-    browser()
+
     addnodes <- dots[[i]]$nodes
     addx <- sum(xwidths[0:(thiscol-1)]) + (thiscol-1)*distance_x
     addnodes[c("x", "node_xmax", "node_xmin")] <- addnodes[c("x", "node_xmax", "node_xmin")] + addx
@@ -42,8 +43,9 @@ merge.sem_graph <- function(..., nrow = NULL, ncol = NULL, distance_x = 1, dista
     addnodes[c("y", "node_ymax", "node_ymin")] <- addnodes[c("y", "node_ymax", "node_ymin")] + addy
 
     dots[[i]]$nodes <- addnodes
-    p1$edges <- rbind(p1$edges, dots[[m[i]]]$edges)
-    p1$nodes <- rbind(p1$nodes, dots[[m[i]]]$nodes)
+    dots[[1]]$edges <- rbind(dots[[1]]$edges, dots[[m[i]]]$edges)
+    dots[[1]]$nodes <- rbind(dots[[1]]$nodes, dots[[m[i]]]$nodes)
   }
-  return(p1)
+  return(dots[[1]])
 }
+
