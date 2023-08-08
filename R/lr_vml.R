@@ -8,6 +8,11 @@
 #' @references Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
 #' normal mixture. Biometrika. 2001;88(3):767–778.
 #' \doi{10.1093/biomet/88.3.767}
+#' @references Vuong, Q. H. (1989). Likelihood ratio tests for model selection
+#' and non-nested hypotheses. Econometrica, 57, 307-333. \doi{10.2307/1912557}
+#' @references Merkle, E. C., You, D., & Preacher, K. (2016). Testing non-nested
+#' structural equation models. Psychological Methods, 21, 151-163.
+#' \doi{10.1037/met0000038}
 #' @examples
 #' lr_lmr(
 #'  x = list("-2LL" = -741.02,
@@ -130,4 +135,17 @@ print.LRT <- function(x,
            paste0("< ", 1/10^digits),
            paste0("= ", formatC(x[["lmr_p"]], digits = digits, format = "f")))
     , sep = "")
+}
+
+
+#' @method lr_lmr MxModel
+#' @export
+lr_lmr.MxModel() <- function(x, ...){
+  dots <- list(...)
+  object1 <- x
+  object2 <- dots[[which(sapply(dots, inherits, what = "MxModel"))]]
+  vuongtest(object1, object2,
+            score1 = function(x)imxRowGradients(x) * -.5,
+            score2 = function(x)imxRowGradients(x) * -.5,
+            dots)
 }
