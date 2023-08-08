@@ -140,7 +140,7 @@ print.LRT <- function(x,
 
 #' @method lr_lmr MxModel
 #' @export
-lr_lmr.MxModel() <- function(x, ...){
+lr_lmr.MxModel <- function(x, ...){
   dots <- list(...)
   object1 <- x
   object2 <- dots[[which(sapply(dots, inherits, what = "MxModel"))]]
