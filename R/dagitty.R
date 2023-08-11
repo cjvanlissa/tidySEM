@@ -59,9 +59,15 @@ get_edges.dagitty <- function(x, label = "est", ...){
 #' @importFrom dagitty coordinates
 get_nodes.dagitty <- function(x, label = "est", ...){
   nods <- dagitty::coordinates(x)
-  labs <- names(nods$x)
+  nams <- labs <- names(nods$x)
+  if(!is.null(attr(x, "labels"))){
+    attrlab <- attr(x, "labels")
+    if(any(labs %in% names(attrlab))){
+      labs[labs %in% names(attrlab)] <- attrlab[labs[labs %in% names(attrlab)]]
+    }
+  }
   nods <- data.frame(
-    name = labs,
+    name = nams,
     shape = "none",
     label = labs
   )
