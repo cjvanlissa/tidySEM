@@ -41,7 +41,8 @@ Imports:
     car,
     future.apply,
     progressr,
-    dagitty
+    dagitty,
+    nonnest2
 Suggests: 
     testthat,
     knitr,
