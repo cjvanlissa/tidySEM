@@ -19,6 +19,15 @@ BLRT <- function(x, replications = 100, ...){
   UseMethod("BLRT", x)
 }
 
+#' @method BLRT MxModel
+#' @export
+BLRT.MxModel <- function(x, replications = 100, ...){
+  dots <- list(...)
+  object1 <- x
+  object2 <- dots[[which(sapply(dots, inherits, what = "MxModel"))[1]]]
+  blrt_internal(object1, object2, replications = replications)
+}
+
 # blrt_simple <- function(mod_simple, mod_complex, replications = 100, parallel = TRUE){
 #' @method BLRT mixture_list
 #' @export
@@ -38,7 +47,7 @@ BLRT.mixture_list <- function(x, replications = 100, ...){
   }
   out <- data.frame(null = c(NA, sapply(x[-length(x)], function(x){x@name})),
                     alt = c(NA, sapply(x[-1], function(x){x@name})),
-                    out)
+                    out)[-1, , drop = FALSE]
   rownames(out) <- NULL
   return(out)
 }

@@ -42,4 +42,11 @@ lr_lmr(
 Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
 normal mixture. Biometrika. 2001;88(3):767–778.
 \doi{10.1093/biomet/88.3.767}
+
+Vuong, Q. H. (1989). Likelihood ratio tests for model selection
+and non-nested hypotheses. Econometrica, 57, 307-333. \doi{10.2307/1912557}
+
+Merkle, E. C., You, D., & Preacher, K. (2016). Testing non-nested
+structural equation models. Psychological Methods, 21, 151-163.
+\doi{10.1037/met0000038}
 }

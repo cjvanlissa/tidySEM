@@ -409,7 +409,7 @@ as_mx_mixture <- function(model,
   if(classes > 1){
     mix <- mxModel(
       model = paste0("mix", classes),
-      lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE)) }),
+      lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE, rowDiagnostics = TRUE)) }),
       mxData(data, type = "raw"),
       mxMatrix(values=1, nrow=1, ncol=classes, lbound = 1e-4, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
       mxExpectationMixture(paste0("class", 1:classes), scale="sum"),
@@ -418,7 +418,7 @@ as_mx_mixture <- function(model,
     mix <- mxModel(
       model[[1]],
       mxData(data, type = "raw"),
-      mxFitFunctionML(),
+      mxFitFunctionML(rowDiagnostics = TRUE),
       name = paste0("mix", classes))
   }
   attr(mix, "tidySEM") <- "mixture"
@@ -645,7 +645,7 @@ estimate_mx_mixture <- function(model,
     if(!is.null(cls[["F"]])){
       cls$F$values <- strts[[paste0("class", strt)]]$F$values
     }
-    mxModel(cls, mxFitFunctionML(vector=TRUE))
+    mxModel(cls, mxFitFunctionML(vector=TRUE, rowDiagnostics = TRUE))
   }, cls = model, strt = 1:classes)
   # Prepare mixture model
   mix <- mxModel(

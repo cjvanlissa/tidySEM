@@ -139,13 +139,63 @@ print.LRT <- function(x,
 
 
 #' @method lr_lmr MxModel
+#' @importFrom nonnest2 vuongtest
 #' @export
 lr_lmr.MxModel <- function(x, ...){
   dots <- list(...)
   object1 <- x
-  object2 <- dots[[which(sapply(dots, inherits, what = "MxModel"))]]
-  vuongtest(object1, object2,
-            score1 = function(x)imxRowGradients(x) * -.5,
-            score2 = function(x)imxRowGradients(x) * -.5,
-            dots)
+  object2 <- dots[[which(sapply(dots, inherits, what = "MxModel"))[1]]]
+  lr_res <- vuongtest(object1, object2,
+            score1 = function(x)mixgrads(x) * -.5,
+            score2 = function(x)mixgrads(x) * -.5,
+            nested = FALSE)
+  return(data.frame(lr = -1*lr_res$LRTstat, df = length(omxGetParameters(object2)) - length(omxGetParameters(object1)), p = lr_res$p_LRT$B))
+}
+
+#' @method lr_lmr mixture_list
+#' @importFrom nonnest2 vuongtest
+#' @export
+lr_lmr.mixture_list <- function(x, ...){
+  df_empty <- data.frame(lr = NA, df = NA, p = NA)
+  if(length(x) > 1){
+    out <- mapply(function(smaller, bigger){
+      tryCatch({
+        lr_lmr.MxModel(smaller, bigger)
+      },
+      error = function(e){
+        df_empty })
+    }, bigger = x[-1], smaller = x[-length(x)], SIMPLIFY = FALSE)
+    out <- do.call(rbind, append(out, list(df_empty), 0))
+  } else {
+    out <- df_empty
+  }
+  out <- data.frame(null = c(NA, sapply(x[-length(x)], function(x){x@name})),
+                    alt = c(NA, sapply(x[-1], function(x){x@name})),
+                    out)[-1, , drop = FALSE]
+  rownames(out) <- NULL
+  return(out)
+}
+
+
+mixgrads <- function(model){
+  if(!isTRUE("mixture" %in% attr(model, "tidySEM")) & length(names(model@submodels)) > 1){
+    return(imxRowGradients(model))
+  }
+  paramLabels <- names(omxGetParameters(model))
+  numParam <- length(paramLabels)
+  custom.compute <-
+    mxComputeSequence(list(
+      mxComputeNumericDeriv(checkGradient = FALSE,
+                            hessian = FALSE),
+      mxComputeReportDeriv()
+    ))
+  grads <- do.call(rbind, lapply(1:nrow(model@data$observed), function(i) {
+    tryCatch({
+      mxRun(mxModel(model, custom.compute, mxData(model@data$observed[i, , drop = FALSE], "raw")), silent = TRUE)$output$gradient
+    },
+    error = function(e) {
+      rep(NA, length(numParam))
+    })
+  }))
+  return(grads)
 }
