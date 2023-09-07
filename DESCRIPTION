@@ -1,7 +1,7 @@
 Package: tidySEM
 Type: Package
 Title: Tidy Structural Equation Modeling
-Version: 0.2.5.5
+Version: 0.2.5
 Authors@R: 
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",
@@ -17,6 +17,7 @@ Description: A tidy workflow for generating, estimating, reporting,
     and plotting structural equation models using 'lavaan', 'OpenMx', or
     'Mplus'. Throughout this workflow, elements of syntax, results, and graphs
     are represented as 'tidy' data, making them easy to customize.
+    Includes functionality to estimate latent class analyses.
 License: GPL (>= 3)
 URL: https://cjvanlissa.github.io/tidySEM/
 BugReports: https://github.com/cjvanlissa/tidySEM/issues
@@ -42,7 +43,7 @@ Imports:
     future.apply,
     progressr,
     dagitty,
-    nonnest2
+    nonnest2 (>= 0.5.6)
 Suggests: 
     testthat,
     knitr,

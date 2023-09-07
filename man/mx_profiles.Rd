@@ -56,6 +56,12 @@ mx_profiles(data = df,
             classes = 2) -> res
 }
 }
+\references{
+Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+Recommended Practices in Latent Class Analysis using the Open-Source
+R-Package tidySEM. Structural Equation Modeling.
+\doi{10.1080/10705511.2023.2250920}
+}
 \keyword{mixture}
 \keyword{models}
 \keyword{openmx}

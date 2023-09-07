@@ -49,6 +49,12 @@ mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
                   data = df) -> res
 }
 }
+\references{
+Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+Recommended Practices in Latent Class Analysis using the Open-Source
+R-Package tidySEM. Structural Equation Modeling.
+\doi{10.1080/10705511.2023.2250920}
+}
 \keyword{mixture}
 \keyword{models}
 \keyword{openmx}

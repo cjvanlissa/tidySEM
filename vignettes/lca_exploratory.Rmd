@@ -32,6 +32,7 @@ run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_eve
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
 otherwise known as latent profile analysis (LPA) or finite Gaussian mixture modeling, using `tidySEM`.
+See Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. https://doi.org/10.1080/10705511.2023.2250920.
 The present example uses data collected by Alkema as part of a study on ocean microplastics.
 The purpose of this study was to provide a more nuanced model for the distribution of different sizes of ocean microplastics than the commonly used normal distribution.
 To this end, a mixture of normals was used.

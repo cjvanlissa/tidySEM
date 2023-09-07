@@ -44,19 +44,8 @@ print.LRT <- function(x,
                       digits = 3,
                       na.print = "",
                       ...) {
-  cat("Lo-Mendell-Rubin ad-hoc adjusted likelihood ratio rest:\n\n")
-  cat(
-    "LR = ",
-    formatC(x[["lr"]], digits = digits, format = "f"),
-    ", LMR LR (df = ",
-    as.integer(x[["df"]]),
-    ") = ",
-    formatC(x[["lmr_lr"]], digits = digits, format = "f"),
-    ", p ",
-    ifelse(x[["lmr_p"]] < 1/10^digits,
-           paste0("< ", 1/10^digits),
-           paste0("= ", formatC(x[["lmr_p"]], digits = digits, format = "f")))
-    , sep = "")
+  cat(attr(x, "type"), "Likelihood Ratio Test:\n\n")
+  print.data.frame(x, digits = digits, row.names = FALSE)
 }
 
 #' @method lr_lmr MxModel
@@ -70,7 +59,10 @@ lr_lmr.MxModel <- function(x, ...){
             score1 = function(x)mixgrads(x) * -.5,
             score2 = function(x)mixgrads(x) * -.5,
             nested = FALSE)
-  return(data.frame(lr = -1*lr_res$LRTstat, df = length(omxGetParameters(object2)) - length(omxGetParameters(object1)), p = lr_res$p_LRT$B, w2 = lr_res$omega, p_w2 = lr_res$p_omega))
+  out <- data.frame(lr = -1*lr_res$LRTstat, df = length(omxGetParameters(object2)) - length(omxGetParameters(object1)), p = max(c(.Machine$double.eps, lr_res$p_LRT$B)), w2 = lr_res$omega, p_w2 = max(c(.Machine$double.eps, lr_res$p_omega)))
+  class(out) <- c("LRT", class(out))
+  attr(out, "type") <- "Lo-Mendell-Rubin adjusted"
+  return(out)
 }
 
 #' @method lr_lmr mixture_list
@@ -94,6 +86,8 @@ lr_lmr.mixture_list <- function(x, ...){
                     alt = c(NA, sapply(x[-1], function(x){x@name})),
                     out)[-1, , drop = FALSE]
   rownames(out) <- NULL
+  class(out) <- c("LRT", class(out))
+  attr(out, "type") <- "Lo-Mendell-Rubin adjusted"
   return(out)
 }
 

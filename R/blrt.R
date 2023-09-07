@@ -48,7 +48,8 @@ BLRT.mixture_list <- function(x, replications = 100, ...){
   out <- data.frame(null = c(NA, sapply(x[-length(x)], function(x){x@name})),
                     alt = c(NA, sapply(x[-1], function(x){x@name})),
                     out)[-1, , drop = FALSE]
-  rownames(out) <- NULL
+  class(out) <- c("LRT", class(out))
+  attr(out, "type") <- "Bootstrapped"
   return(out)
 }
 
@@ -96,10 +97,12 @@ blrt_internal <-
     bootres <- do.call(rbind, bootres)
     isvalid <- bootres[, 2] == 0
     lrdist <- bootres[isvalid, 1]
-    data.frame(
+    out <- data.frame(
       lr = lrtest,
       df = length(omxGetParameters(mod_complex)) - length(omxGetParameters(mod_simple)),
       blrt_p = sum(lrdist > lrtest) / length(lrdist),
       samples = sum(isvalid)
     )
+    class(out) <- c("LRT", class(out))
+    attr(out, "type") <- "Bootstrapped"
   }

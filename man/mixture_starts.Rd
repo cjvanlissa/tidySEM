@@ -69,6 +69,11 @@ mod <- mixture_starts(mod)
 Shireman, E., Steinley, D. & Brusco, M.J. Examining the effect of
 initialization strategies on the performance of Gaussian mixture modeling.
 Behav Res 49, 282–293 (2017). \doi{10.3758/s13428-015-0697-6}
+
+Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+Recommended Practices in Latent Class Analysis using the Open-Source
+R-Package tidySEM. Structural Equation Modeling.
+\doi{10.1080/10705511.2023.2250920}
 }
 \keyword{mixture}
 \keyword{models}
