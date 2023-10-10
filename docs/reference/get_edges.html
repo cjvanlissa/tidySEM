@@ -18,7 +18,7 @@ are defined as regression paths and covariances between variables (nodes)."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
       </span>
     </div>
 
@@ -52,6 +52,9 @@ are defined as regression paths and covariances between variables (nodes)."><!--
     </li>
     <li>
       <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
+      <a href="../articles/SMART_LCA_checklist.html">`r paste0("SMART-LCA Checklist, version ", packageVersion("tidySEM"))`</a>
     </li>
     <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
@@ -146,14 +149,14 @@ label. See examples.</p>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="st">"dist ~ speed"</span>, <span class="va">cars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow     label connect_from connect_to curvature   lhs op   rhs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last   3.93***           NA         NA        NA  dist  ~ speed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07***           NA         NA        NA  dist ~~  dist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 speed speed  both     27.40           NA         NA        NA speed ~~ speed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      est    se pval          confint   est_sig est_std se_std pval_std</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   3.93  0.41 0.00     [3.13, 4.73]   3.93***    0.81   0.04     0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 227.07 45.41 0.00 [138.06, 316.08] 227.07***    0.35   0.07     0.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  27.40  0.00 &lt;NA&gt;   [27.40, 27.40]     27.40    1.00   0.00     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow     label connect_from connect_to curvature linetype   lhs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last   3.93***           NA         NA        NA        1  dist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07***           NA         NA        NA        1  dist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 speed speed  both     27.40           NA         NA        NA        1 speed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   op   rhs    est    se pval          confint   est_sig est_std se_std pval_std</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ~ speed   3.93  0.41 0.00     [3.13, 4.73]   3.93***    0.81   0.04     0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 ~~  dist 227.07 45.41 0.00 [138.06, 316.08] 227.07***    0.35   0.07     0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 ~~ speed  27.40  0.00 &lt;NA&gt;   [27.40, 27.40]     27.40    1.00   0.00     &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    confint_std est_sig_std   label_results  show</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 [0.73, 0.89]     0.81***   dist.ON.speed  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 [0.22, 0.48]     0.35***  Variances.dist  TRUE</span>
@@ -165,37 +168,41 @@ label. See examples.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 speed speed  both       27.40 [27.40, 27.40]           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   curvature   lhs op   rhs    est    se pval          confint   est_sig est_std</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA  dist  ~ speed   3.93  0.41 0.00     [3.13, 4.73]   3.93***    0.81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA  dist ~~  dist 227.07 45.41 0.00 [138.06, 316.08] 227.07***    0.35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        NA speed ~~ speed  27.40  0.00 &lt;NA&gt;   [27.40, 27.40]     27.40    1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   se_std pval_std  confint_std est_sig_std   label_results  show</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.04     0.00 [0.73, 0.89]     0.81***   dist.ON.speed  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0.07     0.00 [0.22, 0.48]     0.35***  Variances.dist  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   0.00     &lt;NA&gt; [1.00, 1.00]        1.00 Variances.speed FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   curvature linetype   lhs op   rhs    est    se pval          confint</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA        1  dist  ~ speed   3.93  0.41 0.00     [3.13, 4.73]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA        1  dist ~~  dist 227.07 45.41 0.00 [138.06, 316.08]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        NA        1 speed ~~ speed  27.40  0.00 &lt;NA&gt;   [27.40, 27.40]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     est_sig est_std se_std pval_std  confint_std est_sig_std   label_results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   3.93***    0.81   0.04     0.00 [0.73, 0.89]     0.81***   dist.ON.speed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 227.07***    0.35   0.07     0.00 [0.22, 0.48]     0.35***  Variances.dist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     27.40    1.00   0.00     &lt;NA&gt; [1.00, 1.00]        1.00 Variances.speed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    show</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Pass the argument 'columns' to table_results through '...' to retain</span></span></span>
 <span class="r-in"><span><span class="co"># auxiliary columns for further processing</span></span></span>
 <span class="r-in"><span><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu">get_edges</span><span class="op">(</span><span class="va">res</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"est_sig"</span>, <span class="st">"confint"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">edg</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow     label connect_from connect_to curvature   est_sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last   3.93***           NA         NA        NA   3.93***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07***           NA         NA        NA 227.07***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 speed speed  both     27.40           NA         NA        NA     27.40</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            confint</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     [3.13, 4.73]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 [138.06, 316.08]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   [27.40, 27.40]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow     label connect_from connect_to curvature linetype</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last   3.93***           NA         NA        NA        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07***           NA         NA        NA        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 speed speed  both     27.40           NA         NA        NA        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     est_sig          confint</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   3.93***     [3.13, 4.73]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 227.07*** [138.06, 316.08]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     27.40   [27.40, 27.40]</span>
 <span class="r-in"><span><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">edg</span>, <span class="op">{</span><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est_sig</span>, <span class="va">confint</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">edg</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    from    to arrow                      label connect_from connect_to</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 speed  dist  last       3.93*** [3.13, 4.73]           NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  dist  dist  both 227.07*** [138.06, 316.08]           NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 speed speed  both       27.40 [27.40, 27.40]           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   curvature   est_sig          confint</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA   3.93***     [3.13, 4.73]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA 227.07*** [138.06, 316.08]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        NA     27.40   [27.40, 27.40]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   curvature linetype   est_sig          confint</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA        1   3.93***     [3.13, 4.73]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA        1 227.07*** [138.06, 316.08]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        NA        1     27.40   [27.40, 27.40]</span>
 </code></pre></div>
     </div>
   </div>

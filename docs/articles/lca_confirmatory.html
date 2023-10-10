@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
       </span>
     </div>
 
@@ -69,6 +69,9 @@
     </li>
     <li>
       <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
+      <a href="../articles/SMART_LCA_checklist.html">`r paste0("SMART-LCA Checklist, version ", packageVersion("tidySEM"))`</a>
     </li>
     <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
@@ -109,9 +112,12 @@
 
     
     
-<p>This is an example of confirmatory LPA using <code>tidySEM</code>.
-The simulated data are based on work by Zegwaard and colleagues, who
-sought to establish a typology of caregivers who support a close other
+<p>This is an example of confirmatory LPA using <code>tidySEM</code>, as
+explained in Van Lissa, C. J., Garnier-Villarreal, M., &amp; Anadria, D.
+(2023). <em>Recommended Practices in Latent Class Analysis using the
+Open-Source R-Package tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link uri">https://doi.org/10.1080/10705511.2023.2250920</a>. The
+simulated data are based on work by Zegwaard and colleagues, who sought
+to establish a typology of caregivers who support a close other
 receiving outpatient psychological care. Qualitative research among
 experts resulted in a theory postulating the existence of four types of
 caregivers (translated from the original Dutch):</p>
@@ -165,89 +171,6 @@ for continuous data to de-clutter the table:</p>
 <span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"n"</span>, <span class="st">"missing"</span>, <span class="st">"unique"</span>, <span class="st">"mean"</span>, <span class="st">"median"</span>,</span>
 <span>    <span class="st">"sd"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>, <span class="st">"skew_2se"</span>, <span class="st">"kurt_2se"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">desc</span></span></code></pre></div>
-<table class="table">
-<caption>Descriptive statistics</caption>
-<colgroup>
-<col width="14%">
-<col width="5%">
-<col width="10%">
-<col width="9%">
-<col width="6%">
-<col width="9%">
-<col width="6%">
-<col width="8%">
-<col width="5%">
-<col width="12%">
-<col width="12%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">name</th>
-<th align="right">n</th>
-<th align="right">missing</th>
-<th align="right">unique</th>
-<th align="right">mean</th>
-<th align="right">median</th>
-<th align="right">sd</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">skew_2se</th>
-<th align="right">kurt_2se</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">burdened</td>
-<td align="right">509</td>
-<td align="right">0.01</td>
-<td align="right">509</td>
-<td align="right">3.4</td>
-<td align="right">3.4</td>
-<td align="right">0.75</td>
-<td align="right">1.20</td>
-<td align="right">5.3</td>
-<td align="right">0.17</td>
-<td align="right">6.5</td>
-</tr>
-<tr class="even">
-<td align="left">trapped</td>
-<td align="right">505</td>
-<td align="right">0.02</td>
-<td align="right">505</td>
-<td align="right">1.7</td>
-<td align="right">1.8</td>
-<td align="right">0.90</td>
-<td align="right">-0.86</td>
-<td align="right">3.8</td>
-<td align="right">-1.03</td>
-<td align="right">5.4</td>
-</tr>
-<tr class="odd">
-<td align="left">negaffect</td>
-<td align="right">506</td>
-<td align="right">0.01</td>
-<td align="right">506</td>
-<td align="right">2.5</td>
-<td align="right">2.5</td>
-<td align="right">0.69</td>
-<td align="right">0.71</td>
-<td align="right">5.0</td>
-<td align="right">0.08</td>
-<td align="right">6.5</td>
-</tr>
-<tr class="even">
-<td align="left">loneliness</td>
-<td align="right">510</td>
-<td align="right">0.01</td>
-<td align="right">510</td>
-<td align="right">2.7</td>
-<td align="right">2.7</td>
-<td align="right">0.62</td>
-<td align="right">0.98</td>
-<td align="right">4.2</td>
-<td align="right">-0.33</td>
-<td align="right">6.3</td>
-</tr>
-</tbody>
-</table>
 <p>The table indicates two potential causes for concern: there is a
 small percentage of missingness, and all variables have relatively high
 kurtosis. Since there are some missing values, we can conduct an MCAR
@@ -267,7 +190,6 @@ table: the data are kurtotic (peaked).</p>
 <span>    timevar <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Variable</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_lpa_desc.png" width="80%"></p>
 </div>
 <div class="section level2">
 <h2 id="conducting-latent-profile-analysis">Conducting Latent Profile Analysis<a class="anchor" aria-label="anchor" href="#conducting-latent-profile-analysis"></a>
@@ -318,95 +240,6 @@ interpreting the results.</p>
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>  <span class="co"># model fit table</span></span>
 <span><span class="va">fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"Parameters"</span>, <span class="st">"n"</span>, <span class="st">"BIC"</span>, <span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>,</span>
 <span>    <span class="st">"prob_max"</span>, <span class="st">"n_min"</span>, <span class="st">"n_max"</span>, <span class="st">"np_ratio"</span>, <span class="st">"np_local"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<table class="table">
-<caption>Model fit table</caption>
-<colgroup>
-<col width="19%">
-<col width="9%">
-<col width="4%">
-<col width="6%">
-<col width="8%">
-<col width="12%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Name</th>
-<th align="right">LL</th>
-<th align="right">p</th>
-<th align="right">n</th>
-<th align="right">BIC</th>
-<th align="right">Entropy</th>
-<th align="right">p_min</th>
-<th align="right">p_max</th>
-<th align="right">n_min</th>
-<th align="right">n_max</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">equal var 1</td>
-<td align="right">-2242</td>
-<td align="right">8</td>
-<td align="right">513</td>
-<td align="right">4534</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-</tr>
-<tr class="even">
-<td align="left">equal var 2</td>
-<td align="right">-2031</td>
-<td align="right">13</td>
-<td align="right">513</td>
-<td align="right">4144</td>
-<td align="right">0.74</td>
-<td align="right">0.91</td>
-<td align="right">0.93</td>
-<td align="right">0.42</td>
-<td align="right">0.58</td>
-</tr>
-<tr class="odd">
-<td align="left">equal var 3</td>
-<td align="right">-1951</td>
-<td align="right">18</td>
-<td align="right">513</td>
-<td align="right">4015</td>
-<td align="right">0.78</td>
-<td align="right">0.89</td>
-<td align="right">0.91</td>
-<td align="right">0.19</td>
-<td align="right">0.54</td>
-</tr>
-<tr class="even">
-<td align="left">equal var 4</td>
-<td align="right">-1916</td>
-<td align="right">23</td>
-<td align="right">513</td>
-<td align="right">3976</td>
-<td align="right">0.75</td>
-<td align="right">0.81</td>
-<td align="right">0.92</td>
-<td align="right">0.16</td>
-<td align="right">0.34</td>
-</tr>
-<tr class="odd">
-<td align="left">equal var 5</td>
-<td align="right">-1912</td>
-<td align="right">28</td>
-<td align="right">513</td>
-<td align="right">3999</td>
-<td align="right">0.79</td>
-<td align="right">0.81</td>
-<td align="right">0.92</td>
-<td align="right">0.00</td>
-<td align="right">0.34</td>
-</tr>
-</tbody>
-</table>
 <div class="section level3">
 <h3 id="using-ics">Using ICs<a class="anchor" aria-label="anchor" href="#using-ics"></a>
 </h3>
@@ -426,59 +259,6 @@ a posterior model probability of nearly 100%.</p>
 all pairwise model comparisons, except for the 5-class model:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lr_lmr.html">lr_lmr</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>LMR test table</caption>
-<thead><tr class="header">
-<th align="left">Null</th>
-<th align="left">Alt</th>
-<th align="right">lr</th>
-<th align="right">lmr_lr</th>
-<th align="right">df</th>
-<th align="right">lmr_p</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">equal var 1</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-</tr>
-<tr class="even">
-<td align="left">equal var 1</td>
-<td align="left">equal var 2</td>
-<td align="right">421.2</td>
-<td align="right">399.9</td>
-<td align="right">5</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="odd">
-<td align="left">equal var 2</td>
-<td align="left">equal var 3</td>
-<td align="right">160.0</td>
-<td align="right">151.9</td>
-<td align="right">5</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="even">
-<td align="left">equal var 3</td>
-<td align="left">equal var 4</td>
-<td align="right">70.2</td>
-<td align="right">66.6</td>
-<td align="right">5</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="odd">
-<td align="left">equal var 4</td>
-<td align="left">equal var 5</td>
-<td align="right">7.8</td>
-<td align="right">7.4</td>
-<td align="right">5</td>
-<td align="right">0.19</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section level3">
 <h3 id="using-blrt-tests">Using BLRT tests<a class="anchor" aria-label="anchor" href="#using-blrt-tests"></a>
@@ -503,59 +283,6 @@ bar:</p>
 <span><span class="fu"><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">handlers</a></span><span class="op">(</span><span class="st">"progress"</span><span class="op">)</span>  <span class="co"># Progress bar</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BLRT.html">BLRT</a></span><span class="op">(</span><span class="va">res</span>, replications <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>BLRT test table</caption>
-<thead><tr class="header">
-<th align="left">null</th>
-<th align="left">alt</th>
-<th align="right">lr</th>
-<th align="right">df</th>
-<th align="right">blrt_p</th>
-<th align="right">samples</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-</tr>
-<tr class="even">
-<td align="left">mix1</td>
-<td align="left">mix2</td>
-<td align="right">421.2</td>
-<td align="right">5</td>
-<td align="right">0.00</td>
-<td align="right">20</td>
-</tr>
-<tr class="odd">
-<td align="left">mix2</td>
-<td align="left">mix3</td>
-<td align="right">160.0</td>
-<td align="right">5</td>
-<td align="right">0.00</td>
-<td align="right">20</td>
-</tr>
-<tr class="even">
-<td align="left">mix3</td>
-<td align="left">mix4</td>
-<td align="right">70.2</td>
-<td align="right">5</td>
-<td align="right">0.00</td>
-<td align="right">20</td>
-</tr>
-<tr class="odd">
-<td align="left">mix4</td>
-<td align="left">mix5</td>
-<td align="right">7.8</td>
-<td align="right">5</td>
-<td align="right">0.55</td>
-<td align="right">20</td>
-</tr>
-</tbody>
-</table>
 <p>In sum, across all class enumeration criteria, there is strong
 support for a 4-class solution.</p>
 </div>
@@ -575,55 +302,6 @@ them.</p>
 <code class="sourceCode R"><span><span class="va">res_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">df</span>, classes <span class="op">=</span> <span class="fl">4</span>, variances <span class="op">=</span> <span class="st">"varying"</span><span class="op">)</span></span>
 <span><span class="va">compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">res</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>, <span class="va">res_alt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">compare</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>Comparing competing theoretical models</caption>
-<colgroup>
-<col width="7%">
-<col width="9%">
-<col width="16%">
-<col width="7%">
-<col width="12%">
-<col width="13%">
-<col width="13%">
-<col width="9%">
-<col width="9%">
-</colgroup>
-<thead><tr class="header">
-<th align="right">Name</th>
-<th align="right">LL</th>
-<th align="right">Parameters</th>
-<th align="right">BIC</th>
-<th align="right">Entropy</th>
-<th align="right">prob_min</th>
-<th align="right">prob_max</th>
-<th align="right">n_min</th>
-<th align="right">n_max</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">-1916</td>
-<td align="right">23</td>
-<td align="right">3976</td>
-<td align="right">0.75</td>
-<td align="right">0.81</td>
-<td align="right">0.92</td>
-<td align="right">0.16</td>
-<td align="right">0.34</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="right">-1909</td>
-<td align="right">35</td>
-<td align="right">4037</td>
-<td align="right">0.78</td>
-<td align="right">0.84</td>
-<td align="right">0.92</td>
-<td align="right">0.16</td>
-<td align="right">0.32</td>
-</tr>
-</tbody>
-</table>
 <p>The alternative model incurs 12 additional parameters for the free
 variances. Yet, it has a higher BIC, which indicates that this
 additional complexity does not outweigh the increase in fit.</p>
@@ -645,179 +323,6 @@ table of the results below.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_final</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est"</span>, <span class="st">"se"</span>, <span class="st">"confint"</span>,</span>
 <span>    <span class="st">"class"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>Four-class model results</caption>
-<thead><tr class="header">
-<th align="left">label</th>
-<th align="right">est</th>
-<th align="right">se</th>
-<th align="left">confint</th>
-<th align="left">class</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mix4.weights[1,2]</td>
-<td align="right">0.86</td>
-<td align="right">0.15</td>
-<td align="left">[0.56, 1.15]</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">mix4.weights[1,3]</td>
-<td align="right">0.66</td>
-<td align="right">0.11</td>
-<td align="left">[0.44, 0.88]</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">mix4.weights[1,4]</td>
-<td align="right">0.47</td>
-<td align="right">0.08</td>
-<td align="left">[0.32, 0.63]</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">Variances.burdened</td>
-<td align="right">0.23</td>
-<td align="right">0.02</td>
-<td align="left">[0.19, 0.27]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="odd">
-<td align="left">Variances.trapped</td>
-<td align="right">0.17</td>
-<td align="right">0.02</td>
-<td align="left">[0.14, 0.20]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="even">
-<td align="left">Variances.negaffect</td>
-<td align="right">0.31</td>
-<td align="right">0.02</td>
-<td align="left">[0.27, 0.36]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="odd">
-<td align="left">Variances.loneliness</td>
-<td align="right">0.24</td>
-<td align="right">0.02</td>
-<td align="left">[0.20, 0.28]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="even">
-<td align="left">Means.burdened</td>
-<td align="right">3.27</td>
-<td align="right">0.04</td>
-<td align="left">[3.18, 3.36]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.trapped</td>
-<td align="right">1.28</td>
-<td align="right">0.05</td>
-<td align="left">[1.18, 1.38]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="even">
-<td align="left">Means.negaffect</td>
-<td align="right">2.31</td>
-<td align="right">0.06</td>
-<td align="left">[2.20, 2.42]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.loneliness</td>
-<td align="right">2.73</td>
-<td align="right">0.04</td>
-<td align="left">[2.64, 2.82]</td>
-<td align="left">class1</td>
-</tr>
-<tr class="even">
-<td align="left">Means.burdened</td>
-<td align="right">3.40</td>
-<td align="right">0.06</td>
-<td align="left">[3.28, 3.52]</td>
-<td align="left">class2</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.trapped</td>
-<td align="right">2.27</td>
-<td align="right">0.06</td>
-<td align="left">[2.15, 2.38]</td>
-<td align="left">class2</td>
-</tr>
-<tr class="even">
-<td align="left">Means.negaffect</td>
-<td align="right">2.81</td>
-<td align="right">0.06</td>
-<td align="left">[2.70, 2.93]</td>
-<td align="left">class2</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.loneliness</td>
-<td align="right">2.79</td>
-<td align="right">0.06</td>
-<td align="left">[2.66, 2.91]</td>
-<td align="left">class2</td>
-</tr>
-<tr class="even">
-<td align="left">Means.burdened</td>
-<td align="right">4.25</td>
-<td align="right">0.07</td>
-<td align="left">[4.12, 4.38]</td>
-<td align="left">class3</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.trapped</td>
-<td align="right">2.67</td>
-<td align="right">0.05</td>
-<td align="left">[2.58, 2.77]</td>
-<td align="left">class3</td>
-</tr>
-<tr class="even">
-<td align="left">Means.negaffect</td>
-<td align="right">2.92</td>
-<td align="right">0.06</td>
-<td align="left">[2.80, 3.03]</td>
-<td align="left">class3</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.loneliness</td>
-<td align="right">2.01</td>
-<td align="right">0.06</td>
-<td align="left">[1.89, 2.14]</td>
-<td align="left">class3</td>
-</tr>
-<tr class="even">
-<td align="left">Means.burdened</td>
-<td align="right">2.38</td>
-<td align="right">0.06</td>
-<td align="left">[2.26, 2.50]</td>
-<td align="left">class4</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.trapped</td>
-<td align="right">0.38</td>
-<td align="right">0.05</td>
-<td align="left">[0.28, 0.49]</td>
-<td align="left">class4</td>
-</tr>
-<tr class="even">
-<td align="left">Means.negaffect</td>
-<td align="right">1.78</td>
-<td align="right">0.07</td>
-<td align="left">[1.65, 1.91]</td>
-<td align="left">class4</td>
-</tr>
-<tr class="odd">
-<td align="left">Means.loneliness</td>
-<td align="right">3.18</td>
-<td align="right">0.06</td>
-<td align="left">[3.07, 3.30]</td>
-<td align="left">class4</td>
-</tr>
-</tbody>
-</table>
 <p>The results are best interpreted by examining a plot of the model and
 data, however. Relevant plot functions are
 <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></code>, <code><a href="../reference/plot_density.html">plot_density()</a></code>, and
@@ -825,11 +330,6 @@ data, however. Relevant plot functions are
 because <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></code> also includes them.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_bivariate.html">plot_bivariate</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="lpa_bivariate.png" alt="Bivariate profile plot" width="80%"><p class="caption">
-Bivariate profile plot
-</p>
-</div>
 <p>On the diagonal of the bivariate plot are weighted density plots:
 normal approximations of the density function of observed data, weighed
 by class probability. On the off-diagonal are plots for each pair of
@@ -861,11 +361,6 @@ relatively low.</p>
 not match the hypothesized pattern of class parameters exactly.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="lpa_profiles.png" alt="Bivariate profile plot" width="80%"><p class="caption">
-Bivariate profile plot
-</p>
-</div>
 </div>
 <div class="section level2">
 <h2 id="auxiliary-analyses">Auxiliary Analyses<a class="anchor" aria-label="anchor" href="#auxiliary-analyses"></a>
@@ -929,8 +424,6 @@ all classes.</p>
 <code class="sourceCode R"><span><span class="va">df_new</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>burdened <span class="op">=</span> <span class="fl">2</span>, trapped <span class="op">=</span> <span class="fl">0.5</span>, negaffect <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    loneliness <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">res_final</span>, newdata <span class="op">=</span> <span class="va">df_new</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;       class1  class2 class3  class4 predicted</span></span>
-<span><span class="co">#&gt; [1,] 0.00081 1.4e-15      1 4.6e-08         3</span></span></code></pre>
 </div>
   </div>
 
