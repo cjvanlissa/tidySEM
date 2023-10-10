@@ -227,13 +227,13 @@ the 4-class model has a posterior model probability of nearly 100%.
 If we conduct LMR tests, we find that the tests are significant for all pairwise model comparisons, except for the 5-class model:
 
 ```{r lmr_table, echo = TRUE, eval=FALSE}
-lr_lmr(fit)
+lr_lmr(res)
 ```
+
 ```{r tablmr, echo = FALSE, eval = eval_results}
-tbl <- lr_lmr(fit)
-tbl$Null <- c("", fit$Name[-nrow(fit)])
-tbl$Alt <- c(fit$Name)
-knitr::kable(tbl[, c("Null", "Alt", "lr", "lmr_lr", "df", "lmr_p")], caption = "LMR test table", digits = 2)
+res <- readRDS("res_lpa.RData")
+tbl <- lr_lmr(res)
+knitr::kable(tbl, caption = "LMR test table", digits = 2)
 ```
 
 ### Using BLRT tests
