@@ -218,7 +218,7 @@ the 4-class solution has the lowest BIC,
 which means it is preferred over all other solutions including a 1-class solution and a solution with more classes.
 Note that a scree plot for the BIC can be plotted by calling `plot(fit)`.
 Following the elbow criterion, a three-class solution would also be defensible.
-The function `ic_weights(tab_compare)` allows us to compute IC weights;
+The function `ic_weights(fit)` allows us to compute IC weights;
 it indicates that, conditional on the set of models,
 the 4-class model has a posterior model probability of nearly 100%.
 
@@ -230,9 +230,14 @@ If we conduct LMR tests, we find that the tests are significant for all pairwise
 lr_lmr(res)
 ```
 
-```{r tablmr, echo = FALSE, eval = eval_results}
+```{r tablmr, echo = FALSE, eval = run_everything}
 res <- readRDS("res_lpa.RData")
 tbl <- lr_lmr(res)
+write.csv(tbl, "lpatablmr.csv", row.names = FALSE)
+```
+
+```{r echo = FALSE, eval = TRUE}
+tbl <- read.csv("lpatablmr.csv", stringsAsFactors = FALSE)
 knitr::kable(tbl, caption = "LMR test table", digits = 2)
 ```
 
