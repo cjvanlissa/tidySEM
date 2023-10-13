@@ -1,7 +1,7 @@
 Package: tidySEM
 Type: Package
 Title: Tidy Structural Equation Modeling
-Version: 0.2.5
+Version: 0.2.6.1
 Authors@R: 
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",
@@ -42,7 +42,6 @@ Imports:
     car,
     future.apply,
     progressr,
-    dagitty,
     nonnest2 (>= 0.5.6)
 Suggests: 
     testthat,
@@ -58,7 +57,8 @@ Suggests:
     MASS,
     scales,
     yaml,
-    formatR
+    formatR,
+    dagitty
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
