@@ -105,4 +105,5 @@ blrt_internal <-
     )
     class(out) <- c("LRT", class(out))
     attr(out, "type") <- "Bootstrapped"
+    out
   }

@@ -1,5 +1,5 @@
 ---
-title: '`r paste0("SMART-LCA Checklist, version ", packageVersion("tidySEM"))`'
+title: 'SMART-LCA Checklist'
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{SMART-LCA Checklist}
@@ -23,6 +23,8 @@ options(scipen = 1, digits = 2)
 
 This Vignette describes the SMART-LCA Checklist: Standards for More Accuracy in Reporting of different Types of Latent Class Analysis,
 introduced in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. <https://doi.org/10.1080/10705511.2023.2250920>.
+This version of the checklist corresponds to the `tidySEM` R-package's version , `r packageVersion("tidySEM")`.
+
 The paper discusses the best practices on which the checklist is based and describes specific points to check when writing, reviewing, or reading a paper in greater detail.
 However, this vignette may be updated to keep pace with `tidySEM` package development,
 whereas the print publication will remain static.

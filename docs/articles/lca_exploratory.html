@@ -71,7 +71,7 @@
       <a href="../articles/sem_graph.html">SEM graphing conventions</a>
     </li>
     <li>
-      <a href="../articles/SMART_LCA_checklist.html">`r paste0("SMART-LCA Checklist, version ", packageVersion("tidySEM"))`</a>
+      <a href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a>
     </li>
     <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
@@ -159,12 +159,69 @@ columns for categorical data to de-clutter the table:</p>
 <span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"type"</span>, <span class="st">"n"</span>, <span class="st">"unique"</span>, <span class="st">"mean"</span>, <span class="st">"median"</span>,</span>
 <span>    <span class="st">"sd"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>, <span class="st">"skew_2se"</span>, <span class="st">"kurt_2se"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">desc</span>, caption <span class="op">=</span> <span class="st">"Descriptive statistics"</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<caption>Descriptive statistics</caption>
+<colgroup>
+<col width="10%">
+<col width="11%">
+<col width="7%">
+<col width="10%">
+<col width="7%">
+<col width="10%">
+<col width="5%">
+<col width="5%">
+<col width="7%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">name</th>
+<th align="left">type</th>
+<th align="right">n</th>
+<th align="right">unique</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">sd</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">skew_2se</th>
+<th align="right">kurt_2se</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">length</td>
+<td align="left">numeric</td>
+<td align="right">5605</td>
+<td align="right">2086</td>
+<td align="right">2.9</td>
+<td align="right">2.4</td>
+<td align="right">1.9</td>
+<td align="right">1.0</td>
+<td align="right">69.2</td>
+<td align="right">137</td>
+<td align="right">2116</td>
+</tr>
+<tr class="even">
+<td align="left">width</td>
+<td align="left">numeric</td>
+<td align="right">5605</td>
+<td align="right">2079</td>
+<td align="right">2.0</td>
+<td align="right">1.6</td>
+<td align="right">1.1</td>
+<td align="right">0.2</td>
+<td align="right">6.8</td>
+<td align="right">22</td>
+<td align="right">37</td>
+</tr>
+</tbody>
+</table>
 <p>The data are correctly coded as <code>numeric</code> and the
 distributional characteristics match the intended measurement level. The
 variable scales are comparable (both in millimeters and no large
 discrepancies between variances). There are no missing values; if any
 variables had missing values, we would report an MCAR test with
-<code><a href="https://amices.org/mice/reference/mcar.html" class="external-link">mice::mcar()</a></code>, and explain that missing data are accounted
+<code>mice::mcar()</code>, and explain that missing data are accounted
 for using FIML. Additionally, we can plot the data. The
 <code>ggplot2</code> function <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density()</a></code> is useful to
 visualize continuous data:</p>
@@ -175,6 +232,7 @@ visualize continuous data:</p>
 <span>    timevar <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Variable</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot_gmm_desc.png" width="590"></p>
 <p>Both the table above and the density plot indicate that the data are
 extremely right-skewed and kurtotic. With this in mind, it can be useful
 to transform and rescale the data. We will use a log transformation.</p>
@@ -182,6 +240,7 @@ to transform and rescale the data. We will use a log transformation.</p>
 <code class="sourceCode R"><span><span class="va">df_plot</span><span class="op">$</span><span class="va">Value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">$</span><span class="va">Value</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Variable</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot_gmm_desc_log.png" width="590"></p>
 <p>The log transformation addresses the aforementioned concerns
 regarding skew and kurtosis. To confirm this, reshape the data to wide
 format and examine a scatterplot:</p>
@@ -191,6 +250,7 @@ format and examine a scatterplot:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"Value."</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">length</span>, y <span class="op">=</span> <span class="va">width</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="plot_gmm_scatter.png" width="590"></p>
 <!-- As evident from the scatterplot, there is a very strong linear tend in the data. -->
 <!-- This indicates that fragments tend to be coextensive (when length goes up, width goes up). -->
 <!-- We can analyze these data in their original dimensions (length and width). -->
@@ -253,6 +313,165 @@ of class size to class-specific parameters is 18 (see
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"p"</span>, <span class="st">"BIC"</span>, <span class="st">"Ent."</span>, <span class="st">"p_min"</span>, <span class="st">"n_min"</span>,</span>
 <span>    <span class="st">"np_ratio"</span>, <span class="st">"np_local"</span><span class="op">)</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">tbl</span>, caption <span class="op">=</span> <span class="st">"Model fit table."</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>Model fit table.</caption>
+<colgroup>
+<col width="31%">
+<col width="8%">
+<col width="4%">
+<col width="6%">
+<col width="6%">
+<col width="8%">
+<col width="8%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Name</th>
+<th align="right">LL</th>
+<th align="right">p</th>
+<th align="right">BIC</th>
+<th align="right">Ent.</th>
+<th align="right">p_min</th>
+<th align="right">n_min</th>
+<th align="right">np_ratio</th>
+<th align="right">np_local</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">equal var, equal cov 1</td>
+<td align="right">-3389</td>
+<td align="right">5</td>
+<td align="right">6820</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1121</td>
+<td align="right">1121</td>
+</tr>
+<tr class="even">
+<td align="left">equal var, equal cov 2</td>
+<td align="right">-3082</td>
+<td align="right">8</td>
+<td align="right">6234</td>
+<td align="right">0.72</td>
+<td align="right">0.86</td>
+<td align="right">0.31</td>
+<td align="right">701</td>
+<td align="right">494</td>
+</tr>
+<tr class="odd">
+<td align="left">equal var, equal cov 3</td>
+<td align="right">-3030</td>
+<td align="right">11</td>
+<td align="right">6155</td>
+<td align="right">0.67</td>
+<td align="right">0.71</td>
+<td align="right">0.17</td>
+<td align="right">510</td>
+<td align="right">313</td>
+</tr>
+<tr class="even">
+<td align="left">free var, equal cov 1</td>
+<td align="right">-3389</td>
+<td align="right">5</td>
+<td align="right">6820</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1121</td>
+<td align="right">1121</td>
+</tr>
+<tr class="odd">
+<td align="left">free var, equal cov 2</td>
+<td align="right">-2545</td>
+<td align="right">10</td>
+<td align="right">5176</td>
+<td align="right">0.64</td>
+<td align="right">0.51</td>
+<td align="right">0.09</td>
+<td align="right">560</td>
+<td align="right">108</td>
+</tr>
+<tr class="even">
+<td align="left">free var, equal cov 3</td>
+<td align="right">-2257</td>
+<td align="right">15</td>
+<td align="right">4643</td>
+<td align="right">0.68</td>
+<td align="right">0.54</td>
+<td align="right">0.06</td>
+<td align="right">374</td>
+<td align="right">83</td>
+</tr>
+<tr class="odd">
+<td align="left">equal var, free cov 1</td>
+<td align="right">-3389</td>
+<td align="right">5</td>
+<td align="right">6820</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1121</td>
+<td align="right">1121</td>
+</tr>
+<tr class="even">
+<td align="left">equal var, free cov 2</td>
+<td align="right">-2552</td>
+<td align="right">9</td>
+<td align="right">5181</td>
+<td align="right">0.65</td>
+<td align="right">0.52</td>
+<td align="right">0.09</td>
+<td align="right">623</td>
+<td align="right">121</td>
+</tr>
+<tr class="odd">
+<td align="left">equal var, free cov 3</td>
+<td align="right">-2368</td>
+<td align="right">13</td>
+<td align="right">4848</td>
+<td align="right">0.56</td>
+<td align="right">0.51</td>
+<td align="right">0.02</td>
+<td align="right">431</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="left">free var, free cov 1</td>
+<td align="right">-3389</td>
+<td align="right">5</td>
+<td align="right">6820</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1121</td>
+<td align="right">1121</td>
+</tr>
+<tr class="odd">
+<td align="left">free var, free cov 2</td>
+<td align="right">-2575</td>
+<td align="right">11</td>
+<td align="right">5245</td>
+<td align="right">0.56</td>
+<td align="right">0.81</td>
+<td align="right">0.40</td>
+<td align="right">510</td>
+<td align="right">448</td>
+</tr>
+<tr class="even">
+<td align="left">free var, free cov 3</td>
+<td align="right">-2111</td>
+<td align="right">17</td>
+<td align="right">4370</td>
+<td align="right">0.65</td>
+<td align="right">0.51</td>
+<td align="right">0.04</td>
+<td align="right">330</td>
+<td align="right">41</td>
+</tr>
+</tbody>
+</table>
 <p>However, note that we have a very large sample, and for many models,
 the smallest class comprises only a very small percentage of the total
 sample. Since the purpose of this analysis is to better represent the
@@ -283,6 +502,11 @@ give identical conclusions.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>    hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="gmm_plotfit.png" alt="Bivariate profile plot" width="100%"><p class="caption">
+Bivariate profile plot
+</p>
+</div>
 <p>Looking at the blocks of 1-4 class models for each model
 specification, it appears that the BIC keeps decreasing with the
 addition of more classes. Across the blocks, the BIC keeps decreasing
@@ -308,6 +532,63 @@ errors and p-values are relatively uninformative: With a sample size of
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_bic</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est"</span>,</span>
 <span>    <span class="st">"std_est"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">results</span></span></code></pre></div>
+<table class="table">
+<caption>Results of a 2-class model with free (co)variances</caption>
+<thead><tr class="header">
+<th align="left">label</th>
+<th align="right">est</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Means.length</td>
+<td align="right">0.65</td>
+</tr>
+<tr class="even">
+<td align="left">Means.width</td>
+<td align="right">0.34</td>
+</tr>
+<tr class="odd">
+<td align="left">Variances.length</td>
+<td align="right">0.10</td>
+</tr>
+<tr class="even">
+<td align="left">Covariances.length.WITH.width</td>
+<td align="right">0.09</td>
+</tr>
+<tr class="odd">
+<td align="left">Variances.width</td>
+<td align="right">0.10</td>
+</tr>
+<tr class="even">
+<td align="left">Means.length</td>
+<td align="right">1.33</td>
+</tr>
+<tr class="odd">
+<td align="left">Means.width</td>
+<td align="right">0.86</td>
+</tr>
+<tr class="even">
+<td align="left">Variances.length</td>
+<td align="right">0.19</td>
+</tr>
+<tr class="odd">
+<td align="left">Covariances.length.WITH.width</td>
+<td align="right">0.20</td>
+</tr>
+<tr class="even">
+<td align="left">Variances.width</td>
+<td align="right">0.28</td>
+</tr>
+<tr class="odd">
+<td align="left">mix2.weights[1,1]</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="even">
+<td align="left">mix2.weights[1,2]</td>
+<td align="right">0.75</td>
+</tr>
+</tbody>
+</table>
 <p>Interpreting the results is facilitated by examining a plot of the
 model and data. Relevant plot functions are
 <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></code>, <code><a href="../reference/plot_density.html">plot_density()</a></code>, and
@@ -315,6 +596,11 @@ model and data. Relevant plot functions are
 because <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></code> also includes them.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_bivariate.html">plot_bivariate</a></span><span class="op">(</span><span class="va">res_bic</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="gmm_bivariate_bic.png" alt="Bivariate profile plot" width="100%"><p class="caption">
+Bivariate profile plot
+</p>
+</div>
 <p>On the diagonal of the bivariate plot are weighted density plots:
 normal approximations of the density function of observed data, weighed
 by class probability. On the off-diagonal are plots for each pair of
