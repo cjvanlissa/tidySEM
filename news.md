@@ -1,3 +1,9 @@
+# tidySEM 0.2.6
+
+* Fix bug in BLRT()
+* Patch to anticipate change in lavaan parser that would break add_paths()
+* Improve vignette Generating_syntax.Rmd
+
 # tidySEM 0.2.5
 
 * Add reference to best practices paper, <DOI:10.1080/10705511.2023.2250920>

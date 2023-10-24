@@ -1,12 +1,12 @@
-# tidySEM 0.2.5
+# tidySEM 0.2.6
 
-* Add reference to best practices paper, <DOI:10.1080/10705511.2023.2250920>
-* Include vignettes corresponding to the appendices of that paper
-* Correct implementation of `lr_lmr()` using `nonnest2::vuongtest()`
+* Fix bug in BLRT()
+* Patch to anticipate change in lavaan parser that would break add_paths()
+* Improve vignette Generating_syntax.Rmd
 
 ## Test environments
 
-* local Windows 11 install, R 4.3.0
+* local Windows 11 install, R 4.3.1
 * GitHub Actions (r-lib): windows-latest (release)
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)
