@@ -118,6 +118,13 @@ add_paths.default <- function(model, ...){ #, strict_check = TRUE
     warning("Some elements of '...' could not be parsed. Try entering these commands as a character string.")
     dots <- dots[is_char]
   }
+  # Remove broken operators to accommodate new stricter lavaan syntax
+  dots <- lapply(dots, function(x){
+    x <- gsub("=\\s{1,}~", "=~", x)
+    x <- gsub("~\\s{1,}~", "~~", x)
+    x <- gsub("~\\s{0,}\\*\\s{0,}~", "~\\*~", x)
+    x
+  })
   # Parse dots
   tab <- lavParseModelString(paste0(unlist(dots), collapse = ";"), as.data.frame. = TRUE)
   # Convert to lavaan

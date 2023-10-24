@@ -178,6 +178,19 @@ tmp <- filter(tmp, !(lhs == "spe" | rhs == "spe"))
 syntax(model) <- tmp
 ```
 
+Remember that both of the original latent variables were identified by fixing one indicator to be equal to 1, so we have to free up one of them: 
+
+```{r, echo = TRUE, eval = FALSE}
+syntax(model) |>
+  mutate(free = ifelse(rhs == "spe_1", 1, free),
+  ustart = ifelse(rhs == "spe_1", NA, ustart)) -> syntax(model)
+```
+```{r, eval = TRUE, echo = FALSE}
+syntax(model) |>
+  mutate(free = ifelse(rhs == "spe_1", 1, free),
+  ustart = ifelse(rhs == "spe_1", NA, ustart)) -> syntax(model)
+```
+
 The modified model could then be run:
 
 ```{r}
