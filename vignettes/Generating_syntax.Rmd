@@ -107,7 +107,7 @@ model |>
 estimate_lavaan(model)
 ```
 
-The same model can be estimated in 'Mplus' through the R-package `MplusAutomation`. This requires 'Mplus' to be installed.
+The same model can be estimated with 'OpenMx' through the R-package `OpenMx`.
 
 ```{r include=FALSE}
 estimate_mx(model) -> res_mx
