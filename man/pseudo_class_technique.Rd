@@ -8,8 +8,8 @@ pseudo_class_technique(
   fit,
   analysis,
   x = NULL,
-  m = 10,
-  pool_results = TRUE,
+  m = 20,
+  pool_results = FALSE,
   expose_data = FALSE,
   ...
 )
@@ -25,7 +25,7 @@ the dataset is taken from "fit".}
 
 \item{m}{The amount of datasets to generate. Default is 10.}
 
-\item{pool_results}{Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is TRUE.}
+\item{pool_results}{Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.}
 
 \item{expose_data}{Whether the expression explicitly refers to the generated dataset using "data".}
 
@@ -86,13 +86,13 @@ pseudo_class_technique( fit = fit,
 \references{
 \itemize{
 \item Paper recommending, among others, the pseudo-class technique.
-The GRoLTS-Checklist: Guidelines for Reporting on Latent Trajectory Studies. \if{html}{\out{<a>}}https://doi.org/10.1080/10705511.2016.1247646\if{html}{\out{</a>}}
+The GRoLTS-Checklist: Guidelines for Reporting on Latent Trajectory Studies. https://doi.org/10.1080/10705511.2016.1247646
 \item Paper describing the pseudo-class technique.
-Residual Diagnostics for Growth Mixture Models. \if{html}{\out{<a>}}https://doi.org/10.1198/016214505000000501\if{html}{\out{</a>}}
+Residual Diagnostics for Growth Mixture Models. https://doi.org/10.1198/016214505000000501
 \item Paper describing pooling results.
-Applied missing data analysis with SPSS and (R) Studio. Chapter Rubin's Rules. \if{html}{\out{<a>}}https://bookdown.org/mwheymans/bookmi/rubins-rules.html\if{html}{\out{</a>}}
+Applied missing data analysis with SPSS and (R) Studio. Chapter Rubin's Rules. https://bookdown.org/mwheymans/bookmi/rubins-rules.html
 \item Source for the default of 20 draws.
-Wald Test of Mean Equality for Potential Latent Class Predictors in Mixture Modeling. \if{html}{\out{<a>}}https://www.statmodel.com/download/MeanTest1.pdf\if{html}{\out{</a>}}
+Wald Test of Mean Equality for Potential Latent Class Predictors in Mixture Modeling. https://www.statmodel.com/download/MeanTest1.pdf
 }
 }
 \author{

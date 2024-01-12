@@ -4,7 +4,7 @@
 \alias{pseudo_class_data}
 \title{Sample class membership based on class membership probabilities}
 \usage{
-pseudo_class_data(fit, x = NULL, m = 10, output_type = "list")
+pseudo_class_data(fit, x = NULL, m = 20, output_type = "list")
 }
 \arguments{
 \item{fit}{A fitted mx_mixture model}
