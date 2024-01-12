@@ -48,7 +48,8 @@ Imports:
     future.apply,
     progressr,
     nonnest2 (>= 0.5.6),
-    mice
+    mice,
+    rlang
 Suggests: 
     testthat,
     knitr,
