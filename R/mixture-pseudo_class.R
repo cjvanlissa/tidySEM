@@ -11,23 +11,24 @@ probabilistic_assignment <- function(probs) {
 
 }
 
-#' @importFrom rlang eval_tidy
-pseudo_class_analysis <- function(dfs, quosure, enclos, expose_data = FALSE) {
+pseudo_class_analysis <- function(dfs, analysis, enclos = parent.frame(), expose_data = FALSE) {
 
   if ( expose_data ) {
     # Expose the imputed data frame as "data"
     lapply(X = dfs, FUN = function(df) {
 
-      eval_tidy(expr = quosure, data = list(data = df), env = enclos)
+      result <- eval(expr = analysis, envir = list(data = df), enclos = enclos)
 
+      result
     })
 
   } else {
 
     lapply(X = dfs, FUN = function(df) {
 
-      eval_tidy(expr = quosure, data = df, env = enclos)
+      result <- eval(expr = analysis, envir = df, enclos = enclos)
 
+      result
     })
 
   }
@@ -129,7 +130,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' @param x The corresponding dataset on which the model "fit" was fitted. If NULL (default)
 #' the dataset is taken from "fit".
 #' @param m The amount of datasets to generate. Default is 10.
-#' @param pool_results Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is TRUE.
+#' @param pool_results Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.
 #' @param expose_data Whether the expression explicitly refers to the generated dataset using "data".
 #' @param ... Arguments passed to \code{\link[mice]{pool}}
 #'
@@ -190,21 +191,20 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' @md
 #'
 #' @export
-#' @importFrom mice pool
-#' @importFrom rlang get_expr
-#' @importFrom rlang enquo
-pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results = TRUE, expose_data = FALSE, ...) {
+pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results = FALSE, expose_data = FALSE, ...) {
 
   enclos <- parent.frame()
 
-  quosure <- enquo(analysis)
-
-  expr <- get_expr(quosure)
+  expr <- substitute(analysis)
 
   if (is(expr, "name")) {
     analysis_type <- "function"
   } else if (is(expr, "call")) {
-    analysis_type <- "expression"
+    if (length(expr) > 1 && deparse(expr[[1]]) == "function"  ) {
+      analysis_type <- "function"
+    } else {
+      analysis_type <- "expression"
+    }
   } else {
     stop(paste0("Unknown expression type for 'analysis'. Should be a 'call' or 'name' of a function. 'analysis': ", as.character(expr)))
   }
@@ -227,14 +227,20 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
   } else {
 
     # Analysis is a call which can be evaluated
-    fits <- pseudo_class_analysis(dfs, quosure, enclos, expose_data = expose_data)
+    fits <- pseudo_class_analysis(dfs, expr, enclos, expose_data = expose_data)
 
   }
 
   # Pool the results?
   if (pool_results) {
     # Leverage mice::pool
-    pool(object = fits, ...)
+
+    if ( ! requireNamespace("mice") ) {
+      stop("Cannot pool result, because package 'mice' is not installed")
+    }
+
+    mice::pool(object = fits, dfcom = nrow(x), ...)
+
   } else {
 
     # Return a list of fit objects
