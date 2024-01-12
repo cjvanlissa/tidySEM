@@ -239,7 +239,7 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
       stop("Cannot pool result, because package 'mice' is not installed")
     }
 
-    mice::pool(object = fits, dfcom = nrow(x), ...)
+    mice::pool(object = fits, ...)
 
   } else {
 
