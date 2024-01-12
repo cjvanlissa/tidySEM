@@ -18,7 +18,8 @@ pseudo_class_technique(
 \item{fit}{A fitted mx_mixture model}
 
 \item{analysis}{Either an expression to execute on every generated dataset,
-or a function that performs the analysis on every generated dataset.}
+or a function that performs the analysis on every generated dataset,
+or a character that can be converted with \code{\link[tidySEM]{as_ram}}.}
 
 \item{x}{The corresponding dataset on which the model "fit" was fitted. If NULL (default)
 the dataset is taken from "fit".}
@@ -29,7 +30,7 @@ the dataset is taken from "fit".}
 
 \item{expose_data}{Whether the expression explicitly refers to the generated dataset using "data".}
 
-\item{...}{Arguments passed to \code{\link[mice]{pool}}}
+\item{...}{Arguments passed to \code{\link[tidySEM]{pseudo_class_pool}}}
 }
 \value{
 If pool_results is FALSE, returns a list of size "m" containing fitted models as returned by "analysis".
@@ -53,9 +54,16 @@ colnames(x) <- c("SL", "SW", "PL", "PW")
 tidySEM::mx_profiles(data = x, classes = 3) -> fit
 
 pseudo_class_technique( fit = fit,
-                        analysis = lm( SL ~ class ) ) -> pct
+                        analysis = "SL ~ class",
+                        pool_results = TRUE ) -> pct_mx
 
-summary(pct)
+summary(pct_mx)
+
+pseudo_class_technique( fit = fit,
+                        analysis = lm( SL ~ class ),
+                        pool_results = TRUE  ) -> pct_lm
+
+summary(pct_lm)
 
 
 pseudo_class_technique(fit = fit,

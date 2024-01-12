@@ -1,4 +1,161 @@
 
+
+#' @references
+#' Amelia::rubin_rules and mice::pool served as inspirations for this function
+pool_data <- function(estimates, standard_errors, df_complete) {
+  # Rubin rules
+
+  m <- length(estimates)
+  estimate <- mean(estimates)
+
+  var_w <- mean(standard_errors^2)
+  var_b <- var(estimates)
+  var_t <- var_w + var_b + (var_b / m)
+
+  lambda <- (1 + 1/m) * var_b/var_t
+  lambda[lambda < 1e-04] <- 1e-04
+  dfold <- (m - 1)/lambda^2
+  dfobs <- (df_complete + 1)/(df_complete + 3) * df_complete * (1 - lambda)
+  df <- ifelse(is.infinite(df_complete), dfold, dfold * dfobs/(dfold + dfobs))
+
+  riv <- (1 + 1/m) * var_b/var_w
+  lambda <- (1 + 1/m) * var_b/var_t
+  fmi <- (riv + 2/(df + 3))/(riv + 1)
+
+  se <- sqrt(var_t)
+  statistic <- estimate / se
+  pvalue <- 2 * (pt(abs(statistic), pmax(df, 0.001), lower.tail = FALSE))
+
+  list(
+    estimate = estimate,
+    se = se,
+    statistic = statistic,
+    df = df,
+    pvalue = pvalue#,
+    # var_w = var_w,
+    # var_b = var_b,
+    # var_t = var_t,
+    # riv = riv,
+    # lambda = lambda,
+    # fmi = fmi
+  )
+}
+
+do_pool <- function(parameters, parameter_names, df_complete) {
+
+  m <- array(dim = c(
+    length(parameter_names),
+    length(parameters),
+    2
+  ), dimnames = list(parameter_names, NULL, c("est", "se")))
+
+  for (j in seq_len(length(parameters))) {
+    for(i in seq_len(length(parameter_names))) {
+      m[i, j, ] <- unlist(parameters[[j]][i, c("est", "se"), drop = TRUE])
+    }
+  }
+
+  results <- lapply(parameter_names, function(pn) {
+    pool_data(m[pn,,"est"], m[pn,,"se"], df_complete)
+  })
+
+  results <- as.data.frame(do.call(rbind, results))
+
+  results$term <- parameter_names
+
+  results[,unique(c("term",colnames(results)))]
+}
+
+#' @export
+pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
+
+  if (!is.list(fits)) {
+    fits <- list(fits)
+  }
+
+  cls <- sapply(fits, function(x) head(class(x)))
+
+  cl <- unique(cls)
+
+  if ( length(cl) > 1 ) {
+    stop(paste0("'fits' consists of objects with different classes: ", paste(cl, sep = ', ')))
+  }
+
+  UseMethod("pseudo_class_pool", fits[[1]])
+
+}
+
+#' @export
+pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
+  if ( ! requireNamespace("mice") ) {
+    stop("Cannot pool fit objects, because package 'mice' is not installed")
+  }
+
+  summary(mice::pool(object = fits, dfcom = df_complete, ...))
+}
+
+#' @export
+pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, ...) {
+
+  parameters <- lapply(fits, function(fit) {
+
+    parameters <- summary(fit)$parameters
+
+    ns <- colnames(parameters)
+    colnames(parameters)[which(ns == "Estimate")] <- "est"
+    colnames(parameters)[which(ns == "Std.Error")] <- "se"
+
+    parameters[,c("name", "est", "se")]
+  })
+
+  example_fit <- fits[[1]]
+  example_parameters <- parameters[[1]]
+
+  if (is.null(df_complete)) {
+    warning(paste("degrees of freedom is assumed to be equal to the number of observations used in the analysis. Provide a better value via the 'df_complete' argument"))
+    df_complete <- example_fit@data@numObs
+  }
+
+
+  parameter_names <- example_parameters$name
+
+  do_pool(parameters, parameter_names, df_complete)
+}
+
+#' @export
+pseudo_class_pool.lavaan <- function(fits, std.all = FALSE, ...) {
+
+  parameters <- lapply(fits, function(fit) {
+
+    if (std.all == TRUE) {
+      ss <- lavaan::standardizedSolution(fit, type = "std.all", se = TRUE, zstat = F, pvalue = F, ci = F)
+
+      cns <- colnames(ss)
+      colnames(ss)[which(cns == "est.std")] <- "est"
+
+      parameters <- ss
+    } else {
+      parameters <- lavaan::parameterEstimates(fit, se = TRUE, zstat = F, pvalue = F, ci = F)
+    }
+
+    parameters
+  })
+
+  example_fit <- fits[[1]]
+  example_parameters <- parameters[[1]]
+
+  if (is.null(df_complete)) {
+    warning(paste("degrees of freedom is assumed to be equal to the number of observations used in the analysis. Provide a better value via the 'df_complete' argument"))
+    df_complete <- lavaan::lavInspect(example_fit, "ntotal")
+  }
+
+  parameter_names <- with(example_parameters, paste(lhs, op, rhs))
+
+
+
+  do_pool(parameters, parameter_names, df_complete)
+}
+
 probabilistic_assignment <- function(probs) {
 
   ps <- nrow(probs)
@@ -126,13 +283,14 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #'
 #' @param fit A fitted mx_mixture model
 #' @param analysis Either an expression to execute on every generated dataset,
-#' or a function that performs the analysis on every generated dataset.
+#' or a function that performs the analysis on every generated dataset,
+#' or a character that can be converted with \code{\link[tidySEM]{as_ram}}.
 #' @param x The corresponding dataset on which the model "fit" was fitted. If NULL (default)
 #' the dataset is taken from "fit".
 #' @param m The amount of datasets to generate. Default is 10.
 #' @param pool_results Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.
 #' @param expose_data Whether the expression explicitly refers to the generated dataset using "data".
-#' @param ... Arguments passed to \code{\link[mice]{pool}}
+#' @param ... Arguments passed to \code{\link[tidySEM]{pseudo_class_pool}}
 #'
 #' @note
 #' Note that if you provide "x", the function assumes rows of "x" correspond to the same
@@ -150,9 +308,16 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' tidySEM::mx_profiles(data = x, classes = 3) -> fit
 #'
 #' pseudo_class_technique( fit = fit,
-#'                         analysis = lm( SL ~ class ) ) -> pct
+#'                         analysis = "SL ~ class",
+#'                         pool_results = TRUE ) -> pct_mx
 #'
-#' summary(pct)
+#' summary(pct_mx)
+#'
+#' pseudo_class_technique( fit = fit,
+#'                         analysis = lm( SL ~ class ),
+#'                         pool_results = TRUE  ) -> pct_lm
+#'
+#' summary(pct_lm)
 #'
 #'
 #' pseudo_class_technique(fit = fit,
@@ -205,6 +370,25 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
     } else {
       analysis_type <- "expression"
     }
+  } else if (is.character(expr)) {
+    # Treat as a tidy_sem
+    analysis_type <- "function"
+
+    ramModel <- as_ram(analysis)
+
+    analysis <- function(df) {
+
+      model <- mxModel(ramModel,
+              data = mxData(observed = df, type = "raw"),
+              fitfunction = mxFitFunctionML())
+
+      out <- try(run_mx(model, silent = TRUE), silent = TRUE)
+      if(!inherits(out, "try-error")){
+        return(out)
+      }
+
+      out
+    }
   } else {
     stop(paste0("Unknown expression type for 'analysis'. Should be a 'call' or 'name' of a function. 'analysis': ", as.character(expr)))
   }
@@ -233,13 +417,8 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
 
   # Pool the results?
   if (pool_results) {
-    # Leverage mice::pool
 
-    if ( ! requireNamespace("mice") ) {
-      stop("Cannot pool result, because package 'mice' is not installed")
-    }
-
-    mice::pool(object = fits, ...)
+    pseudo_class_pool(fits, ...)
 
   } else {
 
