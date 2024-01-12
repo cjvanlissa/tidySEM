@@ -67,7 +67,7 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 #' @author Frank Gootjes
 #'
 #' @export
-pseudo_class_data <- function(fit, x = NULL, m = 10, output_type = "list") {
+pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 
   output_type <- match.arg(output_type, c("list", "long", "class_only"))
 
@@ -178,11 +178,22 @@ pseudo_class_data <- function(fit, x = NULL, m = 10, output_type = "list") {
 #'
 #' ## End(Not run)
 #'
+#' @references
+#' - Paper recommending, among others, the pseudo-class technique.
+#'   The GRoLTS-Checklist: Guidelines for Reporting on Latent Trajectory Studies. https://doi.org/10.1080/10705511.2016.1247646
+#' - Paper describing the pseudo-class technique.
+#'   Residual Diagnostics for Growth Mixture Models. https://doi.org/10.1198/016214505000000501
+#' - Paper describing pooling results.
+#'   Applied missing data analysis with SPSS and (R) Studio. Chapter Rubin's Rules. https://bookdown.org/mwheymans/bookmi/rubins-rules.html
+#' - Source for the default of 20 draws.
+#'   Wald Test of Mean Equality for Potential Latent Class Predictors in Mixture Modeling. https://www.statmodel.com/download/MeanTest1.pdf
+#' @md
+#'
 #' @export
 #' @importFrom mice pool
 #' @importFrom rlang get_expr
 #' @importFrom rlang enquo
-pseudo_class_technique <- function(fit, analysis, x = NULL, m = 10, pool_results = TRUE, expose_data = FALSE, ...) {
+pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results = TRUE, expose_data = FALSE, ...) {
 
   enclos <- parent.frame()
 

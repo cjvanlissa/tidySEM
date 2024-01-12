@@ -83,6 +83,18 @@ pseudo_class_technique( fit = fit,
 ## End(Not run)
 \dontshow{\}) # examplesIf}
 }
+\references{
+\itemize{
+\item Paper recommending, among others, the pseudo-class technique.
+The GRoLTS-Checklist: Guidelines for Reporting on Latent Trajectory Studies. \if{html}{\out{<a>}}https://doi.org/10.1080/10705511.2016.1247646\if{html}{\out{</a>}}
+\item Paper describing the pseudo-class technique.
+Residual Diagnostics for Growth Mixture Models. \if{html}{\out{<a>}}https://doi.org/10.1198/016214505000000501\if{html}{\out{</a>}}
+\item Paper describing pooling results.
+Applied missing data analysis with SPSS and (R) Studio. Chapter Rubin's Rules. \if{html}{\out{<a>}}https://bookdown.org/mwheymans/bookmi/rubins-rules.html\if{html}{\out{</a>}}
+\item Source for the default of 20 draws.
+Wald Test of Mean Equality for Potential Latent Class Predictors in Mixture Modeling. \if{html}{\out{<a>}}https://www.statmodel.com/download/MeanTest1.pdf\if{html}{\out{</a>}}
+}
+}
 \author{
 Frank Gootjes
 }
