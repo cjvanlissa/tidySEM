@@ -174,6 +174,9 @@ pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, 
 
   example_fit <- fits[[1]]
 
+  # Extract free parameters only, because the SE of fixed parameters is 0, while their estimate can differ across fits
+  # Applying Rubin's Rules to SE values of 0 appears invalid.
+  # If they needed to be included in the pooling process, they should be included in the lavaan model.
   fit_meta <- lavaan::parameterTable(example_fit)
   fit_meta <- fit_meta[fit_meta$free != 0, c("lhs", "op", "rhs")]
 
