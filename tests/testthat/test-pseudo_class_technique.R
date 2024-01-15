@@ -1,4 +1,4 @@
-test_that("pseudo_class_technique works", {
+test_that("pseudo_class works", {
 
   x <- iris[,c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
   colnames(x) <- c("SL", "SW", "PL", "PW")
@@ -7,16 +7,16 @@ test_that("pseudo_class_technique works", {
 
   library(lavaan)
 
-  pct_lm <- pseudo_class_technique( fit = fit,
+  pct_lm <- pseudo_class( fit = fit,
                                   analysis = lm( SL ~ class ),
                                   pool_results = TRUE  )
 
-  pct_lv <- pseudo_class_technique( fit = fit,
+  pct_lv <- pseudo_class( fit = fit,
                                  analysis = sem( "SL ~ class", data = data),
                                  pool_results = TRUE,
                                  df_complete = nrow(x) - 1)
 
-  pct_mx <- pseudo_class_technique( fit = fit,
+  pct_mx <- pseudo_class( fit = fit,
                                     analysis = "SL ~ class",
                                     pool_results = TRUE,
                                     df_complete = nrow(x) - 1  )

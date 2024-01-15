@@ -22,7 +22,7 @@ detect_usage_of_data <- function(kall) {
 
 #' @references
 #' Amelia::rubin_rules and mice::pool served as inspirations for this function
-pool_data <- function(x, df_complete) {
+pool_data <- function(x, df_complete = NULL) {
   # Rubin rules
 
   estimates <- x[,"est"]
@@ -65,7 +65,7 @@ pool_data <- function(x, df_complete) {
   )
 }
 
-do_pool <- function(parameters, parameter_names, df_complete) {
+do_pool <- function(parameters, parameter_names, df_complete = NULL) {
 
   m <- array(dim = c(
     length(parameter_names),
@@ -405,20 +405,20 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' colnames(x) <- c("SL", "SW", "PL", "PW")
 #' tidySEM::mx_profiles(data = x, classes = 3) -> fit
 #'
-#' pseudo_class_technique( fit = fit,
+#' pseudo_class( fit = fit,
 #'                         analysis = "SL ~ class",
 #'                         pool_results = TRUE ) -> pct_mx
 #'
 #' summary(pct_mx)
 #'
-#' pseudo_class_technique( fit = fit,
+#' pseudo_class( fit = fit,
 #'                         analysis = lm( SL ~ class ),
 #'                         pool_results = TRUE  ) -> pct_lm
 #'
 #' summary(pct_lm)
 #'
 #'
-#' pseudo_class_technique(fit = fit,
+#' pseudo_class(fit = fit,
 #'                        analysis = lm(Sepal.Length ~ class, data = data),
 #'                        x = iris,
 #'                        m = 10,
@@ -427,7 +427,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #'
 #' summary(pcte)
 #'
-#' pseudo_class_technique(fit = fit,
+#' pseudo_class(fit = fit,
 #'                        analysis = function(df) lm(Sepal.Length ~ class, data = df),
 #'                        x = iris,
 #'                        m = 10,
@@ -436,7 +436,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #'
 #' summary(pct_func)
 #'
-#' pseudo_class_technique( fit = fit,
+#' pseudo_class( fit = fit,
 #'                         analysis = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
 #'
 #'
@@ -454,17 +454,17 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' @md
 #'
 #' @export
-pseudo_class_technique <- function(fit,
+pseudo_class <- function(fit,
                                    analysis,
                                    x = NULL,
                                    m = 20,
                                    pool_results = FALSE,
                                    expose_data = detect_usage_of_data(substitute(analysis)), ...) {
-  UseMethod("pseudo_class_technique")
+  UseMethod("pseudo_class")
 }
 
 #' @export
-pseudo_class_technique.MxModel <- function(fit,
+pseudo_class.MxModel <- function(fit,
                                            analysis,
                                            x = NULL,
                                            m = 20,
