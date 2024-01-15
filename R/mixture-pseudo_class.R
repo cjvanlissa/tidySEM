@@ -152,7 +152,7 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
     nparam <- length(omxGetParameters(example_fit, free = TRUE))
     ntotal <- example_fit@data@numObs
 
-    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated: ", nparam, ". Provide a better value via the 'df_complete' argument"))
+    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
 
     df_complete <- max(1, ntotal - nparam)
 
@@ -195,7 +195,7 @@ pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, 
     nparam <- length(lavaan::coef(example_fit))
     ntotal <- lavaan::lavInspect(example_fit, "ntotal")
 
-    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated (", nparam, "). Provide a better value via the 'df_complete' argument"))
+    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
 
     df_complete <- max(1, ntotal - nparam)
   }
@@ -279,6 +279,10 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
   output_type <- match.arg(output_type, c("list", "long", "class_only"))
 
   cs <- seq_along(fit@submodels)
+
+  if ( length(cs) == 0 ) {
+    stop("No submodules found for 'fit', make sure it is a mixture model.")
+  }
 
   probabilities <- as.data.frame(class_prob(fit)$individual)[,cs]
 
@@ -406,6 +410,10 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #'
 #' @export
 pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results = FALSE, expose_data = FALSE, ...) {
+
+  if ( length(fit@submodels) == 0 ) {
+    stop("No submodules found for 'fit', make sure it is a mixture model.")
+  }
 
   enclos <- parent.frame()
 
