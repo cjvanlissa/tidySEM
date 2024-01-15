@@ -14,7 +14,6 @@ test_that("pseudo_class_technique works", {
   pct_lv <- pseudo_class_technique( fit = fit,
                                  analysis = sem( "SL ~ class", data = data),
                                  pool_results = TRUE,
-                                 expose_data = TRUE,
                                  df_complete = nrow(x) - 1)
 
   pct_mx <- pseudo_class_technique( fit = fit,

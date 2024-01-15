@@ -1,5 +1,25 @@
 
 
+detect_usage_of_data <- function(kall) {
+  mc <- match.call()
+
+  expr <- eval.parent(mc$kall)
+
+  if ( is.call(expr) ) {
+    f <- eval(expr[[1]])
+    fargs <- expr[-1]
+
+    for ( i in seq_along(fargs) ) {
+      v <- as.character(fargs[[i]])
+      if ( length(v) == 1 && v == "data" ) {
+        return(TRUE)
+      }
+    }
+  }
+
+  return(FALSE)
+}
+
 #' @references
 #' Amelia::rubin_rules and mice::pool served as inspirations for this function
 pool_data <- function(x, df_complete) {
@@ -359,7 +379,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' the class probabilities of "fit".
 #'
 #' @param fit A fitted mx_mixture model
-#' @param analysis Either an expression to execute on every generated dataset,
+#' @param analysis Either a call to execute on every generated dataset,
 #' or a function that performs the analysis on every generated dataset,
 #' or a character that can be converted with \code{\link[tidySEM]{as_ram}}.
 #' @param x The corresponding dataset on which the model "fit" was fitted. If NULL (default)
@@ -367,6 +387,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' @param m The amount of datasets to generate. Default is 10.
 #' @param pool_results Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.
 #' @param expose_data Whether the expression explicitly refers to the generated dataset using "data".
+#' The default is to detect the usage of the "data" keyword in 'analysis'.
 #' @param ... Arguments passed to \code{\link[tidySEM]{pseudo_class_pool}}
 #'
 #' @note
@@ -433,7 +454,22 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' @md
 #'
 #' @export
-pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results = FALSE, expose_data = FALSE, ...) {
+pseudo_class_technique <- function(fit,
+                                   analysis,
+                                   x = NULL,
+                                   m = 20,
+                                   pool_results = FALSE,
+                                   expose_data = detect_usage_of_data(substitute(analysis)), ...) {
+  UseMethod("pseudo_class_technique")
+}
+
+#' @export
+pseudo_class_technique.MxModel <- function(fit,
+                                           analysis,
+                                           x = NULL,
+                                           m = 20,
+                                           pool_results = FALSE,
+                                           expose_data = detect_usage_of_data(substitute(analysis)), ...) {
 
   if ( length(fit@submodels) == 0 ) {
     stop("No submodules found for 'fit', make sure it is a mixture model.")
@@ -445,7 +481,7 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
 
   if (is(expr, "name")) {
 
-    # Assume name's are okay to evaluate
+    # Assume names are okay to evaluate
     if ( is.function(analysis) ) {
       analysis_type <- "function"
     } else {
@@ -454,9 +490,21 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
 
   } else if (is(expr, "call")) {
     if (length(expr) > 1 && deparse(expr[[1]]) == "function"  ) {
+      # expr is an anonymous function passed as an argument
       analysis_type <- "function"
     } else {
-      analysis_type <- "expression"
+      analysis_type <- "call"
+
+      f <- eval(expr[[1]])
+      fargs <- expr[-1]
+
+      for ( i in seq_along(fargs) ) {
+        v <- as.character(fargs[[i]])
+        if ( length(v) == 1 && v == "data" ) {
+          expose_data = TRUE
+        }
+      }
+
     }
   } else if (is.character(expr)) {
     # Treat as a tidy_sem
@@ -510,11 +558,13 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
     # Analysis is a function so the callback variant can be used
     fits <- pseudo_class_analysis_cb(dfs, analysis)
 
-  } else {
+  } else if (analysis_type == "call" ) {
 
     # Analysis is a call which can be evaluated
     fits <- pseudo_class_analysis(dfs, expr, enclos, expose_data = expose_data)
 
+  } else {
+    stop(paste("Unknown analysis_type:", analysis_type))
   }
 
   # Pool the results?
