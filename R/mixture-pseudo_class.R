@@ -2,8 +2,11 @@
 
 #' @references
 #' Amelia::rubin_rules and mice::pool served as inspirations for this function
-pool_data <- function(estimates, standard_errors, df_complete) {
+pool_data <- function(x, df_complete) {
   # Rubin rules
+
+  estimates <- x[,"est"]
+  standard_errors <- x[,"se"]
 
   m <- length(estimates)
   estimate <- mean(estimates)
@@ -56,7 +59,7 @@ do_pool <- function(parameters, parameter_names, df_complete) {
   }
 
   results <- lapply(parameter_names, function(pn) {
-    pool_data(m[pn,,"est"], m[pn,,"se"], df_complete)
+    pool_data(m[pn,,], df_complete)
   })
 
   results <- as.data.frame(do.call(rbind, results))
@@ -95,25 +98,64 @@ pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
 }
 
 #' @export
-pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, ...) {
+pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...) {
+
+  modelType <- imxTypeName(fits_openmx[[1]])
+
+  if ( modelType != "RAM" && std == TRUE) {
+    stop(paste("Don't know how to standardize a MxModel of type:", modelType))
+  }
 
   parameters <- lapply(fits, function(fit) {
 
-    parameters <- summary(fit)$parameters
+    if (std == TRUE) {
 
-    ns <- colnames(parameters)
-    colnames(parameters)[which(ns == "Estimate")] <- "est"
-    colnames(parameters)[which(ns == "Std.Error")] <- "se"
+      # table_results() is used to get the prettier lhs, op, and rhs
+      parameters_info <- table_results(fit, format_numeric = F, columns = c("lhs", "op", "rhs", "est", "se", "name"))
 
-    parameters[,c("name", "est", "se")]
+      parameters_standardized <- mxStandardizeRAMpaths(fit, SE = TRUE)[,c("name", "Std.Value", "Std.SE")]
+
+      parameters <- merge(parameters_info, parameters_standardized)
+
+      if(nrow(parameters) != nrow(parameters_standardized)) {
+        stop("merge() result is unexpected")
+      }
+
+      parameters$rhs <- ifelse(parameters$op == "~1", "", parameters$rhs)
+
+      parameters$name <- with(parameters, paste(lhs, op, rhs))
+
+      parameters$est <- parameters$Std.Value
+      parameters$se <- parameters$Std.SE
+
+      parameters <- parameters[,c("name", "est", "se")]
+
+    } else {
+
+      parameters <- table_results(fit, format_numeric = F, columns = c("lhs", "op", "rhs", "est", "se"))
+
+      parameters$rhs <- ifelse(parameters$op == "~1", "", parameters$rhs)
+
+      parameters$name <- with(parameters, paste(lhs, op, rhs))
+
+      parameters <- parameters[,-(1:3)][,c("name", "est", "se")]
+
+    }
+
+    parameters
   })
 
   example_fit <- fits[[1]]
   example_parameters <- parameters[[1]]
 
   if (is.null(df_complete)) {
-    warning(paste("degrees of freedom is assumed to be equal to the number of observations used in the analysis. Provide a better value via the 'df_complete' argument"))
-    df_complete <- example_fit@data@numObs
+    nparam <- length(omxGetParameters(example_fit, free = TRUE))
+    ntotal <- example_fit@data@numObs
+
+    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated: ", nparam, ". Provide a better value via the 'df_complete' argument"))
+
+    df_complete <- max(1, ntotal - nparam)
+
   }
 
 
@@ -123,11 +165,14 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, ...) {
 }
 
 #' @export
-pseudo_class_pool.lavaan <- function(fits, std.all = FALSE, ...) {
+pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, ...) {
 
   parameters <- lapply(fits, function(fit) {
 
+    # I use this implementation rather than coef() because it is more flexible in terms of options
+
     if (std.all == TRUE) {
+      #
       ss <- lavaan::standardizedSolution(fit, type = "std.all", se = TRUE, zstat = F, pvalue = F, ci = F)
 
       cns <- colnames(ss)
@@ -135,6 +180,8 @@ pseudo_class_pool.lavaan <- function(fits, std.all = FALSE, ...) {
 
       parameters <- ss
     } else {
+
+
       parameters <- lavaan::parameterEstimates(fit, se = TRUE, zstat = F, pvalue = F, ci = F)
     }
 
@@ -145,13 +192,15 @@ pseudo_class_pool.lavaan <- function(fits, std.all = FALSE, ...) {
   example_parameters <- parameters[[1]]
 
   if (is.null(df_complete)) {
-    warning(paste("degrees of freedom is assumed to be equal to the number of observations used in the analysis. Provide a better value via the 'df_complete' argument"))
-    df_complete <- lavaan::lavInspect(example_fit, "ntotal")
+    nparam <- length(lavaan::coef(example_fit))
+    ntotal <- lavaan::lavInspect(example_fit, "ntotal")
+
+    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated (", nparam, "). Provide a better value via the 'df_complete' argument"))
+
+    df_complete <- max(1, ntotal - nparam)
   }
 
   parameter_names <- with(example_parameters, paste(lhs, op, rhs))
-
-
 
   do_pool(parameters, parameter_names, df_complete)
 }
@@ -363,7 +412,14 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
   expr <- substitute(analysis)
 
   if (is(expr, "name")) {
-    analysis_type <- "function"
+
+    # Assume name's are okay to evaluate
+    if ( is.function(analysis) ) {
+      analysis_type <- "function"
+    } else {
+      analysis_type <- class(analysis)
+    }
+
   } else if (is(expr, "call")) {
     if (length(expr) > 1 && deparse(expr[[1]]) == "function"  ) {
       analysis_type <- "function"
@@ -372,7 +428,6 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
     }
   } else if (is.character(expr)) {
     # Treat as a tidy_sem
-    analysis_type <- "function"
 
     ramModel <- as_ram(analysis)
 
@@ -389,8 +444,12 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
 
       out
     }
+
+    analysis_type <- "function"
+
+
   } else {
-    stop(paste0("Unknown expression type for 'analysis'. Should be a 'call' or 'name' of a function. 'analysis': ", as.character(expr)))
+    stop(paste0("Unknown expression type for 'analysis'. It should be a 'call', a 'function' or 'name' of a function. Received: ", as.character(expr)))
   }
 
   # Generate the data, uses sample(). Since analysis might also use the seed,
@@ -400,10 +459,21 @@ pseudo_class_technique <- function(fit, analysis, x = NULL, m = 20, pool_results
     x <- fit@data@observed
   }
 
-  dfs <- pseudo_class_data(fit = fit, x = x, m = m, output_type = "list")
+  dfs <- pseudo_class_data(fit = fit,
+                           x = x,
+                           m = m,
+                           output_type = "list")
 
   # Run the models
   if ( analysis_type == "function" ) {
+
+    if ( !is.function(analysis)  ) {
+      stop(paste("analysis '", expr, "' is not a function. The argument 'analysis' should be a callback function, a call, or a character vector"))
+    }
+
+    if ( length( formalArgs(analysis) ) != 1 ) {
+      stop("'analysis' is a function but it does not accept an argument. The callback function should accept one argument.")
+    }
 
     # Analysis is a function so the callback variant can be used
     fits <- pseudo_class_analysis_cb(dfs, analysis)
