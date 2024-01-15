@@ -26,7 +26,7 @@ the dataset is taken from "fit".}
 
 \item{m}{The amount of datasets to generate. Default is 10.}
 
-\item{pool_results}{Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.}
+\item{pool_results}{Whether to pool the results of the analyses using \code{\link[tidySEM]{pseudo_class_pool}}, default is FALSE.}
 
 \item{expose_data}{Whether the expression explicitly refers to the generated dataset using "data".
 The default is to detect the usage of the "data" keyword in 'analysis'.}
@@ -35,7 +35,7 @@ The default is to detect the usage of the "data" keyword in 'analysis'.}
 }
 \value{
 If pool_results is FALSE, returns a list of size "m" containing fitted models as returned by "analysis".
-If pool_results is TRUE, returns an object of class \code{\link[mice]{mipo}}
+If pool_results is TRUE, returns a data frame containing pooled results.
 }
 \description{
 Given a fitted tidySEM mixture model "fit", and the corresponding dataset "x",
