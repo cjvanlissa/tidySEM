@@ -395,7 +395,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' @param x The corresponding dataset on which the model "fit" was fitted. If NULL (default)
 #' the dataset is taken from "fit".
 #' @param m The amount of datasets to generate. Default is 10.
-#' @param pool_results Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.
+#' @param pool_results Whether to pool the results of the analyses using \code{\link[tidySEM]{pseudo_class_pool}}, default is FALSE.
 #' @param expose_data Whether the expression explicitly refers to the generated dataset using "data".
 #' The default is to detect the usage of the "data" keyword in 'analysis'.
 #' @param ... Arguments passed to \code{\link[tidySEM]{pseudo_class_pool}}
@@ -405,7 +405,7 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #' rows of the dataset on which "fit" is based.
 #'
 #' @returns If pool_results is FALSE, returns a list of size "m" containing fitted models as returned by "analysis".
-#' If pool_results is TRUE, returns an object of class \code{\link[mice]{mipo}}
+#' If pool_results is TRUE, returns a data frame containing pooled results.
 #'
 #' @author Frank Gootjes
 #'
