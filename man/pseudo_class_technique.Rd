@@ -10,14 +10,14 @@ pseudo_class_technique(
   x = NULL,
   m = 20,
   pool_results = FALSE,
-  expose_data = FALSE,
+  expose_data = detect_usage_of_data(substitute(analysis)),
   ...
 )
 }
 \arguments{
 \item{fit}{A fitted mx_mixture model}
 
-\item{analysis}{Either an expression to execute on every generated dataset,
+\item{analysis}{Either a call to execute on every generated dataset,
 or a function that performs the analysis on every generated dataset,
 or a character that can be converted with \code{\link[tidySEM]{as_ram}}.}
 
@@ -28,7 +28,8 @@ the dataset is taken from "fit".}
 
 \item{pool_results}{Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.}
 
-\item{expose_data}{Whether the expression explicitly refers to the generated dataset using "data".}
+\item{expose_data}{Whether the expression explicitly refers to the generated dataset using "data".
+The default is to detect the usage of the "data" keyword in 'analysis'.}
 
 \item{...}{Arguments passed to \code{\link[tidySEM]{pseudo_class_pool}}}
 }
@@ -83,9 +84,6 @@ pseudo_class_technique(fit = fit,
                        analysis_method = "function") -> pct_func
 
 summary(pct_func)
-
-pseudo_class_technique( fit = fit,
-                        analysis = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
 
 
 ## End(Not run)

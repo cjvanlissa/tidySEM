@@ -20,6 +20,7 @@ detect_usage_of_data <- function(kall) {
   return(FALSE)
 }
 
+#' @importFrom stats pt
 #' @references
 #' Amelia::rubin_rules and mice::pool served as inspirations for this function
 pool_data <- function(x, df_complete) {
@@ -94,6 +95,15 @@ do_pool <- function(parameters, parameter_names, df_complete) {
   results[,unique(c("term",colnames(results)))]
 }
 
+#' @title Pool parameter estimates of fit objects
+#' @description
+#' This S3 method pools parameter estimates of a list of fit objects using Rubin's Rules.
+#' The list of fits objects can be acquired with \code{\link[tidySEM]{pseudo_class_technique}}.
+#' In case the fit objects are not of class MxModel or lavaan, \code{\link[mice]{pool}} is tried (if that package is installed).
+#'
+#' @param fits List of fit objects (e.g. MxModel or lavaan)
+#' @param df_complete The residual degrees of freedom for the model
+#' @param ... arguments passed to specific implementations of pseudo_class_pool
 #' @export
 pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
 
@@ -436,9 +446,6 @@ pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
 #'
 #' summary(pct_func)
 #'
-#' pseudo_class_technique( fit = fit,
-#'                         analysis = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
-#'
 #'
 #' ## End(Not run)
 #'
@@ -463,6 +470,7 @@ pseudo_class_technique <- function(fit,
   UseMethod("pseudo_class_technique")
 }
 
+#' @importFrom methods is
 #' @export
 pseudo_class_technique.MxModel <- function(fit,
                                            analysis,
