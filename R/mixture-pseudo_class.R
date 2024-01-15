@@ -1,27 +1,7 @@
 
-
-detect_usage_of_data <- function(kall) {
-  mc <- match.call()
-
-  expr <- eval.parent(mc$kall)
-
-  if ( is.call(expr) ) {
-    f <- eval(expr[[1]])
-    fargs <- expr[-1]
-
-    for ( i in seq_along(fargs) ) {
-      v <- as.character(fargs[[i]])
-      if ( length(v) == 1 && v == "data" ) {
-        return(TRUE)
-      }
-    }
-  }
-
-  return(FALSE)
-}
-
 #' @references
 #' Amelia::rubin_rules and mice::pool served as inspirations for this function
+#' @importFrom stats pt
 pool_data <- function(x, df_complete = NULL) {
   # Rubin rules
 
@@ -47,7 +27,7 @@ pool_data <- function(x, df_complete = NULL) {
 
   se <- sqrt(var_t)
   statistic <- estimate / se
-  pvalue <- 2 * (pt(abs(statistic), pmax(df, 0.001), lower.tail = FALSE))
+  pvalue <- 2 * (stats::pt(abs(statistic), pmax(df, 0.001), lower.tail = FALSE))
 
   list(
     estimate = estimate,
@@ -94,7 +74,7 @@ do_pool <- function(parameters, parameter_names, df_complete = NULL) {
   results[,unique(c("term",colnames(results)))]
 }
 
-#' @export
+
 pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
 
   if (!is.list(fits)) {
@@ -113,16 +93,16 @@ pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
 
 }
 
-#' @export
+
 pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
-  if ( ! requireNamespace("mice") ) {
+  if ( ! requireNamespace("mice", quietly = TRUE) ) {
     stop("Cannot pool fit objects, because package 'mice' is not installed")
   }
 
   summary(mice::pool(object = fits, dfcom = df_complete, ...))
 }
 
-#' @export
+
 pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...) {
 
   modelType <- imxTypeName(fits[[1]])
@@ -177,7 +157,7 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
     nparam <- length(omxGetParameters(example_fit, free = TRUE))
     ntotal <- example_fit@data@numObs
 
-    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
+    message(paste("The degrees of freedom are assumed to be equal to the total number of observations used in the model (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
 
     df_complete <- max(1, ntotal - nparam)
 
@@ -189,7 +169,7 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
   do_pool(parameters, parameter_names, df_complete)
 }
 
-#' @export
+
 pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, ...) {
 
   example_fit <- fits[[1]]
@@ -239,7 +219,7 @@ pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, 
     nparam <- length(lavaan::coef(example_fit))
     ntotal <- lavaan::lavInspect(example_fit, "ntotal")
 
-    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of free parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
+    message(paste("The degrees of freedom are assumed to be equal to the total number of observations used in the model (", ntotal, ") minus the number of free parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
 
     df_complete <- max(1, ntotal - nparam)
   }
@@ -261,28 +241,14 @@ probabilistic_assignment <- function(probs) {
 
 }
 
-pseudo_class_analysis <- function(dfs, analysis, enclos = parent.frame(), expose_data = FALSE) {
+pseudo_class_analysis <- function(dfs, model, enclos = parent.frame()) {
 
-  if ( expose_data ) {
-    # Expose the imputed data frame as "data"
+  # Expose the imputed data frame as "data"
     lapply(X = dfs, FUN = function(df) {
 
-      result <- eval(expr = analysis, envir = list(data = df), enclos = enclos)
+      eval(expr = model, envir = list(data = df), enclos = enclos)
 
-      result
     })
-
-  } else {
-
-    lapply(X = dfs, FUN = function(df) {
-
-      result <- eval(expr = analysis, envir = df, enclos = enclos)
-
-      result
-    })
-
-  }
-
 }
 
 pseudo_class_analysis_cb <- function(dfs, func) {
@@ -290,202 +256,169 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 }
 
 
-#' @title Sample class membership based on class membership probabilities
+#' @title Append Pseudo-class Draws
 #' @description
-#' Adds a variable named "class" to "m" datasets. The variable contains the
-#' random class membership assignment based on the probabilities of "fit"
+#' Generates `m` datasets with random draws of a variable named `class`, with
+#' probability for these draws based on each case's probability of belonging to
+#' that class according to the model in `x`.
+#' @param x An object for which a method exists, usually a `mx_mixture` model.
+#' @param data A data.frame which the `class` variable is appended to. Note
+#' that the row order must be identical to that of the data used to fit `x`,
+#' as these data will be augmented with a pseudo-class draw for that specific
+#' individual.
+#' @param m Integer. Number of datasets to generate. Default is 10.
+#' @returns A list of class `pseudo_draws`.
+#' @examples
+#' dat <- iris[c(1:5, 50:55, 100:105),1:3]
+#' colnames(dat) <- letters[1:3]
+#' fit <- mx_profiles(data = dat, classes = 2)
 #'
-#' @param fit A fitted mx_mixture model
-#' @param x A dataset to which to add "class", if NULL, takes data from fit object
-#' @param m How many datasets to generate. Default is 10.
-#' @param output_type Either 'list' (default), 'long', or 'class_only'. If 'list', the datasets are returned as a list.
-#' If "long", the datasets are combined into a long dataset containing ".imp" to indicate the separate datasets.
-#' If "class_only", class assignments are returned as a matrix with "m" columns.
-#'
-#' @returns Returns a list of size "m" containing data.frame's with variable "class",
-#' or if output_type is "long", one long format data.frame with variable "class".
-#' If output_type is "class_only" a matrix with "m" columns containing class assignments.
-#'
-#' @examplesIf FALSE
-#' ## Not run:
-#' x <- iris[,c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
-#' colnames(x) <- c("SL", "SW", "PL", "PW")
-#' tidySEM::mx_profiles(data = x, classes = 3) -> fit
-#'
-#' class_assignments <- pseudo_class_data(fit)
-#' ## End(Not)
-#'
-#' @author Frank Gootjes
-#'
+#' append_class_draws(fit, data = iris[c(1:5, 50:55, 100:105), 4, drop = FALSE])
 #' @export
-pseudo_class_data <- function(fit, x = NULL, m = 20, output_type = "list") {
-
-  output_type <- match.arg(output_type, c("list", "long", "class_only"))
-
+# @author Frank Gootjes # CJ: You can list your authorship here, but you're also
+# in the package author list, which is redundant.
+# CJ: Rename to a meaningful action:
+append_class_draws <- function(x, data = NULL, m = 20) {
   cs <- seq_along(fit@submodels)
 
-  if ( length(cs) == 0 ) {
-    stop("No submodules found for 'fit', make sure it is a mixture model.")
+  if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
+    stop("Argument 'fit' is not a valid mixture model.")
   }
 
-  probabilities <- as.data.frame(class_prob(fit)$individual)[,cs]
+  probabilities <- as.data.frame(class_prob(fit)$individual)[, cs, drop = FALSE]
 
-  if ( output_type != "class_only") {
-    if (is.null(x)) {
-      x <- fit@data@observed
+  if (is.null(data)) {
+      data <- x@data@observed
     }
 
-    if (nrow(x) != nrow(probabilities)) {
-      stop("Cannot assign class membership variable to data.frame 'x'. Ensure the same rows in 'x' were used to fit the model.")
+    if (nrow(data) != nrow(probabilities)) {
+      stop("Cannot assign class membership variable to data.frame 'data'. Ensure the same rows in 'data' were used to fit the model.")
     }
 
     x_imputed <- lapply(seq_len(m), function(i) {
-
-      x$class <- probabilistic_assignment(probabilities)
-
-      x
+      data.frame(data, class = probabilistic_assignment(probabilities))
     })
 
-    if (output_type == "long") {
-
-      x_imputed <- lapply(seq_along(x_imputed), function(i) {
-        x_imputed[[i]]$.id <- rownames(x_imputed[[i]])
-        x_imputed[[i]]$.imp <- i
-
-        x_imputed[[i]]
-      })
-
-      do.call(rbind, x_imputed)
-    } else {
-      x_imputed
-    }
-  } else {
-
-    sapply(seq_len(m), function(i) {
-
-      probabilistic_assignment(probabilities)
-
-    })
-  }
-
+    class(x_imputed) <- c("class_draws", class(x_imputed))
+    return(x_imputed)
 
 }
 
-#' @title Analyze cluster membership using the pseudo-class technique
+#' @title Estimate an Auxiliary Model using the Pseudo-Class Method
 #' @description
-#' Given a fitted tidySEM mixture model "fit", and the corresponding dataset "x",
-#' this functions executes "analysis" on "m" datasets. Each of these datasets
-#' contains a "class" variable representing random class assignment based on
-#' the class probabilities of "fit".
+#' Estimate an auxiliary model based on multiple datasets, randomly drawing
+#' latent class values based on the estimated probability of belonging to each
+#' class. The pseudo class variable is treated as an observed variable within
+#' each dataset, and results are pooled across datasets to account for
+#' classification uncertainty.
 #'
-#' @param fit A fitted mx_mixture model
-#' @param analysis Either a call to execute on every generated dataset,
+#' @param x An object for which a method exists, typically either a fitted
+#' `mx_mixture` model or `pseudo_draws` object.
+#' @param model Either an expression to execute on every generated dataset,
 #' or a function that performs the analysis on every generated dataset,
-#' or a character that can be converted with \code{\link[tidySEM]{as_ram}}.
-#' @param x The corresponding dataset on which the model "fit" was fitted. If NULL (default)
-#' the dataset is taken from "fit".
-#' @param m The amount of datasets to generate. Default is 10.
-#' @param pool_results Whether to pool the results of the analyses using \code{\link[mice]{pool}}, default is FALSE.
-#' @param expose_data Whether the expression explicitly refers to the generated dataset using "data".
-#' The default is to detect the usage of the "data" keyword in 'analysis'.
-#' @param ... Arguments passed to \code{\link[tidySEM]{pseudo_class_pool}}
+#' or a character that can be interpreted as a structural equation model using
+#' \code{\link[tidySEM]{as_ram}}. This `model` can explicitly refer to `data`.
+#' @param data A data.frame on which the auxiliary model can be evaluated. Note
+#' that the row order must be identical to that of the data used to fit `x`,
+#' as these data will be augmented with a pseudo-class draw for that specific
+#' individual.
+#' @param m Integer. Number of datasets to generate. Default is 20.
+#' @param df_complete Integer. Degrees of freedom of the complete-data analysis.
+#' @param ... Additional arguments passed to other functions.
+#' @returns An object of class \code{\link[mice]{mipo}}
 #'
-#' @note
-#' Note that if you provide "x", the function assumes rows of "x" correspond to the same
-#' rows of the dataset on which "fit" is based.
+# @author Frank Gootjes
+# CJ: Frank, it's fine to list yourself here, but this tag is in principle used
+#     when function authors differ from package authors, and you are currently
+#     listed as a package author as well. So might be redundant.
 #'
-#' @returns If pool_results is FALSE, returns a list of size "m" containing fitted models as returned by "analysis".
-#' If pool_results is TRUE, returns an object of class \code{\link[mice]{mipo}}
-#'
-#' @author Frank Gootjes
-#'
-#' @examplesIf FALSE
-#' ## Not run:
-#' x <- iris[,c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+#' @examples
+#' x <- iris[c(1:5, 50:55, 100:105), 1:4]
 #' colnames(x) <- c("SL", "SW", "PL", "PW")
 #' tidySEM::mx_profiles(data = x, classes = 3) -> fit
 #'
 #' pseudo_class( fit = fit,
-#'                         analysis = "SL ~ class",
-#'                         pool_results = TRUE ) -> pct_mx
+#'                         model = "SL ~ class") -> pct_mx
 #'
 #' summary(pct_mx)
 #'
 #' pseudo_class( fit = fit,
-#'                         analysis = lm( SL ~ class ),
-#'                         pool_results = TRUE  ) -> pct_lm
+#'                         model = lm( SL ~ class )) -> pct_lm
 #'
 #' summary(pct_lm)
 #'
 #'
 #' pseudo_class(fit = fit,
-#'                        analysis = lm(Sepal.Length ~ class, data = data),
+#'                        model = lm(Sepal.Length ~ class, data = data),
 #'                        x = iris,
-#'                        m = 10,
-#'                        pool_results = TRUE,
-#'                        expose_data = TRUE) -> pcte
+#'                        m = 10) -> pcte
 #'
 #' summary(pcte)
 #'
 #' pseudo_class(fit = fit,
-#'                        analysis = function(df) lm(Sepal.Length ~ class, data = df),
+#'                        model = function(data) lm(Sepal.Length ~ class, data = data),
 #'                        x = iris,
-#'                        m = 10,
-#'                        pool_results = TRUE,
-#'                        analysis_method = "function") -> pct_func
+#'                        m = 10) -> pct_func
 #'
 #' summary(pct_func)
 #'
-#' pseudo_class( fit = fit,
-#'                         analysis = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
+# pseudo_class( fit = fit,
+#                         model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
 #'
 #'
-#' ## End(Not run)
 #'
 #' @references
-#' - Paper recommending, among others, the pseudo-class technique.
-#'   The GRoLTS-Checklist: Guidelines for Reporting on Latent Trajectory Studies. https://doi.org/10.1080/10705511.2016.1247646
-#' - Paper describing the pseudo-class technique.
-#'   Residual Diagnostics for Growth Mixture Models. https://doi.org/10.1198/016214505000000501
-#' - Paper describing pooling results.
-#'   Applied missing data analysis with SPSS and (R) Studio. Chapter Rubin's Rules. https://bookdown.org/mwheymans/bookmi/rubins-rules.html
-#' - Source for the default of 20 draws.
-#'   Wald Test of Mean Equality for Potential Latent Class Predictors in Mixture Modeling. https://www.statmodel.com/download/MeanTest1.pdf
+#' - Pseudo-class technique:
+#'   Wang C-P, Brown CH, Bandeen-Roche K (2005). Residual Diagnostics for Growth
+#'   Mixture Models: Examining the Impact of a Preventive Intervention on
+#'   Multiple Trajectories of Aggressive Behavior. Journal of the American
+#'   Statistical Association 100(3):1054-1076. \doi{10.1198/016214505000000501}
+#' - Pooling results across samples:
+#'   Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition. Boca Raton, FL: Chapman & Hall/CRC. \doi{10.1201/9780429492259}
 #' @md
 #'
 #' @export
-pseudo_class <- function(fit,
-                                   analysis,
-                                   x = NULL,
-                                   m = 20,
-                                   pool_results = FALSE,
-                                   expose_data = detect_usage_of_data(substitute(analysis)), ...) {
-  UseMethod("pseudo_class")
+pseudo_class <- function(x, model, data, m = 20, df_complete = NULL, ...) {
+  UseMethod("pseudo_class", x)
 }
 
+
+#' @method pseudo_class MxModel
 #' @export
-pseudo_class.MxModel <- function(fit,
-                                           analysis,
-                                           x = NULL,
-                                           m = 20,
-                                           pool_results = FALSE,
-                                           expose_data = detect_usage_of_data(substitute(analysis)), ...) {
-
-  if ( length(fit@submodels) == 0 ) {
-    stop("No submodules found for 'fit', make sure it is a mixture model.")
+pseudo_class.MxModel <- function(x, model, data = NULL, df_complete = NULL, ...) {
+  if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
+    stop("Argument 'fit' is not a valid mixture model.")
   }
+  if(inherits(data, what = "data.frame")){
+    cl <- match.call()
+    cl[[1]] <- quote(append_class_draws)
+    cl <- cl[c(1, which(names(cl) %in% c("x", "data", "m")))]
+    data <- eval.parent(cl)
+  } else {
+    stop("Function 'pseudo_class()' requires a 'data' argument when called on a 'mx_mixture' model.")
+  }
+  cl <- match.call()
+  cl[[1]] <- quote(pseudo_class)
+  cl[["x"]] <- data
+  cl <- cl[c(1, which(names(cl) %in% c("x", "model", "df_complete")))]
+  eval.parent(cl)
+}
 
+#' @method pseudo_class class_draws
+#' @export
+#' @importFrom methods is
+pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
   enclos <- parent.frame()
 
-  expr <- substitute(analysis)
+  expr <- substitute(model)
 
-  if (is(expr, "name")) {
+  if (methods::is(expr, "name")) {
 
     # Assume names are okay to evaluate
-    if ( is.function(analysis) ) {
+    if ( is.function(model) ) {
       analysis_type <- "function"
     } else {
-      analysis_type <- class(analysis)
+      analysis_type <- class(model)
     }
 
   } else if (is(expr, "call")) {
@@ -494,24 +427,13 @@ pseudo_class.MxModel <- function(fit,
       analysis_type <- "function"
     } else {
       analysis_type <- "call"
-
-      f <- eval(expr[[1]])
-      fargs <- expr[-1]
-
-      for ( i in seq_along(fargs) ) {
-        v <- as.character(fargs[[i]])
-        if ( length(v) == 1 && v == "data" ) {
-          expose_data = TRUE
-        }
-      }
-
     }
   } else if (is.character(expr)) {
     # Treat as a tidy_sem
 
-    ramModel <- as_ram(analysis)
+    ramModel <- as_ram(model)
 
-    analysis <- function(df) {
+    model <- function(df) {
 
       model <- mxModel(ramModel,
               data = mxData(observed = df, type = "raw"),
@@ -529,53 +451,37 @@ pseudo_class.MxModel <- function(fit,
 
 
   } else {
-    stop(paste0("Unknown expression type for 'analysis'. It should be a 'call', a 'function' or 'name' of a function. Received: ", as.character(expr)))
+    stop(paste0("Unknown expression type for 'model'. It should be a 'call', a 'function' or 'name' of a function. Received: ", as.character(expr)))
   }
 
-  # Generate the data, uses sample(). Since analysis might also use the seed,
+  # Generate the data, uses sample(). Since model might also use the seed,
   # data is generated first in order to be more reproducible.
 
-  if ( is.null(x) ) {
-    x <- fit@data@observed
-  }
-
-  dfs <- pseudo_class_data(fit = fit,
-                           x = x,
-                           m = m,
-                           output_type = "list")
+  dfs <- x
 
   # Run the models
   if ( analysis_type == "function" ) {
 
-    if ( !is.function(analysis)  ) {
-      stop(paste("analysis '", expr, "' is not a function. The argument 'analysis' should be a callback function, a call, or a character vector"))
+    if ( !is.function(model)  ) {
+      stop(paste("model '", expr, "' is not a function. The argument 'model' should be a callback function, a call, or a character vector"))
     }
 
-    if ( length( formalArgs(analysis) ) != 1 ) {
-      stop("'analysis' is a function but it does not accept an argument. The callback function should accept one argument.")
+    if ( length( formalArgs(model) ) != 1 ) {
+      stop("'model' is a function but it does not accept an argument. The callback function should accept one argument.")
     }
 
     # Analysis is a function so the callback variant can be used
-    fits <- pseudo_class_analysis_cb(dfs, analysis)
+    fits <- pseudo_class_analysis_cb(dfs, model)
 
   } else if (analysis_type == "call" ) {
 
     # Analysis is a call which can be evaluated
-    fits <- pseudo_class_analysis(dfs, expr, enclos, expose_data = expose_data)
+    fits <- pseudo_class_analysis(dfs, expr, enclos)
 
   } else {
     stop(paste("Unknown analysis_type:", analysis_type))
   }
 
-  # Pool the results?
-  if (pool_results) {
-
-    pseudo_class_pool(fits, ...)
-
-  } else {
-
-    # Return a list of fit objects
-    fits
-  }
-
+  # Pool the results
+  return(pseudo_class_pool(fits, ...))
 }
