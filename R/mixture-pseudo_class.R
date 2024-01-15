@@ -34,6 +34,7 @@ pool_data <- function(x, df_complete) {
     se = se,
     statistic = statistic,
     df = df,
+    df_complete = df_complete,
     pvalue = pvalue#,
     # var_w = var_w,
     # var_b = var_b,
@@ -59,10 +60,14 @@ do_pool <- function(parameters, parameter_names, df_complete) {
   }
 
   results <- lapply(parameter_names, function(pn) {
+    if ( all( m[pn,,"se"] == 0 ) ) {
+      warning(paste("Standard errors of parameter '", pn,"' are all zero. This can happen for non-free parameters. Don't interpret the SE for such parameters."))
+    }
     pool_data(m[pn,,], df_complete)
   })
 
-  results <- as.data.frame(do.call(rbind, results))
+  a <- as.data.frame(do.call(rbind, results))
+  results <- as.data.frame(lapply(a, unlist))
 
   results$term <- parameter_names
 
@@ -100,7 +105,7 @@ pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
 #' @export
 pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...) {
 
-  modelType <- imxTypeName(fits_openmx[[1]])
+  modelType <- imxTypeName(fits[[1]])
 
   if ( modelType != "RAM" && std == TRUE) {
     stop(paste("Don't know how to standardize a MxModel of type:", modelType))
@@ -167,9 +172,18 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
 #' @export
 pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, ...) {
 
+  example_fit <- fits[[1]]
+
+  fit_meta <- lavaan::parameterTable(example_fit)
+  fit_meta <- fit_meta[fit_meta$free != 0, c("lhs", "op", "rhs")]
+
+  free_parameter_names <- with(fit_meta, paste(lhs, op, rhs))
+
   parameters <- lapply(fits, function(fit) {
 
     # I use this implementation rather than coef() because it is more flexible in terms of options
+
+
 
     if (std.all == TRUE) {
       #
@@ -185,22 +199,29 @@ pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, 
       parameters <- lavaan::parameterEstimates(fit, se = TRUE, zstat = F, pvalue = F, ci = F)
     }
 
+    parameters$name <- with(parameters, paste(lhs, op, rhs))
+
+    parameters <- parameters[,c("name", "est", "se")]
+
+    parameters <- parameters[parameters$name %in% free_parameter_names,]
+
+    parameters <- parameters[order(parameters$name),]
+
     parameters
   })
 
-  example_fit <- fits[[1]]
   example_parameters <- parameters[[1]]
 
   if (is.null(df_complete)) {
     nparam <- length(lavaan::coef(example_fit))
     ntotal <- lavaan::lavInspect(example_fit, "ntotal")
 
-    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
+    warning(paste("degrees of freedom is assumed to be equal to the total number of observations used in the analysis (", ntotal, ") minus the number of free parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
 
     df_complete <- max(1, ntotal - nparam)
   }
 
-  parameter_names <- with(example_parameters, paste(lhs, op, rhs))
+  parameter_names <- example_parameters$name
 
   do_pool(parameters, parameter_names, df_complete)
 }
