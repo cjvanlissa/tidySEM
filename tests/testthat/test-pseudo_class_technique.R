@@ -1,11 +1,9 @@
+library(lavaan)
 test_that("pseudo_class works", {
 
   dat <- iris[,c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
   colnames(dat) <- c("SL", "SW", "PL", "PW")
-  mx_profiles(data = dat, classes = 3) -> fit
-
-
-  library(lavaan)
+  fit <- mx_profiles(data = dat, classes = 3)
 
   pct_lm <- pseudo_class(x = fit,
                          model = lm( SL ~ class, data = data ),

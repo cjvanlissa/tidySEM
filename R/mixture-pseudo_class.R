@@ -337,28 +337,28 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #' colnames(x) <- c("SL", "SW", "PL", "PW")
 #' tidySEM::mx_profiles(data = x, classes = 3) -> fit
 #'
-#' pseudo_class( fit = fit,
-#'                         model = "SL ~ class") -> pct_mx
+#' pseudo_class(x = fit,
+#'              model = "SL ~ class") -> pct_mx
 #'
 #' summary(pct_mx)
 #'
-#' pseudo_class( fit = fit,
-#'                         model = lm( SL ~ class )) -> pct_lm
+#' pseudo_class(x = fit,
+#'              model = lm( SL ~ class )) -> pct_lm
 #'
 #' summary(pct_lm)
 #'
 #'
-#' pseudo_class(fit = fit,
-#'                        model = lm(Sepal.Length ~ class, data = data),
-#'                        x = iris,
-#'                        m = 10) -> pcte
+#' pseudo_class(x = fit,
+#'              model = lm(Sepal.Length ~ class, data = data),
+#'              data = iris,
+#'              m = 10) -> pcte
 #'
 #' summary(pcte)
 #'
-#' pseudo_class(fit = fit,
-#'                        model = function(data) lm(Sepal.Length ~ class, data = data),
-#'                        x = iris,
-#'                        m = 10) -> pct_func
+#' pseudo_class(x = fit,
+#'              model = function(data) lm(Sepal.Length ~ class, data = data),
+#'              data = iris,
+#'              m = 10) -> pct_func
 #'
 #' summary(pct_func)
 #'
@@ -390,10 +390,17 @@ pseudo_class.MxModel <- function(x, model, data = NULL, df_complete = NULL, ...)
     stop("Argument 'fit' is not a valid mixture model.")
   }
   if(inherits(data, what = "data.frame")){
-    cl <- match.call()
-    cl[[1]] <- quote(append_class_draws)
-    cl <- cl[c(1, which(names(cl) %in% c("x", "data", "m")))]
-    data <- eval.parent(cl)
+    # cl <- match.call()
+    # cl[[1]] <- quote(append_class_draws)
+    # cl <- cl[c(1, which(names(cl) %in% c("x", "data", "m")))]
+    # data <- eval.parent(cl)
+    Args <- list(
+      x = x,
+      data = data
+    )
+    dots <- list(...)
+    if("m" %in% names(dots)) c(Args, dots["m"])
+    data <- do.call(append_class_draws, Args)
   } else {
     stop("Function 'pseudo_class()' requires a 'data' argument when called on a 'mx_mixture' model.")
   }

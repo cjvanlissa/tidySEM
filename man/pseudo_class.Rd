@@ -41,28 +41,28 @@ x <- iris[c(1:5, 50:55, 100:105), 1:4]
 colnames(x) <- c("SL", "SW", "PL", "PW")
 tidySEM::mx_profiles(data = x, classes = 3) -> fit
 
-pseudo_class( fit = fit,
-                        model = "SL ~ class") -> pct_mx
+pseudo_class(x = fit,
+             model = "SL ~ class") -> pct_mx
 
 summary(pct_mx)
 
-pseudo_class( fit = fit,
-                        model = lm( SL ~ class )) -> pct_lm
+pseudo_class(x = fit,
+             model = lm( SL ~ class )) -> pct_lm
 
 summary(pct_lm)
 
 
-pseudo_class(fit = fit,
-                       model = lm(Sepal.Length ~ class, data = data),
-                       x = iris,
-                       m = 10) -> pcte
+pseudo_class(x = fit,
+             model = lm(Sepal.Length ~ class, data = data),
+             data = iris,
+             m = 10) -> pcte
 
 summary(pcte)
 
-pseudo_class(fit = fit,
-                       model = function(data) lm(Sepal.Length ~ class, data = data),
-                       x = iris,
-                       m = 10) -> pct_func
+pseudo_class(x = fit,
+             model = function(data) lm(Sepal.Length ~ class, data = data),
+             data = iris,
+             m = 10) -> pct_func
 
 summary(pct_func)
 
