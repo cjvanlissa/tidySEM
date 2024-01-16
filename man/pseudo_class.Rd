@@ -2,9 +2,12 @@
 % Please edit documentation in R/mixture-pseudo_class.R
 \name{pseudo_class}
 \alias{pseudo_class}
+\alias{pseudo_class.MxModel}
 \title{Estimate an Auxiliary Model using the Pseudo-Class Method}
 \usage{
-pseudo_class(x, model, data, m = 20, df_complete = NULL, ...)
+pseudo_class(x, model, df_complete = NULL, ...)
+
+\method{pseudo_class}{MxModel}(x, model, df_complete = NULL, data = NULL, m = 20, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists, typically either a fitted
@@ -15,16 +18,16 @@ or a function that performs the analysis on every generated dataset,
 or a character that can be interpreted as a structural equation model using
 \code{\link[tidySEM]{as_ram}}. This \code{model} can explicitly refer to \code{data}.}
 
+\item{df_complete}{Integer. Degrees of freedom of the complete-data analysis.}
+
+\item{...}{Additional arguments passed to other functions.}
+
 \item{data}{A data.frame on which the auxiliary model can be evaluated. Note
 that the row order must be identical to that of the data used to fit \code{x},
 as these data will be augmented with a pseudo-class draw for that specific
 individual.}
 
 \item{m}{Integer. Number of datasets to generate. Default is 20.}
-
-\item{df_complete}{Integer. Degrees of freedom of the complete-data analysis.}
-
-\item{...}{Additional arguments passed to other functions.}
 }
 \value{
 An object of class \code{\link[mice]{mipo}}
@@ -37,47 +40,39 @@ each dataset, and results are pooled across datasets to account for
 classification uncertainty.
 }
 \examples{
-x <- iris[c(1:5, 50:55, 100:105), 1:4]
-colnames(x) <- c("SL", "SW", "PL", "PW")
-tidySEM::mx_profiles(data = x, classes = 3) -> fit
-
-pseudo_class(x = fit,
-             model = "SL ~ class") -> pct_mx
-
-summary(pct_mx)
-
-pseudo_class(x = fit,
-             model = lm( SL ~ class )) -> pct_lm
-
-summary(pct_lm)
+dat <- iris[c(1:5, 50:55, 100:105), 1:4]
+colnames(dat) <- c("SL", "SW", "PL", "PW")
+fit <- suppressWarnings(mx_profiles(data = dat, classes = 3))
 
 
-pseudo_class(x = fit,
-             model = lm(Sepal.Length ~ class, data = data),
-             data = iris,
-             m = 10) -> pcte
+pct_lm <- pseudo_class(x = fit,
+             model = lm( SL ~ class, data = data),
+             data = dat)
 
-summary(pcte)
 
-pseudo_class(x = fit,
-             model = function(data) lm(Sepal.Length ~ class, data = data),
-             data = iris,
-             m = 10) -> pct_func
+pcte <- pseudo_class(x = fit,
+                     model = lm(SL ~ class, data = data),
+                     data = dat,
+                     m = 10)
 
-summary(pct_func)
+pct_func <- pseudo_class(x = fit,
+                         model = function(data){lm(SL ~ class, data = data)},
+                         data = dat,
+                         m = 10)
+
 
 
 
 
 }
 \references{
-\itemize{
-\item Pseudo-class technique:
+Pseudo-class technique:
 Wang C-P, Brown CH, Bandeen-Roche K (2005). Residual Diagnostics for Growth
 Mixture Models: Examining the Impact of a Preventive Intervention on
 Multiple Trajectories of Aggressive Behavior. Journal of the American
 Statistical Association 100(3):1054-1076. \doi{10.1198/016214505000000501}
-\item Pooling results across samples:
-Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition. Boca Raton, FL: Chapman & Hall/CRC. \doi{10.1201/9780429492259}
-}
+
+Pooling results across samples:
+Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition.
+Boca Raton, FL: Chapman & Hall/CRC. \doi{10.1201/9780429492259}
 }

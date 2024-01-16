@@ -279,8 +279,6 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 # in the package author list, which is redundant.
 # CJ: Rename to a meaningful action:
 append_class_draws <- function(x, data = NULL, m = 20) {
-  cs <- seq_along(x@submodels)
-
   if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
     stop("Argument 'x' is not a valid mixture model.")
   }
@@ -288,11 +286,13 @@ append_class_draws <- function(x, data = NULL, m = 20) {
     warning("Argument 'data' has a column called 'id_dataset'; this column will be renamed because append_class_draws() adds a column of the same name.")
     names(data)[which(names(data) == "id_dataset")] <- "id_dataset.1"
   }
-  probabilities <- as.data.frame(class_prob(x)$individual)[, cs, drop = FALSE]
+  probabilities <- as.data.frame(class_prob(x, type = "individual")[["individual"]])
+  probabilities <- probabilities[, -ncol(probabilities), drop = FALSE]
 
   if (is.null(data)) {
       data <- x@data@observed
-    }
+  }
+
 
     if (nrow(data) != nrow(probabilities)) {
       stop("Cannot assign class membership variable to data.frame 'data'. Ensure the same rows in 'data' were used to fit the model.")
@@ -320,11 +320,6 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #' or a function that performs the analysis on every generated dataset,
 #' or a character that can be interpreted as a structural equation model using
 #' \code{\link[tidySEM]{as_ram}}. This `model` can explicitly refer to `data`.
-#' @param data A data.frame on which the auxiliary model can be evaluated. Note
-#' that the row order must be identical to that of the data used to fit `x`,
-#' as these data will be augmented with a pseudo-class draw for that specific
-#' individual.
-#' @param m Integer. Number of datasets to generate. Default is 20.
 #' @param df_complete Integer. Degrees of freedom of the complete-data analysis.
 #' @param ... Additional arguments passed to other functions.
 #' @returns An object of class \code{\link[mice]{mipo}}
@@ -335,34 +330,29 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #     listed as a package author as well. So might be redundant.
 #'
 #' @examples
-#' x <- iris[c(1:5, 50:55, 100:105), 1:4]
-#' colnames(x) <- c("SL", "SW", "PL", "PW")
-#' tidySEM::mx_profiles(data = x, classes = 3) -> fit
+#' dat <- iris[c(1:5, 50:55, 100:105), 1:4]
+#' colnames(dat) <- c("SL", "SW", "PL", "PW")
+#' fit <- suppressWarnings(mx_profiles(data = dat, classes = 3))
 #'
-#' pseudo_class(x = fit,
-#'              model = "SL ~ class") -> pct_mx
+# pct_mx <- pseudo_class(x = fit,
+#                        model = "SL ~ class",
+#                        data = dat)
 #'
-#' summary(pct_mx)
-#'
-#' pseudo_class(x = fit,
-#'              model = lm( SL ~ class )) -> pct_lm
-#'
-#' summary(pct_lm)
+#' pct_lm <- pseudo_class(x = fit,
+#'              model = lm( SL ~ class, data = data),
+#'              data = dat)
 #'
 #'
-#' pseudo_class(x = fit,
-#'              model = lm(Sepal.Length ~ class, data = data),
-#'              data = iris,
-#'              m = 10) -> pcte
+#' pcte <- pseudo_class(x = fit,
+#'                      model = lm(SL ~ class, data = data),
+#'                      data = dat,
+#'                      m = 10)
 #'
-#' summary(pcte)
+#' pct_func <- pseudo_class(x = fit,
+#'                          model = function(data){lm(SL ~ class, data = data)},
+#'                          data = dat,
+#'                          m = 10)
 #'
-#' pseudo_class(x = fit,
-#'              model = function(data) lm(Sepal.Length ~ class, data = data),
-#'              data = iris,
-#'              m = 10) -> pct_func
-#'
-#' summary(pct_func)
 #'
 # pseudo_class(x = fit,
 #              model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
@@ -370,24 +360,32 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'
 #'
 #' @references
-#' - Pseudo-class technique:
+#' Pseudo-class technique:
 #'   Wang C-P, Brown CH, Bandeen-Roche K (2005). Residual Diagnostics for Growth
 #'   Mixture Models: Examining the Impact of a Preventive Intervention on
 #'   Multiple Trajectories of Aggressive Behavior. Journal of the American
 #'   Statistical Association 100(3):1054-1076. \doi{10.1198/016214505000000501}
-#' - Pooling results across samples:
-#'   Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition. Boca Raton, FL: Chapman & Hall/CRC. \doi{10.1201/9780429492259}
+#'
+#' Pooling results across samples:
+#' Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition.
+#' Boca Raton, FL: Chapman & Hall/CRC. \doi{10.1201/9780429492259}
 #' @md
 #'
 #' @export
-pseudo_class <- function(x, model, data, m = 20, df_complete = NULL, ...) {
+pseudo_class <- function(x, model, df_complete = NULL, ...) {
   UseMethod("pseudo_class", x)
 }
 
 
 #' @method pseudo_class MxModel
+#' @param data A data.frame on which the auxiliary model can be evaluated. Note
+#' that the row order must be identical to that of the data used to fit `x`,
+#' as these data will be augmented with a pseudo-class draw for that specific
+#' individual.
+#' @param m Integer. Number of datasets to generate. Default is 20.
+#' @rdname pseudo_class
 #' @export
-pseudo_class.MxModel <- function(x, model, data = NULL, df_complete = NULL, ...) {
+pseudo_class.MxModel <- function(x, model, df_complete = NULL, data = NULL, m = 20, ...) {
   if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
     stop("Argument 'fit' is not a valid mixture model.")
   }
