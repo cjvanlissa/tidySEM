@@ -279,13 +279,16 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 # in the package author list, which is redundant.
 # CJ: Rename to a meaningful action:
 append_class_draws <- function(x, data = NULL, m = 20) {
-  cs <- seq_along(fit@submodels)
+  cs <- seq_along(x@submodels)
 
   if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
-    stop("Argument 'fit' is not a valid mixture model.")
+    stop("Argument 'x' is not a valid mixture model.")
   }
-
-  probabilities <- as.data.frame(class_prob(fit)$individual)[, cs, drop = FALSE]
+  if(any(names(data) == "id_dataset")){
+    warning("Argument 'data' has a column called 'id_dataset'; this column will be renamed because append_class_draws() adds a column of the same name.")
+    names(data)[which(names(data) == "id_dataset")] <- "id_dataset.1"
+  }
+  probabilities <- as.data.frame(class_prob(x)$individual)[, cs, drop = FALSE]
 
   if (is.null(data)) {
       data <- x@data@observed
@@ -298,10 +301,9 @@ append_class_draws <- function(x, data = NULL, m = 20) {
     x_imputed <- lapply(seq_len(m), function(i) {
       data.frame(data, class = probabilistic_assignment(probabilities))
     })
-
+    x_imputed <- data.frame(id_dataset = rep(1:20, each = nrow(data)), do.call(rbind, x_imputed))
     class(x_imputed) <- c("class_draws", class(x_imputed))
     return(x_imputed)
-
 }
 
 #' @title Estimate an Auxiliary Model using the Pseudo-Class Method
@@ -362,8 +364,8 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'
 #' summary(pct_func)
 #'
-# pseudo_class( fit = fit,
-#                         model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
+# pseudo_class(x = fit,
+#              model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
 #'
 #'
 #'
@@ -464,7 +466,7 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
   # Generate the data, uses sample(). Since model might also use the seed,
   # data is generated first in order to be more reproducible.
 
-  dfs <- x
+  dfs <- tmp = split(x[, -which(names(x) == "id_dataset"), drop = FALSE], f = factor(x$id_dataset))
 
   # Run the models
   if ( analysis_type == "function" ) {

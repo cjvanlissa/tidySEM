@@ -1,3 +1,8 @@
+# tidySEM 0.2.7
+
+* Frank Gootjes contributed pseudo class functionality, new functions are
+  append_class_draws() and pseudo_class()
+
 # tidySEM 0.2.6
 
 * Fix bug in BLRT()
