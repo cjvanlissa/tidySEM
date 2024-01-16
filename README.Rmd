@@ -76,6 +76,10 @@ You can cite the R-package with the following citation:
 
 > Van Lissa, C. J., (2019). *tidySEM: Tidy structural equation modeling.* R package version 0.2.1. https://github.com/cjvanlissa/tidySEM/
 
+To cite the latent class analysis functionality in tidySEM, cite:
+
+> Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. https://doi.org/10.1080/10705511.2023.2250920
+
 ## Contributing and Contact Information
 
 If you have ideas, please get involved. You can contribute by opening an issue on 'GitHub', or sending a pull request with proposed features (see further instructions below).

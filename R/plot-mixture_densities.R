@@ -248,7 +248,7 @@ plot_density.MxModel <- function(x,
         densities <- .get_dens_for_plot(plot_df)
         densities$alpha <- alpha
         densities$alpha[densities$Class == "Total"] <- 0
-        densities$Class <- ordered(densities$Class, levels = c(levels(plot_df$Class)[-1][order(as.numeric(levels(plot_df$Class)[-1]))], levels(plot_df$Class)[1]))
+        densities$Class <- ordered(densities$Class, levels = c(levels(plot_df$Class)[-match("Total", levels(plot_df$Class))], "Total"))
         if (bw) {
             density_plot <-
                 ggplot(densities,
@@ -273,6 +273,7 @@ plot_density.MxModel <- function(x,
                                   #size = "size"
                        )) + labs(x = "Value", y = "density")
             class_colors <- c(get_palette(length(levels(plot_df$Class))-1), "#000000")
+            names(class_colors) <- levels(plot_df$Class)
             density_plot <- density_plot +
                 scale_colour_manual(values = class_colors)+
                 scale_fill_manual(values = class_colors) +

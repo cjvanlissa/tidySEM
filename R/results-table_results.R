@@ -347,12 +347,17 @@ conf_int.default <- function(x, digits = 2, se = NULL, lb = NULL, ub = NULL, ci 
     se <- NULL
   }
   if(!is.null(lb) & !is.null(ub)){
-    paste0("[", format_with_na(lb, digits = digits, format = "f"), ", ", format_with_na(ub, digits = digits, format = "f"), "]")
+    formatlb <- format_with_na(lb, digits = digits, format = "f")
+    formatub <- format_with_na(ub, digits = digits, format = "f")
   } else {
     if(!(ci>0 & ci < 100)) stop("Argument 'ci' must have a value between 0-100.", call. = FALSE)
     bound <- qnorm((1-(ci/100))/2)
-    paste0("[", format_with_na(x+(bound*se), digits = digits, format = "f"), ", ", format_with_na(x-(bound*se), digits = digits, format = "f"), "]")
+    formatlb <- format_with_na(x+(bound*se), digits = digits, format = "f")
+    formatub <- format_with_na(x-(bound*se), digits = digits, format = "f")
   }
+  out <- paste0("[", formatlb, ", ", formatub, "]")
+  out[is.na(formatlb) & is.na(formatub)] <- NA
+  return(out)
 }
 
 #' @method conf_int mplus.params

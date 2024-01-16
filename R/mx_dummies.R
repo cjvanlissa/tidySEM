@@ -76,6 +76,6 @@ mx_dummies.factor <- function(x, ...){
   mat <- data.frame(model.matrix(~.-1, data = tmp))
   mat[] <- lapply(mat, mxFactor, levels = c(0, 1))
   options(na.action = na_action)
-  names(mat) <- gsub("xxxremovemexxx", "", names(mat), fixed = TRUE)
+  names(mat) <- make.names(gsub("xxxremovemexxx", "", names(mat), fixed = TRUE))
   return(mat)
 }

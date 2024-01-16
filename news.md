@@ -1,3 +1,20 @@
+# tidySEM 0.2.7
+
+* Frank Gootjes contributed pseudo class functionality, new functions are
+  append_class_draws() and pseudo_class()
+
+# tidySEM 0.2.6
+
+* Fix bug in BLRT()
+* Patch to anticipate change in lavaan parser that would break add_paths()
+* Improve vignette Generating_syntax.Rmd
+
+# tidySEM 0.2.5
+
+* Add reference to best practices paper, <DOI:10.1080/10705511.2023.2250920>
+* Include vignettes corresponding to the appendices of that paper
+* Correct implementation of `lr_lmr()` using `nonnest2::vuongtest()`
+
 # tidySEM 0.2.4
 
 * Update maintainer email address

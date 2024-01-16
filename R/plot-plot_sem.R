@@ -464,11 +464,12 @@ prepare_graph.default <- function(edges = NULL,
   df_nodes$node_xmax <- NA
   df_nodes$node_ymin <- NA
   df_nodes$node_ymax <- NA
-  if(any(df_nodes$shape == "rect")){
-    df_nodes[df_nodes$shape == "rect", c("node_xmin", "node_xmax")] <- cbind(df_nodes[df_nodes$shape == "rect", ]$x-.5*rect_width,
-                                                                             df_nodes[df_nodes$shape == "rect", ]$x+.5*rect_width)
-    df_nodes[df_nodes$shape == "rect", c("node_ymin", "node_ymax")] <- cbind(df_nodes[df_nodes$shape == "rect", ]$y-.5*rect_height,
-                                                                             df_nodes[df_nodes$shape == "rect", ]$y+.5*rect_height)
+  thesenodes <- df_nodes$shape %in% c("rect", "none")
+  if(any(thesenodes)){
+    df_nodes[thesenodes, c("node_xmin", "node_xmax")] <- cbind(df_nodes[thesenodes, ]$x-.5*rect_width,
+                                                                             df_nodes[thesenodes, ]$x+.5*rect_width)
+    df_nodes[thesenodes, c("node_ymin", "node_ymax")] <- cbind(df_nodes[thesenodes, ]$y-.5*rect_height,
+                                                                             df_nodes[thesenodes, ]$y+.5*rect_height)
   }
 
   if(any(df_nodes$shape == "oval")){
@@ -571,7 +572,16 @@ prepare_graph.lavaan <- function(model,
 #' @method prepare_graph MxModel
 #' @rdname prepare_graph
 #' @export
-prepare_graph.MxModel <- prepare_graph.lavaan
+prepare_graph.MxModel <- function(model, ...){
+  cl <- match.call()
+  tab <- table_results(model)
+  if(!"edges" %in% names(cl)) cl[["edges"]] <- get_edges(tab)
+  if(!"nodes" %in% names(cl)) cl[["nodes"]] <- get_nodes(tab)
+  if(!"layout" %in% names(cl)) cl[["layout"]] <- get_layout(tab)
+  cl[["model"]] <- NULL
+  cl[[1]] <- quote(prepare_graph)
+  eval.parent(cl)
+}
 
 #' @method prepare_graph character
 #' @rdname prepare_graph
@@ -907,8 +917,14 @@ get_nodes.tidy_results <- function(x, label = paste2(name, est_sig, sep = "\n"),
     })
     return(bind_list(x_list))
   }
+  if(!all(c("lhs", "rhs", "op") %in% names(x))){
+    if(!"label" %in% names(x)){
+      stop("Could not extract edges; re-run with table_results(columns = NULL).")
+    }
+    addcols <- .labeltolhsrhsop(x$label)
+    x <- cbind(x, addcols[, names(addcols)[!names(addcols) %in% names(x)], drop = FALSE])
+  }
   latent <- unique(x$lhs[x$op == "=~"])
-
   obs <- unique(c(x$lhs[x$op %in% c("~~", "~", "~1")], x$rhs[x$op %in% c("~")]))
   nodes <- unique(c(latent, obs))
   nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
@@ -1106,6 +1122,13 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
     })
     return(bind_list(x_list))
   }
+  if(!all(c("lhs", "rhs", "op") %in% names(x))){
+    if(!"label" %in% names(x)){
+      stop("Could not extract edges; re-run with table_results(columns = NULL).")
+    }
+    addcols <- .labeltolhsrhsop(x$label)
+    x <- cbind(x, addcols[, names(addcols)[!names(addcols) %in% names(x)], drop = FALSE])
+  }
   if("label" %in% names(x)){
     names(x)[names(x) == "label"] <- "label_results"
   }
@@ -1150,7 +1173,9 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
   tmp <- x #data.frame(as.list(x)[ c("from", "to", "arrow", keep_cols) ], check.names=FALSE)
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
-  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", keep_cols))
+  tmp$linetype <- 1
+  tmp$linetype[x$op == "~~" & !x$lhs == x$rhs] <- 2
+  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", "linetype", keep_cols))
   keep_cols <- keep_cols[keep_cols %in% names(tmp)]
   tmp <- tmp[, keep_cols, drop = FALSE]
   class(tmp) <- c("tidy_edges", class(tmp))
@@ -1159,6 +1184,17 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
   tmp
 }
 
+.labeltolhsrhsop <- function(lbl){
+  op <- gsub("^.+?\\.(BY|ON|WITH)\\..+$", "\\1", lbl)
+  op <- gsub("\\..*$", "", op)
+  repl <- c("BY" = "=~", "WITH" = "~~", "Variances" = "~~", "Means" = "~1", "ON" = "~")
+  op <- repl[op]
+  lhs <- gsub("^.+\\b(.+?)\\.(BY|WITH|ON)\\..*$", "\\1", lbl)
+  lhs <- gsub("^(Variances|Means)\\.", "", lhs)
+  rhs <- gsub("^.+\\.(BY|WITH|ON)\\.(.+?)\\b.*$", "\\2", lbl)
+  rhs <- gsub("^(Variances|Means)\\.", "", rhs)
+  return(data.frame(lhs = lhs, op = op, rhs = rhs))
+}
 
 .euclidean_distance <- function(p, q){
   sqrt(sum((p - q)^2))
@@ -1249,7 +1285,7 @@ match.call.defaults <- function(...) {
 
   if(any(df$shape == "rect")){
     df_rect <- df[df$shape == "rect", ]
-    Args <- c("linetype", "size", "colour", "color", "fill", "alpha")
+    Args <- c("linetype", "size", "colour", "color", "fill", "alpha", "linewidth")
     Args <- as.list(df_rect[which(names(df_rect) %in% Args)])
     Args <- c(list(
       data = df_rect,
@@ -1298,7 +1334,6 @@ match.call.defaults <- function(...) {
     connect_from <- apply(df_edges[!is_variance, ], 1, function(thisedge){
       points1 <- matrix(unlist(df_nodes[df_nodes$name == thisedge["from"], c("node_xmin", "x", "node_xmax", "x", "y", "node_ymin", "y", "node_ymax")]), ncol = 2)
       points2 <- matrix(unlist(df_nodes[df_nodes$name == thisedge["to"], c("node_xmin", "x", "node_xmax", "x", "y", "node_ymin", "y", "node_ymax")]), ncol = 2)
-
       indx1 <- RANN::nn2(points1, points2, k = 1, searchtype = "standard")
       indx2 <- RANN::nn2(points2, points1, k = 1, searchtype = "standard")
       c(c("left", "bottom", "right", "top")[indx1$nn.idx[which.min(indx1$nn.dists)]],
@@ -1490,20 +1525,20 @@ match.call.defaults <- function(...) {
           rep(rownum, npoints)),
         nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
       )
-      # Check if the curve should be flipped
-      midpoint <- out[floor(npoints/2), 1:2]
-      # replace this with node df
-      df_tmp <- df[, c("text_x", "text_y")]
-      names(df_tmp) <- c('x', 'y')
-      # Find the reflection of the midpoint
-      midpoint_reflect <- .reflect_points(points = matrix(midpoint, nrow = 1),
-                                          start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
-                                          end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
-      if(.flip_curve(otherpoints = df_tmp, candidatepoints = list(midpoint, midpoint_reflect))){
-        out[, 1:2] <- .reflect_points(points = out[, 1:2],
-                                      start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
-                                      end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
-      }
+      # # Check if the curve should be flipped
+      # midpoint <- out[floor(npoints/2), 1:2]
+      # # replace this with node df
+      # df_tmp <- df[, c("text_x", "text_y")]
+      # names(df_tmp) <- c('x', 'y')
+      # # Find the reflection of the midpoint
+      # midpoint_reflect <- .reflect_points(points = matrix(midpoint, nrow = 1),
+      #                                     start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
+      #                                     end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
+      # if(.flip_curve(otherpoints = df_tmp, candidatepoints = list(midpoint, midpoint_reflect))){
+      #   out[, 1:2] <- .reflect_points(points = out[, 1:2],
+      #                                 start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
+      #                                 end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
+      # }
       out
     }
   })))
@@ -1522,12 +1557,12 @@ match.call.defaults <- function(...) {
   df_label <- df_edges[middle_point, ]
   df_label$label <- df$label
   df_label <- df_label[!(is.na(df_label$label) | df_label$label == ""), ]
-  # Prepare aesthetics ------------------------------------------------------
+  # # Prepare aesthetics ------------------------------------------------------
   if(!"linetype" %in% names(df_edges)){
-    df_edges$linetype <- 2
-    df_edges$linetype[is.na(df_edges$curvature)] <- 1
+    df_edges$linetype <- 1#2
+    #df_edges$linetype[is.na(df_edges$curvature)] <- 1
   }
-  if(any(df_edges$arrow == "curve")) stop("Arrow cannot be 'curve'.")
+  if(!all(df_edges$arrow %in% c("first", "last", "both", "none"))) stop("Illicit 'arrow' value; acceptable values are c('first', 'last', 'both', 'none').")
   p <- .plot_edges_internal(p, df_edges)
   # Add label and return ----------------------------------------------------
   .plot_label_internal(p, df_label, text_size)
@@ -1537,18 +1572,17 @@ match.call.defaults <- function(...) {
 .plot_edges_internal <- function(p, df){
   # Prepare aesthetics ------------------------------------------------------
   if(!"linetype" %in% names(df)){
-    df$linetype <- 2
-    df$linetype[is.na(df$curvature)] <- 1
+    df$linetype <- 1#2
+    #df$linetype[is.na(df$curvature)] <- 1
   }
   if(any(df$arrow != "none")){
     df_path <- df[!df$arrow == "none", ]
-    aes_args <- c("id", "arrow", "linetype", "size", "colour", "color", "alpha")
+    aes_args <- c("id", "arrow", "linetype", "size", "colour", "color", "alpha", "linewidth")
     aes_args <- df_path[!duplicated(df_path$id), which(names(df_path) %in% aes_args)]
     Args <- list(
       data = df_path[, c("x", "y", "id")],
       mapping = aes(x = .data[["x"]], y = .data[["y"]], group = .data[["id"]]),
       arrow = quote(ggplot2::arrow(angle = 25, length = unit(.1, "inches"), ends = "last", type = "closed")))
-
     for(this_path in unique(df_path$id)){
       Args$data <- df_path[df_path$id == this_path, ]
       Args$arrow[[4]] <- force(aes_args$arrow[aes_args$id == this_path])
@@ -1561,7 +1595,7 @@ match.call.defaults <- function(...) {
   }
   if(any(df$arrow == "none")){
     df_path <- df[df$arrow == "none", ]
-    Args <- c("linetype", "size", "colour", "color", "alpha")
+    Args <- c("linetype", "linewidth", "size", "colour", "color", "alpha")
     Args <- as.list(df_path[which(names(df_path) %in% Args)])
     Args <- c(list(
       data = df_path,

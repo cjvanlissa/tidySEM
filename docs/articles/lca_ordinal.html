@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
       </span>
     </div>
 
@@ -69,6 +69,9 @@
     </li>
     <li>
       <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
+      <a href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a>
     </li>
     <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
@@ -111,12 +114,15 @@ Indicators</h1>
     
     
 <p>This is an example of exploratory LCA with ordinal indicators using
-<code>tidySEM</code>. The present example uses synthetic data based on a
-study by Maene and colleagues. In a convenience sample of Flemish
-(Belgian) high-school students with a migration background, this study
-set out to identify distinct classes based on ordinal indicators of
-National, Regional, and Heritage identity. Sample size was not
-justified.</p>
+<code>tidySEM</code>, as explained in Van Lissa, C. J.,
+Garnier-Villarreal, M., &amp; Anadria, D. (2023). <em>Recommended
+Practices in Latent Class Analysis using the Open-Source R-Package
+tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link uri">https://doi.org/10.1080/10705511.2023.2250920</a>. The
+present example uses synthetic data based on a study by Maene and
+colleagues. In a convenience sample of Flemish (Belgian) high-school
+students with a migration background, this study set out to identify
+distinct classes based on ordinal indicators of National, Regional, and
+Heritage identity. Sample size was not justified.</p>
 <p>The approach to class enumeration was semi-theory driven: The
 researchers expected to find profiles that were distinct on all three
 types of identity (national, regional, and heritage) - but the exact
@@ -248,7 +254,7 @@ coded as ordinal factors, these descriptive statistics would have
 revealed that each variable has only 5-10 unique values. The proportion
 of missing values is reported in the <code>"missing"</code> column. If
 any variables had missing values, we would report an MCAR test with
-<code><a href="https://amices.org/mice/reference/mcar.html" class="external-link">mice::mcar()</a></code> and explain that missing data are accounted
+<code>mice::mcar()</code> and explain that missing data are accounted
 for using FIML. In our example, we see that there are no missing values,
 hence we proceed with our analysis. Note that the ethic identification
 variables are very right-skewed and some response categories have

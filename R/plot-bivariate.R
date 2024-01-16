@@ -80,6 +80,7 @@ get_cordat.MxModel <- function(x){
 #' in black and white.
 #' @param alpha_range Numeric vector (0-1). Sets
 #' the transparency of geom_density and geom_point.
+#' @param ... Additional arguments.
 #' @param return_list Logical. Whether to return a list of ggplot objects, or
 #' just the final plot. Defaults to FALSE.
 #' @return An object of class 'ggplot'.
@@ -93,13 +94,13 @@ get_cordat.MxModel <- function(x){
 #' @keywords mixture correlation plot
 #' @rdname plot_bivariate
 #' @export
-plot_bivariate <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE){
+plot_bivariate <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
   UseMethod("plot_bivariate", x)
 }
 
 #' @method plot_bivariate mixture_list
 #' @export
-plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE){
+plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
   Args <- match.call()
   if(length(x) == 1){
     Args$x <- x[[1]]
@@ -112,8 +113,20 @@ plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = T
 
 #' @method plot_bivariate MxModel
 #' @export
-plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE){
+plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
+  dots <- list(...)
   df_plot <- get_cordat(x)
+  if("label_class" %in% names(dots)){
+    classlabs <- dots[["label_class"]]
+    origlabs <- unique(df_plot$Class)
+    if(isFALSE(length(classlabs) == length(origlabs))){
+      stop("The vector 'label_class' must be the same length as the number of classes.")
+    }
+    if(isFALSE(all(names(classlabs) %in% unique(df_plot$Class)))){
+      stop("The names of the vector 'label_class' must correspond to the class names.")
+    }
+    df_plot$Class <- classlabs[df_plot$Class]
+  }
   df2 <- df_plot
   df2$Parameter <- paste0(df2$yvar, ".WITH.", df2$xvar)
   names(df2) <- gsub("^x", "xxx", names(df2))
@@ -127,6 +140,9 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   if(length(variables) < 2) stop("Function plot_bivariate() requires at least two variables.")
   if (rawdata) {
     df_raw <- .extract_rawdata(x, select_vars = variables)
+    if("label_class" %in% names(dots)){
+      df_raw$Class <- classlabs[df_raw$Class]
+    }
     df_raw$Class <- ordered(df_raw$Class, labels = levels(df_plot$Class))
   }
   # Basic plot
@@ -139,7 +155,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   n_vars <- length(Args$variables)
   model_mat <- matrix(1L:(n_vars*n_vars), nrow = n_vars)
   df_density <- do.call(.extract_density_data, Args)
-
+  df_density$Class <- ordered(df_density$Class, levels = c(seq_along(levels(df_plot$Class)), "Total"), labels = c(levels(df_plot$Class), "Total"))
   args_dens <- list(plot_df = df_density,
                     variables = NULL)
 
@@ -213,11 +229,16 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   plot_list[diag(model_mat)] <- dens_plotlist
 
   plot_list[which(lower.tri(model_mat))] <- cor_plotlist
+  class(plot_list) <- c("plot_list", class(plot_list))
   if (return_list) return(plot_list)
   merge_corplots(plot_list)
 }
 
-
+#' @export
+#' @method plot plot_list
+plot.plot_list <- function(x, y, ...){
+  plot(merge_corplots(x))
+}
 
 .base_plot <- function(num_colors) {
   p <- ggplot(NULL,

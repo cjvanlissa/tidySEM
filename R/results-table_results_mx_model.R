@@ -26,11 +26,18 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   digits <- force(digits)
   sum_x <- summary(x)
   results <- sum_x$parameters
+  # Add fixed pars
+  results_fixed <- .mxfixedpars(x)
+  if(!is.null(results_fixed)){
+    if(any(!results_fixed$name %in% results$name)){
+      results <- bind_list(list(results, results_fixed[!results_fixed$name %in% results$name, , drop = FALSE]))
+    }
+  }
   results$openmx_label <- results$name
   matrixnames <- grepl("\\[.+?\\]", results$name)
   results$label[matrixnames] <- NA
   results$name[!matrixnames] <- get_mx_names(x, results)[!matrixnames]
-# Add standardized --------------------------------------------------------
+  # Add standardized --------------------------------------------------------
   if(is.null(columns) | any(grepl("std_", columns))){ # Conditional, to save time
     results_std <- mxStandardizeRAMPaths(x, SE = TRUE)
     if(inherits(results_std, "list")){
@@ -40,7 +47,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       results_std <- bind_list(results_std)
     }
     # Remove redundant correlations
-    remove_these <- results_std$name[endsWith(results_std$matrix, ".S")]
+    remove_these <- results_std$name[endsWith(results_std$matrix, ".S") | results_std$matrix == "S"]
     remove_these <- remove_these[!remove_these %in% results$name]
     if(length(remove_these) > 0){
       these_rows <- which(results_std$name %in% remove_these)
@@ -61,12 +68,12 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
     results <- two_to_one(tab)
   }
 
-# Add algebras ------------------------------------------------------------
+  # Add algebras ------------------------------------------------------------
   algs <- alg_to_res(x)
   algs$openmx_label <- algs$name
   results <- bind_list(list(results, algs))
 
-# Label groups ------------------------------------------------------------
+  # Label groups ------------------------------------------------------------
   results <- .label_groups_internal(x, results)
   # if(has_submod(x)){
   #   results <- submodels(x, results, cols = names(results))
@@ -127,8 +134,8 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   if(any(names(renam) %in% names(results))) names(results)[match(names(renam), names(results))] <- renam
   # Impose similar order to lavaan
   firstcols <- c("lhs", "op", "rhs", "est", "se", "pval", "confint", "est_sig",
-    "est_std", "se_std", "pval_std", "confint_std", "est_sig_std",
-    "label")
+                 "est_std", "se_std", "pval_std", "confint_std", "est_sig_std",
+                 "label")
   results <- results[, c(firstcols[firstcols %in% names(results)], names(results)[!names(results) %in% firstcols]), drop = FALSE]
   # Format using digits
   value_columns <- names(results)[can_be_numeric(results)]
@@ -136,7 +143,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
     results[, value_columns] <- lapply(results[, value_columns],
                                        format_with_na, digits = digits, format = "f")
   }
-
+  results <- results[order(results$name), , drop = FALSE]
   if(!is.null(columns)) {
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   }
@@ -148,10 +155,10 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
                                        order_cols]
     order_cols <- c(match(order_cols, names(results)), match(remaining_cols,
                                                              names(results)))
-    class(results) <- c("tidy_results", class(results))
     results <- results[, order_cols, drop = FALSE]
   }
   rownames(results) <- NULL
+  class(results) <- c("tidy_results", class(results))
   return(results)
 }
 
@@ -326,8 +333,8 @@ flat <- function(x){
       dims <- dim(x[[thisalg]]$result)
       if(!sum(dims) == 2){
         nams <- paste0(x[[thisalg]]$name, "[",
-                             paste(rep(1:dims[1], dims[2]),
-                                   rep(1:dims[2], each = dims[1]), sep = ","), "]")
+                       paste(rep(1:dims[1], dims[2]),
+                             rep(1:dims[2], each = dims[1]), sep = ","), "]")
       } else {
         nams = x[[thisalg]]$name
       }
@@ -335,12 +342,12 @@ flat <- function(x){
       rownam <- rep(dimnam[[1]], length(dimnam[[2]]))
       colnam <- rep(dimnam[[2]], each = length(dimnam[[1]]))
       addalg <- data.frame(name = nams,
-                 matrix =  x[[thisalg]]$name,
-                 row = rownam,
-                 col = colnam,
-                 Estimate = val,
-                 formula = deparse(x[[thisalg]]$formula),
-                 row.names = NULL)
+                           matrix =  x[[thisalg]]$name,
+                           row = rownam,
+                           col = colnam,
+                           Estimate = val,
+                           formula = deparse(x[[thisalg]]$formula),
+                           row.names = NULL)
       addthis <- c(addthis, list(addalg))
     }
     names(addthis) <- algs
@@ -449,9 +456,9 @@ threshdims_mx <- function(i, ...){
         stop()
       }
       cbind(rep(out[[2]], each = length(out[[1]])),
-                   rep(out[[1]], length(out[[2]]))
-                   )
-      }, error = function(e){NULL})
+            rep(out[[1]], length(out[[2]]))
+      )
+    }, error = function(e){NULL})
   }
 }
 

@@ -18,7 +18,7 @@
 #' res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
 #' @references Bolck, A., Croon, M., & Hagenaars, J. (2004). Estimating latent
 #' structure models with categorical variables: One-step versus three-step
-#' estimators. Political Analysis, 12(1), 3–27. \doi{10.2307/25791751}
+#' estimators. Political Analysis, 12(1), 3–27. \doi{10.1093/pan/mph001}
 #' @export
 BCH <- function(x, model, data, ...){
   UseMethod("BCH", x)
@@ -29,9 +29,17 @@ BCH <- function(x, model, data, ...){
 BCH.MxModel <- function(x, model, data, ...){
   if(inherits(data, what = c("factor", "numeric", "integer"))){
     if(inherits(data, what = "factor")){
-      cats <- length(levels(data))
-      model <- paste0("y |t", 1:(cats-1), collapse = "\n")
-      data <- data.frame(y = mxFactor(data, levels = levels(data)))
+      if(!inherits(data, what = c("ordered"))){
+        data <- mx_dummies(data)
+        model <- paste0(
+          names(data), " | t1",
+          collapse = "\n"
+        )
+      } else {
+        cats <- length(levels(data))
+        model <- paste0("y |t", 1:(cats-1), collapse = "\n")
+        data <- data.frame(y = mxFactor(data, levels = levels(data)))
+      }
     } else {
       model <- "y ~1"
       data <- data.frame(y = data)

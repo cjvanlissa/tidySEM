@@ -1,19 +1,11 @@
-# tidySEM 0.2.4
+# tidySEM 0.2.7
 
-* Update maintainer email address
-* Fixed bug in `plot_profiles()` when covariances are free
-* Improved starting values for latent class analysis
-* Documentation incorrectly referred to `data_mixture_ordinal`, instead of
-  `data_mix_ordinal`
-* Added legend to `plot_probs()`
-* Added `np_ratio` and `np_local` to `table_fit()` output for mixture models
-* Reimplement `BLRT()` to avoid slow OpenMx implementation
-* Add functions `lr_test()` and `lr_lmr()`
+* Frank Gootjes contributed pseudo class functionality, new functions are
+  append_class_draws() and pseudo_class()
 
 ## Test environments
 
-* local Windows 10 install, R 4.1.2
-* local Windows 11 install, R 4.2.2
+* local Windows 11 install, R 4.3.1
 * GitHub Actions (r-lib): windows-latest (release)
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)
@@ -27,7 +19,4 @@
 
 ## R CMD check results
 
-1 NOTE:
-
-* New maintainer: Caspar J. van Lissa <c.j.vanlissa@tilburguniversity.edu>
-  + I have updated my email address because my affiliation changed.
+0 errors | 0 warnings | 0 notes

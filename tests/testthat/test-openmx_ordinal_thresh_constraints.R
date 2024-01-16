@@ -50,23 +50,23 @@ test_that("lavaan and openmx work with constrained thresholds",
 
 # Now, try with difference matrix -----------------------------------------
 if(FALSE){
-thresh <- tidySEM:::mx_thresholds(df)
-thresh$alg_thres$labels <- matrix(paste0(rep(dimnames(thresh$alg_thres)[[2]], each = length(dimnames(thresh$alg_thres)[[1]])), "_", rep(dimnames(thresh$alg_thres)[[1]], length(dimnames(thresh$alg_thres)[[2]]))), nrow = length(dimnames(thresh$alg_thres)[[1]]))
+  thresh <- tidySEM:::mx_thresholds(df)
+  thresh$alg_thres$labels <- matrix(paste0(rep(dimnames(thresh$alg_thres)[[2]], each = length(dimnames(thresh$alg_thres)[[1]])), "_", rep(dimnames(thresh$alg_thres)[[1]], length(dimnames(thresh$alg_thres)[[2]]))), nrow = length(dimnames(thresh$alg_thres)[[1]]))
 
-thresh <- c(thresh, list(
-  mxConstraint(name = "th2", test.mat_dev[1,1]+test.mat_dev[2,1] == test.mat_dev[1,2]+test.mat_dev[2,2])
-))
+  thresh <- c(thresh, list(
+    mxConstraint(name = "th2", test.mat_dev[1,1]+test.mat_dev[2,1] == test.mat_dev[1,2]+test.mat_dev[2,2])
+  ))
 
-mod3 <- mxModel(model = "test",
-              type = "RAM",
-              manifestVars = names(df),
-              mxPath(from = "one", to = names(df), free = FALSE, values = 0),
-              mxPath(from = names(df), to = names(df), free = FALSE, values = 1, arrows = 2),
-              thresh,
-              mxFitFunctionML(),
-              mxData(df, type = "raw"))
-mod3$expectation$thresholds <- "Thresholds"
-res_mx3 <- mxRun(mod3)
-#summary(res_mx3)
-res_mx3$Thresholds$result
+  mod3 <- mxModel(model = "test",
+                  type = "RAM",
+                  manifestVars = names(df),
+                  mxPath(from = "one", to = names(df), free = FALSE, values = 0),
+                  mxPath(from = names(df), to = names(df), free = FALSE, values = 1, arrows = 2),
+                  thresh,
+                  mxFitFunctionML(),
+                  mxData(df, type = "raw"))
+  mod3$expectation$thresholds <- "Thresholds"
+  res_mx3 <- mxRun(mod3)
+  #summary(res_mx3)
+  res_mx3$Thresholds$result
 }

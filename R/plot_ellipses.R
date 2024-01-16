@@ -49,7 +49,7 @@
   df_ellipse$grp <- rep(paste0("g", 1:length(x)), each = npoints)
   df$grp <- paste0("g", 1:length(x))
   df_ellipse <- merge(df_ellipse, df, by = "grp", all.y = TRUE)
-  Args <- c("linetype", "size", "colour", "fill", "alpha")
+  Args <- c("linetype", "size", "colour", "fill", "alpha", "linewidth")
   Args <- as.list(df_ellipse[which(names(df_ellipse) %in% Args)])
 
   Args <- c(list(

@@ -29,7 +29,8 @@ if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, err
 run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
 ```
 
-This is an example of exploratory LCA with ordinal indicators using `tidySEM`.
+This is an example of exploratory LCA with ordinal indicators using `tidySEM`,
+as explained in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. https://doi.org/10.1080/10705511.2023.2250920.
 The present example uses synthetic data based on a study by Maene and colleagues.
 In a convenience sample of Flemish (Belgian) high-school students with a migration background,
 this study set out to identify distinct classes based on ordinal indicators of National, Regional, and Heritage identity.

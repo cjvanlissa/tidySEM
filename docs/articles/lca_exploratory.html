@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
       </span>
     </div>
 
@@ -69,6 +69,9 @@
     </li>
     <li>
       <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
+      <a href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a>
     </li>
     <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
@@ -111,7 +114,10 @@
     
 <p>This is an example of exploratory latent class analysis (LCA) with
 continuous indicators, otherwise known as latent profile analysis (LPA)
-or finite Gaussian mixture modeling, using <code>tidySEM</code>. The
+or finite Gaussian mixture modeling, using <code>tidySEM</code>. See Van
+Lissa, C. J., Garnier-Villarreal, M., &amp; Anadria, D. (2023).
+<em>Recommended Practices in Latent Class Analysis using the Open-Source
+R-Package tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link uri">https://doi.org/10.1080/10705511.2023.2250920</a>. The
 present example uses data collected by Alkema as part of a study on
 ocean microplastics. The purpose of this study was to provide a more
 nuanced model for the distribution of different sizes of ocean
@@ -215,7 +221,7 @@ distributional characteristics match the intended measurement level. The
 variable scales are comparable (both in millimeters and no large
 discrepancies between variances). There are no missing values; if any
 variables had missing values, we would report an MCAR test with
-<code><a href="https://amices.org/mice/reference/mcar.html" class="external-link">mice::mcar()</a></code>, and explain that missing data are accounted
+<code>mice::mcar()</code>, and explain that missing data are accounted
 for using FIML. Additionally, we can plot the data. The
 <code>ggplot2</code> function <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density()</a></code> is useful to
 visualize continuous data:</p>
@@ -534,22 +540,6 @@ errors and p-values are relatively uninformative: With a sample size of
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mix2.weights[1,2]</td>
-<td align="right">0.75</td>
-</tr>
-<tr class="even">
-<td align="left">Variances.length</td>
-<td align="right">0.10</td>
-</tr>
-<tr class="odd">
-<td align="left">Covariances.length.WITH.width</td>
-<td align="right">0.09</td>
-</tr>
-<tr class="even">
-<td align="left">Variances.width</td>
-<td align="right">0.10</td>
-</tr>
-<tr class="odd">
 <td align="left">Means.length</td>
 <td align="right">0.65</td>
 </tr>
@@ -559,15 +549,15 @@ errors and p-values are relatively uninformative: With a sample size of
 </tr>
 <tr class="odd">
 <td align="left">Variances.length</td>
-<td align="right">0.19</td>
+<td align="right">0.10</td>
 </tr>
 <tr class="even">
 <td align="left">Covariances.length.WITH.width</td>
-<td align="right">0.20</td>
+<td align="right">0.09</td>
 </tr>
 <tr class="odd">
 <td align="left">Variances.width</td>
-<td align="right">0.28</td>
+<td align="right">0.10</td>
 </tr>
 <tr class="even">
 <td align="left">Means.length</td>
@@ -576,6 +566,26 @@ errors and p-values are relatively uninformative: With a sample size of
 <tr class="odd">
 <td align="left">Means.width</td>
 <td align="right">0.86</td>
+</tr>
+<tr class="even">
+<td align="left">Variances.length</td>
+<td align="right">0.19</td>
+</tr>
+<tr class="odd">
+<td align="left">Covariances.length.WITH.width</td>
+<td align="right">0.20</td>
+</tr>
+<tr class="even">
+<td align="left">Variances.width</td>
+<td align="right">0.28</td>
+</tr>
+<tr class="odd">
+<td align="left">mix2.weights[1,1]</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="even">
+<td align="left">mix2.weights[1,2]</td>
+<td align="right">0.75</td>
 </tr>
 </tbody>
 </table>

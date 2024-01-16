@@ -30,6 +30,10 @@
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
+#' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+#' Recommended Practices in Latent Class Analysis using the Open-Source
+#' R-Package tidySEM. Structural Equation Modeling.
+#' \doi{10.1080/10705511.2023.2250920}
 #' @examples
 #' \dontrun{
 #' # Example 1: Dynamic model generation using {C}
@@ -87,6 +91,10 @@ mx_mixture <- function(model,
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
+#' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+#' Recommended Practices in Latent Class Analysis using the Open-Source
+#' R-Package tidySEM. Structural Equation Modeling.
+#' \doi{10.1080/10705511.2023.2250920}
 #' @examples
 #' \dontrun{
 #' data("empathy")
@@ -167,6 +175,10 @@ mx_profiles <- function(data = NULL,
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
+#' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+#' Recommended Practices in Latent Class Analysis using the Open-Source
+#' R-Package tidySEM. Structural Equation Modeling.
+#' \doi{10.1080/10705511.2023.2250920}
 #' @examples
 #' \dontrun{
 #' data("empathy")
@@ -217,6 +229,10 @@ mx_growth_mixture <- function(model,
 #' @return Returns an \code{\link[OpenMx]{mxModel}}.
 #' @export
 #' @keywords mixture models openmx
+#' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+#' Recommended Practices in Latent Class Analysis using the Open-Source
+#' R-Package tidySEM. Structural Equation Modeling.
+#' \doi{10.1080/10705511.2023.2250920}
 #' @examples
 #' \dontrun{
 #' df <- data_mix_ordinal
@@ -346,7 +362,7 @@ mx_mixture.MxModel <- function(model,
                             data = NULL,
                             run = TRUE,
                             ...){
-  browser() # Develop this functionality
+  stop("This functionality has not yet been developed.") # Develop this functionality
 }
 
 #' @method mx_mixture list
@@ -356,7 +372,7 @@ mx_mixture.list <- function(model,
                             data = NULL,
                             run = TRUE,
                             ...){
-  browser() # Check before CRAN
+  #browser() # Check before CRAN
   cl <- match.call()
   dots <- list(...)
   if(length(classes) > 1){
@@ -409,7 +425,7 @@ as_mx_mixture <- function(model,
   if(classes > 1){
     mix <- mxModel(
       model = paste0("mix", classes),
-      lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE)) }),
+      lapply(model, function(x){ mxModel(x, mxFitFunctionML(vector=TRUE, rowDiagnostics = TRUE)) }),
       mxData(data, type = "raw"),
       mxMatrix(values=1, nrow=1, ncol=classes, lbound = 1e-4, free=c(FALSE,rep(TRUE, classes-1)), name="weights"),
       mxExpectationMixture(paste0("class", 1:classes), scale="sum"),
@@ -418,7 +434,7 @@ as_mx_mixture <- function(model,
     mix <- mxModel(
       model[[1]],
       mxData(data, type = "raw"),
-      mxFitFunctionML(),
+      mxFitFunctionML(rowDiagnostics = TRUE),
       name = paste0("mix", classes))
   }
   attr(mix, "tidySEM") <- "mixture"
@@ -482,6 +498,11 @@ as_mx_mixture <- function(model,
 #' @references Shireman, E., Steinley, D. & Brusco, M.J. Examining the effect of
 #' initialization strategies on the performance of Gaussian mixture modeling.
 #' Behav Res 49, 282–293 (2017). \doi{10.3758/s13428-015-0697-6}
+#'
+#' Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+#' Recommended Practices in Latent Class Analysis using the Open-Source
+#' R-Package tidySEM. Structural Equation Modeling.
+#' \doi{10.1080/10705511.2023.2250920}
 #' @importFrom OpenMx mxModel mxRun mxTryHard mxAutoStart
 #' @importFrom methods hasArg
 #' @importFrom stats kmeans
@@ -503,9 +524,9 @@ mixture_starts <- function(model,
     }
   }
   data <- model@data$observed
+  isfac <- sapply(data, inherits, what = "factor")
   if(!hasArg(splits)){
     df_split <- data
-    isfac <- sapply(df_split, inherits, what = "factor")
     if(any(isfac)){
       df_split[which(isfac)] <- lapply(df_split[which(isfac)], as.integer)
     }
@@ -645,7 +666,7 @@ estimate_mx_mixture <- function(model,
     if(!is.null(cls[["F"]])){
       cls$F$values <- strts[[paste0("class", strt)]]$F$values
     }
-    mxModel(cls, mxFitFunctionML(vector=TRUE))
+    mxModel(cls, mxFitFunctionML(vector=TRUE, rowDiagnostics = TRUE))
   }, cls = model, strt = 1:classes)
   # Prepare mixture model
   mix <- mxModel(

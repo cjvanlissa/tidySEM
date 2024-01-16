@@ -18,7 +18,7 @@ unidimensional density plots for a single mixture model."><!-- mathjax --><scrip
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
       </span>
     </div>
 
@@ -52,6 +52,9 @@ unidimensional density plots for a single mixture model."><!-- mathjax --><scrip
     </li>
     <li>
       <a href="../articles/sem_graph.html">SEM graphing conventions</a>
+    </li>
+    <li>
+      <a href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a>
     </li>
     <li>
       <a href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a>
@@ -94,7 +97,8 @@ unidimensional density plots for a single mixture model.</p>
 <span>  rawdata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bw <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span>  return_list <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  return_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -138,6 +142,10 @@ the transparency of geom_density and geom_point.</p></dd>
 <dt>return_list</dt>
 <dd><p>Logical. Whether to return a list of ggplot objects, or
 just the final plot. Defaults to FALSE.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional arguments.</p></dd>
 
 </dl></div>
     <div id="value">

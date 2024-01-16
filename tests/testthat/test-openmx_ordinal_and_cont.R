@@ -354,12 +354,12 @@ mix_tidysem <- mxModel(model = "mix",
                        mxMatrix(values=c(1, 0), nrow=1, ncol=2, lbound = 1e-4, free=c(FALSE, TRUE), name="weights"),
                        mxExpectationMixture(paste0("class", 1:2), weights = "weights", scale="sum"),
                        mxFitFunctionML()
-                       )
+)
 #dput(res_tidysem$class2$mat_dev$values, file = "clipboard")
 c1$mat_dev$values <- structure(c(-0.302926034964045, 2.82909331886401, -0.156445970735619,
                                  2.45771849854658, -0.7972067240314, 3.32008451032839), .Dim = 2:3)
 c2$mat_dev$values <- structure(c(-2.81346831932699, 2.97287051561923, -16.0318807337397,
-            16.2223970956036, -7.36668563619277, 7.53597976150227), .Dim = 2:3)
+                                 16.2223970956036, -7.36668563619277, 7.53597976150227), .Dim = 2:3)
 #dput(res_tidysem$class2$M$values[1,4], file = "clipboard")
 c1$S$values[4,4] <- 1.1720109167467
 c2$S$values[4,4] <- 0.9371036285639
@@ -395,9 +395,9 @@ test_that("ordinal mixture model works with mx_threshold", {
   expect_equivalent(sort(tmp_tidysem$sum.posterior$proportion),
                     sort(c(0.52532, 0.47468)), tolerance = .02)
 
-  expect_equivalent(pnorm(as.numeric(props_tidysem$est)[12:23][unlist(list(c(1:6), c(7:12))[order(tmp_tidysem$sum.posterior$proportion)])]),
-                    pnorm(c(-0.477, 5.189, -0.231, 4.807, -1.296, 5.177, -5.473, 0.27,
-                            -15, 0.311, -15, 0.286))
+  expect_equivalent(sort(pnorm(as.numeric(props_tidysem$est[props_tidysem$matrix == "Thresholds"]))),
+                    sort(pnorm(c(-0.477, 5.189, -0.231, 4.807, -1.296, 5.177, -5.473, 0.27,
+                                 -15, 0.311, -15, 0.286)))
                     , tolerance = .12) # Note high tolerance!
 })
 

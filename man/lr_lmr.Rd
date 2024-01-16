@@ -2,44 +2,53 @@
 % Please edit documentation in R/lr_vml.R
 \name{lr_lmr}
 \alias{lr_lmr}
-\alias{lr_lmr.list}
 \title{Lo-Mendell-Rubin Likelihood Ratio Test}
 \usage{
 lr_lmr(x, ...)
-
-\method{lr_lmr}{list}(x, y, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists.}
 
 \item{...}{Additional arguments.}
-
-\item{y}{A list with elements
-\code{c("-2LL", "parameters", "n", "classes")}. Note that,
-if this argument is used, \code{x} must also be a list with the
-same elements.}
 }
 \value{
-A numeric vector containing the likelihood ratio LR, the ad-hoc
-corrected LMR, degrees of freedom, and the LMR p-value.
+A \code{data.frame} containing the Z-value for the likelihood ratio test,
+its p-value, df (which indicates the difference in number of parameters, not
+true degrees of freedom, which may be zero), w2 (omega squared) statistic for
+the test of distinguishability, an its p-value.
 }
 \description{
-Implements the ad-hoc adjusted likelihood ratio test (LRT)
-described in Formula 15 of Lo, Mendell, & Rubin (2001), or LMR LRT.
+A likelihood ratio test for class enumeration in latent class
+analysis, proposed by Lo, Mendell, & Rubin (2001) based on work by Vuong
+(1989). See Details for important clarification.
+}
+\details{
+The likelihood ratio test for non-nested models, based on
+work by Vuong (1989), is often used for class enumeration in latent class
+analysis (see Lo, Mendell, & Rubin, 2001). Following work by Merkle,
+You, & Preacher (2016), the models to be compared must first be tested for
+distinguishability in the population, using the \code{w2} test. The null
+hypothesis is that the models are indistinguishable. If this null hypothesis
+is not rejected, there is no point in statistical model comparison, either
+using the LMR LRT or other statistics. If the null hypothesis is rejected,
+the LMR LRT can be evaluated using a Z-test. This function wraps
+\verb{\link[nonnest2]\{vuongtest\}} to perform that test.
 }
 \examples{
-lr_lmr(
- x = list("-2LL" = -741.02,
-   "parameters" = 8,
-   "n" = 150,
-   "classes" = 1),
- y = list("-2LL" = -488.91,
-   "parameters" = 13,
-   "n" = 150,
-   "classes" = 2))
+df <- iris[c(1:5, 100:105), 1:3]
+names(df) <- letters[1:3]
+res <- mx_profiles(df, classes = 1:2)
+lr_lmr(res)
 }
 \references{
 Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
 normal mixture. Biometrika. 2001;88(3):767–778.
 \doi{10.1093/biomet/88.3.767}
+
+Vuong, Q. H. (1989). Likelihood ratio tests for model selection
+and non-nested hypotheses. Econometrica, 57, 307-333. \doi{10.2307/1912557}
+
+Merkle, E. C., You, D., & Preacher, K. (2016). Testing non-nested
+structural equation models. Psychological Methods, 21, 151-163.
+\doi{10.1037/met0000038}
 }

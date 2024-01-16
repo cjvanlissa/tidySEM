@@ -151,15 +151,17 @@ u3 | t3*t1
 u4 | t4*t1", data = df)
 pars_lv <- parameterestimates(res_lv)
 pars_lv <- pars_lv$est[pars_lv$op == "|"]
-pars_mx <- table_results(res_mx, columns = c("est"))$est
+pars_mx <- table_results(res_mx, columns = NULL)
+pars_mx <- pars_mx$est[pars_mx$matrix == "Thresholds"]
+pars_mx
 test_that("binary variable thresholds correct", {
   expect_equivalent(as.numeric(pars_mx), pars_lv, tolerance = 1e-2)
 })
 
 # Mixture model
 suppressWarnings({
-res_mx <- mx_mixture(
-  "u1 | t1{C}*t1
+  res_mx <- mx_mixture(
+    "u1 | t1{C}*t1
 u2 | t2{C}*t1
 u3 | t3{C}*t1
 u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
@@ -187,12 +189,12 @@ res_mx$class2$Thresholds$values <- structure(c(1.22655751606709, 1.2082265004526
                                                -1.14581064840368), .Dim = c(1L, 4L))
 
 res_mx <- mxTryHardOrdinal(res_mx)
-table_results(res_mx, columns=c("label", "est")) ->tmp
+tmp <- table_results(res_mx, columns=NULL)
 
 fit <- table_fit(res_mx)
 probs <- class_prob(res_mx)
 
-prop_mx <- pnorm(as.numeric(tmp$est[-1]))
+prop_mx <- pnorm(as.numeric(tmp$est[tmp$matrix == "Thresholds"]))
 prop_mx <- rbind(prop_mx[1:4], prop_mx[5:8])
 prop_mx <- prop_mx[order(probs$sum.posterior$proportion), ]
 
@@ -241,8 +243,8 @@ mix_tidysem <- mxModel(model = "mix",
 res_tidysem <- mxTryHardOrdinal(mix_tidysem)
 tmp_tidysem <- class_prob(res_tidysem)
 fit_tidysem <- table_fit(res_tidysem)
-props_tidysem <- table_results(res_tidysem, columns=c("label", "est"))
-props_tidysem <- pnorm(as.numeric(props_tidysem$est[-1]))
+props_tidysem <- table_results(res_tidysem, columns=NULL)
+props_tidysem <- pnorm(as.numeric(props_tidysem$est[props_tidysem$matrix == "Thresholds"]))
 props_tidysem <- rbind(props_tidysem[1:4], props_tidysem[5:8])
 props_tidysem <- props_tidysem[order(tmp_tidysem$sum.posterior$proportion), ]
 

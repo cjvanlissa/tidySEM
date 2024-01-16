@@ -1344,9 +1344,9 @@ u4 | t42*t2", data = df)
 
   pars_lv <- parameterestimates(res_lv)
   pars_lv$est[pars_lv$op == "|"]
-  pars_mx <- table_results(res_mx, "est")
+  pars_mx <- table_results(res_mx, columns = c("est", "matrix"))
   expect_equivalent(
-    matrix(as.numeric(pars_mx$est), nrow = 2, byrow = F),
+    matrix(as.numeric(pars_mx$est[pars_mx$matrix == "Thresholds"]), nrow = 2, byrow = F),
     matrix(round(pars_lv$est[pars_lv$op == "|"], 2), nrow = 2, byrow = T),
     tolerance = 1e-4)
 
@@ -1365,9 +1365,9 @@ u4 | t42{C}*t2", classes = 2, data = df, run = FALSE)}, error = function(e){NULL
   res_mx <- mxTryHardOrdinal(res_mx)
   res_mx$expectation$scale <- "softmax"
 
-  tmp <- table_results(res_mx, columns=c("label", "est"))
+  tmp <- table_results(res_mx, columns=c("label", "est", "matrix"))
   probs_mx <- class_prob(res_mx)
-  mat <- matrix(tmp$est[-1], ncol = 2, byrow = F)
+  mat <- matrix(as.numeric(tmp$est[tmp$matrix == "Thresholds"]), ncol = 2, byrow = F)
   mat <- mat[, order(probs_mx$sum.posterior$proportion)]
   mat[,] <- pnorm(as.numeric(mat))
   #tmp$est<-pnorm(tmp$est)

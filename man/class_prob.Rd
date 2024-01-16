@@ -28,7 +28,7 @@ method exists. See Details.
 }
 \details{
 The following types are available:
-\itemize{
+\describe{
 \item{"sum.posterior"}{A summary table of the posterior class
 probabilities; this indicates what proportion of your data contributes to
 each class.}

@@ -1,0 +1,128 @@
+---
+title: 'SMART-LCA Checklist'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SMART-LCA Checklist}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(yaml)
+library(scales)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  results = "hide",
+  tidy.opts = list(width.cutoff = 60), tidy = TRUE
+)
+options(scipen = 1, digits = 2)
+```
+
+This Vignette describes the SMART-LCA Checklist: Standards for More Accuracy in Reporting of different Types of Latent Class Analysis,
+introduced in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. <https://doi.org/10.1080/10705511.2023.2250920>.
+This version of the checklist corresponds to the `tidySEM` R-package's version , `r packageVersion("tidySEM")`.
+
+The paper discusses the best practices on which the checklist is based and describes specific points to check when writing, reviewing, or reading a paper in greater detail.
+However, this vignette may be updated to keep pace with `tidySEM` package development,
+whereas the print publication will remain static.
+
+Note that, although the steps below are numbered for reference purposes,
+we acknowledge the process of conducting and reporting research is not always linear.
+
+1. Pre-Analysis
+    + Define a research question and study design suitable for LCA.
+    + Determine whether the application of LCA is confirmatory or exploratory.
+    + Choose valid and reliable indicators with an appropriate data type for LCA.
+    + Justify sample size.
+    + Optionally: pre-register the analysis plan.
+    + Optionally: use Preregistration-As-Code.
+1. Examining Observed Data
+    + Assess indicator distributions and scales.
+        - `descriptives()`
+    + Does the observed distribution match the intended measurement level? E.g., continuous variables have many unique values, categorical variables have a well-balaced response distribution.
+    + Are all indicators on similar scales?
+    + Are there distributional idiosyncrasies that need to be accounted for in model specification or by transforming the data (e.g., extreme skew)?
+1. Data Preprocessing
+    + Make sure continuous variables have type `numeric` or `integer` and an interval measurement level.
+    + Convert ordered and binary variables to `mxFactor`.
+        - `mxFactor()`
+    + Convert nominal variables to binary dummy variables.
+        - `mx_dummies()`
+    + Rescale indicators that are on very different scales to prevent convergence issues.
+        - `poms()`, `scale()`
+    + Optionally, transform data to account for distributional idiosyncracies that could cause the model to fit poorly.
+        - `sqrt()`, `log()`
+1. Missing data
+    + Examine and report proportion of missingness per variable.
+        - `descriptives()`
+    + Report MAR test using `mice::mcar()`.
+    + Select and report appropriate method to handle missingness. In `tidySEM`, this is full information maximum likelihood (FIML), which is valid regardless of the outcome of the MAR test.
+1. Model specification
+    + For exploratory LCA, list all sensible alternative specifications
+    + In confirmatory LCA, justify alternative model specifications on theoretical grounds
+    + Clearly report the model specification, so it is clear what all parameters are.
+    + Optionally, verify that the model can capture distributional idiosyncracies (see Data Preprocessing).
+1. Number of classes
+    + Justify the maximum number of classes $k$.
+    + In exploratory LCA, estimate 1:$k$ classes.
+    + In confirmatory LCA, estimate the theoretical number of classes and choose other models to benchmark it against. This should include a 1-class model, optionally competing theoretical models, and optionally models with a different numbers of classes.
+1. Justify the criteria used for class enumeration, which can include:
+    + Information criteria.
+    + LR tests.
+        - The `BLRT()` is best supported by the literature; `lr_lmr()` has been criticized but is also available.
+    + Theoretically expected class solution.
+1. Justify the criteria used to eliminate models from consideration, including:
+    + Model convergence.
+    + Classification diagnostics.
+        - `table_fit()`
+    + Local identifiability (acceptable number of observations per parameter in each class).
+    + Theoretical interpretability of the results.
+        - Columns `np_global` and `np_local` in output of `table_fit()`
+1. Transparency and Reproducibility
+    + Use free open-source software to enable reproducibility.
+        - See the `worcs` package and its Vignettes, also [Van Lissa et al. (2021)](https://DOI.org/10.3233/DS-210031)
+    + Comprehensively cite literature, software, and data sources.
+    + Share analysis code.
+    + If possible, share data. Otherwise, share a synthetic dataset.
+        - Synthetic data can be created for an entire dataset in a model-agnostic way via `worcs::synthetic()`
+        - Synthetic data can be generated from the LCA model by running `mxGenerateData()` on the model object.
+    + Share all digital research output in line with the FAIR principles.
+    + Optionally, use the Workflow for Open Reproducible Code in Science and the `worcs` R-package automate creating a reproducible research archive.
+1. Estimation and Convergence
+    + Report the method of estimation. In `tidySEM`, this is simulated annealing with informative start values, determined via K-means clustering for complete data and hierarchical clustering when there are missing values.
+    + Assess convergence of all models before interpreting them.
+    + Optionally, if there is non-convergence, use functions like `mxTryHard()` to aid convergence.
+        - E.g., if you have concerns about model 4 in output object `res`, you could run `res[[4]] <- mxTryHard(res[[4]], extraTries = 200)` to run 200 permutations.
+1. Reporting Results
+    + Report the fit of all models under consideration in a table.
+        - `table_fit()`
+    + Report classification diagnostics for all models under consideration.
+        - `class_probs()`
+    + Report the minimal class proportions for all models under consideration.
+        - Column `n_min` in `table_fit()` results.
+    + Report class proportions for the final model
+        - `class_prob(res, "sum.posterior")`
+    + Report point estimates, standard errors and confidence intervals for model parameters.
+        - `table_results()`
+    + Optionally, convert thresholds to conditional item probabilities.
+        - `table_prob()`
+    + Assign informative class names while clarifying that these names are just shorthand.
+1. Inference
+    + Standard p-values in `table_results()` test the hypothesis that parameters are equal to zero. Consider whether these tests are meaningful and relevant.
+    + Control for, or reflect on, the study-wide Type I error level.
+    + Optionally, use the standard errors to test other null hypotheses.
+    + Optionally, use `wald_test()` to test informative hypotheses.
+    + Optionally, to test a confirmatory LCA model, compare parameter estimates to hypothesized values.
+    + Optionally, use `lr_test()` to compare parameters across classes.
+1. Visualization
+    + Visualize raw data to assess class separability and model fit.
+        - `plot_profiles()`, `plot_density()`, `plot_prob()`, `plot_growth()`
+    + Show point estimates of model parameters.
+    + If possible, show confidence bounds.
+    + Optionally, show multivariate distributions for multivariate models.
+1. Follow-up analyses.
+    + Account for classification inaccuracy in follow-up analyses.
+        - `BCH()`

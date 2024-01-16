@@ -29,7 +29,8 @@ if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, err
 run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
 ```
 
-This vignette illustrated `tidySEM`'s ability to perform latent class growth analysis, or growth mixture modeling.
+This vignette illustrated `tidySEM`'s ability to perform latent class growth analysis, or growth mixture modeling,
+as explained in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. https://doi.org/10.1080/10705511.2023.2250920.
 The simulated data used for this example are inspired by work in progress by Plas and colleagues,
 on heterogeneity in depression trajectories among Dutch military personnel who were deployed to Afghanistan.
 The original data were collected as part of the *Prospection in Stress-related Military Research (PRISMO)* study,
