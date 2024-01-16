@@ -430,7 +430,7 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
       analysis_type <- class(model)
     }
 
-  } else if (is(expr, "call")) {
+  } else if (methods::is(expr, "call")) {
     if (length(expr) > 1 && deparse(expr[[1]]) == "function"  ) {
       # expr is an anonymous function passed as an argument
       analysis_type <- "function"
@@ -465,7 +465,7 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
 
   # Generate the data, uses sample(). Since model might also use the seed,
   # data is generated first in order to be more reproducible.
-
+  class(x) <- "data.frame"
   dfs <- split(x[, -which(names(x) == "id_dataset"), drop = FALSE], f = factor(x$id_dataset))
 
   # Run the models
