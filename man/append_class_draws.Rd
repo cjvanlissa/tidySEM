@@ -17,7 +17,7 @@ individual.}
 \item{m}{Integer. Number of datasets to generate. Default is 10.}
 }
 \value{
-A list of class \code{pseudo_draws}.
+A data.frame of class \code{class_draws}.
 }
 \description{
 Generates \code{m} datasets with random draws of a variable named \code{class}, with
