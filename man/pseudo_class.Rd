@@ -11,7 +11,7 @@ pseudo_class(x, model, df_complete = NULL, ...)
 }
 \arguments{
 \item{x}{An object for which a method exists, typically either a fitted
-\code{mx_mixture} model or \code{pseudo_draws} object.}
+\code{mx_mixture} model or \code{class_draws} object.}
 
 \item{model}{Either an expression to execute on every generated dataset,
 or a function that performs the analysis on every generated dataset,
@@ -30,7 +30,8 @@ individual.}
 \item{m}{Integer. Number of datasets to generate. Default is 20.}
 }
 \value{
-An object of class \code{\link[mice]{mipo}}
+An object of class \code{\link[base]{data.frame}} containing pooled
+estimates.
 }
 \description{
 Estimate an auxiliary model based on multiple datasets, randomly drawing
@@ -40,10 +41,14 @@ each dataset, and results are pooled across datasets to account for
 classification uncertainty.
 }
 \examples{
+set.seed(2)
 dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 colnames(dat) <- c("SL", "SW", "PL", "PW")
 fit <- suppressWarnings(mx_profiles(data = dat, classes = 3))
 
+pct_mx <- pseudo_class(x = fit,
+                       model = "SL ~ class",
+                       data = dat)
 
 pct_lm <- pseudo_class(x = fit,
              model = lm( SL ~ class, data = data),

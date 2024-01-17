@@ -86,7 +86,7 @@ pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
   cl <- unique(cls)
 
   if ( length(cl) > 1 ) {
-    stop(paste0("'fits' consists of objects with different classes: ", paste(cl, sep = ', ')))
+    stop(paste0("'fits' consists of objects with different classes: ", paste(cl, collapse = ', ')))
   }
 
   UseMethod("pseudo_class_pool", fits[[1]])
@@ -267,7 +267,7 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 #' as these data will be augmented with a pseudo-class draw for that specific
 #' individual.
 #' @param m Integer. Number of datasets to generate. Default is 10.
-#' @returns A list of class `pseudo_draws`.
+#' @returns A data.frame of class `class_draws`.
 #' @examples
 #' dat <- iris[c(1:5, 50:55, 100:105),1:3]
 #' colnames(dat) <- letters[1:3]
@@ -275,9 +275,6 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 #'
 #' append_class_draws(fit, data = iris[c(1:5, 50:55, 100:105), 4, drop = FALSE])
 #' @export
-# @author Frank Gootjes # CJ: You can list your authorship here, but you're also
-# in the package author list, which is redundant.
-# CJ: Rename to a meaningful action:
 append_class_draws <- function(x, data = NULL, m = 20) {
   if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
     stop("Argument 'x' is not a valid mixture model.")
@@ -299,9 +296,9 @@ append_class_draws <- function(x, data = NULL, m = 20) {
     }
 
     x_imputed <- lapply(seq_len(m), function(i) {
-      data.frame(data, class = probabilistic_assignment(probabilities))
+      data.frame(id_dataset = i, data, class = probabilistic_assignment(probabilities))
     })
-    x_imputed <- data.frame(id_dataset = rep(1:20, each = nrow(data)), do.call(rbind, x_imputed))
+    x_imputed <- data.frame(do.call(rbind, x_imputed))
     class(x_imputed) <- c("class_draws", class(x_imputed))
     return(x_imputed)
 }
@@ -315,28 +312,26 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #' classification uncertainty.
 #'
 #' @param x An object for which a method exists, typically either a fitted
-#' `mx_mixture` model or `pseudo_draws` object.
+#' `mx_mixture` model or `class_draws` object.
 #' @param model Either an expression to execute on every generated dataset,
 #' or a function that performs the analysis on every generated dataset,
 #' or a character that can be interpreted as a structural equation model using
 #' \code{\link[tidySEM]{as_ram}}. This `model` can explicitly refer to `data`.
 #' @param df_complete Integer. Degrees of freedom of the complete-data analysis.
 #' @param ... Additional arguments passed to other functions.
-#' @returns An object of class \code{\link[mice]{mipo}}
+#' @returns An object of class \code{\link[base]{data.frame}} containing pooled
+#' estimates.
 #'
-# @author Frank Gootjes
-# CJ: Frank, it's fine to list yourself here, but this tag is in principle used
-#     when function authors differ from package authors, and you are currently
-#     listed as a package author as well. So might be redundant.
 #'
 #' @examples
+#' set.seed(2)
 #' dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 #' colnames(dat) <- c("SL", "SW", "PL", "PW")
 #' fit <- suppressWarnings(mx_profiles(data = dat, classes = 3))
 #'
-# pct_mx <- pseudo_class(x = fit,
-#                        model = "SL ~ class",
-#                        data = dat)
+#' pct_mx <- pseudo_class(x = fit,
+#'                        model = "SL ~ class",
+#'                        data = dat)
 #'
 #' pct_lm <- pseudo_class(x = fit,
 #'              model = lm( SL ~ class, data = data),
@@ -369,7 +364,7 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #' Pooling results across samples:
 #' Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition.
 #' Boca Raton, FL: Chapman & Hall/CRC. \doi{10.1201/9780429492259}
-#' @md
+#'
 #'
 #' @export
 pseudo_class <- function(x, model, df_complete = NULL, ...) {
@@ -390,16 +385,15 @@ pseudo_class.MxModel <- function(x, model, df_complete = NULL, data = NULL, m = 
     stop("Argument 'fit' is not a valid mixture model.")
   }
   if(inherits(data, what = "data.frame")){
-    # cl <- match.call()
-    # cl[[1]] <- quote(append_class_draws)
-    # cl <- cl[c(1, which(names(cl) %in% c("x", "data", "m")))]
-    # data <- eval.parent(cl)
+
     Args <- list(
       x = x,
-      data = data
+      data = data,
+      m = m
     )
-    dots <- list(...)
-    if("m" %in% names(dots)) c(Args, dots["m"])
+
+    # Generate the data, uses sample(). Since model might also use the seed,
+    # all data is generated first in order to be more reproducible.
     data <- do.call(append_class_draws, Args)
   } else {
     stop("Function 'pseudo_class()' requires a 'data' argument when called on a 'mx_mixture' model.")
@@ -461,8 +455,6 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
     stop(paste0("Unknown expression type for 'model'. It should be a 'call', a 'function' or 'name' of a function. Received: ", as.character(expr)))
   }
 
-  # Generate the data, uses sample(). Since model might also use the seed,
-  # data is generated first in order to be more reproducible.
   class(x) <- "data.frame"
   dfs <- split(x[, -which(names(x) == "id_dataset"), drop = FALSE], f = factor(x$id_dataset))
 
