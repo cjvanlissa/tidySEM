@@ -5,15 +5,12 @@ predict.MxModel <- function(object,
                             ...){
   cl <- match.call()
   cl[[1L]] <- str2lang("OpenMx:::predict.MxModel")
-  if(is.null(attr(object, "tidySEM"))){
-    eval.parent(cl)
-  } else {
-    switch(attr(object, "tidySEM"),
-           "mixture" = {
+  if(!is.null(attr(object, "tidySEM"))){
+    if("mixture" %in% attr(object, "tidySEM")){
              cl[[1L]] <- str2lang("tidySEM:::predict_mxmodel_mixture")
-           })
-    eval.parent(cl)
+    }
   }
+  eval.parent(cl)
 }
 
 predict_mxmodel_mixture <- function(object, newdata = NULL, ...){
