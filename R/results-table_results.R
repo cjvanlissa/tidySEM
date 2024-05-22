@@ -102,7 +102,7 @@ table_results <- function(x, columns = c("label", "est_sig", "se", "pval", "conf
 table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
   cl <- match.call()
   cl$x <- x$results
-  cl[[1L]] <- quote(table_results)
+  cl[[1L]] <- str2lang("tidySEM::table_results")
   eval.parent(cl)
 }
 
@@ -218,7 +218,7 @@ internal_table_mplusmodel <- function(x, parameters, digits = 2, format_numeric 
     cl <- cl[c(1, which(names(cl) %in% c("x", "digits", "sig")))]
     cl[["x"]] <- results$est
     cl[["sig"]] <- results$pval
-    cl[[1L]] <- quote(est_sig)
+    cl[[1L]] <- str2lang("tidySEM::est_sig")
     results$est_sig <- eval.parent(cl)
   }
 
@@ -226,7 +226,7 @@ internal_table_mplusmodel <- function(x, parameters, digits = 2, format_numeric 
   cl <- match.call()
   cl <- cl[c(1, which(names(cl) %in% c("x", "digits", "se", "lb", "ub", "ci")))]
   cl[["x"]] <- results
-  cl[[1L]] <- quote(conf_int)
+  cl[[1L]] <- str2lang("tidySEM::conf_int")
   results$confint <- eval.parent(cl)
   if(format_numeric){
     results[, value_columns] <- lapply(results[, value_columns], format_with_na, digits = digits, format = "f")
@@ -557,14 +557,14 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   cl[["x"]] <- pars_unst$est
   cl[["lb"]] <- pars_unst$ci.lower
   cl[["ub"]] <-  pars_unst$ci.upper
-  cl[[1L]] <- quote(conf_int)
+  cl[[1L]] <- str2lang("tidySEM::conf_int")
   pars_unst$confint <- eval(cl)
   # Call est_sig
   cl <- match.call()
   cl <- cl[c(1, which(names(cl) %in% c("x", "digits", "sig")))]
   cl[["x"]] <- pars_unst$est
   cl[["sig"]] <- pars_unst$pval
-  cl[[1L]] <- quote(est_sig)
+  cl[[1L]] <- str2lang("tidySEM::est_sig")
   pars_unst$est_sig <- eval(cl)
   pars_unst[c("z", "ci.lower", "ci.upper")] <- NULL
 
@@ -577,14 +577,14 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   cl[["x"]] <- pars_std$est
   cl[["lb"]] <- pars_std$ci.lower
   cl[["ub"]] <-  pars_std$ci.upper
-  cl[[1L]] <- quote(conf_int)
+  cl[[1L]] <- str2lang("tidySEM::conf_int")
   pars_std$confint <- eval(cl)
   # Call est_sig
   cl <- match.call()
   cl <- cl[c(1, which(names(cl) %in% c("x", "digits", "sig")))]
   cl[["x"]] <- pars_std$est
   cl[["sig"]] <- pars_std$pval
-  cl[[1L]] <- quote(est_sig)
+  cl[[1L]] <- str2lang("tidySEM::est_sig")
   pars_std$est_sig <- eval(cl)
   # Remove redundant columns
 

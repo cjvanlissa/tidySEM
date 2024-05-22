@@ -622,6 +622,72 @@ ggsave("pgfig10.png", p, device = "png", width= 4, height = 4)
 knitr::include_graphics("pgfig10.png")
 ```
 
+## Math Notation in Graphs
+
+Since the objects created by `prepare_graph()` and `graph_sem()` are `ggplot` objects, we can use the full functionality of `ggplot` to customize them.
+The following example, based on code provided by GitHub user `dumaskvn`, showcases how `plotmath` labels can be displayed (see `?plotmath`).
+There are several ways to do this; this is just one example.
+
+```{r, eval = FALSE}
+model <- "
+  Sepal.Length ~ Sepal.Width + Petal.Length
+  Sepal.Width ~ Petal.Length
+"
+# fit model
+fit <- sem(model, data = iris)
+# specify layout for consistency
+layout <- get_layout("", "Sepal.Width", "",
+                     "Petal.Length", "", "Sepal.Length", rows = 2)
+# get data from prepare_graph
+p <- prepare_graph(fit, layout = layout, angle = 180)
+
+# standard graph
+plot(p)
+
+# Duplicate node data.frame
+df_nodes <- p$nodes
+# Add mathematical notation to node label
+df_nodes$label <- paste("atop(", p$nodes$label, ", ", c("alpha-div", # Add a Greek letter
+                                                 paste0("R^2 ==", formatC(inspect(fit, "r2"), digits = 2, format = "f"))), ")")  # Add R2 to node labels
+# Set original labels to blank
+p$nodes$label <- "" 
+
+# Plot, treat as ggplot object and add parsed node labels
+plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
+
+```
+
+```{r, echo = FALSE, out.width="300px"}
+set.seed(6)
+model <- "
+  Sepal.Length ~ Sepal.Width + Petal.Length
+  Sepal.Width ~ Petal.Length
+"
+# fit model
+fit <- sem(model, data = iris)
+# specify layout for consistency
+layout <- get_layout("", "Sepal.Width", "",
+                     "Petal.Length", "", "Sepal.Length", rows = 2)
+# get data from prepare_graph
+p <- prepare_graph(fit, layout = layout, angle = 180)
+
+# standard graph
+# plot(p)
+
+# Duplicate node data.frame
+df_nodes <- p$nodes
+# Add mathematical notation to node label
+df_nodes$label <- paste("atop(", p$nodes$label, ", ", c("alpha-div", # Add a Greek letter
+                                                 paste0("R^2 ==", formatC(inspect(fit, "r2"), digits = 2, format = "f"))), ")")  # Add R2 to node labels
+# Set original labels to blank
+p$nodes$label <- "" 
+
+# Plot, treat as ggplot object and add parsed node labels
+p <- plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
+ggsave("pgfig11.png", p, device = "png", width= 5, height = 5)
+knitr::include_graphics("pgfig11.png")
+```
+
 <!--As explained before, the functions `get_edges()` and `get_nodes()`,
 which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
 have an argument `columns` which adds auxiliary columns to the resulting data.frames.

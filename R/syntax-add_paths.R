@@ -73,7 +73,7 @@ add_paths.tidy_sem <- function(model, ...){ #, strict_check = TRUE
   cl <- match.call()
   cl["model"] <- list(model$syntax)
   if(!is.null(group_var(model))) cl[["ngroups"]] <- group_var(model, "ngroups")
-  cl[[1L]] <- quote(add_paths)
+  cl[[1L]] <- str2lang("tidySEM::add_paths")
   #Args <- c(list(model = model$syntax), as.list(match.call()[-c(1:2)]))
   model$syntax <- eval.parent(cl)
   return(model)

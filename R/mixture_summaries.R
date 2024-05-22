@@ -23,6 +23,7 @@ calc_fitindices <- function(model, ...){
   UseMethod("calc_fitindices", model)
 }
 
+#' @export
 calc_fitindices.MxModel <- function (model, type = NULL, ...){
   sums <- .table_fit_mx(model, type = type)
   if(isTRUE(type == "mixture")){
@@ -155,6 +156,7 @@ extract_postprob <- function(model){
   UseMethod("extract_postprob", model)
 }
 
+#' @export
 extract_postprob.MxModel <- function(model){
   if(!inherits(model$expectation, "MxExpectationMixture")){
     return(matrix(1, nrow = model$data$numObs))
@@ -174,7 +176,7 @@ extract_postprob.MxModel <- function(model){
   # then normalize them into probabilities:
   posteriors/rowSums(posteriors)
 }
-
+#' @export
 extract_postprob.mplus.model <- function(model){
   model$savedata[grepl("^CPROB", names(model$savedata))]
 }

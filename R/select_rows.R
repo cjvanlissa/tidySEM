@@ -246,7 +246,7 @@ if_edit.sem_graph <- function(data, condition, expr,
 #X   cl <- match.call()
 #X   cl[["condition"]] <- substitute(COND)
 #X   cl[["element"]] = c("edges", "nodes")
-#X   cl[[1L]] <- quote(if_edit)
+#X   cl[[1L]] <- str2lang("tidySEM:::if_edit")
 #X   eval.parent(cl)
 #X }
 
@@ -259,7 +259,7 @@ if_edit.sem_graph <- function(data, condition, expr,
 #X   cl[["condition"]] <- substitute(COND)
 #X   cl[["expr"]] <- quote({ show = FALSE })
 #X   cl[["element"]] = c("edges", "nodes")
-#X   cl[[1L]] <- quote(if_edit)
+#X   cl[[1L]] <- str2lang("tidySEM:::if_edit")
 #X   eval.parent(cl)
 #X }
 
@@ -272,7 +272,7 @@ if_edit.sem_graph <- function(data, condition, expr,
 #X   cl[["condition"]] <- substitute(COND)
 #X   cl[["expr"]] <- quote({ show = TRUE })
 #X   cl[["element"]] = c("edges", "nodes")
-#X   cl[[1L]] <- quote(if_edit)
+#X   cl[[1L]] <- str2lang("tidySEM:::if_edit")
 #X   eval.parent(cl)
 #X }
 
@@ -303,7 +303,7 @@ if_edit.sem_graph <- function(data, condition, expr,
 #AX   cl[["expr"]] <- str2lang(paste0("AES = ", deparse(AES)))
 #AX   cl[["element"]] <- c("edges", "nodes")
 #AX   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-#AX   cl[[1L]] <- quote(if_edit)
+#AX   cl[[1L]] <- str2lang("tidySEM:::if_edit")
 #AX   eval.parent(cl)
 #AX }
 
@@ -318,7 +318,7 @@ all_sig <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -330,7 +330,7 @@ hide_sig <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -342,7 +342,7 @@ show_sig <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -372,7 +372,7 @@ colour_sig <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -402,7 +402,7 @@ color_sig <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -432,7 +432,7 @@ linetype_sig <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -462,7 +462,7 @@ size_sig <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -492,7 +492,7 @@ alpha_sig <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -522,7 +522,7 @@ fill_sig <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -552,7 +552,7 @@ label_colour_sig <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -582,7 +582,7 @@ label_color_sig <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -612,7 +612,7 @@ label_fill_sig <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -642,7 +642,7 @@ label_size_sig <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -672,7 +672,7 @@ label_alpha_sig <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -702,7 +702,7 @@ label_family_sig <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -732,7 +732,7 @@ label_fontface_sig <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -762,7 +762,7 @@ label_hjust_sig <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -792,7 +792,7 @@ label_vjust_sig <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -822,7 +822,7 @@ label_lineheight_sig <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -852,7 +852,7 @@ label_location_sig <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -863,7 +863,7 @@ all_nonsig <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -875,7 +875,7 @@ hide_nonsig <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -887,7 +887,7 @@ show_nonsig <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -917,7 +917,7 @@ colour_nonsig <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -947,7 +947,7 @@ color_nonsig <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -977,7 +977,7 @@ linetype_nonsig <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1007,7 +1007,7 @@ size_nonsig <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1037,7 +1037,7 @@ alpha_nonsig <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1067,7 +1067,7 @@ fill_nonsig <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1097,7 +1097,7 @@ label_colour_nonsig <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1127,7 +1127,7 @@ label_color_nonsig <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1157,7 +1157,7 @@ label_fill_nonsig <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1187,7 +1187,7 @@ label_size_nonsig <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1217,7 +1217,7 @@ label_alpha_nonsig <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1247,7 +1247,7 @@ label_family_nonsig <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1277,7 +1277,7 @@ label_fontface_nonsig <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1307,7 +1307,7 @@ label_hjust_nonsig <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1337,7 +1337,7 @@ label_vjust_nonsig <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1367,7 +1367,7 @@ label_lineheight_nonsig <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1397,7 +1397,7 @@ label_location_nonsig <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1408,7 +1408,7 @@ all_fixed <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1420,7 +1420,7 @@ hide_fixed <- function(data, ...){
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1432,7 +1432,7 @@ show_fixed <- function(data, ...){
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1462,7 +1462,7 @@ colour_fixed <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1492,7 +1492,7 @@ color_fixed <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1522,7 +1522,7 @@ linetype_fixed <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1552,7 +1552,7 @@ size_fixed <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1582,7 +1582,7 @@ alpha_fixed <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1612,7 +1612,7 @@ fill_fixed <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1642,7 +1642,7 @@ label_colour_fixed <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1672,7 +1672,7 @@ label_color_fixed <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1702,7 +1702,7 @@ label_fill_fixed <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1732,7 +1732,7 @@ label_size_fixed <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1762,7 +1762,7 @@ label_alpha_fixed <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1792,7 +1792,7 @@ label_family_fixed <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1822,7 +1822,7 @@ label_fontface_fixed <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1852,7 +1852,7 @@ label_hjust_fixed <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1882,7 +1882,7 @@ label_vjust_fixed <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1912,7 +1912,7 @@ label_lineheight_fixed <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1942,7 +1942,7 @@ label_location_fixed <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1953,7 +1953,7 @@ all_pos <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1965,7 +1965,7 @@ hide_pos <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -1977,7 +1977,7 @@ show_pos <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2007,7 +2007,7 @@ colour_pos <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2037,7 +2037,7 @@ color_pos <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2067,7 +2067,7 @@ linetype_pos <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2097,7 +2097,7 @@ size_pos <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2127,7 +2127,7 @@ alpha_pos <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2157,7 +2157,7 @@ fill_pos <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2187,7 +2187,7 @@ label_colour_pos <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2217,7 +2217,7 @@ label_color_pos <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2247,7 +2247,7 @@ label_fill_pos <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2277,7 +2277,7 @@ label_size_pos <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2307,7 +2307,7 @@ label_alpha_pos <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2337,7 +2337,7 @@ label_family_pos <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2367,7 +2367,7 @@ label_fontface_pos <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2397,7 +2397,7 @@ label_hjust_pos <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2427,7 +2427,7 @@ label_vjust_pos <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2457,7 +2457,7 @@ label_lineheight_pos <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2487,7 +2487,7 @@ label_location_pos <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2498,7 +2498,7 @@ all_neg <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2510,7 +2510,7 @@ hide_neg <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2522,7 +2522,7 @@ show_neg <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = c("edges", "nodes")
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2552,7 +2552,7 @@ colour_neg <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2582,7 +2582,7 @@ color_neg <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2612,7 +2612,7 @@ linetype_neg <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2642,7 +2642,7 @@ size_neg <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2672,7 +2672,7 @@ alpha_neg <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2702,7 +2702,7 @@ fill_neg <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2732,7 +2732,7 @@ label_colour_neg <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2762,7 +2762,7 @@ label_color_neg <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2792,7 +2792,7 @@ label_fill_neg <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2822,7 +2822,7 @@ label_size_neg <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2852,7 +2852,7 @@ label_alpha_neg <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2882,7 +2882,7 @@ label_family_neg <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2912,7 +2912,7 @@ label_fontface_neg <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2942,7 +2942,7 @@ label_hjust_neg <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -2972,7 +2972,7 @@ label_vjust_neg <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3002,7 +3002,7 @@ label_lineheight_neg <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- c("edges", "nodes")
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3032,7 +3032,7 @@ label_location_neg <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3043,7 +3043,7 @@ all_var <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(lhs == rhs & op == "~~")
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3055,7 +3055,7 @@ hide_var <- function(data, ...){
   cl[["condition"]] <- substitute(lhs == rhs & op == "~~")
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3067,7 +3067,7 @@ show_var <- function(data, ...){
   cl[["condition"]] <- substitute(lhs == rhs & op == "~~")
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3097,7 +3097,7 @@ colour_var <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3127,7 +3127,7 @@ color_var <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3157,7 +3157,7 @@ linetype_var <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3187,7 +3187,7 @@ size_var <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3217,7 +3217,7 @@ alpha_var <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3247,7 +3247,7 @@ label_colour_var <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3277,7 +3277,7 @@ label_color_var <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3307,7 +3307,7 @@ label_fill_var <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3337,7 +3337,7 @@ label_size_var <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3367,7 +3367,7 @@ label_alpha_var <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3397,7 +3397,7 @@ label_family_var <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3427,7 +3427,7 @@ label_fontface_var <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3457,7 +3457,7 @@ label_hjust_var <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3487,7 +3487,7 @@ label_vjust_var <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3517,7 +3517,7 @@ label_lineheight_var <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3528,7 +3528,7 @@ all_cov <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(lhs != rhs & op == "~~")
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3540,7 +3540,7 @@ hide_cov <- function(data, ...){
   cl[["condition"]] <- substitute(lhs != rhs & op == "~~")
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3552,7 +3552,7 @@ show_cov <- function(data, ...){
   cl[["condition"]] <- substitute(lhs != rhs & op == "~~")
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3582,7 +3582,7 @@ colour_cov <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3612,7 +3612,7 @@ color_cov <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3642,7 +3642,7 @@ linetype_cov <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3672,7 +3672,7 @@ size_cov <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3702,7 +3702,7 @@ alpha_cov <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3732,7 +3732,7 @@ label_colour_cov <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3762,7 +3762,7 @@ label_color_cov <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3792,7 +3792,7 @@ label_fill_cov <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3822,7 +3822,7 @@ label_size_cov <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3852,7 +3852,7 @@ label_alpha_cov <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3882,7 +3882,7 @@ label_family_cov <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3912,7 +3912,7 @@ label_fontface_cov <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3942,7 +3942,7 @@ label_hjust_cov <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -3972,7 +3972,7 @@ label_vjust_cov <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4002,7 +4002,7 @@ label_lineheight_cov <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4032,7 +4032,7 @@ label_location_cov <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4043,7 +4043,7 @@ all_reg <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(op == "~")
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4055,7 +4055,7 @@ hide_reg <- function(data, ...){
   cl[["condition"]] <- substitute(op == "~")
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4067,7 +4067,7 @@ show_reg <- function(data, ...){
   cl[["condition"]] <- substitute(op == "~")
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4097,7 +4097,7 @@ colour_reg <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4127,7 +4127,7 @@ color_reg <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4157,7 +4157,7 @@ linetype_reg <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4187,7 +4187,7 @@ size_reg <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4217,7 +4217,7 @@ alpha_reg <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4247,7 +4247,7 @@ label_colour_reg <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4277,7 +4277,7 @@ label_color_reg <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4307,7 +4307,7 @@ label_fill_reg <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4337,7 +4337,7 @@ label_size_reg <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4367,7 +4367,7 @@ label_alpha_reg <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4397,7 +4397,7 @@ label_family_reg <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4427,7 +4427,7 @@ label_fontface_reg <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4457,7 +4457,7 @@ label_hjust_reg <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4487,7 +4487,7 @@ label_vjust_reg <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4517,7 +4517,7 @@ label_lineheight_reg <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4547,7 +4547,7 @@ label_location_reg <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4558,7 +4558,7 @@ all_load <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(op == "=~")
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4570,7 +4570,7 @@ hide_load <- function(data, ...){
   cl[["condition"]] <- substitute(op == "=~")
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4582,7 +4582,7 @@ show_load <- function(data, ...){
   cl[["condition"]] <- substitute(op == "=~")
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4612,7 +4612,7 @@ colour_load <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4642,7 +4642,7 @@ color_load <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4672,7 +4672,7 @@ linetype_load <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4702,7 +4702,7 @@ size_load <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4732,7 +4732,7 @@ alpha_load <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4762,7 +4762,7 @@ label_colour_load <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4792,7 +4792,7 @@ label_color_load <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4822,7 +4822,7 @@ label_fill_load <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4852,7 +4852,7 @@ label_size_load <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4882,7 +4882,7 @@ label_alpha_load <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4912,7 +4912,7 @@ label_family_load <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4942,7 +4942,7 @@ label_fontface_load <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -4972,7 +4972,7 @@ label_hjust_load <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5002,7 +5002,7 @@ label_vjust_load <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5032,7 +5032,7 @@ label_lineheight_load <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5062,7 +5062,7 @@ label_location_load <- function(data, label_location = .5, ...){
   cl[["expr"]] <- str2lang(paste0("label_location = ", deparse(label_location)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5073,7 +5073,7 @@ all_obs <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5085,7 +5085,7 @@ hide_obs <- function(data, ...){
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5097,7 +5097,7 @@ show_obs <- function(data, ...){
   cl[["condition"]] <- substitute(shape == "rect")
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5127,7 +5127,7 @@ colour_obs <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5157,7 +5157,7 @@ color_obs <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5187,7 +5187,7 @@ linetype_obs <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5217,7 +5217,7 @@ size_obs <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5247,7 +5247,7 @@ alpha_obs <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5277,7 +5277,7 @@ fill_obs <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5307,7 +5307,7 @@ label_colour_obs <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5337,7 +5337,7 @@ label_color_obs <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5367,7 +5367,7 @@ label_fill_obs <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5397,7 +5397,7 @@ label_size_obs <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5427,7 +5427,7 @@ label_alpha_obs <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5457,7 +5457,7 @@ label_family_obs <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5487,7 +5487,7 @@ label_fontface_obs <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5517,7 +5517,7 @@ label_hjust_obs <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5547,7 +5547,7 @@ label_vjust_obs <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5577,7 +5577,7 @@ label_lineheight_obs <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5588,7 +5588,7 @@ all_latent <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5600,7 +5600,7 @@ hide_latent <- function(data, ...){
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5612,7 +5612,7 @@ show_latent <- function(data, ...){
   cl[["condition"]] <- substitute(shape == "oval")
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5642,7 +5642,7 @@ colour_latent <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5672,7 +5672,7 @@ color_latent <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5702,7 +5702,7 @@ linetype_latent <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5732,7 +5732,7 @@ size_latent <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5762,7 +5762,7 @@ alpha_latent <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5792,7 +5792,7 @@ fill_latent <- function(data, fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("fill = ", deparse(fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5822,7 +5822,7 @@ label_colour_latent <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5852,7 +5852,7 @@ label_color_latent <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5882,7 +5882,7 @@ label_fill_latent <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5912,7 +5912,7 @@ label_size_latent <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5942,7 +5942,7 @@ label_alpha_latent <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -5972,7 +5972,7 @@ label_family_latent <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6002,7 +6002,7 @@ label_fontface_latent <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6032,7 +6032,7 @@ label_hjust_latent <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6062,7 +6062,7 @@ label_vjust_latent <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6092,7 +6092,7 @@ label_lineheight_latent <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6103,7 +6103,7 @@ all_sig_nodes <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6115,7 +6115,7 @@ hide_sig_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6127,7 +6127,7 @@ show_sig_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6157,7 +6157,7 @@ colour_sig_nodes <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6187,7 +6187,7 @@ color_sig_nodes <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6217,7 +6217,7 @@ linetype_sig_nodes <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6247,7 +6247,7 @@ size_sig_nodes <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6277,7 +6277,7 @@ alpha_sig_nodes <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6307,7 +6307,7 @@ label_colour_sig_nodes <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6337,7 +6337,7 @@ label_color_sig_nodes <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6367,7 +6367,7 @@ label_fill_sig_nodes <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6397,7 +6397,7 @@ label_size_sig_nodes <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6427,7 +6427,7 @@ label_alpha_sig_nodes <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6457,7 +6457,7 @@ label_family_sig_nodes <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6487,7 +6487,7 @@ label_fontface_sig_nodes <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6517,7 +6517,7 @@ label_hjust_sig_nodes <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6547,7 +6547,7 @@ label_vjust_sig_nodes <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6577,7 +6577,7 @@ label_lineheight_sig_nodes <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6588,7 +6588,7 @@ all_nonsig_nodes <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6600,7 +6600,7 @@ hide_nonsig_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6612,7 +6612,7 @@ show_nonsig_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6642,7 +6642,7 @@ colour_nonsig_nodes <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6672,7 +6672,7 @@ color_nonsig_nodes <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6702,7 +6702,7 @@ linetype_nonsig_nodes <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6732,7 +6732,7 @@ size_nonsig_nodes <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6762,7 +6762,7 @@ alpha_nonsig_nodes <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6792,7 +6792,7 @@ label_colour_nonsig_nodes <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6822,7 +6822,7 @@ label_color_nonsig_nodes <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6852,7 +6852,7 @@ label_fill_nonsig_nodes <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6882,7 +6882,7 @@ label_size_nonsig_nodes <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6912,7 +6912,7 @@ label_alpha_nonsig_nodes <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6942,7 +6942,7 @@ label_family_nonsig_nodes <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -6972,7 +6972,7 @@ label_fontface_nonsig_nodes <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7002,7 +7002,7 @@ label_hjust_nonsig_nodes <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7032,7 +7032,7 @@ label_vjust_nonsig_nodes <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7062,7 +7062,7 @@ label_lineheight_nonsig_nodes <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7073,7 +7073,7 @@ all_fixed_nodes <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7085,7 +7085,7 @@ hide_fixed_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7097,7 +7097,7 @@ show_fixed_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7127,7 +7127,7 @@ colour_fixed_nodes <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7157,7 +7157,7 @@ color_fixed_nodes <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7187,7 +7187,7 @@ linetype_fixed_nodes <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7217,7 +7217,7 @@ size_fixed_nodes <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7247,7 +7247,7 @@ alpha_fixed_nodes <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7277,7 +7277,7 @@ label_colour_fixed_nodes <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7307,7 +7307,7 @@ label_color_fixed_nodes <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7337,7 +7337,7 @@ label_fill_fixed_nodes <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7367,7 +7367,7 @@ label_size_fixed_nodes <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7397,7 +7397,7 @@ label_alpha_fixed_nodes <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7427,7 +7427,7 @@ label_family_fixed_nodes <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7457,7 +7457,7 @@ label_fontface_fixed_nodes <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7487,7 +7487,7 @@ label_hjust_fixed_nodes <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7517,7 +7517,7 @@ label_vjust_fixed_nodes <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7547,7 +7547,7 @@ label_lineheight_fixed_nodes <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7558,7 +7558,7 @@ all_pos_nodes <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7570,7 +7570,7 @@ hide_pos_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7582,7 +7582,7 @@ show_pos_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7612,7 +7612,7 @@ colour_pos_nodes <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7642,7 +7642,7 @@ color_pos_nodes <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7672,7 +7672,7 @@ linetype_pos_nodes <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7702,7 +7702,7 @@ size_pos_nodes <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7732,7 +7732,7 @@ alpha_pos_nodes <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7762,7 +7762,7 @@ label_colour_pos_nodes <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7792,7 +7792,7 @@ label_color_pos_nodes <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7822,7 +7822,7 @@ label_fill_pos_nodes <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7852,7 +7852,7 @@ label_size_pos_nodes <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7882,7 +7882,7 @@ label_alpha_pos_nodes <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7912,7 +7912,7 @@ label_family_pos_nodes <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7942,7 +7942,7 @@ label_fontface_pos_nodes <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -7972,7 +7972,7 @@ label_hjust_pos_nodes <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8002,7 +8002,7 @@ label_vjust_pos_nodes <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8032,7 +8032,7 @@ label_lineheight_pos_nodes <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8043,7 +8043,7 @@ all_neg_nodes <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8055,7 +8055,7 @@ hide_neg_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8067,7 +8067,7 @@ show_neg_nodes <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "nodes"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8097,7 +8097,7 @@ colour_neg_nodes <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8127,7 +8127,7 @@ color_neg_nodes <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8157,7 +8157,7 @@ linetype_neg_nodes <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8187,7 +8187,7 @@ size_neg_nodes <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8217,7 +8217,7 @@ alpha_neg_nodes <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8247,7 +8247,7 @@ label_colour_neg_nodes <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8277,7 +8277,7 @@ label_color_neg_nodes <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8307,7 +8307,7 @@ label_fill_neg_nodes <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8337,7 +8337,7 @@ label_size_neg_nodes <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8367,7 +8367,7 @@ label_alpha_neg_nodes <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8397,7 +8397,7 @@ label_family_neg_nodes <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8427,7 +8427,7 @@ label_fontface_neg_nodes <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8457,7 +8457,7 @@ label_hjust_neg_nodes <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8487,7 +8487,7 @@ label_vjust_neg_nodes <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8517,7 +8517,7 @@ label_lineheight_neg_nodes <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "nodes"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8528,7 +8528,7 @@ all_sig_edges <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8540,7 +8540,7 @@ hide_sig_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8552,7 +8552,7 @@ show_sig_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) < .05)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8582,7 +8582,7 @@ colour_sig_edges <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8612,7 +8612,7 @@ color_sig_edges <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8642,7 +8642,7 @@ linetype_sig_edges <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8672,7 +8672,7 @@ size_sig_edges <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8702,7 +8702,7 @@ alpha_sig_edges <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8732,7 +8732,7 @@ label_colour_sig_edges <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8762,7 +8762,7 @@ label_color_sig_edges <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8792,7 +8792,7 @@ label_fill_sig_edges <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8822,7 +8822,7 @@ label_size_sig_edges <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8852,7 +8852,7 @@ label_alpha_sig_edges <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8882,7 +8882,7 @@ label_family_sig_edges <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8912,7 +8912,7 @@ label_fontface_sig_edges <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8942,7 +8942,7 @@ label_hjust_sig_edges <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -8972,7 +8972,7 @@ label_vjust_sig_edges <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9002,7 +9002,7 @@ label_lineheight_sig_edges <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9013,7 +9013,7 @@ all_nonsig_edges <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9025,7 +9025,7 @@ hide_nonsig_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9037,7 +9037,7 @@ show_nonsig_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(pval) >= .05)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9067,7 +9067,7 @@ colour_nonsig_edges <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9097,7 +9097,7 @@ color_nonsig_edges <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9127,7 +9127,7 @@ linetype_nonsig_edges <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9157,7 +9157,7 @@ size_nonsig_edges <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9187,7 +9187,7 @@ alpha_nonsig_edges <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9217,7 +9217,7 @@ label_colour_nonsig_edges <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9247,7 +9247,7 @@ label_color_nonsig_edges <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9277,7 +9277,7 @@ label_fill_nonsig_edges <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9307,7 +9307,7 @@ label_size_nonsig_edges <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9337,7 +9337,7 @@ label_alpha_nonsig_edges <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9367,7 +9367,7 @@ label_family_nonsig_edges <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9397,7 +9397,7 @@ label_fontface_nonsig_edges <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9427,7 +9427,7 @@ label_hjust_nonsig_edges <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9457,7 +9457,7 @@ label_vjust_nonsig_edges <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9487,7 +9487,7 @@ label_lineheight_nonsig_edges <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9498,7 +9498,7 @@ all_fixed_edges <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9510,7 +9510,7 @@ hide_fixed_edges <- function(data, ...){
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9522,7 +9522,7 @@ show_fixed_edges <- function(data, ...){
   cl[["condition"]] <- substitute(is.na(pval))
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9552,7 +9552,7 @@ colour_fixed_edges <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9582,7 +9582,7 @@ color_fixed_edges <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9612,7 +9612,7 @@ linetype_fixed_edges <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9642,7 +9642,7 @@ size_fixed_edges <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9672,7 +9672,7 @@ alpha_fixed_edges <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9702,7 +9702,7 @@ label_colour_fixed_edges <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9732,7 +9732,7 @@ label_color_fixed_edges <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9762,7 +9762,7 @@ label_fill_fixed_edges <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9792,7 +9792,7 @@ label_size_fixed_edges <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9822,7 +9822,7 @@ label_alpha_fixed_edges <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9852,7 +9852,7 @@ label_family_fixed_edges <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9882,7 +9882,7 @@ label_fontface_fixed_edges <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9912,7 +9912,7 @@ label_hjust_fixed_edges <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9942,7 +9942,7 @@ label_vjust_fixed_edges <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9972,7 +9972,7 @@ label_lineheight_fixed_edges <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9983,7 +9983,7 @@ all_pos_edges <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -9995,7 +9995,7 @@ hide_pos_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10007,7 +10007,7 @@ show_pos_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) > 0)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10037,7 +10037,7 @@ colour_pos_edges <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10067,7 +10067,7 @@ color_pos_edges <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10097,7 +10097,7 @@ linetype_pos_edges <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10127,7 +10127,7 @@ size_pos_edges <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10157,7 +10157,7 @@ alpha_pos_edges <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10187,7 +10187,7 @@ label_colour_pos_edges <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10217,7 +10217,7 @@ label_color_pos_edges <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10247,7 +10247,7 @@ label_fill_pos_edges <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10277,7 +10277,7 @@ label_size_pos_edges <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10307,7 +10307,7 @@ label_alpha_pos_edges <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10337,7 +10337,7 @@ label_family_pos_edges <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10367,7 +10367,7 @@ label_fontface_pos_edges <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10397,7 +10397,7 @@ label_hjust_pos_edges <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10427,7 +10427,7 @@ label_vjust_pos_edges <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10457,7 +10457,7 @@ label_lineheight_pos_edges <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10468,7 +10468,7 @@ all_neg_edges <- function(data, expr, ...){
   cl <- match.call()
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10480,7 +10480,7 @@ hide_neg_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- quote({ show = FALSE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10492,7 +10492,7 @@ show_neg_edges <- function(data, ...){
   cl[["condition"]] <- substitute(as.numeric(est) < 0)
   cl[["expr"]] <- quote({ show = TRUE })
   cl[["element"]] = "edges"
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10522,7 +10522,7 @@ colour_neg_edges <- function(data, colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("colour = ", deparse(colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10552,7 +10552,7 @@ color_neg_edges <- function(data, color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("color = ", deparse(color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10582,7 +10582,7 @@ linetype_neg_edges <- function(data, linetype = 1, ...){
   cl[["expr"]] <- str2lang(paste0("linetype = ", deparse(linetype)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10612,7 +10612,7 @@ size_neg_edges <- function(data, size = 1, ...){
   cl[["expr"]] <- str2lang(paste0("size = ", deparse(size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10642,7 +10642,7 @@ alpha_neg_edges <- function(data, alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("alpha = ", deparse(alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10672,7 +10672,7 @@ label_colour_neg_edges <- function(data, label_colour = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_colour = ", deparse(label_colour)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10702,7 +10702,7 @@ label_color_neg_edges <- function(data, label_color = "black", ...){
   cl[["expr"]] <- str2lang(paste0("label_color = ", deparse(label_color)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10732,7 +10732,7 @@ label_fill_neg_edges <- function(data, label_fill = "white", ...){
   cl[["expr"]] <- str2lang(paste0("label_fill = ", deparse(label_fill)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10762,7 +10762,7 @@ label_size_neg_edges <- function(data, label_size = 4, ...){
   cl[["expr"]] <- str2lang(paste0("label_size = ", deparse(label_size)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10792,7 +10792,7 @@ label_alpha_neg_edges <- function(data, label_alpha = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_alpha = ", deparse(label_alpha)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10822,7 +10822,7 @@ label_family_neg_edges <- function(data, label_family = "sans", ...){
   cl[["expr"]] <- str2lang(paste0("label_family = ", deparse(label_family)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10852,7 +10852,7 @@ label_fontface_neg_edges <- function(data, label_fontface = "plain", ...){
   cl[["expr"]] <- str2lang(paste0("label_fontface = ", deparse(label_fontface)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10882,7 +10882,7 @@ label_hjust_neg_edges <- function(data, label_hjust = "center", ...){
   cl[["expr"]] <- str2lang(paste0("label_hjust = ", deparse(label_hjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10912,7 +10912,7 @@ label_vjust_neg_edges <- function(data, label_vjust = "middle", ...){
   cl[["expr"]] <- str2lang(paste0("label_vjust = ", deparse(label_vjust)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }
 #' @export
@@ -10942,6 +10942,6 @@ label_lineheight_neg_edges <- function(data, label_lineheight = 1, ...){
   cl[["expr"]] <- str2lang(paste0("label_lineheight = ", deparse(label_lineheight)))
   cl[["element"]] <- "edges"
   cl <- cl[c(1, match(c("data", "condition", "expr", "element"), names(cl)))]
-  cl[[1L]] <- quote(if_edit)
+  cl[[1L]] <- str2lang("tidySEM:::if_edit")
   eval.parent(cl)
 }

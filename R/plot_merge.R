@@ -1,3 +1,4 @@
+#' @export
 merge.sem_graph <- function(..., nrow = NULL, ncol = NULL, distance_x = 1, distance_y = 1){
   dots <- list(...)
   n <- length(dots)

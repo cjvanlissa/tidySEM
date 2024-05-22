@@ -256,7 +256,7 @@ mx_lca <- function(data = NULL,
   if(length(classes) > 1){
     out <- lapply(classes, function(i){
       cl[["classes"]] <- i
-      cl[[1L]] <- quote(mx_lca)
+      cl[[1L]] <- str2lang("tidySEM::mx_lca")
       eval.parent(cl)
     })
     attr(out, "tidySEM") <- "list"
@@ -319,7 +319,7 @@ mx_mixture.character <- function(model,
   if(length(classes) > 1){
     out <- lapply(classes, function(i){
       cl[["classes"]] <- i
-      cl[[1L]] <- quote(mx_mixture)
+      cl[[1L]] <- str2lang("tidySEM::mx_mixture")
       eval.parent(cl)
     })
     attr(out, "tidySEM") <- "list"

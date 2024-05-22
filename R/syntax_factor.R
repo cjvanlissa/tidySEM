@@ -2,6 +2,7 @@ lgm <- function(y, loadings = 1:length(y), polynomials = 1, ...){
   UseMethod("lgm")
 }
 
+#' @export
 lgm.list <- function(y, loadings = 1:length(y), polynomials = 1, ...){
   cl <- match.call()
   if(!length(y) == 1) stop("Can only make lgm syntax for a scales_list of length 1.")
@@ -12,6 +13,7 @@ lgm.list <- function(y, loadings = 1:length(y), polynomials = 1, ...){
  eval.parent(cl)
 }
 
+#' @export
 lgm.character <- function(y, loadings = 1:length(y), polynomials = 1, lv_name = "", ...){
   lv_prefix <- c("i", "s", "q", "c")
   if(polynomials > 3){

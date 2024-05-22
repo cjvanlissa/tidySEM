@@ -133,6 +133,7 @@ thresh <- function(x, ...){
   UseMethod("thresh", x)
 }
 
+#' @export
 thresh.numeric <- function(x, ...){
   paste0(unlist(lapply(names(x), function(v){
     t <- x[v]

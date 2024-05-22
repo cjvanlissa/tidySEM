@@ -61,7 +61,7 @@ table_fit.mixture_list <- function(x, ...) {
 table_fit.list <- function(x, ...) {
   if(all(sapply(x, inherits, what = "MxModel"))){
     cl <- match.call()
-    cl[[1L]] <- quote(table_fit)
+    cl[[1L]] <- str2lang("tidySEM::table_fit")
     class(x) <- c("mixture_list", class(x))
     cl[["x"]] <- x
     return(eval.parent(cl))

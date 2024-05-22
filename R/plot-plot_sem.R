@@ -23,7 +23,7 @@ filter_graph <- function(x, subset, select, element = "edges", ...){
 }
 
 # @method filter_graph sem_graph
-# @export
+#' @export
 filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
   if(!element %in% names(x)){
     stop("Element ", element, " is not an element of the sem_graph object.", call. = FALSE)
@@ -62,7 +62,7 @@ edit_graph.sem_graph <- function(x, expr, element = c("edges", "nodes"), ...){
   }
   cl <- match.call()
   for(el in element){
-    cl[[1L]] <- quote(edit_graph)
+    cl[[1L]] <- str2lang("tidySEM::edit_graph")
     cl[["x"]] <- x[[el]]
     cl <- cl[c(1, match(c("x", "expr"), names(cl)))]
     x[[el]] <- eval.parent(cl)
@@ -74,7 +74,7 @@ edit_graph.sem_graph <- function(x, expr, element = c("edges", "nodes"), ...){
 #' @export
 edit_nodes <- function(x, expr, ...){
   cl <- match.call()
-  cl[[1L]] <- quote(edit_graph)
+  cl[[1L]] <- str2lang("tidySEM::edit_graph")
   cl[["element"]] <- "nodes"
   eval.parent(cl)
 }
@@ -83,7 +83,7 @@ edit_nodes <- function(x, expr, ...){
 #' @export
 edit_edges <- function(x, expr, ...){
   cl <- match.call()
-  cl[[1L]] <- quote(edit_graph)
+  cl[[1L]] <- str2lang("tidySEM::edit_graph")
   cl[["element"]] <- "edges"
   eval.parent(cl)
 }
@@ -183,7 +183,7 @@ graph_sem.default <- function(edges = NULL,
                               ...){
   cl <- match.call()
 
-  cl[[1L]] <- quote(prepare_graph)
+  cl[[1L]] <- str2lang("tidySEM::prepare_graph")
   prep <- eval.parent(cl)
   plot(prep)
 }
@@ -204,7 +204,7 @@ graph_sem.lavaan <- function(model,
                              nodes = NULL,
                              ...){
   cl <- match.call()
-  cl[[1]] <- quote(prepare_graph)
+  cl[[1]] <- str2lang("tidySEM::prepare_graph")
   prep <- eval.parent(cl)
   return(plot(prep))
 }
@@ -579,7 +579,7 @@ prepare_graph.MxModel <- function(model, ...){
   if(!"nodes" %in% names(cl)) cl[["nodes"]] <- get_nodes(tab)
   if(!"layout" %in% names(cl)) cl[["layout"]] <- get_layout(tab)
   cl[["model"]] <- NULL
-  cl[[1]] <- quote(prepare_graph)
+  cl[[1]] <- str2lang("tidySEM::prepare_graph")
   eval.parent(cl)
 }
 
@@ -827,12 +827,12 @@ get_nodes <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
 #   dots <- list(...)
 #   cl <- match.call()
 #   cl["columns"] <- list(NULL)
-#   cl[[1L]] <- quote(table_results)
+#   cl[[1L]] <- str2lang("tidySEM::table_results")
 #   cl$x <- eval.parent(cl)
 #   if("columns" %in% names(dots)){
 #     cl["columns"] <- dots["columns"]
 #   }
-#   cl[[1L]] <- quote(get_nodes)
+#   cl[[1L]] <- str2lang("tidySEM::get_nodes")
 #   eval.parent(cl)
 # }
 
@@ -845,7 +845,7 @@ get_nodes.lavaan <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   dots <- list(...)
   cl <- match.call()
   cl["columns"] <- list(NULL)
-  cl[[1L]] <- quote(table_results)
+  cl[[1L]] <- str2lang("tidySEM::table_results")
   cl$x <- eval.parent(cl)
   # if(!fit@Options[["meanstructure"]]){
   #   message("Use the argument 'meanstructure = TRUE' in the lavaan call to obtain information about node means.")
@@ -853,7 +853,7 @@ get_nodes.lavaan <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   if("columns" %in% names(dots)){
     cl["columns"] <- dots["columns"]
   }
-  cl[[1L]] <- quote(get_nodes)
+  cl[[1L]] <- str2lang("tidySEM::get_nodes")
   eval.parent(cl)
 }
 
@@ -863,14 +863,14 @@ get_nodes.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...)
   dots <- list(...)
   cl <- match.call()
   cl["columns"] <- list(NULL)
-  cl[[1L]] <- quote(table_results)
+  cl[[1L]] <- str2lang("tidySEM::table_results")
   cl$x <- tryCatch(eval.parent(cl), error = function(e){
     stop("Could not extract nodes from object.")
   })
   if("columns" %in% names(dots)){
     cl["columns"] <- dots["columns"]
   }
-  cl[[1L]] <- quote(get_nodes)
+  cl[[1L]] <- str2lang("tidySEM::get_nodes")
   eval.parent(cl)
 }
 
@@ -1036,7 +1036,7 @@ get_edges.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...)
   dots <- list(...)
   cl <- match.call()
   cl["columns"] <- list(NULL)
-  cl[[1L]] <- quote(table_results)
+  cl[[1L]] <- str2lang("tidySEM::table_results")
   cl$x <- tryCatch(eval.parent(cl), error = function(e){
     stop("Could not extract edges from object.")
   })
@@ -1053,7 +1053,7 @@ get_edges.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...)
 #   dots <- list(...)
 #   cl <- match.call()
 #   cl["columns"] <- list(NULL)
-#   cl[[1L]] <- quote(table_results)
+#   cl[[1L]] <- str2lang("tidySEM::table_results")
 #   cl$x <- eval.parent(cl)
 #   if("columns" %in% names(dots)){
 #     cl["columns"] <- dots["columns"]
@@ -1068,7 +1068,7 @@ get_edges.lavaan <- function(x, label = "est_sig", ...){
   dots <- list(...)
   cl <- match.call()
   #cl[["label"]] <- force(label)
-  cl[[1L]] <- quote(table_results)
+  cl[[1L]] <- str2lang("tidySEM::table_results")
   cl["columns"] <- list(NULL)
   cl$x <- eval.parent(cl)
   if("columns" %in% names(dots)){

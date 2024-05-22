@@ -29,9 +29,9 @@ run_mx <- function(x, ...){
 #' @export
 run_mx.tidy_sem <- function(x, ...){
   cl <- match.call()
-  cl[[1L]] <- quote(as_ram)
+  cl[[1L]] <- str2lang("tidySEM::as_ram")
   cl[["x"]] <- eval.parent(cl)
-  cl[[1L]] <- quote(run_mx)
+  cl[[1L]] <- str2lang("tidySEM::run_mx")
   cl[["data"]] <- x$data
   eval.parent(cl)
 }

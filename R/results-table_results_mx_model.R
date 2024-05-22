@@ -4,7 +4,7 @@ table_results.mixture_list <- function (x, columns = c("label", "est_sig", "se",
 {
   cl <- match.call()
   out <- suppressWarnings(lapply(x, function(thismod){
-    cl[[1L]] <- quote(table_results)
+    cl[[1L]] <- str2lang("tidySEM::table_results")
     cl[["x"]] <- thismod
     tmp <- eval.parent(cl)
     tmp$model <- thismod$name

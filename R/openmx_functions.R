@@ -89,7 +89,7 @@ as_ram.character <- function(x, groups = NULL, data = NULL, ...){
   cl[[1L]] <- str2lang("tidySEM:::tidysem_lavaanify")
   x <- eval.parent(cl)
   cl <- match.call()
-  cl[[1L]] <- quote(as_ram)
+  cl[[1L]] <- str2lang("tidySEM::as_ram")
   cl[["x"]] <- x
   eval.parent(cl)
 }
@@ -98,7 +98,7 @@ as_ram.character <- function(x, groups = NULL, data = NULL, ...){
 #' @export
 as_ram.tidy_sem <- function(x, ...){
   cl <- match.call()
-  cl[[1L]] <- quote(as_ram)
+  cl[[1L]] <- str2lang("tidySEM::as_ram")
   cl[["x"]] <- x$syntax
   if(is.null(cl[["data"]])) cl[["data"]] <- x$data
   gv <- group_var(x)

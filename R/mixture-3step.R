@@ -78,7 +78,7 @@ BCH.MxModel <- function(x, model, data, ...){
 
 bch_continuous <- function(x, y){
   cl <- match.call()
-  cl[[1L]] <- quote(BCH)
+  cl[[1L]] <- str2lang("tidySEM::BCH")
   cl[["y"]] <- NULL
   cl[["model"]] <- "y ~1"
   cl[["data"]] <- data.frame(y = y)
@@ -87,7 +87,7 @@ bch_continuous <- function(x, y){
 
 bch_categorical <- function(x, y){
   cl <- match.call()
-  cl[[1L]] <- quote(BCH)
+  cl[[1L]] <- str2lang("tidySEM::BCH")
   cl[["y"]] <- NULL
   cats <- length(levels(y))
   mod <- paste0("y |t", 1:(cats-1), collapse = "\n")

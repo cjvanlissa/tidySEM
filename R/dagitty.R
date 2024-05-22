@@ -97,7 +97,7 @@ prepare_graph.dagitty <- function(model,
   cl[["rect_height"]] <- rect_height
   cl[["rect_width"]] <- rect_width
   cl[["model"]] <- NULL
-  cl[[1]] <- quote(prepare_graph)
+  cl[[1]] <- str2lang("tidySEM::prepare_graph")
   eval.parent(cl)
 }
 
@@ -107,7 +107,7 @@ prepare_graph.dagitty <- function(model,
 graph_sem.dagitty <- function(model,
                               ...){
   cl <- match.call()
-  cl[[1L]] <- quote(prepare_graph)
+  cl[[1L]] <- str2lang("tidySEM::prepare_graph")
   out <- eval.parent(cl)
   return(plot(out))
 }

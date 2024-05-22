@@ -179,6 +179,7 @@ spearman_brown <- function(x, y = NULL, ...){
   UseMethod("spearman_brown", x)
 }
 
+#' @export
 spearman_brown.data.frame <- function(x, y = NULL, ...){
   if(ncol(x) > 2) stop("Spearman Brown is only appropriate as a reliability estimate for two-item scales.")
   cl <- as.list(match.call()[-1])

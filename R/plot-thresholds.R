@@ -32,7 +32,7 @@ plot_prob <- function(x, variables = NULL, bars = c("Variable", "group", "class"
 plot_prob.MxModel <- function(x, variables = NULL, bars = c("Variable", "group", "class"), facet = c("group", "class", "Variable"), bw = FALSE, ...){
     cl <- match.call()
     cl[["x"]] <- table_prob(x)
-    cl[[1]] <- quote(plot_prob)
+    cl[[1]] <- str2lang("tidySEM::plot_prob")
     eval.parent(cl)
 }
 

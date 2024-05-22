@@ -278,14 +278,14 @@ get_layout.default <- function(x, ..., rows = NULL){
       dots <- list(...)
       cl <- match.call()
       cl["columns"] <- list(NULL)
-      cl[[1L]] <- quote(table_results)
+      cl[[1L]] <- str2lang("tidySEM::table_results")
       cl$x <- tryCatch(eval.parent(cl), error = function(e){
         stop("Could not create layout for object.")
       })
       if("columns" %in% names(dots)){
         cl["columns"] <- dots["columns"]
       }
-      cl[[1L]] <- quote(get_layout)
+      cl[[1L]] <- str2lang("tidySEM::get_layout")
       return(eval.parent(cl))
     }
   }

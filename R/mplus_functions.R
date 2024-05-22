@@ -3,6 +3,7 @@ drop_mplusObject <- function(x){
   UseMethod("drop_mplusObject", x)
 }
 
+#' @export
 drop_mplusObject.mplusObject <- function(x){
   x$results
 }
@@ -46,10 +47,11 @@ get_loadings <- function(x, std = "stdyx.standardized"){
   UseMethod("get_loadings", x)
 }
 
+#' @export
 get_loadings.mplusObject <- function(x, std = "stdyx.standardized"){
   get_loadings(drop_mplusObject(x))
 }
-
+#' @export
 get_loadings.mplus.model <- function(x, std = "stdyx.standardized"){
   x$parameters[[std]][grepl("\\.BY", x$parameters[[std]]$paramHeader), ]
 }

@@ -93,7 +93,7 @@ pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
 
 }
 
-
+#' @export
 pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
   if ( ! requireNamespace("mice", quietly = TRUE) ) {
     stop("Cannot pool fit objects, because package 'mice' is not installed")
@@ -102,7 +102,7 @@ pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
   summary(mice::pool(object = fits, dfcom = df_complete, ...))
 }
 
-
+#' @export
 pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...) {
 
   modelType <- imxTypeName(fits[[1]])
@@ -169,7 +169,7 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
   do_pool(parameters, parameter_names, df_complete)
 }
 
-
+#' @export
 pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, ...) {
 
   example_fit <- fits[[1]]
@@ -399,7 +399,7 @@ pseudo_class.MxModel <- function(x, model, df_complete = NULL, data = NULL, m = 
     stop("Function 'pseudo_class()' requires a 'data' argument when called on a 'mx_mixture' model.")
   }
   cl <- match.call()
-  cl[[1]] <- quote(pseudo_class)
+  cl[[1]] <- str2lang("tidySEM::pseudo_class")
   cl[["x"]] <- data
   cl <- cl[c(1, which(names(cl) %in% c("x", "model", "df_complete")))]
   eval.parent(cl)

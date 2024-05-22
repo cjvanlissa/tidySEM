@@ -39,6 +39,7 @@ get_cordat <- function(x){
   UseMethod("get_cordat", x)
 }
 
+#' @export
 get_cordat.MxModel <- function(x){
   classes <- names(x@submodels)
   df_cors <- do.call(rbind, lapply(classes, function(c){

@@ -16,7 +16,7 @@ mplus_data <- function(x, ...){
 }
 
 # @method mplus_data mplusObject
-# @export
+#' @export
 mplus_data.mplusObject <- function(x, ...){
   Args <- as.list(match.call()[-1])
   Args$x <- x$results

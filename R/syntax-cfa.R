@@ -54,6 +54,7 @@ syntax_measurement <- function(x, ...){
   UseMethod("syntax_measurement", x)
 }
 
+#' @export
 syntax_measurement.tidy_sem <- function(x, ...){
   if(!has_dictionary(x)) stop("Dictionary required to create measurement model syntax.", call. = FALSE)
   variables <- unique(c(NA, x$dictionary$scale))[-1]
@@ -165,6 +166,7 @@ group_var <- function(x, value = "name", ...){
   UseMethod("group_var", x)
 }
 
+#' @export
 group_var.tidy_sem <- function(x, value = "name", ...){
   groupvar <- x$dictionary$name[which(x$dictionary$type == "group")]
   if(length(groupvar) == 0) return(NULL)
@@ -186,6 +188,7 @@ group_var.tidy_sem <- function(x, value = "name", ...){
   UseMethod("group_var<-", x)
 }
 
+#' @export
 `group_var<-.tidy_sem` <- function(x, value = NULL){
   if(is.null(value)){
     x$dictionary[["type"]][which(x$dictionary[["type"]] == "group")] <- "observed"
