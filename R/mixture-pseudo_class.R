@@ -331,35 +331,35 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'
 #' pct_mx <- pseudo_class(x = fit,
 #'                        model = "SL ~ class",
-#'                        data = dat)
+#'                        data = dat,
+#'                        m = 2)
 #'
 #' pct_lm <- pseudo_class(x = fit,
 #'              model = lm( SL ~ class, data = data),
-#'              data = dat)
+#'              data = dat,
+#'              m = 2)
 #'
 #'
 #' pcte <- pseudo_class(x = fit,
 #'                      model = lm(SL ~ class, data = data),
 #'                      data = dat,
-#'                      m = 10)
+#'                      m = 2)
 #'
 #' pct_func <- pseudo_class(x = fit,
 #'                          model = function(data){lm(SL ~ class, data = data)},
 #'                          data = dat,
-#'                          m = 10)
+#'                          m = 2)
 #'
 #'
 # pseudo_class(x = fit,
 #              model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
 #'
-#'
-#'
 #' @references
 #' Pseudo-class technique:
-#'   Wang C-P, Brown CH, Bandeen-Roche K (2005). Residual Diagnostics for Growth
-#'   Mixture Models: Examining the Impact of a Preventive Intervention on
-#'   Multiple Trajectories of Aggressive Behavior. Journal of the American
-#'   Statistical Association 100(3):1054-1076. \doi{10.1198/016214505000000501}
+#' Wang C-P, Brown CH, Bandeen-Roche K (2005). Residual Diagnostics for Growth
+#' Mixture Models: Examining the Impact of a Preventive Intervention on
+#' Multiple Trajectories of Aggressive Behavior. Journal of the American
+#' Statistical Association 100(3):1054-1076. \doi{10.1198/016214505000000501}
 #'
 #' Pooling results across samples:
 #' Van Buuren, S. 2018. Flexible Imputation of Missing Data. Second Edition.
