@@ -348,6 +348,7 @@ prepare_graph.default <- function(edges = NULL,
                                   fix_coord = FALSE,
                                   ...
 ){
+  #browser()
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_graph.default)
   for ( v in names(myfor)){
@@ -532,24 +533,47 @@ prepare_graph.default <- function(edges = NULL,
 #' @rdname prepare_graph
 #' @export
 prepare_graph.lavaan <- function(model,
-                                 edges = get_edges(x = model),
-                                 layout = get_layout(x = model),
-                                 nodes = get_nodes(x = model),
+                                 edges = NULL,
+                                 layout = NULL,
+                                 nodes = NULL,
                                  ...){
+  #browser()
+
   dots <- match.call(expand.dots = FALSE)[["..."]]
+
   pass_args <- c("label", "digits", "columns")
-  edges <- substitute(edges)
-  layout <- substitute(layout)
-  nodes <- substitute(nodes)
-  if(any(pass_args %in% names(dots))){
-    for(this_arg in pass_args){
-      if(do.call(hasArg, list(this_arg))){
-        if(is.null(edges[[this_arg]])) edges[[this_arg]] <- dots[[this_arg]]
-        if(is.null(nodes[[this_arg]])) nodes[[this_arg]] <- dots[[this_arg]]
-        dots[[this_arg]] <- NULL
-      }
-    }
+
+  if(is.null(edges)){
+    edges <- do.call(call, args = c(list(
+      name = "get_edges",
+      x = model
+    ), dots[names(dots) %in% pass_args]), quote = TRUE)
   }
+  if(is.null(nodes)){
+    nodes <- do.call(call, args = c(list(
+      name = "get_nodes",
+      x = model
+    ), dots[names(dots) %in% pass_args]), quote = TRUE)
+  }
+  if(is.null(layout)){
+    layout <- do.call(call, args = c(list(
+      name = "get_layout",
+      x = model
+    ), dots[names(dots) %in% pass_args]), quote = TRUE)
+  }
+
+  # if(any(pass_args %in% names(dots))){
+  #   for(this_arg in pass_args[pass_args %in% names(dots)]){
+  #     if(do.call(hasArg, list(this_arg))){
+  #       if(is.null(edges[[this_arg]])) edges[this_arg] <- dots[this_arg]
+  #       if(is.null(nodes[[this_arg]])) nodes[this_arg] <- dots[this_arg]
+  #       dots[[this_arg]] <- NULL
+  #     }
+  #   }
+  # }
+  # if(is.null(layout)) layout <- quote(get_layout(model))
+  # if(is.null(nodes)) nodes <- quote(get_nodes(model))
+
   Args <- as.list(match.call(expand.dots = FALSE)[-1])
   model <- model
   Args[["..."]] <- NULL
@@ -559,11 +583,11 @@ prepare_graph.lavaan <- function(model,
   # They are available in the parent environment, but `model` is not.
   # Maybe make new environment and add model to it?
   # It's a hack, but seems to pass all tests.
-  use_env <- parent.frame()
-  assign("model", model, envir = use_env)
-  Args[["edges"]] <-  eval(edges, envir = use_env)
-  Args[["nodes"]] <-  eval(nodes, envir = use_env)
-  Args[["layout"]] <- eval(layout, envir = use_env)
+  # use_env <- parent.frame()
+  # assign("model", model, envir = use_env)
+  Args[["edges"]] <-  eval(edges)#, envir = use_env)
+  Args[["nodes"]] <-  eval(nodes)#, envir = use_env)
+  Args[["layout"]] <- eval(layout)#, envir = use_env)
   Args <- c(Args, dots)
 
   do.call(prepare_graph_model, Args)

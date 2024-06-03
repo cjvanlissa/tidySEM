@@ -48,24 +48,24 @@ fit <- suppressWarnings(mx_profiles(data = dat, classes = 3))
 
 pct_mx <- pseudo_class(x = fit,
                        model = "SL ~ class",
-                       data = dat)
+                       data = dat,
+                       m = 2)
 
 pct_lm <- pseudo_class(x = fit,
              model = lm( SL ~ class, data = data),
-             data = dat)
+             data = dat,
+             m = 2)
 
 
 pcte <- pseudo_class(x = fit,
                      model = lm(SL ~ class, data = data),
                      data = dat,
-                     m = 10)
+                     m = 2)
 
 pct_func <- pseudo_class(x = fit,
                          model = function(data){lm(SL ~ class, data = data)},
                          data = dat,
-                         m = 10)
-
-
+                         m = 2)
 
 
 

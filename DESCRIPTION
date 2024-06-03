@@ -36,7 +36,7 @@ Imports:
     lavaan,
     blavaan,
     MplusAutomation,
-    igraph,
+    igraph (>= 2.0.0),
     psych,
     methods,
     gtable,
@@ -47,7 +47,7 @@ Imports:
     car,
     future.apply,
     progressr,
-    nonnest2 (>= 0.5.6),
+    nonnest2 (>= 0.5.6)
 Suggests: 
     testthat,
     knitr,
@@ -64,7 +64,8 @@ Suggests:
     yaml,
     formatR,
     dagitty,
-    mice
+    mice,
+    ggraph
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

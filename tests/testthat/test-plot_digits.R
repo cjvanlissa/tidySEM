@@ -7,9 +7,9 @@ p <- prepare_graph(fit, digits = 5)
 
 fit <- sem("mpg ~ am", data = mtcars, meanstructure = TRUE)
 
-prepare_graph(fit, digits = 5) %>%
-  color_sig("green") %>%
-  label_color_sig("green") %>%
+prepare_graph(fit, digits = 5) |>
+  color_sig("green") |>
+  label_color_sig("green") |>
   plot()
 
 

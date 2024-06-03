@@ -33,33 +33,15 @@ prepare_graph(...)
   ...
 )
 
-\method{prepare_graph}{lavaan}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{prepare_graph}{lavaan}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
 \method{prepare_graph}{MxModel}(model, ...)
 
 \method{prepare_graph}{character}(...)
 
-\method{prepare_graph}{mplus.model}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{prepare_graph}{mplus.model}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
-\method{prepare_graph}{mplusObject}(
-  model,
-  edges = get_edges(x = model),
-  layout = get_layout(x = model),
-  nodes = get_nodes(x = model),
-  ...
-)
+\method{prepare_graph}{mplusObject}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 }
 \arguments{
 \item{model}{Instead of the edges argument, it is also possible to use the
