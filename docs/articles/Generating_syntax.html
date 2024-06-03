@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generating syntax for structural equation models • tidySEM</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.7</span>
       </span>
     </div>
 
@@ -257,7 +257,7 @@ using lavaan:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.6.15 ended normally after 35 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.6.17 ended normally after 35 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -385,21 +385,28 @@ mention of the “spe” latent variable:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/syntax.html">syntax</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>lhs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">lhs</span> <span class="op">==</span> <span class="st">"spe"</span> <span class="op">&amp;</span> <span class="va">op</span> <span class="op">==</span> <span class="st">"=~"</span>, <span class="st">"tex"</span>, <span class="va">lhs</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">lhs</span> <span class="op">==</span> <span class="st">"spe"</span> <span class="op">|</span> <span class="va">rhs</span> <span class="op">==</span> <span class="st">"spe"</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="fu"><a href="../reference/syntax.html">syntax</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
-<p>The modified model could then be run:</p>
+<p>Remember that both of the original latent variables were identified
+by fixing one indicator to be equal to 1, so we have to free up one of
+them:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/syntax.html">syntax</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">rhs</span> <span class="op">==</span> <span class="st">"spe_1"</span>, <span class="fl">1</span>, <span class="va">free</span><span class="op">)</span>,</span>
+<span>  ustart <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">rhs</span> <span class="op">==</span> <span class="st">"spe_1"</span>, <span class="cn">NA</span>, <span class="va">ustart</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="fu"><a href="../reference/syntax.html">syntax</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<p>The modified model could then be run:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lavaan 0.6.15 ended normally after 28 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6.17 ended normally after 28 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
-<span><span class="co">#&gt;   Number of model parameters                        27</span></span>
+<span><span class="co">#&gt;   Number of model parameters                        28</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           301</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
-<span><span class="co">#&gt;   Test statistic                               330.994</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                27</span></span>
+<span><span class="co">#&gt;   Test statistic                               236.091</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -410,23 +417,23 @@ model syntax described in Step 6, it is also possible to add (or modify)
 paths by adding <code>lavaan</code> syntax. For example, imagine that -
 instead of having “vis” and “tex” correlate, we want to add a regression
 path between them:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>estimates <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.6.15 ended normally after 27 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.6.17 ended normally after 25 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
-<span><span class="co">#&gt;   Number of model parameters                        27</span></span>
+<span><span class="co">#&gt;   Number of model parameters                        28</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           301</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
-<span><span class="co">#&gt;   Test statistic                               330.994</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                27</span></span>
+<span><span class="co">#&gt;   Test statistic                               236.091</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Parameter Estimates:</span></span>
@@ -439,30 +446,30 @@ path between them:</p>
 <span><span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span></span>
 <span><span class="co">#&gt;   vis =~                                              </span></span>
 <span><span class="co">#&gt;     vis_1             1.000                           </span></span>
-<span><span class="co">#&gt;     vis_2             0.558    0.104    5.361    0.000</span></span>
-<span><span class="co">#&gt;     vis_3             0.711    0.116    6.143    0.000</span></span>
+<span><span class="co">#&gt;     vis_2             0.551    0.103    5.335    0.000</span></span>
+<span><span class="co">#&gt;     vis_3             0.700    0.115    6.110    0.000</span></span>
 <span><span class="co">#&gt;   tex =~                                              </span></span>
 <span><span class="co">#&gt;     tex_1             1.000                           </span></span>
-<span><span class="co">#&gt;     tex_2             1.448    0.099   14.657    0.000</span></span>
-<span><span class="co">#&gt;     tex_3             1.234    0.084   14.696    0.000</span></span>
-<span><span class="co">#&gt;     spe_1             1.000                           </span></span>
-<span><span class="co">#&gt;     spe_2             0.319    0.083    3.860    0.000</span></span>
-<span><span class="co">#&gt;     spe_3             0.437    0.082    5.326    0.000</span></span>
+<span><span class="co">#&gt;     tex_2             1.109    0.066   16.892    0.000</span></span>
+<span><span class="co">#&gt;     tex_3             0.927    0.056   16.636    0.000</span></span>
+<span><span class="co">#&gt;     spe_1             0.198    0.067    2.969    0.003</span></span>
+<span><span class="co">#&gt;     spe_2             0.198    0.062    3.192    0.001</span></span>
+<span><span class="co">#&gt;     spe_3             0.299    0.061    4.907    0.000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span></span>
 <span><span class="co">#&gt;   vis ~                                               </span></span>
-<span><span class="co">#&gt;     tex               0.591    0.092    6.408    0.000</span></span>
+<span><span class="co">#&gt;     tex               0.447    0.068    6.569    0.000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Intercepts:</span></span>
 <span><span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span></span>
 <span><span class="co">#&gt;    .vis_1             4.936    0.067   73.473    0.000</span></span>
 <span><span class="co">#&gt;    .vis_2             6.088    0.068   89.855    0.000</span></span>
 <span><span class="co">#&gt;    .vis_3             2.250    0.065   34.579    0.000</span></span>
-<span><span class="co">#&gt;    .tex_1             3.061    0.060   51.280    0.000</span></span>
+<span><span class="co">#&gt;    .tex_1             3.061    0.067   45.694    0.000</span></span>
 <span><span class="co">#&gt;    .tex_2             4.341    0.074   58.452    0.000</span></span>
 <span><span class="co">#&gt;    .tex_3             2.186    0.063   34.667    0.000</span></span>
-<span><span class="co">#&gt;    .spe_1             4.186    0.080   52.359    0.000</span></span>
+<span><span class="co">#&gt;    .spe_1             4.186    0.063   66.766    0.000</span></span>
 <span><span class="co">#&gt;    .spe_2             5.527    0.058   94.854    0.000</span></span>
 <span><span class="co">#&gt;    .spe_3             5.374    0.058   92.546    0.000</span></span>
 <span><span class="co">#&gt;    .vis               0.000                           </span></span>
@@ -470,39 +477,37 @@ path between them:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|)</span></span>
-<span><span class="co">#&gt;    .vis_1             0.538    0.126    4.280    0.000</span></span>
-<span><span class="co">#&gt;    .vis_2             1.127    0.102   11.006    0.000</span></span>
-<span><span class="co">#&gt;    .vis_3             0.860    0.094    9.151    0.000</span></span>
-<span><span class="co">#&gt;    .tex_1             0.512    0.050   10.281    0.000</span></span>
-<span><span class="co">#&gt;    .tex_2             0.485    0.065    7.447    0.000</span></span>
-<span><span class="co">#&gt;    .tex_3             0.343    0.047    7.335    0.000</span></span>
-<span><span class="co">#&gt;    .spe_1             1.364    0.118   11.587    0.000</span></span>
-<span><span class="co">#&gt;    .spe_2             0.965    0.079   12.160    0.000</span></span>
-<span><span class="co">#&gt;    .spe_3             0.908    0.075   12.055    0.000</span></span>
-<span><span class="co">#&gt;    .vis               0.625    0.134    4.673    0.000</span></span>
-<span><span class="co">#&gt;     tex               0.560    0.073    7.638    0.000</span></span></code></pre>
+<span><span class="co">#&gt;    .vis_1             0.526    0.127    4.136    0.000</span></span>
+<span><span class="co">#&gt;    .vis_2             1.129    0.102   11.030    0.000</span></span>
+<span><span class="co">#&gt;    .vis_3             0.867    0.094    9.237    0.000</span></span>
+<span><span class="co">#&gt;    .tex_1             0.376    0.048    7.885    0.000</span></span>
+<span><span class="co">#&gt;    .tex_2             0.461    0.059    7.871    0.000</span></span>
+<span><span class="co">#&gt;    .tex_3             0.358    0.043    8.334    0.000</span></span>
+<span><span class="co">#&gt;    .spe_1             1.145    0.094   12.216    0.000</span></span>
+<span><span class="co">#&gt;    .spe_2             0.984    0.081   12.207    0.000</span></span>
+<span><span class="co">#&gt;    .spe_3             0.928    0.077   12.121    0.000</span></span>
+<span><span class="co">#&gt;    .vis               0.638    0.136    4.692    0.000</span></span>
+<span><span class="co">#&gt;     tex               0.975    0.112    8.714    0.000</span></span></code></pre>
 <p>This function accepts both quoted (character) and unquoted arguments.
 So, for example, if we want to add a cross-loading from “spe_1” on
 “vis”, in addition to the regression path before, we could use the
 following code:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span>, vis <span class="op">=</span><span class="op">~</span> <span class="va">spe_1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov</span></span>
-<span><span class="co">#&gt; variances are negative</span></span>
-<span><span class="co">#&gt; lavaan 0.6.15 ended normally after 64 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.6.17 ended normally after 31 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
-<span><span class="co">#&gt;   Number of model parameters                        27</span></span>
+<span><span class="co">#&gt;   Number of model parameters                        28</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           301</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
-<span><span class="co">#&gt;   Test statistic                               407.730</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                27</span></span>
+<span><span class="co">#&gt;   Test statistic                               288.451</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span></code></pre>
 </div>
 </div>
@@ -525,7 +530,7 @@ following code:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

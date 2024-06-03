@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plotting graphs for structural equation models • tidySEM</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidySEM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.7</span>
       </span>
     </div>
 
@@ -1153,6 +1153,45 @@ use:</p>
 <span>  <span class="fu"><a href="../reference/if_edit.html">if_edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"4"</span>, <span class="va">est</span><span class="op">)</span>, <span class="op">{</span><span class="va">color</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pgfig10.png" width="300px"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="math-notation-in-graphs">Math Notation in Graphs<a class="anchor" aria-label="anchor" href="#math-notation-in-graphs"></a>
+</h2>
+<p>Since the objects created by <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> and
+<code><a href="../reference/graph_sem.html">graph_sem()</a></code> are <code>ggplot</code> objects, we can use the
+full functionality of <code>ggplot</code> to customize them. The
+following example, based on code provided by GitHub user
+<code>dumaskvn</code>, showcases how <code>plotmath</code> labels can be
+displayed (see <code><a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">?plotmath</a></code>). There are several ways to do
+this; this is just one example.</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<span><span class="st">  Sepal.Length ~ Sepal.Width + Petal.Length</span></span>
+<span><span class="st">  Sepal.Width ~ Petal.Length</span></span>
+<span><span class="st">"</span></span>
+<span><span class="co"># fit model</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
+<span><span class="co"># specify layout for consistency</span></span>
+<span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"Sepal.Width"</span>, <span class="st">""</span>,</span>
+<span>                     <span class="st">"Petal.Length"</span>, <span class="st">""</span>, <span class="st">"Sepal.Length"</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co"># get data from prepare_graph</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span>, layout <span class="op">=</span> <span class="va">layout</span>, angle <span class="op">=</span> <span class="fl">180</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># standard graph</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Duplicate node data.frame</span></span>
+<span><span class="va">df_nodes</span> <span class="op">&lt;-</span> <span class="va">p</span><span class="op">$</span><span class="va">nodes</span></span>
+<span><span class="co"># Add mathematical notation to node label</span></span>
+<span><span class="va">df_nodes</span><span class="op">$</span><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"atop("</span>, <span class="va">p</span><span class="op">$</span><span class="va">nodes</span><span class="op">$</span><span class="va">label</span>, <span class="st">", "</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha-div"</span>, <span class="co"># Add a Greek letter</span></span>
+<span>                                                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"R^2 =="</span>, <span class="fu"><a href="https://rdrr.io/r/base/formatc.html" class="external-link">formatC</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/lavInspect.html" class="external-link">inspect</a></span><span class="op">(</span><span class="va">fit</span>, <span class="st">"r2"</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">2</span>, format <span class="op">=</span> <span class="st">"f"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span>  <span class="co"># Add R2 to node labels</span></span>
+<span><span class="co"># Set original labels to blank</span></span>
+<span><span class="va">p</span><span class="op">$</span><span class="va">nodes</span><span class="op">$</span><span class="va">label</span> <span class="op">&lt;-</span> <span class="st">""</span> </span>
+<span></span>
+<span><span class="co"># Plot, treat as ggplot object and add parsed node labels</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_nodes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>, y<span class="op">=</span><span class="va">y</span>, label<span class="op">=</span><span class="va">label</span><span class="op">)</span>, parse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pgfig11.png" width="300px"></p>
 <!--As explained before, the functions `get_edges()` and `get_nodes()`,
 which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
 have an argument `columns` which adds auxiliary columns to the resulting data.frames.
@@ -1191,7 +1230,6 @@ knitr::include_graphics("pgfig8.png")
 ```
 -->
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -1211,7 +1249,7 @@ knitr::include_graphics("pgfig8.png")
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

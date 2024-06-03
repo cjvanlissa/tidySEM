@@ -73,6 +73,9 @@
     <loc>/reference/all_fun.html</loc>
   </url>
   <url>
+    <loc>/reference/append_class_draws.html</loc>
+  </url>
+  <url>
     <loc>/reference/as.lavaan.html</loc>
   </url>
   <url>
@@ -263,6 +266,9 @@
   </url>
   <url>
     <loc>/reference/prepare_graph.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pseudo_class.html</loc>
   </url>
   <url>
     <loc>/reference/rbind_tables.html</loc>
