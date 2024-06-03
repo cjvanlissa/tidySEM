@@ -1,5 +1,7 @@
 # tidySEM 0.2.7
 
+* Stop calling tidySEM functions as default arguments of prepare_graph.lavaan().
+  This ensures that tidySEM works when its namespace is not attached.
 * Frank Gootjes contributed pseudo class functionality, new functions are
   append_class_draws() and pseudo_class()
 
@@ -10,12 +12,13 @@
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (devel)
+* GitHub Actions (r-lib): ubuntu-20.04 (oldrel-1)
 * win-builder: release
 * win-builder: oldrelease
 * win-builder: development
-* Rhub Fedora Linux, R-devel, clang, gfortran
-* Rhub Ubuntu Linux 20.04.1 LTS, R-release, GCC
-* Windows Server 2022, R-devel, 64 bit
+* Rhub 14 [CT] gcc14          R-devel (2024-06-02 r86665)
+* Rhub 20 [CT] ubuntu-clang   R-devel (2024-06-02 r86665)
+* Rhub 21 [CT] ubuntu-gcc12   R-devel (2024-06-02 r86665)
 
 ## R CMD check results
 
