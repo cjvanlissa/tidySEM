@@ -81,11 +81,11 @@ pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
     fits <- list(fits)
   }
 
-  cls <- sapply(fits, function(x) head(class(x)))
+  cls <- sapply(fits, function(x) class(x)[1])
 
-  cl <- unique(cls)
+  cls <- unique(cls)
 
-  if ( length(cl) > 1 ) {
+  if ( length(cls) > 1 ) {
     stop(paste0("'fits' consists of objects with different classes: ", paste(cl, collapse = ', ')))
   }
 
