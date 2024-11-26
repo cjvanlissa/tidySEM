@@ -297,10 +297,6 @@ merge_corplots <- function(plots, ...) {
         plot2_grobs$grobs[[which(sapply(plot2_grobs$grobs, `[[`, "name") == "guide-box")]]
       width_grob <- grobWidth(plot2_grobs$grobs[[grep("^axis.title.y.left", sapply(plot2_grobs$grobs, `[[`, "name"))]])
 
-      # axes <- lapply(plots[1:n_vars], function(x){
-      #     tmp <- ggplot_gtable(ggplot_build(x))
-      #     tmp$grobs[[grep("^axis.title.y.left", sapply(tmp$grobs, `[[`, "name"))]]
-      #     })
 
       model_mat <- matrix(1L:(n_vars * n_vars), nrow = n_vars)
       model_mat[upper.tri(model_mat)] <- NA
@@ -362,17 +358,12 @@ merge_corplots <- function(plots, ...) {
           plots[[x]]$widths[4] <- plots[[x]]$widths[4]+width_grob
         }
         plots[[x]]$heights <- fixed_heights
-        if(!x %in% model_mat[nrow(model_mat), ]){
-          plots[[x]]$heights[c(1,9)] <- unit(0, "cm")
-          plots[[x]]$heights[8] <- plots[[x]]$heights[8]+width_grob
-        }
+        #Hier gaat iets mis. Ik weet niet waarom dit er oorspronkelijk stond..
+        # if(!x %in% model_mat[nrow(model_mat), ]){
+        #  plots[[x]]$heights[c(1)] <- unit(0, "cm")
+        #  plots[[x]]$heights[8] <- plots[[x]]$heights[8]+width_grob
+        # }
       }
-      #plots[-c(1:n_vars)] <- lapply(plots[-c(1:n_vars)], function(x) {
-
-
-      #x$heights <- fixed_heights
-      #    x
-      #})
 
       plots[[((n_vars - 1) * n_vars) + 1]] <- grob_legend
 
