@@ -80,11 +80,11 @@ blrt_internal <-
           mod_simple <-
             mxRun(mod_simple,
                   silent = TRUE,
-                  suppressWarnings = TRUE)
+                  suppressWarnings = FALSE)
           mod_complex <-
             mxRun(mod_complex,
                   silent = TRUE,
-                  suppressWarnings = TRUE)
+                  suppressWarnings = FALSE)
           c(
             mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood,
             mod_simple@output$status$code + mod_complex@output$status$code
@@ -96,7 +96,8 @@ blrt_internal <-
     )})
     bootres <- do.call(rbind, bootres)
     isvalid <- bootres[, 2] == 0
-    lrdist <- bootres[isvalid, 1]
+    # lrdist <- bootres[isvalid, 1]
+    lrdist <- bootres[, 1, drop = FALSE]
     out <- data.frame(
       lr = lrtest,
       df = length(omxGetParameters(mod_complex)) - length(omxGetParameters(mod_simple)),
