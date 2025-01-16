@@ -10,7 +10,8 @@ add_paths(model, ...)
 \item{model}{An object of class \code{tidy_sem}.}
 
 \item{...}{Paths to add or substitute, specified in
-\code{\link{lavaan}{model.syntax}}, and separated by commas.}
+\code{\link[lavaan:model.syntax]{lavaan::model.syntax}},
+and separated by commas.}
 }
 \value{
 An object of class \code{tidy_sem}.
@@ -18,20 +19,23 @@ An object of class \code{tidy_sem}.
 \description{
 Add paths to an object of class \code{tidy_sem}, or replace
 existing paths. The paths must be specified as
-\code{\link[lavaan]{model.syntax}}, and separated by commas.
+\code{\link[lavaan:model.syntax]{lavaan::model.syntax}}, and separated by commas.
 }
 \details{
-Currently, only the \code{\link{lavaan}{lavaan}} commands \code{~,
+Currently, only the
+\code{\link[lavaan:lavaan]{lavaan::lavaan()}}
+commands \code{~,
 ~~, =~,} and \code{~1} are parsed.
 
-This function
-relies on \code{lavaan \link[lavaan]{model.syntax}} to convert syntax strings
+This function relies on
+\code{\link[lavaan:model.syntax]{lavaan::model.syntax}}
+to convert syntax strings
 to \code{lavaan} parameter tables. By default, is uses the arguments
 \code{int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
 auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
 auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE,
 meanstructure = TRUE}, in a similar way
-to \code{\link[lavaan]{sem}} and \code{\link[lavaan]{cfa}}.
+to \code{\link[lavaan:sem]{lavaan::sem()}} and \code{\link[lavaan:cfa]{lavaan::cfa()}}.
 }
 \examples{
 library(lavaan)
@@ -44,5 +48,5 @@ res <- estimate_lavaan(model)
 summary(res)
 }
 \seealso{
-\code{\link[lavaan]{model.syntax}}
+\code{\link[lavaan:model.syntax]{lavaan::model.syntax}}
 }

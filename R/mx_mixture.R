@@ -27,7 +27,7 @@
 #'   \item A list of \code{mxModel} objects, specified by the user.
 #' }
 #'
-#' @return Returns an \code{\link[OpenMx]{mxModel}}.
+#' @return Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 #' @export
 #' @keywords mixture models openmx
 #' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
@@ -88,7 +88,7 @@ mx_mixture <- function(model,
 #' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
 #' @param expand_grid Logical, whether or not to estimate all possible combinations of the `variances` and `covariances` arguments. Defaults to `FALSE`.
 #' @param ... Additional arguments, passed to functions.
-#' @return Returns an \code{\link[OpenMx]{mxModel}}.
+#' @return Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 #' @export
 #' @keywords mixture models openmx
 #' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
@@ -160,7 +160,7 @@ mx_profiles <- function(data = NULL,
 #' Estimate growth mixture models using OpenMx
 #'
 #' This function is a wrapper around \code{\link{mx_mixture}}, adding the
-#' default arguments of \code{\link[lavaan]{growth}} to simplify the
+#' default arguments of \code{\link[lavaan:growth]{lavaan::growth()}} to simplify the
 #' specification of growth mixture models. This function is only
 #' useful if all the latent variables in the model are growth factors.
 #' @param model Syntax for the model; either a character string, or a list of
@@ -172,7 +172,7 @@ mx_profiles <- function(data = NULL,
 #' @param run Logical, whether or not to run the model. If \code{run = TRUE},
 #' the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.
 #' @param ... Additional arguments, passed to functions.
-#' @return Returns an \code{\link[OpenMx]{mxModel}}.
+#' @return Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 #' @export
 #' @keywords mixture models openmx
 #' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
@@ -224,9 +224,9 @@ mx_growth_mixture <- function(model,
 #' @param classes A vector of integers, indicating which class solutions to
 #' generate. Defaults to 1L. E.g., \code{classes = 1:6},
 #' @param run Logical, whether or not to run the model. If \code{run = TRUE},
-#' the function calls \code{\link[OpenMx]{mxTryHardOrdinal}}.
+#' the function calls \code{\link[OpenMx:mxTryHardOrdinal]{OpenMx::mxTryHardOrdinal()}}.
 #' @param ... Additional arguments, passed to functions.
-#' @return Returns an \code{\link[OpenMx]{mxModel}}.
+#' @return Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 #' @export
 #' @keywords mixture models openmx
 #' @references Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
@@ -449,7 +449,7 @@ as_mx_mixture <- function(model,
 #' \code{mxModel}s.
 #' @param model A mixture model of class \code{mxModel}.
 #' @param splits Optional. A numeric vector of length equal to the number of
-#' rows in the \code{\link{mxData}} used in the \code{model} object. The data
+#' rows in the \code{\link[OpenMx:mxData]{OpenMx::mxData()}} used in the \code{model} object. The data
 #' will be split by this vector. See Details for the default setting and
 #' possible alternatives.
 #' @param ... Additional arguments, passed to functions.
@@ -466,7 +466,7 @@ as_mx_mixture <- function(model,
 #' }
 #'
 #' If the argument \code{splits} is not provided, the function will call
-#' \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster},
+#' \code{stats::kmeans(x = data, centers = classes)$cluster},
 #' where \code{data} is extracted from the \code{model} argument.
 #'
 #' Sensible ways to split the data include:
@@ -474,14 +474,14 @@ as_mx_mixture <- function(model,
 #'   \item Using Hierarchical clustering:
 #'    \code{cutree(hclust(dist(data)), k = classes))}
 #'   \item Using K-means clustering:
-#'   \code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
+#'   \code{stats::kmeans(x = data, centers = classes)$cluster}
 #'   \item Using agglomerative hierarchical clustering:
-#'   \code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
+#'   \code{mclust::hclass(data = data), G = classes)[, 1]}
 #'   \item Using a random split:
-#'   \code{\link{sample.int}}\code{(n = classes,
+#'   \code{sample.int(n = classes,
 #'   size = nrow(data), replace = TRUE)}
 #' }
-#' @return Returns an \code{\link[OpenMx]{mxModel}} with starting values.
+#' @return Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}} with starting values.
 #' @export
 #' @keywords mixture models openmx
 #' @examples

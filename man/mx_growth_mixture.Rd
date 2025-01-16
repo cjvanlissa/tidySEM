@@ -22,11 +22,11 @@ the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.}
 \item{...}{Additional arguments, passed to functions.}
 }
 \value{
-Returns an \code{\link[OpenMx]{mxModel}}.
+Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 }
 \description{
 This function is a wrapper around \code{\link{mx_mixture}}, adding the
-default arguments of \code{\link[lavaan]{growth}} to simplify the
+default arguments of \code{\link[lavaan:growth]{lavaan::growth()}} to simplify the
 specification of growth mixture models. This function is only
 useful if all the latent variables in the model are growth factors.
 }

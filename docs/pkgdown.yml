@@ -1,5 +1,5 @@
-pandoc: 3.1.11
-pkgdown: 2.0.9
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   Generating_syntax: Generating_syntax.html
@@ -11,5 +11,4 @@ articles:
   sem_graph: sem_graph.html
   SMART_LCA_checklist: SMART_LCA_checklist.html
   Tabulating_results: Tabulating_results.html
-last_built: 2024-06-03T09:23Z
-
+last_built: 2025-01-16T12:39Z

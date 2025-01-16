@@ -40,7 +40,7 @@ the function calls \code{\link{mixture_starts}} and \code{\link{run_mx}}.}
 \item{...}{Additional arguments, passed to functions.}
 }
 \value{
-Returns an \code{\link[OpenMx]{mxModel}}.
+Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 }
 \description{
 This function is a wrapper around \code{\link{mx_mixture}} to simplify the

@@ -86,7 +86,7 @@ pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
   cls <- unique(cls)
 
   if ( length(cls) > 1 ) {
-    stop(paste0("'fits' consists of objects with different classes: ", paste(cl, collapse = ', ')))
+    stop(paste0("'fits' consists of objects with different classes: ", paste(cls, collapse = ', ')))
   }
 
   UseMethod("pseudo_class_pool", fits[[1]])

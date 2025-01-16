@@ -10,14 +10,14 @@ mixture_starts(model, splits, ...)
 \item{model}{A mixture model of class \code{mxModel}.}
 
 \item{splits}{Optional. A numeric vector of length equal to the number of
-rows in the \code{\link{mxData}} used in the \code{model} object. The data
+rows in the \code{\link[OpenMx:mxData]{OpenMx::mxData()}} used in the \code{model} object. The data
 will be split by this vector. See Details for the default setting and
 possible alternatives.}
 
 \item{...}{Additional arguments, passed to functions.}
 }
 \value{
-Returns an \code{\link[OpenMx]{mxModel}} with starting values.
+Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}} with starting values.
 }
 \description{
 Automatically set starting values for an OpenMx mixture model. This function
@@ -37,7 +37,7 @@ assigned to the corresponding mixture component as starting values.
 }
 
 If the argument \code{splits} is not provided, the function will call
-\code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster},
+\code{stats::kmeans(x = data, centers = classes)$cluster},
 where \code{data} is extracted from the \code{model} argument.
 
 Sensible ways to split the data include:
@@ -45,11 +45,11 @@ Sensible ways to split the data include:
 \item Using Hierarchical clustering:
 \code{cutree(hclust(dist(data)), k = classes))}
 \item Using K-means clustering:
-\code{\link[stats]{kmeans}}\code{(x = data, centers = classes)$cluster}
+\code{stats::kmeans(x = data, centers = classes)$cluster}
 \item Using agglomerative hierarchical clustering:
-\code{hclass(}\code{\link[mclust]{hc}}\code{(data = data), G = classes)[, 1]}
+\code{mclust::hclass(data = data), G = classes)[, 1]}
 \item Using a random split:
-\code{\link{sample.int}}\code{(n = classes,
+\code{sample.int(n = classes,
   size = nrow(data), replace = TRUE)}
 }
 }

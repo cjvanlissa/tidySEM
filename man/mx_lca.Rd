@@ -13,12 +13,12 @@ mx_lca(data = NULL, classes = 1L, run = TRUE, ...)
 generate. Defaults to 1L. E.g., \code{classes = 1:6},}
 
 \item{run}{Logical, whether or not to run the model. If \code{run = TRUE},
-the function calls \code{\link[OpenMx]{mxTryHardOrdinal}}.}
+the function calls \code{\link[OpenMx:mxTryHardOrdinal]{OpenMx::mxTryHardOrdinal()}}.}
 
 \item{...}{Additional arguments, passed to functions.}
 }
 \value{
-Returns an \code{\link[OpenMx]{mxModel}}.
+Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}}.
 }
 \description{
 This function simplifies the specification of latent class models:
