@@ -26,15 +26,33 @@ get_layout.dagitty <- function(x, ..., rows = NULL){
 get_edges.dagitty <- function(x, label = "est", ...){
   if (requireNamespace("dagitty", quietly = TRUE)) {
     edg <- dagitty::edges(x)
-    cl <- match.call()
-    cl[[1]] <- str2lang("dagitty:::.edgeAttributes")
-    cl <- cl[c(1, which(names(cl) == "x"))]
-    cl[["a"]] <- "beta"
-    labs <- try(eval.parent(cl))
-    if(!inherits(labs, "try-error")){
-      if(!all(is.na(labs$a))){
-        edg$label <- labs$a
-      }
+    txt <- as.character(x)
+    if(grepl("[", txt, fixed = TRUE)){
+      attrbts <- strsplit(txt, split = "\n")[[1]]
+      attrbts <- attrbts[grepl("(<-|->|--)", attrbts)]
+      attrbts <- attrbts[grep("[", attrbts, fixed = TRUE)]
+      attrbts <- lapply(attrbts, function(at){
+        out <- trimws(strsplit(at, split = "[", fixed = TRUE)[[1]])
+        nam = out[1]
+        out <- gsub("]", "", out[2], fixed = TRUE)
+        out <- strsplit(out, split = ",", fixed = TRUE)[[1]]
+        out <- lapply(out, function(i){
+          gsub('"', "", strsplit(i, split = "=", fixed = TRUE)[[1]], fixed = TRUE)
+        })
+        nams <- sapply(out, `[`, 1)
+        out <- data.frame(name = nam, lapply(out, `[`, 2))
+        names(out) <- c("name", nams)
+        if(any(names(out) %in% c("exposure", "outcome"))) out[(names(out) %in% c("exposure", "outcome"))] <- TRUE
+        out
+      })
+      attrbts <- bind_list(attrbts)
+      edge_atts <- attrbts[, !(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
+      # Merge
+      edge_atts$v <- gsub("\\s.*$", "", edge_atts$name)
+      edge_atts$w <- gsub("^.+\\s", "", edge_atts$name)
+      edge_atts$e <- gsub("^.+?\\s(.+)\\s.+$", "\\1", edge_atts$name)
+      edg <- merge(edg, edge_atts, by = c("v", "w", "e"), all = TRUE)
+
     }
     names(edg)[1:2] <- c("from", "to")
     edg$arrow <- "last"
@@ -50,7 +68,7 @@ get_edges.dagitty <- function(x, label = "est", ...){
       edg$curvature <- NA
       edg$curvature[edg$e == "<->"] <- 60
     }
-    edg <- edg[, names(edg)[names(edg) %in% c("from", "to", "arrow", "curvature", "linewidth", "color")], drop = FALSE]
+    edg <- edg[, !names(edg) %in% c("x", "y"), drop = FALSE]
     class(edg) <- c("tidy_edges", class(edg))
     return(edg)
   } else {
@@ -58,24 +76,38 @@ get_edges.dagitty <- function(x, label = "est", ...){
   }
 }
 
-
 #' @method get_nodes dagitty
 #' @export
 get_nodes.dagitty <- function(x, label = "est", ...){
   if (requireNamespace("dagitty", quietly = TRUE)) {
-    nods <- dagitty::coordinates(x)
-    nams <- labs <- names(nods$x)
-    if(!is.null(attr(x, "labels"))){
-      attrlab <- attr(x, "labels")
-      if(any(labs %in% names(attrlab))){
-        labs[labs %in% names(attrlab)] <- attrlab[labs[labs %in% names(attrlab)]]
+
+      nods <- names(dagitty::coordinates(x)$x)
+      nods <- data.frame(name = nods)
+      txt <- as.character(x)
+      if(grepl("[", txt, fixed = TRUE)){
+        attrbts <- strsplit(txt, split = "\n")[[1]]
+        attrbts <- attrbts[!grepl("(<-|->|--|\\{|\\})", attrbts)]
+        attrbts <- attrbts[grep("[", attrbts, fixed = TRUE)]
+        attrbts <- lapply(attrbts, function(at){
+          out <- trimws(strsplit(at, split = "[", fixed = TRUE)[[1]])
+          nam = out[1]
+          out <- gsub("]", "", out[2], fixed = TRUE)
+          out <- strsplit(out, split = ",", fixed = TRUE)[[1]]
+          out <- lapply(out, function(i){
+            gsub('"', "", strsplit(i, split = "=", fixed = TRUE)[[1]], fixed = TRUE)
+          })
+          nams <- sapply(out, `[`, 1)
+          out <- data.frame(name = nam, lapply(out, `[`, 2))
+          names(out) <- c("name", nams)
+          if(any(names(out) %in% c("exposure", "outcome"))) out[(names(out) %in% c("exposure", "outcome"))] <- TRUE
+          out
+        })
+        attrbts <- bind_list(attrbts)
+        node_atts <- attrbts[, !c(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
+        nods <- merge(nods, node_atts, by = "name", all = TRUE)
       }
-    }
-    nods <- data.frame(
-      name = nams,
-      shape = "none",
-      label = labs
-    )
+
+      nods$shape <- "none"
     class(nods) <- c("tidy_nodes", class(nods))
     return(nods)
   } else {

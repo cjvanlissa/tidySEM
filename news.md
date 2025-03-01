@@ -1,3 +1,7 @@
+# tidySEM 0.2.8
+
+* Improve parsing of dagitty objects
+
 # tidySEM 0.2.7
 
 * Stop calling tidySEM functions as default arguments of prepare_graph.lavaan().
