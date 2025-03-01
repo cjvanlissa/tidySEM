@@ -69,6 +69,9 @@ get_edges.dagitty <- function(x, label = "est", ...){
       edg$curvature[edg$e == "<->"] <- 60
     }
     edg <- edg[, !names(edg) %in% c("x", "y"), drop = FALSE]
+    if("label" %in% names(edg)){
+      edg$label[is.na(edg$label)] <- edg$name[is.na(edg$label)]
+    }
     class(edg) <- c("tidy_edges", class(edg))
     return(edg)
   } else {
@@ -106,7 +109,9 @@ get_nodes.dagitty <- function(x, label = "est", ...){
         node_atts <- attrbts[, !c(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
         nods <- merge(nods, node_atts, by = "name", all = TRUE)
       }
-
+      if("label" %in% names(nods)){
+        nods$label[is.na(nods$label)] <- nods$name[is.na(nods$label)]
+      }
       nods$shape <- "none"
     class(nods) <- c("tidy_nodes", class(nods))
     return(nods)
