@@ -1,4 +1,6 @@
 library(testthat)
 library(tidySEM)
+if(requireNamespace("OpenMx", quietly = TRUE)) require("OpenMx")
+if(requireNamespace("umx", quietly = TRUE)) require("umx")
 options("test_mplus" = FALSE)
 test_check("tidySEM")

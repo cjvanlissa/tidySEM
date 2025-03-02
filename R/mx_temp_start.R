@@ -1,7 +1,7 @@
 simple_starts <- function (model, type = c("ULS", "DWLS"))
 {
-  # From omxBuildAutoStartModel
-  isMultiGroupModel <- (is.null(model$expectation) && inherits(model$fitfunction, "OpenMx::MxFitFunctionMultigroup"))
+
+  isMultiGroupModel <- (is.null(model$expectation) && inherits(model$fitfunction, "MxFitFunctionMultigroup"))
   if (isMultiGroupModel) {
     submNames <- names(model@submodels)
     wmodel <- model

@@ -195,3 +195,7 @@ imp_fun <- function(x){
     out
   }
 }
+
+fun_from_pack <- function(x){
+  eval(parse(text=x))
+}

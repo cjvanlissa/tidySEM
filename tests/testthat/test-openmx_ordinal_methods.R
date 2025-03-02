@@ -3,6 +3,8 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
   test_that("ordinal mixture model works with different methods", {
     tidySEM:::skip_if_not_local()
     if(requireNamespace("OpenMx", quietly = TRUE) & requireNamespace("umx", quietly = TRUE)){
+      require("OpenMx")
+      require("umx")
       set.seed(1)
       df <- data_mix_ordinal
       df[1:4] <- lapply(df, ordered)

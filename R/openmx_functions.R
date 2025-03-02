@@ -200,7 +200,6 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   path_list <- lapply(1:nrow(lavtab), function(i){
     path <- lavtab[i, ]
     Args <- c(list(
-      name = "OpenMx::mxPath",
       from = switch(path[["op"]],
                     "=~" = path[["lhs"]],
                     path[["rhs"]]),
@@ -215,7 +214,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
       values = path[["ustart"]]
     ), mxpath_dots)
     if(!path[["label"]] == "") Args$labels <- path[["label"]]
-    do.call(call, Args)
+    do.call(fun_from_pack("OpenMx::mxPath"), Args)
   })
   if(length(defined) > 0){
     path_list <- c(

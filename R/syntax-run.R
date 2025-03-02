@@ -66,7 +66,7 @@ run_mx.MxModel <- function(x, ...){
       switch(mix_method,
              "hard" = {
                # tryhard
-               run_fun <- "mxTryHard"
+               run_fun <- "OpenMx::mxTryHard"
                run_args <- c(run_args,
                              list(
                                extraTries = 100,
@@ -97,7 +97,7 @@ run_mx.MxModel <- function(x, ...){
       "model" = x
     ),
     run_args,
-    dots[which(names(dots) %in% formalArgs(run_fun))])
+    dots[which(names(dots) %in% formalArgs(fun_from_pack(run_fun)))])
   cl <- as.call(run_args)
   res <- eval(cl)
   if(res$output$maxRelativeOrdinalError > OpenMx::mxOption(NULL, 'mvnRelEps')){
