@@ -5,8 +5,12 @@ get_layout.dagitty <- function(x, ..., rows = NULL){
     lo <- dagitty::coordinates(x)
     if(!diff(sapply(lo, length)) == 0) stop("Could not extract layout from object of class 'dagitty'.")
     if(anyNA(lo$x) | anyNA(lo$y)){
-      edg <- get_edges(x)
-      out <- get_layout(edg)
+      lo_graph <- dagitty::coordinates(dagitty::graphLayout(x))
+      lo$x[is.na(lo$x)] <- lo_graph$x[is.na(lo$x)]
+      lo$y[is.na(lo$y)] <- lo_graph$y[is.na(lo$y)]
+      out <- data.frame(name = names(lo$x), do.call(cbind, lo))
+      rownames(out) <- NULL
+      class(out) <- c("tidy_layout", class(out))
     } else {
       out <- matrix(nrow = max(lo$y) + 1, ncol = max(lo$x) + 1)
       for(v in names(lo$x)){
@@ -46,13 +50,14 @@ get_edges.dagitty <- function(x, label = "est", ...){
         out
       })
       attrbts <- bind_list(attrbts)
-      edge_atts <- attrbts[, !(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
-      # Merge
-      edge_atts$v <- gsub("\\s.*$", "", edge_atts$name)
-      edge_atts$w <- gsub("^.+\\s", "", edge_atts$name)
-      edge_atts$e <- gsub("^.+?\\s(.+)\\s.+$", "\\1", edge_atts$name)
-      edg <- merge(edg, edge_atts, by = c("v", "w", "e"), all = TRUE)
-
+      if(!is.null(attrbts)){
+        edge_atts <- attrbts[, !(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
+        # Merge
+        edge_atts$v <- gsub("\\s.*$", "", edge_atts$name)
+        edge_atts$w <- gsub("^.+\\s", "", edge_atts$name)
+        edge_atts$e <- gsub("^.+?\\s(.+)\\s.+$", "\\1", edge_atts$name)
+        edg <- merge(edg, edge_atts, by = c("v", "w", "e"), all = TRUE)
+      }
     }
     names(edg)[1:2] <- c("from", "to")
     edg$arrow <- "last"
@@ -106,8 +111,10 @@ get_nodes.dagitty <- function(x, label = "est", ...){
           out
         })
         attrbts <- bind_list(attrbts)
-        node_atts <- attrbts[, !c(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
-        nods <- merge(nods, node_atts, by = "name", all = TRUE)
+        if(!is.null(attrbts)){
+          node_atts <- attrbts[, !c(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
+          nods <- merge(nods, node_atts, by = "name", all = TRUE)
+        }
       }
       if("label" %in% names(nods)){
         nods$label[is.na(nods$label)] <- nods$name[is.na(nods$label)]

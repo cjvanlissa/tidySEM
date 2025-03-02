@@ -348,24 +348,27 @@ prepare_graph.default <- function(edges = NULL,
                                   fix_coord = FALSE,
                                   ...
 ){
-  #browser()
+
   Args <- as.list(match.call())[-1]
   myfor <- formals(prepare_graph.default)
   for ( v in names(myfor)){
     if (!(v %in% names(Args)))
       Args <- append(Args,myfor[v])
   }
-
   # Check if nodes exist in edges and layout --------------------------------
-  if(inherits(layout, c("matrix", "data.frame"))){
-    layout <- long_layout(layout)
-    if(any(duplicated(layout$name))){
-      stop("Some nodes are duplicated in the layout. The offending node names are: ", paste0(unique(layout$name[duplicated(layout$name)]), collapse = ", "))
+  if(!inherits(layout, "tidy_layout")){
+    if(inherits(layout, c("matrix", "data.frame"))){
+      layout <- long_layout(layout)
+      if(any(duplicated(layout$name))){
+        stop("Some nodes are duplicated in the layout. The offending node names are: ", paste0(unique(layout$name[duplicated(layout$name)]), collapse = ", "))
+      }
+    } else {
+      stop("Argument 'layout' must be a matrix or data.frame.")
     }
-    Args$layout <- layout
-  } else {
-    stop("Argument 'layout' must be a matrix or data.frame.")
   }
+
+  Args$layout <- layout
+
   if(!is.null(edges)){
     df_edges <- edges
   } else {

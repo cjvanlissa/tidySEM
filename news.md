@@ -1,6 +1,8 @@
 # tidySEM 0.2.8
 
 * Improve parsing of dagitty objects
+* Allow floating point coordinates in layouts of class `tidy_layout` (mostly for
+  dagitty plots)
 
 # tidySEM 0.2.7
 
