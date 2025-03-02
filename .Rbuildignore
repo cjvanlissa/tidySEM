@@ -64,3 +64,4 @@ CODE_OF_CONDUCT.md
 ^vignettes/lca_prob.png$
 ^vignettes/lca_aux_dep.RData$
 ^vignettes/lca_aux_model.RData$
+^pkgdown$

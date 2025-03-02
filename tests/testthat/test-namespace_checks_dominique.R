@@ -8,9 +8,11 @@ test_that("graph_sem works when tidySEM is not attached", {
   expect_error({tidySEM::graph_sem(m, edges = tidySEM::get_edges(m))}, NA)
 })
 
-library(tidySEM)
-library(ggraph)
-test_that("graph_sem works when ggraph masks get_edges etc", {
-  expect_error({tidySEM::graph_sem(m)}, NA)
-})
-detach("package:ggraph", unload = TRUE)
+if(requireNamespace("ggraph", quietly = TRUE)){
+  library(tidySEM)
+  library(ggraph)
+  test_that("graph_sem works when ggraph masks get_edges etc", {
+    expect_error({tidySEM::graph_sem(m)}, NA)
+  })
+  detach("package:ggraph", unload = TRUE)
+}
