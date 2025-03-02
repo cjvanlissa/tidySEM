@@ -39,7 +39,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results$name[!matrixnames] <- get_mx_names(x, results)[!matrixnames]
   # Add standardized --------------------------------------------------------
   if(is.null(columns) | any(grepl("std_", columns))){ # Conditional, to save time
-    results_std <- mxStandardizeRAMPaths(x, SE = TRUE)
+    results_std <- OpenMx::mxStandardizeRAMPaths(x, SE = TRUE)
     if(inherits(results_std, "list")){
       for(n in names(results_std)){
         results_std[[n]]$matrix <- paste(n, results_std[[n]]$matrix, sep = ".")
@@ -180,10 +180,10 @@ submodels <- function(x, results, cols = c("name", "matrix", "row", "col", "Esti
     results[["matrix"]][from_group] <- gsub(paste0("(", paste0(submod, collapse = "|"), ")\\."), "", results$matrix[from_group])
     #results
     #dup_pars <- table(names(unlist(lapply(submod, function(i){ omxGetParameters(x[[i]]) }))))
-    dup_pars <- table(names(unlist(lapply(submod, function(i){ omxGetParameters(x[[i]]) }))))
+    dup_pars <- table(names(unlist(lapply(submod, function(i){ OpenMx::omxGetParameters(x[[i]]) }))))
     dup_pars <- names(dup_pars)[dup_pars > 1]
     for(i in submod){
-      submodpars <- omxGetParameters(x[[i]])
+      submodpars <- OpenMx::omxGetParameters(x[[i]])
       if(any(dup_pars %in% names(submodpars))){
         add_these <- results[results$name %in% dup_pars, ]
         add_these <- add_these[!add_these[[thename]] == i, ]
@@ -236,12 +236,10 @@ from_submodels <- function(x, what = NULL, ...){
     if(existingnames > 0) thename <- paste0(thename, ".", existingnames, collapse = "")
     results[[thename]] <- thisgroup
     results[["matrix"]][from_group] <- gsub(paste0("(", paste0(submod, collapse = "|"), ")\\."), "", results$matrix[from_group])
-    #results
-    #dup_pars <- table(names(unlist(lapply(submod, function(i){ omxGetParameters(x[[i]]) }))))
-    dup_pars <- table(names(unlist(lapply(submod, function(i){ omxGetParameters(x[[i]]) }))))
+    dup_pars <- table(names(unlist(lapply(submod, function(i){ OpenMx::omxGetParameters(x[[i]]) }))))
     dup_pars <- names(dup_pars)[dup_pars > 1]
     for(i in submod){
-      submodpars <- omxGetParameters(x[[i]])
+      submodpars <- OpenMx::omxGetParameters(x[[i]])
       if(any(dup_pars %in% names(submodpars))){
         add_these <- results[results$name %in% dup_pars, ]
         add_these <- add_these[!add_these[[thename]] == i, ]
@@ -293,8 +291,11 @@ has_submod <- function(x, depth = 0){
 #   paste(names(out), out, sep = ".")
 # }
 
-#' @importFrom OpenMx mxSE omxGetParameters
+# @importFrom OpenMx mxSE omxGetParameters
 get_algebras <- function(x, ...){
+  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+    return(NULL)
+  }
   cl <- match.call()
   cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")
   algs <- eval.parent(cl)
@@ -305,14 +306,14 @@ get_algebras <- function(x, ...){
                     row = unlist_mx(algs, element = "formula"),
                     col = ":=",
                     Estimate = Estimate, row.names = NULL)
-  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
   out
 }
 
 alg_to_res <- function(x, ...){
   out <- .alg_to_res_internal(x, ...)
   out <- bind_list(flat(out))
-  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
   out
 }
 

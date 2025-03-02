@@ -216,6 +216,6 @@ update_thresholds <- function(x, ...){
     }
     return(out)
   } else {
-    return(mxNormalQuantiles(length(x)))
+    return(OpenMx::mxNormalQuantiles(length(x)))
   }
 }

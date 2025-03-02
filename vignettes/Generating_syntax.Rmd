@@ -109,7 +109,7 @@ estimate_lavaan(model)
 
 The same model can be estimated with 'OpenMx' through the R-package `OpenMx`.
 
-```{r include=FALSE}
+```{r include=FALSE, eval = requireNamespace("OpenMx", quietly = TRUE)}
 estimate_mx(model) -> res_mx
 ```
 ```{r echo = TRUE, eval = FALSE}

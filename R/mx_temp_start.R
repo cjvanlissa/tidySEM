@@ -1,27 +1,27 @@
 simple_starts <- function (model, type = c("ULS", "DWLS"))
 {
   # From omxBuildAutoStartModel
-  isMultiGroupModel <- (is.null(model$expectation) && inherits(model$fitfunction, "MxFitFunctionMultigroup"))
+  isMultiGroupModel <- (is.null(model$expectation) && inherits(model$fitfunction, "OpenMx::MxFitFunctionMultigroup"))
   if (isMultiGroupModel) {
     submNames <- names(model@submodels)
     wmodel <- model
     for (amod in submNames) {
-      wmodel[[amod]] <- mxModel(model[[amod]], asdhelper(model,
+      wmodel[[amod]] <- OpenMx::mxModel(model[[amod]], asdhelper(model,
                                                                    subname = amod, type = type))
     }
-    wmodel <- mxModel(wmodel, mxFitFunctionMultigroup(submNames))
+    wmodel <- OpenMx::mxModel(wmodel, OpenMx::mxFitFunctionMultigroup(submNames))
   }
   else {
-    wmodel <- mxModel(model, asdhelper(model,
+    wmodel <- OpenMx::mxModel(model, asdhelper(model,
                                                  type = type))
   }
-  wmodel <- mxOption(wmodel, "Calculate Hessian", "No")
-  wmodel <- mxOption(wmodel, "Standard Errors", "No")
+  wmodel <- OpenMx::mxOption(wmodel, "Calculate Hessian", "No")
+  wmodel <- OpenMx::mxOption(wmodel, "Standard Errors", "No")
   # End omxBuildAutoStartModel
-  wmodel <- mxRun(wmodel, silent = TRUE)
+  wmodel <- OpenMx::mxRun(wmodel, silent = TRUE)
   newparams <- coef(wmodel)
   oldparams <- coef(model)
-  model <- omxSetParameters(model, values = newparams, labels = names(oldparams))
+  model <- OpenMx::omxSetParameters(model, values = newparams, labels = names(oldparams))
   model <- fix_x(wmodel = wmodel, model = model, multigroup = isMultiGroupModel)
   return(model)
 }
@@ -31,7 +31,7 @@ simple_starts <- function (model, type = c("ULS", "DWLS"))
 asdhelper <- function (model, subname = model@name, type)
 {
   exps <-
-    mxGetExpected(model, c("covariance", "means", "thresholds"),
+    OpenMx::mxGetExpected(model, c("covariance", "means", "thresholds"),
                   subname = subname)
   useVars <- colnames(exps$means)
   data <- model[[subname]]$data$observed
@@ -43,30 +43,30 @@ asdhelper <- function (model, subname = model@name, type)
       if (length(exps$means) > 0)
         os$means <- colMeans(data, na.rm = TRUE)
       return(list(
-        mxData(
+        OpenMx::mxData(
           data,
           type = "raw",
           numObs = nrow(data),
           observedStats = os
         ),
-        mxFitFunctionWLS("ULS",
+        OpenMx::mxFitFunctionWLS("ULS",
                          fullWeight = FALSE)
       ))
     }
     return(list(
-      mxData(
+      OpenMx::mxData(
         data,
         type = "raw"
       ),
-      mxFitFunctionWLS("ULS",
+      OpenMx::mxFitFunctionWLS("ULS",
                        fullWeight = FALSE)
     ))
   }
-  mdata <- mxData(
+  mdata <- OpenMx::mxData(
     data,
     type = "raw"
   )
-  return(list(mdata, mxFitFunctionWLS(
+  return(list(mdata, OpenMx::mxFitFunctionWLS(
     type,
     ifelse(length(exps$means) >
              0, "marginals", "cumulants"),

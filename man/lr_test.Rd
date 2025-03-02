@@ -23,9 +23,11 @@ conduct overall and pairwise likelihood ratio tests.
 All submodels must be identical.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 df <- iris[c(1:10, 140:150), c(1, 5)]
 names(df) <- c("x", "group")
 mod <- as_ram("x~1", data = df, group = "group")
 mod <- run_mx(mod)
 lr_test(mod)
+}
 }

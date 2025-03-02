@@ -12,10 +12,12 @@
 #' @param ... further arguments to be passed to or from other methods.
 #' @return An MxModel.
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' dat <- data.frame(x = iris$Petal.Length)
 #' mixmod <- mx_profiles(dat,
 #'                       classes = 2)
 #' res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
+#' }
 #' @references Bolck, A., Croon, M., & Hagenaars, J. (2004). Estimating latent
 #' structure models with categorical variables: One-step versus three-step
 #' estimators. Political Analysis, 12(1), 3–27. \doi{10.1093/pan/mph001}
@@ -38,7 +40,7 @@ BCH.MxModel <- function(x, model, data, ...){
       } else {
         cats <- length(levels(data))
         model <- paste0("y |t", 1:(cats-1), collapse = "\n")
-        data <- data.frame(y = mxFactor(data, levels = levels(data)))
+        data <- data.frame(y = OpenMx::mxFactor(data, levels = levels(data)))
       }
     } else {
       model <- "y ~1"
@@ -60,12 +62,12 @@ BCH.MxModel <- function(x, model, data, ...){
   if(!inherits(model, what = c("MxModel", "MxRAMModel"))) stop("Argument 'model' must be either an object of class 'MxModel', or a character string that can be coerced using as_ram().")
 
   grps <- lapply(1:ncol(bchweights), function(i){
-    mxModel(model,
+    OpenMx::mxModel(model,
             name = grp_names[i],
-            data = mxData(observed = df, type = "raw", weight = names(bchweights)[i]),
-            fitfunction = mxFitFunctionML())
+            data = OpenMx::mxData(observed = df, type = "raw", weight = names(bchweights)[i]),
+            fitfunction = OpenMx::mxFitFunctionML())
   })
-  grps <- do.call(mxModel, c(list(model = "aux", mxFitFunctionMultigroup(grp_names), grps)))
+  grps <- do.call(OpenMx::mxModel, c(list(model = "aux", OpenMx::mxFitFunctionMultigroup(grp_names), grps)))
 
   out <- try(run_mx(grps), silent = TRUE)
   attr(out, "tidySEM") <- "BCH"
@@ -92,7 +94,7 @@ bch_categorical <- function(x, y){
   cats <- length(levels(y))
   mod <- paste0("y |t", 1:(cats-1), collapse = "\n")
   cl[["model"]] <- mod
-  cl[["data"]] <- data.frame(y = mxFactor(y, levels = levels(y)))
+  cl[["data"]] <- data.frame(y = OpenMx::mxFactor(y, levels = levels(y)))
   eval.parent(cl)
 }
 
@@ -107,11 +109,13 @@ bch_categorical <- function(x, y){
 #' @param ... Additional arguments passed to other functions.
 #' @return An object of class `lr_test` and `list`.
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' df <- iris[c(1:10, 140:150), c(1, 5)]
 #' names(df) <- c("x", "group")
 #' mod <- as_ram("x~1", data = df, group = "group")
 #' mod <- run_mx(mod)
 #' lr_test(mod)
+#' }
 #' @rdname lr_test
 #' @export
 lr_test <- function(x, compare = c("All", "A", "S", "F", "M", "Thresholds"), ...){
@@ -132,7 +136,7 @@ lr_test <- function(x, compare = c("All", "A", "S", "F", "M", "Thresholds"), ...
       mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
     }
   }
-  mod_base <- omxAssignFirstParameters(mod_base)
+  mod_base <- OpenMx::omxAssignFirstParameters(mod_base)
 
   mod_base <- run_mx(mod_base)
 
@@ -142,17 +146,17 @@ lr_test <- function(x, compare = c("All", "A", "S", "F", "M", "Thresholds"), ...
       tmp[[tests[i, 1]]][[m]]$labels[,] <- paste0(m, letters[1:length(tmp[[tests[i, 1]]][[m]]$labels)])
       tmp[[tests[i, 2]]][[m]]$labels[,] <- paste0(m, letters[1:length(tmp[[tests[i, 1]]][[m]]$labels)])
     }
-    tmp <- omxAssignFirstParameters(tmp)
+    tmp <- OpenMx::omxAssignFirstParameters(tmp)
     tmp <- run_mx(tmp)
 
-    return(.lltest(mxCompare(x, tmp)))
+    return(.lltest(OpenMx::mxCompare(x, tmp)))
   }))
   tests <- data.frame(tests,
                       test_res)
   names(tests)[1:2] <- c("Model1", "Model2")
 
   # Overall test
-  test_comp <- .lltest(mxCompare(x, mod_base))
+  test_comp <- .lltest(OpenMx::mxCompare(x, mod_base))
   tests <- list(overall = test_comp,
                 pairwise = tests)
   class(tests) <- c("lr_test", class(tests))

@@ -41,6 +41,7 @@ each dataset, and results are pooled across datasets to account for
 classification uncertainty.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 set.seed(2)
 dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 colnames(dat) <- c("SL", "SW", "PL", "PW")
@@ -68,6 +69,7 @@ pct_func <- pseudo_class(x = fit,
                          m = 2)
 
 
+}
 
 }
 \references{

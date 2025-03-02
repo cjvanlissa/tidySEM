@@ -1,6 +1,7 @@
-test_that("ordinal variable thresholds correct", {
-  tidySEM:::skip_if_not_local()
-  tmp <- 'structure(list(u1 = structure(c(1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
+if(requireNamespace("OpenMx", quietly = TRUE)){
+  test_that("ordinal variable thresholds correct", {
+    tidySEM:::skip_if_not_local()
+    tmp <- 'structure(list(u1 = structure(c(1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
 1L, 1L, 3L, 3L, 2L, 3L, 1L, 2L, 1L, 2L, 2L, 3L, 1L, 1L, 1L, 3L,
 1L, 3L, 3L, 2L, 3L, 3L, 1L, 2L, 3L, 3L, 1L, 3L, 3L, 3L, 1L, 3L,
 1L, 3L, 3L, 1L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 3L, 2L, 3L,
@@ -1319,12 +1320,12 @@ test_that("ordinal variable thresholds correct", {
     1L, 3L, 3L, 1L, 1L, 1L, 3L, 2L, 1L, 3L, 3L, 3L, 3L), .Label = c("0",
     "1", "2"), class = c("ordered", "factor"))), row.names = c(NA,
 -5000L), class = "data.frame")'
-  df <- eval(parse(text = tmp))
+    df <- eval(parse(text = tmp))
 
-  # Just thresholds
-  suppressWarnings({
-    res_mx <- tryCatch(run_mx(as_ram(
-      "u1 | t11*t1
+    # Just thresholds
+    suppressWarnings({
+      res_mx <- tryCatch(run_mx(as_ram(
+        "u1 | t11*t1
 u2 | t21*t1
 u3 | t31*t1
 u4 | t41*t1
@@ -1332,8 +1333,8 @@ u1 | t12*t2
 u2 | t22*t2
 u3 | t32*t2
 u4 | t42*t2", data = df)), error = function(e) NULL)})
-  library(lavaan)
-  res_lv <- sem("u1 | t11*t1
+    library(lavaan)
+    res_lv <- sem("u1 | t11*t1
 u2 | t21*t1
 u3 | t31*t1
 u4 | t41*t1
@@ -1342,18 +1343,18 @@ u2 | t22*t2
 u3 | t32*t2
 u4 | t42*t2", data = df)
 
-  pars_lv <- parameterestimates(res_lv)
-  pars_lv$est[pars_lv$op == "|"]
-  pars_mx <- table_results(res_mx, columns = c("est", "matrix"))
-  expect_equivalent(
-    matrix(as.numeric(pars_mx$est[pars_mx$matrix == "Thresholds"]), nrow = 2, byrow = F),
-    matrix(round(pars_lv$est[pars_lv$op == "|"], 2), nrow = 2, byrow = T),
-    tolerance = 1e-4)
+    pars_lv <- parameterestimates(res_lv)
+    pars_lv$est[pars_lv$op == "|"]
+    pars_mx <- table_results(res_mx, columns = c("est", "matrix"))
+    expect_equivalent(
+      matrix(as.numeric(pars_mx$est[pars_mx$matrix == "Thresholds"]), nrow = 2, byrow = F),
+      matrix(round(pars_lv$est[pars_lv$op == "|"], 2), nrow = 2, byrow = T),
+      tolerance = 1e-4)
 
-  # Mixture model
-  suppressWarnings({
-    res_mx <- tryCatch({mx_mixture(
-      "u1 | t11{C}*t1
+    # Mixture model
+    suppressWarnings({
+      res_mx <- tryCatch({mx_mixture(
+        "u1 | t11{C}*t1
 u2 | t21{C}*t1
 u3 | t31{C}*t1
 u4 | t41{C}*t1
@@ -1361,51 +1362,53 @@ u1 | t12{C}*t2
 u2 | t22{C}*t2
 u3 | t32{C}*t2
 u4 | t42{C}*t2", classes = 2, data = df, run = FALSE)}, error = function(e){NULL})
-    res_mx <- tryCatch(mxTryHardOrdinal(res_mx), error = function(e){NULL})})
-  res_mx <- mxTryHardOrdinal(res_mx)
-  res_mx$expectation$scale <- "softmax"
+      res_mx <- tryCatch(mxTryHardOrdinal(res_mx), error = function(e){NULL})})
+    res_mx <- mxTryHardOrdinal(res_mx)
+    res_mx$expectation$scale <- "softmax"
 
-  tmp <- table_results(res_mx, columns=c("label", "est", "matrix"))
-  probs_mx <- class_prob(res_mx)
-  mat <- matrix(as.numeric(tmp$est[tmp$matrix == "Thresholds"]), ncol = 2, byrow = F)
-  mat <- mat[, order(probs_mx$sum.posterior$proportion)]
-  mat[,] <- pnorm(as.numeric(mat))
-  #tmp$est<-pnorm(tmp$est)
-  fit <- table_fit(res_mx)
+    tmp <- table_results(res_mx, columns=c("label", "est", "matrix"))
+    probs_mx <- class_prob(res_mx)
+    mat <- matrix(as.numeric(tmp$est[tmp$matrix == "Thresholds"]), ncol = 2, byrow = F)
+    mat <- mat[, order(probs_mx$sum.posterior$proportion)]
+    mat[,] <- pnorm(as.numeric(mat))
+    #tmp$est<-pnorm(tmp$est)
+    fit <- table_fit(res_mx)
 
-  # df_mp <- df
-  # df_mp[1:4] <- lapply(df, as.integer)
-  # res_mp <- mplusObject(VARIABLE = "categorical are u1-u4;
-  #                         CLASSES = c(2);",
-  #                       ANALYSIS = "type = MIXTURE;
-  #                       starts = 500 20",
-  #             rdata = df_mp,
-  #             modelout = "test.inp",
-  #             run = 1L
-  #             )
-  # dput(res_mp$results$summaries$LL, file = "clipboard")
-  # dput(res_mp$results$class_counts$modelEstimated$proportion, file = "clipboard")
-  # dput(matrix(res_mp$results$parameters$unstandardized$est[9:16], nrow = 2)),
-  #   matrix(res_mp$results$parameters$unstandardized$est[1:8], nrow = 2)
-  # )[order(c(0.41442, 0.58558))], file = "clipboard")
-  # dput(cbind(
-  #   res_mp$results$parameters$unstandardized$est[unlist(list(c(1:8), c(9:16))[order(res_mp$results$class_counts$modelEstimated$proportion)])]
-  # ), file = "clipboard")
+    # df_mp <- df
+    # df_mp[1:4] <- lapply(df, as.integer)
+    # res_mp <- mplusObject(VARIABLE = "categorical are u1-u4;
+    #                         CLASSES = c(2);",
+    #                       ANALYSIS = "type = MIXTURE;
+    #                       starts = 500 20",
+    #             rdata = df_mp,
+    #             modelout = "test.inp",
+    #             run = 1L
+    #             )
+    # dput(res_mp$results$summaries$LL, file = "clipboard")
+    # dput(res_mp$results$class_counts$modelEstimated$proportion, file = "clipboard")
+    # dput(matrix(res_mp$results$parameters$unstandardized$est[9:16], nrow = 2)),
+    #   matrix(res_mp$results$parameters$unstandardized$est[1:8], nrow = 2)
+    # )[order(c(0.41442, 0.58558))], file = "clipboard")
+    # dput(cbind(
+    #   res_mp$results$parameters$unstandardized$est[unlist(list(c(1:8), c(9:16))[order(res_mp$results$class_counts$modelEstimated$proportion)])]
+    # ), file = "clipboard")
 
-  # library(poLCA)
-  # res_po <- poLCA(cbind(u1, u2, u3, u4)~1,data = df, nclass = 2)
-  # res_po_thres <- do.call(rbind, lapply(res_po$probs, function(i){
-  #     out <- t(i)
-  #     rbind(qnorm(out[1,]),
-  #           qnorm(colSums(out[1:2,])))
-  # }))
-  # res_po_thres <- as.matrix(res_po_thres[ , order(res_po$P)])
+    # library(poLCA)
+    # res_po <- poLCA(cbind(u1, u2, u3, u4)~1,data = df, nclass = 2)
+    # res_po_thres <- do.call(rbind, lapply(res_po$probs, function(i){
+    #     out <- t(i)
+    #     rbind(qnorm(out[1,]),
+    #           qnorm(colSums(out[1:2,])))
+    # }))
+    # res_po_thres <- as.matrix(res_po_thres[ , order(res_po$P)])
 
-  expect_failure(expect_equal(-19214.48, fit$LL))
-  expect_failure(expect_equivalent(sort(probs_mx$sum.posterior$proportion), sort(c(0.41442, 0.58558))))
-  expect_failure(expect_equivalent(
-    pnorm(res_mx[[c("class1", "class2")[order(sort(probs_mx$sum.posterior$proportion))[1]]]]$Thresholds$values),
-    pnorm(structure(c(-0.523, -0.002, -0.364, 0.102, 0.425, 0.894, 0.383,
-                      0.872), .Dim = c(2L, 4L)))
-  ))
-})
+    expect_failure(expect_equal(-19214.48, fit$LL))
+    expect_failure(expect_equivalent(sort(probs_mx$sum.posterior$proportion), sort(c(0.41442, 0.58558))))
+    expect_failure(expect_equivalent(
+      pnorm(res_mx[[c("class1", "class2")[order(sort(probs_mx$sum.posterior$proportion))[1]]]]$Thresholds$values),
+      pnorm(structure(c(-0.523, -0.002, -0.364, 0.102, 0.425, 0.894, 0.383,
+                        0.872), .Dim = c(2L, 4L)))
+    ))
+  })
+
+}

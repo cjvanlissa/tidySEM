@@ -105,7 +105,7 @@ pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
 #' @export
 pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...) {
 
-  modelType <- imxTypeName(fits[[1]])
+  modelType <- OpenMx::imxTypeName(fits[[1]])
 
   if ( modelType != "RAM" && std == TRUE) {
     stop(paste("Don't know how to standardize a MxModel of type:", modelType))
@@ -118,7 +118,7 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
       # table_results() is used to get the prettier lhs, op, and rhs
       parameters_info <- table_results(fit, format_numeric = F, columns = c("lhs", "op", "rhs", "est", "se", "name"))
 
-      parameters_standardized <- mxStandardizeRAMpaths(fit, SE = TRUE)[,c("name", "Std.Value", "Std.SE")]
+      parameters_standardized <- OpenMx::mxStandardizeRAMpaths(fit, SE = TRUE)[,c("name", "Std.Value", "Std.SE")]
 
       parameters <- merge(parameters_info, parameters_standardized)
 
@@ -154,7 +154,7 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
   example_parameters <- parameters[[1]]
 
   if (is.null(df_complete)) {
-    nparam <- length(omxGetParameters(example_fit, free = TRUE))
+    nparam <- length(OpenMx::omxGetParameters(example_fit, free = TRUE))
     ntotal <- example_fit@data@numObs
 
     message(paste("The degrees of freedom are assumed to be equal to the total number of observations used in the model (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
@@ -269,11 +269,13 @@ pseudo_class_analysis_cb <- function(dfs, func) {
 #' @param m Integer. Number of datasets to generate. Default is 10.
 #' @returns A data.frame of class `class_draws`.
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' dat <- iris[c(1:5, 50:55, 100:105),1:3]
 #' colnames(dat) <- letters[1:3]
 #' fit <- mx_profiles(data = dat, classes = 2)
 #'
 #' append_class_draws(fit, data = iris[c(1:5, 50:55, 100:105), 4, drop = FALSE])
+#' }
 #' @export
 append_class_draws <- function(x, data = NULL, m = 20) {
   if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
@@ -324,6 +326,7 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'
 #'
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' set.seed(2)
 #' dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 #' colnames(dat) <- c("SL", "SW", "PL", "PW")
@@ -353,6 +356,7 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'
 # pseudo_class(x = fit,
 #              model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
+#' }
 #'
 #' @references
 #' Pseudo-class technique:
@@ -436,9 +440,9 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
 
     model <- function(df) {
 
-      model <- mxModel(ramModel,
-              data = mxData(observed = df, type = "raw"),
-              fitfunction = mxFitFunctionML())
+      model <- OpenMx::mxModel(ramModel,
+              data = OpenMx::mxData(observed = df, type = "raw"),
+              fitfunction = OpenMx::mxFitFunctionML())
 
       out <- try(run_mx(model, silent = TRUE), silent = TRUE)
       if(!inherits(out, "try-error")){

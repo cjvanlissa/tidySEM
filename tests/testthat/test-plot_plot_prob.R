@@ -1,4 +1,5 @@
 test_that("plot_prob works", {
+  testthat::skip_if_not_installed("OpenMx")
   tidySEM:::skip_if_not_local()
   df <- data_mix_ordinal
   df[1:4] <- lapply(df, ordered)

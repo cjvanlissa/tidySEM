@@ -78,12 +78,12 @@ mx_threshold_matrices <- function(x, ...){
   algs <- startsWith(names(x), "alg_")
   if(any(mats)){
     x[which(mats)] <- lapply(x[which(mats)], function(l){
-      do.call(mxMatrix, l)
+      do.call(OpenMx::mxMatrix, l)
     })
   }
   if(any(algs)){
     x[which(algs)] <- lapply(x[which(algs)], function(l){
-      do.call(mxAlgebra, l)
+      do.call(OpenMx::mxAlgebra, l)
     })
   }
   return(x)
@@ -95,19 +95,19 @@ if(FALSE){
   df[["c"]] <- NULL
   df$u_2[df$u_2 == 2] <- 1
   df[1:4] <- lapply(df[1:4], ordered)
-  test <- mxModel("test",
+  test <- OpenMx::mxModel("test",
                   type = "RAM",
                   manifestVars = names(df),
-                  mxPath(from = "one", to = names(df), free = FALSE, values = 0),
-                  mxPath(from = names(df), to = names(df), free = FALSE, values = 1, arrows = 2),
-                  mxData(df[1:4], type = "raw"))
+                  OpenMx::mxPath(from = "one", to = names(df), free = FALSE, values = 0),
+                  OpenMx::mxPath(from = names(df), to = names(df), free = FALSE, values = 1, arrows = 2),
+                  OpenMx::mxData(df[1:4], type = "raw"))
   # res1 <- mxModel(res1, "Thresholds", remove = T)
   # res1$expectation$thresholds <- "mat_dev"
   thresholds <- list_to_mx(mx_thresholds(df))
-  test <- do.call(mxModel, c(list(model = test), thresholds))
+  test <- do.call(OpenMx::mxModel, c(list(model = test), thresholds))
 
   test$expectation$thresholds <- "Thresholds"
-  mxRun(test) -> tmp2
+  OpenMx::mxRun(test) -> tmp2
   summary(tmp2)
   table_results(tmp2)
 

@@ -25,5 +25,7 @@ or non-membership (0) of that level.
 The resulting dummies have class \code{mxFactor}.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 mx_dummies(iris[1:5,])
+}
 }

@@ -22,7 +22,7 @@ rep_stat <- foreach(i = rep(2:length(res), each = reps), .combine = rbind, .pack
 parallel::stopCluster(cl)
 
 
-npars <- sapply(res, function(m){ length(omxGetParameters(m)) })
+npars <- sapply(res, function(m){ length(OpenMx::omxGetParameters(m)) })
 tests <- lapply(2:length(res), function(i){
   msqs <- colMeans(rep_stat[rep_stat[,1] == i,-1])
   fvals <- msqs[1:length(dat_stat)] / msqs[(length(dat_stat)+1):length(msqs)]

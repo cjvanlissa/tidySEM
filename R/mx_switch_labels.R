@@ -76,7 +76,7 @@ mx_switch_labels.MxModel <- function(x, param = "weights", decreasing = TRUE, or
       }
     }
     model$weights$values <- (model$weights$values / model$weights$values[ordr[1]])[ordr]
-    model <- mxRun(model)
+    model <- OpenMx::mxRun(model)
   }
   return(model)
 }

@@ -29,8 +29,7 @@ BugReports: https://github.com/cjvanlissa/tidySEM/issues
 Depends: 
     R (>= 4.0.0),
     stats,
-    utils,
-    OpenMx
+    utils
 Imports:
     ggplot2 (>= 3.4.2),
     lavaan,
@@ -65,7 +64,8 @@ Suggests:
     formatR,
     dagitty,
     mice,
-    ggraph
+    ggraph,
+    OpenMx
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

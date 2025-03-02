@@ -10,7 +10,9 @@
 #' @param ... Arguments
 #' @return A `data.frame`.
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' mx_dummies(iris[1:5,])
+#' }
 #' @rdname mx_dummies
 #' @export
 #' @importFrom stats model.matrix
@@ -36,7 +38,7 @@ mx_dummies.data.frame <- function(x, classes = c("factor", "character"), ...){
   out <- x[, !code_me, drop = FALSE]
   coded <- lapply(x[which(code_me)], function(c){
     mat <- data.frame(model.matrix(~.-1, data = as.data.frame(c)))
-    mat[] <- lapply(mat, mxFactor, levels = c(0, 1))
+    mat[] <- lapply(mat, OpenMx::mxFactor, levels = c(0, 1))
     mat
   })
   options(na.action = na_action)
@@ -74,7 +76,7 @@ mx_dummies.factor <- function(x, ...){
   tmp <- data.frame(x)
   names(tmp) <- vnam
   mat <- data.frame(model.matrix(~.-1, data = tmp))
-  mat[] <- lapply(mat, mxFactor, levels = c(0, 1))
+  mat[] <- lapply(mat, OpenMx::mxFactor, levels = c(0, 1))
   options(na.action = na_action)
   names(mat) <- make.names(gsub("xxxremovemexxx", "", names(mat), fixed = TRUE))
   return(mat)

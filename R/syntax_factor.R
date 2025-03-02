@@ -26,7 +26,6 @@ lgm.character <- function(y, loadings = 1:length(y), polynomials = 1, lv_name = 
   out
 }
 
-#' @importFrom OpenMx imxReportProgress
 #' @importFrom utils combn
 syntax_cor_lavaan <- function(x, y = x, all = TRUE, label = TRUE, generic_label = FALSE){
   if(length(x) == 1 & !hasArg(y)) return(NULL)

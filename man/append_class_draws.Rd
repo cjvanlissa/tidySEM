@@ -25,9 +25,11 @@ probability for these draws based on each case's probability of belonging to
 that class according to the model in \code{x}.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 dat <- iris[c(1:5, 50:55, 100:105),1:3]
 colnames(dat) <- letters[1:3]
 fit <- mx_profiles(data = dat, classes = 2)
 
 append_class_draws(fit, data = iris[c(1:5, 50:55, 100:105), 4, drop = FALSE])
+}
 }

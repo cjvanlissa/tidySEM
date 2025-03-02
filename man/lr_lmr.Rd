@@ -35,10 +35,12 @@ the LMR LRT can be evaluated using a Z-test. This function wraps
 \verb{\link[nonnest2]\{vuongtest\}} to perform that test.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 df <- iris[c(1:5, 100:105), 1:3]
 names(df) <- letters[1:3]
 res <- mx_profiles(df, classes = 1:2)
 lr_lmr(res)
+}
 }
 \references{
 Lo Y, Mendell NR, Rubin DB. Testing the number of components in a

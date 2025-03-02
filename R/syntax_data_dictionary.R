@@ -37,7 +37,7 @@
 #' "macqr_7", "macqr_8", "macqr_9", "macqr_10", "macqr_11",
 #' "macqr_12", "macqr_13", "macqr_14", "macqr_15", "macqr_16",
 #' "macqr_17", "macqr_18", "macqr_19", "macqr_20", "macqr_21", "sex"))
-#' tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5",
+#' suppressMessages(tidy_sem(c("bfi_1", "bfi_2", "bfi_3", "bfi_4", "bfi_5",
 #' "mac_q_j_1", "mac_q_j_2", "mac_q_j_3", "mac_q_j_4", "mac_q_j_5", "mac_q_j_6",
 #' "mac_q_j_7", "mac_q_j_8", "mac_q_j_9", "mac_q_j_10", "mac_q_j_11",
 #' "mac_q_j_12", "mac_q_j_13", "mac_q_j_14", "mac_q_j_15", "mac_q_j_16",
@@ -45,7 +45,7 @@
 #' "mac_q_r_1", "mac_q_r_2", "mac_q_r_3", "mac_q_r_4", "mac_q_r_5", "mac_q_r_6",
 #' "mac_q_r_7", "mac_q_r_8", "mac_q_r_9", "mac_q_r_10", "mac_q_r_11",
 #' "mac_q_r_12", "mac_q_r_13", "mac_q_r_14", "mac_q_r_15", "mac_q_r_16",
-#' "mac_q_r_17", "mac_q_r_18", "mac_q_r_19", "mac_q_r_20", "mac_q_r_21"))
+#' "mac_q_r_17", "mac_q_r_18", "mac_q_r_19", "mac_q_r_20", "mac_q_r_21")))
 tidy_sem <- function(x,
                        split = "_"){
   UseMethod("tidy_sem")

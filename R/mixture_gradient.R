@@ -4,14 +4,14 @@
 # mix <- mx_profiles(df, classes = 2)
 
 mx_mixture_gradients <- function(x, ...){
-  paramLabels <- names(omxGetParameters(x))
+  paramLabels <- names(OpenMx::omxGetParameters(x))
   numParam <- length(paramLabels)
-  custom.compute <- mxComputeSequence(list(mxComputeNumericDeriv(checkGradient = FALSE,
-                                                                 hessian = FALSE), mxComputeReportDeriv()))
+  custom.compute <- OpenMx::mxComputeSequence(list(OpenMx::mxComputeNumericDeriv(checkGradient = FALSE,
+                                                                 hessian = FALSE), OpenMx::mxComputeReportDeriv()))
   do.call(rbind, lapply(1:nrow(x@data$observed), function(i) {
     tryCatch({
-      mxRun(mxModel(
-        x, custom.compute, mxData(x@data$observed[i, , drop = FALSE], "raw")
+      OpenMx::mxRun(OpenMx::mxModel(
+        x, custom.compute, OpenMx::mxData(x@data$observed[i, , drop = FALSE], "raw")
       ), silent = TRUE)$output$gradient
     },
     error = function(e) {

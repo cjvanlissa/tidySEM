@@ -28,10 +28,12 @@ all groups, but they are weighted by group-specific BCH weights as described
 in Bolck, Croon, & Hagenaars, 2004.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 dat <- data.frame(x = iris$Petal.Length)
 mixmod <- mx_profiles(dat,
                       classes = 2)
 res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
+}
 }
 \references{
 Bolck, A., Croon, M., & Hagenaars, J. (2004). Estimating latent

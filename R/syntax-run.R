@@ -20,8 +20,11 @@
 # @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
 # @importFrom lavaan mplus2lavaan.modelSyntax
 # @importFrom stats cutree dist hclust
-#' @importFrom OpenMx omxDefaultComputePlan mxComputeSimAnnealing
+# @importFrom OpenMx omxDefaultComputePlan mxComputeSimAnnealing
 run_mx <- function(x, ...){
+  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+    return(NULL)
+  }
   UseMethod("run_mx", x)
 }
 
@@ -40,7 +43,7 @@ run_mx.tidy_sem <- function(x, ...){
 #' @export
 run_mx.MxModel <- function(x, ...){
   dots <- list(...)
-  run_fun <- "mxRun"
+  run_fun <- "OpenMx::mxRun"
   run_args <- list()
   # Determine type of model and what elements are available
   if(!is.null(dots[["data"]])){
@@ -74,11 +77,11 @@ run_mx.MxModel <- function(x, ...){
                                exhaustive = TRUE))
              },
              {
-               x <- mxModel(x, mxComputeSimAnnealing())
-               res <- try(mxRun(x), silent = TRUE)
+               x <- OpenMx::mxModel(x, OpenMx::mxComputeSimAnnealing())
+               res <- try(OpenMx::mxRun(x), silent = TRUE)
                if(inherits(res, "try-error")){
                  message("Simulated annealing failed, suggesting bad starting values or an overly complex model. Trying `mxTryHard()`.")
-                 x <- mxTryHard(x)
+                 x <- OpenMx::mxTryHard(x)
                } else {
                  x <- res
                }
@@ -97,9 +100,9 @@ run_mx.MxModel <- function(x, ...){
     dots[which(names(dots) %in% formalArgs(run_fun))])
   cl <- as.call(run_args)
   res <- eval(cl)
-  if(res$output$maxRelativeOrdinalError > mxOption(NULL, 'mvnRelEps')){
+  if(res$output$maxRelativeOrdinalError > OpenMx::mxOption(NULL, 'mvnRelEps')){
     message("Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.")
-    res <- try(mxTryHardOrdinal(x), silent = TRUE)
+    res <- try(OpenMx::mxTryHardOrdinal(x), silent = TRUE)
   }
   return(res)
 }
@@ -120,13 +123,13 @@ mx_add_data <- function(x, data, ...){
       }
       for(i in 1:length(groupnames)){
         x[[x$fitfunction$groups[i]]] <-
-          mxModel(x[[x$fitfunction$groups[i]]],
-                  mxData(data[data[[dots[["groups"]]]] == groupnames[i], -which(names(data) == dots[["groups"]]), drop = FALSE],
+          OpenMx::mxModel(x[[x$fitfunction$groups[i]]],
+                  OpenMx::mxData(data[data[[dots[["groups"]]]] == groupnames[i], -which(names(data) == dots[["groups"]]), drop = FALSE],
                          type = "raw"))
       }
     }
   } else {
-    x <- mxModel(x, mxData(data, type = "raw"))
+    x <- OpenMx::mxModel(x, OpenMx::mxData(data, type = "raw"))
   }
   x
 }

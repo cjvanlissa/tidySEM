@@ -54,15 +54,18 @@ vnames <- getFromNamespace("vnames", "lavaan")
 #' @rdname as_ram
 #' @export
 #' @importFrom lavaan lavaanify
-#' @importFrom OpenMx mxModel imxReportProgress
-#' @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
-#' @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
-#' @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
+# @importFrom OpenMx mxModel imxReportProgress
+# @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
+# @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
+# @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
 #' @importFrom lavaan mplus2lavaan.modelSyntax
 #' @importFrom stats cutree dist hclust
 #' @importFrom methods formalArgs
-#' @import OpenMx
+# @import OpenMx
 as_ram <- function(x, ...){
+  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+    return(NULL)
+  }
   UseMethod("as_ram", x)
 }
 
@@ -134,15 +137,15 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
         Args <- list(
           out,
           name = groupnames[i],
-          mxFitFunctionML()
+          OpenMx::mxFitFunctionML()
         )
         # if(usedata) {
         #   Args <-
         #     c(Args, list(mxData(data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE], type = "raw")))
         # }
-        do.call(mxModel, Args)
+        do.call(OpenMx::mxModel, Args)
       })
-      grps <- do.call(mxModel, c(list(model = "mg", mxFitFunctionMultigroup(groupnames), grps)))
+      grps <- do.call(OpenMx::mxModel, c(list(model = "mg", OpenMx::mxFitFunctionMultigroup(groupnames), grps)))
       return(grps)
     }
   }
@@ -168,7 +171,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
         values = tvalues,
         labels = vthres$label
       )
-      do.call(mxThreshold, Args)
+      do.call(OpenMx::mxThreshold, Args)
     })
   }
   # Parse defined parameters
@@ -197,7 +200,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   path_list <- lapply(1:nrow(lavtab), function(i){
     path <- lavtab[i, ]
     Args <- c(list(
-      name = "mxPath",
+      name = "OpenMx::mxPath",
       from = switch(path[["op"]],
                     "=~" = path[["lhs"]],
                     path[["rhs"]]),
@@ -239,7 +242,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   if(isFALSE(is.null(mxmodel_dots))){
     mxmodel_args[mxmodel_dots] <- dots[mxmodel_dots]
   }
-  out <- do.call(mxModel, c(mxmodel_args,
+  out <- do.call(OpenMx::mxModel, c(mxmodel_args,
                      path_list))
   # Add data if available
   if(usedata){
@@ -258,6 +261,6 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   lapply(ord_var_nam, function(nam){
     tab <- table(df[[nam]])
     startvals <- qnorm(cumsum(prop.table(tab)[-length(tab)]))
-    mxThreshold(vars = nam, nThresh = (length(tab)-1), free = TRUE, values = startvals)
+    OpenMx::mxThreshold(vars = nam, nThresh = (length(tab)-1), free = TRUE, values = startvals)
   })
 }

@@ -83,7 +83,7 @@ table_results(fit_mx)
 table_fit(fit_mx)
 ```
 
-```{r, eval = TRUE, echo = FALSE}
+```{r, eval = requireNamespace("OpenMx", quietly = TRUE), echo = FALSE}
 estimate_mx(model) -> fit_mx
 table_results(fit_mx)
 table_fit(fit_mx)

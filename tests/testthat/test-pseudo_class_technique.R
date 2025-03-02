@@ -1,6 +1,6 @@
 library(lavaan)
 test_that("pseudo_class works", {
-
+  testthat::skip_if_not_installed("OpenMx")
   dat <- iris[,c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
   colnames(dat) <- c("SL", "SW", "PL", "PW")
   fit <- mx_profiles(data = dat, classes = 3)

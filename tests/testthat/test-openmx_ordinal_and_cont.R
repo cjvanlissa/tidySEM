@@ -1,5 +1,6 @@
-# Building model with umxThresholdMatrix works:
-df <- eval(parse(text = 'structure(list(V1 = c(-0.723313, 2.231216, -1.291729, 0.011013,
+if(requireNamespace("OpenMx", quietly = TRUE)){
+  # Building model with umxThresholdMatrix works:
+  df <- eval(parse(text = 'structure(list(V1 = c(-0.723313, 2.231216, -1.291729, 0.011013,
 -0.045636, -4.053967, -0.734269, 1.619908, -0.251358, 1.977465,
 0.008706, 1.449868, -0.425644, -1.375329, -0.741892, -0.146341,
 -1.789703, -1.091391, -2.137643, -1.825095, -1.722729, 1.587158,
@@ -329,75 +330,78 @@ df <- eval(parse(text = 'structure(list(V1 = c(-0.723313, 2.231216, -1.291729, 0
 0.773786, 2.062851, -1.792514, 2.216625, 2.259267)), row.names = c(NA,
 -500L), class = "data.frame")
 '))
-names(df) <- c(paste0("u", 1:3), "y")
-df[1:3] <- lapply(df[1:3], function(x){ordered(cut(x, 3), labels = 1:3)})
-thresh <- tidySEM:::mx_thresholds(df[1:3])
+  names(df) <- c(paste0("u", 1:3), "y")
+  df[1:3] <- lapply(df[1:3], function(x){ordered(cut(x, 3), labels = 1:3)})
+  thresh <- tidySEM:::mx_thresholds(df[1:3])
 
-c1 <- mxModel(model = "class1",
-              type = "RAM",
-              manifestVars = names(df),
-              mxPath(from = "one", to = names(df)[1:3], free = FALSE, values = 0),
-              mxPath(from = "one", to = names(df)[4], free = TRUE, values = 0),
-              mxPath(from = names(df)[1:3], to = names(df)[1:3], free = FALSE, values = 1, arrows = 2),
-              mxPath(from = names(df)[4], to = names(df)[4], free = TRUE, values = 1, arrows = 2),
-              thresh,
-              mxFitFunctionML(vector=TRUE))
-c1$expectation$thresholds <- "Thresholds"
+  c1 <- mxModel(model = "class1",
+                type = "RAM",
+                manifestVars = names(df),
+                mxPath(from = "one", to = names(df)[1:3], free = FALSE, values = 0),
+                mxPath(from = "one", to = names(df)[4], free = TRUE, values = 0),
+                mxPath(from = names(df)[1:3], to = names(df)[1:3], free = FALSE, values = 1, arrows = 2),
+                mxPath(from = names(df)[4], to = names(df)[4], free = TRUE, values = 1, arrows = 2),
+                thresh,
+                mxFitFunctionML(vector=TRUE))
+  c1$expectation$thresholds <- "Thresholds"
 
-c2 <- mxModel(c1,
-              name = "class2")
+  c2 <- mxModel(c1,
+                name = "class2")
 
-mix_tidysem <- mxModel(model = "mix",
-                       c1,
-                       c2,
-                       mxData(df, type = "raw"),
-                       mxMatrix(values=c(1, 0), nrow=1, ncol=2, lbound = 1e-4, free=c(FALSE, TRUE), name="weights"),
-                       mxExpectationMixture(paste0("class", 1:2), weights = "weights", scale="sum"),
-                       mxFitFunctionML()
-)
-#dput(res_tidysem$class2$mat_dev$values, file = "clipboard")
-c1$mat_dev$values <- structure(c(-0.302926034964045, 2.82909331886401, -0.156445970735619,
-                                 2.45771849854658, -0.7972067240314, 3.32008451032839), .Dim = 2:3)
-c2$mat_dev$values <- structure(c(-2.81346831932699, 2.97287051561923, -16.0318807337397,
-                                 16.2223970956036, -7.36668563619277, 7.53597976150227), .Dim = 2:3)
-#dput(res_tidysem$class2$M$values[1,4], file = "clipboard")
-c1$S$values[4,4] <- 1.1720109167467
-c2$S$values[4,4] <- 0.9371036285639
-c1$M$values[1,4] = -1.06960406324529
-c2$M$values[1,4] = 0.962237983458882
-# c2$mat_dev$lbound[1,] <- -10
-# c2$mat_dev$ubound <- c2$mat_dev$lbound
-# c2$mat_dev$ubound[,] <- 10
+  mix_tidysem <- mxModel(model = "mix",
+                         c1,
+                         c2,
+                         mxData(df, type = "raw"),
+                         mxMatrix(values=c(1, 0), nrow=1, ncol=2, lbound = 1e-4, free=c(FALSE, TRUE), name="weights"),
+                         mxExpectationMixture(paste0("class", 1:2), weights = "weights", scale="sum"),
+                         mxFitFunctionML()
+  )
+  #dput(res_tidysem$class2$mat_dev$values, file = "clipboard")
+  c1$mat_dev$values <- structure(c(-0.302926034964045, 2.82909331886401, -0.156445970735619,
+                                   2.45771849854658, -0.7972067240314, 3.32008451032839), .Dim = 2:3)
+  c2$mat_dev$values <- structure(c(-2.81346831932699, 2.97287051561923, -16.0318807337397,
+                                   16.2223970956036, -7.36668563619277, 7.53597976150227), .Dim = 2:3)
+  #dput(res_tidysem$class2$M$values[1,4], file = "clipboard")
+  c1$S$values[4,4] <- 1.1720109167467
+  c2$S$values[4,4] <- 0.9371036285639
+  c1$M$values[1,4] = -1.06960406324529
+  c2$M$values[1,4] = 0.962237983458882
+  # c2$mat_dev$lbound[1,] <- -10
+  # c2$mat_dev$ubound <- c2$mat_dev$lbound
+  # c2$mat_dev$ubound[,] <- 10
 
-res_tidysem <- mxTryHardOrdinal(mix_tidysem, extraTries = 10)
-tmp_tidysem <- class_prob(res_tidysem)
+  res_tidysem <- mxTryHardOrdinal(mix_tidysem, extraTries = 10)
+  tmp_tidysem <- class_prob(res_tidysem)
 
-props_tidysem <- suppressWarnings(table_results(res_tidysem, columns=NULL))
-fit_tidysem <- table_fit(res_tidysem)
+  props_tidysem <- suppressWarnings(table_results(res_tidysem, columns=NULL))
+  fit_tidysem <- table_fit(res_tidysem)
 
-# df_mp <- df
-# df_mp[1:3] <- lapply(df_mp[1:3], as.integer)
-# res_mp <- mplusObject(VARIABLE = "usevariables are u1-u3 y;
-# categorical are u1-u3;
-#                         CLASSES = c(2);",
-#                       ANALYSIS = "type = MIXTURE;
-#                       starts = 500 20",
-#             rdata = df_mp,
-#             modelout = "test.inp",
-#             run = 1L
-#             )
-# dput(res_mp$results$summaries$LL, file = "clipboard")
-# dput(res_mp$results$class_counts$modelEstimated$proportion, file = "clipboard")
-# dput(res_mp$results$parameters$unstandardized$est[c(2:7, 10:15)][unlist(list(c(1:6), c(7:12))[order(res_mp$results$class_counts$modelEstimated$proportion)])], file = "clipboard")
+  # df_mp <- df
+  # df_mp[1:3] <- lapply(df_mp[1:3], as.integer)
+  # res_mp <- mplusObject(VARIABLE = "usevariables are u1-u3 y;
+  # categorical are u1-u3;
+  #                         CLASSES = c(2);",
+  #                       ANALYSIS = "type = MIXTURE;
+  #                       starts = 500 20",
+  #             rdata = df_mp,
+  #             modelout = "test.inp",
+  #             run = 1L
+  #             )
+  # dput(res_mp$results$summaries$LL, file = "clipboard")
+  # dput(res_mp$results$class_counts$modelEstimated$proportion, file = "clipboard")
+  # dput(res_mp$results$parameters$unstandardized$est[c(2:7, 10:15)][unlist(list(c(1:6), c(7:12))[order(res_mp$results$class_counts$modelEstimated$proportion)])], file = "clipboard")
 
-test_that("ordinal mixture model works with mx_threshold", {
-  expect_equal(-2036.035, fit_tidysem$LL, tolerance = 2)
-  expect_equivalent(sort(tmp_tidysem$sum.posterior$proportion),
-                    sort(c(0.52532, 0.47468)), tolerance = .02)
+  test_that("ordinal mixture model works with mx_threshold", {
+    testthat::skip_if_not_installed("OpenMx")
+    expect_equal(-2036.035, fit_tidysem$LL, tolerance = 2)
+    expect_equivalent(sort(tmp_tidysem$sum.posterior$proportion),
+                      sort(c(0.52532, 0.47468)), tolerance = .02)
 
-  expect_equivalent(sort(pnorm(as.numeric(props_tidysem$est[props_tidysem$matrix == "Thresholds"]))),
-                    sort(pnorm(c(-0.477, 5.189, -0.231, 4.807, -1.296, 5.177, -5.473, 0.27,
-                                 -15, 0.311, -15, 0.286)))
-                    , tolerance = .12) # Note high tolerance!
-})
+    expect_equivalent(sort(pnorm(as.numeric(props_tidysem$est[props_tidysem$matrix == "Thresholds"]))),
+                      sort(pnorm(c(-0.477, 5.189, -0.231, 4.807, -1.296, 5.177, -5.473, 0.27,
+                                   -15, 0.311, -15, 0.286)))
+                      , tolerance = .12) # Note high tolerance!
+  })
 
+
+}

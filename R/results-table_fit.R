@@ -159,7 +159,7 @@ table_fit.MxModel <- function(x, ...) {
   out <- tryCatch({
     suppressMessages({
       if(!type == "mixture"){
-        satmod <- mxRefModels(x, run = TRUE)
+        satmod <- OpenMx::mxRefModels(x, run = TRUE)
         summary(x, refModels = satmod)
       } else {
         summary(x)
