@@ -81,9 +81,11 @@ get_nodes.dagitty <- function(x, label = "est", ...){
         atts <- strsplit(txt, split = "\n")[[1]]
         atts <- atts[!grepl("(<-|->|--|\\{|\\})", atts)]
         atts <- atts[grep("[", atts, fixed = TRUE)]
-        atts <- parse_dag_properties(atts)
-        if(!is.null(atts)){
-          nods <- merge(nods, atts, by = "name", all = TRUE)
+        if(length(atts) > 0){
+          atts <- parse_dag_properties(atts)
+          if(!is.null(atts)){
+            nods <- merge(nods, atts, by = "name", all = TRUE)
+          }
         }
       }
       if("label" %in% names(nods)){
