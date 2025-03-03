@@ -24,7 +24,6 @@ get_layout.dagitty <- function(x, ..., rows = NULL){
   }
 }
 
-
 #' @method get_edges dagitty
 #' @export
 get_edges.dagitty <- function(x, label = "est", ...){
@@ -46,7 +45,7 @@ get_edges.dagitty <- function(x, label = "est", ...){
         nams <- sapply(out, `[`, 1)
         out <- data.frame(name = nam, lapply(out, `[`, 2))
         names(out) <- c("name", nams)
-        if(any(names(out) %in% c("exposure", "outcome"))) out[(names(out) %in% c("exposure", "outcome"))] <- TRUE
+        if(any(names(out) %in% c("exposure", "outcome", "unobserved"))) out[(names(out) %in% c("exposure", "outcome", "unobserved"))] <- TRUE
         out
       })
       attrbts <- bind_list(attrbts)
@@ -57,6 +56,7 @@ get_edges.dagitty <- function(x, label = "est", ...){
         edge_atts$w <- gsub("^.+\\s", "", edge_atts$name)
         edge_atts$e <- gsub("^.+?\\s(.+)\\s.+$", "\\1", edge_atts$name)
         edg <- merge(edg, edge_atts, by = c("v", "w", "e"), all = TRUE)
+        edg[["name"]] <- NULL
       }
     }
     names(edg)[1:2] <- c("from", "to")
@@ -107,7 +107,7 @@ get_nodes.dagitty <- function(x, label = "est", ...){
           nams <- sapply(out, `[`, 1)
           out <- data.frame(name = nam, lapply(out, `[`, 2))
           names(out) <- c("name", nams)
-          if(any(names(out) %in% c("exposure", "outcome"))) out[(names(out) %in% c("exposure", "outcome"))] <- TRUE
+          if(any(names(out) %in% c("exposure", "outcome", "unobserved"))) out[(names(out) %in% c("exposure", "outcome", "unobserved"))] <- TRUE
           out
         })
         attrbts <- bind_list(attrbts)
@@ -126,6 +126,10 @@ get_nodes.dagitty <- function(x, label = "est", ...){
     message("Dependency 'dagitty' is not available.")
   }
 }
+
+# parse_dag_properties <- function(x){
+#
+# }
 
 #' @method prepare_graph dagitty
 #' @rdname prepare_graph

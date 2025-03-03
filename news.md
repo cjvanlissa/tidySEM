@@ -19,7 +19,7 @@
 
 # tidySEM 0.2.5
 
-* Add reference to best practices paper, <DOI:10.1080/10705511.2023.2250920>
+* Add reference to best practices paper
 * Include vignettes corresponding to the appendices of that paper
 * Correct implementation of `lr_lmr()` using `nonnest2::vuongtest()`
 

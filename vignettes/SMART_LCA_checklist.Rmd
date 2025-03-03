@@ -83,7 +83,7 @@ we acknowledge the process of conducting and reporting research is not always li
         - Columns `np_global` and `np_local` in output of `table_fit()`
 1. Transparency and Reproducibility
     + Use free open-source software to enable reproducibility.
-        - See the `worcs` package and its Vignettes, also [Van Lissa et al. (2021)](https://DOI.org/10.3233/DS-210031)
+        - See the `worcs` package and its Vignettes, [Van Lissa et al. (2021)](https://doi.org/10.3233/DS-210031)
     + Comprehensively cite literature, software, and data sources.
     + Share analysis code.
     + If possible, share data. Otherwise, share a synthetic dataset.
