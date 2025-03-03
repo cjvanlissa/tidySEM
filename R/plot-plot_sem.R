@@ -355,6 +355,7 @@ prepare_graph.default <- function(edges = NULL,
     if (!(v %in% names(Args)))
       Args <- append(Args,myfor[v])
   }
+
   # Check if nodes exist in edges and layout --------------------------------
   if(!inherits(layout, "tidy_layout")){
     if(inherits(layout, c("matrix", "data.frame"))){
@@ -430,7 +431,11 @@ prepare_graph.default <- function(edges = NULL,
   if(!("name" %in% names(nodes) & "name" %in% names(layout))){
     stop("Arguments 'nodes' and 'layout' must both have a 'name' column.")
   }
-  df_nodes <- merge(nodes, layout, by = "name")
+  df_nodes <- nodes
+  if(!all(c("x", "y") %in% names(df_nodes))){
+    df_nodes <- merge(df_nodes, layout[, c("name", setdiff(names(layout), names(df_nodes))), drop = FALSE], by = "name")
+  }
+
   if(!"label" %in% names(df_nodes)){
     df_nodes$label <- df_nodes$name
   }
@@ -540,7 +545,6 @@ prepare_graph.lavaan <- function(model,
                                  layout = NULL,
                                  nodes = NULL,
                                  ...){
-  #browser()
 
   dots <- match.call(expand.dots = FALSE)[["..."]]
 
@@ -1647,7 +1651,7 @@ match.call.defaults <- function(...) {
     if(!"size" %in% names(df)){
       df$size <- text_size
     }
-    #browser()
+
     Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha", "geom_text")
     Args <- as.list(df[which(names(df) %in% Args)])
     Args <- c(list(
