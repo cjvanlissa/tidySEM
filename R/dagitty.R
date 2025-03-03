@@ -31,31 +31,16 @@ get_edges.dagitty <- function(x, label = "est", ...){
     edg <- dagitty::edges(x)
     txt <- as.character(x)
     if(grepl("[", txt, fixed = TRUE)){
-      attrbts <- strsplit(txt, split = "\n")[[1]]
-      attrbts <- attrbts[grepl("(<-|->|--)", attrbts)]
-      attrbts <- attrbts[grep("[", attrbts, fixed = TRUE)]
-      attrbts <- lapply(attrbts, function(at){
-        out <- trimws(strsplit(at, split = "[", fixed = TRUE)[[1]])
-        nam = out[1]
-        out <- gsub("]", "", out[2], fixed = TRUE)
-        out <- strsplit(out, split = ",", fixed = TRUE)[[1]]
-        out <- lapply(out, function(i){
-          gsub('"', "", strsplit(i, split = "=", fixed = TRUE)[[1]], fixed = TRUE)
-        })
-        nams <- sapply(out, `[`, 1)
-        out <- data.frame(name = nam, lapply(out, `[`, 2))
-        names(out) <- c("name", nams)
-        if(any(names(out) %in% c("exposure", "outcome", "unobserved"))) out[(names(out) %in% c("exposure", "outcome", "unobserved"))] <- TRUE
-        out
-      })
-      attrbts <- bind_list(attrbts)
-      if(!is.null(attrbts)){
-        edge_atts <- attrbts[, !(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
+      atts <- strsplit(txt, split = "\n")[[1]]
+      atts <- atts[grepl("(<-|->|--)", atts)]
+      atts <- atts[grep("[", atts, fixed = TRUE)]
+      atts <- parse_dag_properties(atts)
+      if(!is.null(atts)){
         # Merge
-        edge_atts$v <- gsub("\\s.*$", "", edge_atts$name)
-        edge_atts$w <- gsub("^.+\\s", "", edge_atts$name)
-        edge_atts$e <- gsub("^.+?\\s(.+)\\s.+$", "\\1", edge_atts$name)
-        edg <- merge(edg, edge_atts, by = c("v", "w", "e"), all = TRUE)
+        atts$v <- gsub("\\s.*$", "", atts$name)
+        atts$w <- gsub("^.+\\s", "", atts$name)
+        atts$e <- gsub("^.+?\\s(.+)\\s.+$", "\\1", atts$name)
+        edg <- merge(edg, atts, by = c("v", "w", "e"), all = TRUE)
         edg[["name"]] <- NULL
       }
     }
@@ -93,27 +78,12 @@ get_nodes.dagitty <- function(x, label = "est", ...){
       nods <- data.frame(name = nods)
       txt <- as.character(x)
       if(grepl("[", txt, fixed = TRUE)){
-        attrbts <- strsplit(txt, split = "\n")[[1]]
-        attrbts <- attrbts[!grepl("(<-|->|--|\\{|\\})", attrbts)]
-        attrbts <- attrbts[grep("[", attrbts, fixed = TRUE)]
-        attrbts <- lapply(attrbts, function(at){
-          out <- trimws(strsplit(at, split = "[", fixed = TRUE)[[1]])
-          nam = out[1]
-          out <- gsub("]", "", out[2], fixed = TRUE)
-          out <- strsplit(out, split = ",", fixed = TRUE)[[1]]
-          out <- lapply(out, function(i){
-            gsub('"', "", strsplit(i, split = "=", fixed = TRUE)[[1]], fixed = TRUE)
-          })
-          nams <- sapply(out, `[`, 1)
-          out <- data.frame(name = nam, lapply(out, `[`, 2))
-          names(out) <- c("name", nams)
-          if(any(names(out) %in% c("exposure", "outcome", "unobserved", "latent"))) out[(names(out) %in% c("exposure", "outcome", "unobserved", "latent"))] <- TRUE
-          out
-        })
-        attrbts <- bind_list(attrbts)
-        if(!is.null(attrbts)){
-          node_atts <- attrbts[, !c(colSums(is.na(attrbts)) == nrow(attrbts)), drop = FALSE]
-          nods <- merge(nods, node_atts, by = "name", all = TRUE)
+        atts <- strsplit(txt, split = "\n")[[1]]
+        atts <- atts[!grepl("(<-|->|--|\\{|\\})", atts)]
+        atts <- atts[grep("[", atts, fixed = TRUE)]
+        atts <- parse_dag_properties(atts)
+        if(!is.null(atts)){
+          nods <- merge(nods, atts, by = "name", all = TRUE)
         }
       }
       if("label" %in% names(nods)){
@@ -127,9 +97,35 @@ get_nodes.dagitty <- function(x, label = "est", ...){
   }
 }
 
-# parse_dag_properties <- function(x){
-#
-# }
+parse_dag_properties <- function(x){
+  if(length(x) > 1){
+    out <- lapply(x, function(thisx){
+      parse_dag_properties(thisx)
+    })
+    out <- tidySEM:::bind_list(out)
+    out <- out[, !c(colSums(is.na(out)) == nrow(out)), drop = FALSE]
+    return(out)
+  }
+  nam <- trimws(gsub("\\[.*", "", x))
+  x <- gsub("^.+?\\[(.+?)\\].{0,}$", "\\1", x)
+  sects <- unname(unlist(read.csv(text=x, header = FALSE)))
+  sects <- lapply(sects, function(i){
+    splt <- strsplit(i, split = "=", fixed = TRUE)[[1]]
+    nm <- splt[1]
+    out <- data.frame(splt[-1])
+    # Catch tags
+    if(nm %in% c("exposure", "outcome", "unobserved", "latent")){
+      out[1,1] <- TRUE
+    }
+    names(out) <- nm
+    if(nm == "pos"){
+      out <- as.data.frame(t(as.numeric(strsplit(out[[1]], split = ",", fixed = TRUE)[[1]])))
+      names(out) <- c("x", "y")
+    }
+    out
+  })
+  data.frame(name = nam, do.call(cbind, sects))
+}
 
 #' @method prepare_graph dagitty
 #' @rdname prepare_graph
