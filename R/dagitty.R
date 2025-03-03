@@ -107,7 +107,7 @@ get_nodes.dagitty <- function(x, label = "est", ...){
           nams <- sapply(out, `[`, 1)
           out <- data.frame(name = nam, lapply(out, `[`, 2))
           names(out) <- c("name", nams)
-          if(any(names(out) %in% c("exposure", "outcome", "unobserved"))) out[(names(out) %in% c("exposure", "outcome", "unobserved"))] <- TRUE
+          if(any(names(out) %in% c("exposure", "outcome", "unobserved", "latent"))) out[(names(out) %in% c("exposure", "outcome", "unobserved", "latent"))] <- TRUE
           out
         })
         attrbts <- bind_list(attrbts)
