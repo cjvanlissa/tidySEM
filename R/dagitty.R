@@ -59,9 +59,9 @@ get_edges.dagitty <- function(x, label = "est", ...){
       edg$curvature[edg$e == "<->"] <- 60
     }
     edg <- edg[, !names(edg) %in% c("x", "y"), drop = FALSE]
-    if("label" %in% names(edg)){
-      if(any(is.na(edg$label))) edg$label[is.na(edg$label)] <- edg$name[is.na(edg$label)]
-    }
+    # if("label" %in% names(edg)){
+    #   if(any(is.na(edg$label))) edg$label[is.na(edg$label)] <- edg$name[is.na(edg$label)]
+    # }
     class(edg) <- c("tidy_edges", class(edg))
     return(edg)
   } else {
