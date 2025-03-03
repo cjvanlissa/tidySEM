@@ -34,8 +34,8 @@ get_edges.dagitty <- function(x, label = "est", ...){
       atts <- strsplit(txt, split = "\n")[[1]]
       atts <- atts[grepl("(<-|->|--)", atts)]
       atts <- atts[grep("[", atts, fixed = TRUE)]
-      atts <- parse_dag_properties(atts)
-      if(!is.null(atts)){
+      if(length(atts) > 0){
+        atts <- parse_dag_properties(atts)
         # Merge
         atts$v <- gsub("\\s.*$", "", atts$name)
         atts$w <- gsub("^.+\\s", "", atts$name)
