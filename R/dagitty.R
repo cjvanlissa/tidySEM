@@ -112,7 +112,7 @@ parse_dag_properties <- function(x){
   x <- gsub("^.+?\\[(.+?)\\].{0,}$", "\\1", x)
   sects <- unname(unlist(read.csv(text=x, header = FALSE)))
   sects <- lapply(sects, function(i){
-    splt <- strsplit(i, split = "=", fixed = TRUE)[[1]]
+    splt <- regmatches(i, regexpr("=", i), invert = TRUE)[[1]]
     nm <- splt[1]
     out <- data.frame(splt[-1])
     # Catch tags
