@@ -1,12 +1,13 @@
 # tidySEM 0.2.8
 
-* Fix CRAN check NOTES:
-    + "Rd file(s) with Rd \link{} targets missing package
-      anchors"
+* Make OpenMx a Suggest instead of an Import
+* Improve parsing of dagitty objects
+* Allow floating point coordinates in layouts of class `tidy_layout` (mostly for
+  dagitty plots)
 
 ## Test environments
 
-* local Windows 11 install, R 4.3.1
+* local Windows 11 install, R 4.4.2
 * GitHub Actions (r-lib): windows-latest (release)
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)

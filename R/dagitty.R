@@ -115,17 +115,20 @@ parse_dag_properties <- function(x){
   sects <- lapply(sects, function(i){
     splt <- regmatches(i, regexpr("=", i), invert = TRUE)[[1]]
     nm <- splt[1]
-    out <- data.frame(splt[-1])
     # Catch tags
     if(nm %in% c("exposure", "outcome", "unobserved", "latent")){
-      out[1,1] <- TRUE
+      out <- data.frame(TRUE)
+      names(out) <- nm
+      return(out)
     }
-    names(out) <- nm
     if(nm == "pos"){
-      out <- as.data.frame(t(as.numeric(strsplit(out[[1]], split = ",", fixed = TRUE)[[1]])))
+      out <- as.data.frame(t(as.numeric(strsplit(splt[2], split = ",", fixed = TRUE)[[1]])))
       names(out) <- c("x", "y")
+      return(out)
     }
-    out
+    out <- data.frame(splt[-1])
+    names(out) <- nm
+    return(out)
   })
   data.frame(name = nam, do.call(cbind, sects))
 }

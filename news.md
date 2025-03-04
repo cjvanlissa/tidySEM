@@ -1,8 +1,12 @@
 # tidySEM 0.2.8
 
+* Make OpenMx a Suggest instead of an Import
 * Improve parsing of dagitty objects
 * Allow floating point coordinates in layouts of class `tidy_layout` (mostly for
   dagitty plots)
+* Fix CRAN check NOTES:
+    + "Rd file(s) with Rd \link{} targets missing package
+      anchors"
 
 # tidySEM 0.2.7
 
