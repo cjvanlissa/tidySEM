@@ -1,25 +1,23 @@
 #' @title Add paths to an object of class 'tidy_sem'
 #' @description Add paths to an object of class \code{tidy_sem}, or replace
 #' existing paths. The paths must be specified as
-#' \code{\link[lavaan:model.syntax]{lavaan::model.syntax}}, and separated by commas.
+#' [lavaan::model.syntax][lavaan::model.syntax], and separated by commas.
 #' @param model An object of class \code{tidy_sem}.
 #' @param ... Paths to add or substitute, specified in
-#' \code{\link[lavaan:model.syntax]{lavaan::model.syntax}},
+#' [lavaan::model.syntax][lavaan::model.syntax],
 #' and separated by commas.
 #' @return An object of class \code{tidy_sem}.
-#' @details Currently, only the
-#' \code{\link[lavaan:lavaan]{lavaan::lavaan()}}
+#' @details Currently, only the `lavaan`
 #' commands \code{~,
 #' ~~, =~,} and \code{~1} are parsed.
 #' @details  This function relies on
-#' \code{\link[lavaan:model.syntax]{lavaan::model.syntax}}
-#' to convert syntax strings
+#' [lavaan::model.syntax][lavaan::model.syntax] to convert syntax strings
 #' to \code{lavaan} parameter tables. By default, is uses the arguments
 #' \code{int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = TRUE,
 #' auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
 #' auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE,
 #' meanstructure = TRUE}, in a similar way
-#' to \code{\link[lavaan:sem]{lavaan::sem()}} and \code{\link[lavaan:cfa]{lavaan::cfa()}}.
+#' to [lavaan::sem()][lavaan::sem()] and [lavaan::cfa()][lavaan::cfa()].
 #' @examples
 #' library(lavaan)
 #' df <- iris[, 1:4]
@@ -29,8 +27,7 @@
 #' model <- add_paths(model, x =~ a*x_1 + b*x_2 + a*x_3 + b*x_4)
 #' res <- estimate_lavaan(model)
 #' summary(res)
-#' @seealso
-#'  \code{\link[lavaan:model.syntax]{lavaan::model.syntax}}
+#' @seealso [lavaan::model.syntax][lavaan::model.syntax]
 #' @rdname add_paths
 #' @export
 #' @importFrom lavaan lavParseModelString

@@ -455,7 +455,7 @@ as_mx_mixture <- function(model,
 #' \code{mxModel}s.
 #' @param model A mixture model of class \code{mxModel}.
 #' @param splits Optional. A numeric vector of length equal to the number of
-#' rows in the \code{\link[OpenMx:mxData]{OpenMx::mxData()}} used in the \code{model} object. The data
+#' rows in the [OpenMx::mxData()] used in the \code{model} object. The data
 #' will be split by this vector. See Details for the default setting and
 #' possible alternatives.
 #' @param ... Additional arguments, passed to functions.
@@ -487,7 +487,7 @@ as_mx_mixture <- function(model,
 #'   \code{sample.int(n = classes,
 #'   size = nrow(data), replace = TRUE)}
 #' }
-#' @return Returns an \code{\link[OpenMx:mxModel]{OpenMx::mxModel()}} with starting values.
+#' @return Returns an [OpenMx::mxModel()] with starting values.
 #' @export
 #' @keywords mixture models openmx
 #' @examples

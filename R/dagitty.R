@@ -99,18 +99,19 @@ get_nodes.dagitty <- function(x, label = "est", ...){
   }
 }
 
+#' @importFrom utils read.csv
 parse_dag_properties <- function(x){
   if(length(x) > 1){
     out <- lapply(x, function(thisx){
       parse_dag_properties(thisx)
     })
-    out <- tidySEM:::bind_list(out)
+    out <- bind_list(out)
     out <- out[, !c(colSums(is.na(out)) == nrow(out)), drop = FALSE]
     return(out)
   }
   nam <- trimws(gsub("\\[.*", "", x))
   x <- gsub("^.+?\\[(.+?)\\].{0,}$", "\\1", x)
-  sects <- unname(unlist(read.csv(text=x, header = FALSE)))
+  sects <- unname(unlist(utils::read.csv(text=x, header = FALSE)))
   sects <- lapply(sects, function(i){
     splt <- regmatches(i, regexpr("=", i), invert = TRUE)[[1]]
     nm <- splt[1]

@@ -50,7 +50,6 @@ Imports:
 Suggests: 
     testthat,
     knitr,
-    rmarkdown,
     dplyr,
     stringr,
     covr,
@@ -65,7 +64,8 @@ Suggests:
     dagitty,
     mice,
     ggraph,
-    OpenMx
+    OpenMx,
+    rmarkdown
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
