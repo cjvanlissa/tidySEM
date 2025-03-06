@@ -117,6 +117,7 @@ plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = T
 #' @method plot_bivariate MxModel
 #' @export
 plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
+
   dots <- list(...)
   df_plot <- get_cordat(x)
   if("label_class" %in% names(dots)){
@@ -143,10 +144,11 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   if(length(variables) < 2) stop("Function plot_bivariate() requires at least two variables.")
   if (rawdata) {
     df_raw <- .extract_rawdata(x, select_vars = variables)
+    df_raw$Class <- paste0("class", df_raw$Class)
     if("label_class" %in% names(dots)){
       df_raw$Class <- classlabs[df_raw$Class]
     }
-    df_raw$Class <- ordered(df_raw$Class, labels = levels(df_plot$Class))
+    df_raw$Class <- ordered(df_raw$Class, levels = levels(df_plot$Class))
   }
   # Basic plot
   p <- .base_plot(ifelse(bw, 0, max(df_plot$Classes)))
@@ -158,7 +160,13 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   n_vars <- length(Args$variables)
   model_mat <- matrix(1L:(n_vars*n_vars), nrow = n_vars)
   df_density <- do.call(.extract_density_data, Args)
-  df_density$Class <- ordered(df_density$Class, levels = c(seq_along(levels(df_plot$Class)), "Total"), labels = c(levels(df_plot$Class), "Total"))
+
+  if("label_class" %in% names(dots)){
+    levels(df_density$Class)[-1] <- classlabs[paste0("class", levels(df_density$Class)[-1])]
+  } else {
+    levels(df_density$Class)[-1] <- paste0("class", levels(df_density$Class)[-1])
+  }
+  df_density$Class <- ordered(df_density$Class, levels = c(levels(df_plot$Class), "Total"), labels = c(levels(df_plot$Class), "Total"))
   args_dens <- list(plot_df = df_density,
                     variables = NULL)
 

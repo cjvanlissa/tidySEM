@@ -1,3 +1,7 @@
+# tidySEM 0.2.9
+
+* Fix bug in plot_bivariate()
+
 # tidySEM 0.2.8
 
 * Make OpenMx a Suggest instead of an Import
