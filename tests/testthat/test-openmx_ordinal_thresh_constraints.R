@@ -1,4 +1,5 @@
 if(requireNamespace("OpenMx", quietly = TRUE)){
+  data(data_mix_ordinal)
   df <- data_mix_ordinal[1:2]
   df[1:2] <- lapply(df, ordered)
 

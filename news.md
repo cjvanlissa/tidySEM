@@ -1,6 +1,10 @@
 # tidySEM 0.2.9
 
+* Add support for igraph: get_nodes.igraph(), get_edges.igraph(),
+  get_layout.igraph()
 * Fix bug in plot_bivariate()
+* Fix CRAN check on r-release-macos-arm64: Do not error but instead print
+  message and return NULL when mice is not installed.
 
 # tidySEM 0.2.8
 

@@ -219,6 +219,12 @@ graph_sem.MxModel <- graph_sem.lavaan
 #' @export
 graph_sem.mplus.model <- graph_sem.lavaan
 
+#' @method graph_sem igraph
+#' @rdname graph_sem
+#' @export
+graph_sem.igraph <- graph_sem.lavaan
+
+
 #' @method graph_sem character
 #' @rdname graph_sem
 #' @export

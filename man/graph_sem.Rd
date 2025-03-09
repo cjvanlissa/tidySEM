@@ -7,6 +7,7 @@
 \alias{graph_sem.lavaan}
 \alias{graph_sem.MxModel}
 \alias{graph_sem.mplus.model}
+\alias{graph_sem.igraph}
 \alias{graph_sem.character}
 \alias{graph_sem.mplusObject}
 \title{Render a graph}
@@ -38,6 +39,8 @@ graph_sem(...)
 \method{graph_sem}{MxModel}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
 \method{graph_sem}{mplus.model}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
+
+\method{graph_sem}{igraph}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
 \method{graph_sem}{character}(...)
 

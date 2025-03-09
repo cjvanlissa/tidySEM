@@ -96,9 +96,9 @@ pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
 #' @export
 pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
   if ( ! requireNamespace("mice", quietly = TRUE) ) {
-    stop("Cannot pool fit objects, because package 'mice' is not installed")
+    message("Cannot pool fit objects, because package 'mice' is not installed")
+    return(NULL)
   }
-
   summary(mice::pool(object = fits, dfcom = df_complete, ...))
 }
 
