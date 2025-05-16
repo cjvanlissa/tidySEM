@@ -24,10 +24,9 @@ wald_test <- function(x, hypothesis, ...){
   varnames_orig <- varnames <- names(coef(x))
   hyp_orig <- hypothesis
   if(any(grepl("\\[\\d+,\\d+\\]", varnames))){
-    uniqnams <- unique(varnames)
-    for(i in seq_along(uniqnams)){
-      varnames[which(varnames == uniqnams[i])] <- paste0("xxxxxx", i)
-      hypothesis <- gsub(uniqnams[i], paste0("xxxxxx", i), hypothesis, fixed = TRUE)
+    for(i in seq_along(varnames_orig)){
+      names(varnames_orig)[i] <- varnames[i] <- paste0("xxxxxx", i)
+      hypothesis <- gsub(varnames_orig[i], paste0("xxxxxx", i), hypothesis, fixed = TRUE)
     }
   }
   hyps <- parse_hypothesis(varnames = varnames, hyp = hypothesis)
@@ -37,10 +36,10 @@ wald_test <- function(x, hypothesis, ...){
   names(test_res) <- c("df", "chisq", "p")
   out <- data.frame(Hypothesis = hyps$original_hypothesis, test_res)
   if(any(grepl("xxxxxx\\d{1,}", out$Hypothesis))){
-    for(i in seq_along(uniqnams)){
+    for(i in seq_along(varnames_orig)){
       repthis <- paste0("xxxxxx", i)
-      if(!any(grepl(repthis, out$Hypothesis, fixed = TRUE))) next
-      out$Hypothesis <- gsub(repthis, uniqnams[i], out$Hypothesis)
+      if(!any(grepl(repthis, out$Hypothesis), fixed = TRUE)) next
+      out$Hypothesis <- gsub(paste0(repthis, "\\b"), varnames_orig[repthis], out$Hypothesis)
     }
   }
   class(out) <- c("wald_test", class(out))

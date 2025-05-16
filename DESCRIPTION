@@ -66,8 +66,7 @@ Suggests:
     mice,
     ggraph,
     OpenMx,
-    rmarkdown,
-    dagitty
+    rmarkdown
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
