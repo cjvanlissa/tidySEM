@@ -622,12 +622,15 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 }
 
 #' @importFrom lavaan parameterEstimates standardizedsolution
-#' @importFrom blavaan blavInspect
+# @importFrom blavaan blavInspect
 #' @method table_results blavaan
 #' @export
 table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+  if(!isTRUE(requireNamespace("blavaan", quietly = TRUE))){
+    return(NULL)
+  }
   # Rename dictionary for consistency with mplus
-  user_specified <- blavInspect(x, "list")
+  user_specified <- blavaan::blavInspect(x, "list")
   remthese <- which(
     (user_specified$op == "==" & user_specified$user != 1L) |
       (user_specified$op == "==" & user_specified$user == 1L) |
@@ -642,9 +645,9 @@ table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval
   # Rename columns for consistency with mplus
   pars_unst$label <- lavaan_labels(pars_unst)
 
-  num_groups <- blavInspect(x, what = "ngroups")
+  num_groups <- blavaan::blavInspect(x, what = "ngroups")
   if(num_groups > 1){
-    group_labels <- blavInspect(x, what = "group.label")
+    group_labels <- blavaan::blavInspect(x, what = "group.label")
     if(!all(group_labels %in% unique(pars_unst$group))){
       if(is.numeric(pars_unst$group)){
         pars_unst$group[pars_unst$group > 0] <- group_labels[pars_unst$group]

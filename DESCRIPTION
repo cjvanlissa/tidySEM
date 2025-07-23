@@ -34,7 +34,6 @@ Depends:
 Imports:
     ggplot2 (>= 3.4.2),
     lavaan,
-    blavaan,
     MplusAutomation,
     igraph (>= 2.0.0),
     psych,
@@ -67,7 +66,8 @@ Suggests:
     ggraph,
     OpenMx,
     rmarkdown,
-    dagitty
+    dagitty,
+    blavaan
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
