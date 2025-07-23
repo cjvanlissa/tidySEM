@@ -25,3 +25,4 @@ tests/test_local.txt
 !dev/res_gmm_nopca.RData
 !vignettes/*.RData
 docs
+!tests/testthat/fit.RData
