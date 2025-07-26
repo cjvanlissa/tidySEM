@@ -1,5 +1,6 @@
 # tidySEM 0.2.9
 
+* Move blavaan and bain from Imports to Suggests to reduce dependencies
 * Add support for igraph: get_nodes.igraph(), get_edges.igraph(),
   get_layout.igraph()
 * Fix bug in plot_bivariate()

@@ -622,7 +622,6 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 }
 
 #' @importFrom lavaan parameterEstimates standardizedsolution
-# @importFrom blavaan blavInspect
 #' @method table_results blavaan
 #' @export
 table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
