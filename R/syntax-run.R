@@ -24,8 +24,10 @@
 run_mx <- function(x, ...){
   if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
     return(NULL)
+  } else {
+    attachNamespace("OpenMx")
+    UseMethod("run_mx", x)
   }
-  UseMethod("run_mx", x)
 }
 
 #' @method run_mx tidy_sem
