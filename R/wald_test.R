@@ -1,5 +1,9 @@
 #' @importFrom utils getFromNamespace
-parse_hypothesis <- getFromNamespace("parse_hypothesis", "bain")
+if(requireNamespace("bain", quietly = TRUE)){
+  parse_hypothesis <- getFromNamespace("parse_hypothesis", "bain")
+} else {
+  parse_hypothesis <- function(varnames, hyp){ NULL }
+}
 
 #' @title Wald Test for Linear Hypotheses
 #' @description This function is a wrapper for the function
@@ -21,20 +25,34 @@ parse_hypothesis <- getFromNamespace("parse_hypothesis", "bain")
 #' @importFrom car linearHypothesis
 wald_test <- function(x, hypothesis, ...){
   if(grepl("[><]", hypothesis)) stop("Can only evaluate equality constrained hypotheses. Hypotheses with '>' or '<' are not valid.")
-  varnames_orig <- varnames <- names(coef(x))
-  hyp_orig <- hypothesis
-  if(any(grepl("\\[\\d+,\\d+\\]", varnames))){
-    for(i in seq_along(varnames_orig)){
-      names(varnames_orig)[i] <- varnames[i] <- paste0("xxxxxx", i)
-      hypothesis <- gsub(varnames_orig[i], paste0("xxxxxx", i), hypothesis, fixed = TRUE)
+  if(requireNamespace("bain", quietly = FALSE)){
+    varnames_orig <- varnames <- names(coef(x))
+    hyp_orig <- hypothesis
+    if(any(grepl("\\[\\d+,\\d+\\]", varnames))){
+      for(i in seq_along(varnames_orig)){
+        names(varnames_orig)[i] <- varnames[i] <- paste0("xxxxxx", i)
+        hypothesis <- gsub(varnames_orig[i], paste0("xxxxxx", i), hypothesis, fixed = TRUE)
+      }
+    }
+    hyps <- parse_hypothesis(varnames = varnames, hyp = hypothesis)
+    test_res <- do.call(rbind, lapply(hyps$hyp_mat, function(h){
+      as.data.frame(lapply(car::linearHypothesis(x, hypothesis.matrix = h[, -ncol(h), drop = FALSE], rhs = h[, ncol(h), drop = TRUE]), `[[`, 2))
+    }))
+  } else {
+    message('The `bain` package is not installed; hypotheses cannot be parsed. Run `install.packages("bain")` to be able to parse complex hypotheses.')
+    hyps <- hypothesis
+    test_res <- do.call(rbind, lapply(hyps, function(h){
+      as.data.frame(lapply(car::linearHypothesis(x, hypothesis.matrix = h), `[[`, 2))
+    }))
+  }
+  if(!is.null(test_res)){
+    if(!"F" %in% names(test_res)){
+      names(test_res) <- c("df", "chisq", "p")
+    } else {
+      names(test_res)[match("Pr..F.", names(test_res))] <- c("p")
     }
   }
-  hyps <- parse_hypothesis(varnames = varnames, hyp = hypothesis)
-  test_res <- do.call(rbind, lapply(hyps$hyp_mat, function(h){
-    as.data.frame(lapply(car::linearHypothesis(x, hypothesis.matrix = h[, -ncol(h), drop = FALSE], rhs = h[, ncol(h), drop = TRUE]), `[[`, 2))
-  }))
-  names(test_res) <- c("df", "chisq", "p")
-  out <- data.frame(Hypothesis = hyps$original_hypothesis, test_res)
+  out <- data.frame(Hypothesis = tryCatch(hyps$original_hypothesis, error = function(e){hypothesis}), test_res)
   if(any(grepl("xxxxxx\\d{1,}", out$Hypothesis))){
     for(i in seq_along(varnames_orig)){
       repthis <- paste0("xxxxxx", i)
@@ -49,13 +67,26 @@ wald_test <- function(x, hypothesis, ...){
 #' @method print wald_test
 #' @export
 print.wald_test <- function(x, ...){
-  cat("Wald chi-square tests for linear hypotheses:\n")
+  cat("Wald tests for linear hypotheses:\n")
   print.data.frame(x, ..., row.names = FALSE)
+}
+
+#' @title Get estimates from a model object
+#' @description Get estimates from a model object.
+#' This convenience function allows you to see that coefficients are properly
+#' extracted, note how their names will be parsed, and inspect their values.
+#' @param x A model object.
+#' @param ... Parameters passed to and from other functions.
+#' @return An object of class 'model_estimates'
+#' @rdname get_estimates
+#' @export
+#' @keywords internal
+get_estimates <- function(x, ...){
+  UseMethod("get_estimates", x)
 }
 
 #' @method get_estimates MxModel
 #' @export
-#' @importFrom bain get_estimates
 get_estimates.MxModel <- function(x, ...){
   coef(x)
 }

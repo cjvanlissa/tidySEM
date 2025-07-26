@@ -42,7 +42,6 @@ Imports:
     dbscan,
     RANN,
     Matrix,
-    bain,
     car,
     future.apply,
     progressr,
@@ -67,7 +66,8 @@ Suggests:
     OpenMx,
     rmarkdown,
     dagitty,
-    blavaan
+    blavaan,
+    bain
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
