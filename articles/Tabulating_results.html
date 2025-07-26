@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,7 +176,10 @@ model:</p>
 <span>  <span class="fu"><a href="../reference/estimate_mx.html">estimate_mx</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">fit_mx</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Running model with 30 parameters</span></span>
+<pre><code><span><span class="co">#&gt; To take full advantage of multiple cores, use:</span></span>
+<span><span class="co">#&gt;   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span></span>
+<span><span class="co">#&gt;   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span></span>
+<span><span class="co">#&gt; Running model with 30 parameters</span></span>
 <span><span class="co">#&gt;                       label est_sig   se pval      confint</span></span>
 <span><span class="co">#&gt; 1     Loadings.vis.BY.vis_1    1.00 &lt;NA&gt; &lt;NA&gt;         &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 2     Loadings.vis.BY.vis_2 0.55*** 0.11 0.00 [0.34, 0.77]</span></span>

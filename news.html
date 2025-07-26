@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,9 @@
 
 <div id="tidysem-029" class="section level1">
 
-<ul><li>Add support for igraph: get_nodes.igraph(), get_edges.igraph(), get_layout.igraph()</li>
+<ul><li>Ensure run_mx() works even when OpenMx is not attached</li>
+<li>Move blavaan and bain from Imports to Suggests to reduce dependencies</li>
+<li>Add support for igraph: get_nodes.igraph(), get_edges.igraph(), get_layout.igraph()</li>
 <li>Fix bug in plot_bivariate()</li>
 <li>Fix CRAN check on r-release-macos-arm64: Do not error but instead print message and return NULL when mice is not installed.</li>
 </ul></div>
