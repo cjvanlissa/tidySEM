@@ -90,7 +90,12 @@ equal in pairwise comparisons.</p></dd>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="run_mx.html">run_mx</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">lr_test</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in attachNamespace("OpenMx"):</span> namespace is already attached</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> To take full advantage of multiple cores, use:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running mg with 4 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: OpenMx</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x[[submods[1]]]:</span> this S4 class is not subsettable</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
