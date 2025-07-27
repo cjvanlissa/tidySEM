@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -209,7 +209,7 @@ experiment with adjusting this.</strong></p>
 <span>    classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
 <span><span class="co"># Additional iterations because of convergence problems for</span></span>
 <span><span class="co"># model 1:</span></span>
-<span><span class="va">res_step</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">mxTryHardWideSearch</span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, extraTries <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">res_step</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHardWideSearch</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, extraTries <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
 <p>Note that the first model showed convergence problems, throwing the
 error: <em>The model does not satisfy the first-order optimality
 conditions to the required accuracy, and no improved point for the merit

@@ -11,7 +11,7 @@ analysis, proposed by Lo, Mendell, &amp;amp; Rubin (2001) based on work by Vuong
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,21 +106,15 @@ structural equation models. Psychological Methods, 21, 151-163.
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"OpenMx"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">100</span><span class="op">:</span><span class="fl">105</span><span class="op">)</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">df</span>, classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">lr_lmr</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> To take full advantage of multiple cores, use:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix1 with 6 parameters</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> To take full advantage of multiple cores, use:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix2 with 10 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix2 with 10 parameters</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: OpenMx</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lo-Mendell-Rubin adjusted Likelihood Ratio Test:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  null  alt   lr df        p   w2  p_w2</span>

@@ -15,7 +15,7 @@ classification uncertainty."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,6 +123,7 @@ Boca Raton, FL: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9780429
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"OpenMx"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">50</span><span class="op">:</span><span class="fl">55</span>, <span class="fl">100</span><span class="op">:</span><span class="fl">105</span><span class="op">)</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL"</span>, <span class="st">"SW"</span>, <span class="st">"PL"</span>, <span class="st">"PW"</span><span class="op">)</span></span></span>
@@ -151,7 +152,9 @@ Boca Raton, FL: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9780429
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in model[[thissub]]:</span> this S4 class is not subsettable</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix3 with 18 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix3 with 18 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The degrees of freedom are assumed to be equal to the total number of observations used in the model ( 17 ) minus the number of parameters estimated ( 5 ). This may not be correct. If necessary, provide a better value via the 'df_complete' argument</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

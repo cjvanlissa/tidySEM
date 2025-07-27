@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -171,9 +171,9 @@ as some of the indicators have only 5 response categories.</p>
 <p>In class enumeration, we want to compare a sequence of LCA models
 fitted to the data. First, note that all models converged without
 issues. If this had not been the case, it is possible to aid convergence
-using <code>mxTryHardOrdinal()</code>, which expands the search for
+using <code><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHardOrdinal()</a></code>, which expands the search for
 optimal parameter values for models with ordinal indicators. It is part
-of the family of functions based on <code>mxTryHard()</code>.</p>
+of the family of functions based on <code><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHard()</a></code>.</p>
 <p>Next, we create a model fit table using <code><a href="../reference/table_fit.html">table_fit()</a></code> and
 retain relevant columns. We also determine whether any models can be
 disqualified.</p>

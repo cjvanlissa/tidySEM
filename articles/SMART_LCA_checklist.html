@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@ introduced in Van Lissa, C. J., Garnier-Villarreal, M., &amp; Anadria,
 D. (2023). <em>Recommended Practices in Latent Class Analysis using the
 Open-Source R-Package tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link uri">https://doi.org/10.1080/10705511.2023.2250920</a>. This
 version of the checklist corresponds to the <code>tidySEM</code>
-R-package’s version , 0.2.9.</p>
+R-package’s version , 0.2.9.2.</p>
 <p>The paper discusses the best practices on which the checklist is
 based and describes specific points to check when writing, reviewing, or
 reading a paper in greater detail. However, this vignette may be updated
@@ -122,7 +122,7 @@ skew)?</li>
 <code>integer</code> and an interval measurement level.</li>
 <li>Convert ordered and binary variables to <code>mxFactor</code>.
 <ul>
-<li><code>mxFactor()</code></li>
+<li><code><a href="https://rdrr.io/pkg/OpenMx/man/mxFactor.html" class="external-link">mxFactor()</a></code></li>
 </ul>
 </li>
 <li>Convert nominal variables to binary dummy variables.
@@ -235,7 +235,7 @@ al. (2021)</a>
 model-agnostic way via <code>worcs::synthetic()</code>
 </li>
 <li>Synthetic data can be generated from the LCA model by running
-<code>mxGenerateData()</code> on the model object.</li>
+<code><a href="https://rdrr.io/pkg/OpenMx/man/mxGenerateData.html" class="external-link">mxGenerateData()</a></code> on the model object.</li>
 </ul>
 </li>
 <li>Share all digital research output in line with the FAIR
@@ -253,7 +253,7 @@ K-means clustering for complete data and hierarchical clustering when
 there are missing values.</li>
 <li>Assess convergence of all models before interpreting them.</li>
 <li>Optionally, if there is non-convergence, use functions like
-<code>mxTryHard()</code> to aid convergence.
+<code><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHard()</a></code> to aid convergence.
 <ul>
 <li>E.g., if you have concerns about model 4 in output object
 <code>res</code>, you could run

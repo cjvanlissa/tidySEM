@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -169,10 +169,12 @@ it helps to rename the variables:</p>
 <div class="section level2">
 <h2 id="output-from-openmx">Output from OpenMx<a class="anchor" aria-label="anchor" href="#output-from-openmx"></a>
 </h2>
-<p>Now, we’ll reproduce the same analysis in ‘OpenMx’. First, we run the
+<p>Now, we’ll reproduce the same analysis in ‘OpenMx’. Note that this
+requires loading the <code>OpenMx</code> package. First, we run the
 model:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_mx.html">estimate_mx</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">fit_mx</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span></code></pre></div>
@@ -180,10 +182,6 @@ model:</p>
 <span><span class="co">#&gt;   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span></span>
 <span><span class="co">#&gt;   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span></span>
 <span><span class="co">#&gt; Running model with 30 parameters</span></span>
-<span><span class="co">#&gt; Loading required namespace: OpenMx</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'OpenMx':</span></span>
-<span><span class="co">#&gt;   method          from   </span></span>
-<span><span class="co">#&gt;   predict.MxModel tidySEM</span></span>
 <span><span class="co">#&gt;                       label est_sig   se pval      confint</span></span>
 <span><span class="co">#&gt; 1     Loadings.vis.BY.vis_1    1.00 &lt;NA&gt; &lt;NA&gt;         &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 2     Loadings.vis.BY.vis_2 0.55*** 0.11 0.00 [0.34, 0.77]</span></span>
