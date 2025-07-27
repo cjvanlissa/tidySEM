@@ -22,7 +22,9 @@
 # @importFrom stats cutree dist hclust
 # @importFrom OpenMx omxDefaultComputePlan mxComputeSimAnnealing
 run_mx <- function(x, ...){
-  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+  s <- search()
+  if(!any(grepl("OpenMx", s, fixed = TRUE))){
+    message("Please run `library(OpenMx) before running any OpenMx models.`")
     return(NULL)
   }
   UseMethod("run_mx", x)
