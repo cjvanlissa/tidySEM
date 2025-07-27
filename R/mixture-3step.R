@@ -13,6 +13,7 @@
 #' @return An MxModel.
 #' @examples
 #' if(requireNamespace("OpenMx", quietly = TRUE)){
+#' library(OpenMx)
 #' dat <- data.frame(x = iris$Petal.Length)
 #' mixmod <- mx_profiles(dat,
 #'                       classes = 2)
@@ -110,6 +111,7 @@ bch_categorical <- function(x, y){
 #' @return An object of class `lr_test` and `list`.
 #' @examples
 #' if(requireNamespace("OpenMx", quietly = TRUE)){
+#' library(OpenMx)
 #' df <- iris[c(1:10, 140:150), c(1, 5)]
 #' names(df) <- c("x", "group")
 #' mod <- as_ram("x~1", data = df, group = "group")

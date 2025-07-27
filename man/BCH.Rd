@@ -29,6 +29,7 @@ in Bolck, Croon, & Hagenaars, 2004.
 }
 \examples{
 if(requireNamespace("OpenMx", quietly = TRUE)){
+library(OpenMx)
 dat <- data.frame(x = iris$Petal.Length)
 mixmod <- mx_profiles(dat,
                       classes = 2)

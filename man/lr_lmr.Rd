@@ -36,6 +36,7 @@ the LMR LRT can be evaluated using a Z-test. This function wraps
 }
 \examples{
 if(requireNamespace("OpenMx", quietly = TRUE)){
+library(OpenMx)
 df <- iris[c(1:5, 100:105), 1:3]
 names(df) <- letters[1:3]
 res <- mx_profiles(df, classes = 1:2)
