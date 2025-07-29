@@ -1,13 +1,6 @@
-# tidySEM 0.2.8
-
-* Make OpenMx a Suggest instead of an Import
-* Improve parsing of dagitty objects
-* Allow floating point coordinates in layouts of class `tidy_layout` (mostly for
-  dagitty plots)
-
 ## Test environments
 
-* local Windows 11 install, R 4.4.2
+* local Windows 11 install, R 4.5.0
 * GitHub Actions (r-lib): windows-latest (release)
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)
@@ -16,9 +9,10 @@
 * win-builder: release
 * win-builder: oldrelease
 * win-builder: development
-* Rhub 14 [CT] gcc14          R-devel (2024-06-02 r86665)
-* Rhub 20 [CT] ubuntu-clang   R-devel (2024-06-02 r86665)
-* Rhub 21 [CT] ubuntu-gcc12   R-devel (2024-06-02 r86665)
+* Rhub 1 [VM] linux          R-* (any version)
+* Rhub 2 [VM] m1-san         R-* (any version)
+* Rhub 3 [VM] macos          R-* (any version)
+* Rhub 4 [VM] macos-arm64    R-* (any version)    
 
 ## R CMD check results
 
