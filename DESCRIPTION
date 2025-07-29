@@ -1,7 +1,7 @@
 Package: tidySEM
 Type: Package
 Title: Tidy Structural Equation Modeling
-Version: 0.2.9.2
+Version: 0.2.9
 Authors@R: 
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",
@@ -65,7 +65,6 @@ Suggests:
     ggraph,
     OpenMx,
     rmarkdown,
-    dagitty,
     blavaan,
     bain
 VignetteBuilder: 
