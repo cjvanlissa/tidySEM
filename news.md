@@ -1,5 +1,8 @@
 # tidySEM 0.2.9
 
+* Make it clear that OpenMx functions require a library(OpenMx) call
+    + Updated examples and vignettes
+    + Add informative message() to run_mx() in case OpenMx is not loaded
 * Add support for igraph: get_nodes.igraph(), get_edges.igraph(),
   get_layout.igraph()
 * Fix bug in plot_bivariate()
