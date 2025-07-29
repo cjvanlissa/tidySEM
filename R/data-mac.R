@@ -26,7 +26,7 @@
 #' @keywords datasets
 #' @name curry_mac
 #' @usage data(curry_mac)
-#' @references Curry, O. S., Jones Chesters, M., & Van Lissa, C. J. (2019). Mapping morality with a compass: Testing the theory of ‘morality-as-cooperation’ with a new questionnaire. Journal of Research in Personality, 78, 106–124.
+#' @references Curry, O. S., Jones Chesters, M., & Van Lissa, C. J. (2019). Mapping morality with a compass: Testing the theory of 'morality-as-cooperation' with a new questionnaire. Journal of Research in Personality, 78, 106-124.
 #' \doi{10.1016/j.jrp.2018.10.008}
 #' @format A data.frame with 1392 rows and 42 variables.
 NULL

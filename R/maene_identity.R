@@ -41,7 +41,7 @@
 #' @keywords datasets
 #' @name maene_identity
 #' @usage data(maene_identity)
-#' @references Maene, C., D’hondt, F., Van Lissa, C. J., Thijs, J., & Stevens,
+#' @references Maene, C., D'hondt, F., Van Lissa, C. J., Thijs, J., & Stevens,
 #' P. A. (2022). Perceived teacher discrimination and depressive feelings in
 #' adolescents: the role of national, regional, and heritage identities in
 #' Flemish schools. Journal of youth and adolescence, 51(12), 2281-2293.

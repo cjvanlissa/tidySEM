@@ -45,7 +45,7 @@ lr_lmr(res)
 }
 \references{
 Lo Y, Mendell NR, Rubin DB. Testing the number of components in a
-normal mixture. Biometrika. 2001;88(3):767–778.
+normal mixture. Biometrika. 2001;88(3):767-778.
 \doi{10.1093/biomet/88.3.767}
 
 Vuong, Q. H. (1989). Likelihood ratio tests for model selection

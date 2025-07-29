@@ -36,7 +36,7 @@ Cooperation scale.
 }
 }
 \references{
-Curry, O. S., Jones Chesters, M., & Van Lissa, C. J. (2019). Mapping morality with a compass: Testing the theory of ‘morality-as-cooperation’ with a new questionnaire. Journal of Research in Personality, 78, 106–124.
+Curry, O. S., Jones Chesters, M., & Van Lissa, C. J. (2019). Mapping morality with a compass: Testing the theory of 'morality-as-cooperation' with a new questionnaire. Journal of Research in Personality, 78, 106-124.
 \doi{10.1016/j.jrp.2018.10.008}
 }
 \keyword{datasets}

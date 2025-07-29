@@ -64,7 +64,7 @@ suitable as an estimate of reliability. For such scales, the Spearman-Brown
 reliability coefficient for two-item scales is computed, as described in
 Eisinga, R., Grotenhuis, M. te, & Pelzer, B. (2012). The reliability of a
 two-item scale: Pearson, Cronbach, or Spearman-Brown? International Journal
-of Public Health, 58(4), 637–642. \doi{10.1007/s00038-012-0416-3}.
+of Public Health, 58(4), 637-642. \doi{10.1007/s00038-012-0416-3}.
 These coefficients are marked with "(sb)".
 }
 \examples{

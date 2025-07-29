@@ -21,7 +21,7 @@
 #' }
 #' @references Bolck, A., Croon, M., & Hagenaars, J. (2004). Estimating latent
 #' structure models with categorical variables: One-step versus three-step
-#' estimators. Political Analysis, 12(1), 3–27. \doi{10.1093/pan/mph001}
+#' estimators. Political Analysis, 12(1), 3-27. \doi{10.1093/pan/mph001}
 #' @export
 BCH <- function(x, model, data, ...){
   UseMethod("BCH", x)

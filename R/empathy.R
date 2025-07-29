@@ -40,7 +40,7 @@
 #' @references Van Lissa, C. J., Hawk, S. T., Branje, S. J., Koot, H. M.,
 #' Van Lier, P. A., & Meeus, W. H. (2014). Divergence Between Adolescent and
 #' Parental Perceptions of Conflict in Relationship to Adolescent Empathy
-#' Development. Journal of Youth and Adolescence, (Journal Article), 1–14.
+#' Development. Journal of Youth and Adolescence, (Journal Article), 1-14.
 #' \doi{10.1007/s10964-014-0152-5}
 #' @format A data frame with 467 rows and 13 variables.
 NULL
