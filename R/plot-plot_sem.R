@@ -1658,17 +1658,17 @@ match.call.defaults <- function(...) {
       df$size <- text_size
     }
 
-    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha", "geom_text")
+    Args <- c("fill", "size", "family", "fontface", "hjust", "vjust", "lineheight", "colour","color",  "alpha", "geom_text", "linewidth")
     Args <- as.list(df[which(names(df) %in% Args)])
     Args <- c(list(
       data = df,
-      mapping = aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]]),
-      label.size = NA
+      mapping = aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]])
+      #, linewidth = NA
     ),
     Args)
     if(use_geom_text){
       Args$mapping <- aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]], customdata = .data[["label"]])
-      Args[c("geom_text", "fill", "label.size")] <- NULL
+      Args[c("geom_text", "fill", "linewidth")] <- NULL
       p <- p + do.call(geom_text, Args)
     } else {
       p <- p + do.call(geom_label, Args)

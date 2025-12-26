@@ -2,7 +2,11 @@
 if(requireNamespace("bain", quietly = TRUE)){
   parse_hypothesis <- getFromNamespace("parse_hypothesis", "bain")
 } else {
-  parse_hypothesis <- function(varnames, hyp){ NULL }
+  parse_hypothesis <- function(varnames, hyp){
+    message('The `bain` package is not installed; hypotheses cannot be parsed. Run `install.packages("bain")` to be able to parse complex hypotheses.')
+    return(NULL)
+  }
+
 }
 
 #' @title Wald Test for Linear Hypotheses

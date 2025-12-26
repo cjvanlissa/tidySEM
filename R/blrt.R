@@ -57,43 +57,74 @@ BLRT.mixture_list <- function(x, replications = 100, ...){
 #' @export
 BLRT.list <- BLRT.mixture_list
 
+#' @importFrom progress progress_bar
 #' @importFrom future.apply future_lapply
 #' @importFrom progressr with_progress progressor
 blrt_internal <-
-  function(mod_simple, mod_complex, replications = 100) {
+  function(mod_simple, mod_complex, replications = 100, show_progress = TRUE) {
     lrtest <-
       mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood
     progmsg <- paste0(mod_simple@name, " vs. ", mod_complex@name)
-    progressr::with_progress({
-      pgs <- progressr::progressor(steps = replications)
-    bootres <- future.apply::future_lapply(
-      X = 1:replications,
-      future.seed = TRUE,
-      FUN = function(i) {
-        pgs(sprintf(progmsg))
-        tryCatch({
-          df_sim <- OpenMx::mxGenerateData(mod_simple)
-          mod_simple@data$observed <-
-            df_sim
-          mod_complex@data$observed <-
-            df_sim
-          mod_simple <-
-            OpenMx::mxRun(mod_simple,
-                  silent = TRUE,
-                  suppressWarnings = FALSE)
-          mod_complex <-
-            OpenMx::mxRun(mod_complex,
-                  silent = TRUE,
-                  suppressWarnings = FALSE)
-          c(
-            mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood,
-            mod_simple@output$status$code + mod_complex@output$status$code
-          )
-        }, error = function(e) {
-          c(NA, 1)
-        })
-      }
-    )})
+    if(show_progress & requireNamespace("progressr", quietly = TRUE) & requireNamespace("progress", quietly = TRUE)){
+      progressr::with_progress({
+        pgs <- progressr::progressor(steps = replications)
+        bootres <- future.apply::future_lapply(
+          X = 1:replications,
+          future.seed = TRUE,
+          FUN = function(i) {
+            pgs(sprintf(progmsg))
+            tryCatch({
+              df_sim <- OpenMx::mxGenerateData(mod_simple, silent = TRUE)
+              mod_simple@data$observed <-
+                df_sim
+              mod_complex@data$observed <-
+                df_sim
+              mod_simple <-
+                OpenMx::mxRun(mod_simple,
+                              silent = TRUE,
+                              suppressWarnings = FALSE)
+              mod_complex <-
+                OpenMx::mxRun(mod_complex,
+                              silent = TRUE,
+                              suppressWarnings = FALSE)
+              c(
+                mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood,
+                mod_simple@output$status$code + mod_complex@output$status$code
+              )
+            }, error = function(e) {
+              c(NA, 1)
+            })
+          }
+        )})
+    } else {
+      bootres <- future.apply::future_lapply(
+        X = 1:replications,
+        future.seed = TRUE,
+        FUN = function(i) {
+          tryCatch({
+            df_sim <- OpenMx::mxGenerateData(mod_simple, silent = TRUE)
+            mod_simple@data$observed <-
+              df_sim
+            mod_complex@data$observed <-
+              df_sim
+            mod_simple <-
+              OpenMx::mxRun(mod_simple,
+                            silent = TRUE,
+                            suppressWarnings = FALSE)
+            mod_complex <-
+              OpenMx::mxRun(mod_complex,
+                            silent = TRUE,
+                            suppressWarnings = FALSE)
+            c(
+              mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood,
+              mod_simple@output$status$code + mod_complex@output$status$code
+            )
+          }, error = function(e) {
+            c(NA, 1)
+          })
+        }
+      )
+    }
     bootres <- do.call(rbind, bootres)
     isvalid <- bootres[, 2] == 0
     # lrdist <- bootres[isvalid, 1]

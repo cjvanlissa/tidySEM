@@ -180,7 +180,7 @@ tidysem_lavaanify <- function(..., data = NULL){
   cl[[1L]] <- str2lang("lavaan::lavaanify")
   x <- eval.parent(cl)
   if(!is.null(data)){
-    obs <- vnames(x, type = "ov")
+    obs <- lavaan::lavNames(x, type = "ov")
     ord <- sapply(data[obs], inherits, "ordered")
     cats <- sapply(data[obs], inherits, "factor") & !ord
     if(any(ord)){

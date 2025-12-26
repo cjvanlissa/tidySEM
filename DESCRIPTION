@@ -32,8 +32,8 @@ Depends:
     stats,
     utils
 Imports:
-    ggplot2 (>= 3.4.2),
-    lavaan,
+    ggplot2 (>= 3.5.0),
+    lavaan (>= 0.6-21),
     MplusAutomation,
     igraph (>= 2.0.0),
     psych,
@@ -45,6 +45,7 @@ Imports:
     car,
     future.apply,
     progressr,
+    progress,
     nonnest2 (>= 0.5.6)
 Suggests: 
     testthat,
@@ -66,10 +67,11 @@ Suggests:
     OpenMx,
     rmarkdown,
     blavaan,
-    bain
+    bain,
+    future
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 LazyData: true
 Roxygen: list(markdown = TRUE)

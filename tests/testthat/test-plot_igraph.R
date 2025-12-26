@@ -50,7 +50,7 @@ names <- c('A','B','C,','D')
 from <- c(113,115,112,114,113)
 to <- c(112,112,115,113,114)
 structure <- data.frame("from" = from, "to" = to)
-g <- graph.data.frame(structure)
+g <- igraph::graph_from_data_frame(structure)
 #V(g)$label <- names
 V(g)$nonsense <- letters[seq_along(names)]
 

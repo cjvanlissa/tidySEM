@@ -20,8 +20,8 @@ lsub <- function(x, replacement = NULL, pattern = "{C}", fixed = TRUE, ...){
 }
 
 
-#' @importFrom utils getFromNamespace
-vnames <- getFromNamespace("vnames", "lavaan")
+# @importFrom utils getFromNamespace
+#vnames <- getFromNamespace("vnames", "lavaan")
 
 
 #' @title Convert lavaan syntax to RAM specification
@@ -183,7 +183,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
 
   }
   # Identify observed and latent
-  vnames <- vnames(partable = lavtab, type = "all")
+  vnames <- lavaan::lavNames(object = lavtab, type = "all")
 
   if(!is.null(vnames[["lv"]])){
     latent <- unlist(vnames[["lv"]])

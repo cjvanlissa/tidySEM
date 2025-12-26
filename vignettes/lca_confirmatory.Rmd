@@ -67,6 +67,7 @@ We first only use the four scales: `c("burdened", "trapped", "negaffect", "lonel
 # Load required packages
 library(tidySEM) 
 library(ggplot2)
+library(OpenMx)
 # Load data
 df <- zegwaard_carecompass[, c("burdened", "trapped", "negaffect", "loneliness")]
 ```
@@ -399,8 +400,8 @@ p1 <- plot_profiles(res_final, ci = NULL, sd= FALSE, add_line = TRUE, rawdata = 
 p1 <- p1 + theme(legend.position = c(.85, .2))
 p2 <- plot_profiles(res_final)
 p2 <- p2 + theme(legend.position = "none")
-p <- ggpubr::ggarrange(p1, p2)
-ggsave("lpa_profiles.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1)
+# p <- ggpubr::ggarrange(p1, p2)
+# ggsave("lpa_profiles.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1)
 ```
 ```{r echo = FALSE, eval = eval_results, fig.cap="Bivariate profile plot", out.width="80%"}
 knitr::include_graphics("lpa_profiles.png")
@@ -474,7 +475,7 @@ so that mental healthcare professionals can provide tailored support to those wh
 In `tidySEM`, it is possible to predict class membership for new data.
 Imagine that we administer the care compass questionnaire to a new individual.
 We can assign their scale scores to a `data.frame`,
-and supply it to the `predict()` function via the `newdata` argument.
+and supply it to the `predict_class()` function (in previous versions, we overloaded the `predict()` function) via the `newdata` argument.
 The result includes the individual's most likely class,
 as well as posterior probabilities for all classes.
 
@@ -485,7 +486,7 @@ df_new <- data.frame(
   negaffect = 1.5,
   loneliness = 4
 )
-predict(res_final, newdata = df_new)
+predict_class(res_final, newdata = df_new)
 ```
 ```{r echo = FALSE, eval = TRUE}
 structure(c(0.000808074819286418, 1.35412723878036e-15, 0.999191879285034, 
