@@ -1,3 +1,12 @@
+# tidySEM 0.2.10
+
+* Fix GitGub issue #116: lavaan is deprecating lavaan:::vnames, replaced with
+  lavaan::lavNames()
+* Fix GitHub issue #115: Wald tests resulted in empty data.frame when progress
+  was not loaded.
+* Vignettes should show that OpenMx must be loaded in order to run functions
+  that depend on it (i.e., latent class analyses)
+  
 # tidySEM 0.2.9
 
 * Make it clear that OpenMx functions require a library(OpenMx) call
