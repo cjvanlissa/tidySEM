@@ -663,7 +663,7 @@ prepare_graph_model <- function(model, ...) {
 
 #' @export
 #' @importFrom stats setNames
-#' @importFrom ggplot2 aes_string arrow element_blank facet_grid geom_label
+#' @importFrom ggplot2 arrow element_blank facet_grid geom_label
 #' @importFrom ggplot2 geom_rect geom_segment geom_text geom_vline ggplot labs
 #' @importFrom ggplot2 theme theme_bw unit facet_wrap facet_grid coord_fixed
 #' @importFrom graphics plot
@@ -1527,7 +1527,7 @@ match.call.defaults <- function(...) {
 }
 
 #' @importFrom stats dist
-#' @importFrom ggplot2 scale_linetype_manual aes_string
+#' @importFrom ggplot2 scale_linetype_manual
 #' @importFrom ggplot2 arrow
 .plot_edges <- function(p, df, text_size = 5, npoints = 101, ...) {
   df_edges <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
@@ -1663,7 +1663,7 @@ match.call.defaults <- function(...) {
     Args <- c(list(
       data = df,
       mapping = aes(x = .data[["x"]], y = .data[["y"]], label = .data[["label"]])
-      #, linewidth = NA
+      , linewidth = NA
     ),
     Args)
     if(use_geom_text){

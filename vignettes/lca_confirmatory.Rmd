@@ -10,7 +10,7 @@ vignette: >
 ```{r setup, include = FALSE}
 library(yaml)
 library(scales)
-
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -63,7 +63,7 @@ To load the data, simply attach the `tidySEM` package.
 For convenience, we assign the variables used for analysis to an object called `df`.
 We first only use the four scales: `c("burdened", "trapped", "negaffect", "loneliness")`.
 
-```{r, echo = TRUE, eval=TRUE}
+```{r, echo = TRUE, eval=run_openmx}
 # Load required packages
 library(tidySEM) 
 library(ggplot2)
@@ -85,7 +85,7 @@ desc <- desc[, c("name", "n", "missing", "unique",
                  "skew_2se", "kurt_2se")]
 desc
 ```
-```{r tabdesc, echo = FALSE, eval=TRUE}
+```{r tabdesc, echo = FALSE, eval=run_openmx}
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "n", "missing", "unique",
                  "mean", "median", "sd", "min", "max",

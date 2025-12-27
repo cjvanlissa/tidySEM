@@ -120,6 +120,9 @@ add_paths.default <- function(model, ...){ #, strict_check = TRUE
     x
   })
   # Parse dots
+  modlstr <- paste0(unlist(dots), collapse = ";")
+  modlstr <- gsub("(=|~|~\\*|<)\\s{0,}", "\\1", modlstr)
+  modlstr <- gsub("\\s{0,}(~|1|\\*~)", "\\1", modlstr)
   tab <- lavParseModelString(paste0(unlist(dots), collapse = ";"), as.data.frame. = TRUE)
   # Convert to lavaan
   tab <- do.call(tidysem_lavaanify, c(list(model = tab), Args_lav))

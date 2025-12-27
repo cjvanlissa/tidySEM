@@ -6,21 +6,22 @@
   was not loaded.
 * Vignettes should show that OpenMx must be loaded in order to run functions
   that depend on it (i.e., latent class analyses)
+* Remove spaces from lavaan operators to be compatible with new parser
 
 ## Test environments
 
 * local Windows 10 x64, R 4.4.3
-* local Ubuntu 22.2, R 4.5.0
+* local Linux 6.14.0-37-generic 24.04.1-Ubuntu, R 4.5.0
 * GitHub Actions (r-lib): windows-latest (release)
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (release)
 * GitHub Actions (r-lib): ubuntu-20.04 (devel)
-* win-builder: release
-* win-builder: oldrelease
-* win-builder: development
-* Rhub Fedora Linux, R-devel, clang, gfortran
-* Rhub Ubuntu Linux 20.04.1 LTS, R-release, GCC
-* Windows Server 2022, R-devel, 64 bit
+* win-builder: R version 4.4.3 (2025-02-28 ucrt)
+* win-builder: R Under development (unstable) (2025-12-24 r89227 ucrt)
+* win-builder: R version 4.5.2 (2025-10-31 ucrt)
+* Rhub os: linux (R-devel)
+* Rhub os: m1-san (R-devel)
+* Rhub os: windows (R-devel)
 
 ## R CMD check results
 
