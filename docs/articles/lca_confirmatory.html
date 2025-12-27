@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -116,7 +117,7 @@ called <code>df</code>. We first only use the four scales:
 <code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://openmx.ssri.psu.edu" class="external-link">OpenMx</a></span><span class="op">)</span></span>
 <span><span class="co"># Load data</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"burdened"</span>, <span class="st">"trapped"</span>, <span class="st">"negaffect"</span>,</span>
 <span>    <span class="st">"loneliness"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
@@ -473,43 +474,43 @@ bar:</p>
 <thead><tr class="header">
 <th align="left">null</th>
 <th align="left">alt</th>
-<th align="left">lr</th>
-<th align="left">df</th>
-<th align="left">blrt_p</th>
-<th align="left">samples</th>
+<th align="right">lr</th>
+<th align="right">df</th>
+<th align="right">blrt_p</th>
+<th align="right">samples</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">mix1</td>
 <td align="left">mix2</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="right">421.2</td>
+<td align="right">5</td>
+<td align="right">0.00</td>
+<td align="right">20</td>
 </tr>
 <tr class="even">
 <td align="left">mix2</td>
 <td align="left">mix3</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="right">160.0</td>
+<td align="right">5</td>
+<td align="right">0.00</td>
+<td align="right">20</td>
 </tr>
 <tr class="odd">
 <td align="left">mix3</td>
 <td align="left">mix4</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="right">70.2</td>
+<td align="right">5</td>
+<td align="right">0.00</td>
+<td align="right">20</td>
 </tr>
 <tr class="even">
 <td align="left">mix4</td>
 <td align="left">mix5</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="right">7.8</td>
+<td align="right">5</td>
+<td align="right">0.55</td>
+<td align="right">20</td>
 </tr>
 </tbody>
 </table>
