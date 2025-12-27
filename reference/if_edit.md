@@ -1,0 +1,1329 @@
+# Conditionally edit a sem_graph object
+
+This function allows users to conditionally manipulate the edges and
+nodes of a `sem_graph` object. The generic function `if_edit` applies
+the expression `expr` to all rows of the `nodes` and `edges` data.frames
+for which `condition` is `TRUE`.
+
+The wrapper functions documented in the Usage section have a hard-coded
+`expr` and `condition`; for example, `color_sig(color = "green")` colors
+all nodes and edges with `pval < .05` green. If no column exists for the
+assigned aesthetic (e.g., `color`), the wrappers assign the default
+argument (in this case, `color = "black"`) to all other nodes and edges.
+
+## Usage
+
+``` r
+if_edit(data, condition, expr, ...)
+
+if_edges(data, condition, expr, ...)
+
+if_nodes(data, condition, expr, ...)
+
+# S3 method for class 'sem_graph'
+if_edit(data, condition, expr, element = c("edges", "nodes"), ...)
+
+all_sig(data, expr, ...)
+
+hide_sig(data, ...)
+
+show_sig(data, ...)
+
+colour_sig(data, colour = "black", ...)
+
+color_sig(data, color = "black", ...)
+
+linetype_sig(data, linetype = 1, ...)
+
+size_sig(data, size = 1, ...)
+
+alpha_sig(data, alpha = 1, ...)
+
+fill_sig(data, fill = "white", ...)
+
+label_colour_sig(data, label_colour = "black", ...)
+
+label_color_sig(data, label_color = "black", ...)
+
+label_fill_sig(data, label_fill = "white", ...)
+
+label_size_sig(data, label_size = 4, ...)
+
+label_alpha_sig(data, label_alpha = 1, ...)
+
+label_family_sig(data, label_family = "sans", ...)
+
+label_fontface_sig(data, label_fontface = "plain", ...)
+
+label_hjust_sig(data, label_hjust = "center", ...)
+
+label_vjust_sig(data, label_vjust = "middle", ...)
+
+label_lineheight_sig(data, label_lineheight = 1, ...)
+
+label_location_sig(data, label_location = 0.5, ...)
+
+all_nonsig(data, expr, ...)
+
+hide_nonsig(data, ...)
+
+show_nonsig(data, ...)
+
+colour_nonsig(data, colour = "black", ...)
+
+color_nonsig(data, color = "black", ...)
+
+linetype_nonsig(data, linetype = 1, ...)
+
+size_nonsig(data, size = 1, ...)
+
+alpha_nonsig(data, alpha = 1, ...)
+
+fill_nonsig(data, fill = "white", ...)
+
+label_colour_nonsig(data, label_colour = "black", ...)
+
+label_color_nonsig(data, label_color = "black", ...)
+
+label_fill_nonsig(data, label_fill = "white", ...)
+
+label_size_nonsig(data, label_size = 4, ...)
+
+label_alpha_nonsig(data, label_alpha = 1, ...)
+
+label_family_nonsig(data, label_family = "sans", ...)
+
+label_fontface_nonsig(data, label_fontface = "plain", ...)
+
+label_hjust_nonsig(data, label_hjust = "center", ...)
+
+label_vjust_nonsig(data, label_vjust = "middle", ...)
+
+label_lineheight_nonsig(data, label_lineheight = 1, ...)
+
+label_location_nonsig(data, label_location = 0.5, ...)
+
+all_fixed(data, expr, ...)
+
+hide_fixed(data, ...)
+
+show_fixed(data, ...)
+
+colour_fixed(data, colour = "black", ...)
+
+color_fixed(data, color = "black", ...)
+
+linetype_fixed(data, linetype = 1, ...)
+
+size_fixed(data, size = 1, ...)
+
+alpha_fixed(data, alpha = 1, ...)
+
+fill_fixed(data, fill = "white", ...)
+
+label_colour_fixed(data, label_colour = "black", ...)
+
+label_color_fixed(data, label_color = "black", ...)
+
+label_fill_fixed(data, label_fill = "white", ...)
+
+label_size_fixed(data, label_size = 4, ...)
+
+label_alpha_fixed(data, label_alpha = 1, ...)
+
+label_family_fixed(data, label_family = "sans", ...)
+
+label_fontface_fixed(data, label_fontface = "plain", ...)
+
+label_hjust_fixed(data, label_hjust = "center", ...)
+
+label_vjust_fixed(data, label_vjust = "middle", ...)
+
+label_lineheight_fixed(data, label_lineheight = 1, ...)
+
+label_location_fixed(data, label_location = 0.5, ...)
+
+all_pos(data, expr, ...)
+
+hide_pos(data, ...)
+
+show_pos(data, ...)
+
+colour_pos(data, colour = "black", ...)
+
+color_pos(data, color = "black", ...)
+
+linetype_pos(data, linetype = 1, ...)
+
+size_pos(data, size = 1, ...)
+
+alpha_pos(data, alpha = 1, ...)
+
+fill_pos(data, fill = "white", ...)
+
+label_colour_pos(data, label_colour = "black", ...)
+
+label_color_pos(data, label_color = "black", ...)
+
+label_fill_pos(data, label_fill = "white", ...)
+
+label_size_pos(data, label_size = 4, ...)
+
+label_alpha_pos(data, label_alpha = 1, ...)
+
+label_family_pos(data, label_family = "sans", ...)
+
+label_fontface_pos(data, label_fontface = "plain", ...)
+
+label_hjust_pos(data, label_hjust = "center", ...)
+
+label_vjust_pos(data, label_vjust = "middle", ...)
+
+label_lineheight_pos(data, label_lineheight = 1, ...)
+
+label_location_pos(data, label_location = 0.5, ...)
+
+all_neg(data, expr, ...)
+
+hide_neg(data, ...)
+
+show_neg(data, ...)
+
+colour_neg(data, colour = "black", ...)
+
+color_neg(data, color = "black", ...)
+
+linetype_neg(data, linetype = 1, ...)
+
+size_neg(data, size = 1, ...)
+
+alpha_neg(data, alpha = 1, ...)
+
+fill_neg(data, fill = "white", ...)
+
+label_colour_neg(data, label_colour = "black", ...)
+
+label_color_neg(data, label_color = "black", ...)
+
+label_fill_neg(data, label_fill = "white", ...)
+
+label_size_neg(data, label_size = 4, ...)
+
+label_alpha_neg(data, label_alpha = 1, ...)
+
+label_family_neg(data, label_family = "sans", ...)
+
+label_fontface_neg(data, label_fontface = "plain", ...)
+
+label_hjust_neg(data, label_hjust = "center", ...)
+
+label_vjust_neg(data, label_vjust = "middle", ...)
+
+label_lineheight_neg(data, label_lineheight = 1, ...)
+
+label_location_neg(data, label_location = 0.5, ...)
+
+all_var(data, expr, ...)
+
+hide_var(data, ...)
+
+show_var(data, ...)
+
+colour_var(data, colour = "black", ...)
+
+color_var(data, color = "black", ...)
+
+linetype_var(data, linetype = 1, ...)
+
+size_var(data, size = 1, ...)
+
+alpha_var(data, alpha = 1, ...)
+
+label_colour_var(data, label_colour = "black", ...)
+
+label_color_var(data, label_color = "black", ...)
+
+label_fill_var(data, label_fill = "white", ...)
+
+label_size_var(data, label_size = 4, ...)
+
+label_alpha_var(data, label_alpha = 1, ...)
+
+label_family_var(data, label_family = "sans", ...)
+
+label_fontface_var(data, label_fontface = "plain", ...)
+
+label_hjust_var(data, label_hjust = "center", ...)
+
+label_vjust_var(data, label_vjust = "middle", ...)
+
+label_lineheight_var(data, label_lineheight = 1, ...)
+
+all_cov(data, expr, ...)
+
+hide_cov(data, ...)
+
+show_cov(data, ...)
+
+colour_cov(data, colour = "black", ...)
+
+color_cov(data, color = "black", ...)
+
+linetype_cov(data, linetype = 1, ...)
+
+size_cov(data, size = 1, ...)
+
+alpha_cov(data, alpha = 1, ...)
+
+label_colour_cov(data, label_colour = "black", ...)
+
+label_color_cov(data, label_color = "black", ...)
+
+label_fill_cov(data, label_fill = "white", ...)
+
+label_size_cov(data, label_size = 4, ...)
+
+label_alpha_cov(data, label_alpha = 1, ...)
+
+label_family_cov(data, label_family = "sans", ...)
+
+label_fontface_cov(data, label_fontface = "plain", ...)
+
+label_hjust_cov(data, label_hjust = "center", ...)
+
+label_vjust_cov(data, label_vjust = "middle", ...)
+
+label_lineheight_cov(data, label_lineheight = 1, ...)
+
+label_location_cov(data, label_location = 0.5, ...)
+
+all_reg(data, expr, ...)
+
+hide_reg(data, ...)
+
+show_reg(data, ...)
+
+colour_reg(data, colour = "black", ...)
+
+color_reg(data, color = "black", ...)
+
+linetype_reg(data, linetype = 1, ...)
+
+size_reg(data, size = 1, ...)
+
+alpha_reg(data, alpha = 1, ...)
+
+label_colour_reg(data, label_colour = "black", ...)
+
+label_color_reg(data, label_color = "black", ...)
+
+label_fill_reg(data, label_fill = "white", ...)
+
+label_size_reg(data, label_size = 4, ...)
+
+label_alpha_reg(data, label_alpha = 1, ...)
+
+label_family_reg(data, label_family = "sans", ...)
+
+label_fontface_reg(data, label_fontface = "plain", ...)
+
+label_hjust_reg(data, label_hjust = "center", ...)
+
+label_vjust_reg(data, label_vjust = "middle", ...)
+
+label_lineheight_reg(data, label_lineheight = 1, ...)
+
+label_location_reg(data, label_location = 0.5, ...)
+
+all_load(data, expr, ...)
+
+hide_load(data, ...)
+
+show_load(data, ...)
+
+colour_load(data, colour = "black", ...)
+
+color_load(data, color = "black", ...)
+
+linetype_load(data, linetype = 1, ...)
+
+size_load(data, size = 1, ...)
+
+alpha_load(data, alpha = 1, ...)
+
+label_colour_load(data, label_colour = "black", ...)
+
+label_color_load(data, label_color = "black", ...)
+
+label_fill_load(data, label_fill = "white", ...)
+
+label_size_load(data, label_size = 4, ...)
+
+label_alpha_load(data, label_alpha = 1, ...)
+
+label_family_load(data, label_family = "sans", ...)
+
+label_fontface_load(data, label_fontface = "plain", ...)
+
+label_hjust_load(data, label_hjust = "center", ...)
+
+label_vjust_load(data, label_vjust = "middle", ...)
+
+label_lineheight_load(data, label_lineheight = 1, ...)
+
+label_location_load(data, label_location = 0.5, ...)
+
+all_obs(data, expr, ...)
+
+hide_obs(data, ...)
+
+show_obs(data, ...)
+
+colour_obs(data, colour = "black", ...)
+
+color_obs(data, color = "black", ...)
+
+linetype_obs(data, linetype = 1, ...)
+
+size_obs(data, size = 1, ...)
+
+alpha_obs(data, alpha = 1, ...)
+
+fill_obs(data, fill = "white", ...)
+
+label_colour_obs(data, label_colour = "black", ...)
+
+label_color_obs(data, label_color = "black", ...)
+
+label_fill_obs(data, label_fill = "white", ...)
+
+label_size_obs(data, label_size = 4, ...)
+
+label_alpha_obs(data, label_alpha = 1, ...)
+
+label_family_obs(data, label_family = "sans", ...)
+
+label_fontface_obs(data, label_fontface = "plain", ...)
+
+label_hjust_obs(data, label_hjust = "center", ...)
+
+label_vjust_obs(data, label_vjust = "middle", ...)
+
+label_lineheight_obs(data, label_lineheight = 1, ...)
+
+all_latent(data, expr, ...)
+
+hide_latent(data, ...)
+
+show_latent(data, ...)
+
+colour_latent(data, colour = "black", ...)
+
+color_latent(data, color = "black", ...)
+
+linetype_latent(data, linetype = 1, ...)
+
+size_latent(data, size = 1, ...)
+
+alpha_latent(data, alpha = 1, ...)
+
+fill_latent(data, fill = "white", ...)
+
+label_colour_latent(data, label_colour = "black", ...)
+
+label_color_latent(data, label_color = "black", ...)
+
+label_fill_latent(data, label_fill = "white", ...)
+
+label_size_latent(data, label_size = 4, ...)
+
+label_alpha_latent(data, label_alpha = 1, ...)
+
+label_family_latent(data, label_family = "sans", ...)
+
+label_fontface_latent(data, label_fontface = "plain", ...)
+
+label_hjust_latent(data, label_hjust = "center", ...)
+
+label_vjust_latent(data, label_vjust = "middle", ...)
+
+label_lineheight_latent(data, label_lineheight = 1, ...)
+
+all_sig_nodes(data, expr, ...)
+
+hide_sig_nodes(data, ...)
+
+show_sig_nodes(data, ...)
+
+colour_sig_nodes(data, colour = "black", ...)
+
+color_sig_nodes(data, color = "black", ...)
+
+linetype_sig_nodes(data, linetype = 1, ...)
+
+size_sig_nodes(data, size = 1, ...)
+
+alpha_sig_nodes(data, alpha = 1, ...)
+
+label_colour_sig_nodes(data, label_colour = "black", ...)
+
+label_color_sig_nodes(data, label_color = "black", ...)
+
+label_fill_sig_nodes(data, label_fill = "white", ...)
+
+label_size_sig_nodes(data, label_size = 4, ...)
+
+label_alpha_sig_nodes(data, label_alpha = 1, ...)
+
+label_family_sig_nodes(data, label_family = "sans", ...)
+
+label_fontface_sig_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_sig_nodes(data, label_hjust = "center", ...)
+
+label_vjust_sig_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_sig_nodes(data, label_lineheight = 1, ...)
+
+all_nonsig_nodes(data, expr, ...)
+
+hide_nonsig_nodes(data, ...)
+
+show_nonsig_nodes(data, ...)
+
+colour_nonsig_nodes(data, colour = "black", ...)
+
+color_nonsig_nodes(data, color = "black", ...)
+
+linetype_nonsig_nodes(data, linetype = 1, ...)
+
+size_nonsig_nodes(data, size = 1, ...)
+
+alpha_nonsig_nodes(data, alpha = 1, ...)
+
+label_colour_nonsig_nodes(data, label_colour = "black", ...)
+
+label_color_nonsig_nodes(data, label_color = "black", ...)
+
+label_fill_nonsig_nodes(data, label_fill = "white", ...)
+
+label_size_nonsig_nodes(data, label_size = 4, ...)
+
+label_alpha_nonsig_nodes(data, label_alpha = 1, ...)
+
+label_family_nonsig_nodes(data, label_family = "sans", ...)
+
+label_fontface_nonsig_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_nonsig_nodes(data, label_hjust = "center", ...)
+
+label_vjust_nonsig_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_nonsig_nodes(data, label_lineheight = 1, ...)
+
+all_fixed_nodes(data, expr, ...)
+
+hide_fixed_nodes(data, ...)
+
+show_fixed_nodes(data, ...)
+
+colour_fixed_nodes(data, colour = "black", ...)
+
+color_fixed_nodes(data, color = "black", ...)
+
+linetype_fixed_nodes(data, linetype = 1, ...)
+
+size_fixed_nodes(data, size = 1, ...)
+
+alpha_fixed_nodes(data, alpha = 1, ...)
+
+label_colour_fixed_nodes(data, label_colour = "black", ...)
+
+label_color_fixed_nodes(data, label_color = "black", ...)
+
+label_fill_fixed_nodes(data, label_fill = "white", ...)
+
+label_size_fixed_nodes(data, label_size = 4, ...)
+
+label_alpha_fixed_nodes(data, label_alpha = 1, ...)
+
+label_family_fixed_nodes(data, label_family = "sans", ...)
+
+label_fontface_fixed_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_fixed_nodes(data, label_hjust = "center", ...)
+
+label_vjust_fixed_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_fixed_nodes(data, label_lineheight = 1, ...)
+
+all_pos_nodes(data, expr, ...)
+
+hide_pos_nodes(data, ...)
+
+show_pos_nodes(data, ...)
+
+colour_pos_nodes(data, colour = "black", ...)
+
+color_pos_nodes(data, color = "black", ...)
+
+linetype_pos_nodes(data, linetype = 1, ...)
+
+size_pos_nodes(data, size = 1, ...)
+
+alpha_pos_nodes(data, alpha = 1, ...)
+
+label_colour_pos_nodes(data, label_colour = "black", ...)
+
+label_color_pos_nodes(data, label_color = "black", ...)
+
+label_fill_pos_nodes(data, label_fill = "white", ...)
+
+label_size_pos_nodes(data, label_size = 4, ...)
+
+label_alpha_pos_nodes(data, label_alpha = 1, ...)
+
+label_family_pos_nodes(data, label_family = "sans", ...)
+
+label_fontface_pos_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_pos_nodes(data, label_hjust = "center", ...)
+
+label_vjust_pos_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_pos_nodes(data, label_lineheight = 1, ...)
+
+all_neg_nodes(data, expr, ...)
+
+hide_neg_nodes(data, ...)
+
+show_neg_nodes(data, ...)
+
+colour_neg_nodes(data, colour = "black", ...)
+
+color_neg_nodes(data, color = "black", ...)
+
+linetype_neg_nodes(data, linetype = 1, ...)
+
+size_neg_nodes(data, size = 1, ...)
+
+alpha_neg_nodes(data, alpha = 1, ...)
+
+label_colour_neg_nodes(data, label_colour = "black", ...)
+
+label_color_neg_nodes(data, label_color = "black", ...)
+
+label_fill_neg_nodes(data, label_fill = "white", ...)
+
+label_size_neg_nodes(data, label_size = 4, ...)
+
+label_alpha_neg_nodes(data, label_alpha = 1, ...)
+
+label_family_neg_nodes(data, label_family = "sans", ...)
+
+label_fontface_neg_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_neg_nodes(data, label_hjust = "center", ...)
+
+label_vjust_neg_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_neg_nodes(data, label_lineheight = 1, ...)
+
+all_sig_edges(data, expr, ...)
+
+hide_sig_edges(data, ...)
+
+show_sig_edges(data, ...)
+
+colour_sig_edges(data, colour = "black", ...)
+
+color_sig_edges(data, color = "black", ...)
+
+linetype_sig_edges(data, linetype = 1, ...)
+
+size_sig_edges(data, size = 1, ...)
+
+alpha_sig_edges(data, alpha = 1, ...)
+
+label_colour_sig_edges(data, label_colour = "black", ...)
+
+label_color_sig_edges(data, label_color = "black", ...)
+
+label_fill_sig_edges(data, label_fill = "white", ...)
+
+label_size_sig_edges(data, label_size = 4, ...)
+
+label_alpha_sig_edges(data, label_alpha = 1, ...)
+
+label_family_sig_edges(data, label_family = "sans", ...)
+
+label_fontface_sig_edges(data, label_fontface = "plain", ...)
+
+label_hjust_sig_edges(data, label_hjust = "center", ...)
+
+label_vjust_sig_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_sig_edges(data, label_lineheight = 1, ...)
+
+all_nonsig_edges(data, expr, ...)
+
+hide_nonsig_edges(data, ...)
+
+show_nonsig_edges(data, ...)
+
+colour_nonsig_edges(data, colour = "black", ...)
+
+color_nonsig_edges(data, color = "black", ...)
+
+linetype_nonsig_edges(data, linetype = 1, ...)
+
+size_nonsig_edges(data, size = 1, ...)
+
+alpha_nonsig_edges(data, alpha = 1, ...)
+
+label_colour_nonsig_edges(data, label_colour = "black", ...)
+
+label_color_nonsig_edges(data, label_color = "black", ...)
+
+label_fill_nonsig_edges(data, label_fill = "white", ...)
+
+label_size_nonsig_edges(data, label_size = 4, ...)
+
+label_alpha_nonsig_edges(data, label_alpha = 1, ...)
+
+label_family_nonsig_edges(data, label_family = "sans", ...)
+
+label_fontface_nonsig_edges(data, label_fontface = "plain", ...)
+
+label_hjust_nonsig_edges(data, label_hjust = "center", ...)
+
+label_vjust_nonsig_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_nonsig_edges(data, label_lineheight = 1, ...)
+
+all_fixed_edges(data, expr, ...)
+
+hide_fixed_edges(data, ...)
+
+show_fixed_edges(data, ...)
+
+colour_fixed_edges(data, colour = "black", ...)
+
+color_fixed_edges(data, color = "black", ...)
+
+linetype_fixed_edges(data, linetype = 1, ...)
+
+size_fixed_edges(data, size = 1, ...)
+
+alpha_fixed_edges(data, alpha = 1, ...)
+
+label_colour_fixed_edges(data, label_colour = "black", ...)
+
+label_color_fixed_edges(data, label_color = "black", ...)
+
+label_fill_fixed_edges(data, label_fill = "white", ...)
+
+label_size_fixed_edges(data, label_size = 4, ...)
+
+label_alpha_fixed_edges(data, label_alpha = 1, ...)
+
+label_family_fixed_edges(data, label_family = "sans", ...)
+
+label_fontface_fixed_edges(data, label_fontface = "plain", ...)
+
+label_hjust_fixed_edges(data, label_hjust = "center", ...)
+
+label_vjust_fixed_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_fixed_edges(data, label_lineheight = 1, ...)
+
+all_pos_edges(data, expr, ...)
+
+hide_pos_edges(data, ...)
+
+show_pos_edges(data, ...)
+
+colour_pos_edges(data, colour = "black", ...)
+
+color_pos_edges(data, color = "black", ...)
+
+linetype_pos_edges(data, linetype = 1, ...)
+
+size_pos_edges(data, size = 1, ...)
+
+alpha_pos_edges(data, alpha = 1, ...)
+
+label_colour_pos_edges(data, label_colour = "black", ...)
+
+label_color_pos_edges(data, label_color = "black", ...)
+
+label_fill_pos_edges(data, label_fill = "white", ...)
+
+label_size_pos_edges(data, label_size = 4, ...)
+
+label_alpha_pos_edges(data, label_alpha = 1, ...)
+
+label_family_pos_edges(data, label_family = "sans", ...)
+
+label_fontface_pos_edges(data, label_fontface = "plain", ...)
+
+label_hjust_pos_edges(data, label_hjust = "center", ...)
+
+label_vjust_pos_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_pos_edges(data, label_lineheight = 1, ...)
+
+all_neg_edges(data, expr, ...)
+
+hide_neg_edges(data, ...)
+
+show_neg_edges(data, ...)
+
+colour_neg_edges(data, colour = "black", ...)
+
+color_neg_edges(data, color = "black", ...)
+
+linetype_neg_edges(data, linetype = 1, ...)
+
+size_neg_edges(data, size = 1, ...)
+
+alpha_neg_edges(data, alpha = 1, ...)
+
+label_colour_neg_edges(data, label_colour = "black", ...)
+
+label_color_neg_edges(data, label_color = "black", ...)
+
+label_fill_neg_edges(data, label_fill = "white", ...)
+
+label_size_neg_edges(data, label_size = 4, ...)
+
+label_alpha_neg_edges(data, label_alpha = 1, ...)
+
+label_family_neg_edges(data, label_family = "sans", ...)
+
+label_fontface_neg_edges(data, label_fontface = "plain", ...)
+
+label_hjust_neg_edges(data, label_hjust = "center", ...)
+
+label_vjust_neg_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_neg_edges(data, label_lineheight = 1, ...)
+```
+
+## Arguments
+
+- data:
+
+  Object to manipulate.
+
+- condition:
+
+  Expression that returns a logical vector when evaluated in the
+  environment of `data`.
+
+- expr:
+
+  Expression to perform on elements of `data` for which
+  `condition == TRUE`.
+
+- ...:
+
+  Additional arguments passed to and from functions.
+
+- element:
+
+  Character vector. The elements of the `sem_graph` to edit, defaults to
+  `c("edges", "nodes")`.
+
+- colour:
+
+  Atomic character vector, indicating which colour to assign to the
+  selected elements.
+
+- color:
+
+  Atomic character vector, indicating which color to assign to the
+  selected elements.
+
+- linetype:
+
+  Atomic character vector, indicating which linetype to assign to the
+  selected elements.
+
+- size:
+
+  Atomic character vector, indicating which size to assign to the
+  selected elements.
+
+- alpha:
+
+  Atomic character vector, indicating which alpha to assign to the
+  selected elements.
+
+- fill:
+
+  Atomic character vector, indicating which fill to assign to the
+  selected elements.
+
+- label_colour:
+
+  Atomic character vector, indicating which label_colour to assign to
+  the selected elements.
+
+- label_color:
+
+  Atomic character vector, indicating which label_color to assign to the
+  selected elements.
+
+- label_fill:
+
+  Atomic character vector, indicating which label_fill to assign to the
+  selected elements.
+
+- label_size:
+
+  Atomic character vector, indicating which label_size to assign to the
+  selected elements.
+
+- label_alpha:
+
+  Atomic character vector, indicating which label_alpha to assign to the
+  selected elements.
+
+- label_family:
+
+  Atomic character vector, indicating which label_family to assign to
+  the selected elements.
+
+- label_fontface:
+
+  Atomic character vector, indicating which label_fontface to assign to
+  the selected elements.
+
+- label_hjust:
+
+  Atomic character vector, indicating which label_hjust to assign to the
+  selected elements.
+
+- label_vjust:
+
+  Atomic character vector, indicating which label_vjust to assign to the
+  selected elements.
+
+- label_lineheight:
+
+  Atomic character vector, indicating which label_lineheight to assign
+  to the selected elements.
+
+- label_location:
+
+  Atomic character vector, indicating which label_location to assign to
+  the selected elements.
+
+## Value
+
+Object of the same class as `data`.
+
+## Examples
+
+``` r
+library(lavaan)
+res <- sem("dist ~ speed", cars, meanstructure = TRUE)
+p <- prepare_graph(res)
+out <- if_edit(p, condition = {pval < .05}, expr = {label = "sig"})
+out <- if_edges(p, condition = {pval < .05}, expr = {label = "sig"})
+out <- if_nodes(p, condition = {pval < .05}, expr = {label = "sig"})
+out <- all_sig(p, expr = {label = "sig"})
+out <- hide_sig(p)
+out <- show_sig(p)
+out <- colour_sig(p, { colour = "black" })
+out <- color_sig(p, { color = "black" })
+out <- linetype_sig(p, { linetype = 1 })
+out <- size_sig(p, { size = 1 })
+out <- alpha_sig(p, { alpha = 1 })
+out <- fill_sig(p, { fill = "white" })
+out <- label_colour_sig(p, { label_colour = "black" })
+out <- label_color_sig(p, { label_color = "black" })
+out <- label_fill_sig(p, { label_fill = "white" })
+out <- label_size_sig(p, { label_size = 4 })
+out <- label_alpha_sig(p, { label_alpha = 1 })
+out <- label_family_sig(p, { label_family = "sans" })
+out <- label_fontface_sig(p, { label_fontface = "plain" })
+out <- label_hjust_sig(p, { label_hjust = "center" })
+out <- label_vjust_sig(p, { label_vjust = "middle" })
+out <- label_lineheight_sig(p, { label_lineheight = 1 })
+out <- label_location_sig(p, { label_location = .5 })
+out <- all_nonsig(p, expr = {label = "sig"})
+out <- hide_nonsig(p)
+out <- show_nonsig(p)
+out <- colour_nonsig(p, { colour = "black" })
+out <- color_nonsig(p, { color = "black" })
+out <- linetype_nonsig(p, { linetype = 1 })
+out <- size_nonsig(p, { size = 1 })
+out <- alpha_nonsig(p, { alpha = 1 })
+out <- fill_nonsig(p, { fill = "white" })
+out <- label_colour_nonsig(p, { label_colour = "black" })
+out <- label_color_nonsig(p, { label_color = "black" })
+out <- label_fill_nonsig(p, { label_fill = "white" })
+out <- label_size_nonsig(p, { label_size = 4 })
+out <- label_alpha_nonsig(p, { label_alpha = 1 })
+out <- label_family_nonsig(p, { label_family = "sans" })
+out <- label_fontface_nonsig(p, { label_fontface = "plain" })
+out <- label_hjust_nonsig(p, { label_hjust = "center" })
+out <- label_vjust_nonsig(p, { label_vjust = "middle" })
+out <- label_lineheight_nonsig(p, { label_lineheight = 1 })
+out <- label_location_nonsig(p, { label_location = .5 })
+out <- all_fixed(p, expr = {label = "sig"})
+out <- hide_fixed(p)
+out <- show_fixed(p)
+out <- colour_fixed(p, { colour = "black" })
+out <- color_fixed(p, { color = "black" })
+out <- linetype_fixed(p, { linetype = 1 })
+out <- size_fixed(p, { size = 1 })
+out <- alpha_fixed(p, { alpha = 1 })
+out <- fill_fixed(p, { fill = "white" })
+out <- label_colour_fixed(p, { label_colour = "black" })
+out <- label_color_fixed(p, { label_color = "black" })
+out <- label_fill_fixed(p, { label_fill = "white" })
+out <- label_size_fixed(p, { label_size = 4 })
+out <- label_alpha_fixed(p, { label_alpha = 1 })
+out <- label_family_fixed(p, { label_family = "sans" })
+out <- label_fontface_fixed(p, { label_fontface = "plain" })
+out <- label_hjust_fixed(p, { label_hjust = "center" })
+out <- label_vjust_fixed(p, { label_vjust = "middle" })
+out <- label_lineheight_fixed(p, { label_lineheight = 1 })
+out <- label_location_fixed(p, { label_location = .5 })
+out <- all_pos(p, expr = {label = "sig"})
+out <- hide_pos(p)
+out <- show_pos(p)
+out <- colour_pos(p, { colour = "black" })
+out <- color_pos(p, { color = "black" })
+out <- linetype_pos(p, { linetype = 1 })
+out <- size_pos(p, { size = 1 })
+out <- alpha_pos(p, { alpha = 1 })
+out <- fill_pos(p, { fill = "white" })
+out <- label_colour_pos(p, { label_colour = "black" })
+out <- label_color_pos(p, { label_color = "black" })
+out <- label_fill_pos(p, { label_fill = "white" })
+out <- label_size_pos(p, { label_size = 4 })
+out <- label_alpha_pos(p, { label_alpha = 1 })
+out <- label_family_pos(p, { label_family = "sans" })
+out <- label_fontface_pos(p, { label_fontface = "plain" })
+out <- label_hjust_pos(p, { label_hjust = "center" })
+out <- label_vjust_pos(p, { label_vjust = "middle" })
+out <- label_lineheight_pos(p, { label_lineheight = 1 })
+out <- label_location_pos(p, { label_location = .5 })
+out <- all_neg(p, expr = {label = "sig"})
+out <- hide_neg(p)
+out <- show_neg(p)
+out <- colour_neg(p, { colour = "black" })
+out <- color_neg(p, { color = "black" })
+out <- linetype_neg(p, { linetype = 1 })
+out <- size_neg(p, { size = 1 })
+out <- alpha_neg(p, { alpha = 1 })
+out <- fill_neg(p, { fill = "white" })
+out <- label_colour_neg(p, { label_colour = "black" })
+out <- label_color_neg(p, { label_color = "black" })
+out <- label_fill_neg(p, { label_fill = "white" })
+out <- label_size_neg(p, { label_size = 4 })
+out <- label_alpha_neg(p, { label_alpha = 1 })
+out <- label_family_neg(p, { label_family = "sans" })
+out <- label_fontface_neg(p, { label_fontface = "plain" })
+out <- label_hjust_neg(p, { label_hjust = "center" })
+out <- label_vjust_neg(p, { label_vjust = "middle" })
+out <- label_lineheight_neg(p, { label_lineheight = 1 })
+out <- label_location_neg(p, { label_location = .5 })
+out <- all_var(p, expr = {label = "sig"})
+out <- hide_var(p)
+out <- show_var(p)
+out <- colour_var(p, { colour = "black" })
+out <- color_var(p, { color = "black" })
+out <- linetype_var(p, { linetype = 1 })
+out <- size_var(p, { size = 1 })
+out <- alpha_var(p, { alpha = 1 })
+out <- label_colour_var(p, { label_colour = "black" })
+out <- label_color_var(p, { label_color = "black" })
+out <- label_fill_var(p, { label_fill = "white" })
+out <- label_size_var(p, { label_size = 4 })
+out <- label_alpha_var(p, { label_alpha = 1 })
+out <- label_family_var(p, { label_family = "sans" })
+out <- label_fontface_var(p, { label_fontface = "plain" })
+out <- label_hjust_var(p, { label_hjust = "center" })
+out <- label_vjust_var(p, { label_vjust = "middle" })
+out <- label_lineheight_var(p, { label_lineheight = 1 })
+out <- all_cov(p, expr = {label = "sig"})
+out <- hide_cov(p)
+out <- show_cov(p)
+out <- colour_cov(p, { colour = "black" })
+out <- color_cov(p, { color = "black" })
+out <- linetype_cov(p, { linetype = 1 })
+out <- size_cov(p, { size = 1 })
+out <- alpha_cov(p, { alpha = 1 })
+out <- label_colour_cov(p, { label_colour = "black" })
+out <- label_color_cov(p, { label_color = "black" })
+out <- label_fill_cov(p, { label_fill = "white" })
+out <- label_size_cov(p, { label_size = 4 })
+out <- label_alpha_cov(p, { label_alpha = 1 })
+out <- label_family_cov(p, { label_family = "sans" })
+out <- label_fontface_cov(p, { label_fontface = "plain" })
+out <- label_hjust_cov(p, { label_hjust = "center" })
+out <- label_vjust_cov(p, { label_vjust = "middle" })
+out <- label_lineheight_cov(p, { label_lineheight = 1 })
+out <- label_location_cov(p, { label_location = .5 })
+out <- all_reg(p, expr = {label = "sig"})
+out <- hide_reg(p)
+out <- show_reg(p)
+out <- colour_reg(p, { colour = "black" })
+out <- color_reg(p, { color = "black" })
+out <- linetype_reg(p, { linetype = 1 })
+out <- size_reg(p, { size = 1 })
+out <- alpha_reg(p, { alpha = 1 })
+out <- label_colour_reg(p, { label_colour = "black" })
+out <- label_color_reg(p, { label_color = "black" })
+out <- label_fill_reg(p, { label_fill = "white" })
+out <- label_size_reg(p, { label_size = 4 })
+out <- label_alpha_reg(p, { label_alpha = 1 })
+out <- label_family_reg(p, { label_family = "sans" })
+out <- label_fontface_reg(p, { label_fontface = "plain" })
+out <- label_hjust_reg(p, { label_hjust = "center" })
+out <- label_vjust_reg(p, { label_vjust = "middle" })
+out <- label_lineheight_reg(p, { label_lineheight = 1 })
+out <- label_location_reg(p, { label_location = .5 })
+out <- all_load(p, expr = {label = "sig"})
+out <- hide_load(p)
+out <- show_load(p)
+out <- colour_load(p, { colour = "black" })
+out <- color_load(p, { color = "black" })
+out <- linetype_load(p, { linetype = 1 })
+out <- size_load(p, { size = 1 })
+out <- alpha_load(p, { alpha = 1 })
+out <- label_colour_load(p, { label_colour = "black" })
+out <- label_color_load(p, { label_color = "black" })
+out <- label_fill_load(p, { label_fill = "white" })
+out <- label_size_load(p, { label_size = 4 })
+out <- label_alpha_load(p, { label_alpha = 1 })
+out <- label_family_load(p, { label_family = "sans" })
+out <- label_fontface_load(p, { label_fontface = "plain" })
+out <- label_hjust_load(p, { label_hjust = "center" })
+out <- label_vjust_load(p, { label_vjust = "middle" })
+out <- label_lineheight_load(p, { label_lineheight = 1 })
+out <- label_location_load(p, { label_location = .5 })
+out <- all_obs(p, expr = {label = "sig"})
+out <- hide_obs(p)
+out <- show_obs(p)
+out <- colour_obs(p, { colour = "black" })
+out <- color_obs(p, { color = "black" })
+out <- linetype_obs(p, { linetype = 1 })
+out <- size_obs(p, { size = 1 })
+out <- alpha_obs(p, { alpha = 1 })
+out <- fill_obs(p, { fill = "white" })
+out <- label_colour_obs(p, { label_colour = "black" })
+out <- label_color_obs(p, { label_color = "black" })
+out <- label_fill_obs(p, { label_fill = "white" })
+out <- label_size_obs(p, { label_size = 4 })
+out <- label_alpha_obs(p, { label_alpha = 1 })
+out <- label_family_obs(p, { label_family = "sans" })
+out <- label_fontface_obs(p, { label_fontface = "plain" })
+out <- label_hjust_obs(p, { label_hjust = "center" })
+out <- label_vjust_obs(p, { label_vjust = "middle" })
+out <- label_lineheight_obs(p, { label_lineheight = 1 })
+out <- all_latent(p, expr = {label = "sig"})
+out <- hide_latent(p)
+out <- show_latent(p)
+out <- colour_latent(p, { colour = "black" })
+out <- color_latent(p, { color = "black" })
+out <- linetype_latent(p, { linetype = 1 })
+out <- size_latent(p, { size = 1 })
+out <- alpha_latent(p, { alpha = 1 })
+out <- fill_latent(p, { fill = "white" })
+out <- label_colour_latent(p, { label_colour = "black" })
+out <- label_color_latent(p, { label_color = "black" })
+out <- label_fill_latent(p, { label_fill = "white" })
+out <- label_size_latent(p, { label_size = 4 })
+out <- label_alpha_latent(p, { label_alpha = 1 })
+out <- label_family_latent(p, { label_family = "sans" })
+out <- label_fontface_latent(p, { label_fontface = "plain" })
+out <- label_hjust_latent(p, { label_hjust = "center" })
+out <- label_vjust_latent(p, { label_vjust = "middle" })
+out <- label_lineheight_latent(p, { label_lineheight = 1 })
+out <- all_sig(p, expr = {label = "sig"})
+out <- hide_sig(p)
+out <- show_sig(p)
+out <- colour_sig(p, { colour = "black" })
+out <- color_sig(p, { color = "black" })
+out <- linetype_sig(p, { linetype = 1 })
+out <- size_sig(p, { size = 1 })
+out <- alpha_sig(p, { alpha = 1 })
+out <- label_colour_sig(p, { label_colour = "black" })
+out <- label_color_sig(p, { label_color = "black" })
+out <- label_fill_sig(p, { label_fill = "white" })
+out <- label_size_sig(p, { label_size = 4 })
+out <- label_alpha_sig(p, { label_alpha = 1 })
+out <- label_family_sig(p, { label_family = "sans" })
+out <- label_fontface_sig(p, { label_fontface = "plain" })
+out <- label_hjust_sig(p, { label_hjust = "center" })
+out <- label_vjust_sig(p, { label_vjust = "middle" })
+out <- label_lineheight_sig(p, { label_lineheight = 1 })
+out <- all_nonsig(p, expr = {label = "sig"})
+out <- hide_nonsig(p)
+out <- show_nonsig(p)
+out <- colour_nonsig(p, { colour = "black" })
+out <- color_nonsig(p, { color = "black" })
+out <- linetype_nonsig(p, { linetype = 1 })
+out <- size_nonsig(p, { size = 1 })
+out <- alpha_nonsig(p, { alpha = 1 })
+out <- label_colour_nonsig(p, { label_colour = "black" })
+out <- label_color_nonsig(p, { label_color = "black" })
+out <- label_fill_nonsig(p, { label_fill = "white" })
+out <- label_size_nonsig(p, { label_size = 4 })
+out <- label_alpha_nonsig(p, { label_alpha = 1 })
+out <- label_family_nonsig(p, { label_family = "sans" })
+out <- label_fontface_nonsig(p, { label_fontface = "plain" })
+out <- label_hjust_nonsig(p, { label_hjust = "center" })
+out <- label_vjust_nonsig(p, { label_vjust = "middle" })
+out <- label_lineheight_nonsig(p, { label_lineheight = 1 })
+out <- all_fixed(p, expr = {label = "sig"})
+out <- hide_fixed(p)
+out <- show_fixed(p)
+out <- colour_fixed(p, { colour = "black" })
+out <- color_fixed(p, { color = "black" })
+out <- linetype_fixed(p, { linetype = 1 })
+out <- size_fixed(p, { size = 1 })
+out <- alpha_fixed(p, { alpha = 1 })
+out <- label_colour_fixed(p, { label_colour = "black" })
+out <- label_color_fixed(p, { label_color = "black" })
+out <- label_fill_fixed(p, { label_fill = "white" })
+out <- label_size_fixed(p, { label_size = 4 })
+out <- label_alpha_fixed(p, { label_alpha = 1 })
+out <- label_family_fixed(p, { label_family = "sans" })
+out <- label_fontface_fixed(p, { label_fontface = "plain" })
+out <- label_hjust_fixed(p, { label_hjust = "center" })
+out <- label_vjust_fixed(p, { label_vjust = "middle" })
+out <- label_lineheight_fixed(p, { label_lineheight = 1 })
+out <- all_pos(p, expr = {label = "sig"})
+out <- hide_pos(p)
+out <- show_pos(p)
+out <- colour_pos(p, { colour = "black" })
+out <- color_pos(p, { color = "black" })
+out <- linetype_pos(p, { linetype = 1 })
+out <- size_pos(p, { size = 1 })
+out <- alpha_pos(p, { alpha = 1 })
+out <- label_colour_pos(p, { label_colour = "black" })
+out <- label_color_pos(p, { label_color = "black" })
+out <- label_fill_pos(p, { label_fill = "white" })
+out <- label_size_pos(p, { label_size = 4 })
+out <- label_alpha_pos(p, { label_alpha = 1 })
+out <- label_family_pos(p, { label_family = "sans" })
+out <- label_fontface_pos(p, { label_fontface = "plain" })
+out <- label_hjust_pos(p, { label_hjust = "center" })
+out <- label_vjust_pos(p, { label_vjust = "middle" })
+out <- label_lineheight_pos(p, { label_lineheight = 1 })
+out <- all_neg(p, expr = {label = "sig"})
+out <- hide_neg(p)
+out <- show_neg(p)
+out <- colour_neg(p, { colour = "black" })
+out <- color_neg(p, { color = "black" })
+out <- linetype_neg(p, { linetype = 1 })
+out <- size_neg(p, { size = 1 })
+out <- alpha_neg(p, { alpha = 1 })
+out <- label_colour_neg(p, { label_colour = "black" })
+out <- label_color_neg(p, { label_color = "black" })
+out <- label_fill_neg(p, { label_fill = "white" })
+out <- label_size_neg(p, { label_size = 4 })
+out <- label_alpha_neg(p, { label_alpha = 1 })
+out <- label_family_neg(p, { label_family = "sans" })
+out <- label_fontface_neg(p, { label_fontface = "plain" })
+out <- label_hjust_neg(p, { label_hjust = "center" })
+out <- label_vjust_neg(p, { label_vjust = "middle" })
+out <- label_lineheight_neg(p, { label_lineheight = 1 })
+out <- all_sig(p, expr = {label = "sig"})
+out <- hide_sig(p)
+out <- show_sig(p)
+out <- colour_sig(p, { colour = "black" })
+out <- color_sig(p, { color = "black" })
+out <- linetype_sig(p, { linetype = 1 })
+out <- size_sig(p, { size = 1 })
+out <- alpha_sig(p, { alpha = 1 })
+out <- label_colour_sig(p, { label_colour = "black" })
+out <- label_color_sig(p, { label_color = "black" })
+out <- label_fill_sig(p, { label_fill = "white" })
+out <- label_size_sig(p, { label_size = 4 })
+out <- label_alpha_sig(p, { label_alpha = 1 })
+out <- label_family_sig(p, { label_family = "sans" })
+out <- label_fontface_sig(p, { label_fontface = "plain" })
+out <- label_hjust_sig(p, { label_hjust = "center" })
+out <- label_vjust_sig(p, { label_vjust = "middle" })
+out <- label_lineheight_sig(p, { label_lineheight = 1 })
+out <- all_nonsig(p, expr = {label = "sig"})
+out <- hide_nonsig(p)
+out <- show_nonsig(p)
+out <- colour_nonsig(p, { colour = "black" })
+out <- color_nonsig(p, { color = "black" })
+out <- linetype_nonsig(p, { linetype = 1 })
+out <- size_nonsig(p, { size = 1 })
+out <- alpha_nonsig(p, { alpha = 1 })
+out <- label_colour_nonsig(p, { label_colour = "black" })
+out <- label_color_nonsig(p, { label_color = "black" })
+out <- label_fill_nonsig(p, { label_fill = "white" })
+out <- label_size_nonsig(p, { label_size = 4 })
+out <- label_alpha_nonsig(p, { label_alpha = 1 })
+out <- label_family_nonsig(p, { label_family = "sans" })
+out <- label_fontface_nonsig(p, { label_fontface = "plain" })
+out <- label_hjust_nonsig(p, { label_hjust = "center" })
+out <- label_vjust_nonsig(p, { label_vjust = "middle" })
+out <- label_lineheight_nonsig(p, { label_lineheight = 1 })
+out <- all_fixed(p, expr = {label = "sig"})
+out <- hide_fixed(p)
+out <- show_fixed(p)
+out <- colour_fixed(p, { colour = "black" })
+out <- color_fixed(p, { color = "black" })
+out <- linetype_fixed(p, { linetype = 1 })
+out <- size_fixed(p, { size = 1 })
+out <- alpha_fixed(p, { alpha = 1 })
+out <- label_colour_fixed(p, { label_colour = "black" })
+out <- label_color_fixed(p, { label_color = "black" })
+out <- label_fill_fixed(p, { label_fill = "white" })
+out <- label_size_fixed(p, { label_size = 4 })
+out <- label_alpha_fixed(p, { label_alpha = 1 })
+out <- label_family_fixed(p, { label_family = "sans" })
+out <- label_fontface_fixed(p, { label_fontface = "plain" })
+out <- label_hjust_fixed(p, { label_hjust = "center" })
+out <- label_vjust_fixed(p, { label_vjust = "middle" })
+out <- label_lineheight_fixed(p, { label_lineheight = 1 })
+out <- all_pos(p, expr = {label = "sig"})
+out <- hide_pos(p)
+out <- show_pos(p)
+out <- colour_pos(p, { colour = "black" })
+out <- color_pos(p, { color = "black" })
+out <- linetype_pos(p, { linetype = 1 })
+out <- size_pos(p, { size = 1 })
+out <- alpha_pos(p, { alpha = 1 })
+out <- label_colour_pos(p, { label_colour = "black" })
+out <- label_color_pos(p, { label_color = "black" })
+out <- label_fill_pos(p, { label_fill = "white" })
+out <- label_size_pos(p, { label_size = 4 })
+out <- label_alpha_pos(p, { label_alpha = 1 })
+out <- label_family_pos(p, { label_family = "sans" })
+out <- label_fontface_pos(p, { label_fontface = "plain" })
+out <- label_hjust_pos(p, { label_hjust = "center" })
+out <- label_vjust_pos(p, { label_vjust = "middle" })
+out <- label_lineheight_pos(p, { label_lineheight = 1 })
+out <- all_neg(p, expr = {label = "sig"})
+out <- hide_neg(p)
+out <- show_neg(p)
+out <- colour_neg(p, { colour = "black" })
+out <- color_neg(p, { color = "black" })
+out <- linetype_neg(p, { linetype = 1 })
+out <- size_neg(p, { size = 1 })
+out <- alpha_neg(p, { alpha = 1 })
+out <- label_colour_neg(p, { label_colour = "black" })
+out <- label_color_neg(p, { label_color = "black" })
+out <- label_fill_neg(p, { label_fill = "white" })
+out <- label_size_neg(p, { label_size = 4 })
+out <- label_alpha_neg(p, { label_alpha = 1 })
+out <- label_family_neg(p, { label_family = "sans" })
+out <- label_fontface_neg(p, { label_fontface = "plain" })
+out <- label_hjust_neg(p, { label_hjust = "center" })
+out <- label_vjust_neg(p, { label_vjust = "middle" })
+out <- label_lineheight_neg(p, { label_lineheight = 1 })
+```

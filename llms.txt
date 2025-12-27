@@ -1,0 +1,673 @@
+# tidySEM [![](https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png)](https://github.com/cjvanlissa/tidySEM)
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
+[![CRAN RStudio mirror
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](https://r-pkg.org/pkg/tidySEM)
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
+[![R-CMD-check](https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://app.codecov.io/gh/cjvanlissa/tidySEM?branch=master)
+[![Contributor
+Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
+
+The package `tidySEM` provides a ‘tidy’ workflow for conducting,
+reporting, and plotting structural equation modeling analyses. It does
+not perform model estimation, but instead allows users to estimate
+models in a software-agnostic way, using either the free open source R
+packages `lavaan` or `OpenMx`, or the commercial closed-source program
+`Mplus` (controlled through the R package `MplusAutomation`). The aim of
+`tidySEM` is to provide three specific functions:
+
+1.  Generate model syntax in a top-down, tidy way,
+    - With particular attention to specifying mixture models in `OpenMx`
+2.  Tabulate model output in a publication-ready, uniform manner,
+3.  Make easily customizable graphs for SEM-models.
+
+These functions are designed with the [*tidy tools manifesto* (Wickham,
+last updated
+23-11-2019)](https://tidyverse.tidyverse.org/articles/manifesto.html) in
+mind, and interface with the existing suite of packages in the
+[`tidyverse`](https://tidyverse.tidyverse.org/).
+
+## Installation
+
+You can install the public release of `tidySEM` from CRAN with:
+
+``` r
+install.packages("tidySEM")
+```
+
+If you want access to the latest developer version, including features
+that may not yet be finalized, you can install the development version
+of `tidySEM` from R-universe with:
+
+``` r
+install.packages('tidySEM',
+                 repos = c('https://cjvanlissa.r-universe.dev',
+                           'https://cloud.r-project.org'))
+```
+
+And if you are a developer and want to contribute to `tidySEM`, or want
+to install a specific historical version of the package, you can install
+directly from GitHub with:
+
+``` r
+install.packages("remotes")
+remotes::install_github('cjvanlissa/tidySEM')
+```
+
+## Documentation
+
+Every user-facing function in the package is documented, and the
+documentation can be accessed by running `?function_name` in the R
+console, e.g.,
+[`?graph_sem`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md).
+
+Furthermore, there are three main vignettes, describing the three main
+tracks of `tidySEM` functions:
+
+1.  A [vignette about generating syntax and estimating
+    models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html)
+2.  A [vignette about tabulating
+    results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
+3.  A [vignette about making
+    graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
+    - An additional vignette describes the [graphing
+      conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html)
+      for structural equation models.
+
+## Citing tidySEM
+
+You can cite the R-package with the following citation:
+
+> Van Lissa, C. J., (2019). *tidySEM: Tidy structural equation
+> modeling.* R package version 0.2.1.
+> <https://github.com/cjvanlissa/tidySEM/>
+
+## Contributing and Contact Information
+
+If you have ideas, please get involved. You can contribute by opening an
+issue on ‘GitHub’, or sending a pull request with proposed features (see
+further instructions below).
+
+- File a ‘GitHub’ issue [here](https://github.com/cjvanlissa/tidySEM)
+- Make a pull request
+  [here](https://github.com/cjvanlissa/tidySEM/pulls)
+
+By participating in this project, you agree to abide by the [Contributor
+Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html).
+
+### Pull requests
+
+- Please always contribute via pull request instead of committing to
+  master, so I can review the contribution.
+  - You can either fork the repository to your own account and then
+    submit a pull request, or make minor changes directly on this
+    repository, and choose to commit them to a different branch and send
+    a pull request when you save those changes
+- If you fix an issue, in your Commit message, please write “closes
+  \#issuenumber” so we can trace which commits fixed which issues
+- Please add a line to NEWS.md for each bug fix or feature contribution
+- Please increment the minor version number in DESCRIPTION, e.g.:
+  0.2.3.1 -\> 0.2.3.2
+
+# Package index
+
+## All functions
+
+- [`BCH()`](https://cjvanlissa.github.io/tidySEM/reference/BCH.md) :
+  Estimate an Auxiliary Model using the BCH Method
+- [`BLRT()`](https://cjvanlissa.github.io/tidySEM/reference/BLRT.md) :
+  Conduct Bootstrapped Likelihood Ratio Test
+- [`add_paths()`](https://cjvanlissa.github.io/tidySEM/reference/add_paths.md)
+  : Add paths to an object of class 'tidy_sem'
+- [`alkema_microplastics`](https://cjvanlissa.github.io/tidySEM/reference/alkema_microplastics.md)
+  : Ocean Microplastics Data
+- [`append_class_draws()`](https://cjvanlissa.github.io/tidySEM/reference/append_class_draws.md)
+  : Append Pseudo-class Draws
+- [`as_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/as_lavaan.md)
+  : Convert tidy_sem to 'lavaan' syntax
+- [`as_mplus()`](https://cjvanlissa.github.io/tidySEM/reference/as_mplus.md)
+  : Convert tidy_sem to 'Mplus' syntax
+- [`as_ram()`](https://cjvanlissa.github.io/tidySEM/reference/as_ram.md)
+  : Convert lavaan syntax to RAM specification
+- [`class_prob()`](https://cjvanlissa.github.io/tidySEM/reference/class_prob.md)
+  : Obtain latent class probabilities
+- [`conf_int()`](https://cjvanlissa.github.io/tidySEM/reference/conf_int.md)
+  : Format confidence intervals
+- [`cors()`](https://cjvanlissa.github.io/tidySEM/reference/cors.md) :
+  Generate syntax for correlations
+- [`create_scales()`](https://cjvanlissa.github.io/tidySEM/reference/create_scales.md)
+  : Create scale scores from observed variables
+- [`curry_mac`](https://cjvanlissa.github.io/tidySEM/reference/curry_mac.md)
+  : Simulated MAC data
+- [`data_mix_ordinal`](https://cjvanlissa.github.io/tidySEM/reference/data_mix_ordinal.md)
+  : Simulated data for mixture model with ordinal indicators
+- [`descriptives()`](https://cjvanlissa.github.io/tidySEM/reference/descriptives.md)
+  : Describe a dataset
+- [`dictionary()`](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
+  [`` `dictionary<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
+  : Extract dictionary from tidy_sem
+- [`edges()`](https://cjvanlissa.github.io/tidySEM/reference/edges.md)
+  [`` `edges<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/edges.md)
+  : Extract edges from sem_graph
+- [`edit_graph()`](https://cjvanlissa.github.io/tidySEM/reference/edit_graph.md)
+  [`edit_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/edit_graph.md)
+  [`edit_edges()`](https://cjvanlissa.github.io/tidySEM/reference/edit_graph.md)
+  : Edit graph elements
+- [`empathy`](https://cjvanlissa.github.io/tidySEM/reference/empathy.md)
+  : Simulated empathy data
+- [`est_sig()`](https://cjvanlissa.github.io/tidySEM/reference/est_sig.md)
+  : Add significance asterisks to object
+- [`estimate_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_lavaan.md)
+  : Estimate tidy_sem using 'lavaan'
+- [`estimate_mplus()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_mplus.md)
+  : Estimate tidy_sem using 'Mplus'
+- [`estimate_mx()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_mx.md)
+  : Estimate tidy_sem using 'OpenMx'
+- [`get_data()`](https://cjvanlissa.github.io/tidySEM/reference/get_data.md)
+  [`` `get_data<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/get_data.md)
+  : Extract data from tidy_sem
+- [`get_edges()`](https://cjvanlissa.github.io/tidySEM/reference/get_edges.md)
+  : Extract edges from a SEM model object
+- [`get_fit()`](https://cjvanlissa.github.io/tidySEM/reference/get_fit.md)
+  : Get fit indices from objects
+- [`get_layout()`](https://cjvanlissa.github.io/tidySEM/reference/get_layout.md)
+  : Generate graph layout
+- [`get_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/get_nodes.md)
+  : Extract nodes from a SEM model object
+- [`graph_sem()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
+  : Render a graph
+- [`ic_weights()`](https://cjvanlissa.github.io/tidySEM/reference/ic_weights.md)
+  : Compare Information Criteria
+- [`if_edit()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`if_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`if_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_sig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_nonsig()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_fixed()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_pos()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_neg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_var()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_cov()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_reg()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_location_load()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_obs()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`fill_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_latent()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_sig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_nonsig_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_fixed_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_pos_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_neg_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_sig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_nonsig_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_fixed_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_pos_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`all_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`hide_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`show_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`colour_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`color_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`linetype_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`size_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`alpha_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_colour_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_color_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fill_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_size_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_alpha_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_family_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_fontface_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_hjust_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_vjust_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  [`label_lineheight_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
+  : Conditionally edit a sem_graph object
+- [`lr_lmr()`](https://cjvanlissa.github.io/tidySEM/reference/lr_lmr.md)
+  : Lo-Mendell-Rubin Likelihood Ratio Test
+- [`lr_test()`](https://cjvanlissa.github.io/tidySEM/reference/lr_test.md)
+  : Conduct Likelihood Ratio tests
+- [`lsub()`](https://cjvanlissa.github.io/tidySEM/reference/lsub.md) :
+  Apply pattern replacement over a vector
+- [`maene_identity`](https://cjvanlissa.github.io/tidySEM/reference/maene_identity.md)
+  : National Identity, Discrimination and Depression
+- [`measurement()`](https://cjvanlissa.github.io/tidySEM/reference/measurement.md)
+  : Generate syntax for a measurement model
+- [`mixture_starts()`](https://cjvanlissa.github.io/tidySEM/reference/mixture_starts.md)
+  : Automatically set starting values for an OpenMx mixture model
+- [`mplus_expand_names()`](https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.md)
+  : Expand abbreviated Mplus variable names
+- [`mx_dummies()`](https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.md)
+  : Dummy Code Factor Variables
+- [`mx_growth_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.md)
+  : Estimate growth mixture models using OpenMx
+- [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md)
+  : Estimate latent class analyses using OpenMx
+- [`mx_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixture.md)
+  : Estimate mixture models using OpenMx
+- [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md)
+  : Estimate latent profile analyses using OpenMx
+- [`mx_switch_labels()`](https://cjvanlissa.github.io/tidySEM/reference/mx_switch_labels.md)
+  : Switch LCA Class Labels
+- [`nodes()`](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
+  [`` `nodes<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
+  : Extract nodes from sem_graph
+- [`paste2()`](https://cjvanlissa.github.io/tidySEM/reference/paste2.md)
+  : Concatenate Strings while omitting NA
+- [`plas_depression`](https://cjvanlissa.github.io/tidySEM/reference/plas_depression.md)
+  : Simulated depression data
+- [`plot_bivariate()`](https://cjvanlissa.github.io/tidySEM/reference/plot_bivariate.md)
+  : Create correlation plots for a mixture model
+- [`plot_density()`](https://cjvanlissa.github.io/tidySEM/reference/plot_density.md)
+  : Create density plots for mixture models
+- [`plot_prob()`](https://cjvanlissa.github.io/tidySEM/reference/plot_prob.md)
+  : Plot categorical variable probabilities
+- [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
+  : Create latent profile plots
+- [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
+  : Predict Class Membership
+- [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
+  : Prepare graph data
+- [`pseudo_class()`](https://cjvanlissa.github.io/tidySEM/reference/pseudo_class.md)
+  : Estimate an Auxiliary Model using the Pseudo-Class Method
+- [`run_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/run_lavaan.md)
+  : Run as lavaan model
+- [`run_mx()`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md)
+  : Run as OpenMx model with sensible defaults
+- [`skew_kurtosis()`](https://cjvanlissa.github.io/tidySEM/reference/skew_kurtosis.md)
+  : Calculate skew and kurtosis
+- [`syntax()`](https://cjvanlissa.github.io/tidySEM/reference/syntax.md)
+  [`` `syntax<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/syntax.md)
+  : Extract syntax from tidy_sem
+- [`table_cors()`](https://cjvanlissa.github.io/tidySEM/reference/table_cors.md)
+  : Extract correlation tables
+- [`table_fit()`](https://cjvanlissa.github.io/tidySEM/reference/table_fit.md)
+  : Print model fit table formatted for publication
+- [`table_prob()`](https://cjvanlissa.github.io/tidySEM/reference/table_prob.md)
+  : Results table in probability scale
+- [`table_results()`](https://cjvanlissa.github.io/tidySEM/reference/table_results.md)
+  : Print results table formatted for publication
+- [`tidy_sem()`](https://cjvanlissa.github.io/tidySEM/reference/tidy_sem.md)
+  : Create a tidy_sem object
+- [`wald_test()`](https://cjvanlissa.github.io/tidySEM/reference/wald_test.md)
+  : Wald Test for Linear Hypotheses
+- [`zegwaard_carecompass`](https://cjvanlissa.github.io/tidySEM/reference/zegwaard_carecompass.md)
+  : Caregiver Compass Data
+
+# Articles
+
+### All vignettes
+
+- [Generating syntax for structural equation
+  models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.md):
+- [Confirmatory LPA for the Caregiver
+  Compass](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.md):
+- [Exploratory LPA for Ocean
+  Microplastics](https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.md):
+- [Latent Class Growth
+  Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.md):
+- [Latent Class Analysis for Ordinal
+  Indicators](https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.md):
+- [Plotting graphs for structural equation
+  models](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.md):
+- [SEM graphing
+  conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.md):
+- [SMART-LCA
+  Checklist](https://cjvanlissa.github.io/tidySEM/articles/SMART_LCA_checklist.md):
+- [Tabulating results from structural equation
+  models](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.md):
