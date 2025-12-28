@@ -184,10 +184,10 @@ u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
   #             modelout = "test.inp",
   #             run = 1L
   #             )
-  res_mx$class1$Thresholds$values <- structure(c(-1.21202423291062, -1.03055648196733, 1.34960931996936,
-                                                 1.21984168386381), .Dim = c(1L, 4L))
-  res_mx$class2$Thresholds$values <- structure(c(1.22655751606709, 1.20822650045262, -1.2762983140788,
-                                                 -1.14581064840368), .Dim = c(1L, 4L))
+  # res_mx$class1$Thresholds$values <- structure(c(-1.21202423291062, -1.03055648196733, 1.34960931996936,
+  #                                                1.21984168386381), .Dim = c(1L, 4L))
+  # res_mx$class2$Thresholds$values <- structure(c(1.22655751606709, 1.20822650045262, -1.2762983140788,
+  #                                                -1.14581064840368), .Dim = c(1L, 4L))
 
   res_mx <- mxTryHardOrdinal(res_mx)
   tmp <- table_results(res_mx, columns=NULL)
