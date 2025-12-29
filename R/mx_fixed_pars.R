@@ -12,7 +12,7 @@
   mats <- x@matrices
   if(length(mats) > 0){
   out <- c(out,
-           lapply(names(mats)[!names(mats) %in% c("F")], function(thism){
+           lapply(names(mats)[!names(mats) %in% c("F", "mat_dev", "mat_ones", "Indicators")], function(thism){
              tmp <- as.data.frame.table(x[[thism]][["values"]])
              if(is.null(rownames(x[[thism]][["values"]]))){
                levels(tmp$Var1) <- 1:length(levels(tmp$Var1))
@@ -23,7 +23,8 @@
              tmp$row <- as.character(tmp$Var1)
              tmp$col <- as.character(tmp$Var2)
              isfree <- as.vector(x[[thism]][["free"]])
-             tmp[!isfree & !tmp$Estimate == 0, c("name", "matrix", "row", "col", "Estimate"), drop = FALSE]
+             tmp <- tmp[!isfree & !tmp$Estimate == 0, c("name", "matrix", "row", "col", "Estimate"), drop = FALSE]
+             tmp[!rowSums(is.na(tmp)) == ncol(tmp), , drop = FALSE]
            }))
   }
   out <- bind_list(out)

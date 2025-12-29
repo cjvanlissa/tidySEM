@@ -11,9 +11,10 @@ mx_thresholds <- function (df, variables = names(df), output = "mx")
   # labels <- sapply(1:length(variables), function(i){
   #   paste0(prefix, variables[i], midfix, 1:maxthres, suffix)
   # })
-  free <- sapply(1:length(variables), function(i){
-    1:maxthres %in% 1:(numcats[i]-1)
-  })
+  free <- matrix(FALSE, nrow = maxthres, ncol = length(numcats))
+  for(v in seq_along(numcats)){
+    free[1:(numcats[v]-1L), v] <- TRUE
+  }
   #labels[!free] <- NA
   values_thresh <- matrix(1e-3, ncol = length(numcats), nrow = maxthres)
   for(i in 1:length(variables)){
@@ -42,9 +43,17 @@ mx_thresholds <- function (df, variables = names(df), output = "mx")
     values_dev[!free] <- 1e-3
   }
 
-  #devLabels <- paste0(labels, "_dev")
-  #devLabels[is.na(labels)] <- NA
+
+  mat_indicator <- list(
+    name = "Indicators",
+    type = "Full",
+    nrow = maxthres,
+    ncol = length(variables),
+    free = FALSE,
+    values = as.integer(free))
+
   mat_dev <- mat_thresh
+
   mat_dev$name <- "mat_dev"
   #mat_dev$labels[,] <- paste0("dev_", mat_dev$labels)
   mat_dev$values <- values_dev
@@ -63,6 +72,7 @@ mx_thresholds <- function (df, variables = names(df), output = "mx")
   out <- list(#mat_thresh = mat_thresh,
        mat_dev = mat_dev,
        mat_ones = mat_ones,
+       mat_indicator = mat_indicator,
        alg_thres = algebra)
   if(output == "list"){
     return(out)

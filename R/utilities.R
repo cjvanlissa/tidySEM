@@ -25,6 +25,10 @@ paste2 <- function(..., sep = " ", collapse = NULL, na.rm = TRUE){
     paste(na.omit(res), collapse = collapse)
 }
 
+diag_bind <- function(a, b, pad = NA){
+  rbind(cbind(a, matrix(data = pad, nrow = nrow(a), ncol = ncol(b))),
+        cbind(matrix(data = pad, nrow = nrow(b), ncol = ncol(a)), b))
+}
 
 # @title Longest common substring
 # @description Extract the longest common substring of two strings using

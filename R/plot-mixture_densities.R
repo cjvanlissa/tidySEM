@@ -273,7 +273,7 @@ plot_density.MxModel <- function(x,
                                   #size = "size"
                        )) + labs(x = "Value", y = "density")
             class_colors <- c(get_palette(length(levels(plot_df$Class))-1), "#000000")
-            names(class_colors) <- levels(plot_df$Class)
+            names(class_colors) <- c(levels(plot_df$Class)[-which(levels(plot_df$Class) == "Total")], "Total")
             density_plot <- density_plot +
                 scale_colour_manual(values = class_colors)+
                 scale_fill_manual(values = class_colors) +
