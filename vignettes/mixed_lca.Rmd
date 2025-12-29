@@ -1,0 +1,217 @@
+---
+title: "Latent Class Analysis with Mixed (Categorical and Continuous) Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lca_mixed_data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+run_chunks <- requireNamespace("OpenMx", quietly = TRUE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  eval = run_chunks,
+  comment = "#>"
+)
+
+show_plots <- FALSE
+if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
+  show_plots <- TRUE
+}
+
+```
+
+Latent class analysis for categorical indicators (LCA) and latent profile analysis for continuous indicators (LPA) are widely used
+mixture modeling techniques for identifying unobserved subgroups in a
+population. In practice, researchers often encounter **mixed data types**: a
+combination of continuous, binary, and ordinal indicators.
+
+Estimating such models was complicated in prior versions of `tidySEM`,
+and often led to convergence issues.
+The new function `mx_mixed_lca()`, introduced in `tidySEM` version `0.2.10`, provides a high-level interface to
+estimate mixed-data latent class models.
+It implements a
+multi-step estimation procedure designed to improve starting
+values and convergence when working with heterogeneous indicators.
+
+This vignette demonstrates how to:
+
+* Prepare mixed continuous and ordinal data
+* Estimate mixed-data latent class models
+* Fit multiple class solutions
+* Inspect and interpret the resulting OpenMx models
+
+## Requirements
+
+The `mx_mixed_lca()` function relies on `OpenMx`. Make sure both packages are
+installed.
+
+```{r eval = run_chunks}
+library(tidySEM)
+library(OpenMx)
+```
+
+## Example Data
+
+We simulate a dataset with:
+
+* Three continuous indicators
+* One ordinal indicator
+* Two latent classes
+
+```{r eval = run_chunks}
+set.seed(10)
+n <- 200
+
+# Set class-specific means
+class_means <- c(rep(0, floor(0.3 * n)),
+rep(2, ceiling(0.7 * n)))
+
+# Simulate continuous indicators
+df <- rnorm(4 * n, mean = rep(class_means, 4))
+df <- matrix(df, nrow = n)
+df <- t(t(df) * c(1, 2, 0.5, 1))
+df <- data.frame(df)
+names(df) <- paste0("X", 1:4)
+
+# Convert one indicator to ordinal
+df$X4 <- cut(df$X4, breaks = 3, labels = FALSE)
+df$X4 <- mxFactor(df$X4, levels = 1:3)
+
+```
+
+
+## Model Estimation with `mx_mixed_lca()`
+
+The `mx_mixed_lca()` function estimates mixed-data latent class models using the
+following procedure:
+
+1. Estimate an **Latent profile analysis (LPA)** for the continuous indicators using
+   `mx_profiles()`
+2. Use the **BCH method** to obtain starting values for ordinal indicators: the classes probabilities from step 1 are used to estimate thresholds for the remaining ordinal indicators.
+3. **Latent class analysis (LCA)** for ordinal indicators using `mx_lca()`, using the thresholds from step 2. as starting values.
+4. **Joint estimation** of continuous and ordinal indicators in a single model, using the results from steps 1. and 3. as starting values.
+
+### Estimating a Single Class Solution
+
+To estimate a 2-class mixed-data latent class model, use the following code. Note that you will see several notifications concerning model estimation, as the aforementioned steps are completed. 
+
+```{r eval = run_chunks}
+res_2 <- mx_mixed_lca(
+data = df,
+classes = 2
+)
+```
+
+
+The returned object is an `OpenMx::mxModel`, and can be modified using the functions in that package:
+
+```{r eval = run_chunks}
+class(res_2)
+```
+
+## Estimating Multiple Class Solutions
+
+A common workflow is to estimate several class solutions and compare model fit.
+This can be done by passing a vector of class numbers.
+
+```{r eval = run_chunks}
+res_1_3 <- mx_mixed_lca(
+  data = df,
+  classes = 1:3
+)
+```
+
+The result is a list of OpenMx models, one for each class solution.
+
+## Inspecting Model Results
+
+The model fit can be inspected by printing the object, or calling `table_fit(res_1_3)`:
+
+```{r}
+table_fit(res_1_3)
+```
+
+Note that, as expected, the BIC for the 2-class solution is lowest.
+The 3-class solution has an extremely low ratio of cases to parameters,
+so this model is most likely overfit.
+
+The class proportions for the two-class solution are printed in this table too (`n_min` and `n_max`); note that they correspond nicely to the simulated .3/.7 split.
+
+We can examine the parameter values using `table_results()` on the second element of the model list, or the 2-class model:
+
+```{r}
+table_results(res_1_3[[2]])
+```
+
+Note that we get free means for each class, with the variances constrained to be equal across classes.
+For the categorical variable, we get thresholds:
+These correspond to quartiles of a normal distribution.
+For class 1, the probability of scoring within the first response category corresponds to `pnorm(-2.38, lower.tail = TRUE)`, or about 1%.
+To convert these thresholds to the probability scale, we can run:
+
+```{r}
+table_prob(res_1_3[[2]])
+```
+
+## Advanced Options
+
+Additional arguments can be passed via `...` and are forwarded to the underlying
+model-building functions. For example, you can release thevariance constraints for
+the continuous indicators as follows:
+
+```{r}
+res_2_free <- mx_mixed_lca(
+  data = df,
+  classes = 2,
+  variances = "free"
+)
+```
+
+We can test whether releasing the variances significantly changes the model fit using an ANOVA:
+
+```{r}
+anova(res_1_3[[2]], res_2_free)
+```
+
+With a p-value of `0.63`, we conclude that the added complexity does not significantly improve the model (as expected, because we did not simulate class-specific variances).
+
+
+# Plotting the Model
+
+The model can be plot with the usual functions, but note that categorical indicators will not look good in plots for continuous indicators, and could lead to errors.
+
+Thus, for example, we can use a profile plot for the continuous indicators:
+
+```{r eval = run_chunks & show_plots}
+plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
+```
+
+Alternatively, we can use a bivariate plot with densities:
+
+```{r eval = run_chunks & show_plots}
+plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
+```
+
+We can plot the categorical variables as follows:
+
+```{r eval = run_chunks & show_plots}
+plot_prob(res_1_3[[2]])
+```
+
+The `mx_mixed_lca()` function is particularly useful when:
+
+* Your indicators include **both continuous and ordinal variables**
+* You want **robust starting values** to reduce convergence issues
+* You prefer a **single high-level interface** to OpenMx mixture modeling
+
+For purely continuous indicators, consider `mx_profiles()`.
+For purely categorical indicators, consider `mx_lca()`.
+
+## References
+
+Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+*Recommended Practices in Latent Class Analysis using the Open-Source R-Package
+tidySEM.* Structural Equation Modeling.
+[https://doi.org/10.1080/10705511.2023.2250920](https://doi.org/10.1080/10705511.2023.2250920)

@@ -353,6 +353,15 @@ flat <- function(x){
                            Estimate = val,
                            formula = deparse(x[[thisalg]]$formula),
                            row.names = NULL)
+      # Drop unused thresholds
+      if(thisalg == "Thresholds"){
+        if(!is.null(x[["Indicators"]])){
+          # Drop thresholds for deviances that don't have a label, as these should be bogus
+          if(isTRUE(any(x[["Indicators"]]$values == 0))){
+            addalg <- addalg[-which(x[["Indicators"]]$values == 0), , drop = FALSE]
+          }
+        }
+      }
       addthis <- c(addthis, list(addalg))
     }
     names(addthis) <- algs

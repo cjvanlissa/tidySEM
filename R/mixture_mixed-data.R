@@ -16,14 +16,14 @@
 #' The procedure is as follows:
 #'
 #' 1. Estimate a latent profile analysis for the continuous indicators using
-#'    \code{\link[mx_profiles]{mx_profiles()}}. Additional arguments, like
+#'    \code{\link[tidySEM:mx_profiles]{mx_profiles()}}. Additional arguments, like
 #'    `variabces = "free"`, can be passed via `...`. The estimator uses
 #'    simulated annealing.
 #' 2. To obtain good starting values for the categorical indicators, use the
 #'    classes from step 1. to estimate an auxiliary model for the ordinal
-#'    indicators with \code{\link[BCH]{BCH()}}.
+#'    indicators with \code{\link[tidySEM:BCH]{BCH()}}.
 #' 3. Estimate a latent class analysis for the categorical indicators using
-#'    \code{\link[mx_lca]{mx_lca()}}, with the results of step 2. as starting
+#'    \code{\link[tidySEM:mx_lca]{mx_lca()}}, with the results of step 2. as starting
 #'    values. The estimator uses
 #'    \code{\link[OpenMx:mxTryHardOrdinal]{OpenMx::mxTryHardOrdinal()}}.
 #' 4. Combine the models from steps 1. and 3. into one joint model. Conduct one
@@ -54,9 +54,9 @@
 #' }
 #' }
 mx_mixed_lca <- function(data = NULL,
-                   classes = 1L,
-                   run = TRUE,
-                   ...){
+                         classes = 1L,
+                         run = TRUE,
+                         ...){
   if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
     return(NULL)
   }
@@ -66,7 +66,6 @@ mx_mixed_lca <- function(data = NULL,
   if(!any(vars_ord) | !any(vars_cont) | any(!(vars_cont | vars_ord))) stop("Function mx_mixed_lca() only accepts data that contain both ordinal (binary or ordered categorical) and continuous (numeric) levels of measurement.")
 
   cl <- match.call()
-
   # Recursive function
   if(length(classes) > 1){
     out <- lapply(classes, function(i){
@@ -92,85 +91,139 @@ mx_mixed_lca <- function(data = NULL,
 
     # Get starting values for ordinal variables
     df_ord <- data[, vars_ord, drop = FALSE]
-    numcats <- sapply(df_ord, function(x){length(levels(x))})
-    mdl_ord <- paste0(unlist(lapply(names(df_ord), function(n){
-      paste0(n, " | ", paste0("t", 1:(length(levels(df_ord[[n]]))-1L)), collapse = "; ")
-    })), collapse = "; ")
-    ord_strts <- suppressWarnings(tidySEM::BCH(x = mix_profiles, model = mdl_ord, data = df_ord))
-
     mix_ord <- mx_lca(df_ord, classes = classes, run = FALSE)
+    if(classes == 1){
+      # Prepare matrices
+      manv <- c(mix_profiles$manifestVars, mix_ord$manifestVars)
+      nms <- list(manv, manv)
+      mat_a <- OpenMx::mxMatrix(name="A", type="Full", nrow = ncol(data), ncol = ncol(data),
+                                free = FALSE, values = 0, dimnames = nms)
+      mat_s <- OpenMx::mxMatrix(name = "S",
+                                type = "Diag",
+                                nrow = nrow(mix_profiles$S) + nrow(mix_ord$S),
+                                ncol = ncol(mix_profiles$S) + ncol(mix_ord$S),
+                                free = c(diag(mix_profiles$S$free), diag(mix_ord$S$free)),
+                                values = c(diag(mix_profiles$S$values), diag(mix_ord$S$values)),
+                                labels = c(diag(mix_profiles$S$labels), diag(mix_ord$S$labels)),
+                                dimnames = nms)
 
-    classnams <- names(mix_ord@submodels)
-    for(i in 1:classes){
-      # Restore deviations from thresholds via the inverse of the indicator matrix
-      # solve(mix_ord$class1$mat_ones$values) %*% (mix_ord$class1$mat_ones$values %*% mix_ord$class1$mat_dev$values)
-      mix_ord[[classnams[i]]]$mat_dev$values <- solve(mix_ord[[classnams[i]]]$mat_ones$values) %*% ord_strts[[classnams[i]]]$Thresholds$values
-    }
+      mat_f <- OpenMx::mxMatrix(name="F", type="Diag", nrow = ncol(data),
+                                free = FALSE, values = 1, dimnames = nms)
+      mat_m <- OpenMx::mxMatrix(name = "M",
+                                type = "Full",
+                                nrow = 1,
+                                ncol = ncol(mix_profiles$M) + ncol(mix_ord$M),
+                                free = c(mix_profiles$M$free, mix_ord$M$free),
+                                values = c(mix_profiles$M$values, mix_ord$M$values),
+                                labels = c(mix_profiles$M$labels, mix_ord$M$labels),
+                                dimnames = list(NULL, nms[[1]]))
 
-    # Prepare matrices
-    manv <- names(data)
-    mat_a <- OpenMx::mxMatrix(name="A", type="Full", nrow = ncol(data), ncol = ncol(data),
-             free = FALSE, values = 0)
-    mat_s <- OpenMx::mxMatrix(name = "S",
-             type = "Diag",
-             nrow = nrow(mix_profiles$class1$S) + nrow(mix_ord$class1$S),
-             ncol = ncol(mix_profiles$class1$S) + ncol(mix_ord$class1$S),
-             free = c(diag(mix_profiles$class1$S$free), diag(mix_ord$class1$S$free)),
-             values = c(diag(mix_profiles$class1$S$values), diag(mix_ord$class1$S$values)),
-             labels = c(diag(mix_profiles$class1$S$labels), diag(mix_ord$class1$S$labels)),
-             dimnames = list(c(rownames(mix_profiles$class1$S), rownames(mix_ord$class1$S)), c(rownames(mix_profiles$class1$S), rownames(mix_ord$class1$S)))
-    )
-    mat_f <- OpenMx::mxMatrix(name="F", type="Diag", nrow = ncol(data),
-             free = FALSE, values = 1, dimnames = list(names(data), names(data)))
-    mat_m <- OpenMx::mxMatrix(name = "M",
-             type = "Full",
-             nrow = 1,
-             ncol = ncol(mix_profiles$class1$M) + ncol(mix_ord$class1$M),
-             free = c(mix_profiles$class1$M$free, mix_ord$class1$M$free),
-             values = c(mix_profiles$class1$M$values, mix_ord$class1$M$values),
-             labels = c(mix_profiles$class1$M$labels, mix_ord$class1$M$labels),
-             dimnames = list(NULL, c(colnames(mix_profiles$class1$M), colnames(mix_ord$class1$M))))
+      # Make class list
+      mix_combined <- OpenMx::mxModel(
+        model = "mix1",
+        type = "RAM",
+        manifestVars = manv,
+        mat_a,
+        mat_s,
+        mat_f,
+        mat_m,
+        mix_ord$mat_dev,
+        mix_ord$mat_ones,
+        mix_ord$Indicators,
+        mix_ord$Thresholds,
+        OpenMx::mxExpectationRAM("A","S","F","M"),
+        OpenMx::mxFitFunctionML(),
+        OpenMx::mxData(data[, manv, drop = FALSE], type = "raw")
+      )
+      mix_combined$expectation$thresholds <- "Thresholds"
 
-    # Make class list
-    c1 <- OpenMx::mxModel(model = "class1",
-                  type = "RAM",
-                  manifestVars = names(data),
-                  mat_a,
-                  mat_s,
-                  mat_f,
-                  mat_m,
-                  mix_ord$class1$mat_dev,
-                  mix_ord$class1$mat_ones,
-                  mix_ord$class1$Thresholds,
-                  OpenMx::mxExpectationRAM("A","S","F","M"),
-                  OpenMx::mxFitFunctionML(vector=TRUE))
-    c1$expectation$thresholds <- "Thresholds"
-    class_list <- vector(mode = "list", length = classes)
-    class_list[[1]] <- c1
-    if(classes > 1){
-      for(i in 2:classes){
-        theclass <- paste0("class", i)
-        class_list[[i]] <- OpenMx::mxModel(c1, name = theclass)
-        class_list[[i]]$S$values <- diag_bind(mix_profiles[[theclass]]$S$values, mix_ord[[theclass]]$S$values, pad = 0)
-        class_list[[i]]$S$free <- diag_bind(mix_profiles[[theclass]]$S$free, mix_ord[[theclass]]$S$free, pad = FALSE)
-        class_list[[i]]$S$labels = diag_bind(mix_profiles[[theclass]]$S$labels, mix_ord[[theclass]]$S$labels, pad = NA)
+    } else {
+      thresh <- mx_thresholds(df_ord)
+      mx_mdl_ord <- OpenMx::mxModel(
+        model = "ordinal_starts",
+        type = "RAM",
+        manifestVars = names(df_ord),
+        OpenMx::mxPath(from = "one", to = names(df_ord), free = FALSE, values = 0),
+        OpenMx::mxPath(from = names(df_ord), to = names(df_ord), free = FALSE, values = 1, arrows = 2),
+        thresh)
+      mx_mdl_ord$expectation$thresholds <- "Thresholds"
+      ord_strts <- suppressWarnings(tidySEM::BCH(x = mix_profiles, model = mx_mdl_ord, data = df_ord))
 
-        class_list[[i]]$M$values <- cbind(mix_profiles[[theclass]]$M$values, mix_ord[[theclass]]$M$values)
-        class_list[[i]]$M$free <- cbind(mix_profiles[[theclass]]$M$free, mix_ord[[theclass]]$M$free)
-        class_list[[i]]$M$labels <- cbind(mix_profiles[[theclass]]$M$labels, mix_ord[[theclass]]$M$labels)
-        class_list[[i]]$mat_dev$values <- mix_ord[[theclass]]$mat_dev$values
+
+      classnams <- names(mix_ord@submodels)
+      for(i in 1:classes){
+        # Restore deviations from thresholds via the inverse of the indicator matrix
+        # solve(mix_ord$class1$mat_ones$values) %*% (mix_ord$class1$mat_ones$values %*% mix_ord$class1$mat_dev$values)
+        # mix_ord[[classnams[i]]]$mat_dev$values <- solve(mix_ord[[classnams[i]]]$mat_ones$values) %*% ord_strts[[classnams[i]]]$Thresholds$values
+        mix_ord[[classnams[i]]]$mat_dev$values <- ord_strts[[classnams[i]]]$mat_dev$values
       }
-    }
-    Args <- c(list(
-      model = "mix",
-      OpenMx::mxData(data, type = "raw"),
-      OpenMx::mxMatrix(values = mix_profiles$weights$values, nrow=1, ncol=ncol(mix_profiles$weights$values), lbound = 1e-4, free=c(FALSE, rep(TRUE, (ncol(mix_profiles$weights$values)-1L))), name="weights"),
-      OpenMx::mxExpectationMixture(paste0("class", 1:classes), weights = "weights", scale="sum"),
-      OpenMx::mxFitFunctionML()
+
+      # Prepare matrices
+      manv <- c(mix_profiles$class1$manifestVars, mix_ord$class1$manifestVars)
+      nms <- list(manv, manv)
+      mat_a <- OpenMx::mxMatrix(name="A", type="Full", nrow = ncol(data), ncol = ncol(data),
+                                free = FALSE, values = 0, dimnames = nms)
+      mat_s <- OpenMx::mxMatrix(name = "S",
+                                type = "Diag",
+                                nrow = nrow(mix_profiles$class1$S) + nrow(mix_ord$class1$S),
+                                ncol = ncol(mix_profiles$class1$S) + ncol(mix_ord$class1$S),
+                                free = c(diag(mix_profiles$class1$S$free), diag(mix_ord$class1$S$free)),
+                                values = c(diag(mix_profiles$class1$S$values), diag(mix_ord$class1$S$values)),
+                                labels = c(diag(mix_profiles$class1$S$labels), diag(mix_ord$class1$S$labels)),
+                                dimnames = nms)
+
+      mat_f <- OpenMx::mxMatrix(name="F", type="Diag", nrow = ncol(data),
+                                free = FALSE, values = 1, dimnames = nms)
+      mat_m <- OpenMx::mxMatrix(name = "M",
+                                type = "Full",
+                                nrow = 1,
+                                ncol = ncol(mix_profiles$class1$M) + ncol(mix_ord$class1$M),
+                                free = c(mix_profiles$class1$M$free, mix_ord$class1$M$free),
+                                values = c(mix_profiles$class1$M$values, mix_ord$class1$M$values),
+                                labels = c(mix_profiles$class1$M$labels, mix_ord$class1$M$labels),
+                                dimnames = list(NULL, nms[[1]]))
+
+      # Make class list
+      c1 <- OpenMx::mxModel(model = "class1",
+                            type = "RAM",
+                            manifestVars = manv,
+                            mat_a,
+                            mat_s,
+                            mat_f,
+                            mat_m,
+                            mix_ord$class1$mat_dev,
+                            mix_ord$class1$mat_ones,
+                            mix_ord$class1$Indicators,
+                            mix_ord$class1$Thresholds,
+                            OpenMx::mxExpectationRAM("A","S","F","M"),
+                            OpenMx::mxFitFunctionML(vector=TRUE))
+      c1$expectation$thresholds <- "Thresholds"
+      class_list <- vector(mode = "list", length = classes)
+      class_list[[1]] <- c1
+      if(classes > 1){
+        for(i in 2:classes){
+          theclass <- paste0("class", i)
+          class_list[[i]] <- OpenMx::mxModel(c1, name = theclass)
+          class_list[[i]]$S$values <- diag_bind(mix_profiles[[theclass]]$S$values, mix_ord[[theclass]]$S$values, pad = 0)
+          class_list[[i]]$S$free <- diag_bind(mix_profiles[[theclass]]$S$free, mix_ord[[theclass]]$S$free, pad = FALSE)
+          class_list[[i]]$S$labels = diag_bind(mix_profiles[[theclass]]$S$labels, mix_ord[[theclass]]$S$labels, pad = NA)
+
+          class_list[[i]]$M$values <- cbind(mix_profiles[[theclass]]$M$values, mix_ord[[theclass]]$M$values)
+          class_list[[i]]$M$free <- cbind(mix_profiles[[theclass]]$M$free, mix_ord[[theclass]]$M$free)
+          class_list[[i]]$M$labels <- cbind(mix_profiles[[theclass]]$M$labels, mix_ord[[theclass]]$M$labels)
+          class_list[[i]]$mat_dev$values <- mix_ord[[theclass]]$mat_dev$values
+        }
+      }
+      Args <- c(list(
+        model = "mix",
+        OpenMx::mxData(data[, manv, drop = FALSE], type = "raw"),
+        OpenMx::mxMatrix(values = mix_profiles$weights$values, nrow=1, ncol=ncol(mix_profiles$weights$values), lbound = 1e-4, free=c(FALSE, rep(TRUE, (ncol(mix_profiles$weights$values)-1L))), name="weights"),
+        OpenMx::mxExpectationMixture(paste0("class", 1:classes), weights = "weights", scale="sum"),
+        OpenMx::mxFitFunctionML()
       ),
       class_list)
-    mix_combined <- do.call(OpenMx::mxModel, Args)
-
+      mix_combined <- do.call(OpenMx::mxModel, Args)
+    }
     if(run){
       out <- OpenMx::mxTryHardOrdinal(mix_combined)
       attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "mixture")

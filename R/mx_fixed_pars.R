@@ -12,7 +12,7 @@
   mats <- x@matrices
   if(length(mats) > 0){
   out <- c(out,
-           lapply(names(mats)[!names(mats) %in% c("F")], function(thism){
+           lapply(names(mats)[!names(mats) %in% c("F", "mat_dev", "mat_ones", "Indicators")], function(thism){
              tmp <- as.data.frame.table(x[[thism]][["values"]])
              if(is.null(rownames(x[[thism]][["values"]]))){
                levels(tmp$Var1) <- 1:length(levels(tmp$Var1))

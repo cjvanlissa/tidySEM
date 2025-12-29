@@ -31,14 +31,14 @@ binary/ordinal and continuous indicators. See Details for more information.
 The procedure is as follows:
 \enumerate{
 \item Estimate a latent profile analysis for the continuous indicators using
-\code{\link[mx_profiles]{mx_profiles()}}. Additional arguments, like
+\code{\link[tidySEM:mx_profiles]{mx_profiles()}}. Additional arguments, like
 \code{variabces = "free"}, can be passed via \code{...}. The estimator uses
 simulated annealing.
 \item To obtain good starting values for the categorical indicators, use the
 classes from step 1. to estimate an auxiliary model for the ordinal
-indicators with \code{\link[BCH]{BCH()}}.
+indicators with \code{\link[tidySEM:BCH]{BCH()}}.
 \item Estimate a latent class analysis for the categorical indicators using
-\code{\link[mx_lca]{mx_lca()}}, with the results of step 2. as starting
+\code{\link[tidySEM:mx_lca]{mx_lca()}}, with the results of step 2. as starting
 values. The estimator uses
 \code{\link[OpenMx:mxTryHardOrdinal]{OpenMx::mxTryHardOrdinal()}}.
 \item Combine the models from steps 1. and 3. into one joint model. Conduct one
@@ -48,7 +48,9 @@ final optimization step using
 }
 \examples{
 \dontrun{
+if(isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
 library(OpenMx)
+# Construct dataset with ordinal and categorical indicators
 set.seed(1)
 n = 200
 mns <- c(rep(0, floor(.3*n)), rep(2, ceiling(.7*n)))
@@ -58,7 +60,9 @@ df <- t(t(df) * c(1, 2, .5, 1))
 df <- data.frame(df)
 df$X4 <- cut(df$X4, 3, labels = FALSE)
 df$X4 <- OpenMx::mxFactor(df$X4, levels = c(1:3))
+# Estimate the model
 res <- mx_mixed_lca(data = df, classes = 2)
+}
 }
 }
 \references{
