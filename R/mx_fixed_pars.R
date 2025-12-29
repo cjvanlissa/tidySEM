@@ -23,7 +23,8 @@
              tmp$row <- as.character(tmp$Var1)
              tmp$col <- as.character(tmp$Var2)
              isfree <- as.vector(x[[thism]][["free"]])
-             tmp[!isfree & !tmp$Estimate == 0, c("name", "matrix", "row", "col", "Estimate"), drop = FALSE]
+             tmp <- tmp[!isfree & !tmp$Estimate == 0, c("name", "matrix", "row", "col", "Estimate"), drop = FALSE]
+             tmp[!rowSums(is.na(tmp)) == ncol(tmp), , drop = FALSE]
            }))
   }
   out <- bind_list(out)

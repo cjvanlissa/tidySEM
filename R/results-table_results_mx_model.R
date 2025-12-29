@@ -22,6 +22,9 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
 {
   # Multigroup:
   # attr(attr(fit,"runstate")$fitfunctions$mg.fitfunction, "groups")
+  if(!x@.wasRun) {
+    stop("This model has not been run yet. Use `model = tidySEM::run_mx(model)` or `model = OpenMx::mxRun(model)` to estimate a model.")
+  }
   Args <- list(x = x)
   digits <- force(digits)
   sum_x <- summary(x)
@@ -127,7 +130,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   lav_labs <- mx_to_lavaan_labels(results)
   results <- cbind(results, lav_labs)
   # Drop internal stuff
-  internalstuff <- grepl("mat_dev", results$name)
+  internalstuff <- grepl("(mat_dev|mat_ones)", results$name)
   if(any(internalstuff)) results <- results[!internalstuff, ]
   # Make uniform column names
   renam <- c(std.value = "est_std", std.se = "se_std")
@@ -157,6 +160,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
                                                              names(results)))
     results <- results[, order_cols, drop = FALSE]
   }
+
   rownames(results) <- NULL
   class(results) <- c("tidy_results", class(results))
   return(results)
