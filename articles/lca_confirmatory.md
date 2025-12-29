@@ -224,12 +224,12 @@ set.seed(1)
 res_blrt <- BLRT(res, replications = 20)
 ```
 
-| null | alt  | lr  | df  | blrt_p | samples |
-|:-----|:-----|:----|:----|:-------|:--------|
-| mix1 | mix2 | NA  | NA  | NA     | NA      |
-| mix2 | mix3 | NA  | NA  | NA     | NA      |
-| mix3 | mix4 | NA  | NA  | NA     | NA      |
-| mix4 | mix5 | NA  | NA  | NA     | NA      |
+| null | alt  |    lr |  df | blrt_p | samples |
+|:-----|:-----|------:|----:|-------:|--------:|
+| mix1 | mix2 | 421.2 |   5 |   0.00 |      20 |
+| mix2 | mix3 | 160.0 |   5 |   0.00 |      20 |
+| mix3 | mix4 |  70.2 |   5 |   0.00 |      20 |
+| mix4 | mix5 |   7.8 |   5 |   0.55 |      20 |
 
 BLRT test table
 

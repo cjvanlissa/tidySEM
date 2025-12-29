@@ -598,6 +598,8 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
   : Estimate growth mixture models using OpenMx
 - [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md)
   : Estimate latent class analyses using OpenMx
+- [`mx_mixed_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.md)
+  : Estimate mixed data latent class analysis using OpenMx
 - [`mx_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixture.md)
   : Estimate mixture models using OpenMx
 - [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md)
@@ -663,6 +665,8 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
   Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.md):
 - [Latent Class Analysis for Ordinal
   Indicators](https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.md):
+- [Latent Class Analysis with Mixed (Categorical and Continuous)
+  Data](https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.md):
 - [Plotting graphs for structural equation
   models](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.md):
 - [SEM graphing

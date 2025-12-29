@@ -484,6 +484,8 @@
   : Estimate growth mixture models using OpenMx
 - [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md)
   : Estimate latent class analyses using OpenMx
+- [`mx_mixed_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.md)
+  : Estimate mixed data latent class analysis using OpenMx
 - [`mx_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixture.md)
   : Estimate mixture models using OpenMx
 - [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md)

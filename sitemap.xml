@@ -10,6 +10,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/authors.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/index.html</loc></url>
@@ -58,6 +59,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_lca.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_mixture.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_switch_labels.html</loc></url>
