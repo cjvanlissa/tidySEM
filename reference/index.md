@@ -478,6 +478,8 @@
   : Automatically set starting values for an OpenMx mixture model
 - [`mplus_expand_names()`](https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.md)
   : Expand abbreviated Mplus variable names
+- [`mx_data_quantiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.md)
+  : Data Quantiles
 - [`mx_dummies()`](https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.md)
   : Dummy Code Factor Variables
 - [`mx_growth_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.md)

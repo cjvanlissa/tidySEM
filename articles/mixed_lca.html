@@ -178,7 +178,7 @@ model estimation, as the aforementioned steps are completed.</p>
 <span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438902</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438657</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 2 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
@@ -186,20 +186,18 @@ model estimation, as the aforementioned steps are completed.</p>
 <span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.0833443855</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438437</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2501.0954752787 vs 2237.08334438437</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438554</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438449</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 7 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
@@ -207,15 +205,17 @@ model estimation, as the aforementioned steps are completed.</p>
 <span><span class="co">#&gt; Beginning fit attempt 8 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438444</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 9 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2501.09547528453 vs 2237.08334438437</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438432</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 10 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438434</span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  2501.09547530228 vs 2237.08334438432</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Retry limit reached</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -226,7 +226,7 @@ model estimation, as the aforementioned steps are completed.</p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Solution found!  Final fit=2237.0833 (started at 2238.2759)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.434564420552243,0.886846903539918,3.93590772326407,0.310218672519021,1.94113920508432,4.39272132060087,1.01180420822462,-1.2358729535897,2.12676562382604,-0.227372799483911,-0.113786500203127,-0.00175481360363231,0.647172296962378,6.60416063101831</span></span></code></pre>
+<span><span class="co">#&gt; 0.434564376560343,0.886846818403691,3.93590771178758,0.310218680847869,1.94113923528429,4.39272132467571,1.01180424277323,-1.23587289760936,2.12676561778231,-0.227372818807064,-0.113786407828762,-0.00175480568398363,0.647172207312266,7.14655875041862</span></span></code></pre>
 <p>The returned object is an <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">OpenMx::mxModel</a></code>, and can be
 modified using the functions in that package:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -292,7 +292,7 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Solution found!  Final fit=2501.0555 (started at 2501.0555)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 1.87981984098451,8.22429885637653,0.527144987176566,1.28424421832253,3.02759054962443,0.704772649273709,-0.524400534288744,1.65079145008716</span></span>
+<span><span class="co">#&gt; 1.8798199150263,8.22430128557246,0.527144866359322,1.28424434013726,3.02759263921926,0.704772507629557,-0.52440058064318,1.65079193999047</span></span>
 <span><span class="co">#&gt; Running mix2 with 10 parameters</span></span>
 <span><span class="co">#&gt; Running mix2 with 10 parameters</span></span>
 <span><span class="co">#&gt; Running aux with 4 parameters</span></span>
@@ -301,30 +301,26 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334440363</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334440364</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438481</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 2 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438461</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438442</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2501.09547526752 vs 2237.08334438461</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438437</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2237.08334438433</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
@@ -334,6 +330,8 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 8 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  2501.09547526706 vs 2237.08334438433</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 9 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
@@ -349,7 +347,7 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Solution found!  Final fit=2237.0833 (started at 2238.2759)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.434564467867257,0.886846861999782,3.93590790208963,0.310218683964876,1.9411391981904,4.39272130929561,1.01180417097397,-1.23587296408572,2.12676561388135,-0.227372734938868,-0.113786609743058,-0.00175463594670445,0.64717217834533,5.21790608119297</span></span>
+<span><span class="co">#&gt; 0.434564376342062,0.886846820973262,3.93590742681462,0.310218688139981,1.94113905985034,4.39272134312443,1.01180434594834,-1.23587250275016,2.12676470213211,-0.227372847134914,-0.113786382872647,-0.00175478157242963,0.647172531897165,5.54724493345608</span></span>
 <span><span class="co">#&gt; Running mix3 with 14 parameters</span></span>
 <span><span class="co">#&gt; Running mix3 with 14 parameters</span></span>
 <span><span class="co">#&gt; Running aux with 6 parameters</span></span>
@@ -358,25 +356,25 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2230.74793597856</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2230.74793597882</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2230.08267647345</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2230.74793597699</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 2 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2230.74793597577</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2230.08267347233</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2315.43674760074 vs 2230.08267347233</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2230.7479359649</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
@@ -384,23 +382,23 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2230.08484782641 vs 2230.08267347233</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 7 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2229.24270208486</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 8 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2230.08487314988 vs 2230.08267347233</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 9 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2230.08487382942 vs 2230.08267347233</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2229.24270170005</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 10 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2229.24270167369</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Retry limit reached</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -409,9 +407,9 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
 <span><span class="co">#&gt;  Warning messages generated from final run for Hessian/SEs/CIs</span></span></code></pre>
 <pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Solution found!  Final fit=2230.0827 (started at 2233.3982)  (11 attempt(s): 11 valid, 0 errors)</span></span>
+<span><span class="co">#&gt;  Solution found!  Final fit=2229.2427 (started at 2233.3982)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.123604047346711,0.491578917609209,0.878248991391313,3.85154425002082,0.31032994584323,1.99699266424106,4.29264581216534,1.00392612317517,-6.78037418977004,7.59957743984485,1.48045564368471,5.27186793269927,1.08158463960071,1.88825398814245,0.001,-0.215009999418002,-0.110174313772497,0.00146823209908602,0.648553928951575,5.59462025101203</span></span></code></pre>
+<span><span class="co">#&gt; 0.461871704498314,0.0586137611174605,0.845889422646711,3.75921295062132,0.310479868310153,2.0024598940212,4.28364375999033,1.00967201881447,-1.51475238123747,2.39938624411697,-0.221716373262513,-0.114749143036037,0.000196674341689011,0.645530862396846,6.56198384989231,0.89773163165368,6.35965321760118,1.05493295890808,0.986045172195464,0.00100000000000022</span></span></code></pre>
 <p>The result is a list of OpenMx models, one for each class
 solution.</p>
 </div>
@@ -425,11 +423,11 @@ solution.</p>
 <span><span class="co">#&gt;   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
 <span><span class="co">#&gt; 1    1       1 -1250.528 200          8 2517.055 2543.442 2518.097 1.0000000</span></span>
 <span><span class="co">#&gt; 2    2       2 -1118.542 200         14 2265.083 2311.260 2266.906 0.9304968</span></span>
-<span><span class="co">#&gt; 3    3       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447525</span></span>
-<span><span class="co">#&gt;    prob_min  prob_max n_min n_max np_ratio  np_local</span></span>
-<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.000000</span></span>
-<span><span class="co">#&gt; 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.076923</span></span>
-<span><span class="co">#&gt; 3 0.9386234 0.9976012 0.075 0.630 10.00000  2.500000</span></span></code></pre></div>
+<span><span class="co">#&gt; 3    3       3 -1114.621 200         20 2269.243 2335.209 2271.847 0.9106430</span></span>
+<span><span class="co">#&gt;    prob_min  prob_max n_min n_max np_ratio   np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.0000000</span></span>
+<span><span class="co">#&gt; 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.0769231</span></span>
+<span><span class="co">#&gt; 3 0.5517685 0.9904940 0.025 0.680 10.00000  0.8333333</span></span></code></pre></div>
 <p>Note that, as expected, the BIC for the 2-class solution is lowest.
 The 3-class solution has an extremely low ratio of cases to parameters,
 so this model is most likely overfit.</p>
@@ -441,24 +439,24 @@ correspond nicely to the simulated .3/.7 split.</p>
 the 2-class model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                     label  est_sig     se pval           confint  class</span></span>
-<span><span class="co">#&gt; 1                Means.X1  1.94***   0.08 0.00      [1.78, 2.10] class1</span></span>
-<span><span class="co">#&gt; 2                Means.X2  4.39***   0.17 0.00      [4.05, 4.73] class1</span></span>
-<span><span class="co">#&gt; 3                Means.X3  1.01***   0.05 0.00      [0.92, 1.11] class1</span></span>
-<span><span class="co">#&gt; 4            Variances.X1  0.89***   0.09 0.00      [0.71, 1.07] class1</span></span>
-<span><span class="co">#&gt; 5            Variances.X2  3.94***   0.42 0.00      [3.12, 4.75] class1</span></span>
-<span><span class="co">#&gt; 6            Variances.X3  0.31***   0.03 0.00      [0.25, 0.37] class1</span></span>
-<span><span class="co">#&gt; 7            Variances.X4     1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
-<span><span class="co">#&gt; 8  class1.Thresholds[1,1] -1.24***   0.15 0.00    [-1.52, -0.95] class1</span></span>
-<span><span class="co">#&gt; 9  class1.Thresholds[2,1]  0.89***   0.12 0.00      [0.65, 1.13] class1</span></span>
-<span><span class="co">#&gt; 10               Means.X1    -0.23   0.13 0.07     [-0.48, 0.02] class2</span></span>
-<span><span class="co">#&gt; 11               Means.X2    -0.11   0.27 0.67     [-0.64, 0.41] class2</span></span>
-<span><span class="co">#&gt; 12               Means.X3    -0.00   0.07 0.98     [-0.15, 0.14] class2</span></span>
-<span><span class="co">#&gt; 13           Variances.X4     1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
-<span><span class="co">#&gt; 14 class2.Thresholds[1,1]  0.65***   0.18 0.00      [0.29, 1.01] class2</span></span>
-<span><span class="co">#&gt; 15 class2.Thresholds[2,1]     5.87 504.90 0.99 [-983.72, 995.45] class2</span></span>
-<span><span class="co">#&gt; 16       mix.weights[1,1]     1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt;   &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 17       mix.weights[1,2]  0.43***   0.07 0.00      [0.30, 0.57]   &lt;NA&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;                     label  est_sig      se pval             confint  class</span></span>
+<span><span class="co">#&gt; 1                Means.X1  1.94***    0.08 0.00        [1.78, 2.10] class1</span></span>
+<span><span class="co">#&gt; 2                Means.X2  4.39***    0.17 0.00        [4.05, 4.73] class1</span></span>
+<span><span class="co">#&gt; 3                Means.X3  1.01***    0.05 0.00        [0.92, 1.11] class1</span></span>
+<span><span class="co">#&gt; 4            Variances.X1  0.89***    0.09 0.00        [0.71, 1.07] class1</span></span>
+<span><span class="co">#&gt; 5            Variances.X2  3.94***    0.42 0.00        [3.12, 4.75] class1</span></span>
+<span><span class="co">#&gt; 6            Variances.X3  0.31***    0.03 0.00        [0.25, 0.37] class1</span></span>
+<span><span class="co">#&gt; 7            Variances.X4     1.00    &lt;NA&gt; &lt;NA&gt;                &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 8  class1.Thresholds[1,1] -1.24***    0.15 0.00      [-1.52, -0.95] class1</span></span>
+<span><span class="co">#&gt; 9  class1.Thresholds[2,1]  0.89***    0.12 0.00        [0.65, 1.13] class1</span></span>
+<span><span class="co">#&gt; 10               Means.X1    -0.23    0.13 0.07       [-0.48, 0.02] class2</span></span>
+<span><span class="co">#&gt; 11               Means.X2    -0.11    0.27 0.67       [-0.64, 0.41] class2</span></span>
+<span><span class="co">#&gt; 12               Means.X3    -0.00    0.07 0.98       [-0.15, 0.14] class2</span></span>
+<span><span class="co">#&gt; 13           Variances.X4     1.00    &lt;NA&gt; &lt;NA&gt;                &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 14 class2.Thresholds[1,1]  0.65***    0.18 0.00        [0.29, 1.01] class2</span></span>
+<span><span class="co">#&gt; 15 class2.Thresholds[2,1]     6.19 1338.52 1.00 [-2617.25, 2629.64] class2</span></span>
+<span><span class="co">#&gt; 16       mix.weights[1,1]     1.00    &lt;NA&gt; &lt;NA&gt;                &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 17       mix.weights[1,2]  0.43***    0.07 0.00        [0.30, 0.57]   &lt;NA&gt;</span></span></code></pre></div>
 <p>Note that we get free means for each class, with the variances
 constrained to be equal across classes. For the categorical variable, we
 get thresholds: These correspond to quartiles of a normal distribution.
@@ -469,12 +467,12 @@ run:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Variable Category  Probability  group</span></span>
-<span><span class="co">#&gt; 1       X4        1 1.082529e-01 class1</span></span>
-<span><span class="co">#&gt; 2       X4        2 7.052537e-01 class1</span></span>
-<span><span class="co">#&gt; 3       X4        3 1.864934e-01 class1</span></span>
-<span><span class="co">#&gt; 4       X4        1 7.412397e-01 class2</span></span>
-<span><span class="co">#&gt; 5       X4        2 2.587603e-01 class2</span></span>
-<span><span class="co">#&gt; 6       X4        3 2.244605e-09 class2</span></span></code></pre></div>
+<span><span class="co">#&gt; 1       X4        1 1.082530e-01 class1</span></span>
+<span><span class="co">#&gt; 2       X4        2 7.052535e-01 class1</span></span>
+<span><span class="co">#&gt; 3       X4        3 1.864935e-01 class1</span></span>
+<span><span class="co">#&gt; 4       X4        1 7.412399e-01 class2</span></span>
+<span><span class="co">#&gt; 5       X4        2 2.587601e-01 class2</span></span>
+<span><span class="co">#&gt; 6       X4        3 2.925049e-10 class2</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="advanced-options">Advanced Options<a class="anchor" aria-label="anchor" href="#advanced-options"></a>
@@ -497,7 +495,7 @@ follows:</p>
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2235.93484633736</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2235.93484633752</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span>
@@ -508,15 +506,17 @@ follows:</p>
 <span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2235.93486489562 vs 2235.93484633736</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2235.93484633027</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  2235.93484631656</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2235.93484632913</span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  2501.09547533531 vs 2235.93484631656</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span>
@@ -539,16 +539,16 @@ follows:</p>
 <span><span class="co">#&gt; Final run, for Hessian and/or standard errors and/or confidence intervals</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Solution found!  Final fit=2235.9348 (started at 2237.0608)  (11 attempt(s): 11 valid, 0 errors)</span></span>
+<span><span class="co">#&gt;  Solution found!  Final fit=2235.9349 (started at 2237.0608)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.428080724710734,0.924888923340374,4.16271958195147,0.311601484410849,1.9366830235926,4.38259917986361,1.00916298177221,-1.23068041426993,2.12471947802648,0.793277142077333,3.40396257611655,0.308612310126997,-0.239858006520611,-0.137720188867739,-0.00628610440938924,0.660896961802222,5.56668711702306</span></span></code></pre>
+<span><span class="co">#&gt; 0.428080203415083,0.924889124074763,4.1627189913582,0.311601605055015,1.93668278567968,4.38259915295965,1.00916290967712,-1.23068042799634,2.12471971794995,0.793277075362616,3.40396220273292,0.308612160090093,-0.239858195067663,-0.137720404121177,-0.00628606939540307,0.660897621241448,4.60350239254635</span></span></code></pre>
 <p>We can test whether releasing the variances significantly changes the
 model fit using an ANOVA:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="va">res_2_free</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   base comparison ep minus2LL  df      AIC   diffLL diffdf         p</span></span>
-<span><span class="co">#&gt; 1  mix       &lt;NA&gt; 17 2235.935 783 2269.935       NA     NA        NA</span></span>
-<span><span class="co">#&gt; 2  mix        mix 14 2237.083 786 2265.083 1.148498      3 0.7653812</span></span></code></pre></div>
+<span><span class="co">#&gt;   base comparison ep minus2LL  df      AIC   diffLL diffdf        p</span></span>
+<span><span class="co">#&gt; 1  mix       &lt;NA&gt; 17 2235.935 783 2269.935       NA     NA       NA</span></span>
+<span><span class="co">#&gt; 2  mix        mix 14 2237.083 786 2265.083 1.148491      3 0.765383</span></span></code></pre></div>
 <p>With a p-value of <code>0.63</code>, we conclude that the added
 complexity does not significantly improve the model (as expected,
 because we did not simulate class-specific variances).</p>

@@ -107,7 +107,7 @@ classes = 2
 #> Beginning fit attempt 1 of at maximum 10 extra tries
 #> Running mix with 14 parameters
 #> 
-#>  Lowest minimum so far:  2237.08334438902
+#>  Lowest minimum so far:  2237.08334438657
 #> 
 #> Beginning fit attempt 2 of at maximum 10 extra tries
 #> Running mix with 14 parameters
@@ -115,20 +115,18 @@ classes = 2
 #> Beginning fit attempt 3 of at maximum 10 extra tries
 #> Running mix with 14 parameters
 #> 
-#>  Lowest minimum so far:  2237.0833443855
-#> 
 #> Beginning fit attempt 4 of at maximum 10 extra tries
 #> Running mix with 14 parameters
-#> 
-#>  Lowest minimum so far:  2237.08334438437
 #> 
 #> Beginning fit attempt 5 of at maximum 10 extra tries
 #> Running mix with 14 parameters
 #> 
-#>  Fit attempt worse than current best:  2501.0954752787 vs 2237.08334438437
+#>  Lowest minimum so far:  2237.08334438554
 #> 
 #> Beginning fit attempt 6 of at maximum 10 extra tries
 #> Running mix with 14 parameters
+#> 
+#>  Lowest minimum so far:  2237.08334438449
 #> 
 #> Beginning fit attempt 7 of at maximum 10 extra tries
 #> Running mix with 14 parameters
@@ -136,15 +134,17 @@ classes = 2
 #> Beginning fit attempt 8 of at maximum 10 extra tries
 #> Running mix with 14 parameters
 #> 
+#>  Lowest minimum so far:  2237.08334438444
+#> 
 #> Beginning fit attempt 9 of at maximum 10 extra tries
 #> Running mix with 14 parameters
 #> 
-#>  Fit attempt worse than current best:  2501.09547528453 vs 2237.08334438437
+#>  Lowest minimum so far:  2237.08334438432
 #> 
 #> Beginning fit attempt 10 of at maximum 10 extra tries
 #> Running mix with 14 parameters
 #> 
-#>  Lowest minimum so far:  2237.08334438434
+#>  Fit attempt worse than current best:  2501.09547530228 vs 2237.08334438432
 #> 
 #> Retry limit reached
 #> 
@@ -157,7 +157,7 @@ classes = 2
     #> 
     #>  Solution found!  Final fit=2237.0833 (started at 2238.2759)  (11 attempt(s): 11 valid, 0 errors)
     #>  Start values from best fit:
-    #> 0.434564420552243,0.886846903539918,3.93590772326407,0.310218672519021,1.94113920508432,4.39272132060087,1.01180420822462,-1.2358729535897,2.12676562382604,-0.227372799483911,-0.113786500203127,-0.00175481360363231,0.647172296962378,6.60416063101831
+    #> 0.434564376560343,0.886846818403691,3.93590771178758,0.310218680847869,1.94113923528429,4.39272132467571,1.01180424277323,-1.23587289760936,2.12676561778231,-0.227372818807064,-0.113786407828762,-0.00175480568398363,0.647172207312266,7.14655875041862
 
 The returned object is an
 [`OpenMx::mxModel`](https://rdrr.io/pkg/OpenMx/man/mxModel.html), and
@@ -228,7 +228,7 @@ res_1_3 <- mx_mixed_lca(
     #> 
     #>  Solution found!  Final fit=2501.0555 (started at 2501.0555)  (11 attempt(s): 11 valid, 0 errors)
     #>  Start values from best fit:
-    #> 1.87981984098451,8.22429885637653,0.527144987176566,1.28424421832253,3.02759054962443,0.704772649273709,-0.524400534288744,1.65079145008716
+    #> 1.8798199150263,8.22430128557246,0.527144866359322,1.28424434013726,3.02759263921926,0.704772507629557,-0.52440058064318,1.65079193999047
     #> Running mix2 with 10 parameters
     #> Running mix2 with 10 parameters
     #> Running aux with 4 parameters
@@ -237,30 +237,26 @@ res_1_3 <- mx_mixed_lca(
     #> Beginning initial fit attempt
     #> Running mix with 14 parameters
     #> 
-    #>  Lowest minimum so far:  2237.08334440363
+    #>  Lowest minimum so far:  2237.08334440364
     #> 
     #> Beginning fit attempt 1 of at maximum 10 extra tries
     #> Running mix with 14 parameters
     #> 
-    #>  Lowest minimum so far:  2237.08334438481
-    #> 
     #> Beginning fit attempt 2 of at maximum 10 extra tries
     #> Running mix with 14 parameters
     #> 
-    #>  Lowest minimum so far:  2237.08334438461
+    #>  Lowest minimum so far:  2237.08334438442
     #> 
     #> Beginning fit attempt 3 of at maximum 10 extra tries
     #> Running mix with 14 parameters
     #> 
-    #>  Fit attempt worse than current best:  2501.09547526752 vs 2237.08334438461
-    #> 
     #> Beginning fit attempt 4 of at maximum 10 extra tries
     #> Running mix with 14 parameters
     #> 
-    #>  Lowest minimum so far:  2237.08334438437
-    #> 
     #> Beginning fit attempt 5 of at maximum 10 extra tries
     #> Running mix with 14 parameters
+    #> 
+    #>  Lowest minimum so far:  2237.08334438433
     #> 
     #> Beginning fit attempt 6 of at maximum 10 extra tries
     #> Running mix with 14 parameters
@@ -270,6 +266,8 @@ res_1_3 <- mx_mixed_lca(
     #> 
     #> Beginning fit attempt 8 of at maximum 10 extra tries
     #> Running mix with 14 parameters
+    #> 
+    #>  Fit attempt worse than current best:  2501.09547526706 vs 2237.08334438433
     #> 
     #> Beginning fit attempt 9 of at maximum 10 extra tries
     #> Running mix with 14 parameters
@@ -286,7 +284,7 @@ res_1_3 <- mx_mixed_lca(
     #> 
     #>  Solution found!  Final fit=2237.0833 (started at 2238.2759)  (11 attempt(s): 11 valid, 0 errors)
     #>  Start values from best fit:
-    #> 0.434564467867257,0.886846861999782,3.93590790208963,0.310218683964876,1.9411391981904,4.39272130929561,1.01180417097397,-1.23587296408572,2.12676561388135,-0.227372734938868,-0.113786609743058,-0.00175463594670445,0.64717217834533,5.21790608119297
+    #> 0.434564376342062,0.886846820973262,3.93590742681462,0.310218688139981,1.94113905985034,4.39272134312443,1.01180434594834,-1.23587250275016,2.12676470213211,-0.227372847134914,-0.113786382872647,-0.00175478157242963,0.647172531897165,5.54724493345608
     #> Running mix3 with 14 parameters
     #> Running mix3 with 14 parameters
     #> Running aux with 6 parameters
@@ -295,25 +293,25 @@ res_1_3 <- mx_mixed_lca(
     #> Beginning initial fit attempt
     #> Running mix with 20 parameters
     #> 
-    #>  Lowest minimum so far:  2230.74793597856
+    #>  Lowest minimum so far:  2230.74793597882
     #> 
     #> Beginning fit attempt 1 of at maximum 10 extra tries
     #> Running mix with 20 parameters
     #> 
-    #>  Lowest minimum so far:  2230.08267647345
+    #>  Lowest minimum so far:  2230.74793597699
     #> 
     #> Beginning fit attempt 2 of at maximum 10 extra tries
     #> Running mix with 20 parameters
     #> 
+    #>  Lowest minimum so far:  2230.74793597577
+    #> 
     #> Beginning fit attempt 3 of at maximum 10 extra tries
     #> Running mix with 20 parameters
-    #> 
-    #>  Lowest minimum so far:  2230.08267347233
     #> 
     #> Beginning fit attempt 4 of at maximum 10 extra tries
     #> Running mix with 20 parameters
     #> 
-    #>  Fit attempt worse than current best:  2315.43674760074 vs 2230.08267347233
+    #>  Lowest minimum so far:  2230.7479359649
     #> 
     #> Beginning fit attempt 5 of at maximum 10 extra tries
     #> Running mix with 20 parameters
@@ -321,23 +319,23 @@ res_1_3 <- mx_mixed_lca(
     #> Beginning fit attempt 6 of at maximum 10 extra tries
     #> Running mix with 20 parameters
     #> 
-    #>  Fit attempt worse than current best:  2230.08484782641 vs 2230.08267347233
-    #> 
     #> Beginning fit attempt 7 of at maximum 10 extra tries
     #> Running mix with 20 parameters
+    #> 
+    #>  Lowest minimum so far:  2229.24270208486
     #> 
     #> Beginning fit attempt 8 of at maximum 10 extra tries
     #> Running mix with 20 parameters
     #> 
-    #>  Fit attempt worse than current best:  2230.08487314988 vs 2230.08267347233
-    #> 
     #> Beginning fit attempt 9 of at maximum 10 extra tries
     #> Running mix with 20 parameters
     #> 
-    #>  Fit attempt worse than current best:  2230.08487382942 vs 2230.08267347233
+    #>  Lowest minimum so far:  2229.24270170005
     #> 
     #> Beginning fit attempt 10 of at maximum 10 extra tries
     #> Running mix with 20 parameters
+    #> 
+    #>  Lowest minimum so far:  2229.24270167369
     #> 
     #> Retry limit reached
     #> 
@@ -347,9 +345,9 @@ res_1_3 <- mx_mixed_lca(
     #>  Warning messages generated from final run for Hessian/SEs/CIs
 
     #> 
-    #>  Solution found!  Final fit=2230.0827 (started at 2233.3982)  (11 attempt(s): 11 valid, 0 errors)
+    #>  Solution found!  Final fit=2229.2427 (started at 2233.3982)  (11 attempt(s): 11 valid, 0 errors)
     #>  Start values from best fit:
-    #> 0.123604047346711,0.491578917609209,0.878248991391313,3.85154425002082,0.31032994584323,1.99699266424106,4.29264581216534,1.00392612317517,-6.78037418977004,7.59957743984485,1.48045564368471,5.27186793269927,1.08158463960071,1.88825398814245,0.001,-0.215009999418002,-0.110174313772497,0.00146823209908602,0.648553928951575,5.59462025101203
+    #> 0.461871704498314,0.0586137611174605,0.845889422646711,3.75921295062132,0.310479868310153,2.0024598940212,4.28364375999033,1.00967201881447,-1.51475238123747,2.39938624411697,-0.221716373262513,-0.114749143036037,0.000196674341689011,0.645530862396846,6.56198384989231,0.89773163165368,6.35965321760118,1.05493295890808,0.986045172195464,0.00100000000000022
 
 The result is a list of OpenMx models, one for each class solution.
 
@@ -363,11 +361,11 @@ table_fit(res_1_3)
 #>   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy
 #> 1    1       1 -1250.528 200          8 2517.055 2543.442 2518.097 1.0000000
 #> 2    2       2 -1118.542 200         14 2265.083 2311.260 2266.906 0.9304968
-#> 3    3       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447525
-#>    prob_min  prob_max n_min n_max np_ratio  np_local
-#> 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.000000
-#> 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.076923
-#> 3 0.9386234 0.9976012 0.075 0.630 10.00000  2.500000
+#> 3    3       3 -1114.621 200         20 2269.243 2335.209 2271.847 0.9106430
+#>    prob_min  prob_max n_min n_max np_ratio   np_local
+#> 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.0000000
+#> 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.0769231
+#> 3 0.5517685 0.9904940 0.025 0.680 10.00000  0.8333333
 ```
 
 Note that, as expected, the BIC for the 2-class solution is lowest. The
@@ -384,24 +382,24 @@ on the second element of the model list, or the 2-class model:
 
 ``` r
 table_results(res_1_3[[2]])
-#>                     label  est_sig     se pval           confint  class
-#> 1                Means.X1  1.94***   0.08 0.00      [1.78, 2.10] class1
-#> 2                Means.X2  4.39***   0.17 0.00      [4.05, 4.73] class1
-#> 3                Means.X3  1.01***   0.05 0.00      [0.92, 1.11] class1
-#> 4            Variances.X1  0.89***   0.09 0.00      [0.71, 1.07] class1
-#> 5            Variances.X2  3.94***   0.42 0.00      [3.12, 4.75] class1
-#> 6            Variances.X3  0.31***   0.03 0.00      [0.25, 0.37] class1
-#> 7            Variances.X4     1.00   <NA> <NA>              <NA> class1
-#> 8  class1.Thresholds[1,1] -1.24***   0.15 0.00    [-1.52, -0.95] class1
-#> 9  class1.Thresholds[2,1]  0.89***   0.12 0.00      [0.65, 1.13] class1
-#> 10               Means.X1    -0.23   0.13 0.07     [-0.48, 0.02] class2
-#> 11               Means.X2    -0.11   0.27 0.67     [-0.64, 0.41] class2
-#> 12               Means.X3    -0.00   0.07 0.98     [-0.15, 0.14] class2
-#> 13           Variances.X4     1.00   <NA> <NA>              <NA> class2
-#> 14 class2.Thresholds[1,1]  0.65***   0.18 0.00      [0.29, 1.01] class2
-#> 15 class2.Thresholds[2,1]     5.87 504.90 0.99 [-983.72, 995.45] class2
-#> 16       mix.weights[1,1]     1.00   <NA> <NA>              <NA>   <NA>
-#> 17       mix.weights[1,2]  0.43***   0.07 0.00      [0.30, 0.57]   <NA>
+#>                     label  est_sig      se pval             confint  class
+#> 1                Means.X1  1.94***    0.08 0.00        [1.78, 2.10] class1
+#> 2                Means.X2  4.39***    0.17 0.00        [4.05, 4.73] class1
+#> 3                Means.X3  1.01***    0.05 0.00        [0.92, 1.11] class1
+#> 4            Variances.X1  0.89***    0.09 0.00        [0.71, 1.07] class1
+#> 5            Variances.X2  3.94***    0.42 0.00        [3.12, 4.75] class1
+#> 6            Variances.X3  0.31***    0.03 0.00        [0.25, 0.37] class1
+#> 7            Variances.X4     1.00    <NA> <NA>                <NA> class1
+#> 8  class1.Thresholds[1,1] -1.24***    0.15 0.00      [-1.52, -0.95] class1
+#> 9  class1.Thresholds[2,1]  0.89***    0.12 0.00        [0.65, 1.13] class1
+#> 10               Means.X1    -0.23    0.13 0.07       [-0.48, 0.02] class2
+#> 11               Means.X2    -0.11    0.27 0.67       [-0.64, 0.41] class2
+#> 12               Means.X3    -0.00    0.07 0.98       [-0.15, 0.14] class2
+#> 13           Variances.X4     1.00    <NA> <NA>                <NA> class2
+#> 14 class2.Thresholds[1,1]  0.65***    0.18 0.00        [0.29, 1.01] class2
+#> 15 class2.Thresholds[2,1]     6.19 1338.52 1.00 [-2617.25, 2629.64] class2
+#> 16       mix.weights[1,1]     1.00    <NA> <NA>                <NA>   <NA>
+#> 17       mix.weights[1,2]  0.43***    0.07 0.00        [0.30, 0.57]   <NA>
 ```
 
 Note that we get free means for each class, with the variances
@@ -414,12 +412,12 @@ To convert these thresholds to the probability scale, we can run:
 ``` r
 table_prob(res_1_3[[2]])
 #>   Variable Category  Probability  group
-#> 1       X4        1 1.082529e-01 class1
-#> 2       X4        2 7.052537e-01 class1
-#> 3       X4        3 1.864934e-01 class1
-#> 4       X4        1 7.412397e-01 class2
-#> 5       X4        2 2.587603e-01 class2
-#> 6       X4        3 2.244605e-09 class2
+#> 1       X4        1 1.082530e-01 class1
+#> 2       X4        2 7.052535e-01 class1
+#> 3       X4        3 1.864935e-01 class1
+#> 4       X4        1 7.412399e-01 class2
+#> 5       X4        2 2.587601e-01 class2
+#> 6       X4        3 2.925049e-10 class2
 ```
 
 ### Advanced Options
@@ -442,7 +440,7 @@ res_2_free <- mx_mixed_lca(
 #> Beginning initial fit attempt
 #> Running mix with 17 parameters
 #> 
-#>  Lowest minimum so far:  2235.93484633736
+#>  Lowest minimum so far:  2235.93484633752
 #> 
 #> Beginning fit attempt 1 of at maximum 10 extra tries
 #> Running mix with 17 parameters
@@ -453,15 +451,17 @@ res_2_free <- mx_mixed_lca(
 #> Beginning fit attempt 3 of at maximum 10 extra tries
 #> Running mix with 17 parameters
 #> 
-#>  Fit attempt worse than current best:  2235.93486489562 vs 2235.93484633736
+#>  Lowest minimum so far:  2235.93484633027
 #> 
 #> Beginning fit attempt 4 of at maximum 10 extra tries
 #> Running mix with 17 parameters
 #> 
+#>  Lowest minimum so far:  2235.93484631656
+#> 
 #> Beginning fit attempt 5 of at maximum 10 extra tries
 #> Running mix with 17 parameters
 #> 
-#>  Lowest minimum so far:  2235.93484632913
+#>  Fit attempt worse than current best:  2501.09547533531 vs 2235.93484631656
 #> 
 #> Beginning fit attempt 6 of at maximum 10 extra tries
 #> Running mix with 17 parameters
@@ -486,18 +486,18 @@ res_2_free <- mx_mixed_lca(
 ```
 
     #> 
-    #>  Solution found!  Final fit=2235.9348 (started at 2237.0608)  (11 attempt(s): 11 valid, 0 errors)
+    #>  Solution found!  Final fit=2235.9349 (started at 2237.0608)  (11 attempt(s): 11 valid, 0 errors)
     #>  Start values from best fit:
-    #> 0.428080724710734,0.924888923340374,4.16271958195147,0.311601484410849,1.9366830235926,4.38259917986361,1.00916298177221,-1.23068041426993,2.12471947802648,0.793277142077333,3.40396257611655,0.308612310126997,-0.239858006520611,-0.137720188867739,-0.00628610440938924,0.660896961802222,5.56668711702306
+    #> 0.428080203415083,0.924889124074763,4.1627189913582,0.311601605055015,1.93668278567968,4.38259915295965,1.00916290967712,-1.23068042799634,2.12471971794995,0.793277075362616,3.40396220273292,0.308612160090093,-0.239858195067663,-0.137720404121177,-0.00628606939540307,0.660897621241448,4.60350239254635
 
 We can test whether releasing the variances significantly changes the
 model fit using an ANOVA:
 
 ``` r
 anova(res_1_3[[2]], res_2_free)
-#>   base comparison ep minus2LL  df      AIC   diffLL diffdf         p
-#> 1  mix       <NA> 17 2235.935 783 2269.935       NA     NA        NA
-#> 2  mix        mix 14 2237.083 786 2265.083 1.148498      3 0.7653812
+#>   base comparison ep minus2LL  df      AIC   diffLL diffdf        p
+#> 1  mix       <NA> 17 2235.935 783 2269.935       NA     NA       NA
+#> 2  mix        mix 14 2237.083 786 2265.083 1.148491      3 0.765383
 ```
 
 With a p-value of `0.63`, we conclude that the added complexity does not
