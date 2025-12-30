@@ -99,6 +99,107 @@ mx_threshold_matrices <- function(x, ...){
   return(x)
 }
 
+
+
+mx_threshold <- function(vars, nThresh = NA, free = FALSE, values = NULL, labels = NA, lbound = NA, ubound = NA){
+  if(!requireNamespace("OpenMx", quietly = TRUE)){
+    return(NULL)
+  }
+  if(is.null(values)){
+    values <- OpenMx::mxNormalQuantiles(nBreaks = nThresh)
+  }
+               maxthres <- max(nThresh)
+               free_mat <- matrix(FALSE, nrow = maxthres, ncol = length(vars))
+               ind <- matrix(0, nrow = maxthres, ncol = length(vars))
+               for(v in seq_along(vars)){
+                 # Set indicator matrix
+                 ind[1:nThresh[v], v] <- 1
+               }
+               if(length(free) == length(free_mat)){
+                 free_mat <- free
+               } else {
+                 free_mat[] <- ind == 1
+               }
+               mat_ones <- matrix(0, nrow = maxthres, ncol = maxthres)
+               mat_ones[lower.tri(mat_ones, diag = TRUE)] <- 1
+               thresh_mat <- ind
+               if(length(values) == sum(ind)){
+                 thresh_mat[which(ind == 1)] <- values
+               } else {
+                 if(length(values) == length(ind)){
+                   thresh_mat[,] <- values
+                 } else {
+                   stop("Could not initialize thresholds.")
+                 }
+               }
+
+               #solve(mat_ones) %*% (mat_ones %*% mat_dev)
+               values_dev <- solve(mat_ones) %*% thresh_mat
+               # Should I set unused thresholds to a small number?
+               values_dev[which(ind == 0)] <- 1e-3
+
+
+               mat_thresh <- list(
+                 name = "Thresholds",
+                 type = "Full",
+                 nrow = maxthres,
+                 ncol = length(vars),
+                 free = free_mat,
+                 values = thresh_mat,
+                 lbound = NA,
+                 ubound = NA,
+                 dimnames = list(paste0("th_", 1:maxthres), vars))
+               # Devs
+               mat_indicator <- list(
+                 name = "Indicators",
+                 type = "Full",
+                 nrow = maxthres,
+                 ncol = length(vars),
+                 free = FALSE,
+                 values = ind)
+
+               mat_dev <- mat_thresh
+               mat_dev$name <- "mat_dev"
+               mat_dev$values <- values_dev
+               mat_dev$lbound <- matrix(NA, nrow = nrow(values_dev), ncol = ncol(values_dev))
+               mat_dev$lbound[-1,] <- 1e-3
+               mat_dev$dimnames <- list(paste0("dev_", 1:maxthres), vars)
+
+               mat_ones = list(
+                 name = "mat_ones",
+                 type = "Lower",
+                 nrow = maxthres,
+                 free = FALSE,
+                 values = 1)
+               algebra <- list(
+                 name = mat_thresh$name,
+                 str2lang(paste0(mat_ones$name, " %*% ", mat_dev$name)),
+                 dimnames = mat_thresh$dimnames)
+               out <- list(#mat_thresh = mat_thresh,
+                 mat_dev = mat_dev,
+                 mat_ones = mat_ones,
+                 mat_indicator = mat_indicator,
+                 alg_thres = algebra)
+               return(mx_threshold_matrices(out))
+             }
+
+#' @title Data Quantiles
+#' @description Get quantiles based on empirical normal distribution of data.
+#' @param df A `data.frame` with only columns of class `ordered`.
+#' @return Matrix
+mx_data_quantiles <- function(df){
+  isordered <- sapply(df, inherits, what = "ordered")
+  if(any(!isordered)) stop("All variables provided to mx_data_quantiles() must be ordered categorical.")
+  numcats <- sapply(df, function(x){length(levels(x))})
+  maxthres <- max(numcats)-1L
+  vals <- matrix(1e-3, nrow = maxthres, ncol = ncol(df))
+  for(v in seq_along(numcats)){
+    vals[1:(numcats[v]-1L), v] <- qnorm(p = cumsum(prop.table(table(df[[v]]))[1:(numcats[v]-1L)]), lower.tail = TRUE)
+  }
+  colnames(vals) <- names(df)
+  return(vals)
+}
+
 if(FALSE){
   df <- read.table("ex7.6.dat", header= F)
   names(df) <- c(paste0("u_", 1:4), "c")
