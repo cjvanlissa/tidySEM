@@ -138,7 +138,7 @@ mx_mixed_lca <- function(data = NULL,
       mix_combined$expectation$thresholds <- "Thresholds"
 
     } else {
-      thresh <- mx_thresholds(df_ord)
+      thresh <- mx_threshold(vars = names(df_ord), nThresh = (sapply(df_ord, function(x){length(levels(x))})-1L), free = TRUE, values = mx_data_quantiles(df_ord))
       mx_mdl_ord <- OpenMx::mxModel(
         model = "ordinal_starts",
         type = "RAM",

@@ -270,7 +270,9 @@ mx_lca <- function(data = NULL,
     return(out)
   } else {
     # One class model
-    thresh <- mx_thresholds(data)
+    thresh <- mx_threshold(vars = names(data), nThresh = sapply(data, function(x){length(levels(x))})-1L, free = TRUE, values = mx_data_quantiles(data))
+
+
     dots_mxmod <- names(dots)[names(dots) %in% formalArgs(OpenMx::mxModel)]
     dots_mxmod <- dots[dots_mxmod]
     c1 <- do.call(OpenMx::mxModel, c(

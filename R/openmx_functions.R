@@ -113,7 +113,7 @@ as_ram.tidy_sem <- function(x, ...){
 
 #' @method as_ram data.frame
 #' @export
-as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = "mxThreshold", ...){
+as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
   if(!all(c("lhs", "rhs", "op", "free", "ustart") %in% names(x))){
     stop("Not a valid lavaan parameter table.")
   }
@@ -149,6 +149,12 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = 
     }
   }
   dots <- list(...)
+  if("threshold_method" %in% names(dots)){
+    threshold_method <- dots[["threshold_method"]]
+    dots[["threshold_method"]] <- NULL
+  } else {
+    threshold_method <- "mx_threshold"
+  }
   if("threshold_data" %in% names(dots)){
     threshold_data <- dots[["threshold_data"]]
     dots[["threshold_data"]] <- NULL
@@ -161,33 +167,42 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = 
     cattab <- lavtab[cats, , drop = FALSE]
     cattab$label[cattab$label == ""] <- NA
     lavtab <- lavtab[-cats, ]
-    if(threshold_method == "mxThreshold"){
+    #if(threshold_method == "mx_threshold"){
+      threshtab <- cattab[cattab$op == "|", , drop = FALSE]
+      catvars <- unique(threshtab$lhs)
+      num_thresholds <- sapply(catvars, function(v){length(unique(threshtab$rhs[threshtab$lhs == v]))})
+      maxthresh <- max(num_thresholds)
+      if(any(!is.na(threshtab$ustart)) & !all(!is.na(threshtab$ustart))){
+        message("User starts for categorical variable thresholds were ignored; either specify ALL thresholds by hand, or remove constraints. You can apply constraints to the `mxModel` object returned by `as_ram()`.")
+      }
+      if(all(!is.na(threshtab$ustart))){
+        tvalues <- unlist(lapply(catvars, function(v){
+          tmp <- threshtab[threshtab$lhs == v, ]
+          tmp$ustart[order(tmp$rhs)]
+          }))
 
-      catlist <- lapply(unique(cattab$lhs), function(v){
-        vthres <- cattab[cattab$lhs == v & cattab$op == "|", ]
-        tvalues <- tryCatch(update_thresholds(vthres$ustart), error = function(e){
-          stop("Could not complete thresholds for variable '", v, "'; either specify all thresholds by hand, or remove constraints.")
-        })
-        vthres <- vthres[order(vthres$rhs), ]
-        Args <- list(
-          vars = v,
-          nThresh = nrow(vthres),
-          free = !(vthres$free == 0),
-          values = tvalues,
-          labels = vthres$label
-        )
-        do.call(OpenMx::mxThreshold, Args)
-      })
-    } else {
-      thresh <- mx_thresholds(threshold_data)
-      catlist <- thresh
-        #list(
-        #OpenMx::mxPath(from = "one", to = names(data), free = FALSE, values = 0),
-        #OpenMx::mxPath(from = names(data), to = names(data), free = FALSE, values = 1, arrows = 2),
-
-      #)
-      # do this: c1$expectation$thresholds <- "Thresholds"
-    }
+      } else {
+        if(usedata){
+          tvalues <- mx_data_quantiles(data[, catvars, drop = FALSE])
+        } else {
+          tvalues <- OpenMx::mxNormalQuantiles(nBreaks = num_thresholds)
+        }
+      }
+      free <- matrix(FALSE, nrow = maxthresh, ncol = length(catvars))
+      for(v in seq_along(catvars)){
+        free[1:num_thresholds[v], v] <- TRUE
+      }
+      catlist <- mx_threshold(vars = catvars, nThresh = num_thresholds, free = free, values = tvalues)
+    # } else {
+    #   thresh <- mx_thresholds(threshold_data)
+    #   catlist <- thresh
+    #     #list(
+    #     #OpenMx::mxPath(from = "one", to = names(data), free = FALSE, values = 0),
+    #     #OpenMx::mxPath(from = names(data), to = names(data), free = FALSE, values = 1, arrows = 2),
+    #
+    #   #)
+    #   # do this: c1$expectation$thresholds <- "Thresholds"
+    # }
 
 
   }
