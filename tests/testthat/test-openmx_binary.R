@@ -140,6 +140,7 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
   #df[1:4] <- lapply(df, function(i){ordered(as.integer(i==0))})
   set.seed(1)
   # Just thresholds
+
   res_mx <- run_mx(as_ram(
     "u1 | t1*t1
 u2 | t2*t1
