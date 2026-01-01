@@ -192,7 +192,8 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
       for(v in seq_along(catvars)){
         free[1:num_thresholds[v], v] <- TRUE
       }
-      catlist <- mx_threshold(vars = catvars, nThresh = num_thresholds, free = free, values = tvalues)
+      catlist <- mx_threshold(vars = catvars, nThresh = num_thresholds, free = free, values = tvalues, labels = threshtab$label)
+
     # } else {
     #   thresh <- mx_thresholds(threshold_data)
     #   catlist <- thresh

@@ -86,6 +86,7 @@ mx_thresholds <- function (df, variables = names(df), output = "mx")
 mx_threshold_matrices <- function(x, ...){
   mats <- startsWith(names(x), "mat_")
   algs <- startsWith(names(x), "alg_")
+  cnst <- startsWith(names(x), "const_")
   if(any(mats)){
     x[which(mats)] <- lapply(x[which(mats)], function(l){
       do.call(OpenMx::mxMatrix, l)
@@ -94,6 +95,11 @@ mx_threshold_matrices <- function(x, ...){
   if(any(algs)){
     x[which(algs)] <- lapply(x[which(algs)], function(l){
       do.call(OpenMx::mxAlgebra, l)
+    })
+  }
+  if(any(cnst)){
+    x[which(cnst)] <- lapply(x[which(cnst)], function(l){
+      do.call(OpenMx::mxConstraint, l)
     })
   }
   return(x)
@@ -175,11 +181,45 @@ mx_threshold <- function(vars, nThresh = NA, free = FALSE, values = NULL, labels
                  name = mat_thresh$name,
                  str2lang(paste0(mat_ones$name, " %*% ", mat_dev$name)),
                  dimnames = mat_thresh$dimnames)
+               if(any(!is.na(labels))){
+                 lab_mat <- thresh_mat
+                 lab_mat[] <- labels
+                 lab_mat <- as.data.frame.table(lab_mat)
+                 lab_mat <- lab_mat[!is.na(lab_mat$Freq), , drop = FALSE]
+                 lab_mat[c(1,2)] <- lapply(lab_mat[c(1,2)], as.integer)
+                 lab_mat$Threshold <- paste0("Thresholds[", lab_mat$Var1, ",", lab_mat$Var2, "]")
+                 cnsts <- do.call(c, lapply(unique(na.omit(labels)), function(labl){
+                   these_thresh <- lab_mat$Threshold[lab_mat$Freq == labl]
+                   if(length(these_thresh) < 2){
+                     return(NULL)
+                   }
+                   out <- do.call(c, lapply(1:(length(these_thresh)-1L), function(i){
+                     lapply(these_thresh[(i+1L):length(these_thresh)], function(withthis){
+                       list(
+                         name = paste0("const_", labl, "_", i),
+                         str2lang(paste0(these_thresh[i], "==", withthis))
+                       )
+                     })
+                    }))
+                   # This could be done in the lapply above if I figure out how
+                   # to properly index the constraints
+                   for(i in 1:length(out)){
+                     out[[i]]$name <- gsub("_\\d{1,}$", paste0("_", i), out[[i]]$name)
+                     names(out)[[i]] <- out[[i]]$name
+                   }
+                  out
+                 }))
+               } else {
+                 cnsts <- list(NULL)
+               }
                out <- list(#mat_thresh = mat_thresh,
                  mat_dev = mat_dev,
                  mat_ones = mat_ones,
                  mat_indicator = mat_indicator,
                  alg_thres = algebra)
+               if(length(cnsts) > 0){
+                 out <- c(out, cnsts)
+               }
                return(mx_threshold_matrices(out))
              }
 

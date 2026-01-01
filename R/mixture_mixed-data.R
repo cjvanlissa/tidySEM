@@ -147,9 +147,9 @@ mx_mixed_lca <- function(data = NULL,
         OpenMx::mxPath(from = names(df_ord), to = names(df_ord), free = FALSE, values = 1, arrows = 2),
         thresh)
       mx_mdl_ord$expectation$thresholds <- "Thresholds"
+
+      if(run){
       ord_strts <- suppressWarnings(tidySEM::BCH(x = mix_profiles, model = mx_mdl_ord, data = df_ord))
-
-
       classnams <- names(mix_ord@submodels)
       for(i in 1:classes){
         # Restore deviations from thresholds via the inverse of the indicator matrix
@@ -157,7 +157,7 @@ mx_mixed_lca <- function(data = NULL,
         # mix_ord[[classnams[i]]]$mat_dev$values <- solve(mix_ord[[classnams[i]]]$mat_ones$values) %*% ord_strts[[classnams[i]]]$Thresholds$values
         mix_ord[[classnams[i]]]$mat_dev$values <- ord_strts[[classnams[i]]]$mat_dev$values
       }
-
+}
       # Prepare matrices
       manv <- c(mix_profiles$class1$manifestVars, mix_ord$class1$manifestVars)
       nms <- list(manv, manv)
@@ -229,7 +229,7 @@ mx_mixed_lca <- function(data = NULL,
       attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "mixture")
       return(out)
     } else {
-      out
+      return(mix_combined)
     }
   }
 }
