@@ -13,7 +13,9 @@ table_results.mixture_list <- function (x, columns = c("label", "est_sig", "se",
     }
     tmp
   }))
-  bind_list(out)
+  out <- bind_list(out)
+  rownames(out) <- NULL
+  out
 }
 #' @method table_results MxModel
 #' @export

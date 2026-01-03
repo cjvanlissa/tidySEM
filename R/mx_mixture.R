@@ -353,9 +353,13 @@ mx_mixture.character <- function(model,
     cl[["data"]] <- data
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     out <- eval.parent(cl)
-    cl[["model"]] <- out
-    cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-    out <- eval.parent(cl)
+    # Check for hidden argument run_mixture_starts with TRUE as default:
+    run_mixture_starts <- tryCatch({!isFALSE(dots[["run_mixture_starts"]])}, error = function(e){TRUE})
+    if(run_mixture_starts){
+      cl[["model"]] <- out
+      cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
+      out <- eval.parent(cl)
+    }
     if(run){
       cl[["x"]] <- out
       cl[["model"]] <- NULL
