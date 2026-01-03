@@ -59,8 +59,8 @@ lr_lmr.MxModel <- function(x, ...){
   object1 <- x
   object2 <- dots[[which(sapply(dots, inherits, what = "MxModel"))[1]]]
   lr_res <- vuongtest(object1, object2,
-            score1 = function(x)mixgrads(x) * -.5,
-            score2 = function(x)mixgrads(x) * -.5,
+            score1 = function(x)OpenMx::imxRowGradients(x) * -.5,
+            score2 = function(x)OpenMx::imxRowGradients(x) * -.5,
             nested = FALSE)
   out <- data.frame(lr = -1*lr_res$LRTstat, df = length(OpenMx::omxGetParameters(object2)) - length(OpenMx::omxGetParameters(object1)), p = max(c(.Machine$double.eps, lr_res$p_LRT$B)), w2 = lr_res$omega, p_w2 = max(c(.Machine$double.eps, lr_res$p_omega)))
   class(out) <- c("LRT", class(out))
@@ -92,28 +92,4 @@ lr_lmr.mixture_list <- function(x, ...){
   class(out) <- c("LRT", class(out))
   attr(out, "type") <- "Lo-Mendell-Rubin adjusted"
   return(out)
-}
-
-
-mixgrads <- function(model){
-  if(!isTRUE("mixture" %in% attr(model, "tidySEM")) & length(names(model@submodels)) > 1){
-    return(OpenMx::imxRowGradients(model))
-  }
-  paramLabels <- names(OpenMx::omxGetParameters(model))
-  numParam <- length(paramLabels)
-  custom.compute <-
-    OpenMx::mxComputeSequence(list(
-      OpenMx::mxComputeNumericDeriv(checkGradient = FALSE,
-                            hessian = FALSE),
-      OpenMx::mxComputeReportDeriv()
-    ))
-  grads <- do.call(rbind, lapply(1:nrow(model@data$observed), function(i) {
-    tryCatch({
-      OpenMx::mxRun(OpenMx::mxModel(model, custom.compute, OpenMx::mxData(model@data$observed[i, , drop = FALSE], "raw")), silent = TRUE)$output$gradient
-    },
-    error = function(e) {
-      rep(NA, length(numParam))
-    })
-  }))
-  return(grads)
 }

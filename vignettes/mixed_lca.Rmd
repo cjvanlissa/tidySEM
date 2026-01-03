@@ -31,9 +31,8 @@ Estimating such models was complicated in prior versions of `tidySEM`,
 and often led to convergence issues.
 The new function `mx_mixed_lca()`, introduced in `tidySEM` version `0.2.10`, provides a high-level interface to
 estimate mixed-data latent class models.
-It implements a
-multi-step estimation procedure designed to improve starting
-values and convergence when working with heterogeneous indicators.
+At the same time, the function `mx_run()` was updated to use `mxTryHardOrdinal()` in case of convergence issues with ordinal categorical indicators,
+which improves the estimation of mixed data LCAs.
 
 This vignette demonstrates how to:
 
@@ -45,7 +44,7 @@ This vignette demonstrates how to:
 ## Requirements
 
 The `mx_mixed_lca()` function relies on `OpenMx`. Make sure both packages are
-installed.
+installed and loaded.
 
 ```{r eval = run_chunks}
 library(tidySEM)
@@ -84,14 +83,14 @@ df$X4 <- mxFactor(df$X4, levels = 1:3)
 
 ## Model Estimation with `mx_mixed_lca()`
 
-The `mx_mixed_lca()` function estimates mixed-data latent class models using the
-following procedure:
+<!-- The `mx_mixed_lca()` function estimates mixed-data latent class models using the -->
+<!-- following procedure: -->
 
-1. Estimate an **Latent profile analysis (LPA)** for the continuous indicators using
-   `mx_profiles()`
-2. Use the **BCH method** to obtain starting values for ordinal indicators: the classes probabilities from step 1 are used to estimate thresholds for the remaining ordinal indicators.
-3. **Latent class analysis (LCA)** for ordinal indicators using `mx_lca()`, using the thresholds from step 2. as starting values.
-4. **Joint estimation** of continuous and ordinal indicators in a single model, using the results from steps 1. and 3. as starting values.
+<!-- 1. Estimate an **Latent profile analysis (LPA)** for the continuous indicators using -->
+<!--    `mx_profiles()` -->
+<!-- 2. Use the **BCH method** to obtain starting values for ordinal indicators: the classes probabilities from step 1 are used to estimate thresholds for the remaining ordinal indicators. -->
+<!-- 3. **Latent class analysis (LCA)** for ordinal indicators using `mx_lca()`, using the thresholds from step 2. as starting values. -->
+<!-- 4. **Joint estimation** of continuous and ordinal indicators in a single model, using the results from steps 1. and 3. as starting values. -->
 
 ### Estimating a Single Class Solution
 

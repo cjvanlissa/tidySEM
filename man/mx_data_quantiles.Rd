@@ -10,8 +10,15 @@ mx_data_quantiles(df)
 \item{df}{A \code{data.frame} with only columns of class \code{ordered}.}
 }
 \value{
-Matrix
+A matrix with the appropriate dimensions for the threshold matrix for
+\code{df}, \code{\link[see OpenMx:mxThreshold]{mxThreshold()}}.
 }
 \description{
 Get quantiles based on empirical normal distribution of data.
+}
+\examples{
+set.seed(1)
+df <- data.frame(X = ordered(sample(c(1:4), size = 100, replace = TRUE,
+prob = c(.1, .2, .5, .2))))
+mx_data_quantiles(df)
 }

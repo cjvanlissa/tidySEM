@@ -6,6 +6,9 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
   res <- mx_profiles(df, 1:2)
 
   test_that("blrt works as expected", {
+    expect_true(inherits(res[[1]], "MxModel"))
+    expect_true(inherits(res[[2]], "MxModel"))
+    expect_true(inherits(res, "mixture_list"))
     res_blrt <- BLRT(res, 10)
     expect_equivalent(res_blrt$lr, 79.6, tolerance = .02)
     expect_equivalent(res_blrt$blrt_p, 0)

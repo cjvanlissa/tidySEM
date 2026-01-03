@@ -44,55 +44,64 @@ run_mx.tidy_sem <- function(x, ...){
 #' @method run_mx MxModel
 #' @export
 run_mx.MxModel <- function(x, ...){
+  # Check if the model has already been run. run_mx will always re-run models
+  if(isTRUE(x@.wasRun)){
+    x@.wasRun <- FALSE
+  }
+
+  # Capture additional arguments
   dots <- list(...)
+
+  # Append data to model if provided in dots
+  if(!is.null(dots[["data"]])){
+    x <- mx_add_data(x, ...)
+  }
+
+  # Default run function and arguments
   run_fun <- "OpenMx::mxRun"
   run_args <- list()
-  # Determine type of model and what elements are available
-  if(!is.null(dots[["data"]])){
-    cl <- match.call()
-    cl[[1L]] <- str2lang("tidySEM:::mx_add_data")
-    x <- eval.parent(cl)
-    dots[["data"]] <- NULL
-  }
+  if(!"silent" %in% names(dots)) run_args$silent <- TRUE
+
+  # Check if confidence intervals are required
   if(length(x@intervals) > 0){
     run_args[["intervals"]] <- TRUE
   }
 
-  # Different approaches based on model type --------------------------------
-  if(!is.null(attr(x, "tidySEM"))){
-    if(attr(x, "tidySEM") == "mixture" & length(names(x@submodels)) > 0){
-      mix_method <- "annealing"
-      if(!is.null(dots[["method"]])){
-        mix_method <- dots[["method"]]
-      }
-      switch(mix_method,
-             "hard" = {
-               # tryhard
-               run_fun <- "OpenMx::mxTryHard"
-               run_args <- c(run_args,
-                             list(
-                               extraTries = 100,
-                               intervals=TRUE,
-                               silent = TRUE,
-                               verbose = FALSE,
-                               bestInitsOutput = FALSE,
-                               exhaustive = TRUE))
-             },
-             {
-               x <- OpenMx::mxModel(x, OpenMx::mxComputeSimAnnealing())
-               res <- try(OpenMx::mxRun(x), silent = TRUE)
-               if(inherits(res, "try-error")){
-                 message("Simulated annealing failed, suggesting bad starting values or an overly complex model. Trying `mxTryHard()`.")
-                 x <- OpenMx::mxTryHard(x)
-               } else {
-                 x <- res
-               }
-               x@compute <- NULL
-             })
-    }
-  } else {
+  # If this is a mixture model with >1 class, use simulated annealing
+  if(isTRUE(attr(x, "tidySEM") == "mixture") & length(names(x@submodels)) > 0){
+    # Has to be re-run again later, to get $expectation$output$weights
+    x <- OpenMx::mxModel(x, OpenMx::mxComputeSimAnnealing())
+    x <- suppressWarnings(try(OpenMx::mxRun(x), silent = TRUE))
+    # Reset simulated annealing
+    x@compute <- NULL
+  }
+
+  # Check if the model has start values (this could be improved)
+  if(!has_startvalues(x)){
     x <- simple_starts(x, type = "ULS")
   }
+
+  # Now run the model
+  x <- run_with_args(x = x, run_fun = run_fun, run_args = run_args, ...)
+  # Use mxTryHard if conversion failed
+  if(inherits(x, "try-error")){
+    message("Model estimation failed. Trying `mxTryHard()`.")
+    x <- run_with_args(x = x, run_fun = "OpenMx::mxTryHard", run_args = run_args, ...)
+  }
+  # Use mxTryHardOrdinal if ordinal error is the problem
+  if(tryCatch({x$output[['maxRelativeOrdinalError']] > OpenMx::mxOption(x, "mvnRelEps")}, error = function(e){FALSE})){
+    message("Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.")
+    x <- run_with_args(x = x, run_fun = "OpenMx::mxTryHardOrdinal", run_args = run_args, ...)
+  }
+  return(x)
+}
+
+has_startvalues <- function(x){
+  isFALSE(all(OpenMx::omxGetParameters(x) == 0))
+}
+
+run_with_args <- function(x, run_fun, run_args, ...){
+  dots <- list(...)
   run_args <- c(
     list(
       "name" = str2lang(run_fun),
@@ -101,13 +110,9 @@ run_mx.MxModel <- function(x, ...){
     run_args,
     dots[which(names(dots) %in% formalArgs(fun_from_pack(run_fun)))])
   cl <- as.call(run_args)
-  res <- eval(cl)
-  if(res$output$maxRelativeOrdinalError > OpenMx::mxOption(NULL, 'mvnRelEps')){
-    message("Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.")
-    res <- try(OpenMx::mxTryHardOrdinal(x), silent = TRUE)
-  }
-  return(res)
+  suppressWarnings(eval(cl))
 }
+
 
 mx_add_data <- function(x, data, ...){
   dots <- list(...)
