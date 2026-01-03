@@ -79,7 +79,7 @@ res_2 <- mx_mixed_lca(
 data = df,
 classes = 2
 )
-#> Running mix with 14 parameters
+#> Running equal var 2 with 14 parameters
 ```
 
 The returned object is an
@@ -103,8 +103,8 @@ res_1_3 <- mx_mixed_lca(
   data = df,
   classes = 1:3
 )
-#> Running mix with 14 parameters
-#> Running mix with 20 parameters
+#> Running equal var 2 with 14 parameters
+#> Running equal var 3 with 20 parameters
 #> Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.
 #> Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=2237.09546071368, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=2230.08267535054, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267393529, new current best! (was 2230.08267535054)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493314156, worse than previous best (2230.08267393529)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 
 #> 
@@ -161,7 +161,7 @@ table_results(res_1_3[[2]])
 #> 14   class2.Thresholds[1,1]  0.65***     0.18 0.00          [0.29, 1.01] class2
 #> 15   class2.Thresholds[2,1]     7.11 35652.78 1.00 [-69871.05, 69885.28] class2
 #> 16 equal var 2.weights[1,1]     1.00     <NA> <NA>                  <NA>   <NA>
-#> 17         mix.weights[1,2]  0.43***     0.07 0.00          [0.30, 0.57]   <NA>
+#> 17 equal var 2.weights[1,2]  0.43***     0.07 0.00          [0.30, 0.57]   <NA>
 ```
 
 Note that we get free means for each class, with the variances
@@ -194,7 +194,7 @@ res_2_free <- mx_mixed_lca(
   classes = 2,
   variances = "free"
 )
-#> Running mix with 17 parameters
+#> Running NA var 2 with 17 parameters
 ```
 
 We can test whether releasing the variances significantly changes the

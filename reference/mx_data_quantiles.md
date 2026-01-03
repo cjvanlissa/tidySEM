@@ -17,8 +17,8 @@ mx_data_quantiles(df)
 ## Value
 
 A matrix with the appropriate dimensions for the threshold matrix for
-`df`,
-[`mxThreshold()`](https://rdrr.io/pkg/OpenMx/man/mxThreshold.html).
+`df`, see
+[`OpenMx::mxThreshold()`](https://rdrr.io/pkg/OpenMx/man/mxThreshold.html).
 
 ## Examples
 
