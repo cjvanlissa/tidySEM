@@ -35,7 +35,6 @@ free parameters updated to their final values.
 df <- iris[1:3]
 names(df) <- paste0("X_", 1:3)
 run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
-#> Running model with 9 parameters
 #> MxModel 'model' 
 #> type : RAM 
 #> $matrices : 'A', 'S', 'F', and 'M' 

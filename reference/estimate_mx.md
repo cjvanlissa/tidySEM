@@ -33,7 +33,6 @@ names(df) <- paste0("x_", 1:4)
 model <- tidy_sem(df)
 model <- measurement(model)
 res <- estimate_mx(model)
-#> Running model with 12 parameters
 summary(res)
 #> Summary of model 
 #>  
@@ -64,8 +63,8 @@ summary(res)
 #> AIC:      -356.5774               843.4226                 845.7000
 #> BIC:     -2126.8309               879.5503                 841.5725
 #> To get additional fit indices, see help(mxRefModels)
-#> timestamp: 2026-01-03 10:05:32 
-#> Wall clock time: 0.01882839 secs 
+#> timestamp: 2026-01-03 13:45:12 
+#> Wall clock time: 0.01848888 secs 
 #> optimizer:  SLSQP 
 #> OpenMx version number: 2.22.10 
 #> Need help?  See help(mxSummary) 

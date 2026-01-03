@@ -127,7 +127,6 @@ table_fit(fit_mx)
     #> To take full advantage of multiple cores, use:
     #>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now
     #>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
-    #> Running model with 30 parameters
     #>                       label est_sig   se pval      confint
     #> 1     Loadings.vis.BY.vis_1    1.00 <NA> <NA>         <NA>
     #> 2     Loadings.vis.BY.vis_2 0.55*** 0.11 0.00 [0.34, 0.77]

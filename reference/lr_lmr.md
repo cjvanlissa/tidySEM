@@ -64,9 +64,8 @@ names(df) <- letters[1:3]
 res <- mx_profiles(df, classes = 1:2)
 lr_lmr(res)
 }
+#> Running mix2 with 10 parameters
 #> Running mix1 with 6 parameters
-#> Running mix2 with 10 parameters
-#> Running mix2 with 10 parameters
 #> Lo-Mendell-Rubin adjusted Likelihood Ratio Test:
 #> 
 #>  null  alt   lr df        p   w2  p_w2

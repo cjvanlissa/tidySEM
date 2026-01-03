@@ -10,9 +10,11 @@ Estimating such models was complicated in prior versions of `tidySEM`,
 and often led to convergence issues. The new function
 [`mx_mixed_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.md),
 introduced in `tidySEM` version `0.2.10`, provides a high-level
-interface to estimate mixed-data latent class models. It implements a
-multi-step estimation procedure designed to improve starting values and
-convergence when working with heterogeneous indicators.
+interface to estimate mixed-data latent class models. At the same time,
+the function `mx_run()` was updated to use
+[`mxTryHardOrdinal()`](https://rdrr.io/pkg/OpenMx/man/mxTryHard.html) in
+case of convergence issues with ordinal categorical indicators, which
+improves the estimation of mixed data LCAs.
 
 This vignette demonstrates how to:
 
@@ -25,7 +27,8 @@ This vignette demonstrates how to:
 
 The
 [`mx_mixed_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.md)
-function relies on `OpenMx`. Make sure both packages are installed.
+function relies on `OpenMx`. Make sure both packages are installed and
+loaded.
 
 ``` r
 library(tidySEM)
@@ -65,24 +68,6 @@ df$X4 <- mxFactor(df$X4, levels = 1:3)
 
 ### Model Estimation with `mx_mixed_lca()`
 
-The
-[`mx_mixed_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.md)
-function estimates mixed-data latent class models using the following
-procedure:
-
-1.  Estimate an **Latent profile analysis (LPA)** for the continuous
-    indicators using
-    [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md)
-2.  Use the **BCH method** to obtain starting values for ordinal
-    indicators: the classes probabilities from step 1 are used to
-    estimate thresholds for the remaining ordinal indicators.
-3.  **Latent class analysis (LCA)** for ordinal indicators using
-    [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md),
-    using the thresholds from step 2. as starting values.
-4.  **Joint estimation** of continuous and ordinal indicators in a
-    single model, using the results from steps 1. and 3. as starting
-    values.
-
 #### Estimating a Single Class Solution
 
 To estimate a 2-class mixed-data latent class model, use the following
@@ -94,15 +79,6 @@ res_2 <- mx_mixed_lca(
 data = df,
 classes = 2
 )
-#> Running mix with 14 parameters
-#> Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.
-#>  This may be fine, but you may wish to re-run the model using
-#>  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.
-#>  Expert version: model$output[['maxRelativeOrdinalError']] is 
-#>  larger than the mvnRelEps value of  0.005 .
-#>  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:
-#>  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)
-#>  see `?mxOptions`
 #> Running mix with 14 parameters
 ```
 
@@ -127,93 +103,13 @@ res_1_3 <- mx_mixed_lca(
   data = df,
   classes = 1:3
 )
-#> Running mix1 with 8 parameters
-#> Running mix with 14 parameters
-#> Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.
-#>  This may be fine, but you may wish to re-run the model using
-#>  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.
-#>  Expert version: model$output[['maxRelativeOrdinalError']] is 
-#>  larger than the mvnRelEps value of  0.005 .
-#>  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:
-#>  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)
-#>  see `?mxOptions`
 #> Running mix with 14 parameters
 #> Running mix with 20 parameters
-#> Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.
-#>  This may be fine, but you may wish to re-run the model using
-#>  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.
-#>  Expert version: model$output[['maxRelativeOrdinalError']] is 
-#>  larger than the mvnRelEps value of  0.005 .
-#>  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:
-#>  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)
-#>  see `?mxOptions`
-#> Running mix with 20 parameters
-#> Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.
-#>  This may be fine, but you may wish to re-run the model using
-#>  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.
-#>  Expert version: model$output[['maxRelativeOrdinalError']] is 
-#>  larger than the mvnRelEps value of  0.005 .
-#>  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:
-#>  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)
-#>  see `?mxOptions`
 #> Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.
-#> Running mix with 20 parameters
+#> Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=2237.09546071368, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=2230.08267535054, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267393529, new current best! (was 2230.08267535054)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493314156, worse than previous best (2230.08267393529)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 
 #> 
-#> Beginning initial fit attempt
-#> Running mix with 20 parameters
-#> 
-#>  Lowest minimum so far:  2230.74793595893
-#> 
-#> Beginning fit attempt 1 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#> Beginning fit attempt 2 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#> Beginning fit attempt 3 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#> Beginning fit attempt 4 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#> Beginning fit attempt 5 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#>  Fit attempt worse than current best:  2237.09546071296 vs 2230.74793595893
-#> 
-#> Beginning fit attempt 6 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#> Beginning fit attempt 7 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#> Beginning fit attempt 8 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#>  Lowest minimum so far:  2230.08267550927
-#> 
-#> Beginning fit attempt 9 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#>  Lowest minimum so far:  2230.08267398337
-#> 
-#> Beginning fit attempt 10 of at maximum 10 extra tries
-#> Running mix with 20 parameters
-#> 
-#>  Fit attempt worse than current best:  2230.0848733741 vs 2230.08267398337
-#> 
-#> Retry limit reached
-#> 
-#> Solution found
-#> Final run, for Hessian and/or standard errors and/or confidence intervals
-#> Running mix with 20 parameters
-#>  Warning messages generated from final run for Hessian/SEs/CIs
+#>  Solution found!  Final fit=2230.0827 (started at 2230.7479)  (11 attempt(s): 11 valid, 0 errors)
 ```
-
-    #> 
-    #>  Solution found!  Final fit=2230.0827 (started at 2230.7512)  (11 attempt(s): 11 valid, 0 errors)
-    #>  Start values from best fit:
-    #> 8.09024154385894,3.97699536057345,0.87824831311025,3.85154183305023,0.310329165223814,1.48045819383439,5.27187071958494,1.08158254326102,1.8881150382418,0.00100000000000009,1.99699501931063,4.29264184255487,1.00392629344803,-7.09416613824002,7.91337313244171,-0.215009168485588,-0.110173482480577,0.00146806192410792,0.648553484492659,5.07949105404964
 
 The result is a list of OpenMx models, one for each class solution.
 
@@ -227,11 +123,11 @@ table_fit(res_1_3)
 #>     Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy
 #> 1  equal       1 -1250.528 200          8 2517.055 2543.442 2518.097 1.0000000
 #> 2 equal1       2 -1118.542 200         14 2265.083 2311.260 2266.906 0.9304968
-#> 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447500
+#> 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447552
 #>    prob_min  prob_max n_min n_max np_ratio  np_local
 #> 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.000000
 #> 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.076923
-#> 3 0.9386143 0.9976012 0.075 0.630 10.00000  2.500000
+#> 3 0.9386331 0.9976012 0.075 0.630 10.00000  2.500000
 ```
 
 Note that, as expected, the BIC for the 2-class solution is lowest. The
@@ -298,15 +194,6 @@ res_2_free <- mx_mixed_lca(
   classes = 2,
   variances = "free"
 )
-#> Running mix with 17 parameters
-#> Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.
-#>  This may be fine, but you may wish to re-run the model using
-#>  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.
-#>  Expert version: model$output[['maxRelativeOrdinalError']] is 
-#>  larger than the mvnRelEps value of  0.005 .
-#>  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:
-#>  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)
-#>  see `?mxOptions`
 #> Running mix with 17 parameters
 ```
 

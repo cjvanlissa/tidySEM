@@ -83,9 +83,10 @@ indicators.</p>
 <code>tidySEM</code>, and often led to convergence issues. The new
 function <code><a href="../reference/mx_mixed_lca.html">mx_mixed_lca()</a></code>, introduced in <code>tidySEM</code>
 version <code>0.2.10</code>, provides a high-level interface to estimate
-mixed-data latent class models. It implements a multi-step estimation
-procedure designed to improve starting values and convergence when
-working with heterogeneous indicators.</p>
+mixed-data latent class models. At the same time, the function
+<code>mx_run()</code> was updated to use <code><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHardOrdinal()</a></code>
+in case of convergence issues with ordinal categorical indicators, which
+improves the estimation of mixed data LCAs.</p>
 <p>This vignette demonstrates how to:</p>
 <ul>
 <li>Prepare mixed continuous and ordinal data</li>
@@ -97,7 +98,8 @@ working with heterogeneous indicators.</p>
 <h3 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
 </h3>
 <p>The <code><a href="../reference/mx_mixed_lca.html">mx_mixed_lca()</a></code> function relies on
-<code>OpenMx</code>. Make sure both packages are installed.</p>
+<code>OpenMx</code>. Make sure both packages are installed and
+loaded.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
@@ -136,24 +138,13 @@ working with heterogeneous indicators.</p>
 <div class="section level3">
 <h3 id="model-estimation-with-mx_mixed_lca">Model Estimation with <code>mx_mixed_lca()</code><a class="anchor" aria-label="anchor" href="#model-estimation-with-mx_mixed_lca"></a>
 </h3>
-<p>The <code><a href="../reference/mx_mixed_lca.html">mx_mixed_lca()</a></code> function estimates mixed-data latent
-class models using the following procedure:</p>
-<ol style="list-style-type: decimal">
-<li>Estimate an <strong>Latent profile analysis (LPA)</strong> for the
-continuous indicators using <code><a href="../reference/mx_profiles.html">mx_profiles()</a></code>
-</li>
-<li>Use the <strong>BCH method</strong> to obtain starting values for
-ordinal indicators: the classes probabilities from step 1 are used to
-estimate thresholds for the remaining ordinal indicators.</li>
-<li>
-<strong>Latent class analysis (LCA)</strong> for ordinal indicators
-using <code><a href="../reference/mx_lca.html">mx_lca()</a></code>, using the thresholds from step 2. as
-starting values.</li>
-<li>
-<strong>Joint estimation</strong> of continuous and ordinal
-indicators in a single model, using the results from steps 1. and 3. as
-starting values.</li>
-</ol>
+<!-- The `mx_mixed_lca()` function estimates mixed-data latent class models using the -->
+<!-- following procedure: -->
+<!-- 1. Estimate an **Latent profile analysis (LPA)** for the continuous indicators using -->
+<!--    `mx_profiles()` -->
+<!-- 2. Use the **BCH method** to obtain starting values for ordinal indicators: the classes probabilities from step 1 are used to estimate thresholds for the remaining ordinal indicators. -->
+<!-- 3. **Latent class analysis (LCA)** for ordinal indicators using `mx_lca()`, using the thresholds from step 2. as starting values. -->
+<!-- 4. **Joint estimation** of continuous and ordinal indicators in a single model, using the results from steps 1. and 3. as starting values. -->
 <div class="section level4">
 <h4 id="estimating-a-single-class-solution">Estimating a Single Class Solution<a class="anchor" aria-label="anchor" href="#estimating-a-single-class-solution"></a>
 </h4>
@@ -165,15 +156,6 @@ model estimation, as the aforementioned steps are completed.</p>
 <span>data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>classes <span class="op">=</span> <span class="fl">2</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Running mix with 14 parameters</span></span>
-<span><span class="co">#&gt; Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.</span></span>
-<span><span class="co">#&gt;  This may be fine, but you may wish to re-run the model using</span></span>
-<span><span class="co">#&gt;  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.</span></span>
-<span><span class="co">#&gt;  Expert version: model$output[['maxRelativeOrdinalError']] is </span></span>
-<span><span class="co">#&gt;  larger than the mvnRelEps value of  0.005 .</span></span>
-<span><span class="co">#&gt;  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:</span></span>
-<span><span class="co">#&gt;  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)</span></span>
-<span><span class="co">#&gt;  see `?mxOptions`</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span></code></pre></div>
 <p>The returned object is an <code><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">OpenMx::mxModel</a></code>, and can be
 modified using the functions in that package:</p>
@@ -194,91 +176,12 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span>  data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Running mix1 with 8 parameters</span></span>
-<span><span class="co">#&gt; Running mix with 14 parameters</span></span>
-<span><span class="co">#&gt; Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.</span></span>
-<span><span class="co">#&gt;  This may be fine, but you may wish to re-run the model using</span></span>
-<span><span class="co">#&gt;  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.</span></span>
-<span><span class="co">#&gt;  Expert version: model$output[['maxRelativeOrdinalError']] is </span></span>
-<span><span class="co">#&gt;  larger than the mvnRelEps value of  0.005 .</span></span>
-<span><span class="co">#&gt;  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:</span></span>
-<span><span class="co">#&gt;  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)</span></span>
-<span><span class="co">#&gt;  see `?mxOptions`</span></span>
 <span><span class="co">#&gt; Running mix with 14 parameters</span></span>
 <span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.</span></span>
-<span><span class="co">#&gt;  This may be fine, but you may wish to re-run the model using</span></span>
-<span><span class="co">#&gt;  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.</span></span>
-<span><span class="co">#&gt;  Expert version: model$output[['maxRelativeOrdinalError']] is </span></span>
-<span><span class="co">#&gt;  larger than the mvnRelEps value of  0.005 .</span></span>
-<span><span class="co">#&gt;  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:</span></span>
-<span><span class="co">#&gt;  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)</span></span>
-<span><span class="co">#&gt;  see `?mxOptions`</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.</span></span>
-<span><span class="co">#&gt;  This may be fine, but you may wish to re-run the model using</span></span>
-<span><span class="co">#&gt;  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.</span></span>
-<span><span class="co">#&gt;  Expert version: model$output[['maxRelativeOrdinalError']] is </span></span>
-<span><span class="co">#&gt;  larger than the mvnRelEps value of  0.005 .</span></span>
-<span><span class="co">#&gt;  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:</span></span>
-<span><span class="co">#&gt;  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)</span></span>
-<span><span class="co">#&gt;  see `?mxOptions`</span></span>
 <span><span class="co">#&gt; Larger ordinal error than expected. Trying `mxTryHardOrdinal()`.</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
+<span><span class="co">#&gt; Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=2237.09546071368, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=2230.08267535054, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267393529, new current best! (was 2230.08267535054)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493314156, worse than previous best (2230.08267393529)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning initial fit attempt</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2230.74793595893</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 2 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2237.09546071296 vs 2230.74793595893</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 7 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 8 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2230.08267550927</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 9 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  2230.08267398337</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Beginning fit attempt 10 of at maximum 10 extra tries</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  2230.0848733741 vs 2230.08267398337</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Retry limit reached</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Solution found</span></span>
-<span><span class="co">#&gt; Final run, for Hessian and/or standard errors and/or confidence intervals</span></span>
-<span><span class="co">#&gt; Running mix with 20 parameters</span></span>
-<span><span class="co">#&gt;  Warning messages generated from final run for Hessian/SEs/CIs</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Solution found!  Final fit=2230.0827 (started at 2230.7512)  (11 attempt(s): 11 valid, 0 errors)</span></span>
-<span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 8.09024154385894,3.97699536057345,0.87824831311025,3.85154183305023,0.310329165223814,1.48045819383439,5.27187071958494,1.08158254326102,1.8881150382418,0.00100000000000009,1.99699501931063,4.29264184255487,1.00392629344803,-7.09416613824002,7.91337313244171,-0.215009168485588,-0.110173482480577,0.00146806192410792,0.648553484492659,5.07949105404964</span></span></code></pre>
+<span><span class="co">#&gt;  Solution found!  Final fit=2230.0827 (started at 2230.7479)  (11 attempt(s): 11 valid, 0 errors)</span></span></code></pre></div>
 <p>The result is a list of OpenMx models, one for each class
 solution.</p>
 </div>
@@ -287,16 +190,16 @@ solution.</p>
 </h3>
 <p>The model fit can be inspected by printing the object, or calling
 <code>table_fit(res_1_3)</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
 <span><span class="co">#&gt; 1  equal       1 -1250.528 200          8 2517.055 2543.442 2518.097 1.0000000</span></span>
 <span><span class="co">#&gt; 2 equal1       2 -1118.542 200         14 2265.083 2311.260 2266.906 0.9304968</span></span>
-<span><span class="co">#&gt; 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447500</span></span>
+<span><span class="co">#&gt; 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447552</span></span>
 <span><span class="co">#&gt;    prob_min  prob_max n_min n_max np_ratio  np_local</span></span>
 <span><span class="co">#&gt; 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.000000</span></span>
 <span><span class="co">#&gt; 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.076923</span></span>
-<span><span class="co">#&gt; 3 0.9386143 0.9976012 0.075 0.630 10.00000  2.500000</span></span></code></pre></div>
+<span><span class="co">#&gt; 3 0.9386331 0.9976012 0.075 0.630 10.00000  2.500000</span></span></code></pre></div>
 <p>Note that, as expected, the BIC for the 2-class solution is lowest.
 The 3-class solution has an extremely low ratio of cases to parameters,
 so this model is most likely overfit.</p>
@@ -306,7 +209,7 @@ correspond nicely to the simulated .3/.7 split.</p>
 <p>We can examine the parameter values using
 <code><a href="../reference/table_results.html">table_results()</a></code> on the second element of the model list, or
 the 2-class model:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                       label  est_sig       se pval               confint  class</span></span>
 <span><span class="co">#&gt; 1                  Means.X1  1.94***     0.08 0.00          [1.78, 2.10] class1</span></span>
@@ -333,7 +236,7 @@ For class 1, the probability of scoring within the first response
 category corresponds to <code>pnorm(-2.38, lower.tail = TRUE)</code>, or
 about 1%. To convert these thresholds to the probability scale, we can
 run:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Variable Category  Probability  group</span></span>
 <span><span class="co">#&gt; 1       X4        1 1.082529e-01 class1</span></span>
@@ -350,25 +253,16 @@ run:</p>
 forwarded to the underlying model-building functions. For example, you
 can release thevariance constraints for the continuous indicators as
 follows:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_2_free</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_mixed_lca.html">mx_mixed_lca</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  variances <span class="op">=</span> <span class="st">"free"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Running mix with 17 parameters</span></span>
-<span><span class="co">#&gt; Warning in runHelper(model, frontendStart, intervals, silent, suppressWarnings, : Polite note: Model finished with a larger ordinal error than we typically expect.</span></span>
-<span><span class="co">#&gt;  This may be fine, but you may wish to re-run the model using</span></span>
-<span><span class="co">#&gt;  `mxTryHardOrdinal()` in place of `mxRun()` to try for a better fit.</span></span>
-<span><span class="co">#&gt;  Expert version: model$output[['maxRelativeOrdinalError']] is </span></span>
-<span><span class="co">#&gt;  larger than the mvnRelEps value of  0.005 .</span></span>
-<span><span class="co">#&gt;  If this is expected for your model, you might wish to increase `mvnRelEps`, e.g:</span></span>
-<span><span class="co">#&gt;  mxOption(NULL, 'mvnRelEps', value= mxOption(NULL, 'mvnRelEps')*5)</span></span>
-<span><span class="co">#&gt;  see `?mxOptions`</span></span>
 <span><span class="co">#&gt; Running mix with 17 parameters</span></span></code></pre></div>
 <p>We can test whether releasing the variances significantly changes the
 model fit using an ANOVA:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="va">res_2_free</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       base  comparison ep minus2LL  df      AIC   diffLL diffdf         p</span></span>
 <span><span class="co">#&gt; 1 NA var 2        &lt;NA&gt; 17 2235.935 783 2269.935       NA     NA        NA</span></span>
@@ -385,15 +279,15 @@ categorical indicators will not look good in plots for continuous
 indicators, and could lead to errors.</p>
 <p>Thus, for example, we can use a profile plot for the continuous
 indicators:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mixed_lca_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="700"></p>
 <p>Alternatively, we can use a bivariate plot with densities:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_bivariate.html">plot_bivariate</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mixed_lca_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="700"></p>
 <p>We can plot the categorical variables as follows:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mixed_lca_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="700"></p>
 <p>The <code><a href="../reference/mx_mixed_lca.html">mx_mixed_lca()</a></code> function is particularly useful

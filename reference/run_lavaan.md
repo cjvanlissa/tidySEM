@@ -33,7 +33,7 @@ names(df) <- paste0("X_", 1:3)
 run_lavaan(measurement(tidy_sem(df), meanstructure = TRUE))
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
-#> lavaan 0.6-21 ended normally after 85 iterations
+#> lavaan 0.6-21 ended normally after 84 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

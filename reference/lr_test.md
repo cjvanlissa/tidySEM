@@ -39,9 +39,6 @@ mod <- as_ram("x~1", data = df, group = "group")
 mod <- run_mx(mod)
 lr_test(mod)
 }
-#> Running mg with 4 parameters
-#> Running mg with 2 parameters
-#> Running mg with 2 parameters
 #> BCH test for equality of means across classes
 #> 
 #> Overall likelihood ratio test:

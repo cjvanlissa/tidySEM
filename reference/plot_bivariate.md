@@ -84,5 +84,4 @@ res <- mx_profiles(iris_sample, classes = 2)
 plot_bivariate(res, rawdata = FALSE)
 }
 #> Running mix2 with 7 parameters
-#> Running mix2 with 7 parameters
 ```

@@ -102,6 +102,5 @@ pct_func <- pseudo_class(x = fit,
 
 }
 #> Running mix3 with 18 parameters
-#> Running mix3 with 18 parameters
 #> The degrees of freedom are assumed to be equal to the total number of observations used in the model ( 17 ) minus the number of parameters estimated ( 5 ). This may not be correct. If necessary, provide a better value via the 'df_complete' argument
 ```

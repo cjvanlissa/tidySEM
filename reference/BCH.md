@@ -58,6 +58,4 @@ res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
 #>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now
 #>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
 #> Running mix2 with 4 parameters
-#> Running mix2 with 4 parameters
-#> Running aux with 4 parameters
 ```
