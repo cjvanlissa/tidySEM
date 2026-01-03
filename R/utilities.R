@@ -26,8 +26,10 @@ paste2 <- function(..., sep = " ", collapse = NULL, na.rm = TRUE){
 }
 
 diag_bind <- function(a, b, pad = NA){
-  rbind(cbind(a, matrix(data = pad, nrow = nrow(a), ncol = ncol(b))),
-        cbind(matrix(data = pad, nrow = nrow(b), ncol = ncol(a)), b))
+  top <- cbind(a, matrix(data = pad, nrow = nrow(a), ncol = ncol(b)))
+  bottom <- cbind(matrix(data = pad, nrow = nrow(b), ncol = ncol(a)), b)
+  colnames(top)[-c(1:ncol(a))] <- colnames(b)
+  rbind(top, bottom)
 }
 
 # @title Longest common substring

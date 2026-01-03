@@ -227,7 +227,7 @@ mx_threshold <- function(vars, nThresh = NA, free = FALSE, values = NULL, labels
 #' @description Get quantiles based on empirical normal distribution of data.
 #' @param df A `data.frame` with only columns of class `ordered`.
 #' @return A matrix with the appropriate dimensions for the threshold matrix for
-#' `df`, \code{\link[see OpenMx:mxThreshold]{mxThreshold()}}.
+#' `df`, see \code{\link[OpenMx:mxThreshold]{OpenMx::mxThreshold()}}.
 #' @examples
 #' set.seed(1)
 #' df <- data.frame(X = ordered(sample(c(1:4), size = 100, replace = TRUE,

@@ -11,7 +11,7 @@ mx_data_quantiles(df)
 }
 \value{
 A matrix with the appropriate dimensions for the threshold matrix for
-\code{df}, \code{\link[see OpenMx:mxThreshold]{mxThreshold()}}.
+\code{df}, see \code{\link[OpenMx:mxThreshold]{OpenMx::mxThreshold()}}.
 }
 \description{
 Get quantiles based on empirical normal distribution of data.
