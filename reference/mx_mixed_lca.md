@@ -8,7 +8,15 @@ Details for more information.
 ## Usage
 
 ``` r
-mx_mixed_lca(data = NULL, classes = 1L, run = TRUE, ...)
+mx_mixed_lca(
+  data = NULL,
+  classes = 1L,
+  variances = "equal",
+  covariances = "zero",
+  run = TRUE,
+  expand_grid = FALSE,
+  ...
+)
 ```
 
 ## Arguments
@@ -22,11 +30,33 @@ mx_mixed_lca(data = NULL, classes = 1L, run = TRUE, ...)
   A vector of integers, indicating which class solutions to generate.
   Defaults to 1L. E.g., `classes = 1:6`,
 
+- variances:
+
+  Character vector. Specifies which variance components to estimate.
+  Defaults to "equal" (constrain variances across classes); the other
+  option is "varying" (estimate variances freely across classes). Each
+  element of this vector refers to one of the models you wish to run.
+
+- covariances:
+
+  Character vector. Specifies which covariance components to estimate.
+  Defaults to "zero" (covariances constrained to zero; this corresponds
+  to an assumption of conditional independence of the indicators); other
+  options are "equal" (covariances between items constrained to be equal
+  across classes), and "varying" (free covariances across classes).
+
 - run:
 
-  Logical, whether or not to run the model. This should usually be set
-  to `TRUE`, because this function runs several models to aid in
-  specifying good starting values; see Details.
+  Logical, whether or not to run the model. If `run = TRUE`, the
+  function calls
+  [`mixture_starts`](https://cjvanlissa.github.io/tidySEM/reference/mixture_starts.md)
+  and
+  [`run_mx`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md).
+
+- expand_grid:
+
+  Logical, whether or not to estimate all possible combinations of the
+  `variances` and `covariances` arguments. Defaults to `FALSE`.
 
 - ...:
 
@@ -34,33 +64,26 @@ mx_mixed_lca(data = NULL, classes = 1L, run = TRUE, ...)
 
 ## Value
 
-Returns an
-[`OpenMx::mxModel()`](https://rdrr.io/pkg/OpenMx/man/mxModel.html).
+A list of class `mixture_list`.
 
 ## Details
 
 The procedure is as follows:
 
-1.  Estimate a latent profile analysis for the continuous indicators
-    using
+1.  Construct a latent profile model for the continuous indicators using
     [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md).
-    Additional arguments, like `variabces = "free"`, can be passed via
-    `...`. The estimator uses simulated annealing.
 
-2.  To obtain good starting values for the categorical indicators, use
-    the classes from step 1. to estimate an auxiliary model for the
-    ordinal indicators with
-    [`BCH()`](https://cjvanlissa.github.io/tidySEM/reference/BCH.md).
+2.  Construct a latent class model for the categorical indicators using
+    [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md).
 
-3.  Estimate a latent class analysis for the categorical indicators
-    using
-    [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md),
-    with the results of step 2. as starting values. The estimator uses
-    [`OpenMx::mxTryHardOrdinal()`](https://rdrr.io/pkg/OpenMx/man/mxTryHard.html).
+3.  Combine the models from steps 1. and 2. into one joint model.
 
-4.  Combine the models from steps 1. and 3. into one joint model.
-    Conduct one final optimization step using
-    [`OpenMx::mxTryHardOrdinal()`](https://rdrr.io/pkg/OpenMx/man/mxTryHard.html).
+If `run = TRUE`, simulated annealing is used to estimate the mixture
+model, as explained in Van Lissa, Garnier-Villareal, & Anadria (2023).
+However, the inclusion of categorical indicators often leads to a large
+ordinal error, which automatically initiates a final optimization step
+using
+[`OpenMx::mxTryHardOrdinal()`](https://rdrr.io/pkg/OpenMx/man/mxTryHard.html).
 
 ## References
 
@@ -74,6 +97,7 @@ R-Package tidySEM. Structural Equation Modeling.
 ``` r
 if (FALSE) { # \dontrun{
 if(isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+library(tidySEM)
 library(OpenMx)
 # Construct dataset with ordinal and categorical indicators
 set.seed(1)
@@ -86,6 +110,7 @@ df <- data.frame(df)
 df$X4 <- cut(df$X4, 3, labels = FALSE)
 df$X4 <- OpenMx::mxFactor(df$X4, levels = c(1:3))
 # Estimate the model
+set.seed(1)
 res <- mx_mixed_lca(data = df, classes = 2)
 }
 } # }
