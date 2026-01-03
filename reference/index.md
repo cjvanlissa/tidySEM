@@ -509,6 +509,8 @@
   : Plot categorical variable probabilities
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
+- [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc_srmr.md)
+  : Predictive Model Comparison
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
 - [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
