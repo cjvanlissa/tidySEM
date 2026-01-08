@@ -64,4 +64,7 @@ CODE_OF_CONDUCT.md
 ^vignettes/lca_prob.png$
 ^vignettes/lca_aux_dep.RData$
 ^vignettes/lca_aux_model.RData$
+^vignettes/res_1_3.RData$
+^vignettes/res_blrt_mixed_lca.RData$
+^vignettes/res_pmc_srmr.RData$
 ^pkgdown$

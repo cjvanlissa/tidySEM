@@ -72,15 +72,42 @@ pmc_srmr.mixture_list <- function(x, ..., reps = 100, ci = .95){
   select_these <- lower.tri(cor_obs)
   cor_obs_sel <- cor_obs[select_these]
 
-  rep_stat <- simplify2array(lapply(x, function(thisres) {
-    replicate(reps, {
-      sims <- OpenMx::mxGenerateData(thisres)
-      if(any(not_num)){
-        sims[which(not_num)] <- lapply(sims[which(not_num)], as.numeric)
-      }
-      cor_sim <- cor(sims)
-      sqrt(mean((cor_sim[select_these] - cor_obs_sel)^2))
-    })}))
+  if(requireNamespace("progressr", quietly = TRUE) & requireNamespace("progress", quietly = TRUE)){
+    progressr::with_progress({
+      pgs <- progressr::progressor(steps = reps*length(x))
+      rep_stat <- do.call(cbind, lapply(seq_along(x), function(i){
+
+        progmsg <- x[[i]]@name
+        simres <- do.call(c, future.apply::future_replicate(
+          n = reps,
+          future.seed = TRUE,
+          simplify = FALSE,
+          expr = {
+            pgs(sprintf(progmsg))
+            sims <- OpenMx::mxGenerateData(x[[i]])
+            if(any(not_num)){
+              sims[which(not_num)] <- lapply(sims[which(not_num)], as.numeric)
+            }
+            cor_sim <- cor(sims)
+            sqrt(mean((cor_sim[select_these] - cor_obs_sel)^2))
+          }
+        ))
+
+        }))
+      })
+
+  } else {
+    rep_stat <- simplify2array(lapply(x, function(thisres) {
+      replicate(reps, {
+        sims <- OpenMx::mxGenerateData(thisres)
+        if(any(not_num)){
+          sims[which(not_num)] <- lapply(sims[which(not_num)], as.numeric)
+        }
+        cor_sim <- cor(sims)
+        sqrt(mean((cor_sim[select_these] - cor_obs_sel)^2))
+      })}))
+
+  }
 
   srsm_meds <- apply(rep_stat, 2, median)
   names(srsm_meds) <- nams
@@ -92,9 +119,11 @@ pmc_srmr.mixture_list <- function(x, ..., reps = 100, ci = .95){
   cis <- do.call(rbind, lapply(cis, function(i){matrix(as.vector(apply(i, 2, stats::quantile, probs = c(((1-ci)/2), 1-((1-ci)/2)))), ncol = 2, byrow = TRUE)}))
   colnames(cis) <- paste0("srmr_", c("lb", "ub"))
   # colMeans(rep_stat)
-  out <- data.frame(comparison = rep(c("dif_seq", "dif_one"), each = 2),
+  out <- data.frame(
     null = c(nams[1:(length(nams)-1L)], rep(nams[1], (length(nams)-1L))),
                alt = rep(nams[2:length(nams)], 2))
+  out <- data.frame(comparison = rep(c("dif_seq", "dif_one"), each = nrow(out)/2),
+                    out)
   out$null_srsm <- srsm_meds[out$null]
   out$alt_srsm <- srsm_meds[out$alt]
   out <- data.frame(out, cis, sig = c("", "*")[(apply(sign(cis), 1, sum) == -2)+1L])

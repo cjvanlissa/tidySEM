@@ -19,7 +19,7 @@ show_plots <- FALSE
 if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
   show_plots <- TRUE
 }
-
+run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
 ```
 
 Latent class analysis for categorical indicators (LCA) and latent profile analysis for continuous indicators (LPA) are widely used
@@ -94,7 +94,7 @@ df$X4 <- mxFactor(df$X4, levels = 1:3)
 
 ### Estimating a Single Class Solution
 
-To estimate a 2-class mixed-data latent class model, use the following code. Note that you will see several notifications concerning model estimation, as the aforementioned steps are completed. 
+To estimate a 2-class mixed-data latent class model, use the following code:
 
 ```{r eval = run_chunks}
 res_2 <- mx_mixed_lca(
@@ -102,7 +102,6 @@ data = df,
 classes = 2
 )
 ```
-
 
 The returned object is an `OpenMx::mxModel`, and can be modified using the functions in that package:
 
@@ -115,30 +114,119 @@ class(res_2)
 A common workflow is to estimate several class solutions and compare model fit.
 This can be done by passing a vector of class numbers.
 
-```{r eval = run_chunks}
+```{r eval = FALSE}
 res_1_3 <- mx_mixed_lca(
   data = df,
   classes = 1:3
 )
 ```
+```{r eval = run_everything, echo = FALSE}
+res_1_3 <- mx_mixed_lca(
+  data = df,
+  classes = 1:3
+)
+saveRDS(res_1_3, "res_1_3.RData")
+```
+```{r eval = TRUE, echo = FALSE}
+res_1_3 <- readRDS("res_1_3.RData")
+```
 
 The result is a list of OpenMx models, one for each class solution.
 
-## Inspecting Model Results
+## Class Enumeration
 
-The model fit can be inspected by printing the object, or calling `table_fit(res_1_3)`:
+As explained in Van Lissa, Garnier-Villareal, and Anadria (2023), there are several approaches to class enumeration.
+The most straightforward best-practice approach is to examine the BIC fit index, and select the model with the lowest BIC.
+This is obtained by inspecting model fit, by printing the object, or calling `table_fit(res_1_3)`:
 
 ```{r}
 table_fit(res_1_3)
 ```
 
-Note that, as expected, the BIC for the 2-class solution is lowest.
-The 3-class solution has an extremely low ratio of cases to parameters,
+As expected, the BIC for the 2-class solution is lowest.
+Note that the 3-class solution also has an extremely low ratio of cases to parameters,
 so this model is most likely overfit.
 
-The class proportions for the two-class solution are printed in this table too (`n_min` and `n_max`); note that they correspond nicely to the simulated .3/.7 split.
+Another best-practice approach to class enumeration is to perform the bootstrapped likelihood ratio test.
+This gives a significance test, but takes a long time to run.
+To accelerate computations, we can use the `future` package for parallel computing (see `?plan` to select the appropriate back-end for your system).
+To track the function's progress,
+we use the `progressr` ecosystem,
+which allows users to choose how they want to be informed.
+The example below uses a progress bar:
 
-We can examine the parameter values using `table_results()` on the second element of the model list, or the 2-class model:
+```{r eval = FALSE, echo = TRUE}
+library(future)
+library(progressr)
+plan(multisession) # Parallel processing for Windows
+handlers("progress") # Progress bar
+set.seed(1)
+res_blrt <- BLRT(res_1_3, replications = 100)
+```
+
+```{r eval = run_everything, echo = FALSE}
+library(future)
+library(progressr)
+plan(multisession) # Parallel processing for Windows
+handlers("progress") # Progress bar
+set.seed(1)
+res_blrt <- BLRT(res_1_3, replications = 100)
+saveRDS(res_blrt, "res_blrt_mixed_lca.RData")
+```
+
+```{r eval = TRUE, echo = FALSE}
+res_blrt <- readRDS("res_blrt_mixed_lca.RData")
+res_blrt
+```
+
+
+This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
+Note that, by default, the BLRT conducts 100 bootstrapped analyses - but only some of these samples could be used to conduct the test, as the model did not converge in remaining iterations.
+
+A third option is to use a predictive model comparison, a method conceptually similar to Bayesian posterior predictive checks.
+
+
+```{r eval = run_everything, echo = FALSE}
+set.seed(1)
+res_pmc_srmr <- pmc_srmr(res_1_3)
+saveRDS(res_pmc_srmr, "res_pmc_srmr.RData")
+```
+```{r echo = TRUE, eval = FALSE}
+res_pmc_srmr <- pmc_srmr(res_1_3)
+res_pmc_srmr
+```
+```{r echo = FALSE}
+if(file.exists("res_pmc_srmr.RData")){
+  res_pmc_srmr <- readRDS("res_pmc_srmr.RData")
+  print(res_pmc_srmr)
+}
+```
+
+This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
+
+## Examine Results
+
+We can investigate the class proportions for the two-class solution by calling:
+
+```{r}
+class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely"))
+```
+
+The sum.posterior class probabilities incorporate classification error; each case can (fractionally) contribute to multiple classes.
+
+The sum.mostlikely class probabilities ignore classification error, assigning each case to the class it has the highest class probability for.
+
+Note that, in this case, both correspond nicely to the simulated .3/.7 split. Thus, we should have good class discrimination.
+
+This is confirmed by checking:
+
+```{r}
+table_fit(res_1_3[[2]])
+```
+
+We have a high minimal- and maximal posterior classification probability, and a high entropy.
+
+Finally, we can examine the parameter values using `table_results()` on the second element of the model list, or the 2-class model:
 
 ```{r}
 table_results(res_1_3[[2]])
@@ -157,24 +245,24 @@ table_prob(res_1_3[[2]])
 ## Advanced Options
 
 Additional arguments can be passed via `...` and are forwarded to the underlying
-model-building functions. For example, you can release thevariance constraints for
+model-building functions. For example, you can release the variance constraints for
 the continuous indicators as follows:
 
 ```{r}
 res_2_free <- mx_mixed_lca(
   data = df,
   classes = 2,
-  variances = "free"
+  variances = "varying"
 )
 ```
 
-We can test whether releasing the variances significantly changes the model fit using an ANOVA:
+We can compare the BICs of these models to determine whether the added complexity improves the model fit:
 
 ```{r}
-anova(res_1_3[[2]], res_2_free)
+table_fit(res_2_free)["BIC"]
 ```
 
-With a p-value of `0.63`, we conclude that the added complexity does not significantly improve the model (as expected, because we did not simulate class-specific variances).
+The BIC is higher for this model than for the model with fixed variances, so its fit is worse - as could be expected, because we did not simulate class-specific variances.
 
 
 # Plotting the Model
@@ -183,30 +271,45 @@ The model can be plot with the usual functions, but note that categorical indica
 
 Thus, for example, we can use a profile plot for the continuous indicators:
 
-```{r eval = run_chunks & show_plots}
+```{r eval = run_everything, echo = FALSE}
+p <- plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
+ggplot2::ggsave("mixed_lca_profiles.svg", p, device = "svg")
+```
+
+```{r eval = FALSE, echo = TRUE}
 plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
+```
+```{r eval = TRUE, echo = FALSE}
+knitr::include_graphics("mixed_lca_profiles.svg")
 ```
 
 Alternatively, we can use a bivariate plot with densities:
 
-```{r eval = run_chunks & show_plots}
+```{r eval = run_everything, echo = FALSE}
+p <- plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
+ggplot2::ggsave("mixed_lca_bivariate.svg", p, device = "svg")
+```
+
+```{r eval = FALSE, echo = TRUE}
 plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
+```
+```{r eval = TRUE, echo = FALSE}
+knitr::include_graphics("mixed_lca_bivariate.svg")
 ```
 
 We can plot the categorical variables as follows:
 
-```{r eval = run_chunks & show_plots}
-plot_prob(res_1_3[[2]])
+```{r eval = run_everything, echo = FALSE}
+p <- plot_prob(res_1_3[[2]])
+ggplot2::ggsave("mixed_lca_prob.svg", p, device = "svg")
 ```
 
-The `mx_mixed_lca()` function is particularly useful when:
-
-* Your indicators include **both continuous and ordinal variables**
-* You want **robust starting values** to reduce convergence issues
-* You prefer a **single high-level interface** to OpenMx mixture modeling
-
-For purely continuous indicators, consider `mx_profiles()`.
-For purely categorical indicators, consider `mx_lca()`.
+```{r eval = FALSE, echo = TRUE}
+plot_prob(res_1_3[[2]])
+```
+```{r eval = TRUE, echo = FALSE}
+knitr::include_graphics("mixed_lca_prob.svg")
+```
 
 ## References
 

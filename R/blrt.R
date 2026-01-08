@@ -82,11 +82,11 @@ blrt_internal <-
               mod_simple <-
                 OpenMx::mxRun(mod_simple,
                               silent = TRUE,
-                              suppressWarnings = FALSE)
+                              suppressWarnings = TRUE)
               mod_complex <-
                 OpenMx::mxRun(mod_complex,
                               silent = TRUE,
-                              suppressWarnings = FALSE)
+                              suppressWarnings = TRUE)
               c(
                 mod_simple@output$Minus2LogLikelihood - mod_complex@output$Minus2LogLikelihood,
                 mod_simple@output$status$code + mod_complex@output$status$code

@@ -73,7 +73,7 @@ mx_mixed_lca <- function(data = NULL,
     # Lapply to each row
     out <- mapply(function(vars, covs, clss){
       # Handle continuous part of model
-      mx_mixed_lca(data = data, classes = clss, variances = vars, covariances = covs, expand_grid = FALSE)
+      mx_mixed_lca(data = data, classes = clss, variances = vars, covariances = covs, run = run, expand_grid = FALSE, ...)
     }, vars = models$variances, covs = models$covariances, clss = models$classes, SIMPLIFY = FALSE)
     out <- do.call(c, out)
     if(inherits(out, "list")){
