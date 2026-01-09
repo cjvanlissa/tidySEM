@@ -125,10 +125,10 @@ res_1_3 <- mx_mixed_lca(
   data = df,
   classes = 1:3
 )
-saveRDS(res_1_3, "res_1_3.RData")
+save(res_1_3, file = "res_1_3.rda")
 ```
 ```{r eval = TRUE, echo = FALSE}
-res_1_3 <- readRDS("res_1_3.RData")
+load("res_1_3.rda")
 ```
 
 The result is a list of OpenMx models, one for each class solution.
@@ -171,12 +171,11 @@ plan(multisession) # Parallel processing for Windows
 handlers("progress") # Progress bar
 set.seed(1)
 res_blrt <- BLRT(res_1_3, replications = 100)
-saveRDS(res_blrt, "res_blrt_mixed_lca.RData")
+save(res_blrt, file = "res_blrt_mixed_lca.rda")
 ```
 
 ```{r eval = TRUE, echo = FALSE}
-res_blrt <- readRDS("res_blrt_mixed_lca.RData")
-res_blrt
+load("res_blrt_mixed_lca.rda")
 ```
 
 
@@ -189,15 +188,15 @@ A third option is to use a predictive model comparison, a method conceptually si
 ```{r eval = run_everything, echo = FALSE}
 set.seed(1)
 res_pmc_srmr <- pmc_srmr(res_1_3)
-saveRDS(res_pmc_srmr, "res_pmc_srmr.RData")
+save(res_pmc_srmr, file = "res_pmc_srmr.rda")
 ```
 ```{r echo = TRUE, eval = FALSE}
 res_pmc_srmr <- pmc_srmr(res_1_3)
 res_pmc_srmr
 ```
 ```{r echo = FALSE}
-if(file.exists("res_pmc_srmr.RData")){
-  res_pmc_srmr <- readRDS("res_pmc_srmr.RData")
+if(file.exists("res_pmc_srmr.rda")){
+  load("res_pmc_srmr.rda")
   print(res_pmc_srmr)
 }
 ```
