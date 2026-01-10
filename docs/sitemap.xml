@@ -11,6 +11,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa_confiratory.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa_exploratory.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/SMART_LCA_checklist.html</loc></url>
@@ -72,9 +73,11 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/measurement.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mixture_starts.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_lca.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_mixture.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_switch_labels.html</loc></url>
@@ -87,6 +90,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/plot_growth.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/plot_prob.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/pmc_srmr.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/poms.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/predict_class.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.html</loc></url>

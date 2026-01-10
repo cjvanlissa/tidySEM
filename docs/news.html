@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
     <li><a class="dropdown-item" href="articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
+    <li><a class="dropdown-item" href="articles/mixed_lca.html">Mixed Data LCA</a></li>
     <li><a class="dropdown-item" href="articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
     <li><a class="dropdown-item" href="articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
@@ -47,9 +48,19 @@
 
 <div id="tidysem-0210" class="section level1">
 
-<ul><li>Fix GitGub issue #116: lavaan is deprecating lavaan:::vnames, replaced with lavaan::lavNames()</li>
+<ul><li>Export predict_class() instead of masking OpenMx::predict.mxModel() with tidySEM::predict.mxModel()</li>
+<li>Add pmc_srmr() for class enumeration</li>
+<li>Add mx_mixed_lca() for latent class analysis with continuous and categorical indicators.</li>
+<li>Add mx_data_quantiles() for data-driven starting values for categorical indicators.</li>
+<li>Internal mixgrads() function is now incorporated in OpenMx version &gt;= 2.21.13, so require that version and rely on OpenMx::imxRowGradients()</li>
+<li>Rewrite run_mx()</li>
+<li>Bugfix to plot_density()</li>
+<li>Bugfix to graph_sem()</li>
+<li>Bugfix to table_results.mxModel()</li>
+<li>Fix GitGub issue #116: lavaan is deprecating lavaan:::vnames, replaced with lavaan::lavNames()</li>
 <li>Fix GitHub issue #115: Wald tests resulted in empty data.frame when progress was not loaded.</li>
 <li>Vignettes should show that OpenMx must be loaded in order to run functions that depend on it (i.e., latent class analyses)</li>
+<li>Remove spaces from lavaan operators to be compatible with new parser</li>
 </ul></div>
 <div class="section level1">
 <h1 id="tidysem-029">tidySEM 0.2.9<a class="anchor" aria-label="anchor" href="#tidysem-029"></a></h1>

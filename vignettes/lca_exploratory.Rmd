@@ -28,6 +28,7 @@ if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, err
 )
 }
 run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+
 ```
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
@@ -194,6 +195,7 @@ For this, we use the function `saveRDS()`.
 We can later use `res <- readRDS("res_gmm.RData")` to load the analysis from the file.
 
 ```{r fitlca, eval = FALSE, echo = TRUE}
+library(OpenMx)
 set.seed(123)
 res <- mx_profiles(data = df,
                    classes = 1:3,
@@ -203,21 +205,15 @@ res <- mx_profiles(data = df,
 saveRDS(res, "res_gmm.RData")
 ```
 ```{r eval = run_everything, echo = FALSE}
+library(OpenMx)
 set.seed(123)
 res <- mx_profiles(data = df,
                    classes = 1:3,
                    variances = c("equal", "varying"),
                    covariances = c("equal", "varying"),
                    expand_grid = TRUE)
-saveRDS(res, "res_gmm.RData")
-fit <- table_fit(res)
-write.csv(fit, "gmm_tabfit.csv", row.names = FALSE)
-#"Warning: In model 'mix4' Optimizer returned a non-zero status code 6. The model does not satisfy the first-order optimality conditions to the required accuracy, and no improved point for the merit function could be found during the final linesearch (Mx status RED)"
 ```
-```{r eval = eval_results, echo = FALSE}
-fit <- read.csv("gmm_tabfit.csv", stringsAsFactors = FALSE)
-class(fit) <- c("tidy_fit", "data.frame")
-```
+
 
 <!-- Note that one model (the most complex one) returns the following warning: -->
 
@@ -236,8 +232,16 @@ we create a model fit table using
 `table_fit()`.
 We will use the BIC for class enumeration.
 
-```{r echo = TRUE, eval=F}
+```{r echo = TRUE, eval=FALSE}
 fit <- table_fit(res)
+```
+```{r echo = FALSE, eval=run_everything}
+fit <- table_fit(res)
+write.csv(fit, "gmm_tabfit.csv", row.names = FALSE)
+```
+```{r eval = TRUE, echo = FALSE}
+fit <- read.csv("gmm_tabfit.csv", stringsAsFactors = FALSE)
+class(fit) <- c("tidy_fit", "data.frame")
 ```
 
 First, we determine whether any models can be disqualified.
@@ -387,22 +391,34 @@ df_pt <- mx_dummies(df_analyze$poly_type)
 aux_pt <- BCH(res_bic, model = "poly_typeOther | t1
                                 poly_typePE | t1
                                 poly_typePP | t1", data = df_pt)
-aux_pt <- mxTryHardOrdinal(aux_pt)
 ```
 ```{r echo = FALSE, eval=run_everything}
 df_pt <- mx_dummies(df_analyze$poly_type)
 aux_pt <- BCH(res_bic, model = "poly_typeOther | t1
                                   poly_typePE | t1
                                   poly_typePP | t1", data = df_pt)
-aux_pt <- mxTryHardOrdinal(aux_pt)
-saveRDS(aux_pt, "gmm_aux_pt.RData")
-```
-```{r echo = FALSE, eval=FALSE}
-aux_pt <- readRDS("gmm_aux_pt.RData")
 ```
 
 To obtain an omnibus likelihood ratio test of the significance of the differences in polymer type across classes,
-use `lr_test(aux_pt)`.
+use `lr_test(aux_pt)`:
+
+```{r eval = FALSE, echo = TRUE}
+lr_test(aux_pt)
+```
+```{r eval = run_everything, echo = FALSE, results='hide'}
+tmp <- lr_test(aux_pt)
+lapply(names(tmp), function(n){
+  write.csv(tmp[[n]], paste0("lca_exp_", n, ".csv"), row.names = F)
+})
+```
+```{r eval = TRUE, echo = FALSE}
+ns <-c("overall","pairwise")
+tmp <- lapply(ns, function(n){read.csv(paste0("lca_exp_", n, ".csv"), stringsAsFactors = F)})
+names(tmp) <- ns
+class(tmp) <- c("lr_test", "list"   )
+tmp
+```
+
 The results indicate that there are significant differences in polymer types across classes, $\Delta LL(3) = 17.14, p < .001$.
 The results can be reported in probability scale using `table_prob(aux_pt)`.
 To test differences for specific polymer types, we can use Wald tests:

@@ -1,0 +1,2 @@
+"Minus2LogLikelihood","n","Parameters","observedStatistics","df","TLI","RMSEA","RMSEASquared","RMSEANull","modelName","AIC","BIC","saBIC","Classes","Entropy","prob_min","prob_max","n_min","n_max","LL"
+2237.08334438438,200,14,1600,1586,1,0,0,0.05,"equal var 2",2265.08334438438,2311.25978751605,2266.90633852312,2,0.930496775329907,0.960663626320166,0.994273727743174,0.295,0.705,-1118.54167219219

@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
+    <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
@@ -468,7 +469,7 @@ bar:</p>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>  <span class="co"># Parallel processing for Windows</span></span>
 <span><span class="fu"><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">handlers</a></span><span class="op">(</span><span class="st">"progress"</span><span class="op">)</span>  <span class="co"># Progress bar</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BLRT.html">BLRT</a></span><span class="op">(</span><span class="va">res</span>, replications <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BLRT.html">BLRT</a></span><span class="op">(</span><span class="va">res</span>, replications <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>BLRT test table</caption>
 <thead><tr class="header">
@@ -486,7 +487,7 @@ bar:</p>
 <td align="right">421.2</td>
 <td align="right">5</td>
 <td align="right">0.00</td>
-<td align="right">20</td>
+<td align="right">100</td>
 </tr>
 <tr class="even">
 <td align="left">mix2</td>
@@ -494,7 +495,7 @@ bar:</p>
 <td align="right">160.0</td>
 <td align="right">5</td>
 <td align="right">0.00</td>
-<td align="right">20</td>
+<td align="right">100</td>
 </tr>
 <tr class="odd">
 <td align="left">mix3</td>
@@ -502,15 +503,15 @@ bar:</p>
 <td align="right">70.2</td>
 <td align="right">5</td>
 <td align="right">0.00</td>
-<td align="right">20</td>
+<td align="right">100</td>
 </tr>
 <tr class="even">
 <td align="left">mix4</td>
 <td align="left">mix5</td>
 <td align="right">7.8</td>
 <td align="right">5</td>
-<td align="right">0.55</td>
-<td align="right">20</td>
+<td align="right">0.36</td>
+<td align="right">100</td>
 </tr>
 </tbody>
 </table>
@@ -878,7 +879,51 @@ classes, use <code>lr_test(aux_model, compare = "A")</code>. The results
 indicate that there are no significant sex differences across classes,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>L</mi><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0.98</mn><mo>,</mo><mi>p</mi><mo>=</mo><mn>.81</mn></mrow><annotation encoding="application/x-tex">\Delta LL(3) = 0.98, p = .81</annotation></semantics></math>.
 The results can be reported using
-<code>table_results(aux_model)</code>.</p>
+<code>table_results(aux_model)</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">aux_model</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;                                label    est_sig     se pval            confint</span></span>
+<span><span class="co">#&gt; 1  Regressions.freqvisit.ON.distance       0.00   0.00 0.80      [-0.00, 0.00]</span></span>
+<span><span class="co">#&gt; 2                    Means.freqvisit    3.99***   0.18 0.00       [3.64, 4.35]</span></span>
+<span><span class="co">#&gt; 3                     Means.distance  155.25***   3.80 0.00   [147.80, 162.70]</span></span>
+<span><span class="co">#&gt; 4                Variances.freqvisit    0.53***   0.06 0.00       [0.42, 0.64]</span></span>
+<span><span class="co">#&gt; 5                 Variances.distance 2464.07*** 266.70 0.00 [1941.34, 2986.79]</span></span>
+<span><span class="co">#&gt; 6  Regressions.freqvisit.ON.distance       0.00   0.00 0.77      [-0.00, 0.01]</span></span>
+<span><span class="co">#&gt; 7                    Means.freqvisit    3.66***   0.43 0.00       [2.81, 4.51]</span></span>
+<span><span class="co">#&gt; 8                     Means.distance  159.52***   2.79 0.00   [154.05, 164.98]</span></span>
+<span><span class="co">#&gt; 9                Variances.freqvisit    1.19***   0.14 0.00       [0.92, 1.46]</span></span>
+<span><span class="co">#&gt; 10                Variances.distance 1144.27*** 133.42 0.00  [882.77, 1405.76]</span></span>
+<span><span class="co">#&gt; 11 Regressions.freqvisit.ON.distance      -0.00   0.00 0.35      [-0.00, 0.00]</span></span>
+<span><span class="co">#&gt; 12                   Means.freqvisit    3.95***   0.27 0.00       [3.43, 4.47]</span></span>
+<span><span class="co">#&gt; 13                    Means.distance  147.24***   6.09 0.00   [135.30, 159.18]</span></span>
+<span><span class="co">#&gt; 14               Variances.freqvisit    1.29***   0.17 0.00       [0.95, 1.63]</span></span>
+<span><span class="co">#&gt; 15                Variances.distance 4200.66*** 558.63 0.00 [3105.75, 5295.56]</span></span>
+<span><span class="co">#&gt; 16 Regressions.freqvisit.ON.distance      -0.00   0.00 0.91      [-0.00, 0.00]</span></span>
+<span><span class="co">#&gt; 17                   Means.freqvisit    3.32***   0.38 0.00       [2.57, 4.08]</span></span>
+<span><span class="co">#&gt; 18                    Means.distance  167.02***   7.06 0.00   [153.18, 180.86]</span></span>
+<span><span class="co">#&gt; 19               Variances.freqvisit    1.48***   0.23 0.00       [1.02, 1.93]</span></span>
+<span><span class="co">#&gt; 20                Variances.distance 3989.68*** 630.52 0.00 [2753.87, 5225.48]</span></span>
+<span><span class="co">#&gt;     group</span></span>
+<span><span class="co">#&gt; 1  class1</span></span>
+<span><span class="co">#&gt; 2  class1</span></span>
+<span><span class="co">#&gt; 3  class1</span></span>
+<span><span class="co">#&gt; 4  class1</span></span>
+<span><span class="co">#&gt; 5  class1</span></span>
+<span><span class="co">#&gt; 6  class2</span></span>
+<span><span class="co">#&gt; 7  class2</span></span>
+<span><span class="co">#&gt; 8  class2</span></span>
+<span><span class="co">#&gt; 9  class2</span></span>
+<span><span class="co">#&gt; 10 class2</span></span>
+<span><span class="co">#&gt; 11 class3</span></span>
+<span><span class="co">#&gt; 12 class3</span></span>
+<span><span class="co">#&gt; 13 class3</span></span>
+<span><span class="co">#&gt; 14 class3</span></span>
+<span><span class="co">#&gt; 15 class3</span></span>
+<span><span class="co">#&gt; 16 class4</span></span>
+<span><span class="co">#&gt; 17 class4</span></span>
+<span><span class="co">#&gt; 18 class4</span></span>
+<span><span class="co">#&gt; 19 class4</span></span>
+<span><span class="co">#&gt; 20 class4</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -895,12 +940,10 @@ individual. We can assign their scale scores to a
 overloaded the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> function) via the
 <code>newdata</code> argument. The result includes the individual’s most
 likely class, as well as posterior probabilities for all classes.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_new</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>burdened <span class="op">=</span> <span class="fl">2</span>, trapped <span class="op">=</span> <span class="fl">0.5</span>, negaffect <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    loneliness <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/predict_class.html">predict_class</a></span><span class="op">(</span><span class="va">res_final</span>, newdata <span class="op">=</span> <span class="va">df_new</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;       class1  class2 class3  class4 predicted</span></span>
-<span><span class="co">#&gt; [1,] 0.00081 1.4e-15      1 4.6e-08         3</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
