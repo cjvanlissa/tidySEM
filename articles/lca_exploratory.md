@@ -54,13 +54,6 @@ desc <- desc[, c("name", "type", "n", "unique", "mean", "median",
 knitr::kable(desc, caption = "Descriptive statistics")
 ```
 
-| name   | type    |    n | unique | mean | median |  sd | min |  max | skew_2se | kurt_2se |
-|:-------|:--------|-----:|-------:|-----:|-------:|----:|----:|-----:|---------:|---------:|
-| length | numeric | 5605 |   2086 |  2.9 |    2.4 | 1.9 | 1.0 | 69.2 |      137 |     2116 |
-| width  | numeric | 5605 |   2079 |  2.0 |    1.6 | 1.1 | 0.2 |  6.8 |       22 |       37 |
-
-Descriptive statistics
-
 The data are correctly coded as `numeric` and the distributional
 characteristics match the intended measurement level. The variable
 scales are comparable (both in millimeters and no large discrepancies
@@ -81,8 +74,6 @@ ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
 ```
 
-![](plot_gmm_desc.png)
-
 Both the table above and the density plot indicate that the data are
 extremely right-skewed and kurtotic. With this in mind, it can be useful
 to transform and rescale the data. We will use a log transformation.
@@ -92,8 +83,6 @@ df_plot$Value <- log(df_plot$Value)
 ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
 ```
-
-![](plot_gmm_desc_log.png)
 
 The log transformation addresses the aforementioned concerns regarding
 skew and kurtosis. To confirm this, reshape the data to wide format and
@@ -106,8 +95,6 @@ names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
 ggplot(df, aes(x = length, y = width)) + geom_point(alpha = 0.1) +
     theme_bw()
 ```
-
-![](plot_gmm_scatter.png)
 
 ## Conducting Latent Profile Analysis
 
@@ -135,6 +122,7 @@ later use `res <- readRDS("res_gmm.RData")` to load the analysis from
 the file.
 
 ``` r
+library(OpenMx)
 set.seed(123)
 res <- mx_profiles(data = df, classes = 1:3, variances = c("equal",
     "varying"), covariances = c("equal", "varying"), expand_grid = TRUE)
@@ -167,23 +155,6 @@ names(tbl) <- c("Name", "LL", "p", "BIC", "Ent.", "p_min", "n_min",
     "np_ratio", "np_local")
 knitr::kable(tbl, caption = "Model fit table.")
 ```
-
-| Name                   |    LL |   p |  BIC | Ent. | p_min | n_min | np_ratio | np_local |
-|:-----------------------|------:|----:|-----:|-----:|------:|------:|---------:|---------:|
-| equal var, equal cov 1 | -3389 |   5 | 6820 | 1.00 |  1.00 |  1.00 |     1121 |     1121 |
-| equal var, equal cov 2 | -3082 |   8 | 6234 | 0.72 |  0.86 |  0.31 |      701 |      494 |
-| equal var, equal cov 3 | -3030 |  11 | 6155 | 0.67 |  0.71 |  0.17 |      510 |      313 |
-| free var, equal cov 1  | -3389 |   5 | 6820 | 1.00 |  1.00 |  1.00 |     1121 |     1121 |
-| free var, equal cov 2  | -2545 |  10 | 5176 | 0.64 |  0.51 |  0.09 |      560 |      108 |
-| free var, equal cov 3  | -2257 |  15 | 4643 | 0.68 |  0.54 |  0.06 |      374 |       83 |
-| equal var, free cov 1  | -3389 |   5 | 6820 | 1.00 |  1.00 |  1.00 |     1121 |     1121 |
-| equal var, free cov 2  | -2552 |   9 | 5181 | 0.65 |  0.52 |  0.09 |      623 |      121 |
-| equal var, free cov 3  | -2368 |  13 | 4848 | 0.56 |  0.51 |  0.02 |      431 |       27 |
-| free var, free cov 1   | -3389 |   5 | 6820 | 1.00 |  1.00 |  1.00 |     1121 |     1121 |
-| free var, free cov 2   | -2575 |  11 | 5245 | 0.56 |  0.81 |  0.40 |      510 |      448 |
-| free var, free cov 3   | -2111 |  17 | 4370 | 0.65 |  0.51 |  0.04 |      330 |       41 |
-
-Model fit table.
 
 However, note that we have a very large sample, and for many models, the
 smallest class comprises only a very small percentage of the total
@@ -222,10 +193,6 @@ plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5,
     hjust = 1))
 ```
 
-![Bivariate profile plot](gmm_plotfit.png)
-
-Bivariate profile plot
-
 Looking at the blocks of 1-4 class models for each model specification,
 it appears that the BIC keeps decreasing with the addition of more
 classes. Across the blocks, the BIC keeps decreasing with increasingly
@@ -251,23 +218,6 @@ results <- table_results(res_bic, columns = c("label", "est",
 results
 ```
 
-| label                         |  est |
-|:------------------------------|-----:|
-| Means.length                  | 0.65 |
-| Means.width                   | 0.34 |
-| Variances.length              | 0.10 |
-| Covariances.length.WITH.width | 0.09 |
-| Variances.width               | 0.10 |
-| Means.length                  | 1.33 |
-| Means.width                   | 0.86 |
-| Variances.length              | 0.19 |
-| Covariances.length.WITH.width | 0.20 |
-| Variances.width               | 0.28 |
-| mix2.weights\[1,1\]           | 1.00 |
-| mix2.weights\[1,2\]           | 0.75 |
-
-Results of a 2-class model with free (co)variances
-
 Interpreting the results is facilitated by examining a plot of the model
 and data. Relevant plot functions are
 [`plot_bivariate()`](https://cjvanlissa.github.io/tidySEM/reference/plot_bivariate.md),
@@ -281,10 +231,6 @@ also includes them.
 ``` r
 plot_bivariate(res_bic)
 ```
-
-![Bivariate profile plot](gmm_bivariate_bic.png)
-
-Bivariate profile plot
 
 On the diagonal of the bivariate plot are weighted density plots: normal
 approximations of the density function of observed data, weighed by
@@ -332,14 +278,18 @@ aux_pt <- BCH(res_bic, model = "poly_typeOther | t1
                                 poly_typePE | t1
                                 poly_typePP | t1",
     data = df_pt)
-aux_pt <- mxTryHardOrdinal(aux_pt)
 ```
 
 To obtain an omnibus likelihood ratio test of the significance of the
-differences in polymer type across classes, use `lr_test(aux_pt)`. The
-results indicate that there are significant differences in polymer types
-across classes, $\Delta LL(3) = 17.14,p < .001$. The results can be
-reported in probability scale using `table_prob(aux_pt)`. To test
+differences in polymer type across classes, use `lr_test(aux_pt)`:
+
+``` r
+lr_test(aux_pt)
+```
+
+The results indicate that there are significant differences in polymer
+types across classes, $\Delta LL(3) = 17.14,p < .001$. The results can
+be reported in probability scale using `table_prob(aux_pt)`. To test
 differences for specific polymer types, we can use Wald tests:
 
 ``` r

@@ -1,11 +1,25 @@
 # tidySEM 0.2.10
 
+- Export predict_class() instead of masking OpenMx::predict.mxModel()
+  with tidySEM::predict.mxModel()
+- Add pmc_srmr() for class enumeration
+- Add mx_mixed_lca() for latent class analysis with continuous and
+  categorical indicators.
+- Add mx_data_quantiles() for data-driven starting values for
+  categorical indicators.
+- Internal mixgrads() function is now incorporated in OpenMx version \>=
+  2.21.13, so require that version and rely on OpenMx::imxRowGradients()
+- Rewrite run_mx()
+- Bugfix to plot_density()
+- Bugfix to graph_sem()
+- Bugfix to table_results.mxModel()
 - Fix GitGub issue \#116: lavaan is deprecating lavaan:::vnames,
   replaced with lavaan::lavNames()
 - Fix GitHub issue \#115: Wald tests resulted in empty data.frame when
   progress was not loaded.
 - Vignettes should show that OpenMx must be loaded in order to run
   functions that depend on it (i.e., latent class analyses)
+- Remove spaces from lavaan operators to be compatible with new parser
 
 # tidySEM 0.2.9
 

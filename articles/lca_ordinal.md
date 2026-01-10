@@ -54,16 +54,6 @@ desc <- desc[, c("name", "type", "n", "missing", "unique", "mode",
 desc
 ```
 
-| name     | type            |   n | missing | unique | mode | mode_value |    v |
-|:---------|:----------------|----:|--------:|-------:|-----:|-----------:|-----:|
-| Ethnic_1 | ordered, factor | 439 |       0 |      6 |  269 |          5 | 0.53 |
-| Ethnic_2 | ordered, factor | 439 |       0 |      6 |  272 |          5 | 0.52 |
-| Ethnic_3 | ordered, factor | 439 |       0 |      6 |  262 |          5 | 0.54 |
-| Belgian  | ordered, factor | 439 |       0 |     11 |   88 |          7 | 0.86 |
-| Flemish  | ordered, factor | 439 |       0 |     11 |   90 |          7 | 0.87 |
-
-Descriptive statistics for ordinal items
-
 Additionally, we can plot the data. The `ggplot2` function
 [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html) is
 useful for ordinal data:
@@ -75,10 +65,6 @@ df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
 ggplot(df_plot, aes(x = Value)) + geom_bar() + facet_wrap(~time,
     scales = "free") + theme_bw()
 ```
-
-![Bar charts for ordinal indicators](lca_plot_desc.png)
-
-Bar charts for ordinal indicators
 
 As we can see, the
 [`descriptives()`](https://cjvanlissa.github.io/tidySEM/reference/descriptives.md)
@@ -152,17 +138,6 @@ fit[, c("Name", "LL", "n", "Parameters", "BIC", "Entropy", "prob_min",
     "n_min", "np_ratio", "np_local")]
 ```
 
-| Name |    LL |   n | Parameters |  BIC | Entropy | prob_min | n_min | np_ratio | np_local |
-|-----:|------:|----:|-----------:|-----:|--------:|---------:|------:|---------:|---------:|
-|    1 | -3076 | 439 |         30 | 6334 |    1.00 |     1.00 |  1.00 |     14.6 |     14.6 |
-|    2 | -2849 | 439 |         61 | 6070 |    0.89 |     0.96 |  0.46 |      7.2 |      6.7 |
-|    3 | -2747 | 439 |         92 | 6054 |    0.93 |     0.94 |  0.15 |      4.8 |      2.2 |
-|    4 | -2659 | 439 |        123 | 6066 |    0.93 |     0.94 |  0.11 |      3.6 |      1.6 |
-|    5 | -2619 | 439 |        154 | 6174 |    0.95 |     0.96 |  0.10 |      2.9 |      1.5 |
-|    6 | -2578 | 439 |        185 | 6281 |    0.92 |     0.94 |  0.10 |      2.4 |      1.5 |
-
-Model fit table
-
 Note that both the global and local ratio of cases to parameters is low;
 for models of 3 or more classes, there are just a few observations per
 parameter in the smallest class (see `np_local`). This is a good reason
@@ -215,56 +190,12 @@ reshape(tab, direction = "wide", v.names = "Probability", timevar = "group",
     idvar = c("Variable", "Category"))
 ```
 
-| Variable | Category | Probability.class1 | Probability.class2 | Probability.class3 |
-|:---------|---------:|-------------------:|-------------------:|-------------------:|
-| Ethnic_1 |        1 |               0.01 |               0.00 |               0.00 |
-| Ethnic_1 |        2 |               0.01 |               0.00 |               0.01 |
-| Ethnic_1 |        3 |               0.20 |               0.06 |               0.01 |
-| Ethnic_1 |        4 |               0.57 |               0.24 |               0.12 |
-| Ethnic_1 |        5 |               0.21 |               0.70 |               0.85 |
-| Ethnic_2 |        1 |               0.00 |               0.01 |               0.00 |
-| Ethnic_2 |        2 |               0.03 |               0.00 |               0.00 |
-| Ethnic_2 |        3 |               0.14 |               0.13 |               0.00 |
-| Ethnic_2 |        4 |               0.74 |               0.22 |               0.03 |
-| Ethnic_2 |        5 |               0.09 |               0.63 |               0.97 |
-| Ethnic_3 |        1 |               0.02 |               0.00 |               0.01 |
-| Ethnic_3 |        2 |               0.02 |               0.03 |               0.00 |
-| Ethnic_3 |        3 |               0.15 |               0.11 |               0.01 |
-| Ethnic_3 |        4 |               0.74 |               0.24 |               0.04 |
-| Ethnic_3 |        5 |               0.07 |               0.61 |               0.94 |
-| Belgian  |        1 |               0.05 |               0.00 |               0.16 |
-| Belgian  |        2 |               0.00 |               0.00 |               0.04 |
-| Belgian  |        3 |               0.00 |               0.00 |               0.06 |
-| Belgian  |        4 |               0.02 |               0.00 |               0.02 |
-| Belgian  |        5 |               0.19 |               0.00 |               0.20 |
-| Belgian  |        6 |               0.13 |               0.00 |               0.05 |
-| Belgian  |        7 |               0.34 |               0.00 |               0.17 |
-| Belgian  |        8 |               0.25 |               0.00 |               0.20 |
-| Belgian  |        9 |               0.01 |               0.18 |               0.09 |
-| Belgian  |       10 |               0.02 |               0.82 |               0.00 |
-| Flemish  |        1 |               0.10 |               0.00 |               0.19 |
-| Flemish  |        2 |               0.01 |               0.01 |               0.05 |
-| Flemish  |        3 |               0.02 |               0.00 |               0.07 |
-| Flemish  |        4 |               0.05 |               0.00 |               0.08 |
-| Flemish  |        5 |               0.14 |               0.02 |               0.17 |
-| Flemish  |        6 |               0.11 |               0.13 |               0.13 |
-| Flemish  |        7 |               0.30 |               0.10 |               0.17 |
-| Flemish  |        8 |               0.22 |               0.17 |               0.12 |
-| Flemish  |        9 |               0.03 |               0.02 |               0.02 |
-| Flemish  |       10 |               0.01 |               0.55 |               0.00 |
-
-Three-class model results in probability scale
-
 The results can also be interpreted by plotting the response
 probabilities:
 
 ``` r
 plot_prob(res_final, bw = TRUE)
 ```
-
-![Probability plot](lca_prob.png)
-
-Probability plot
 
 Note that the first class (33%) has relatively high identification with
 the ethnic indicators and relatively low identification with Belgian and

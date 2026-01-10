@@ -34,17 +34,6 @@ desc <- desc[, c("name", "mean", "median", "sd", "min", "max",
 knitr::kable(desc, caption = "Item descriptives")
 ```
 
-| name  | mean | median |  sd | min | max | skew_2se | kurt_2se |
-|:------|-----:|-------:|----:|----:|----:|---------:|---------:|
-| scl.1 |   20 |     20 | 2.4 |  17 |  38 |       15 |       40 |
-| scl.2 |   20 |     19 | 3.5 |  16 |  64 |       26 |      112 |
-| scl.3 |   20 |     20 | 3.4 |  17 |  59 |       26 |      107 |
-| scl.4 |   21 |     20 | 3.4 |  16 |  50 |       18 |       54 |
-| scl.5 |   21 |     20 | 4.1 |  16 |  64 |       25 |       93 |
-| scl.6 |   21 |     20 | 4.1 |  16 |  58 |       20 |       66 |
-
-Item descriptives
-
 Note that all variables were extremely right-skewed due to censoring at
 the lower end of the scale.
 
@@ -55,8 +44,6 @@ df_plot <- reshape(df, direction = "long", varying = names(df))
 ggplot(df_plot, aes(x = scl)) + geom_density() + facet_wrap(~time) +
     theme_bw()
 ```
-
-![](plot_dist.png)
 
 As this type of skew can result in convergence problems in LCGA, we
 compared several transformations to reduce skew: The square and cube
@@ -112,8 +99,6 @@ ggplot(df_plot, aes(x = Value, colour = Transformation)) + geom_density() +
     facet_wrap(~time) + scale_y_sqrt() + xlab("scl (rescaled to 0-1)") +
     theme_bw()
 ```
-
-![](plot_trans.png)
 
 Evidently, the Box-Cox transformation reduced skew the most.
 Consequently, we proceeded with the Box-Cox transformed scores for
@@ -214,16 +199,6 @@ tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy",
     "prob_min", "n_min", "warning", "lmr_p")]
 ```
 
-| Name | Classes |   LL | Parameters |   BIC | Entropy | prob_min | n_min |
-|-----:|--------:|-----:|-----------:|------:|--------:|---------:|------:|
-|    1 |       1 | 2593 |          9 | -5125 |    1.00 |     1.00 |  1.00 |
-|    2 |       2 | 3876 |         13 | -7662 |    0.94 |     0.97 |  0.24 |
-|    3 |       3 | 4174 |         17 | -8230 |    0.93 |     0.93 |  0.06 |
-|    4 |       4 | 4278 |         21 | -8412 |    0.89 |     0.85 |  0.04 |
-|    5 |       5 | 4315 |         25 | -8457 |    0.86 |     0.73 |  0.04 |
-
-Fit of LCGA models
-
 According to the Table, increasing the number of classes keeps
 increasing model fit according to all ICs except the BIC, which
 increased after 3 classes.
@@ -247,8 +222,6 @@ to be the most parsimonious solution with good fit.
 plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 ```
 
-![](lcga_plot_fit.png)
-
 Based on the aforementioned criteria, we selected a 3-class model for
 further analyses. First, to prevent label switching, we re-order these
 classes by the value of the intercept `i`. Then, we report the estimated
@@ -263,38 +236,6 @@ tab_res <- tab_res[tab_res$Category %in% c("Means", "Variances"),
     c("Category", "lhs", "est", "se", "pval", "confint", "name")]
 tab_res
 ```
-
-|     | Category  | lhs  |   est |   se | pval | confint          | name            |
-|:----|:----------|:-----|------:|-----:|-----:|:-----------------|:----------------|
-| 16  | Means     | i    |  0.33 | 0.00 | 0.00 | \[0.32, 0.33\]   | class1.M\[1,7\] |
-| 17  | Means     | step | -0.02 | 0.01 | 0.00 | \[-0.03, -0.01\] | class1.M\[1,8\] |
-| 18  | Means     | s    |  0.00 | 0.00 | 0.00 | \[0.00, 0.01\]   | class1.M\[1,9\] |
-| 19  | Variances | scl1 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class1.S\[1,1\] |
-| 20  | Variances | scl2 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class1.S\[2,2\] |
-| 21  | Variances | scl3 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class1.S\[3,3\] |
-| 22  | Variances | scl4 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class1.S\[4,4\] |
-| 23  | Variances | scl5 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class1.S\[5,5\] |
-| 24  | Variances | scl6 |  0.01 | 0.00 | 0.00 | \[0.01, 0.02\]   | class1.S\[6,6\] |
-| 40  | Means     | i    |  0.45 | 0.01 | 0.00 | \[0.43, 0.46\]   | class2.M\[1,7\] |
-| 41  | Means     | step |  0.03 | 0.01 | 0.00 | \[0.01, 0.05\]   | class2.M\[1,8\] |
-| 42  | Means     | s    |  0.02 | 0.00 | 0.00 | \[0.01, 0.02\]   | class2.M\[1,9\] |
-| 43  | Variances | scl1 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class2.S\[1,1\] |
-| 44  | Variances | scl2 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class2.S\[2,2\] |
-| 45  | Variances | scl3 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class2.S\[3,3\] |
-| 46  | Variances | scl4 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class2.S\[4,4\] |
-| 47  | Variances | scl5 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class2.S\[5,5\] |
-| 48  | Variances | scl6 |  0.01 | 0.00 | 0.00 | \[0.01, 0.02\]   | class2.S\[6,6\] |
-| 64  | Means     | i    |  0.60 | 0.01 | 0.00 | \[0.57, 0.63\]   | class3.M\[1,7\] |
-| 65  | Means     | step |  0.10 | 0.02 | 0.00 | \[0.07, 0.14\]   | class3.M\[1,8\] |
-| 66  | Means     | s    |  0.01 | 0.00 | 0.08 | \[-0.00, 0.02\]  | class3.M\[1,9\] |
-| 67  | Variances | scl1 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class3.S\[1,1\] |
-| 68  | Variances | scl2 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class3.S\[2,2\] |
-| 69  | Variances | scl3 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class3.S\[3,3\] |
-| 70  | Variances | scl4 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class3.S\[4,4\] |
-| 71  | Variances | scl5 |  0.01 | 0.00 | 0.00 | \[0.01, 0.01\]   | class3.S\[5,5\] |
-| 72  | Variances | scl6 |  0.01 | 0.00 | 0.00 | \[0.01, 0.02\]   | class3.S\[6,6\] |
-
-Results from 3-class LCGA model
 
 As evident from these results, Class 1 started at a relatively lower
 level of depressive symptoms, experienced a decrease after deployment,
@@ -319,13 +260,6 @@ in the model, run:
 names(coef(res_final))
 ```
 
-    #>  [1] "mix3.weights[1,2]" "mix3.weights[1,3]" "vscl1"            
-    #>  [4] "vscl2"             "vscl3"             "vscl4"            
-    #>  [7] "vscl5"             "vscl6"             "class1.M[1,7]"    
-    #> [10] "class1.M[1,8]"     "class1.M[1,9]"     "class2.M[1,7]"    
-    #> [13] "class2.M[1,8]"     "class2.M[1,9]"     "class3.M[1,7]"    
-    #> [16] "class3.M[1,8]"     "class3.M[1,9]"
-
 Next, specify equality constrained hypotheses. For example, a hypothesis
 that states that the mean intercept is equal across groups is specified
 as follows:
@@ -349,14 +283,6 @@ wald_tests$Hypothesis <- c("Mean i", "Mean step", "Mean slope")
 knitr::kable(wald_tests, digits = 2, caption = "Wald tests")
 ```
 
-| Hypothesis |  df | chisq |   p |
-|:-----------|----:|------:|----:|
-| Mean i     |   2 |   468 |   0 |
-| Mean step  |   2 |    69 |   0 |
-| Mean slope |   2 |    13 |   0 |
-
-Wald tests
-
 All Wald tests are significant, indicating that there are significant
 differences between the intercepts, step function, and slopes of the
 three classes.
@@ -378,8 +304,6 @@ p <- p + scale_y_continuous(breaks = seq(0, 1, length.out = 5),
     labels = labs) + ylab("SCL (rescaled from Box-Cox)")
 p
 ```
-
-![](plot_traj.png)
 
 Note that the observed individual trajectories show very high
 variability within classes.
