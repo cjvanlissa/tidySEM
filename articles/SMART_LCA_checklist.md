@@ -6,7 +6,7 @@ introduced in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D.
 (2023). *Recommended Practices in Latent Class Analysis using the
 Open-Source R-Package tidySEM.* Structural Equation Modeling.
 <https://doi.org/10.1080/10705511.2023.2250920>. This version of the
-checklist corresponds to the `tidySEM` R-package’s version , 0.2.10.
+checklist corresponds to the `tidySEM` R-package’s version , 0.2.11.
 
 The paper discusses the best practices on which the checklist is based
 and describes specific points to check when writing, reviewing, or

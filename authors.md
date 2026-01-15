@@ -17,12 +17,12 @@ Source:
 [`DESCRIPTION`](https://github.com/cjvanlissa/tidySEM/blob/master/DESCRIPTION)
 
 van Lissa CJ (2026). *tidySEM: Tidy Structural Equation Modeling*. R
-package version 0.2.10, <https://cjvanlissa.github.io/tidySEM/>.
+package version 0.2.11, <https://cjvanlissa.github.io/tidySEM/>.
 
     @Manual{,
       title = {tidySEM: Tidy Structural Equation Modeling},
       author = {Caspar J. {van Lissa}},
       year = {2026},
-      note = {R package version 0.2.10},
+      note = {R package version 0.2.11},
       url = {https://cjvanlissa.github.io/tidySEM/},
     }

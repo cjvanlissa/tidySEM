@@ -1,3 +1,8 @@
+# tidySEM 0.2.11
+
+- Fix bug in get_edges() and get_nodes() for multigroup lavaan models
+  with user- defined quantities (`:=`), issue \#109.
+
 # tidySEM 0.2.10
 
 - Export predict_class() instead of masking OpenMx::predict.mxModel()
