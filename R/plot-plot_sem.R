@@ -939,7 +939,9 @@ get_nodes.tidy_results <- function(x, label = paste2(name, est_sig, sep = "\n"),
     x_list <- lapply(unique(x$group), function(i){
       cl$x <- x[x$group == i, -which(names(x) == "group")]
       tmp <- eval(cl)
-      tmp$group <- i
+      if(!is.null(tmp)){
+        tmp$group <- i
+      }
       tmp
     })
     return(bind_list(x_list))
@@ -961,9 +963,11 @@ get_nodes.tidy_results <- function(x, label = paste2(name, est_sig, sep = "\n"),
     addcols <- .labeltolhsrhsop(x$label)
     x <- cbind(x, addcols[, names(addcols)[!names(addcols) %in% names(x)], drop = FALSE])
   }
+
   latent <- unique(x$lhs[x$op == "=~"])
   obs <- unique(c(x$lhs[x$op %in% c("~~", "~", "~1")], x$rhs[x$op %in% c("~")]))
   nodes <- unique(c(latent, obs))
+  if(length(nodes) < 1) return(NULL)
   nodes <- data.frame(name = unique(nodes), shape = c("rect", "oval")[(unique(nodes) %in% latent)+1], stringsAsFactors = FALSE)
   #nodes$label <- nodes$name
 
@@ -1143,7 +1147,9 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
     x_list <- lapply(na.omit(unique(x$group)), function(i){
       cl$x <- x[x$group == i, -which(names(x) == "group")]
       tmp <- eval.parent(cl)
-      tmp$group <- i
+      if(!is.null(tmp)){
+        tmp$group <- i
+      }
       tmp
     })
     return(bind_list(x_list))
@@ -1170,6 +1176,7 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...){
     names(x)[names(x) == "label"] <- "label_results"
   }
   x <- x[x$op %in% c("~", "~~", "=~"), ]
+  if(nrow(x) < 1) return(NULL)
   keep_cols <- names(x)
   x$from <- x$lhs
   x$to <- x$rhs
