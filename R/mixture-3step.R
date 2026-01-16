@@ -178,7 +178,7 @@ lr_test <- function(x, compare = c("All", "A", "S", "F", "M", "Thresholds"), ...
 #' @method print lr_test
 #' @export
 print.lr_test <- function(x, ...){
-  cat("BCH test for equality of means across classes\n\nOverall likelihood ratio test:\n")
+  cat("BCH test for equality across classes\n\nOverall likelihood ratio test:\n")
   print(x$overall, ..., row.names = FALSE)
   cat("\nPairwise comparisons using", ifelse(any(grepl("^LL", names(x$pairwise))), "likelihood ratio", "Wald chi square"), "tests:\n")
   print(x$pairwise, ..., row.names = FALSE)

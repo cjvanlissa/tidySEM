@@ -270,7 +270,7 @@ mx_lca <- function(data = NULL,
     return(out)
   } else {
     # One class model
-    thresh <- mx_threshold(vars = names(data), nThresh = sapply(data, function(x){length(levels(x))})-1L, free = TRUE, values = mx_data_quantiles(data))
+    thresh <- mx_deviances(vars = names(data), nThresh = sapply(data, function(x){length(levels(x))})-1L, free = TRUE, values = mx_data_quantiles(data))
 
 
     dots_mxmod <- names(dots)[names(dots) %in% formalArgs(OpenMx::mxModel)]
@@ -336,10 +336,6 @@ mx_mixture.character <- function(model,
   } else {
     dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
     dots_asram <- dots[dots_asram]
-    if(any(sapply(data, inherits, what = "ordered"))){
-      dots_asram[["threshold_method"]] <- "mixture"
-      dots_asram[["threshold_data"]] <- data[, which(sapply(data, inherits, what = "ordered")), drop = FALSE]
-    }
     model <- lsub(model, 1:classes)
     model <- lapply(1:length(model), function(i){
       do.call(as_ram, c(

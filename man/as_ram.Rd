@@ -2,9 +2,12 @@
 % Please edit documentation in R/openmx_functions.R
 \name{as_ram}
 \alias{as_ram}
+\alias{as_ram.data.frame}
 \title{Convert lavaan syntax to RAM specification}
 \usage{
 as_ram(x, ...)
+
+\method{as_ram}{data.frame}(x, groups = NULL, data = NULL, threshold_method = "mxThreshold", ...)
 }
 \arguments{
 \item{x}{An object for which a method exists, such as a \code{tidy_sem}
@@ -12,6 +15,16 @@ object, or character vector describing the user-specified model using
 the lavaan model syntax.}
 
 \item{...}{Parameters passed on to other functions.}
+
+\item{groups}{Character, either corresponding to the name of a column in
+\code{data}, or else a vector of group names.}
+
+\item{data}{Optional, a \code{data.frame} which is added to the model.}
+
+\item{threshold_method}{Character, one of \code{c("mxThreshold", "mx_deviances")}.
+Method used to specify thresholds for ordinal indicators. See the
+\code{mxThreshold} function in the \code{OpenMx} package, and
+\code{\link{mx_deviances}}, respectively.}
 }
 \value{
 Returns an \code{\link[OpenMx]{mxModel}}.
@@ -27,10 +40,12 @@ follows:
 \item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
 arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
 \code{\link[lavaan]{sem}} function.
-\item Convert each row of the resulting lavaan parameter table to a
-\code{\link[OpenMx]{mxPath}}.
-\item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
-an \code{OpenMx} model using RAM specification
+\item Apply the method for \code{data.frame} to the resulting lavaan parameter
+table. This uses \code{\link[OpenMx]{mxPath}} for means, regression
+coefficients, and (co)variances, and the specified \code{threshold_method} for
+thresholds.
+\item Apply \code{\link[OpenMx]{mxModel}} to the resulting list of \code{mxPath}
+and \code{mxMatrix} elements to create an \code{mxModel} using RAM specification.
 }
 }
 \examples{

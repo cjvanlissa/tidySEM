@@ -17,11 +17,29 @@ X1 | t1
 X2 | t1
 X3 | t1
 X3 | t2", data = df)
-  res <- mxTryHardOrdinal(mod)
-  tab_res <- table_results(res, columns = NULL)
+  res <- run_mx(mod)
+
+  tab_res <- table_results(res, columns = NULL, format_numeric = FALSE)
+
   expect_equal(sum(grepl("Thresholds", tab_res$label, fixed = TRUE)), 4L)
-  # Strictly increasing
-  expect_equal(sum(sign(apply(res$Thresholds$result, 2, diff))), 3)
+  # Values correct
+  expect_equivalent(tab_res$est[grepl("Thresholds", tab_res$label, fixed = TRUE)], c(0.0585213786057356, 0.108835037959035, -0.524400512831565,
+                                                                                     1.00825234765667), tolerance = .005)
+
+  # Check that both threshold methods are the same
+  mod2 <- as_ram("
+X1 | t1
+X2 | t1
+X3 | t1
+X3 | t2", data = df, threshold_method = "mx_deviances")
+  # Has deviances
+  expect_true(isFALSE(is.null(mod2[["mat_dev"]])))
+
+  res2 <- run_mx(mod2)
+  tab_res2 <- table_results(res2, columns = NULL, format_numeric = FALSE)
+  # Results same
+  tab_res$label <- gsub("model.", "", tab_res$label, fixed = TRUE)
+  expect_equivalent(tab_res$est, tab_res2$est[match(tab_res$label, tab_res2$label)], tolerance = 1e-3)
 })
 
 
@@ -30,7 +48,7 @@ test_that("lavaan threshold start values respected", {
 X1 | start(1)*t1
 X2 | start(2)*t1
 X3 | start(3)*t1
-X3 | start(4)*t2", data = df)
+X3 | start(4)*t2", data = df, threshold_method = "mx_deviances")
   expect_equal((mod$mat_ones$values %*% mod$mat_dev$values)[c(1,3, 5, 6)], 1L:4L)
 })
 

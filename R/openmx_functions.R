@@ -33,10 +33,12 @@ lsub <- function(x, replacement = NULL, pattern = "{C}", fixed = TRUE, ...){
 #'  \item Apply \code{\link[lavaan]{lavaanify}} to the \code{model}. The default
 #'  arguments to \code{\link[lavaan]{lavaanify}} correspond to those of the
 #'  \code{\link[lavaan]{sem}} function.
-#'  \item Convert each row of the resulting lavaan parameter table to a
-#'  \code{\link[OpenMx]{mxPath}}.
-#'  \item Apply \code{\link[OpenMx]{mxModel}} to the \code{mxPath}s to create
-#'  an \code{OpenMx} model using RAM specification
+#'  \item Apply the method for `data.frame` to the resulting lavaan parameter
+#'  table. This uses \code{\link[OpenMx]{mxPath}} for means, regression
+#'  coefficients, and (co)variances, and the specified `threshold_method` for
+#'  thresholds.
+#'  \item Apply \code{\link[OpenMx]{mxModel}} to the resulting list of `mxPath`
+#'  and `mxMatrix` elements to create an `mxModel` using RAM specification.
 #' }
 #' @param x An object for which a method exists, such as a \code{tidy_sem}
 #' object, or character vector describing the user-specified model using
@@ -112,8 +114,16 @@ as_ram.tidy_sem <- function(x, ...){
 }
 
 #' @method as_ram data.frame
+#' @param groups Character, either corresponding to the name of a column in
+#' `data`, or else a vector of group names.
+#' @param data Optional, a `data.frame` which is added to the model.
+#' @param threshold_method Character, one of `c("mxThreshold", "mx_deviances")`.
+#' Method used to specify thresholds for ordinal indicators. See the
+#' `mxThreshold` function in the `OpenMx` package, and
+#' \code{\link{mx_deviances}}, respectively.
+#' @rdname as_ram
 #' @export
-as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
+as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = "mxThreshold", ...){
   if(!all(c("lhs", "rhs", "op", "free", "ustart") %in% names(x))){
     stop("Not a valid lavaan parameter table.")
   }
@@ -149,16 +159,10 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
     }
   }
   dots <- list(...)
-  if("threshold_method" %in% names(dots)){
-    threshold_method <- dots[["threshold_method"]]
-    dots[["threshold_method"]] <- NULL
-  } else {
-    threshold_method <- "mx_threshold"
+  if(!threshold_method %in% c("mx_deviances", "mxThreshold")){
+    message(paste0("Argument `threshold_method` with value '", threshold_method, "' is not implemented."))
   }
-  if("threshold_data" %in% names(dots)){
-    threshold_data <- dots[["threshold_data"]]
-    dots[["threshold_data"]] <- NULL
-  }
+
   lavtab <- x
   # Parse categorical variables
   cats <- which(lavtab$op %in% c("|", "~*~"))
@@ -167,45 +171,47 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, ...){
     cattab <- lavtab[cats, , drop = FALSE]
     cattab$label[cattab$label == ""] <- NA
     lavtab <- lavtab[-cats, ]
-    #if(threshold_method == "mx_threshold"){
-      threshtab <- cattab[cattab$op == "|", , drop = FALSE]
-      catvars <- unique(threshtab$lhs)
-      num_thresholds <- sapply(catvars, function(v){length(unique(threshtab$rhs[threshtab$lhs == v]))})
-      maxthresh <- max(num_thresholds)
-      if(any(!is.na(threshtab$ustart)) & !all(!is.na(threshtab$ustart))){
-        message("User starts for categorical variable thresholds were ignored; either specify ALL thresholds by hand, or remove constraints. You can apply constraints to the `mxModel` object returned by `as_ram()`.")
-      }
-      if(all(!is.na(threshtab$ustart))){
-        tvalues <- unlist(lapply(catvars, function(v){
-          tmp <- threshtab[threshtab$lhs == v, ]
-          tmp$ustart[order(tmp$rhs)]
-          }))
-
+    threshtab <- cattab[cattab$op == "|", , drop = FALSE]
+    catvars <- unique(threshtab$lhs)
+    num_thresholds <- sapply(catvars, function(v){length(unique(threshtab$rhs[threshtab$lhs == v]))})
+    maxthresh <- max(num_thresholds)
+    # Get tvalues for all methods
+    if(any(!is.na(threshtab$ustart)) & !all(!is.na(threshtab$ustart))){
+      message("User starts for categorical variable thresholds were ignored; either specify ALL thresholds by hand, or remove constraints. You can apply constraints to the `mxModel` object returned by `as_ram()`.")
+    }
+    if(all(!is.na(threshtab$ustart))){ # All start values provided
+      tvalues <- unlist(lapply(catvars, function(v){
+        tmp <- threshtab[threshtab$lhs == v, ]
+        tmp$ustart[order(tmp$rhs)]
+      }))
+    } else {
+      if(usedata){
+        tvalues <- mx_data_quantiles(data[, catvars, drop = FALSE])
       } else {
-        if(usedata){
-          tvalues <- mx_data_quantiles(data[, catvars, drop = FALSE])
-        } else {
-          tvalues <- OpenMx::mxNormalQuantiles(nBreaks = num_thresholds)
-        }
+        tvalues <- OpenMx::mxNormalQuantiles(nBreaks = num_thresholds)
       }
-      free <- matrix(FALSE, nrow = maxthresh, ncol = length(catvars))
-      for(v in seq_along(catvars)){
-        free[1:num_thresholds[v], v] <- TRUE
-      }
-      catlist <- mx_threshold(vars = catvars, nThresh = num_thresholds, free = free, values = tvalues, labels = threshtab$label)
-
-    # } else {
-    #   thresh <- mx_thresholds(threshold_data)
-    #   catlist <- thresh
-    #     #list(
-    #     #OpenMx::mxPath(from = "one", to = names(data), free = FALSE, values = 0),
-    #     #OpenMx::mxPath(from = names(data), to = names(data), free = FALSE, values = 1, arrows = 2),
-    #
-    #   #)
-    #   # do this: c1$expectation$thresholds <- "Thresholds"
-    # }
-
-
+    }
+    # Select threshold method
+    if(threshold_method == "mx_deviances"){
+      catlist <- mx_deviances(vars = catvars, nThresh = num_thresholds, values = tvalues, labels = threshtab$label)
+    }
+    if(threshold_method == "mxThreshold"){
+      catlist <- lapply(unique(cattab$lhs), function(v){
+        vthres <- cattab[cattab$lhs == v & cattab$op == "|", ]
+        tvalues <- tryCatch(update_thresholds(vthres$ustart), error = function(e){
+          stop("Could not complete thresholds for variable '", v, "'; either specify all thresholds by hand, or remove constraints.")
+        })
+        vthres <- vthres[order(vthres$rhs), ]
+        Args <- list(
+          vars = v,
+          nThresh = nrow(vthres),
+          free = !(vthres$free == 0),
+          values = tvalues,
+          labels = vthres$label
+        )
+        do.call(OpenMx::mxThreshold, Args)
+      })
+    }
   }
   # Parse defined parameters
   defined <- NULL
