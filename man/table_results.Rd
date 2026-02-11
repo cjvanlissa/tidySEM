@@ -9,6 +9,8 @@ table_results(
   columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"),
   digits = 2,
   format_numeric = TRUE,
+  use_labels = FALSE,
+  dictionary = NULL,
   ...
 )
 }
@@ -28,6 +30,14 @@ variable for multilevel models, if available.}
 
 \item{format_numeric}{Logical, indicating whether or not to format numeric
 columns. Defaults to \code{TRUE}.}
+
+\item{use_labels}{Logical. If \code{TRUE}, replaces variable names in output
+with their labels from the dictionary (if available). Default is \code{FALSE}.}
+
+\item{dictionary}{Optional. A data.frame with 'name' and 'label' columns,
+typically obtained from a \code{tidy_sem} object via \code{model$dictionary}.
+If \code{NULL} and \code{use_labels = TRUE}, the function will attempt to
+retrieve the dictionary from an attribute of the model object.}
 
 \item{...}{Logical expressions used to filter the rows of results returned.}
 }

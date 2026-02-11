@@ -1,12 +1,23 @@
 #' @method table_results mixture_list
 #' @export
-table_results.mixture_list <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, ...)
+#' @method table_results mixture_list
+#' @export
+table_results.mixture_list <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...)
 {
-  cl <- match.call()
+  # Capture arguments explicitly to avoid scoping issues
+  args <- list(
+    columns = columns,
+    digits = digits,
+    format_numeric = format_numeric,
+    use_labels = use_labels,
+    dictionary = dictionary,
+    ...
+  )
+  
   out <- suppressWarnings(lapply(x, function(thismod){
-    cl[[1L]] <- str2lang("tidySEM::table_results")
-    cl[["x"]] <- thismod
-    tmp <- eval.parent(cl)
+    # Build argument list for table_results call
+    call_args <- c(list(x = thismod), args)
+    tmp <- do.call(tidySEM::table_results, call_args)
     tmp$model <- thismod$name
     if(!"class" %in% names(tmp) & thismod$name == "mix1"){
       tmp$class <- "class1"
@@ -17,10 +28,11 @@ table_results.mixture_list <- function (x, columns = c("label", "est_sig", "se",
   rownames(out) <- NULL
   out
 }
+
 #' @method table_results MxModel
 #' @export
 #' @importFrom stats pnorm
-table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, ...)
+table_results.MxModel <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...)
 {
   # Multigroup:
   # attr(attr(fit,"runstate")$fitfunctions$mg.fitfunction, "groups")
@@ -164,6 +176,25 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   }
 
   rownames(results) <- NULL
+  
+  # Apply labels if requested
+  if (use_labels) {
+    if (is.null(dictionary)) {
+      dictionary <- attr(x, "dictionary")
+    }
+    if (!is.null(dictionary) && "name" %in% names(dictionary) && "label" %in% names(dictionary)) {
+      if ("label" %in% names(results)) {
+        results$label <- replace_with_labels(results$label, dictionary)
+      }
+      if ("lhs" %in% names(results)) {
+        results$lhs <- replace_with_labels(results$lhs, dictionary)
+      }
+      if ("rhs" %in% names(results)) {
+        results$rhs <- replace_with_labels(results$rhs, dictionary)
+      }
+    }
+  }
+  
   class(results) <- c("tidy_results", class(results))
   return(results)
 }
@@ -279,25 +310,6 @@ has_submod <- function(x, depth = 0){
   }
 }
 
-# alg_names <- function(x, ...){
-#   if(!is.null(names(x@algebras))){
-#     out <- list(names(x@algebras))
-#   } else {
-#     out <- list()
-#   }
-#   if(tidySEM:::has_submod(x)){
-#     subs <- names(attr(x, "submodels"))
-#     fromsubs <- lapply(subs, function(thesub){alg_names(x[[thesub]])})
-#     names(fromsubs) <- subs
-#     out <- c(out, fromsubs)
-#   } else {
-#     return(out)
-#   }
-#   out <- unlist(out, use.names = TRUE)
-#   paste(names(out), out, sep = ".")
-# }
-
-# @importFrom OpenMx mxSE omxGetParameters
 get_algebras <- function(x, ...){
   if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
     return(NULL)
@@ -405,28 +417,6 @@ flat <- function(x){
   out
 }
 
-# tmp <- get_algebras(resSD)
-# alg_names <- names(unlist(tmp))
-
-# unlist_mx <- function(x){
-#   lapply(x, function(i){
-#     if(inherits(i, "list")){
-#       lapply(i, unlist_mx)
-#     } else {
-#       out <- i$result
-#       if(sum(dim(i$result)) == 2){
-#         names(out) <- i$name
-#       } else {
-#         out <- as.vector(out)
-#         names(out) <- paste0(i$name, "[",
-#                paste(rep(1:dim(i$result)[1], dim(i$result)[2]),
-#                      rep(1:dim(i$result)[2], each = dim(i$result)[1]), sep = ","), "]")
-#       }
-#       out
-#     }
-#   })
-#}
-
 unlist_mx <- function(i, element, ...){
   cl <- match.call()
   cl[[1L]] <- str2lang("tidySEM:::unlist_mx2")
@@ -434,6 +424,7 @@ unlist_mx <- function(i, element, ...){
   if(!is.null(out)) names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
   out
 }
+
 unlist_mx2 <- function(i, element, ...){
   if(inherits(i, "list")){
     out <- lapply(i, unlist_mx2, element = element, ...)
@@ -478,46 +469,6 @@ threshdims_mx <- function(i, ...){
   }
 }
 
-
-# m1 <- mxRename(mxModel(as_ram("y ~ a*m + x
-# m ~ b*y
-# ind1 := a * b", meanstructure= TRUE), mxData(df[1:75,], type = "raw")), "m1")
-# m2 <- mxRename(mxModel(as_ram("y ~ a2*m + x
-# m ~ b2*y
-# ind2 := a2 * b2", meanstructure= TRUE), mxData(df[76:150,], type = "raw")), "m2")
-# m3 <- mxModel("mg", m1, m2, mxFitFunctionMultigroup(c("m1", "m2")))
-# resMG <- mxRun(m3)
-# summary(resMG)
-# table_results(resMG)
-# resM <- mxRun(mxModel(as_ram(tmp), mxData(df, type = "raw")))
-#
-#
-# mSD <- mxRename(mxModel(as_ram("y ~ a*m + x
-# m ~ b*y", meanstructure= TRUE), mxData(df, type = "raw"), mxAlgebra(sqrt(S), name = "sd") ), "msd")
-# resSD <- mxRun(mSD)
-
-
-# get_algebras <- function(x, ...){
-#   if(!)
-#   algs <- names(x@algebras)
-#   if(!is.null(algs)){
-#     out <- lapply(algs, function(i){
-#       thisalg <- x[[i]]
-#       if(sum(dim(thisalg$result)) == 2){
-#         data.frame(name = i, row = deparse(thisalg$formula), col = i, Estimate = as.numeric(thisalg$result), Std.Error = tryCatch(as.numeric(suppressMessages(mxSE(i, x))), error = function(e){NA}))
-#       } else {
-#         return(NULL)
-#       }
-#       #tab <- as.data.frame.table(thisalg$result)
-#       #tab$name <- paste0()
-
-#     })
-#     return(bind_list(out))
-#   } else {
-#     return(NULL)
-#   }
-# }
-
 mx_to_lavaan_labels <- function(x){
   out <- x$openmx_label
   cat <- rep(NA, length(out))
@@ -543,14 +494,11 @@ mx_to_lavaan_labels <- function(x){
   cat[these] <- "Regressions"
   # thresh
   these <- which(x$matrix == "Thresholds")
-  #out[these] <- paste0("Thresholds.", x$lhs[these], ".ON.", x$rhs[these])
   cat[these] <- "Thresholds"
   these <- which(x$matrix == "weights")
-  #out[these] <- paste0("Thresholds.", x$lhs[these], ".ON.", x$rhs[these])
   cat[these] <- "Weights"
   cbind(label = out, Category = cat)
 }
-
 
 get_mx_names <- function(x, res){
   out <- rep(NA, nrow(res))
@@ -594,7 +542,6 @@ get_mx_names <- function(x, res){
   }
 }
 
-
 two_to_one <- function(tab){
   dupcol <- table(gsub("\\.[xy]", "", names(tab)))
   unicol <- names(dupcol)[dupcol != 2]
@@ -612,5 +559,4 @@ two_to_one <- function(tab){
   } else {
     return(tab)
   }
-
 }

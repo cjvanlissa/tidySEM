@@ -15,7 +15,7 @@
 # }
 #' @method table_results rma
 #' @export
-table_results.rma <-  function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results.rma <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
 
   results <- do.call(cbind, x[c("b", "se", "zval", "pval", "ci.lb", "ci.ub")])
   results <- data.frame(label = rownames(results), results)
@@ -32,6 +32,19 @@ table_results.rma <-  function(x, columns = c("label", "est_sig", "se", "pval", 
                                        format_with_na, digits = digits, format = "f")
   }
   rownames(results) <- NULL
+  
+  # Replace variable names with labels
+  if(use_labels){
+    if(is.null(dictionary)){
+      dictionary <- attr(x, "dictionary")
+    }
+    if(!is.null(dictionary)){
+      if("label" %in% names(results)){
+        results$label <- replace_with_labels(results$label, dictionary)
+      }
+    }
+  }
+  
   if(!all){
     results <- results[, c("b", "se", "zval", "pval", "ci.lb", "ci.ub")]
   } else {
@@ -78,6 +91,12 @@ report_columns <- function(x = c("label", "est_sig", "se", "pval", "confint", "g
 #' @param digits Number of digits to round to when formatting numeric columns.
 #' @param format_numeric Logical, indicating whether or not to format numeric
 #' columns. Defaults to `TRUE`.
+#' @param use_labels Logical. If \code{TRUE}, replaces variable names in output
+#'   with their labels from the dictionary (if available). Default is \code{FALSE}.
+#' @param dictionary Optional. A data.frame with 'name' and 'label' columns,
+#'   typically obtained from a \code{tidy_sem} object via \code{model$dictionary}.
+#'   If \code{NULL} and \code{use_labels = TRUE}, the function will attempt to
+#'   retrieve the dictionary from an attribute of the model object.
 #' @param ... Logical expressions used to filter the rows of results returned.
 #' @return A data.frame of formatted results.
 #' @author Caspar J. van Lissa
@@ -93,13 +112,13 @@ report_columns <- function(x = c("label", "est_sig", "se", "pval", "confint", "g
 #'            data = HolzingerSwineford1939,
 #'            group = "school")
 #' table_results(fit)
-table_results <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
   UseMethod("table_results")
 }
 
 #' @method table_results mplusObject
 #' @export
-table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
   cl <- match.call()
   cl$x <- x$results
   cl[[1L]] <- str2lang("tidySEM::table_results")
@@ -110,7 +129,7 @@ table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "
 #' @method table_results mplus.model
 #' @importFrom MplusAutomation SummaryTable
 #' @export
-table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
   Args <- list(x = x)
   cl <- match.call()
   get_res <- c("unstandardized", "stdyx.standardized")[which( c("unstandardized", "stdyx.standardized") %in% names(x$parameters))]
@@ -138,6 +157,25 @@ table_results.mplus.model <- function(x, columns = c("label", "est_sig", "se", "
   if("betweenwithin" %in% names(results)) names(results)[names(results) == "betweenwithin"] <- "level"
   # Drop id column
   results[["id"]] <- NULL
+  
+  # Replace variable names with labels
+  if(use_labels){
+    if(is.null(dictionary)){
+      dictionary <- attr(x, "dictionary")
+    }
+    if(!is.null(dictionary)){
+      if("label" %in% names(results)){
+        results$label <- replace_with_labels(results$label, dictionary)
+      }
+      if("lhs" %in% names(results)){
+        results$lhs <- replace_with_labels(results$lhs, dictionary)
+      }
+      if("rhs" %in% names(results)){
+        results$rhs <- replace_with_labels(results$rhs, dictionary)
+      }
+    }
+  }
+  
   if(!is.null(columns)){
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
@@ -517,7 +555,7 @@ lav_getParameterLabels <-
 #' @importFrom lavaan parameterEstimates lavInspect standardizedsolution partable
 #' @method table_results lavaan
 #' @export
-table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
   # Rename dictionary for consistency with mplus
   user_specified <- partable(x)
   remthese <- which(
@@ -605,6 +643,24 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   }
   results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
 
+  # Replace variable names with labels
+  if(use_labels){
+    if(is.null(dictionary)){
+      dictionary <- attr(x, "dictionary")
+    }
+    if(!is.null(dictionary)){
+      if("label" %in% names(results)){
+        results$label <- replace_with_labels(results$label, dictionary)
+      }
+      if("lhs" %in% names(results)){
+        results$lhs <- replace_with_labels(results$lhs, dictionary)
+      }
+      if("rhs" %in% names(results)){
+        results$rhs <- replace_with_labels(results$rhs, dictionary)
+      }
+    }
+  }
+
   if(!is.null(columns)){
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
   } else {
@@ -625,7 +681,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
 # @importFrom blavaan blavInspect
 #' @method table_results blavaan
 #' @export
-table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
   if(!requireNamespace("blavaan", quietly = TRUE)){
     return(NULL)
   } else {
@@ -685,6 +741,24 @@ table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval
 
     results[fixed_parameters, c("z", "se", "pval", "se_std", "pval_std")[which(c("z", "se", "pval", "se_std", "pval_std") %in% names(results))]] <- ""
 
+    # Replace variable names with labels
+    if(use_labels){
+      if(is.null(dictionary)){
+        dictionary <- attr(x, "dictionary")
+      }
+      if(!is.null(dictionary)){
+        if("label" %in% names(results)){
+          results$label <- replace_with_labels(results$label, dictionary)
+        }
+        if("lhs" %in% names(results)){
+          results$lhs <- replace_with_labels(results$lhs, dictionary)
+        }
+        if("rhs" %in% names(results)){
+          results$rhs <- replace_with_labels(results$rhs, dictionary)
+        }
+      }
+    }
+
     if(!is.null(columns)){
       results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
     } else {
@@ -706,9 +780,9 @@ table_results.blavaan <- function(x, columns = c("label", "est_sig", "se", "pval
 
 #' @method table_results character
 #' @export
-table_results.character <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
+table_results.character <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, use_labels = FALSE, dictionary = NULL, ...){
   cl <- match.call()
-  cl <- cl[-which(names(cl) %in% c("x", "columns", "digits"))]
+  cl <- cl[-which(names(cl) %in% c("x", "columns", "digits", "use_labels", "dictionary"))]
   cl[[1L]] <- str2lang("lavaan::lavaanify")
   cl[["model"]] <- x
   results <- eval.parent(cl)
@@ -731,4 +805,3 @@ format_with_na <- function(x, ...){
   out[!missings] <- eval.parent(cl)
   out
 }
-

@@ -1,9 +1,12 @@
-# tidySEM 0.2.11
+# tidySEM 0.2.11.1
 
 * as_ram() gains argument threshold_method
 * Export mx_deviances()
 * Fix bug in get_edges() and get_nodes() for multigroup lavaan models with user-
   defined quantities (`:=`), issue #109.
+* Add `use_labels` parameter to `table_results()` for lavaan and OpenMx models,
+  allowing variable names to be replaced with labels from a dictionary. 
+  Closes #56.
 
 # tidySEM 0.2.10
 

@@ -66,6 +66,7 @@ tidy_sem.character <- function(x, split = "_"){
 #' @export
 tidy_sem.data.frame <- function(x, split = "_"){
   Args <- as.list(match.call()[-1])
+  Args$data <- x  # ADD THIS LINE - pass actual data for label extraction
   Args$x <- names(x)
   out <- list(dictionary = do.call(.dict_internal, Args),
               data = x,
@@ -74,13 +75,7 @@ tidy_sem.data.frame <- function(x, split = "_"){
   out
 }
 
-
-keys <- function(x, min_items = 3){
-  UseMethod("keys")
-}
-
-
-.dict_internal <- function(x, split = "_", ...){
+.dict_internal <- function(x, split = "_", data = NULL, ...){
   split_items <- strsplit(x, split)
   num_splits <- sapply(split_items, length)
   if(any(num_splits > 2)){
@@ -98,12 +93,25 @@ keys <- function(x, min_items = 3){
   dictionary <- data.frame(name = x, do.call(rbind, split_items), stringsAsFactors = FALSE)
   names(dictionary)[c(2,3)] <- c("scale", "item")
   dictionary$type <- "observed"
-  #dictionary$type[!observed] <- "indicator"
+  
+  # Extract labels from labelled data if available
   dictionary$label <- dictionary$name
+  if (!is.null(data) && requireNamespace("labelled", quietly = TRUE)) {
+    var_labels <- labelled::var_label(data)
+    for (nm in dictionary$name) {
+      if (nm %in% names(var_labels) && !is.null(var_labels[[nm]])) {
+        dictionary$label[dictionary$name == nm] <- var_labels[[nm]]
+      }
+    }
+  }
+  
   dictionary$item <- NULL
   dictionary
 }
 
+keys <- function(x, min_items = 3){
+  UseMethod("keys")
+}
 
 #' @method keys tidy_sem
 #' @export
