@@ -168,7 +168,7 @@ res_pmc_srmr <- pmc_srmr(res_1_3)
 res_pmc_srmr
 ```
 
-    #>   comparison        null         alt  null_srsm   alt_srsm     srmr_lb
+    #>   comparison        null         alt  null_srmr   alt_srmr     srmr_lb
     #> 1    dif_seq equal var 1 equal var 2 0.46920642 0.06900679 -0.45910956
     #> 2    dif_seq equal var 2 equal var 3 0.06900679 0.05695099 -0.05869216
     #> 3    dif_one equal var 1 equal var 2 0.46920642 0.06900679 -0.45910956

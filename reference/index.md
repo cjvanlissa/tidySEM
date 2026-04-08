@@ -480,6 +480,8 @@
   : Expand abbreviated Mplus variable names
 - [`mx_data_quantiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.md)
   : Data Quantiles
+- [`mx_deviances()`](https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.md)
+  : Create Thresholds Based on Deviances
 - [`mx_dummies()`](https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.md)
   : Dummy Code Factor Variables
 - [`mx_growth_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.md)
@@ -510,6 +512,7 @@
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
 - [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc_srmr.md)
+  [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc_srmr.md)
   : Predictive Model Comparison
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
@@ -523,6 +526,8 @@
   : Run as OpenMx model with sensible defaults
 - [`skew_kurtosis()`](https://cjvanlissa.github.io/tidySEM/reference/skew_kurtosis.md)
   : Calculate skew and kurtosis
+- [`srmr()`](https://cjvanlissa.github.io/tidySEM/reference/srmr.md) :
+  Calculate Standardized Root Mean Residual
 - [`syntax()`](https://cjvanlissa.github.io/tidySEM/reference/syntax.md)
   [`` `syntax<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/syntax.md)
   : Extract syntax from tidy_sem

@@ -86,7 +86,7 @@ International Journal of Public Health, 58(4), 637-642.
 ``` r
 out <- create_scales(iris, keys.list = list(scalename =
             c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")))
-#> Warning: When computing factor loadings for scalename: The estimated weights for the factor scores are probably incorrect.  Try a different factor score estimation method.
+#> Warning: When computing factor loadings for scalename: An ultra-Heywood case was detected.  Examine the results carefully
 #> Number of categories should be increased  in order to count frequencies. 
 out$descriptives
 #>    Subscale Items      n mean   sd  min  max  skew skew_2se kurt kurt_2se

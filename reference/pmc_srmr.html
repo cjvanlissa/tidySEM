@@ -54,7 +54,9 @@ model-simulated data.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pmc_srmr</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, reps <span class="op">=</span> <span class="fl">20</span>, ci <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pmc_srmr</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, reps <span class="op">=</span> <span class="fl">20</span>, ci <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">pmc</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, reps <span class="op">=</span> <span class="fl">20</span>, ci <span class="op">=</span> <span class="fl">0.95</span>, FUN <span class="op">=</span> <span class="fu"><a href="srmr.html">srmr</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +77,11 @@ model-simulated data.</p>
 
 <dt id="arg-ci">ci<a class="anchor" aria-label="anchor" href="#arg-ci"></a></dt>
 <dd><p>Confidence interval coverage, Default: <code>0.95</code>.</p></dd>
+
+
+<dt id="arg-fun">FUN<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
+<dd><p>Function used to compare the real data (referred to as <code>x</code>) to the
+model-implied data (referred to as <code>y</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

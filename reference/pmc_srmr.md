@@ -7,6 +7,8 @@ model-simulated data.
 
 ``` r
 pmc_srmr(x, ..., reps = 20, ci = 0.95)
+
+pmc(x, ..., reps = 20, ci = 0.95, FUN = srmr(x, y))
 ```
 
 ## Arguments
@@ -26,6 +28,11 @@ pmc_srmr(x, ..., reps = 20, ci = 0.95)
 - ci:
 
   Confidence interval coverage, Default: `0.95`.
+
+- FUN:
+
+  Function used to compare the real data (referred to as `x`) to the
+  model-implied data (referred to as `y`).
 
 ## Value
 

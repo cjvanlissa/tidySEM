@@ -6,6 +6,9 @@ Converts SEM models to RAM models for `OpenMx`.
 
 ``` r
 as_ram(x, ...)
+
+# S3 method for class 'data.frame'
+as_ram(x, groups = NULL, data = NULL, threshold_method = "mxThreshold", ...)
 ```
 
 ## Arguments
@@ -19,6 +22,23 @@ as_ram(x, ...)
 - ...:
 
   Parameters passed on to other functions.
+
+- groups:
+
+  Character, either corresponding to the name of a column in `data`, or
+  else a vector of group names.
+
+- data:
+
+  Optional, a `data.frame` which is added to the model.
+
+- threshold_method:
+
+  Character, one of `c("mxThreshold", "mx_deviances")`. Method used to
+  specify thresholds for ordinal indicators. See the `mxThreshold`
+  function in the `OpenMx` package, and
+  [`mx_deviances`](https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.md),
+  respectively.
 
 ## Value
 
@@ -35,11 +55,15 @@ For models specified using lavaan syntax, the procedure is as follows:
     correspond to those of the
     [`sem`](https://rdrr.io/pkg/lavaan/man/sem.html) function.
 
-2.  Convert each row of the resulting lavaan parameter table to a
-    [`mxPath`](https://rdrr.io/pkg/OpenMx/man/mxPath.html).
+2.  Apply the method for `data.frame` to the resulting lavaan parameter
+    table. This uses
+    [`mxPath`](https://rdrr.io/pkg/OpenMx/man/mxPath.html) for means,
+    regression coefficients, and (co)variances, and the specified
+    `threshold_method` for thresholds.
 
 3.  Apply [`mxModel`](https://rdrr.io/pkg/OpenMx/man/mxModel.html) to
-    the `mxPath`s to create an `OpenMx` model using RAM specification
+    the resulting list of `mxPath` and `mxMatrix` elements to create an
+    `mxModel` using RAM specification.
 
 ## Examples
 

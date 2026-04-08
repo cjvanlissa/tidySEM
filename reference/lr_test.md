@@ -39,7 +39,7 @@ mod <- as_ram("x~1", data = df, group = "group")
 mod <- run_mx(mod)
 lr_test(mod)
 }
-#> BCH test for equality of means across classes
+#> BCH test for equality across classes
 #> 
 #> Overall likelihood ratio test:
 #>  LL_baseline LL_restricted   LL_dif df            p
