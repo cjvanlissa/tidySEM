@@ -1,0 +1,103 @@
+---
+title: "Tutorial PMC"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_pmc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  eval = TRUE,
+  comment = "#>"
+)
+```
+
+
+This tutorial requires `tidySEM` version `0.2.11` or higher and `OpenMx`. Make sure both packages are
+installed and loaded.
+
+```{r eval = TRUE}
+library(tidySEM)
+library(OpenMx)
+```
+
+## Example Data
+
+We simulate a dataset with two continuous indicators, and two latent classes.
+
+```{r eval = TRUE}
+set.seed(10)
+n <- 200
+# Set class-specific means
+class_means <- c(rep(0, floor(0.3 * n)), rep(2, ceiling(0.7 * n)))
+
+# Simulate continuous indicators
+df <- rnorm(2 * n, mean = rep(class_means, 2))
+df <- data.frame(matrix(df, nrow = n))
+names(df) <- paste0("X", 1:2)
+```
+
+Next, we estimate 1-3 class solutions:
+
+```{r eval = TRUE}
+res <- mx_profiles(data = df, classes = 1:3)
+```
+
+Optionally, one can perform the bootstrapped likelihood ratio test.
+This takes a long time to run, so we conduct only 100 replications, rather than a more sensible number like 1000.
+To accelerate computations, we can use the `future` package for parallel computing (see `?plan` to select the appropriate back-end for your system).
+
+```{r eval = FALSE, echo = TRUE}
+library(future)
+plan(multisession)
+res_blrt <- BLRT(res, replications = 100)
+res_blrt
+```
+
+This test confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
+
+Next, we use predictive model comparison. The function `pmc_srmr()` is optimized for latent profile analysis; it uses the SRMR statistic, comparing the correlation matrices of the real and model-implied data:
+
+
+```{r eval = TRUE}
+set.seed(1)
+res_srmr <- pmc_srmr(res)
+```
+
+This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
+
+In principle, we can use any statistic to compare the real and model-implied data.
+For example, if we conduct an LCA with ordinal indicators, we might want to use a chi squared test instead.
+
+First, we convert the data to ordinal. This is done purely for the sake of demonstrating the method;
+real research data should not be polytomized like this.
+Then, we estimate a model for ordinal indicators using `mx_lca()`.
+We specify a custom function that references `x` and `y`, where both are of type `data.frame`,
+and we supply it as an argument to `pmc()`:
+
+```{r eval = TRUE}
+# Convert the indicators to ordinal
+df[] <- lapply(df, cut, breaks = 3, labels = FALSE)
+df[] <- lapply(df, mxFactor, levels = 1:3)
+res_cat <- mx_lca(df, classes = 1:3)
+chisq_function <- function(x, y){
+  tab_obs <- table(x)
+  tab_sim <- table(y)
+  tab_sim[tab_sim == 0] <- NA
+  sum((tab_obs - tab_sim)^2 / tab_sim, na.rm = TRUE)
+}
+pmc(res_cat, FUN = chisq_function, reps = 20)
+```
+
+
+
+## References
+
+Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+*Recommended Practices in Latent Class Analysis using the Open-Source R-Package
+tidySEM.* Structural Equation Modeling.
+[https://doi.org/10.1080/10705511.2023.2250920](https://doi.org/10.1080/10705511.2023.2250920)

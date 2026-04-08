@@ -2,9 +2,12 @@
 % Please edit documentation in R/lazy_bootstrap.R
 \name{pmc_srmr}
 \alias{pmc_srmr}
+\alias{pmc}
 \title{Predictive Model Comparison}
 \usage{
 pmc_srmr(x, ..., reps = 20, ci = 0.95)
+
+pmc(x, ..., reps = 20, ci = 0.95, FUN = srmr(x, y))
 }
 \arguments{
 \item{x}{An object for which a method exists.}
@@ -14,6 +17,9 @@ pmc_srmr(x, ..., reps = 20, ci = 0.95)
 \item{reps}{Number of data sets to simulate, Default: \code{100}.}
 
 \item{ci}{Confidence interval coverage, Default: \code{0.95}.}
+
+\item{FUN}{Function used to compare the real data (referred to as \code{x}) to the
+model-implied data (referred to as \code{y}).}
 }
 \value{
 A \code{data.frame}.

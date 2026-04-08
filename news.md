@@ -1,5 +1,8 @@
 # tidySEM 0.2.11
 
+* Fix bug in pmc_srmr()
+* Add pmc() function
+* Add srmr() function
 * as_ram() gains argument threshold_method
 * Export mx_deviances()
 * Fix bug in get_edges() and get_nodes() for multigroup lavaan models with user-
