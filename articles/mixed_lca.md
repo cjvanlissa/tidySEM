@@ -100,6 +100,8 @@ res_1_3 <- mx_mixed_lca(
 )
 ```
 
+    #> Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=2237.09546071368, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=2230.08267535054, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267393529, new current best! (was 2230.08267535054)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493314156, worse than previous best (2230.08267393529)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 
+
 The result is a list of OpenMx models, one for each class solution.
 
 ### Class Enumeration
@@ -117,11 +119,11 @@ table_fit(res_1_3)
     #>     Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy
     #> 1  equal       1 -1250.528 200          8 2517.055 2543.442 2518.097 1.0000000
     #> 2 equal1       2 -1118.542 200         14 2265.083 2311.260 2266.906 0.9304968
-    #> 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447551
+    #> 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447552
     #>    prob_min  prob_max n_min n_max np_ratio  np_local
     #> 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.000000
     #> 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.076923
-    #> 3 0.9386326 0.9976012 0.075 0.630 10.00000  2.500000
+    #> 3 0.9386331 0.9976012 0.075 0.630 10.00000  2.500000
 
 As expected, the BIC for the 2-class solution is lowest. Note that the
 3-class solution also has an extremely low ratio of cases to parameters,
@@ -149,8 +151,8 @@ res_blrt
     #> Bootstrapped Likelihood Ratio Test:
     #> 
     #>         null         alt  lr df blrt_p samples
-    #>  equal var 1 equal var 2 264  6   0.00      42
-    #>  equal var 2 equal var 3   7  6   0.32      17
+    #>  equal var 1 equal var 2 264  6   0.00      43
+    #>  equal var 2 equal var 3   7  6   0.31      11
 
 This test, too, confirms that the 2-class solution is significantly
 better than the 1-class solution - but the 3-class solution offers no
@@ -164,18 +166,18 @@ conceptually similar to Bayesian posterior predictive checks.
 
 ``` r
 set.seed(1)
-res_pmc_srmr <- pmc_srmr(res_1_3)
-res_pmc_srmr
+res_pmc <- pmc(res_1_3)
+res_pmc
 ```
 
-    #>   comparison        null         alt  null_srmr   alt_srmr     srmr_lb
+    #>   comparison        null         alt  null_stat   alt_stat          lb
     #> 1    dif_seq equal var 1 equal var 2 0.46920642 0.06900679 -0.45910956
     #> 2    dif_seq equal var 2 equal var 3 0.06900679 0.05695099 -0.05869216
     #> 3    dif_one equal var 1 equal var 2 0.46920642 0.06900679 -0.45910956
     #> 4    dif_one equal var 1 equal var 3 0.46920642 0.05695099 -0.47293413
-    #>       srmr_ub sig
+    #>            ub sig
     #> 1 -0.32814646   *
-    #> 2  0.03553646    
+    #> 2  0.03553645    
     #> 3 -0.32814646   *
     #> 4 -0.35111805   *
 
@@ -218,12 +220,12 @@ This is confirmed by checking:
 table_fit(res_1_3[[2]])
 ```
 
-    #>   Minus2LogLikelihood   n Parameters observedStatistics   df TLI RMSEA
-    #> 1            2237.083 200         14               1600 1586   1     0
-    #>   RMSEASquared RMSEANull   modelName      AIC     BIC    saBIC Classes
-    #> 1            0      0.05 equal var 2 2265.083 2311.26 2266.906       2
-    #>     Entropy  prob_min  prob_max n_min n_max        LL
-    #> 1 0.9304968 0.9606636 0.9942737 0.295 0.705 -1118.542
+    #>   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared
+    #> 1            2237.083 200         14                800 786            0
+    #>   RMSEANull   modelName      AIC     BIC    saBIC Classes   Entropy  prob_min
+    #> 1      0.05 equal var 2 2265.083 2311.26 2266.906       2 0.9304968 0.9606636
+    #>    prob_max n_min n_max        LL
+    #> 1 0.9942737 0.295 0.705 -1118.542
 
 We have a high minimal- and maximal posterior classification
 probability, and a high entropy.
@@ -251,7 +253,7 @@ table_results(res_1_3[[2]])
     #> 12                 Means.X3    -0.00     0.07 0.98         [-0.15, 0.14] class2
     #> 13             Variances.X4     1.00       NA   NA                  <NA> class2
     #> 14   class2.Thresholds[1,1]  0.65***     0.18 0.00          [0.29, 1.01] class2
-    #> 15   class2.Thresholds[2,1]     7.11 35680.19 1.00 [-69924.78, 69939.01] class2
+    #> 15   class2.Thresholds[2,1]     7.11 35652.78 1.00 [-69871.05, 69885.28] class2
     #> 16 equal var 2.weights[1,1]     1.00       NA   NA                  <NA>   <NA>
     #> 17 equal var 2.weights[1,2]  0.43***     0.07 0.00          [0.30, 0.57]   <NA>
 
@@ -303,9 +305,9 @@ table_fit(compare)
     #>         Name Classes        LL   n Parameters      AIC      BIC    saBIC
     #> 1 fixed_covs       2 -1118.542 200         14 2265.083 2311.260 2266.906
     #> 2  free_covs       2 -1117.967 200         17 2269.935 2326.006 2272.148
-    #>     Entropy  prob_min  prob_max n_min n_max np_ratio np_local
-    #> 1 0.9304968 0.9606636 0.9942737 0.295 0.705 14.28571 9.076923
-    #> 2 0.9353582 0.9680273 0.9931100 0.295 0.705 11.76471 7.375000
+    #>     Entropy  prob_min  prob_max n_min n_max warning np_ratio np_local
+    #> 1 0.9304968 0.9606636 0.9942737 0.295 0.705      NA 14.28571 9.076923
+    #> 2 0.9353582 0.9680273 0.9931100 0.295 0.705    TRUE 11.76471 7.375000
 
 Note that the BIC of the model with free covariances is higher than that
 of the model with fixed variances, so it fits worse. This is as
@@ -320,6 +322,10 @@ indicators, and could lead to errors.
 Thus, for example, we can use a profile plot for the continuous
 indicators:
 
+![](mixed_lca_files/figure-html/unnamed-chunk-32-1.png)
+
+    #> Warning: Using shapes for an ordinal variable is not advised
+
 ``` r
 plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
@@ -327,6 +333,8 @@ plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ![](mixed_lca_profiles.png)
 
 Alternatively, we can use a bivariate plot with densities:
+
+![](mixed_lca_files/figure-html/unnamed-chunk-35-1.png)
 
 ``` r
 plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
