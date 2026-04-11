@@ -1,7 +1,6 @@
 # tidySEM 0.2.11
 
-* Fix bug in pmc_srmr()
-* Add pmc() function
+* pmc() deprecates pmc_srmr() function
 * Add srmr() function
 * as_ram() gains argument threshold_method
 * Export mx_deviances()

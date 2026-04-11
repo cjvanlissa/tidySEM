@@ -7,7 +7,7 @@
 \usage{
 pmc_srmr(x, ..., reps = 20, ci = 0.95)
 
-pmc(x, ..., reps = 20, ci = 0.95, FUN = srmr(x, y))
+pmc(x, ..., reps = 20, ci = 0.95, FUN = NULL)
 }
 \arguments{
 \item{x}{An object for which a method exists.}
@@ -19,7 +19,9 @@ pmc(x, ..., reps = 20, ci = 0.95, FUN = srmr(x, y))
 \item{ci}{Confidence interval coverage, Default: \code{0.95}.}
 
 \item{FUN}{Function used to compare the real data (referred to as \code{x}) to the
-model-implied data (referred to as \code{y}).}
+model-implied data (referred to as \code{y}). Defaults to \code{NULL}, which uses
+\code{\link[=chi_sq]{chi_sq()}} for models with all ordinal variables, and
+\code{\link[=srmr]{srmr()}} otherwise, treating all variables as continuous.}
 }
 \value{
 A \code{data.frame}.
