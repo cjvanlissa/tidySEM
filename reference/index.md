@@ -18,6 +18,8 @@
   : Convert tidy_sem to 'Mplus' syntax
 - [`as_ram()`](https://cjvanlissa.github.io/tidySEM/reference/as_ram.md)
   : Convert lavaan syntax to RAM specification
+- [`chi_sq()`](https://cjvanlissa.github.io/tidySEM/reference/chi_sq.md)
+  : Calculate Chi Square Statistic
 - [`class_prob()`](https://cjvanlissa.github.io/tidySEM/reference/class_prob.md)
   : Obtain latent class probabilities
 - [`conf_int()`](https://cjvanlissa.github.io/tidySEM/reference/conf_int.md)
@@ -511,9 +513,9 @@
   : Plot categorical variable probabilities
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
-- [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc_srmr.md)
-  [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc_srmr.md)
-  : Predictive Model Comparison
+- [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
+  [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md) :
+  Predictive Model Comparison
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
 - [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
