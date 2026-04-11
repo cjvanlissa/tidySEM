@@ -60,21 +60,19 @@ res_blrt
 
 This test confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
 
-Next, we use predictive model comparison. The function `pmc_srmr()` is optimized for latent profile analysis; it uses the SRMR statistic, comparing the correlation matrices of the real and model-implied data:
-
+Next, we use predictive model comparison. If all variables are continuous,
+the function `pmc()` uses the `srmr()` function to compare the standardized root mean squared (SRMR) difference between the correlation matrices of the real and model-implied data:
 
 ```{r eval = TRUE}
 set.seed(1)
-res_srmr <- pmc_srmr(res)
+res_pmc <- pmc(res)
 ```
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
 
-In principle, we can use any statistic to compare the real and model-implied data.
-For example, if we conduct an LCA with ordinal indicators, we might want to use a chi squared test instead.
-
-First, we convert the data to ordinal. This is done purely for the sake of demonstrating the method;
-real research data should not be polytomized like this.
+If we conduct an LCA with ordinal indicators, the function uses a chi squared statistic instead of SRMR.
+To demonstrate this, first, we convert the data to ordinal.
+Note that real research data should not be polytomized like this.
 Then, we estimate a model for ordinal indicators using `mx_lca()`.
 We specify a custom function that references `x` and `y`, where both are of type `data.frame`,
 and we supply it as an argument to `pmc()`:
@@ -90,10 +88,10 @@ chisq_function <- function(x, y){
   tab_sim[tab_sim == 0] <- NA
   sum((tab_obs - tab_sim)^2 / tab_sim, na.rm = TRUE)
 }
-pmc(res_cat, FUN = chisq_function, reps = 20)
+pmc(res_cat, reps = 20)
 ```
 
-
+The argument `FUN` allows users to override these defaults, and specify any custom function to compare the observed data (`x`) and model-implied data (`y`).
 
 ## References
 

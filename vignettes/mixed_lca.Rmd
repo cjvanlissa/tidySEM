@@ -20,7 +20,7 @@ show_plots <- FALSE
 if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
   show_plots <- TRUE
 }
-run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+run_everything = TRUE
 ```
 
 Latent class analysis for categorical indicators (LCA) and latent profile analysis for continuous indicators (LPA) are widely used
@@ -195,17 +195,17 @@ A third option is to use a predictive model comparison, a method conceptually si
 
 ```{r eval = run_everything, echo = FALSE}
 set.seed(1)
-res_pmc_srmr <- pmc_srmr(res_1_3)
-write.csv(res_pmc_srmr, "mixed_lca_res_pmc_srmr.csv", row.names = F)
+res_pmc <- pmc(res_1_3)
+write.csv(res_pmc, "mixed_lca_res_pmc.csv", row.names = F)
 ```
 ```{r echo = TRUE, eval = FALSE}
 set.seed(1)
-res_pmc_srmr <- pmc_srmr(res_1_3)
-res_pmc_srmr
+res_pmc <- pmc(res_1_3)
+res_pmc
 ```
 ```{r echo = FALSE}
-res_pmc_srmr <- read.csv("mixed_lca_res_pmc_srmr.csv", stringsAsFactors = F)
-res_pmc_srmr
+res_pmc <- read.csv("mixed_lca_res_pmc.csv", stringsAsFactors = F)
+res_pmc
 ```
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
