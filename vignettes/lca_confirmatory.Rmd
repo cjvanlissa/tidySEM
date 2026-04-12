@@ -261,7 +261,7 @@ handlers("progress") # Progress bar
 set.seed(1)
 res_blrt <- BLRT(res, replications = 100)
 ```
-```{r eval = run_everything, echo = FALSE}
+```{r eval = FALSE, echo = FALSE}
 library(future)
 library(progressr)
 plan(multisession) # Parallel processing for Windows

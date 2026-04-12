@@ -9,10 +9,11 @@ articles:
   lca_ordinal: lca_ordinal.html
   mixed_lca: mixed_lca.html
   Plotting_graphs: Plotting_graphs.html
+  pmc_tutorial: pmc_tutorial.html
   sem_graph: sem_graph.html
   SMART_LCA_checklist: SMART_LCA_checklist.html
   Tabulating_results: Tabulating_results.html
-last_built: 2026-01-10T09:45Z
+last_built: 2026-04-12T07:24Z
 urls:
   reference: https://cjvanlissa.github.io/tidySEM/reference
   article: https://cjvanlissa.github.io/tidySEM/articles

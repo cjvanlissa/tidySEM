@@ -18,8 +18,8 @@ chi_sq(x, y)
 }
 \description{
 Given two datasets with ordinal variables,
-computes the lambda statistic, which is the chi-square statistic minus the
-degrees of freedom.
+computes the chi squared statistic. To obtain the lambda statistic as used in
+\code{\link[=pmc]{pmc()}}, subtract the degrees of freedom.
 }
 \examples{
 \dontrun{

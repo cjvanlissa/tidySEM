@@ -20,7 +20,7 @@ show_plots <- FALSE
 if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
   show_plots <- TRUE
 }
-run_everything = TRUE
+run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
 ```
 
 Latent class analysis for categorical indicators (LCA) and latent profile analysis for continuous indicators (LPA) are widely used
@@ -169,7 +169,7 @@ set.seed(1)
 res_blrt <- BLRT(res_1_3, replications = 100)
 res_blrt
 ```
-```{r eval = run_everything, echo = FALSE, warning=FALSE}
+```{r eval = FALSE, echo = FALSE, warning=FALSE}
 library(future)
 library(progressr)
 plan(multisession) # Parallel processing for Windows

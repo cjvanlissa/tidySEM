@@ -1,0 +1,140 @@
+---
+title: "Tutorial PMC"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tutorial_pmc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+
+run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  eval = run_everything,
+  comment = "#>"
+)
+```
+
+
+This tutorial requires `tidySEM` version `0.2.11` or higher and `OpenMx`. Make sure both packages are
+installed and loaded.
+
+```{r }
+library(tidySEM)
+library(OpenMx)
+```
+
+## Example Data
+
+We simulate a dataset with two continuous indicators, and two latent classes.
+
+```{r}
+set.seed(10)
+n <- 200
+# Set class-specific means
+class_means <- c(rep(0, floor(0.3 * n)), rep(2, ceiling(0.7 * n)))
+
+# Simulate continuous indicators
+df <- rnorm(2 * n, mean = rep(class_means, 2))
+df <- data.frame(matrix(df, nrow = n))
+names(df) <- paste0("X", 1:2)
+```
+
+Next, we estimate 1-3 class solutions:
+
+```{r}
+res <- mx_profiles(data = df, classes = 1:3)
+```
+
+Optionally, one can perform the bootstrapped likelihood ratio test.
+This takes a long time to run, so we conduct only 100 replications, rather than a more sensible number like 1000.
+To accelerate computations, we can use the `future` package for parallel computing (see `?plan` to select the appropriate back-end for your system).
+
+```{r eval = FALSE}
+library(future)
+plan(multisession)
+res_blrt <- BLRT(res, replications = 100)
+res_blrt
+```
+```{r eval = run_everything, echo = FALSE}
+library(future)
+plan(multisession)
+res_blrt <- BLRT(res, replications = 100)
+write.csv(res_blrt, "pmc_res_blrt.csv", row.names = FALSE)
+```
+```{r eval = TRUE, echo=FALSE}
+res_blrt <- read.csv("pmc_res_blrt.csv", stringsAsFactors = FALSE)
+class(res_blrt) <- c("LRT", "data.frame")
+attr(res_blrt, "type") <- "Bootstrapped"
+res_blrt
+```
+
+This test confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
+
+Next, we use predictive model comparison. If all variables are continuous,
+the function `pmc()` uses the `srmr()` function to compare the standardized root mean squared (SRMR) difference between the correlation matrices of the real and model-implied data:
+
+```{r eval = FALSE}
+set.seed(1)
+res_pmc <- pmc(res)
+```
+```{r eval = run_everything, echo = FALSE}
+set.seed(1)
+res_pmc <- pmc(res)
+write.csv(res_pmc, "pmc_res_pmc.csv", row.names = FALSE)
+```
+```{r eval = TRUE, echo=FALSE}
+res_pmc <- read.csv("pmc_res_pmc.csv", stringsAsFactors = FALSE)
+class(res_pmc) <- c("pmc_df", "data.frame")
+attr(res_pmc, "stat") <- "SRMR"
+res_pmc
+```
+
+This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
+
+If we conduct an LCA with ordinal indicators, the function uses a chi squared statistic instead of SRMR.
+To demonstrate this, first, we convert the data to ordinal.
+Note that real research data should not be polytomized like this.
+Then, we estimate a model for ordinal indicators using `mx_lca()`.
+We specify a custom function that references `x` and `y`, where both are of type `data.frame`,
+and we supply it as an argument to `pmc()`:
+
+```{r eval = FALSE}
+# Convert the indicators to ordinal
+df[] <- lapply(df, cut, breaks = 3, labels = FALSE)
+df[] <- lapply(df, mxFactor, levels = 1:3)
+res_cat <- mx_lca(df, classes = 1:3)
+pmc(res_cat, reps = 20)
+```
+```{r eval = run_everything, echo = FALSE}
+df[] <- lapply(df, cut, breaks = 3, labels = FALSE)
+df[] <- lapply(df, mxFactor, levels = 1:3)
+res_cat <- mx_lca(df, classes = 1:3)
+chisq_function <- function(x, y){
+  tab_obs <- table(x)
+  tab_sim <- table(y)
+  tab_sim[tab_sim == 0] <- NA
+  sum((tab_obs - tab_sim)^2 / tab_sim, na.rm = TRUE)
+}
+res_pmc <- pmc(res_cat, reps = 20)
+write.csv(res_pmc, "pmc_res_chi2.csv", row.names = FALSE)
+```
+```{r eval = TRUE, echo=FALSE}
+res_pmc <- read.csv("pmc_res_chi2.csv", stringsAsFactors = FALSE)
+class(res_pmc) <- c("pmc_df", "data.frame")
+attr(res_pmc, "stat") <- "chi squared"
+res_pmc
+```
+
+The argument `FUN` allows users to override these defaults, and specify any custom function to compare the observed data (`x`) and model-implied data (`y`).
+
+## References
+
+Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
+*Recommended Practices in Latent Class Analysis using the Open-Source R-Package
+tidySEM.* Structural Equation Modeling.
+[https://doi.org/10.1080/10705511.2023.2250920](https://doi.org/10.1080/10705511.2023.2250920)
