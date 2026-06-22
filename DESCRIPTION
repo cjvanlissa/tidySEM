@@ -1,7 +1,7 @@
 Package: tidySEM
 Type: Package
 Title: Tidy Structural Equation Modeling
-Version: 0.2.11
+Version: 0.2.11.1
 Authors@R: 
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",
@@ -49,6 +49,7 @@ Imports:
     nonnest2 (>= 0.5.6)
 Suggests: 
     testthat,
+    labelled,
     knitr,
     dplyr,
     stringr,

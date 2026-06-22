@@ -205,3 +205,32 @@ imp_fun <- function(x){
 fun_from_pack <- function(x){
   eval(parse(text=x))
 }
+
+#' Replace variable names with labels from dictionary
+#'
+#' @param x Character vector containing variable names
+#' @param dictionary A data.frame with 'name' and 'label' columns
+#' @return Character vector with names replaced by labels
+#' @keywords internal
+#' @export
+replace_with_labels <- function(x, dictionary) {
+  if (is.null(dictionary) || !all(c("name", "label") %in% names(dictionary))) {
+    return(x)
+  }
+  
+  label_map <- setNames(dictionary$label, dictionary$name)
+  label_map <- label_map[!is.na(label_map) & label_map != ""]
+  
+  if (length(label_map) == 0) return(x)
+  
+  # Sort by name length (descending) to avoid partial replacements
+  # e.g., "x10" should be replaced before "x1"
+  label_map <- label_map[order(nchar(names(label_map)), decreasing = TRUE)]
+  
+  for (nm in names(label_map)) {
+    # Use word boundaries to avoid partial matches
+    x <- gsub(paste0("(?<![A-Za-z0-9_])", nm, "(?![A-Za-z0-9_])"),
+              label_map[nm], x, perl = TRUE)
+  }
+  x
+}
