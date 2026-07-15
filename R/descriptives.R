@@ -243,7 +243,7 @@ skew_kurtosis.numeric <-
 #' @method skew_kurtosis default
 #' @export
 skew_kurtosis.default <-
-  function(x, verbose = FALSE, se = FALSE, ...) {
+  function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
     out <- rep(NA, 7)
     names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se",
                   "kurt_2se")
