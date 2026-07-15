@@ -165,85 +165,96 @@ var_cat <- function(x) {
 #' skew_kurtosis(datasets::anscombe)
 #' @rdname skew_kurtosis
 #' @export
-skew_kurtosis <- function(x, verbose = FALSE, se = FALSE, ...) {
+skew_kurtosis <- function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
   UseMethod("skew_kurtosis", x)
-}
-
-#' @method skew_kurtosis matrix
-#' @export
-skew_kurtosis.matrix <-
-  function(x, verbose = FALSE, se = FALSE, ...) {
-    Args <- as.list(match.call()[-1])
-    Args$x <- data.frame(x)
-    do.call(skew_kurtosis, Args)
 }
 
 #' @method skew_kurtosis data.frame
 #' @export
 skew_kurtosis.data.frame <-
-  function(x, verbose = FALSE, se = FALSE, ...) {
-    t(sapply(x, skew_kurtosis))
+  function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
+    t(sapply(x, skew_kurtosis, verbose = verbose, se = se, pearson = pearson, corrected = corrected, ...))
   }
 
 #' @method skew_kurtosis matrix
 #' @export
 skew_kurtosis.matrix <-
-  function(x, verbose = FALSE, se = FALSE, ...) {
-    t(apply(x, 2, skew_kurtosis))
+  function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
+    t(sapply(x, 2, skew_kurtosis, verbose = verbose, se = se, pearson = pearson, corrected = corrected, ...))
   }
 
 #' @method skew_kurtosis numeric
 #' @export
 skew_kurtosis.numeric <-
-  function(x, verbose = FALSE, se = FALSE, ...) {
-    x <- x[!is.na(x)]
-    n <- length(x)
-    out <- tryCatch({
-      if (n > 3) {
-        if (n > 5000 &
-            verbose)
-          message("Sample size > 5000; skew and kurtosis will likely be significant.")
-        skew <- (sum((x - mean(x))^3)/n)/(sum((x - mean(x))^2)/n)^(3/2)
-        skew_se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3)))
-        skew_2se <- skew / (2 * skew_se)
-        kurt <- n * (sum((x - mean(x)) ^ 4) / (sum((x - mean(x))^2)^2))
-        kurt_se <- sqrt(24 * n * ((n - 1) ^ 2) / (n - 3) / (n - 2) / (n + 3) /
-                          (n + 5))
-
-        kurt_2se <- kurt / (2 * kurt_se)
-        c(skew,
-          skew_se,
-          skew_2se,
-          kurt,
-          kurt_se,
-          kurt_2se
-        )
-      } else {
-        stop()
+  function (x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) 
+{
+  x <- x[!is.na(x)]
+  n <- length(x)
+  out <- tryCatch({
+    if (n > 3) {
+      if (n > 5000 & verbose) 
+        message("Sample size > 5000; skew and kurtosis will likely be significant.")
+      skew <- (sum((x - mean(x))^3)/n)/(sum((x - mean(x))^2)/n)^(3/2)
+      skew_se <- sqrt((6 * (n - 2)) / ((n + 1) * (n + 3)))
+      skew_2se <- skew/(2 * skew_se)
+      if (corrected) {
+        skew <- sqrt(n * (n - 1)) / (n - 2) * skew
+        skew_se <- sqrt(skew_se^2 * (n * (n - 1) / (n - 2)^2))
+        print(sqrt((6 * n * (n - 1))/((n - 2) * (n + 1) * (n + 3))))
+        skew_2se <- skew/(2 * skew_se)
       }
-    }, error = function(e){ rep(NA, 6) })
-
-    names(out) <-
-      c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
-    if (se) {
-      return(out)
-    } else {
-      return(out[c(1, 3, 4, 6)])
+      
+      kurt_pearson <- n * (sum((x - mean(x))^4)/(sum((x - mean(x))^2)^2))
+      kurt_excess <- kurt_pearson - 3
+      kurt_se <- sqrt((24 * n * (n - 2) * (n - 3)) / (((n + 1)^2) * (n + 3) * (n + 5)))
+      kurt_2se <- kurt_excess/(2 * kurt_se)
+      if (corrected) {
+        kurt_excess <- ((n - 1) / ((n - 2) * (n - 3))) * ((n + 1) * kurt_excess + 6)
+        kurt_pearson <- kurt_excess + 3
+        kurt_se <- sqrt(kurt_se^2 * (((n - 1) * (n + 1)) / ((n - 2) * (n - 3)))^2)
+        kurt_2se <- kurt_excess/(2 * kurt_se)
+      }
+      c(skew, skew_se, skew_2se, kurt_pearson, kurt_excess, kurt_se, kurt_2se)
     }
+    else {
+      stop()
+    }
+  }, error = function(e) {
+    rep(NA, 7)
+  })
+  names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se", 
+                  "kurt_2se")
+  if (!se) {
+    keep <- c("skew", "skew_2se", "kurt_excess", "kurt_2se")
+  } else {
+    keep <- c("skew", "skew_se", "skew_2se",
+              "kurt_excess", "kurt_se", "kurt_2se")
   }
+  if (pearson) {
+    keep <- append(keep, "kurt_pearson", after = ifelse(se, 3, 2))
+  }
+  
+  return(out[keep])
+}
 
 #' @method skew_kurtosis default
 #' @export
 skew_kurtosis.default <-
   function(x, verbose = FALSE, se = FALSE, ...) {
-    out <- rep(NA, 6)
-    names(out) <-
-      c("skew", "skew_se", "skew_2se", "kurt", "kurt_se", "kurt_2se")
-    if (se) {
-      return(out)
-    } else {
-      return(out[c(1, 3, 4, 6)])
-    }
+    out <- rep(NA, 7)
+    names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se", 
+                  "kurt_2se")
+  if (!se) {
+    keep <- c("skew", "skew_2se", "kurt_excess", "kurt_2se")
+  } else {
+    keep <- c("skew", "skew_se", "skew_2se",
+              "kurt_excess", "kurt_se", "kurt_2se")
+  }
+  if (pearson) {
+    keep <- append(keep, "kurt_pearson", after = ifelse(se, 3, 2))
+  }
+  
+  return(out[keep])
   }
 
 
