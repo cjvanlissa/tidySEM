@@ -190,13 +190,13 @@ skew_kurtosis.matrix <-
 #' @method skew_kurtosis numeric
 #' @export
 skew_kurtosis.numeric <-
-  function (x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) 
+  function (x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...)
 {
   x <- x[!is.na(x)]
   n <- length(x)
   out <- tryCatch({
     if (n > 3) {
-      if (n > 5000 & verbose) 
+      if (n > 5000 & verbose)
         message("Sample size > 5000; skew and kurtosis will likely be significant.")
       skew <- (sum((x - mean(x))^3)/n)/(sum((x - mean(x))^2)/n)^(3/2)
       skew_se <- sqrt((6 * (n - 2)) / ((n + 1) * (n + 3)))
@@ -204,10 +204,9 @@ skew_kurtosis.numeric <-
       if (corrected) {
         skew <- sqrt(n * (n - 1)) / (n - 2) * skew
         skew_se <- sqrt(skew_se^2 * (n * (n - 1) / (n - 2)^2))
-        print(sqrt((6 * n * (n - 1))/((n - 2) * (n + 1) * (n + 3))))
         skew_2se <- skew/(2 * skew_se)
       }
-      
+
       kurt_pearson <- n * (sum((x - mean(x))^4)/(sum((x - mean(x))^2)^2))
       kurt_excess <- kurt_pearson - 3
       kurt_se <- sqrt((24 * n * (n - 2) * (n - 3)) / (((n + 1)^2) * (n + 3) * (n + 5)))
@@ -226,7 +225,7 @@ skew_kurtosis.numeric <-
   }, error = function(e) {
     rep(NA, 7)
   })
-  names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se", 
+  names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se",
                   "kurt_2se")
   if (!se) {
     keep <- c("skew", "skew_2se", "kurt_excess", "kurt_2se")
@@ -237,7 +236,7 @@ skew_kurtosis.numeric <-
   if (pearson) {
     keep <- append(keep, "kurt_pearson", after = ifelse(se, 3, 2))
   }
-  
+
   return(out[keep])
 }
 
@@ -246,7 +245,7 @@ skew_kurtosis.numeric <-
 skew_kurtosis.default <-
   function(x, verbose = FALSE, se = FALSE, ...) {
     out <- rep(NA, 7)
-    names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se", 
+    names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se",
                   "kurt_2se")
   if (!se) {
     keep <- c("skew", "skew_2se", "kurt_excess", "kurt_2se")
@@ -257,7 +256,7 @@ skew_kurtosis.default <-
   if (pearson) {
     keep <- append(keep, "kurt_pearson", after = ifelse(se, 3, 2))
   }
-  
+
   return(out[keep])
   }
 
