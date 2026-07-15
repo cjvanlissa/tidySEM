@@ -158,12 +158,16 @@ var_cat <- function(x) {
 #' @param x An object for which a method exists.
 #' @param verbose Logical. Whether or not to print messages to the console,
 #' Default: FALSE
-#' @param se Whether or not to return the standard errors, Default: FALSE
+#' @param se Logical. Whether or not to return the standard errors, Default: FALSE
+#' @param pearson Logical. Whether or not to return the Pearson's kurtosis alongside excess kurtosis, Default: FALSE
+#' @param corrected Logical. Whether or not to correct for bias in skew and kurtosis (Joanes & Gill, 1998). Corrects both the estimates and their standard errors. Default: TRUE
 #' @param ... Additional arguments to pass to and from functions.
 #' @return A \code{matrix} of skew and kurtosis statistics for \code{x}.
 #' @examples
 #' skew_kurtosis(datasets::anscombe)
 #' @rdname skew_kurtosis
+#' @references
+#' Joanes, D. N. & Gill, C. A. (1998). Comparing measures of sample skewness and kurtosis. \emph{Journal Of The Royal Statistical Society: Series D (The Statistician)}, \emph{47}(1), 183–189. \url{https://doi.org/10.1111/1467-9884.00122}
 #' @export
 skew_kurtosis <- function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
   UseMethod("skew_kurtosis", x)
