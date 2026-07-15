@@ -184,7 +184,7 @@ skew_kurtosis.data.frame <-
 #' @export
 skew_kurtosis.matrix <-
   function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
-    t(sapply(x, 2, skew_kurtosis, verbose = verbose, se = se, pearson = pearson, corrected = corrected, ...))
+    t(apply(x, 2, skew_kurtosis, verbose = verbose, se = se, pearson = pearson, corrected = corrected, ...))
   }
 
 #' @method skew_kurtosis numeric
