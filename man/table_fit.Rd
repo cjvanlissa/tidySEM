@@ -29,11 +29,11 @@ fit <- cfa(HS.model,
 table_fit(fit)
 }
 \seealso{
-Other Reporting tools: 
-\code{\link{conf_int}()},
-\code{\link{est_sig}()},
-\code{\link{table_prob}()},
-\code{\link{table_results}()}
+Other Reporting tools:
+\code{\link[=conf_int]{conf_int()}},
+\code{\link[=est_sig]{est_sig()}},
+\code{\link[=table_prob]{table_prob()}},
+\code{\link[=table_results]{table_results()}}
 }
 \author{
 Caspar J. van Lissa

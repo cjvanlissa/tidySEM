@@ -191,6 +191,7 @@ spearman_brown.data.frame <- function(x, y = NULL, ...){
 spearman_brown.matrix <- spearman_brown.data.frame
 
 #' @importFrom stats cor
+#' @export
 spearman_brown.default <- function(x, y, ...){
   r <- cor(x, y, use = "pairwise.complete.obs")
   1/(1+(1/((r/(1-r))+(r/(1-r)))))

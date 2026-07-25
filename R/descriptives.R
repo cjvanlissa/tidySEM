@@ -162,7 +162,9 @@ var_cat <- function(x) {
 #' @param pearson Logical. Whether or not to return the Pearson's kurtosis alongside excess kurtosis, Default: FALSE
 #' @param corrected Logical. Whether or not to correct for bias in skew and kurtosis (Joanes & Gill, 1998). Corrects both the estimates and their standard errors. Default: TRUE
 #' @param ... Additional arguments to pass to and from functions.
-#' @return A \code{matrix} of skew and kurtosis statistics for \code{x}.
+#' @return A \code{matrix} of skew and kurtosis statistics for \code{x}. The
+#' columns labeled `_2se` contain the test statistic divided by two times its
+#' standard error.
 #' @examples
 #' skew_kurtosis(datasets::anscombe)
 #' @rdname skew_kurtosis
@@ -208,16 +210,16 @@ skew_kurtosis.numeric <-
       }
 
       kurt_pearson <- n * (sum((x - mean(x))^4)/(sum((x - mean(x))^2)^2))
-      kurt_excess <- kurt_pearson - 3
+      kurt <- kurt_pearson - 3
       kurt_se <- sqrt((24 * n * (n - 2) * (n - 3)) / (((n + 1)^2) * (n + 3) * (n + 5)))
-      kurt_2se <- kurt_excess/(2 * kurt_se)
+      kurt_2se <- kurt/(2 * kurt_se)
       if (corrected) {
-        kurt_excess <- ((n - 1) / ((n - 2) * (n - 3))) * ((n + 1) * kurt_excess + 6)
-        kurt_pearson <- kurt_excess + 3
+        kurt <- ((n - 1) / ((n - 2) * (n - 3))) * ((n + 1) * kurt + 6)
+        kurt_pearson <- kurt + 3
         kurt_se <- sqrt(kurt_se^2 * (((n - 1) * (n + 1)) / ((n - 2) * (n - 3)))^2)
-        kurt_2se <- kurt_excess/(2 * kurt_se)
+        kurt_2se <- kurt/(2 * kurt_se)
       }
-      c(skew, skew_se, skew_2se, kurt_pearson, kurt_excess, kurt_se, kurt_2se)
+      c(skew, skew_se, skew_2se, kurt_pearson, kurt, kurt_se, kurt_2se)
     }
     else {
       stop()
@@ -225,13 +227,13 @@ skew_kurtosis.numeric <-
   }, error = function(e) {
     rep(NA, 7)
   })
-  names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se",
+  names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt", "kurt_se",
                   "kurt_2se")
   if (!se) {
-    keep <- c("skew", "skew_2se", "kurt_excess", "kurt_2se")
+    keep <- c("skew", "skew_2se", "kurt", "kurt_2se")
   } else {
     keep <- c("skew", "skew_se", "skew_2se",
-              "kurt_excess", "kurt_se", "kurt_2se")
+              "kurt", "kurt_se", "kurt_2se")
   }
   if (pearson) {
     keep <- append(keep, "kurt_pearson", after = ifelse(se, 3, 2))
@@ -245,13 +247,13 @@ skew_kurtosis.numeric <-
 skew_kurtosis.default <-
   function(x, verbose = FALSE, se = FALSE, pearson = FALSE, corrected = TRUE, ...) {
     out <- rep(NA, 7)
-    names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt_excess", "kurt_se",
+    names(out) <- c("skew", "skew_se", "skew_2se", "kurt_pearson", "kurt", "kurt_se",
                   "kurt_2se")
   if (!se) {
-    keep <- c("skew", "skew_2se", "kurt_excess", "kurt_2se")
+    keep <- c("skew", "skew_2se", "kurt", "kurt_2se")
   } else {
     keep <- c("skew", "skew_se", "skew_2se",
-              "kurt_excess", "kurt_se", "kurt_2se")
+              "kurt", "kurt_se", "kurt_2se")
   }
   if (pearson) {
     keep <- append(keep, "kurt_pearson", after = ifelse(se, 3, 2))

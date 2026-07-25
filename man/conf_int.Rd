@@ -38,11 +38,11 @@ conf_int(x = c(1.325, 2.432), se = c(.05336, .00325))
 \seealso{
 table_results est_sig
 
-Other Reporting tools: 
-\code{\link{est_sig}()},
-\code{\link{table_fit}()},
-\code{\link{table_prob}()},
-\code{\link{table_results}()}
+Other Reporting tools:
+\code{\link[=est_sig]{est_sig()}},
+\code{\link[=table_fit]{table_fit()}},
+\code{\link[=table_prob]{table_prob()}},
+\code{\link[=table_results]{table_results()}}
 }
 \author{
 Caspar J. van Lissa

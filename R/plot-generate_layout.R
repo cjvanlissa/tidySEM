@@ -123,9 +123,11 @@ get_layout.mplusObject <- get_layout.lavaan
 #' @method get_layout tidy_results
 #' @export
 #' @importFrom igraph graph_from_data_frame vertex.attributes
-#' layout_as_star layout_as_tree layout_in_circle layout_nicely
-#' layout_on_grid layout_randomly layout_with_dh layout_with_fr layout_with_gem
-#' layout_with_graphopt layout_with_kk layout_with_lgl layout_with_mds
+#' @importFrom igraph layout_as_star layout_as_tree layout_in_circle
+#' @importFrom igraph layout_nicely layout_on_grid layout_randomly
+#' @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
+#' @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
+#' @importFrom igraph layout_with_mds
 get_layout.tidy_results <- function(x, ..., layout_algorithm = "layout_as_tree"){
   cl <- match.call()
   cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")

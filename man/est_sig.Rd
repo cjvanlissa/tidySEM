@@ -26,11 +26,11 @@ est_sig(c(.222, .3333), sig = c(.054, .045))
 \seealso{
 table_results
 
-Other Reporting tools: 
-\code{\link{conf_int}()},
-\code{\link{table_fit}()},
-\code{\link{table_prob}()},
-\code{\link{table_results}()}
+Other Reporting tools:
+\code{\link[=conf_int]{conf_int()}},
+\code{\link[=table_fit]{table_fit()}},
+\code{\link[=table_prob]{table_prob()}},
+\code{\link[=table_results]{table_results()}}
 }
 \author{
 Caspar J. van Lissa

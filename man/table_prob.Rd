@@ -27,11 +27,11 @@ mx_lca(data = df,
 }
 }
 \seealso{
-Other Reporting tools: 
-\code{\link{conf_int}()},
-\code{\link{est_sig}()},
-\code{\link{table_fit}()},
-\code{\link{table_results}()}
+Other Reporting tools:
+\code{\link[=conf_int]{conf_int()}},
+\code{\link[=est_sig]{est_sig()}},
+\code{\link[=table_fit]{table_fit()}},
+\code{\link[=table_results]{table_results()}}
 }
 \concept{Reporting tools}
 \keyword{reporting}

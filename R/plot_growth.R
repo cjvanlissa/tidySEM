@@ -70,6 +70,11 @@ plot_growth <- function(x,
                         jitter_lines = NULL)
 {
   submods <- names(x@submodels)
+  if(is.null(submods)){
+    cl <- match.call()
+    cl[[1L]] <- str2lang("tidySEM:::plot_one_growth")
+    return(eval.parent(cl))
+  }
   if (is.null(growth_variables)) {
     growth_variables <- x[[submods[1]]]$latentVars
   }
@@ -220,3 +225,75 @@ plot_growth <- function(x,
                                                                                                      0))
   return(line_plot)
 }
+
+
+plot_one_growth <- function (x, items = NULL, growth_variables = NULL, time_scale = NULL,
+                             bw = FALSE, rawdata = FALSE, estimated = TRUE, alpha_range = c(0,
+                                                                                            0.1), jitter_lines = NULL)
+{
+
+  if (is.null(growth_variables)) {
+    growth_variables <- x$latentVars
+  }
+  if (is.null(items)) {
+    items <- x$manifestVars
+  }
+  loadings <- x$A$values[items, growth_variables]
+  estimates <- matrix(x$M$values[1, growth_variables], nrow = nrow(loadings),
+                      ncol = length(growth_variables), byrow = TRUE)
+  if (is.null(time_scale)) {
+    time_scale <- seq_along(items)
+  }
+  predicted_trajectories <- data.frame(Time = time_scale, Value = rowSums(loadings * estimates))
+  line_plot <- ggplot(NULL)
+  if (rawdata) {
+    rawdata <- x$data$observed[, items]
+
+    names(rawdata) <- paste0("Value.",
+                             items)
+    rawdata <- reshape(rawdata, direction = "long", varying = paste0("Value.",
+                                                                     items), timevar = "Time")
+    rawdata$Time <- ordered(rawdata$Time, levels = items)
+    rawdata$Time <- time_scale[as.numeric(rawdata$Time)]
+    if (!is.null(jitter_lines)) {
+      rawdata$Value <- rawdata$Value + stats::rnorm(nrow(rawdata),
+                                                    sd = (jitter_lines * stats::sd(rawdata$Value,
+                                                                                   na.rm = TRUE)))
+    }
+    if (bw) {
+      line_plot <- line_plot + geom_path(data = rawdata,
+                                         aes(x = .data[["Time"]], y = .data[["Value"]],
+                                             group = .data[["id"]]
+                                         )) + scale_alpha_continuous(range = alpha_range,
+                                                                     guide = "none")
+    }
+    else {
+      line_plot <- line_plot + geom_path(data = rawdata,
+                                         aes(x = .data[["Time"]], y = .data[["Value"]],
+                                             group = .data[["id"]]), alpha = .05)
+    }
+  }
+  if (estimated) {
+    if (bw) {
+      line_plot <- line_plot + geom_point(data = predicted_trajectories,
+                                          aes(x = .data[["Time"]], y = .data[["Value"]],
+                                              group = 1),
+                                          size = 2) + geom_line(data = predicted_trajectories,
+                                                                aes(x = .data[["Time"]], y = .data[["Value"]],
+                                                                    group = 1),
+                                                                linewidth = 1)
+    }
+    else {
+      line_plot <- line_plot + geom_point(data = predicted_trajectories,
+                                          aes(x = .data[["Time"]], y = .data[["Value"]],
+                                              group = 1), size = 2, color = "red") + geom_line(data = predicted_trajectories,
+                                                                                               aes(x = .data[["Time"]], y = .data[["Value"]],
+                                                                                                   group = 1, color = "red"), linewidth = 1)
+    }
+  }
+  line_plot <- line_plot + theme_bw() + scale_x_continuous(expand = c(0,
+                                                                      0), breaks = time_scale, labels = time_scale) + scale_y_continuous(expand = c(0,
+                                                                                                                                                    0))
+  return(line_plot)
+}
+

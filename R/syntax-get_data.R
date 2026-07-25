@@ -24,7 +24,7 @@ mplus_data.mplusObject <- function(x, ...){
 }
 
 # @method mplus_data mplus.model
-# @export
+#' @export
 #' @importFrom utils read.table
 mplus_data.mplus.model <- function(x, ...){
   df <- read.table(x$input$data$file, stringsAsFactors = FALSE)

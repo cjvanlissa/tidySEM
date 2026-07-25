@@ -28,7 +28,9 @@ Default: FALSE}
 \item{...}{Additional arguments to pass to and from functions.}
 }
 \value{
-A \code{matrix} of skew and kurtosis statistics for \code{x}.
+A \code{matrix} of skew and kurtosis statistics for \code{x}. The
+columns labeled \verb{_2se} contain the test statistic divided by two times its
+standard error.
 }
 \description{
 Calculate skew and kurtosis, standard errors for both, and the
