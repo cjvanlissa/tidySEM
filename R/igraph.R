@@ -1,7 +1,11 @@
 #' @method get_nodes igraph
-#' @importFrom igraph V as_data_frame
+# @importFrom igraph V as_data_frame
 #' @export
 get_nodes.igraph <- function(x, label = name, ...){
+  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
+    message('Run `install.packages("igraph")` before using functions that require it.')
+    return(NULL)
+  }
   label <- substitute(label)
   nod <- igraph::as_data_frame(x, what = "vertices")
   if(ncol(nod) == 0){
@@ -16,9 +20,13 @@ get_nodes.igraph <- function(x, label = name, ...){
 }
 
 #' @method get_edges igraph
-#' @importFrom igraph as_data_frame
+# @importFrom igraph as_data_frame
 #' @export
 get_edges.igraph <- function(x, label = NULL, ...){
+  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
+    message('Run `install.packages("igraph")` before using functions that require it.')
+    return(NULL)
+  }
   label <- substitute(label)
   edg <- igraph::as_data_frame(x, "edges")
   edg$arrow <- tryCatch({c("none", "last")[unclass(x)[[2]]+1L]}, error = function(e){
@@ -35,6 +43,10 @@ get_edges.igraph <- function(x, label = NULL, ...){
 #' @method get_layout igraph
 #' @export
 get_layout.igraph <- function(x, ..., layout_algorithm = "layout_nicely"){
+  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
+    message('Run `install.packages("igraph")` before using functions that require it.')
+    return(NULL)
+  }
   Args <- list("graph" = x, "dim" = 2)
   layout_algorithm <- paste0("igraph::", layout_algorithm)
   lo <- data.frame(do.call(eval(parse(text=layout_algorithm)), Args))
@@ -48,6 +60,10 @@ get_layout.igraph <- function(x, ..., layout_algorithm = "layout_nicely"){
 #' @method prepare_graph igraph
 #' @export
 prepare_graph.igraph <- function(model, ...){
+  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
+    message('Run `install.packages("igraph")` before using functions that require it.')
+    return(NULL)
+  }
   cl <- match.call()
   if(!"edges" %in% names(cl)) cl[["edges"]] <- get_edges(model)
   if(!"nodes" %in% names(cl)) cl[["nodes"]] <- get_nodes(model)

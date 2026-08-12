@@ -161,10 +161,10 @@ read.table(pipe("pbpaste"), sep="\t")
 ```
 
 ```{r echo = FALSE, eval = TRUE}
-structure(list(V1 = structure(2:1, .Label = c("", "x1"), class = "factor"), 
-    V2 = structure(2:1, .Label = c("visual", "x2"), class = "factor"), 
-    V3 = structure(2:1, .Label = c("", "x3"), class = "factor")), class = "data.frame", row.names = c(NA, 
--2L))
+# structure(list(V1 = structure(2:1, .Label = c("", "x1"), class = "factor"), 
+#     V2 = structure(2:1, .Label = c("visual", "x2"), class = "factor"), 
+#     V3 = structure(2:1, .Label = c("", "x3"), class = "factor")), class = "data.frame", row.names = c(NA, 
+# -2L))
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '
