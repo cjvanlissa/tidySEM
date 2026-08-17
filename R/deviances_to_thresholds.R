@@ -87,20 +87,25 @@
 #' coef(res2)
 #' res2_thresholds <- deviances_to_thresholds(res2)
 #' coef(res2_thresholds)
+#' }
 #' @export
 deviances_to_thresholds <- function(model){
+  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+    message("Package `OpenMx` is required to use this function.")
+    return(NULL)
+  }
   submodels <- names(model@submodels)
   if(is.null(submodels)){
     if(!is.null(model[["mat_dev"]])){
-      thresh <- mxMatrix(name = "Thresholds",
+      thresh <- OpenMx::mxMatrix(name = "Thresholds",
                          type = "Full",
                          nrow = nrow(model$Thresholds$result),
                          ncol = ncol(model$Thresholds$result),
                          free = model$mat_dev$free,
                          values = model$Thresholds$result
       )
-      model <- mxModel(model, c("mat_dev", "mat_ones", "Thresholds","Indicators"), remove = TRUE)
-      model <- mxModel(model, thresh)
+      model <- OpenMx::mxModel(model, c("mat_dev", "mat_ones", "Thresholds","Indicators"), remove = TRUE)
+      model <- OpenMx::mxModel(model, thresh)
     }
   } else {
     for(thismodel in submodels) {
