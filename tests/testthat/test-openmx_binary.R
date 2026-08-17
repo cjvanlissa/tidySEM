@@ -188,9 +188,9 @@ u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
   #             run = 1L
   #             )
   # res_mx$class1$Thresholds$values <- structure(c(-1.21202423291062, -1.03055648196733, 1.34960931996936,
-  #                                                1.21984168386381), .Dim = c(1L, 4L))
+  #                                                1.21984168386381), dim = c(1L, 4L))
   # res_mx$class2$Thresholds$values <- structure(c(1.22655751606709, 1.20822650045262, -1.2762983140788,
-  #                                                -1.14581064840368), .Dim = c(1L, 4L))
+  #                                                -1.14581064840368), dim = c(1L, 4L))
 
   res_mx <- mxTryHardOrdinal(res_mx)
   tmp <- table_results(res_mx, columns=NULL)
@@ -209,7 +209,7 @@ u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
 
     expect_equivalent(prop_mx,
                       structure(c(0.11, 0.887, 0.113, 0.849, 0.899, 0.089, 0.874, 0.111
-                      ), .Dim = c(2L, 4L))
+                      ), dim = c(2L, 4L))
                       , tolerance = .04)
   })
 
@@ -230,9 +230,11 @@ u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
   c2 <- OpenMx::mxModel(c1,
                         name = "class2")
   c1$mat_dev$values <- structure(c(1.2265575211327, 1.20822660669051, -1.27629834231466,
-                                   -1.14581070381601), .Dim = c(1L, 4L))
+                                   -1.14581070381601), dim = c(1L, 4L))
+
   c2$mat_dev$values <- structure(c(-1.21202427596978, -1.03055661694953, 1.3496091508717,
-                                   1.21984157176156), .Dim = c(1L, 4L))
+                                   1.21984157176156), dim = c(1L, 4L))
+
   mix_tidysem <- OpenMx::mxModel(model = "mix",
                                  c1,
                                  c2,
@@ -261,7 +263,7 @@ u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
 
     expect_equivalent(props_tidysem,
                       structure(c(0.11, 0.887, 0.113, 0.849, 0.899, 0.089, 0.874, 0.111
-                      ), .Dim = c(2L, 4L))
+                      ), dim = c(2L, 4L))
                       , tolerance = .04)
 
     #expect_equal(-2*res_po$llik, res_tidysem$output$Minus2LogLikelihood)

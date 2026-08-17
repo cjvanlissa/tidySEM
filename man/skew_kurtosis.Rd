@@ -42,5 +42,5 @@ large sample sizes, significant skew/kurtosis is common.
 skew_kurtosis(datasets::anscombe)
 }
 \references{
-Joanes, D. N. & Gill, C. A. (1998). Comparing measures of sample skewness and kurtosis. \emph{Journal Of The Royal Statistical Society: Series D (The Statistician)}, \emph{47}(1), 183–189. \url{https://doi.org/10.1111/1467-9884.00122}
+Joanes, D. N. & Gill, C. A. (1998). Comparing measures of sample skewness and kurtosis. \emph{Journal Of The Royal Statistical Society: Series D (The Statistician)}, \emph{47}(1), 183–189. \doi{10.1111/1467-9884.00122}
 }

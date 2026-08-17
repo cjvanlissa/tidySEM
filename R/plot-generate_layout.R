@@ -102,7 +102,7 @@ space_these <- function(these, n){
 #' layout algorithm to apply to position the nodes. Defaults to
 #' \code{"layout_as_tree"}; see details for more options.
 #' @export
-get_layout.lavaan <- function(x, ..., layout_algorithm = "layout_as_tree"){
+get_layout.lavaan <- function(x, ..., layout_algorithm = "fr_grid"){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, columns = NULL)
   do.call(get_layout, Args)
@@ -128,18 +128,22 @@ get_layout.mplusObject <- get_layout.lavaan
 # @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
 # @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
 # @importFrom igraph layout_with_mds
-get_layout.tidy_results <- function(x, ..., layout_algorithm = "fr"){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
-  cl <- cl[c(1L, which(names(cl) == "x"))]
-  df <- eval.parent(cl)[c("from", "to")]
+get_layout.tidy_results <- function(x, ..., layout_algorithm = "fr_grid"){
+  #cl <- match.call()
+  #cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
+  #cl <- cl[c(1L, which(names(cl) == "x"))]
+  #df <- eval.parent(cl)[, c("from", "to")]
+  df <- x[, c("lhs", "rhs")]
   nds <- unique(unlist(df))
-  if(layout_algorithm == "fr"){
-    lo <- fr_layout(nodes = nds, edges = as.matrix(df))
+  if(layout_algorithm == "fr_grid"){
+    lo <- fr_layout_integer_compact(nodes = nds, edges = as.matrix(df))
   } else {
-    lo <- get_layout(df, layout_algorithm = layout_algorithm)
+    g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
+    lo <- do.call(layout_algorithm, list(g))
+    rownames(lo) <- igraph::vertex.attributes(g)$name
   }
-  return(snap_layout_to_grid(lo))
+  lo <- snap_layout_to_grid(lo)
+  return(lo)
 }
 
 #' @method get_layout tidy_edges
@@ -150,14 +154,17 @@ get_layout.tidy_results <- function(x, ..., layout_algorithm = "fr"){
 #' @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
 #' @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
 #' @importFrom igraph layout_with_mds
-get_layout.tidy_edges <- function(x, ..., layout_algorithm = "layout_as_tree"){
-  browser()
+get_layout.tidy_edges <- function(x, ..., layout_algorithm = "fr_grid"){
   if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
     message('Run `install.packages("igraph")` before using functions that require it.')
-    return(fr_layout(nodes = nds, edges = as.matrix(df)))
+    df <- x[, c("lhs", "rhs")]
+    nds <- unique(unlist(df))
+    return(fr_layout_integer_compact(nodes = nds, edges = as.matrix(df)))
   }
-  g <- igraph::graph_from_data_frame(x, directed = TRUE)
+  g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
   lo <- do.call(layout_algorithm, list(g))
+  rownames(lo) <- igraph::vertex.attributes(g)$name
+  lo <- snap_layout_to_grid(lo)
   return(lo)
 }
 
@@ -176,7 +183,7 @@ snap_layout_to_grid <- function(lo){
   if(dim(out)[2] < dim(out)[1]){
     out <- t(out)
   } else {
-    out <- out[nrow(out):1, ]
+    out <- out[nrow(out):1, , drop = FALSE]
   }
   class(out) <- c("layout_matrix", class(out))
   return(out)

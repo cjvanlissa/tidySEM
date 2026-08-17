@@ -60,7 +60,7 @@ X3 | t1
 X3 | start(4)*t2", data = df))
 })
 
-test_that("mc_lca works", {
+test_that("mx_lca works", {
   res <- mx_lca(df, classes = 2)
   expect_equivalent(sort(res$weights$values / sum(res$weights$values)), c(.33, .66), tolerance = .03)
   tab_res <- table_results(res, columns = NULL)
