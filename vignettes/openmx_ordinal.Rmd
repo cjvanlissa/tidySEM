@@ -190,3 +190,20 @@ The default and deviation specifications are alternative parameterizations of th
 The expressions passed to `wald_test()` differ because a Wald test operates on the parameterization of the fitted model. Reparameterizing a threshold as a sum of deviations therefore requires re-expressing the null hypothesis in terms of that sum.
 
 This distinction is especially important for second and later thresholds. In the direct specification, the target threshold is a single entry of `model.Thresholds`; in the deviation specification, the same target is a linear combination of entries in `model.mat_dev`.
+
+## Reparametrizing the Model
+
+While strictly positive deviances may aid in achieving model convergence, once convergence has been reached,
+it is possible to reparametrize the model to use thresholds instead.
+At present, this is supported by the utility function `deviances_to_thresholds()`, which takes in a model with deviances and returns a model with thresholds.
+The model is automatically re-run.
+
+Use this functionality as follows:
+
+```{r}
+coef(res2)
+res2_thresholds <- deviances_to_thresholds(res2)
+coef(res2_thresholds)
+wald_test(res2_thresholds, "model.Thresholds[1,1] = 0")
+```
+

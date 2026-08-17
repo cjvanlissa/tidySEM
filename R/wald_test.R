@@ -10,6 +10,11 @@ parse_hypothesis <- function(varnames, hyp){
   }
 }
 
+is_simple_hypothesis <- function(x){
+  grepl("^[^<>&;()]+$", x) &
+      lengths(regmatches(x, gregexpr("=", x, fixed = TRUE))) <= 1
+}
+
 #' @title Wald Test for Linear Hypotheses
 #' @description This function is a wrapper for the function
 #' [car::linearHypothesis()], but which uses the [bain::bain()] syntax to parse
@@ -28,26 +33,35 @@ parse_hypothesis <- function(varnames, hyp){
 #' @rdname wald_test
 #' @export
 #' @importFrom car linearHypothesis
+#' @importFrom utils packageVersion
 wald_test <- function(x, hypothesis, ...){
   if(grepl("[><]", hypothesis)) stop("Can only evaluate equality constrained hypotheses. Hypotheses with '>' or '<' are not valid.")
-  if(requireNamespace("bain", quietly = FALSE)){
+  # Check if any hypotheses are complex
+  simple_hypothesis <- is_simple_hypothesis(hypothesis)
+  if(any(!simple_hypothesis)){
+    can_run <- isTRUE(requireNamespace("bain", quietly = TRUE))
+    if(can_run){
+      if(!isTRUE(utils::packageVersion("bain") >= package_version("0.2.12"))){
+        can_run <- FALSE
+      }
+    }
+    if(!can_run){
+      message('You are attempting to test a complex hypothesis which requires the `bain` package to be parsed. Run `install.packages("bain")` to be able to parse complex hypotheses.')
+      return(NULL)
+    }
+  }
+
+  if(all(simple_hypothesis)){
+    hyps <- hypothesis
+    test_res <- do.call(rbind, lapply(hyps, function(h){
+      as.data.frame(lapply(suppressWarnings(car::linearHypothesis(x, hypothesis.matrix = h)), `[[`, 2))
+    }))
+  } else {
     varnames_orig <- varnames <- names(coef(x))
     hyp_orig <- hypothesis
-    # if(any(grepl("\\[\\d+,\\d+\\]", varnames))){
-    #   for(i in seq_along(varnames_orig)){
-    #     names(varnames_orig)[i] <- varnames[i] <- paste0("xxxxxx", i)
-    #     hypothesis <- gsub(varnames_orig[i], paste0("xxxxxx", i), hypothesis, fixed = TRUE)
-    #   }
-    # }
     hyps <- parse_hypothesis(varnames = varnames, hyp = hypothesis)
     test_res <- do.call(rbind, lapply(hyps$hyp_mat, function(h){
       as.data.frame(lapply(car::linearHypothesis(x, hypothesis.matrix = h[, -ncol(h), drop = FALSE], rhs = h[, ncol(h), drop = TRUE]), `[[`, 2))
-    }))
-  } else {
-    message('The `bain` package is not installed; hypotheses cannot be parsed. Run `install.packages("bain")` to be able to parse complex hypotheses.')
-    hyps <- hypothesis
-    test_res <- do.call(rbind, lapply(hyps, function(h){
-      as.data.frame(lapply(car::linearHypothesis(x, hypothesis.matrix = h), `[[`, 2))
     }))
   }
   if(!is.null(test_res)){
@@ -58,13 +72,6 @@ wald_test <- function(x, hypothesis, ...){
     }
   }
   out <- data.frame(Hypothesis = tryCatch(hyps$original_hypothesis, error = function(e){hypothesis}), test_res)
-  if(any(grepl("xxxxxx\\d{1,}", out$Hypothesis))){
-    for(i in seq_along(varnames_orig)){
-      repthis <- paste0("xxxxxx", i)
-      if(!any(grepl(repthis, out$Hypothesis), fixed = TRUE)) next
-      out$Hypothesis <- gsub(paste0(repthis, "\\b"), varnames_orig[repthis], out$Hypothesis)
-    }
-  }
   class(out) <- c("wald_test", class(out))
   out
 }

@@ -114,7 +114,7 @@ deviances_to_thresholds <- function(model){
   }
   is_basecase <- try(!as.character(sys.call(-1))[[1]] == "deviances_to_thresholds", silent = TRUE)
   if(isTRUE(is_basecase)){
-    model <- OpenMx::mxRun(model, silent = TRUE)
+    model <- OpenMx::mxRun(model, silent = TRUE, suppressWarnings = TRUE)
   }
   return(model)
 }
