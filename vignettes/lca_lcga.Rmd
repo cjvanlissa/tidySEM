@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   results = "hide",
-  tidy.opts = list(width.cutoff = 60), tidy = TRUE
+  tidy.opts = list(width.cutoff = 60), tidy = requireNamespace("formatR", quietly = TRUE)
 )
 options(scipen = 1, digits = 2)
 eval_results <- FALSE
@@ -27,6 +27,11 @@ if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, err
 )
 }
 run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+if(!requireNamespace("OpenMx", quietly = TRUE)){
+  knitr::opts_chunk$set(eval = FALSE)
+  run_everything = FALSE
+  eval_results = FALSE
+}
 ```
 
 This vignette illustrated `tidySEM`'s ability to perform latent class growth analysis, or growth mixture modeling,
@@ -38,7 +43,7 @@ which examined of psychological problems after deployment in more than 1,000 Dut
 
 First, we load all required packages:
 
-```{r echo = TRUE, eval = TRUE}
+```{r echo = TRUE}
 library(tidySEM)
 library(OpenMx)
 library(ggplot2)

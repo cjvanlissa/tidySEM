@@ -216,7 +216,7 @@ pseudo_class_pool.lavaan <- function(fits, df_complete = NULL, std.all = FALSE, 
   example_parameters <- parameters[[1]]
 
   if (is.null(df_complete)) {
-    nparam <- length(lavaan::coef(example_fit))
+    nparam <- length(free_parameter_names)
     ntotal <- lavaan::lavInspect(example_fit, "ntotal")
 
     message(paste("The degrees of freedom are assumed to be equal to the total number of observations used in the model (", ntotal, ") minus the number of free parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
