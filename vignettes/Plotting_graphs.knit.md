@@ -86,10 +86,10 @@ To get this layout as a matrix, you can run:
 
 ``` r
 get_layout(fit)
-#>      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]
-#> [1,] NA   NA        NA   NA   NA      "visual" NA   NA  
-#> [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"
-#> [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  
+#>      [,1] [,2]     [,3]      [,4]
+#> [1,] "x2" "x3"     "x6"      "x4"
+#> [2,] "x1" "visual" "textual" "x5"
+#> [3,] "x9" "x7"     "speed"   "x8"
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 ```
@@ -100,17 +100,18 @@ Other layout functions from the `igraph` package can be used by specifying the `
 
 ``` r
 get_layout(fit, layout_algorithm = "layout_in_circle")
-#>      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]
-#> [1,] NA   NA        NA   NA   NA      "visual" NA   NA  
-#> [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"
-#> [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  
+#>      [,1] [,2] [,3]      [,4]    [,5]
+#> [1,] NA   NA   "x5"      NA      NA  
+#> [2,] NA   "x6" "x4"      "x3"    NA  
+#> [3,] "x8" "x7" "textual" "x1"    NA  
+#> [4,] NA   "x9" "visual"  "speed" "x2"
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 get_layout(fit, layout_algorithm = "layout_on_grid")
-#>      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]
-#> [1,] NA   NA        NA   NA   NA      "visual" NA   NA  
-#> [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"
-#> [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  
+#>      [,1]     [,2]      [,3]    [,4]
+#> [1,] "x6"     "x7"      "x8"    "x9"
+#> [2,] "x2"     "x3"      "x4"    "x5"
+#> [3,] "visual" "textual" "speed" "x1"
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 ```
@@ -164,11 +165,6 @@ read.table(pipe("pbpaste"), sep="\t")
 ```
 
 
-```
-#>   V1     V2 V3
-#> 1 x1     x2 x3
-#> 2    visual
-```
 
 ### Examples of user-defined layout
 
@@ -254,56 +250,106 @@ And for the edges:
 
 ``` r
 get_edges(fit)
-#>       from      to arrow   label connect_from connect_to curvature linetype     lhs op     rhs  est   se
-#> 1   visual      x1  last    1.00           NA         NA        NA        1  visual =~      x1 1.00 0.00
-#> 2   visual      x2  last 0.55***           NA         NA        NA        1  visual =~      x2 0.55 0.10
-#> 3   visual      x3  last 0.73***           NA         NA        NA        1  visual =~      x3 0.73 0.11
-#> 4  textual      x4  last    1.00           NA         NA        NA        1 textual =~      x4 1.00 0.00
-#> 5  textual      x5  last 1.11***           NA         NA        NA        1 textual =~      x5 1.11 0.07
-#> 6  textual      x6  last 0.93***           NA         NA        NA        1 textual =~      x6 0.93 0.06
-#> 7    speed      x7  last    1.00           NA         NA        NA        1   speed =~      x7 1.00 0.00
-#> 8    speed      x8  last 1.18***           NA         NA        NA        1   speed =~      x8 1.18 0.16
-#> 9    speed      x9  last 1.08***           NA         NA        NA        1   speed =~      x9 1.08 0.15
-#> 10      x1      x1  both 0.55***           NA         NA        NA        1      x1 ~~      x1 0.55 0.11
-#> 11      x2      x2  both 1.13***           NA         NA        NA        1      x2 ~~      x2 1.13 0.10
-#> 12      x3      x3  both 0.84***           NA         NA        NA        1      x3 ~~      x3 0.84 0.09
-#> 13      x4      x4  both 0.37***           NA         NA        NA        1      x4 ~~      x4 0.37 0.05
-#> 14      x5      x5  both 0.45***           NA         NA        NA        1      x5 ~~      x5 0.45 0.06
-#> 15      x6      x6  both 0.36***           NA         NA        NA        1      x6 ~~      x6 0.36 0.04
-#> 16      x7      x7  both 0.80***           NA         NA        NA        1      x7 ~~      x7 0.80 0.08
-#> 17      x8      x8  both 0.49***           NA         NA        NA        1      x8 ~~      x8 0.49 0.07
-#> 18      x9      x9  both 0.57***           NA         NA        NA        1      x9 ~~      x9 0.57 0.07
-#> 19  visual  visual  both 0.81***           NA         NA        NA        1  visual ~~  visual 0.81 0.15
-#> 20 textual textual  both 0.98***           NA         NA        NA        1 textual ~~ textual 0.98 0.11
-#> 21   speed   speed  both 0.38***           NA         NA        NA        1   speed ~~   speed 0.38 0.09
-#> 22  visual textual  none 0.41***           NA         NA        60        2  visual ~~ textual 0.41 0.07
-#> 23  visual   speed  none 0.26***           NA         NA        60        2  visual ~~   speed 0.26 0.06
-#> 24 textual   speed  none 0.17***           NA         NA        60        2 textual ~~   speed 0.17 0.05
-#>    pval      confint est_sig est_std se_std pval_std  confint_std est_sig_std       label_results show
-#> 1  <NA> [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]     0.77***        visual.BY.x1 TRUE
-#> 2  0.00 [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]     0.42***        visual.BY.x2 TRUE
-#> 3  0.00 [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]     0.58***        visual.BY.x3 TRUE
-#> 4  <NA> [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]     0.85***       textual.BY.x4 TRUE
-#> 5  0.00 [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]     0.86***       textual.BY.x5 TRUE
-#> 6  0.00 [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]     0.84***       textual.BY.x6 TRUE
-#> 7  <NA> [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]     0.57***         speed.BY.x7 TRUE
-#> 8  0.00 [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]     0.72***         speed.BY.x8 TRUE
-#> 9  0.00 [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]     0.67***         speed.BY.x9 TRUE
-#> 10 0.00 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]     0.40***        Variances.x1 TRUE
-#> 11 0.00 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]     0.82***        Variances.x2 TRUE
-#> 12 0.00 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]     0.66***        Variances.x3 TRUE
-#> 13 0.00 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]     0.27***        Variances.x4 TRUE
-#> 14 0.00 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]     0.27***        Variances.x5 TRUE
-#> 15 0.00 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]     0.30***        Variances.x6 TRUE
-#> 16 0.00 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]     0.68***        Variances.x7 TRUE
-#> 17 0.00 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]     0.48***        Variances.x8 TRUE
-#> 18 0.00 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]     0.56***        Variances.x9 TRUE
-#> 19 0.00 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]        1.00    Variances.visual TRUE
-#> 20 0.00 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]        1.00   Variances.textual TRUE
-#> 21 0.00 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]        1.00     Variances.speed TRUE
-#> 22 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]     0.46*** visual.WITH.textual TRUE
-#> 23 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]     0.47***   visual.WITH.speed TRUE
-#> 24 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE
+#>       from      to arrow   label connect_from connect_to
+#> 1   visual      x1  last    1.00           NA         NA
+#> 2   visual      x2  last 0.55***           NA         NA
+#> 3   visual      x3  last 0.73***           NA         NA
+#> 4  textual      x4  last    1.00           NA         NA
+#> 5  textual      x5  last 1.11***           NA         NA
+#> 6  textual      x6  last 0.93***           NA         NA
+#> 7    speed      x7  last    1.00           NA         NA
+#> 8    speed      x8  last 1.18***           NA         NA
+#> 9    speed      x9  last 1.08***           NA         NA
+#> 10      x1      x1  both 0.55***           NA         NA
+#> 11      x2      x2  both 1.13***           NA         NA
+#> 12      x3      x3  both 0.84***           NA         NA
+#> 13      x4      x4  both 0.37***           NA         NA
+#> 14      x5      x5  both 0.45***           NA         NA
+#> 15      x6      x6  both 0.36***           NA         NA
+#> 16      x7      x7  both 0.80***           NA         NA
+#> 17      x8      x8  both 0.49***           NA         NA
+#> 18      x9      x9  both 0.57***           NA         NA
+#> 19  visual  visual  both 0.81***           NA         NA
+#> 20 textual textual  both 0.98***           NA         NA
+#> 21   speed   speed  both 0.38***           NA         NA
+#> 22  visual textual  none 0.41***           NA         NA
+#> 23  visual   speed  none 0.26***           NA         NA
+#> 24 textual   speed  none 0.17***           NA         NA
+#>    curvature linetype     lhs op     rhs  est   se pval
+#> 1         NA        1  visual =~      x1 1.00 0.00 <NA>
+#> 2         NA        1  visual =~      x2 0.55 0.10 0.00
+#> 3         NA        1  visual =~      x3 0.73 0.11 0.00
+#> 4         NA        1 textual =~      x4 1.00 0.00 <NA>
+#> 5         NA        1 textual =~      x5 1.11 0.07 0.00
+#> 6         NA        1 textual =~      x6 0.93 0.06 0.00
+#> 7         NA        1   speed =~      x7 1.00 0.00 <NA>
+#> 8         NA        1   speed =~      x8 1.18 0.16 0.00
+#> 9         NA        1   speed =~      x9 1.08 0.15 0.00
+#> 10        NA        1      x1 ~~      x1 0.55 0.11 0.00
+#> 11        NA        1      x2 ~~      x2 1.13 0.10 0.00
+#> 12        NA        1      x3 ~~      x3 0.84 0.09 0.00
+#> 13        NA        1      x4 ~~      x4 0.37 0.05 0.00
+#> 14        NA        1      x5 ~~      x5 0.45 0.06 0.00
+#> 15        NA        1      x6 ~~      x6 0.36 0.04 0.00
+#> 16        NA        1      x7 ~~      x7 0.80 0.08 0.00
+#> 17        NA        1      x8 ~~      x8 0.49 0.07 0.00
+#> 18        NA        1      x9 ~~      x9 0.57 0.07 0.00
+#> 19        NA        1  visual ~~  visual 0.81 0.15 0.00
+#> 20        NA        1 textual ~~ textual 0.98 0.11 0.00
+#> 21        NA        1   speed ~~   speed 0.38 0.09 0.00
+#> 22        60        2  visual ~~ textual 0.41 0.07 0.00
+#> 23        60        2  visual ~~   speed 0.26 0.06 0.00
+#> 24        60        2 textual ~~   speed 0.17 0.05 0.00
+#>         confint est_sig est_std se_std pval_std  confint_std
+#> 1  [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]
+#> 2  [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]
+#> 3  [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]
+#> 4  [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]
+#> 5  [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]
+#> 6  [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]
+#> 7  [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]
+#> 8  [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]
+#> 9  [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]
+#> 10 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]
+#> 11 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]
+#> 12 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]
+#> 13 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]
+#> 14 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]
+#> 15 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]
+#> 16 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]
+#> 17 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]
+#> 18 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]
+#> 19 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]
+#> 20 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]
+#> 21 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]
+#> 22 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]
+#> 23 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]
+#> 24 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]
+#>    est_sig_std       label_results show
+#> 1      0.77***        visual.BY.x1 TRUE
+#> 2      0.42***        visual.BY.x2 TRUE
+#> 3      0.58***        visual.BY.x3 TRUE
+#> 4      0.85***       textual.BY.x4 TRUE
+#> 5      0.86***       textual.BY.x5 TRUE
+#> 6      0.84***       textual.BY.x6 TRUE
+#> 7      0.57***         speed.BY.x7 TRUE
+#> 8      0.72***         speed.BY.x8 TRUE
+#> 9      0.67***         speed.BY.x9 TRUE
+#> 10     0.40***        Variances.x1 TRUE
+#> 11     0.82***        Variances.x2 TRUE
+#> 12     0.66***        Variances.x3 TRUE
+#> 13     0.27***        Variances.x4 TRUE
+#> 14     0.27***        Variances.x5 TRUE
+#> 15     0.30***        Variances.x6 TRUE
+#> 16     0.68***        Variances.x7 TRUE
+#> 17     0.48***        Variances.x8 TRUE
+#> 18     0.56***        Variances.x9 TRUE
+#> 19        1.00    Variances.visual TRUE
+#> 20        1.00   Variances.textual TRUE
+#> 21        1.00     Variances.speed TRUE
+#> 22     0.46*** visual.WITH.textual TRUE
+#> 23     0.47***   visual.WITH.speed TRUE
+#> 24     0.28***  textual.WITH.speed TRUE
 ```
 
 Note that only the first few columns are used for plotting (specifically, `from`, `to`, `arrow`, `label`, `connect_from`, `connect_to`, and `curvature`).
@@ -320,81 +366,106 @@ This allows you to customize node and edge labels. For example, maybe you want t
 
 ``` r
 get_edges(fit, label = paste(est, confint))
-#>       from      to arrow             label connect_from connect_to curvature linetype     lhs op     rhs
-#> 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA        NA        1  visual =~      x1
-#> 2   visual      x2  last 0.55 [0.36, 0.75]           NA         NA        NA        1  visual =~      x2
-#> 3   visual      x3  last 0.73 [0.52, 0.94]           NA         NA        NA        1  visual =~      x3
-#> 4  textual      x4  last 1.00 [1.00, 1.00]           NA         NA        NA        1 textual =~      x4
-#> 5  textual      x5  last 1.11 [0.98, 1.24]           NA         NA        NA        1 textual =~      x5
-#> 6  textual      x6  last 0.93 [0.82, 1.03]           NA         NA        NA        1 textual =~      x6
-#> 7    speed      x7  last 1.00 [1.00, 1.00]           NA         NA        NA        1   speed =~      x7
-#> 8    speed      x8  last 1.18 [0.86, 1.50]           NA         NA        NA        1   speed =~      x8
-#> 9    speed      x9  last 1.08 [0.79, 1.38]           NA         NA        NA        1   speed =~      x9
-#> 10      x1      x1  both 0.55 [0.33, 0.77]           NA         NA        NA        1      x1 ~~      x1
-#> 11      x2      x2  both 1.13 [0.93, 1.33]           NA         NA        NA        1      x2 ~~      x2
-#> 12      x3      x3  both 0.84 [0.67, 1.02]           NA         NA        NA        1      x3 ~~      x3
-#> 13      x4      x4  both 0.37 [0.28, 0.46]           NA         NA        NA        1      x4 ~~      x4
-#> 14      x5      x5  both 0.45 [0.33, 0.56]           NA         NA        NA        1      x5 ~~      x5
-#> 15      x6      x6  both 0.36 [0.27, 0.44]           NA         NA        NA        1      x6 ~~      x6
-#> 16      x7      x7  both 0.80 [0.64, 0.96]           NA         NA        NA        1      x7 ~~      x7
-#> 17      x8      x8  both 0.49 [0.34, 0.63]           NA         NA        NA        1      x8 ~~      x8
-#> 18      x9      x9  both 0.57 [0.43, 0.70]           NA         NA        NA        1      x9 ~~      x9
-#> 19  visual  visual  both 0.81 [0.52, 1.09]           NA         NA        NA        1  visual ~~  visual
-#> 20 textual textual  both 0.98 [0.76, 1.20]           NA         NA        NA        1 textual ~~ textual
-#> 21   speed   speed  both 0.38 [0.21, 0.55]           NA         NA        NA        1   speed ~~   speed
-#> 22  visual textual  none 0.41 [0.26, 0.55]           NA         NA        60        2  visual ~~ textual
-#> 23  visual   speed  none 0.26 [0.15, 0.37]           NA         NA        60        2  visual ~~   speed
-#> 24 textual   speed  none 0.17 [0.08, 0.27]           NA         NA        60        2 textual ~~   speed
-#>     est   se pval      confint est_sig est_std se_std pval_std  confint_std est_sig_std
-#> 1  1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]     0.77***
-#> 2  0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]     0.42***
-#> 3  0.73 0.11 0.00 [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]     0.58***
-#> 4  1.00 0.00 <NA> [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]     0.85***
-#> 5  1.11 0.07 0.00 [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]     0.86***
-#> 6  0.93 0.06 0.00 [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]     0.84***
-#> 7  1.00 0.00 <NA> [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]     0.57***
-#> 8  1.18 0.16 0.00 [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]     0.72***
-#> 9  1.08 0.15 0.00 [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]     0.67***
-#> 10 0.55 0.11 0.00 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]     0.40***
-#> 11 1.13 0.10 0.00 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]     0.82***
-#> 12 0.84 0.09 0.00 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]     0.66***
-#> 13 0.37 0.05 0.00 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]     0.27***
-#> 14 0.45 0.06 0.00 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]     0.27***
-#> 15 0.36 0.04 0.00 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]     0.30***
-#> 16 0.80 0.08 0.00 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]     0.68***
-#> 17 0.49 0.07 0.00 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]     0.48***
-#> 18 0.57 0.07 0.00 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]     0.56***
-#> 19 0.81 0.15 0.00 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]        1.00
-#> 20 0.98 0.11 0.00 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]        1.00
-#> 21 0.38 0.09 0.00 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]        1.00
-#> 22 0.41 0.07 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]     0.46***
-#> 23 0.26 0.06 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]     0.47***
-#> 24 0.17 0.05 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]     0.28***
-#>          label_results show
-#> 1         visual.BY.x1 TRUE
-#> 2         visual.BY.x2 TRUE
-#> 3         visual.BY.x3 TRUE
-#> 4        textual.BY.x4 TRUE
-#> 5        textual.BY.x5 TRUE
-#> 6        textual.BY.x6 TRUE
-#> 7          speed.BY.x7 TRUE
-#> 8          speed.BY.x8 TRUE
-#> 9          speed.BY.x9 TRUE
-#> 10        Variances.x1 TRUE
-#> 11        Variances.x2 TRUE
-#> 12        Variances.x3 TRUE
-#> 13        Variances.x4 TRUE
-#> 14        Variances.x5 TRUE
-#> 15        Variances.x6 TRUE
-#> 16        Variances.x7 TRUE
-#> 17        Variances.x8 TRUE
-#> 18        Variances.x9 TRUE
-#> 19    Variances.visual TRUE
-#> 20   Variances.textual TRUE
-#> 21     Variances.speed TRUE
-#> 22 visual.WITH.textual TRUE
-#> 23   visual.WITH.speed TRUE
-#> 24  textual.WITH.speed TRUE
+#>       from      to arrow             label connect_from
+#> 1   visual      x1  last 1.00 [1.00, 1.00]           NA
+#> 2   visual      x2  last 0.55 [0.36, 0.75]           NA
+#> 3   visual      x3  last 0.73 [0.52, 0.94]           NA
+#> 4  textual      x4  last 1.00 [1.00, 1.00]           NA
+#> 5  textual      x5  last 1.11 [0.98, 1.24]           NA
+#> 6  textual      x6  last 0.93 [0.82, 1.03]           NA
+#> 7    speed      x7  last 1.00 [1.00, 1.00]           NA
+#> 8    speed      x8  last 1.18 [0.86, 1.50]           NA
+#> 9    speed      x9  last 1.08 [0.79, 1.38]           NA
+#> 10      x1      x1  both 0.55 [0.33, 0.77]           NA
+#> 11      x2      x2  both 1.13 [0.93, 1.33]           NA
+#> 12      x3      x3  both 0.84 [0.67, 1.02]           NA
+#> 13      x4      x4  both 0.37 [0.28, 0.46]           NA
+#> 14      x5      x5  both 0.45 [0.33, 0.56]           NA
+#> 15      x6      x6  both 0.36 [0.27, 0.44]           NA
+#> 16      x7      x7  both 0.80 [0.64, 0.96]           NA
+#> 17      x8      x8  both 0.49 [0.34, 0.63]           NA
+#> 18      x9      x9  both 0.57 [0.43, 0.70]           NA
+#> 19  visual  visual  both 0.81 [0.52, 1.09]           NA
+#> 20 textual textual  both 0.98 [0.76, 1.20]           NA
+#> 21   speed   speed  both 0.38 [0.21, 0.55]           NA
+#> 22  visual textual  none 0.41 [0.26, 0.55]           NA
+#> 23  visual   speed  none 0.26 [0.15, 0.37]           NA
+#> 24 textual   speed  none 0.17 [0.08, 0.27]           NA
+#>    connect_to curvature linetype     lhs op     rhs  est   se
+#> 1          NA        NA        1  visual =~      x1 1.00 0.00
+#> 2          NA        NA        1  visual =~      x2 0.55 0.10
+#> 3          NA        NA        1  visual =~      x3 0.73 0.11
+#> 4          NA        NA        1 textual =~      x4 1.00 0.00
+#> 5          NA        NA        1 textual =~      x5 1.11 0.07
+#> 6          NA        NA        1 textual =~      x6 0.93 0.06
+#> 7          NA        NA        1   speed =~      x7 1.00 0.00
+#> 8          NA        NA        1   speed =~      x8 1.18 0.16
+#> 9          NA        NA        1   speed =~      x9 1.08 0.15
+#> 10         NA        NA        1      x1 ~~      x1 0.55 0.11
+#> 11         NA        NA        1      x2 ~~      x2 1.13 0.10
+#> 12         NA        NA        1      x3 ~~      x3 0.84 0.09
+#> 13         NA        NA        1      x4 ~~      x4 0.37 0.05
+#> 14         NA        NA        1      x5 ~~      x5 0.45 0.06
+#> 15         NA        NA        1      x6 ~~      x6 0.36 0.04
+#> 16         NA        NA        1      x7 ~~      x7 0.80 0.08
+#> 17         NA        NA        1      x8 ~~      x8 0.49 0.07
+#> 18         NA        NA        1      x9 ~~      x9 0.57 0.07
+#> 19         NA        NA        1  visual ~~  visual 0.81 0.15
+#> 20         NA        NA        1 textual ~~ textual 0.98 0.11
+#> 21         NA        NA        1   speed ~~   speed 0.38 0.09
+#> 22         NA        60        2  visual ~~ textual 0.41 0.07
+#> 23         NA        60        2  visual ~~   speed 0.26 0.06
+#> 24         NA        60        2 textual ~~   speed 0.17 0.05
+#>    pval      confint est_sig est_std se_std pval_std
+#> 1  <NA> [1.00, 1.00]    1.00    0.77   0.05     0.00
+#> 2  0.00 [0.36, 0.75] 0.55***    0.42   0.06     0.00
+#> 3  0.00 [0.52, 0.94] 0.73***    0.58   0.06     0.00
+#> 4  <NA> [1.00, 1.00]    1.00    0.85   0.02     0.00
+#> 5  0.00 [0.98, 1.24] 1.11***    0.86   0.02     0.00
+#> 6  0.00 [0.82, 1.03] 0.93***    0.84   0.02     0.00
+#> 7  <NA> [1.00, 1.00]    1.00    0.57   0.05     0.00
+#> 8  0.00 [0.86, 1.50] 1.18***    0.72   0.05     0.00
+#> 9  0.00 [0.79, 1.38] 1.08***    0.67   0.05     0.00
+#> 10 0.00 [0.33, 0.77] 0.55***    0.40   0.08     0.00
+#> 11 0.00 [0.93, 1.33] 1.13***    0.82   0.05     0.00
+#> 12 0.00 [0.67, 1.02] 0.84***    0.66   0.06     0.00
+#> 13 0.00 [0.28, 0.46] 0.37***    0.27   0.04     0.00
+#> 14 0.00 [0.33, 0.56] 0.45***    0.27   0.04     0.00
+#> 15 0.00 [0.27, 0.44] 0.36***    0.30   0.04     0.00
+#> 16 0.00 [0.64, 0.96] 0.80***    0.68   0.06     0.00
+#> 17 0.00 [0.34, 0.63] 0.49***    0.48   0.07     0.00
+#> 18 0.00 [0.43, 0.70] 0.57***    0.56   0.07     0.00
+#> 19 0.00 [0.52, 1.09] 0.81***    1.00   0.00     <NA>
+#> 20 0.00 [0.76, 1.20] 0.98***    1.00   0.00     <NA>
+#> 21 0.00 [0.21, 0.55] 0.38***    1.00   0.00     <NA>
+#> 22 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00
+#> 23 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00
+#> 24 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00
+#>     confint_std est_sig_std       label_results show
+#> 1  [0.66, 0.88]     0.77***        visual.BY.x1 TRUE
+#> 2  [0.31, 0.54]     0.42***        visual.BY.x2 TRUE
+#> 3  [0.47, 0.69]     0.58***        visual.BY.x3 TRUE
+#> 4  [0.81, 0.90]     0.85***       textual.BY.x4 TRUE
+#> 5  [0.81, 0.90]     0.86***       textual.BY.x5 TRUE
+#> 6  [0.79, 0.88]     0.84***       textual.BY.x6 TRUE
+#> 7  [0.47, 0.67]     0.57***         speed.BY.x7 TRUE
+#> 8  [0.62, 0.82]     0.72***         speed.BY.x8 TRUE
+#> 9  [0.56, 0.77]     0.67***         speed.BY.x9 TRUE
+#> 10 [0.24, 0.57]     0.40***        Variances.x1 TRUE
+#> 11 [0.72, 0.92]     0.82***        Variances.x2 TRUE
+#> 12 [0.54, 0.79]     0.66***        Variances.x3 TRUE
+#> 13 [0.20, 0.35]     0.27***        Variances.x4 TRUE
+#> 14 [0.19, 0.34]     0.27***        Variances.x5 TRUE
+#> 15 [0.22, 0.37]     0.30***        Variances.x6 TRUE
+#> 16 [0.56, 0.79]     0.68***        Variances.x7 TRUE
+#> 17 [0.33, 0.62]     0.48***        Variances.x8 TRUE
+#> 18 [0.42, 0.69]     0.56***        Variances.x9 TRUE
+#> 19 [1.00, 1.00]        1.00    Variances.visual TRUE
+#> 20 [1.00, 1.00]        1.00   Variances.textual TRUE
+#> 21 [1.00, 1.00]        1.00     Variances.speed TRUE
+#> 22 [0.33, 0.58]     0.46*** visual.WITH.textual TRUE
+#> 23 [0.33, 0.61]     0.47***   visual.WITH.speed TRUE
+#> 24 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE
 ```
 
 We can do the same for the nodes, but note that in the previous `lavaan` model, the mean structure was **not** part of the model.
@@ -413,19 +484,78 @@ Running `get_nodes()` now uses the estimated means in the label:
 
 ``` r
 get_nodes(fit)
-#>       name shape         label     lhs op rhs  est   se pval      confint est_sig est_std se_std pval_std
-#> 1    speed  oval   speed\n0.00   speed ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
-#> 2  textual  oval textual\n0.00 textual ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
-#> 3   visual  oval  visual\n0.00  visual ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
-#> 4       x1  rect   x1\n4.94***      x1 ~1     4.94 0.07 0.00 [4.80, 5.07] 4.94***    4.23   0.18     0.00
-#> 5       x2  rect   x2\n6.09***      x2 ~1     6.09 0.07 0.00 [5.96, 6.22] 6.09***    5.18   0.22     0.00
-#> 6       x3  rect   x3\n2.25***      x3 ~1     2.25 0.07 0.00 [2.12, 2.38] 2.25***    1.99   0.10     0.00
-#> 7       x4  rect   x4\n3.06***      x4 ~1     3.06 0.07 0.00 [2.93, 3.19] 3.06***    2.63   0.12     0.00
-#> 8       x5  rect   x5\n4.34***      x5 ~1     4.34 0.07 0.00 [4.19, 4.49] 4.34***    3.37   0.15     0.00
-#> 9       x6  rect   x6\n2.19***      x6 ~1     2.19 0.06 0.00 [2.06, 2.31] 2.19***    2.00   0.10     0.00
-#> 10      x7  rect   x7\n4.19***      x7 ~1     4.19 0.06 0.00 [4.06, 4.31] 4.19***    3.85   0.17     0.00
-#> 11      x8  rect   x8\n5.53***      x8 ~1     5.53 0.06 0.00 [5.41, 5.64] 5.53***    5.47   0.23     0.00
-#> 12      x9  rect   x9\n5.37***      x9 ~1     5.37 0.06 0.00 [5.26, 5.49] 5.37***    5.33   0.22     0.00
+#>       name shape         label     lhs op rhs  est   se pval
+#> 1    speed  oval   speed\n0.00   speed ~1     0.00 0.00 <NA>
+#> 2  textual  oval textual\n0.00 textual ~1     0.00 0.00 <NA>
+#> 3   visual  oval  visual\n0.00  visual ~1     0.00 0.00 <NA>
+#> 4       x1  rect   x1\n4.94***      x1 ~1     4.94 0.07 0.00
+#> 5       x2  rect   x2\n6.09***      x2 ~1     6.09 0.07 0.00
+#> 6       x3  rect   x3\n2.25***      x3 ~1     2.25 0.07 0.00
+#> 7       x4  rect   x4\n3.06***      x4 ~1     3.06 0.07 0.00
+#> 8       x5  rect   x5\n4.34***      x5 ~1     4.34 0.07 0.00
+#> 9       x6  rect   x6\n2.19***      x6 ~1     2.19 0.06 0.00
+#> 10      x7  rect   x7\n4.19***      x7 ~1     4.19 0.06 0.00
+#> 11      x8  rect   x8\n5.53***      x8 ~1     5.53 0.06 0.00
+#> 12      x9  rect   x9\n5.37***      x9 ~1     5.37 0.06 0.00
+#>         confint est_sig est_std se_std pval_std  confint_std
+#> 1  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]
+#> 2  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]
+#> 3  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]
+#> 4  [4.80, 5.07] 4.94***    4.23   0.18     0.00 [3.88, 4.59]
+#> 5  [5.96, 6.22] 6.09***    5.18   0.22     0.00 [4.75, 5.61]
+#> 6  [2.12, 2.38] 2.25***    1.99   0.10     0.00 [1.80, 2.19]
+#> 7  [2.93, 3.19] 3.06***    2.63   0.12     0.00 [2.39, 2.87]
+#> 8  [4.19, 4.49] 4.34***    3.37   0.15     0.00 [3.08, 3.66]
+#> 9  [2.06, 2.31] 2.19***    2.00   0.10     0.00 [1.80, 2.19]
+#> 10 [4.06, 4.31] 4.19***    3.85   0.17     0.00 [3.52, 4.18]
+#> 11 [5.41, 5.64] 5.53***    5.47   0.23     0.00 [5.02, 5.92]
+#> 12 [5.26, 5.49] 5.37***    5.33   0.22     0.00 [4.89, 5.78]
+#>    est_sig_std label_results
+#> 1         0.00   Means.speed
+#> 2         0.00 Means.textual
+#> 3         0.00  Means.visual
+#> 4      4.23***      Means.x1
+#> 5      5.18***      Means.x2
+#> 6      1.99***      Means.x3
+#> 7      2.63***      Means.x4
+#> 8      3.37***      Means.x5
+#> 9      2.00***      Means.x6
+#> 10     3.85***      Means.x7
+#> 11     5.47***      Means.x8
+#> 12     5.33***      Means.x9
+```
+
+These labels can be further customized as shown below:
+
+
+``` r
+get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
+#>       name shape                      label     lhs op rhs  est
+#> 1    speed  oval   speed\n0.00 [0.00, 0.00]   speed ~1     0.00
+#> 2  textual  oval textual\n0.00 [0.00, 0.00] textual ~1     0.00
+#> 3   visual  oval  visual\n0.00 [0.00, 0.00]  visual ~1     0.00
+#> 4       x1  rect      x1\n4.94 [4.80, 5.07]      x1 ~1     4.94
+#> 5       x2  rect      x2\n6.09 [5.96, 6.22]      x2 ~1     6.09
+#> 6       x3  rect      x3\n2.25 [2.12, 2.38]      x3 ~1     2.25
+#> 7       x4  rect      x4\n3.06 [2.93, 3.19]      x4 ~1     3.06
+#> 8       x5  rect      x5\n4.34 [4.19, 4.49]      x5 ~1     4.34
+#> 9       x6  rect      x6\n2.19 [2.06, 2.31]      x6 ~1     2.19
+#> 10      x7  rect      x7\n4.19 [4.06, 4.31]      x7 ~1     4.19
+#> 11      x8  rect      x8\n5.53 [5.41, 5.64]      x8 ~1     5.53
+#> 12      x9  rect      x9\n5.37 [5.26, 5.49]      x9 ~1     5.37
+#>      se pval      confint est_sig est_std se_std pval_std
+#> 1  0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
+#> 2  0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
+#> 3  0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
+#> 4  0.07 0.00 [4.80, 5.07] 4.94***    4.23   0.18     0.00
+#> 5  0.07 0.00 [5.96, 6.22] 6.09***    5.18   0.22     0.00
+#> 6  0.07 0.00 [2.12, 2.38] 2.25***    1.99   0.10     0.00
+#> 7  0.07 0.00 [2.93, 3.19] 3.06***    2.63   0.12     0.00
+#> 8  0.07 0.00 [4.19, 4.49] 4.34***    3.37   0.15     0.00
+#> 9  0.06 0.00 [2.06, 2.31] 2.19***    2.00   0.10     0.00
+#> 10 0.06 0.00 [4.06, 4.31] 4.19***    3.85   0.17     0.00
+#> 11 0.06 0.00 [5.41, 5.64] 5.53***    5.47   0.23     0.00
+#> 12 0.06 0.00 [5.26, 5.49] 5.37***    5.33   0.22     0.00
 #>     confint_std est_sig_std label_results
 #> 1  [0.00, 0.00]        0.00   Means.speed
 #> 2  [0.00, 0.00]        0.00 Means.textual
@@ -441,39 +571,6 @@ get_nodes(fit)
 #> 12 [4.89, 5.78]     5.33***      Means.x9
 ```
 
-These labels can be further customized as shown below:
-
-
-``` r
-get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
-#>       name shape                      label     lhs op rhs  est   se pval      confint est_sig est_std
-#> 1    speed  oval   speed\n0.00 [0.00, 0.00]   speed ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00
-#> 2  textual  oval textual\n0.00 [0.00, 0.00] textual ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00
-#> 3   visual  oval  visual\n0.00 [0.00, 0.00]  visual ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00
-#> 4       x1  rect      x1\n4.94 [4.80, 5.07]      x1 ~1     4.94 0.07 0.00 [4.80, 5.07] 4.94***    4.23
-#> 5       x2  rect      x2\n6.09 [5.96, 6.22]      x2 ~1     6.09 0.07 0.00 [5.96, 6.22] 6.09***    5.18
-#> 6       x3  rect      x3\n2.25 [2.12, 2.38]      x3 ~1     2.25 0.07 0.00 [2.12, 2.38] 2.25***    1.99
-#> 7       x4  rect      x4\n3.06 [2.93, 3.19]      x4 ~1     3.06 0.07 0.00 [2.93, 3.19] 3.06***    2.63
-#> 8       x5  rect      x5\n4.34 [4.19, 4.49]      x5 ~1     4.34 0.07 0.00 [4.19, 4.49] 4.34***    3.37
-#> 9       x6  rect      x6\n2.19 [2.06, 2.31]      x6 ~1     2.19 0.06 0.00 [2.06, 2.31] 2.19***    2.00
-#> 10      x7  rect      x7\n4.19 [4.06, 4.31]      x7 ~1     4.19 0.06 0.00 [4.06, 4.31] 4.19***    3.85
-#> 11      x8  rect      x8\n5.53 [5.41, 5.64]      x8 ~1     5.53 0.06 0.00 [5.41, 5.64] 5.53***    5.47
-#> 12      x9  rect      x9\n5.37 [5.26, 5.49]      x9 ~1     5.37 0.06 0.00 [5.26, 5.49] 5.37***    5.33
-#>    se_std pval_std  confint_std est_sig_std label_results
-#> 1    0.00     <NA> [0.00, 0.00]        0.00   Means.speed
-#> 2    0.00     <NA> [0.00, 0.00]        0.00 Means.textual
-#> 3    0.00     <NA> [0.00, 0.00]        0.00  Means.visual
-#> 4    0.18     0.00 [3.88, 4.59]     4.23***      Means.x1
-#> 5    0.22     0.00 [4.75, 5.61]     5.18***      Means.x2
-#> 6    0.10     0.00 [1.80, 2.19]     1.99***      Means.x3
-#> 7    0.12     0.00 [2.39, 2.87]     2.63***      Means.x4
-#> 8    0.15     0.00 [3.08, 3.66]     3.37***      Means.x5
-#> 9    0.10     0.00 [1.80, 2.19]     2.00***      Means.x6
-#> 10   0.17     0.00 [3.52, 4.18]     3.85***      Means.x7
-#> 11   0.23     0.00 [5.02, 5.92]     5.47***      Means.x8
-#> 12   0.22     0.00 [4.89, 5.78]     5.33***      Means.x9
-```
-
 #### Customize labels of a `sem_graph`
 
 Instead of customizing the node and edge labels in the call to `get_nodes()` and `get_edges()`,
@@ -487,56 +584,106 @@ First, let's generate a `sem_graph` object and examine the `edges` element:
 ``` r
 p <- prepare_graph(fit)
 edges(p)
-#>       from      to arrow   label connect_from connect_to curvature linetype     lhs op     rhs  est   se
-#> 1   visual      x1  last    1.00       bottom        top        NA        1  visual =~      x1 1.00 0.00
-#> 2   visual      x2  last 0.55***       bottom       left        NA        1  visual =~      x2 0.55 0.10
-#> 3   visual      x3  last 0.73***        right       left        NA        1  visual =~      x3 0.73 0.11
-#> 4  textual      x4  last    1.00       bottom      right        NA        1 textual =~      x4 1.00 0.00
-#> 5  textual      x5  last 1.11***       bottom        top        NA        1 textual =~      x5 1.11 0.07
-#> 6  textual      x6  last 0.93***       bottom       left        NA        1 textual =~      x6 0.93 0.06
-#> 7    speed      x7  last    1.00       bottom      right        NA        1   speed =~      x7 1.00 0.00
-#> 8    speed      x8  last 1.18***       bottom        top        NA        1   speed =~      x8 1.18 0.16
-#> 9    speed      x9  last 1.08***       bottom       left        NA        1   speed =~      x9 1.08 0.15
-#> 10      x1      x1  both 0.55***       bottom     bottom        NA        1      x1 ~~      x1 0.55 0.11
-#> 11      x2      x2  both 1.13***        right      right        NA        1      x2 ~~      x2 1.13 0.10
-#> 12      x3      x3  both 0.84***        right      right        NA        1      x3 ~~      x3 0.84 0.09
-#> 13      x4      x4  both 0.37***         left       left        NA        1      x4 ~~      x4 0.37 0.05
-#> 14      x5      x5  both 0.45***       bottom     bottom        NA        1      x5 ~~      x5 0.45 0.06
-#> 15      x6      x6  both 0.36***        right      right        NA        1      x6 ~~      x6 0.36 0.04
-#> 16      x7      x7  both 0.80***         left       left        NA        1      x7 ~~      x7 0.80 0.08
-#> 17      x8      x8  both 0.49***       bottom     bottom        NA        1      x8 ~~      x8 0.49 0.07
-#> 18      x9      x9  both 0.57***        right      right        NA        1      x9 ~~      x9 0.57 0.07
-#> 19  visual  visual  both 0.81***          top        top        NA        1  visual ~~  visual 0.81 0.15
-#> 20 textual textual  both 0.98***          top        top        NA        1 textual ~~ textual 0.98 0.11
-#> 21   speed   speed  both 0.38***        right      right        NA        1   speed ~~   speed 0.38 0.09
-#> 22  visual textual  none 0.41***         left      right        60        2  visual ~~ textual 0.41 0.07
-#> 23  visual   speed  none 0.26***       bottom        top        60        2  visual ~~   speed 0.26 0.06
-#> 24 textual   speed  none 0.17***        right       left        60        2 textual ~~   speed 0.17 0.05
-#>    pval      confint est_sig est_std se_std pval_std  confint_std est_sig_std       label_results show
-#> 1  <NA> [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]     0.77***        visual.BY.x1 TRUE
-#> 2  0.00 [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]     0.42***        visual.BY.x2 TRUE
-#> 3  0.00 [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]     0.58***        visual.BY.x3 TRUE
-#> 4  <NA> [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]     0.85***       textual.BY.x4 TRUE
-#> 5  0.00 [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]     0.86***       textual.BY.x5 TRUE
-#> 6  0.00 [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]     0.84***       textual.BY.x6 TRUE
-#> 7  <NA> [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]     0.57***         speed.BY.x7 TRUE
-#> 8  0.00 [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]     0.72***         speed.BY.x8 TRUE
-#> 9  0.00 [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]     0.67***         speed.BY.x9 TRUE
-#> 10 0.00 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]     0.40***        Variances.x1 TRUE
-#> 11 0.00 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]     0.82***        Variances.x2 TRUE
-#> 12 0.00 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]     0.66***        Variances.x3 TRUE
-#> 13 0.00 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]     0.27***        Variances.x4 TRUE
-#> 14 0.00 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]     0.27***        Variances.x5 TRUE
-#> 15 0.00 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]     0.30***        Variances.x6 TRUE
-#> 16 0.00 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]     0.68***        Variances.x7 TRUE
-#> 17 0.00 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]     0.48***        Variances.x8 TRUE
-#> 18 0.00 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]     0.56***        Variances.x9 TRUE
-#> 19 0.00 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]        1.00    Variances.visual TRUE
-#> 20 0.00 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]        1.00   Variances.textual TRUE
-#> 21 0.00 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]        1.00     Variances.speed TRUE
-#> 22 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]     0.46*** visual.WITH.textual TRUE
-#> 23 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]     0.47***   visual.WITH.speed TRUE
-#> 24 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE
+#>       from      to arrow   label connect_from connect_to
+#> 1   visual      x1  last    1.00        right       left
+#> 2   visual      x2  last 0.55***        right       left
+#> 3   visual      x3  last 0.73***        right       left
+#> 4  textual      x4  last    1.00         left      right
+#> 5  textual      x5  last 1.11***         left      right
+#> 6  textual      x6  last 0.93***         left      right
+#> 7    speed      x7  last    1.00        right       left
+#> 8    speed      x8  last 1.18***         left      right
+#> 9    speed      x9  last 1.08***         left      right
+#> 10      x1      x1  both 0.55***        right      right
+#> 11      x2      x2  both 1.13***        right      right
+#> 12      x3      x3  both 0.84***        right      right
+#> 13      x4      x4  both 0.37***         left       left
+#> 14      x5      x5  both 0.45***         left       left
+#> 15      x6      x6  both 0.36***         left       left
+#> 16      x7      x7  both 0.80***        right      right
+#> 17      x8      x8  both 0.49***         left       left
+#> 18      x9      x9  both 0.57***         left       left
+#> 19  visual  visual  both 0.81***       bottom     bottom
+#> 20 textual textual  both 0.98***       bottom     bottom
+#> 21   speed   speed  both 0.38***       bottom     bottom
+#> 22  visual textual  none 0.41***         left      right
+#> 23  visual   speed  none 0.26***         left      right
+#> 24 textual   speed  none 0.17***        right       left
+#>    curvature linetype     lhs op     rhs  est   se pval
+#> 1         NA        1  visual =~      x1 1.00 0.00 <NA>
+#> 2         NA        1  visual =~      x2 0.55 0.10 0.00
+#> 3         NA        1  visual =~      x3 0.73 0.11 0.00
+#> 4         NA        1 textual =~      x4 1.00 0.00 <NA>
+#> 5         NA        1 textual =~      x5 1.11 0.07 0.00
+#> 6         NA        1 textual =~      x6 0.93 0.06 0.00
+#> 7         NA        1   speed =~      x7 1.00 0.00 <NA>
+#> 8         NA        1   speed =~      x8 1.18 0.16 0.00
+#> 9         NA        1   speed =~      x9 1.08 0.15 0.00
+#> 10        NA        1      x1 ~~      x1 0.55 0.11 0.00
+#> 11        NA        1      x2 ~~      x2 1.13 0.10 0.00
+#> 12        NA        1      x3 ~~      x3 0.84 0.09 0.00
+#> 13        NA        1      x4 ~~      x4 0.37 0.05 0.00
+#> 14        NA        1      x5 ~~      x5 0.45 0.06 0.00
+#> 15        NA        1      x6 ~~      x6 0.36 0.04 0.00
+#> 16        NA        1      x7 ~~      x7 0.80 0.08 0.00
+#> 17        NA        1      x8 ~~      x8 0.49 0.07 0.00
+#> 18        NA        1      x9 ~~      x9 0.57 0.07 0.00
+#> 19        NA        1  visual ~~  visual 0.81 0.15 0.00
+#> 20        NA        1 textual ~~ textual 0.98 0.11 0.00
+#> 21        NA        1   speed ~~   speed 0.38 0.09 0.00
+#> 22        60        2  visual ~~ textual 0.41 0.07 0.00
+#> 23        60        2  visual ~~   speed 0.26 0.06 0.00
+#> 24        60        2 textual ~~   speed 0.17 0.05 0.00
+#>         confint est_sig est_std se_std pval_std  confint_std
+#> 1  [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]
+#> 2  [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]
+#> 3  [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]
+#> 4  [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]
+#> 5  [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]
+#> 6  [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]
+#> 7  [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]
+#> 8  [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]
+#> 9  [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]
+#> 10 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]
+#> 11 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]
+#> 12 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]
+#> 13 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]
+#> 14 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]
+#> 15 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]
+#> 16 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]
+#> 17 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]
+#> 18 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]
+#> 19 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]
+#> 20 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]
+#> 21 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]
+#> 22 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]
+#> 23 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]
+#> 24 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]
+#>    est_sig_std       label_results show
+#> 1      0.77***        visual.BY.x1 TRUE
+#> 2      0.42***        visual.BY.x2 TRUE
+#> 3      0.58***        visual.BY.x3 TRUE
+#> 4      0.85***       textual.BY.x4 TRUE
+#> 5      0.86***       textual.BY.x5 TRUE
+#> 6      0.84***       textual.BY.x6 TRUE
+#> 7      0.57***         speed.BY.x7 TRUE
+#> 8      0.72***         speed.BY.x8 TRUE
+#> 9      0.67***         speed.BY.x9 TRUE
+#> 10     0.40***        Variances.x1 TRUE
+#> 11     0.82***        Variances.x2 TRUE
+#> 12     0.66***        Variances.x3 TRUE
+#> 13     0.27***        Variances.x4 TRUE
+#> 14     0.27***        Variances.x5 TRUE
+#> 15     0.30***        Variances.x6 TRUE
+#> 16     0.68***        Variances.x7 TRUE
+#> 17     0.48***        Variances.x8 TRUE
+#> 18     0.56***        Variances.x9 TRUE
+#> 19        1.00    Variances.visual TRUE
+#> 20        1.00   Variances.textual TRUE
+#> 21        1.00     Variances.speed TRUE
+#> 22     0.46*** visual.WITH.textual TRUE
+#> 23     0.47***   visual.WITH.speed TRUE
+#> 24     0.28***  textual.WITH.speed TRUE
 ```
 
 All of the columns in the edges element can be used to manually construct labels, using the `edit_graph()` function:
@@ -593,83 +740,159 @@ The nodes and edges can be examined using `nodes(graph_data)` and `edges(graph_d
 
 ``` r
 nodes(graph_data)
-#>       name shape         label  x y node_xmin node_xmax node_ymin node_ymax     lhs op rhs  est   se pval
-#> 1    speed  oval   speed\n0.00 14 4      13.5      14.5       3.5       4.5   speed ~1     0.00 0.00 <NA>
-#> 2  textual  oval textual\n0.00 10 4       9.5      10.5       3.5       4.5 textual ~1     0.00 0.00 <NA>
-#> 3   visual  oval  visual\n0.00  6 4       5.5       6.5       3.5       4.5  visual ~1     0.00 0.00 <NA>
-#> 4       x1  rect   x1\n4.94***  2 2       1.4       2.6       1.6       2.4      x1 ~1     4.94 0.07 0.00
-#> 5       x2  rect   x2\n6.09***  4 2       3.4       4.6       1.6       2.4      x2 ~1     6.09 0.07 0.00
-#> 6       x3  rect   x3\n2.25***  6 2       5.4       6.6       1.6       2.4      x3 ~1     2.25 0.07 0.00
-#> 7       x4  rect   x4\n3.06***  8 2       7.4       8.6       1.6       2.4      x4 ~1     3.06 0.07 0.00
-#> 8       x5  rect   x5\n4.34*** 10 2       9.4      10.6       1.6       2.4      x5 ~1     4.34 0.07 0.00
-#> 9       x6  rect   x6\n2.19*** 12 2      11.4      12.6       1.6       2.4      x6 ~1     2.19 0.06 0.00
-#> 10      x7  rect   x7\n4.19*** 14 2      13.4      14.6       1.6       2.4      x7 ~1     4.19 0.06 0.00
-#> 11      x8  rect   x8\n5.53*** 16 2      15.4      16.6       1.6       2.4      x8 ~1     5.53 0.06 0.00
-#> 12      x9  rect   x9\n5.37*** 18 2      17.4      18.6       1.6       2.4      x9 ~1     5.37 0.06 0.00
-#>         confint est_sig est_std se_std pval_std  confint_std est_sig_std label_results show
-#> 1  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]        0.00   Means.speed TRUE
-#> 2  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]        0.00 Means.textual TRUE
-#> 3  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]        0.00  Means.visual TRUE
-#> 4  [4.80, 5.07] 4.94***    4.23   0.18     0.00 [3.88, 4.59]     4.23***      Means.x1 TRUE
-#> 5  [5.96, 6.22] 6.09***    5.18   0.22     0.00 [4.75, 5.61]     5.18***      Means.x2 TRUE
-#> 6  [2.12, 2.38] 2.25***    1.99   0.10     0.00 [1.80, 2.19]     1.99***      Means.x3 TRUE
-#> 7  [2.93, 3.19] 3.06***    2.63   0.12     0.00 [2.39, 2.87]     2.63***      Means.x4 TRUE
-#> 8  [4.19, 4.49] 4.34***    3.37   0.15     0.00 [3.08, 3.66]     3.37***      Means.x5 TRUE
-#> 9  [2.06, 2.31] 2.19***    2.00   0.10     0.00 [1.80, 2.19]     2.00***      Means.x6 TRUE
-#> 10 [4.06, 4.31] 4.19***    3.85   0.17     0.00 [3.52, 4.18]     3.85***      Means.x7 TRUE
-#> 11 [5.41, 5.64] 5.53***    5.47   0.23     0.00 [5.02, 5.92]     5.47***      Means.x8 TRUE
-#> 12 [5.26, 5.49] 5.37***    5.33   0.22     0.00 [4.89, 5.78]     5.33***      Means.x9 TRUE
+#>       name shape         label  x y node_xmin node_xmax
+#> 1    speed  oval   speed\n0.00 14 4      13.5      14.5
+#> 2  textual  oval textual\n0.00 10 4       9.5      10.5
+#> 3   visual  oval  visual\n0.00  6 4       5.5       6.5
+#> 4       x1  rect   x1\n4.94***  2 2       1.4       2.6
+#> 5       x2  rect   x2\n6.09***  4 2       3.4       4.6
+#> 6       x3  rect   x3\n2.25***  6 2       5.4       6.6
+#> 7       x4  rect   x4\n3.06***  8 2       7.4       8.6
+#> 8       x5  rect   x5\n4.34*** 10 2       9.4      10.6
+#> 9       x6  rect   x6\n2.19*** 12 2      11.4      12.6
+#> 10      x7  rect   x7\n4.19*** 14 2      13.4      14.6
+#> 11      x8  rect   x8\n5.53*** 16 2      15.4      16.6
+#> 12      x9  rect   x9\n5.37*** 18 2      17.4      18.6
+#>    node_ymin node_ymax     lhs op rhs  est   se pval
+#> 1        3.5       4.5   speed ~1     0.00 0.00 <NA>
+#> 2        3.5       4.5 textual ~1     0.00 0.00 <NA>
+#> 3        3.5       4.5  visual ~1     0.00 0.00 <NA>
+#> 4        1.6       2.4      x1 ~1     4.94 0.07 0.00
+#> 5        1.6       2.4      x2 ~1     6.09 0.07 0.00
+#> 6        1.6       2.4      x3 ~1     2.25 0.07 0.00
+#> 7        1.6       2.4      x4 ~1     3.06 0.07 0.00
+#> 8        1.6       2.4      x5 ~1     4.34 0.07 0.00
+#> 9        1.6       2.4      x6 ~1     2.19 0.06 0.00
+#> 10       1.6       2.4      x7 ~1     4.19 0.06 0.00
+#> 11       1.6       2.4      x8 ~1     5.53 0.06 0.00
+#> 12       1.6       2.4      x9 ~1     5.37 0.06 0.00
+#>         confint est_sig est_std se_std pval_std  confint_std
+#> 1  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]
+#> 2  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]
+#> 3  [0.00, 0.00]    0.00    0.00   0.00     <NA> [0.00, 0.00]
+#> 4  [4.80, 5.07] 4.94***    4.23   0.18     0.00 [3.88, 4.59]
+#> 5  [5.96, 6.22] 6.09***    5.18   0.22     0.00 [4.75, 5.61]
+#> 6  [2.12, 2.38] 2.25***    1.99   0.10     0.00 [1.80, 2.19]
+#> 7  [2.93, 3.19] 3.06***    2.63   0.12     0.00 [2.39, 2.87]
+#> 8  [4.19, 4.49] 4.34***    3.37   0.15     0.00 [3.08, 3.66]
+#> 9  [2.06, 2.31] 2.19***    2.00   0.10     0.00 [1.80, 2.19]
+#> 10 [4.06, 4.31] 4.19***    3.85   0.17     0.00 [3.52, 4.18]
+#> 11 [5.41, 5.64] 5.53***    5.47   0.23     0.00 [5.02, 5.92]
+#> 12 [5.26, 5.49] 5.37***    5.33   0.22     0.00 [4.89, 5.78]
+#>    est_sig_std label_results show
+#> 1         0.00   Means.speed TRUE
+#> 2         0.00 Means.textual TRUE
+#> 3         0.00  Means.visual TRUE
+#> 4      4.23***      Means.x1 TRUE
+#> 5      5.18***      Means.x2 TRUE
+#> 6      1.99***      Means.x3 TRUE
+#> 7      2.63***      Means.x4 TRUE
+#> 8      3.37***      Means.x5 TRUE
+#> 9      2.00***      Means.x6 TRUE
+#> 10     3.85***      Means.x7 TRUE
+#> 11     5.47***      Means.x8 TRUE
+#> 12     5.33***      Means.x9 TRUE
 edges(graph_data)
-#>       from      to arrow   label connect_from connect_to curvature linetype     lhs op     rhs  est   se
-#> 1   visual      x1  last    1.00         left      right        NA        1  visual =~      x1 1.00 0.00
-#> 2   visual      x2  last 0.55***       bottom      right        NA        1  visual =~      x2 0.55 0.10
-#> 3   visual      x3  last 0.73***       bottom        top        NA        1  visual =~      x3 0.73 0.11
-#> 4  textual      x4  last    1.00       bottom      right        NA        1 textual =~      x4 1.00 0.00
-#> 5  textual      x5  last 1.11***       bottom        top        NA        1 textual =~      x5 1.11 0.07
-#> 6  textual      x6  last 0.93***       bottom       left        NA        1 textual =~      x6 0.93 0.06
-#> 7    speed      x7  last    1.00       bottom        top        NA        1   speed =~      x7 1.00 0.00
-#> 8    speed      x8  last 1.18***       bottom       left        NA        1   speed =~      x8 1.18 0.16
-#> 9    speed      x9  last 1.08***        right       left        NA        1   speed =~      x9 1.08 0.15
-#> 10      x1      x1  both 0.55***         left       left        NA        1      x1 ~~      x1 0.55 0.11
-#> 11      x2      x2  both 1.13***         left       left        NA        1      x2 ~~      x2 1.13 0.10
-#> 12      x3      x3  both 0.84***       bottom     bottom        NA        1      x3 ~~      x3 0.84 0.09
-#> 13      x4      x4  both 0.37***         left       left        NA        1      x4 ~~      x4 0.37 0.05
-#> 14      x5      x5  both 0.45***       bottom     bottom        NA        1      x5 ~~      x5 0.45 0.06
-#> 15      x6      x6  both 0.36***        right      right        NA        1      x6 ~~      x6 0.36 0.04
-#> 16      x7      x7  both 0.80***       bottom     bottom        NA        1      x7 ~~      x7 0.80 0.08
-#> 17      x8      x8  both 0.49***        right      right        NA        1      x8 ~~      x8 0.49 0.07
-#> 18      x9      x9  both 0.57***        right      right        NA        1      x9 ~~      x9 0.57 0.07
-#> 19  visual  visual  both 0.81***          top        top        NA        1  visual ~~  visual 0.81 0.15
-#> 20 textual textual  both 0.98***          top        top        NA        1 textual ~~ textual 0.98 0.11
-#> 21   speed   speed  both 0.38***          top        top        NA        1   speed ~~   speed 0.38 0.09
-#> 22  visual textual  none 0.41***        right       left        60        2  visual ~~ textual 0.41 0.07
-#> 23  visual   speed  none 0.26***        right       left        60        2  visual ~~   speed 0.26 0.06
-#> 24 textual   speed  none 0.17***        right       left        60        2 textual ~~   speed 0.17 0.05
-#>    pval      confint est_sig est_std se_std pval_std  confint_std est_sig_std       label_results show
-#> 1  <NA> [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]     0.77***        visual.BY.x1 TRUE
-#> 2  0.00 [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]     0.42***        visual.BY.x2 TRUE
-#> 3  0.00 [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]     0.58***        visual.BY.x3 TRUE
-#> 4  <NA> [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]     0.85***       textual.BY.x4 TRUE
-#> 5  0.00 [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]     0.86***       textual.BY.x5 TRUE
-#> 6  0.00 [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]     0.84***       textual.BY.x6 TRUE
-#> 7  <NA> [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]     0.57***         speed.BY.x7 TRUE
-#> 8  0.00 [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]     0.72***         speed.BY.x8 TRUE
-#> 9  0.00 [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]     0.67***         speed.BY.x9 TRUE
-#> 10 0.00 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]     0.40***        Variances.x1 TRUE
-#> 11 0.00 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]     0.82***        Variances.x2 TRUE
-#> 12 0.00 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]     0.66***        Variances.x3 TRUE
-#> 13 0.00 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]     0.27***        Variances.x4 TRUE
-#> 14 0.00 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]     0.27***        Variances.x5 TRUE
-#> 15 0.00 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]     0.30***        Variances.x6 TRUE
-#> 16 0.00 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]     0.68***        Variances.x7 TRUE
-#> 17 0.00 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]     0.48***        Variances.x8 TRUE
-#> 18 0.00 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]     0.56***        Variances.x9 TRUE
-#> 19 0.00 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]        1.00    Variances.visual TRUE
-#> 20 0.00 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]        1.00   Variances.textual TRUE
-#> 21 0.00 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]        1.00     Variances.speed TRUE
-#> 22 0.00 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]     0.46*** visual.WITH.textual TRUE
-#> 23 0.00 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]     0.47***   visual.WITH.speed TRUE
-#> 24 0.00 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]     0.28***  textual.WITH.speed TRUE
+#>       from      to arrow   label connect_from connect_to
+#> 1   visual      x1  last    1.00         left      right
+#> 2   visual      x2  last 0.55***       bottom      right
+#> 3   visual      x3  last 0.73***       bottom        top
+#> 4  textual      x4  last    1.00       bottom      right
+#> 5  textual      x5  last 1.11***       bottom        top
+#> 6  textual      x6  last 0.93***       bottom       left
+#> 7    speed      x7  last    1.00       bottom        top
+#> 8    speed      x8  last 1.18***       bottom       left
+#> 9    speed      x9  last 1.08***        right       left
+#> 10      x1      x1  both 0.55***         left       left
+#> 11      x2      x2  both 1.13***         left       left
+#> 12      x3      x3  both 0.84***       bottom     bottom
+#> 13      x4      x4  both 0.37***         left       left
+#> 14      x5      x5  both 0.45***       bottom     bottom
+#> 15      x6      x6  both 0.36***        right      right
+#> 16      x7      x7  both 0.80***       bottom     bottom
+#> 17      x8      x8  both 0.49***        right      right
+#> 18      x9      x9  both 0.57***        right      right
+#> 19  visual  visual  both 0.81***          top        top
+#> 20 textual textual  both 0.98***          top        top
+#> 21   speed   speed  both 0.38***          top        top
+#> 22  visual textual  none 0.41***        right       left
+#> 23  visual   speed  none 0.26***        right       left
+#> 24 textual   speed  none 0.17***        right       left
+#>    curvature linetype     lhs op     rhs  est   se pval
+#> 1         NA        1  visual =~      x1 1.00 0.00 <NA>
+#> 2         NA        1  visual =~      x2 0.55 0.10 0.00
+#> 3         NA        1  visual =~      x3 0.73 0.11 0.00
+#> 4         NA        1 textual =~      x4 1.00 0.00 <NA>
+#> 5         NA        1 textual =~      x5 1.11 0.07 0.00
+#> 6         NA        1 textual =~      x6 0.93 0.06 0.00
+#> 7         NA        1   speed =~      x7 1.00 0.00 <NA>
+#> 8         NA        1   speed =~      x8 1.18 0.16 0.00
+#> 9         NA        1   speed =~      x9 1.08 0.15 0.00
+#> 10        NA        1      x1 ~~      x1 0.55 0.11 0.00
+#> 11        NA        1      x2 ~~      x2 1.13 0.10 0.00
+#> 12        NA        1      x3 ~~      x3 0.84 0.09 0.00
+#> 13        NA        1      x4 ~~      x4 0.37 0.05 0.00
+#> 14        NA        1      x5 ~~      x5 0.45 0.06 0.00
+#> 15        NA        1      x6 ~~      x6 0.36 0.04 0.00
+#> 16        NA        1      x7 ~~      x7 0.80 0.08 0.00
+#> 17        NA        1      x8 ~~      x8 0.49 0.07 0.00
+#> 18        NA        1      x9 ~~      x9 0.57 0.07 0.00
+#> 19        NA        1  visual ~~  visual 0.81 0.15 0.00
+#> 20        NA        1 textual ~~ textual 0.98 0.11 0.00
+#> 21        NA        1   speed ~~   speed 0.38 0.09 0.00
+#> 22        60        2  visual ~~ textual 0.41 0.07 0.00
+#> 23        60        2  visual ~~   speed 0.26 0.06 0.00
+#> 24        60        2 textual ~~   speed 0.17 0.05 0.00
+#>         confint est_sig est_std se_std pval_std  confint_std
+#> 1  [1.00, 1.00]    1.00    0.77   0.05     0.00 [0.66, 0.88]
+#> 2  [0.36, 0.75] 0.55***    0.42   0.06     0.00 [0.31, 0.54]
+#> 3  [0.52, 0.94] 0.73***    0.58   0.06     0.00 [0.47, 0.69]
+#> 4  [1.00, 1.00]    1.00    0.85   0.02     0.00 [0.81, 0.90]
+#> 5  [0.98, 1.24] 1.11***    0.86   0.02     0.00 [0.81, 0.90]
+#> 6  [0.82, 1.03] 0.93***    0.84   0.02     0.00 [0.79, 0.88]
+#> 7  [1.00, 1.00]    1.00    0.57   0.05     0.00 [0.47, 0.67]
+#> 8  [0.86, 1.50] 1.18***    0.72   0.05     0.00 [0.62, 0.82]
+#> 9  [0.79, 1.38] 1.08***    0.67   0.05     0.00 [0.56, 0.77]
+#> 10 [0.33, 0.77] 0.55***    0.40   0.08     0.00 [0.24, 0.57]
+#> 11 [0.93, 1.33] 1.13***    0.82   0.05     0.00 [0.72, 0.92]
+#> 12 [0.67, 1.02] 0.84***    0.66   0.06     0.00 [0.54, 0.79]
+#> 13 [0.28, 0.46] 0.37***    0.27   0.04     0.00 [0.20, 0.35]
+#> 14 [0.33, 0.56] 0.45***    0.27   0.04     0.00 [0.19, 0.34]
+#> 15 [0.27, 0.44] 0.36***    0.30   0.04     0.00 [0.22, 0.37]
+#> 16 [0.64, 0.96] 0.80***    0.68   0.06     0.00 [0.56, 0.79]
+#> 17 [0.34, 0.63] 0.49***    0.48   0.07     0.00 [0.33, 0.62]
+#> 18 [0.43, 0.70] 0.57***    0.56   0.07     0.00 [0.42, 0.69]
+#> 19 [0.52, 1.09] 0.81***    1.00   0.00     <NA> [1.00, 1.00]
+#> 20 [0.76, 1.20] 0.98***    1.00   0.00     <NA> [1.00, 1.00]
+#> 21 [0.21, 0.55] 0.38***    1.00   0.00     <NA> [1.00, 1.00]
+#> 22 [0.26, 0.55] 0.41***    0.46   0.06     0.00 [0.33, 0.58]
+#> 23 [0.15, 0.37] 0.26***    0.47   0.07     0.00 [0.33, 0.61]
+#> 24 [0.08, 0.27] 0.17***    0.28   0.07     0.00 [0.15, 0.42]
+#>    est_sig_std       label_results show
+#> 1      0.77***        visual.BY.x1 TRUE
+#> 2      0.42***        visual.BY.x2 TRUE
+#> 3      0.58***        visual.BY.x3 TRUE
+#> 4      0.85***       textual.BY.x4 TRUE
+#> 5      0.86***       textual.BY.x5 TRUE
+#> 6      0.84***       textual.BY.x6 TRUE
+#> 7      0.57***         speed.BY.x7 TRUE
+#> 8      0.72***         speed.BY.x8 TRUE
+#> 9      0.67***         speed.BY.x9 TRUE
+#> 10     0.40***        Variances.x1 TRUE
+#> 11     0.82***        Variances.x2 TRUE
+#> 12     0.66***        Variances.x3 TRUE
+#> 13     0.27***        Variances.x4 TRUE
+#> 14     0.27***        Variances.x5 TRUE
+#> 15     0.30***        Variances.x6 TRUE
+#> 16     0.68***        Variances.x7 TRUE
+#> 17     0.48***        Variances.x8 TRUE
+#> 18     0.56***        Variances.x9 TRUE
+#> 19        1.00    Variances.visual TRUE
+#> 20        1.00   Variances.textual TRUE
+#> 21        1.00     Variances.speed TRUE
+#> 22     0.46*** visual.WITH.textual TRUE
+#> 23     0.47***   visual.WITH.speed TRUE
+#> 24     0.28***  textual.WITH.speed TRUE
 ```
 
 ### Optional step 7: Modify the nodes and edges
@@ -833,20 +1056,34 @@ Let's estimate a model and look at all of the columns extracted by `get_edges()`
 
 
 ```
-#>   from  to arrow    label connect_from connect_to curvature linetype lhs op rhs   est   se pval
-#> 1  cyl mpg  last -2.50***           NA         NA        NA        1 mpg  ~ cyl -2.50 0.34 0.00
-#> 2   am mpg  last    2.57*           NA         NA        NA        1 mpg  ~  am  2.57 1.23 0.04
-#> 3  mpg mpg  both  8.48***           NA         NA        NA        1 mpg ~~ mpg  8.48 2.12 0.00
-#> 4  cyl cyl  both     3.09           NA         NA        NA        1 cyl ~~ cyl  3.09 0.00 <NA>
-#> 5  cyl  am  none    -0.45           NA         NA        60        2 cyl ~~  am -0.45 0.00 <NA>
-#> 6   am  am  both     0.24           NA         NA        NA        1  am ~~  am  0.24 0.00 <NA>
-#>          confint  est_sig est_std se_std pval_std    confint_std est_sig_std label_results  show
-#> 1 [-3.17, -1.83] -2.50***   -0.74   0.08     0.00 [-0.89, -0.59]    -0.74***    mpg.ON.cyl  TRUE
-#> 2   [0.16, 4.98]    2.57*    0.21   0.10     0.03   [0.02, 0.41]       0.21*     mpg.ON.am  TRUE
-#> 3  [4.32, 12.64]  8.48***    0.24   0.06     0.00   [0.13, 0.36]     0.24*** Variances.mpg  TRUE
-#> 4   [3.09, 3.09]     3.09    1.00   0.00     <NA>   [1.00, 1.00]        1.00 Variances.cyl FALSE
-#> 5 [-0.45, -0.45]    -0.45   -0.52   0.00     <NA> [-0.52, -0.52]       -0.52   cyl.WITH.am FALSE
-#> 6   [0.24, 0.24]     0.24    1.00   0.00     <NA>   [1.00, 1.00]        1.00  Variances.am FALSE
+#>   from  to arrow    label connect_from connect_to curvature
+#> 1  cyl mpg  last -2.50***           NA         NA        NA
+#> 2   am mpg  last    2.57*           NA         NA        NA
+#> 3  mpg mpg  both  8.48***           NA         NA        NA
+#> 4  cyl cyl  both     3.09           NA         NA        NA
+#> 5  cyl  am  none    -0.45           NA         NA        60
+#> 6   am  am  both     0.24           NA         NA        NA
+#>   linetype lhs op rhs   est   se pval        confint  est_sig
+#> 1        1 mpg  ~ cyl -2.50 0.34 0.00 [-3.17, -1.83] -2.50***
+#> 2        1 mpg  ~  am  2.57 1.23 0.04   [0.16, 4.98]    2.57*
+#> 3        1 mpg ~~ mpg  8.48 2.12 0.00  [4.32, 12.64]  8.48***
+#> 4        1 cyl ~~ cyl  3.09 0.00 <NA>   [3.09, 3.09]     3.09
+#> 5        2 cyl ~~  am -0.45 0.00 <NA> [-0.45, -0.45]    -0.45
+#> 6        1  am ~~  am  0.24 0.00 <NA>   [0.24, 0.24]     0.24
+#>   est_std se_std pval_std    confint_std est_sig_std
+#> 1   -0.74   0.08     0.00 [-0.89, -0.59]    -0.74***
+#> 2    0.21   0.10     0.03   [0.02, 0.41]       0.21*
+#> 3    0.24   0.06     0.00   [0.13, 0.36]     0.24***
+#> 4    1.00   0.00     <NA>   [1.00, 1.00]        1.00
+#> 5   -0.52   0.00     <NA> [-0.52, -0.52]       -0.52
+#> 6    1.00   0.00     <NA>   [1.00, 1.00]        1.00
+#>   label_results  show
+#> 1    mpg.ON.cyl  TRUE
+#> 2     mpg.ON.am  TRUE
+#> 3 Variances.mpg  TRUE
+#> 4 Variances.cyl FALSE
+#> 5   cyl.WITH.am FALSE
+#> 6  Variances.am FALSE
 ```
 
 Any of these columns can be used to conditionally format the graph.

@@ -41,8 +41,8 @@ Next, we estimate 1-3 class solutions:
 
 ``` r
 res <- mx_profiles(data = df, classes = 1:3)
-#> MxComputeSimAnnealing(tsallis1996) evaluations 2206 fit 2889.68 change -2413MxComputeSimAnnealing(tsallis1996) evaluations 7375 fit 1890.01 change 569.6                                                                            
-#> MxComputeSimAnnealing(tsallis1996) evaluations 1824 fit 1863.63 change 199.8MxComputeSimAnnealing(tsallis1996) evaluations 5517 fit 1346.4 change -245  MxComputeSimAnnealing(tsallis1996) evaluations 9146 fit 1311.49 change 1.025MxComputeSimAnnealing(tsallis1996) evaluations 12776 fit 1310.19 change -1.569                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 950 fit 1903.96 change -98.65MxComputeSimAnnealing(tsallis1996) evaluations 6581 fit 1313.6 change -23.4                                                                            
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1279 fit 2928.78 change -649.7MxComputeSimAnnealing(tsallis1996) evaluations 5156 fit 1536.11 change 220.9 MxComputeSimAnnealing(tsallis1996) evaluations 8956 fit 1310.3 change -455.6MxComputeSimAnnealing(tsallis1996) evaluations 12739 fit 1311.12 change -326.2                                                                              
 ```
 
 Optionally, one can perform the bootstrapped likelihood ratio test.
@@ -58,11 +58,12 @@ res_blrt
 ```
 
 
+
 ```
 #> Bootstrapped Likelihood Ratio Test:
 #> 
 #>  null  alt    lr df blrt_p samples
-#>  mix1 mix2 91.95  3   0.00      98
+#>  mix1 mix2 91.95  3   0.00      99
 #>  mix2 mix3  3.41  3   0.44      96
 ```
 
@@ -81,11 +82,11 @@ res_pmc <- pmc(res)
 ```
 #> PMC model comparison using SRMR:
 #> 
-#>  comparison null  alt  null_stat   alt_stat          lb          ub sig
-#>     dif_seq mix1 mix2 0.51665420 0.03633316 -0.64415512 -0.34942787   *
-#>     dif_seq mix2 mix3 0.03633316 0.03439975 -0.07001605  0.08783185    
-#>     dif_one mix1 mix2 0.51665420 0.03633316 -0.64415512 -0.34942787   *
-#>     dif_one mix1 mix3 0.51665420 0.03439975 -0.63939182 -0.36371510   *
+#>  comparison null  alt null_stat alt_stat    lb     ub sig
+#>     dif_seq mix1 mix2     0.517    0.036 -0.64 -0.349   *
+#>     dif_seq mix2 mix3     0.036    0.034 -0.07  0.088    
+#>     dif_one mix1 mix2     0.517    0.036 -0.64 -0.349   *
+#>     dif_one mix1 mix3     0.517    0.034 -0.64 -0.364   *
 ```
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
@@ -109,17 +110,17 @@ pmc(res_cat, reps = 20)
 ```
 #> Beginning initial fit attemptFit attempt 0, fit=813.722003986849, new current best! (was 813.72200398685)Beginning fit attempt 1 of at maximum 10 extra tries                        Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
 #> Beginning initial fit attemptFit attempt 0, fit=813.722003986846, new current best! (was 813.722003986849)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=763.493917717475, new current best! (was 813.722003986846)Beginning fit attempt 2 of at maximum 10 extra tries                         Fit attempt 2, fit=763.493917717435, new current best! (was 763.493917717475)Beginning fit attempt 3 of at maximum 10 extra tries                         Fit attempt 3, fit=763.493917717433, new current best! (was 763.493917717435)Beginning fit attempt 4 of at maximum 10 extra tries                         Beginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=763.493917717433, new current best! (was 763.493917717433)Beginning fit attempt 6 of at maximum 10 extra tries                         Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFit attempt 10, fit=763.493917717431, new current best! (was 763.493917717433)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                              
-#> Beginning initial fit attemptFit attempt 0, fit=813.722003986846, new current best! (was 813.722003986849)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=763.490198334132, new current best! (was 813.722003986846)Beginning fit attempt 2 of at maximum 10 extra tries                         Beginning fit attempt 3 of at maximum 10 extra triesFit attempt 3, fit=763.490198334131, new current best! (was 763.490198334132)Beginning fit attempt 4 of at maximum 10 extra tries                         Beginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesFit attempt 6, fit=763.49019833413, new current best! (was 763.490198334131)Beginning fit attempt 7 of at maximum 10 extra tries                        Beginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=763.490198334128, new current best! (was 763.49019833413)Beginning fit attempt 9 of at maximum 10 extra tries                        Beginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=813.722003986846, new current best! (was 813.722003986849)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=763.490198334132, new current best! (was 813.722003986846)Beginning fit attempt 2 of at maximum 10 extra tries                         Beginning fit attempt 3 of at maximum 10 extra triesFit attempt 3, fit=763.490198334131, new current best! (was 763.490198334132)Beginning fit attempt 4 of at maximum 10 extra tries                         Beginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesFit attempt 6, fit=763.49019833413, new current best! (was 763.490198334131)Beginning fit attempt 7 of at maximum 10 extra tries                        Beginning fit attempt 8 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 320 fit 763.5 change -0.04009                                                                         Fit attempt 8, fit=763.490198334128, new current best! (was 763.49019833413)Beginning fit attempt 9 of at maximum 10 extra tries                        Beginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
 ```
 
 ```
 #> PMC model comparison using chi squared:
 #> 
-#>  comparison null  alt null_stat  alt_stat         lb        ub sig
-#>     dif_seq mix1 mix2 -143.2320 -186.6654 -73.989003 -27.04252   *
-#>     dif_seq mix2 mix3 -186.6654 -181.3458  -3.330308  17.80954    
-#>     dif_one mix1 mix2 -143.2320 -186.6654 -73.989003 -27.04252   *
-#>     dif_one mix1 mix3 -143.2320 -181.3458 -61.632078 -15.16548   *
+#>  comparison null  alt null_stat alt_stat    lb  ub sig
+#>     dif_seq mix1 mix2      -143     -187 -74.0 -27   *
+#>     dif_seq mix2 mix3      -187     -181  -3.3  18    
+#>     dif_one mix1 mix2      -143     -187 -74.0 -27   *
+#>     dif_one mix1 mix3      -143     -181 -61.6 -15   *
 ```
 
 The argument `FUN` allows users to override these defaults, and specify any custom function to compare the observed data (`x`) and model-implied data (`y`).

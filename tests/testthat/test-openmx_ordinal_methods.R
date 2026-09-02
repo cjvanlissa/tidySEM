@@ -16,10 +16,9 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
                     umxThresholdMatrix(df, names(df), method = "allFree"),
                     mxFitFunctionML(vector=TRUE))
       c1$expectation$thresholds <- "threshMat"
-      c1$deviations_for_thresh$values <- structure(c(0.493797002905578, 0.292025391567409, 0.0954617695580417,
+      c1$deviations_for_thresh$values[,] <- c(0.493797002905578, 0.292025391567409, 0.0954617695580417,
                                                      0.278707105926806, -0.414864787727856, 0.28685436808645, -0.368187507919911,
-                                                     0.322331242046851), .Dim = c(2L, 4L), .Dimnames = list(c("dev_1",
-                                                                                                              "dev_2"), c("u1", "u2", "u3", "u4")))
+                                                     0.322331242046851)
 
       c2 <- mxModel(c1,
                     name = "class2")
@@ -32,10 +31,9 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
                      mxMatrix(values=c(1, 0), nrow=1, ncol=2, lbound = 1e-4, free=c(FALSE, TRUE), name="weights"),
                      mxExpectationMixture(paste0("class", 1:2), weights = "weights", scale="sum"),
                      mxFitFunctionML())
-      c2$deviations_for_thresh$values <- structure(c(-0.417588977444548, 0.383792478783957, -0.0693951277323035,
+      c2$deviations_for_thresh$values[,] <- c(-0.417588977444548, 0.383792478783957, -0.0693951277323035,
                                                      0.299055722485786, 0.231319786555848, 0.32146641858211, 0.204438137718803,
-                                                     0.277326511781225), .Dim = c(2L, 4L), .Dimnames = list(c("dev_1",
-                                                                                                              "dev_2"), c("u1", "u2", "u3", "u4")))
+                                                     0.277326511781225)
 
       res <- mxTryHardOrdinal(mix, extraTries = 10)
       tmp <- class_prob(res)
@@ -143,12 +141,12 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
                              mxExpectationMixture(paste0("class", 1:2), weights = "weights", scale="sum"),
                              mxFitFunctionML()
       )
-      c1$mat_dev$values <- structure(c(0.493797002905578, 0.292025391567409, 0.0954617695580417,
+      c1$mat_dev$values[,] <- c(0.493797002905578, 0.292025391567409, 0.0954617695580417,
                                        0.278707105926806, -0.414864787727856, 0.28685436808645, -0.368187507919911,
-                                       0.322331242046851), .Dim = c(2L, 4L))
-      c2$mat_dev$values <- structure(c(-0.417588977444548, 0.383792478783957, -0.0693951277323035,
+                                       0.322331242046851)
+      c2$mat_dev$values[,] <- c(-0.417588977444548, 0.383792478783957, -0.0693951277323035,
                                        0.299055722485786, 0.231319786555848, 0.32146641858211, 0.204438137718803,
-                                       0.277326511781225), .Dim = c(2L, 4L))
+                                       0.277326511781225)
 
       res_tidysem <- mxTryHardOrdinal(mix_tidysem, extraTries = 10)
       tmp_tidysem <- class_prob(res_tidysem)

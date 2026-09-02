@@ -43,8 +43,9 @@ As an example, let's make a graph for a classic `lavaan` tutorial example for CF
 ``` r
 df <- HolzingerSwineford1939
 names(df)
-#>  [1] "id"     "sex"    "ageyr"  "agemo"  "school" "grade"  "x1"     "x2"     "x3"     "x4"     "x5"    
-#> [12] "x6"     "x7"     "x8"     "x9"
+#>  [1] "id"     "sex"    "ageyr"  "agemo"  "school" "grade" 
+#>  [7] "x1"     "x2"     "x3"     "x4"     "x5"     "x6"    
+#> [13] "x7"     "x8"     "x9"
 ```
 
 These names are not informative, as the items named `x..` are indicators of three different latent variables. We will rename them accordingly:
@@ -109,7 +110,7 @@ model |>
 ```
 
 ```
-#> lavaan 0.6-21 ended normally after 35 iterations
+#> lavaan 0.7-2 ended normally after 35 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -271,7 +272,7 @@ The modified model could then be run:
 
 ``` r
 estimate_lavaan(model)
-#> lavaan 0.6-21 ended normally after 28 iterations
+#> lavaan 0.7-2 ended normally after 28 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -299,7 +300,7 @@ model |>
 ```
 
 ```
-#> lavaan 0.6-21 ended normally after 25 iterations
+#> lavaan 0.7-2 ended normally after 25 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -378,7 +379,7 @@ model |>
 
 
 ```
-#> lavaan 0.6-21 ended normally after 31 iterations
+#> lavaan 0.7-2 ended normally after 31 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

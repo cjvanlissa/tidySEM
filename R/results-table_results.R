@@ -524,7 +524,7 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
       (user_specified$op == "==" & user_specified$user != 1L) |
         (user_specified$op == "==" & user_specified$user == 1L) |
         (user_specified$op %in% c("<", ">")))
-  if(length(remthese > 0)) user_specified <- user_specified[-remthese, , drop = FALSE]
+  if(length(remthese) > 0) user_specified <- user_specified[-remthese, , drop = FALSE]
   user_specified <- (user_specified$free != 0 | !is.na(user_specified$ustart))
 
   rename_dict <- c("pvalue" = "pval")
@@ -533,7 +533,9 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
      names(pars_unst)[names(pars_unst) == "label"] <- "lavaan_label"
   }
   # Rename columns for consistency with mplus
-  names(pars_unst)[match(names(rename_dict), names(pars_unst))] <- rename_dict[names(rename_dict) %in% names(pars_unst)]
+  if(any(names(rename_dict) %in% names(pars_unst))){
+    names(pars_unst)[match(names(rename_dict), names(pars_unst))] <- rename_dict[names(rename_dict) %in% names(pars_unst)]
+  }
   pars_unst$label <- lavaan_labels(pars_unst)
 
   num_groups <- lavInspect(x, what = "ngroups")
@@ -620,6 +622,10 @@ table_results.lavaan <- function(x, columns = c("label", "est_sig", "se", "pval"
   if(length(user_specified) == nrow(results)) attr(results, "user_specified") <- user_specified
   results
 }
+
+#' @method table_results lavaan.mi
+#' @export
+table_results.lavaan.mi <- table_results.lavaan
 
 #' @importFrom lavaan parameterEstimates standardizedsolution
 # @importFrom blavaan blavInspect

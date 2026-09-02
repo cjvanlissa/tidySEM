@@ -1,5 +1,8 @@
 # tidySEM 0.2.11
 
+* Add deviances_to_thresholds() to reparametrize models
+  with ordinal indicators after they have been run,
+  e.g. to facilitate specifying Wald tests.
 * pmc() deprecates pmc_srmr() function
 * Add srmr() function
 * as_ram() gains argument threshold_method

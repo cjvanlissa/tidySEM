@@ -1,0 +1,37 @@
+---
+title: "Untitled"
+output: html_document
+date: "2026-08-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Testing Differences in Thresholds
+
+In most models with ordinal indicators,
+the response proportions per level of the ordinal factors is modeled as a "threshold": a value of the standard normal distribution where the probability mass in the left tail corresponds to the response proportion of that level of the ordinal factor.
+
+In these LCA models, however, we instead model response proportions per level of the ordinal factors in terms of threshold differences, which are strictly positive.
+This benefits model convergence.
+The thresholds are then computed by summing successive differences.
+
+Verify that the parameters are indeed deviances, not thresholds themselves by running `coef(res_final)`.
+The function `table_results(res_final)` computes the thresholds by summing the deviances.
+
+We can use a Wald test to test for threshold differences between the classes.
+However, to do so, we have to manually specify the sum of parameters.
+Thus, to compare the first threshold of the first indicator between the three classes, we could run:
+
+```{r echo = TRUE, eval = FALSE}
+res <- readRDS("lca_res.RData")
+res_final = res[[3]]
+table_results(res[[3]])
+wald_test(res_final, "class1.mat_dev[1,1] = class2.mat_dev[1,1] = class3.mat_dev[1,1]")
+```
+
+To test if the second threshold of the first variable differs across all three classes, we could use the following more complicated syntax, which adds the deviances:
+
+```{r}
+wald_test(res_final, "(class1.mat_dev[1,1]+class1.mat_dev[2,1], class2.mat_dev[1,1]+class2.mat_dev[2,1]) = class3.mat_dev[1,1]+class3.mat_dev[2,1]")
+```

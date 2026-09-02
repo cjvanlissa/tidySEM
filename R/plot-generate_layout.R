@@ -102,7 +102,7 @@ space_these <- function(these, n){
 #' layout algorithm to apply to position the nodes. Defaults to
 #' \code{"layout_as_tree"}; see details for more options.
 #' @export
-get_layout.lavaan <- function(x, ..., layout_algorithm = "layout_as_tree"){
+get_layout.lavaan <- function(x, ..., layout_algorithm = "fr_grid"){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, columns = NULL)
   do.call(get_layout, Args)
@@ -122,29 +122,53 @@ get_layout.mplusObject <- get_layout.lavaan
 
 #' @method get_layout tidy_results
 #' @export
+# @importFrom igraph graph_from_data_frame vertex.attributes
+# @importFrom igraph layout_as_star layout_as_tree layout_in_circle
+# @importFrom igraph layout_nicely layout_on_grid layout_randomly
+# @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
+# @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
+# @importFrom igraph layout_with_mds
+get_layout.tidy_results <- function(x, ..., layout_algorithm = "fr_grid"){
+  #cl <- match.call()
+  #cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
+  #cl <- cl[c(1L, which(names(cl) == "x"))]
+  #df <- eval.parent(cl)[, c("from", "to")]
+  df <- x[, c("lhs", "rhs")]
+  nds <- unique(unlist(df))
+  if(layout_algorithm == "fr_grid"){
+    lo <- fr_layout_integer_compact(nodes = nds, edges = as.matrix(df))
+  } else {
+    g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
+    lo <- do.call(layout_algorithm, list(g))
+    rownames(lo) <- igraph::vertex.attributes(g)$name
+  }
+  lo <- snap_layout_to_grid(lo)
+  return(lo)
+}
+
+#' @method get_layout tidy_edges
+#' @export
 #' @importFrom igraph graph_from_data_frame vertex.attributes
 #' @importFrom igraph layout_as_star layout_as_tree layout_in_circle
 #' @importFrom igraph layout_nicely layout_on_grid layout_randomly
 #' @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
 #' @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
 #' @importFrom igraph layout_with_mds
-get_layout.tidy_results <- function(x, ..., layout_algorithm = "layout_as_tree"){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
-  cl <- cl[c(1L, which(names(cl) == "x"))]
-  df <- eval.parent(cl)[c("from", "to")]
-  get_layout(df)
+get_layout.tidy_edges <- function(x, ..., layout_algorithm = "fr_grid"){
+  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
+    message('Run `install.packages("igraph")` before using functions that require it.')
+    df <- x[, c("lhs", "rhs")]
+    nds <- unique(unlist(df))
+    return(fr_layout_integer_compact(nodes = nds, edges = as.matrix(df)))
+  }
+  g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
+  lo <- do.call(layout_algorithm, list(g))
+  rownames(lo) <- igraph::vertex.attributes(g)$name
+  lo <- snap_layout_to_grid(lo)
+  return(lo)
 }
 
-#' @method get_layout tidy_edges
-#' @export
-#' @importFrom igraph graph_from_data_frame vertex.attributes
-#' layout_as_star layout_as_tree layout_in_circle layout_nicely
-#' layout_on_grid layout_randomly layout_with_dh layout_with_fr layout_with_gem
-#' layout_with_graphopt layout_with_kk layout_with_lgl layout_with_mds
-get_layout.tidy_edges <- function(x, ..., layout_algorithm = "layout_as_tree"){
-  g <- igraph::graph_from_data_frame(x, directed = TRUE)
-  lo <- do.call(layout_algorithm, list(g))
+snap_layout_to_grid <- function(lo){
   lo <- round(lo)
   if(any(duplicated(lo))){
     lo <- resolve_dups(lo)
@@ -152,14 +176,14 @@ get_layout.tidy_edges <- function(x, ..., layout_algorithm = "layout_as_tree"){
   }
   lo <- sweep(lo, 2, (apply(lo, 2, min)-1), "-")
   out <- matrix(nrow = max(lo[,2]), ncol = max(lo[, 1]))
-  vnames <- vertex.attributes(g)$name
+  vnames <- rownames(lo)
   for(this_var in 1:length(vnames)){
     out[lo[this_var, 2], lo[this_var, 1]] <- vnames[this_var]
   }
   if(dim(out)[2] < dim(out)[1]){
     out <- t(out)
   } else {
-    out <- out[nrow(out):1, ]
+    out <- out[nrow(out):1, , drop = FALSE]
   }
   class(out) <- c("layout_matrix", class(out))
   return(out)
