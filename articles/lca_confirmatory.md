@@ -45,6 +45,7 @@ first only use the four scales:
 `c("burdened", "trapped", "negaffect", "loneliness")`.
 
 ``` r
+
 # Load required packages
 library(tidySEM)
 library(ggplot2)
@@ -62,6 +63,7 @@ to describe the data numerically. Because all scales are continuous, we
 select only columns for continuous data to de-clutter the table:
 
 ``` r
+
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "n", "missing", "unique", "mean", "median",
     "sd", "min", "max", "skew_2se", "kurt_2se")]
@@ -73,8 +75,8 @@ percentage of missingness, and all variables have relatively high
 kurtosis. Since there are some missing values, we can conduct an MCAR
 test using `mice::mcar(df)`. According to Hawkins’ test, there is no
 evidence to reject the assumptions of multivariate normality and MCAR,
-$\widetilde{\chi^{2}}(6) = 3.78,\widetilde{p} = 0.71$. Missing data will
-be accounted for using FIML.
+$`\tilde{\chi^2}(6) = 3.78, \tilde{p} = 0.71`$. Missing data will be
+accounted for using FIML.
 
 Additionally, we can plot the data. The `ggplot2` function
 [`geom_density()`](https://ggplot2.tidyverse.org/reference/geom_density.html)
@@ -84,6 +86,7 @@ conclusions from the
 table: the data are kurtotic (peaked).
 
 ``` r
+
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
@@ -104,10 +107,12 @@ covariances. Its arguments are `data` and number of `classes`. All
 variables in `data` are included in the analysis, which is why we first
 selected the indicator variables. As this is a confirmatory LCA, we do
 not follow a strictly data-driven class enumeration procedure. We will
-set the maximum number of classes $K$ to one more than the theoretically
-expected number. We set a seed to ensure replicable results.
+set the maximum number of classes $`K`$ to one more than the
+theoretically expected number. We set a seed to ensure replicable
+results.
 
 ``` r
+
 set.seed(123)
 res <- mx_profiles(data = df, classes = 1:5)
 ```
@@ -144,6 +149,7 @@ However, in this confirmatory use case, we address this when
 interpreting the results.
 
 ``` r
+
 fit <- table_fit(res)  # model fit table
 fit[, c("Name", "LL", "Parameters", "n", "BIC", "Entropy", "prob_min",
     "prob_max", "n_min", "n_max", "np_ratio", "np_local")]
@@ -166,6 +172,7 @@ If we conduct LMR tests, we find that the tests are significant for all
 pairwise model comparisons, except for the 5-class model:
 
 ``` r
+
 lr_lmr(res)
 ```
 
@@ -186,6 +193,7 @@ progress, we use the `progressr` ecosystem, which allows users to choose
 how they want to be informed. The example below uses a progress bar:
 
 ``` r
+
 library(future)
 library(progressr)
 plan(multisession)  # Parallel processing for Windows
@@ -208,6 +216,7 @@ compare our theoretical model against their competing model as follows.
 Note that we can put two models into a list to compare them.
 
 ``` r
+
 res_alt <- mx_profiles(df, classes = 4, variances = "varying")
 compare <- list(res[[4]], res_alt)
 table_fit(compare)
@@ -223,18 +232,20 @@ To interpret the final class solution, we first reorder the 4-class
 model by class size. This helps prevent label switching.
 
 ``` r
+
 res_final <- mx_switch_labels(res[[4]])
 ```
 
 The 4-class model yielded classes of reasonable size; using
 `class_pro`the largest class comprised 33%, and the smallest comprised
-16% of cases. However, the entropy was low, $S = .75$, indicating poor
+16% of cases. However, the entropy was low, $`S = .75`$, indicating poor
 class separability. Furthermore, the posterior classification
-probability ranged from $\lbrack.81,.92\rbrack$, which means that at
-least some classes had a high classification error. We produce a table
-of the results below.
+probability ranged from $`[.81, .92]`$, which means that at least some
+classes had a high classification error. We produce a table of the
+results below.
 
 ``` r
+
 table_results(res_final, columns = c("label", "est", "se", "confint",
     "class"))
 ```
@@ -250,6 +261,7 @@ However, we omit the density plots, because
 also includes them.
 
 ``` r
+
 plot_bivariate(res_final)
 ```
 
@@ -286,6 +298,7 @@ however that the observed classes do not match the hypothesized pattern
 of class parameters exactly.
 
 ``` r
+
 plot_profiles(res_final)
 ```
 
@@ -306,6 +319,7 @@ argument, omitting the `model` argument. Below, we estimate an auxiliary
 model to compare the sex of patients between classes:
 
 ``` r
+
 aux_sex <- BCH(res_final, data = zegwaard_carecompass$sexpatient)
 ```
 
@@ -313,8 +327,8 @@ To obtain an omnibus likelihood ratio test of the significance of these
 sex differences across classes, as well as pairwise comparisons between
 classes, use `lr_test(aux_sex)`. The results indicate that there are
 significant sex differences across classes,
-$\Delta LL(1) = 8.7,p = .003$. Pairwise comparisons indicate that class
-3 differs significantly from classes 1 and 2. The results can be
+$`\Delta LL(1) = 8.7, p = .003`$. Pairwise comparisons indicate that
+class 3 differs significantly from classes 1 and 2. The results can be
 reported in probability scale using `table_prob(aux_sex)`. It appears
 that the entrapped class disproportionately cares for female patients.
 
@@ -325,6 +339,7 @@ will examine whether the distance predicts the frequency of visits
 differently across classes (treated as continuous).
 
 ``` r
+
 df_aux <- zegwaard_carecompass[, c("freqvisit", "distance")]
 df_aux$freqvisit <- as.numeric(df_aux$freqvisit)
 aux_model <- BCH(res_final, model = "freqvisit ~ distance", data = df_aux)
@@ -334,10 +349,11 @@ To obtain an omnibus likelihood ratio test of the difference in
 regression coefficients across classes and pairwise comparisons between
 classes, use `lr_test(aux_model, compare = "A")`. The results indicate
 that there are no significant sex differences across classes,
-$\Delta LL(3) = 0.98,p = .81$. The results can be reported using
+$`\Delta LL(3) = 0.98, p = .81`$. The results can be reported using
 `table_results(aux_model)`:
 
 ``` r
+
 table_results(aux_model)
 ```
 
@@ -356,6 +372,7 @@ function (in previous versions, we overloaded the
 class, as well as posterior probabilities for all classes.
 
 ``` r
+
 df_new <- data.frame(burdened = 2, trapped = 0.5, negaffect = 1.5,
     loneliness = 4)
 predict_class(res_final, newdata = df_new)

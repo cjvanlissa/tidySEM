@@ -33,6 +33,7 @@ To load the data, simply attach the `tidySEM` package. For convenience,
 we assign the indicator data to an object called `df`:
 
 ``` r
+
 # Load required packages
 library(tidySEM)
 library(ggplot2)
@@ -48,6 +49,7 @@ to describe the data numerically. Because all items are categorical, we
 remove columns for continuous data to de-clutter the table:
 
 ``` r
+
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "missing", "unique", "mode",
     "mode_value", "v")]
@@ -59,6 +61,7 @@ Additionally, we can plot the data. The `ggplot2` function
 useful for ordinal data:
 
 ``` r
+
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
@@ -113,6 +116,7 @@ We here consider 1-6 class models, but note that this may be overfit, as
 some of the indicators have only 5 response categories.
 
 ``` r
+
 set.seed(123)
 res <- mx_lca(data = df, classes = 1:6)
 ```
@@ -133,6 +137,7 @@ and retain relevant columns. We also determine whether any models can be
 disqualified.
 
 ``` r
+
 fit <- table_fit(res)
 fit[, c("Name", "LL", "n", "Parameters", "BIC", "Entropy", "prob_min",
     "n_min", "np_ratio", "np_local")]
@@ -168,6 +173,7 @@ theoretical consideration, the analysis proceeded with the 3-class
 solution.
 
 ``` r
+
 res_final <- res[[3]]
 ```
 
@@ -175,16 +181,16 @@ res_final <- res[[3]]
 
 The 3-class model yielded classes of reasonable size; the largest class
 comprised 33%, and the smallest comprised 16% of cases. The entropy was
-high, $S = .93$, indicating good class separability. Furthermore, the
-posterior classification probability ranged from
-$\lbrack.94,.99\rbrack$, which means that all classes had low
-classification error. We can produce a table of results using
-`table_results(res_final)`. However, the results are thresholds,
-indicating quantiles of a standardized normal distribution. These may be
-difficult to interpret. Therefore, we ask for the results in probability
-scale:
+high, $`S = .93`$, indicating good class separability. Furthermore, the
+posterior classification probability ranged from $`[.94, .99]`$, which
+means that all classes had low classification error. We can produce a
+table of results using `table_results(res_final)`. However, the results
+are thresholds, indicating quantiles of a standardized normal
+distribution. These may be difficult to interpret. Therefore, we ask for
+the results in probability scale:
 
 ``` r
+
 tab <- table_prob(res_final)
 reshape(tab, direction = "wide", v.names = "Probability", timevar = "group",
     idvar = c("Variable", "Category"))
@@ -194,6 +200,7 @@ The results can also be interpreted by plotting the response
 probabilities:
 
 ``` r
+
 plot_prob(res_final, bw = TRUE)
 ```
 
@@ -221,6 +228,7 @@ auxiliary variable depression to the `data` argument, omitting the
 depressive symptoms across classes:
 
 ``` r
+
 aux_dep <- BCH(res_final, data = maene_identity$depression)
 ```
 
@@ -228,7 +236,7 @@ To obtain an omnibus likelihood ratio test of the significance of
 depression differences across classes, as well as pairwise comparisons
 between classes, use `lr_test(aux_dep)`. The results indicate that there
 are no significant differences in depression across classes,
-$\Delta LL(5) = 4.32,p = .50$.
+$`\Delta LL(5) = 4.32, p = .50`$.
 
 Hypothesis 3 was that, for assimilated and separated adolescents, there
 would not be a significant effect of perceived teacher discrimination on
@@ -237,6 +245,7 @@ regression coefficient of discrimination on depressive symptoms across
 classes.
 
 ``` r
+
 df_aux <- maene_identity[, c("vict_teacher", "depression")]
 # Dummy-code vict_teacher
 df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher) - 1)
@@ -254,4 +263,4 @@ across classes: using `lr_test(aux_model, compare = "A")`, to compare
 the ‘A matrix’ (regression coefficients) across classes, or
 `wald_test(aux_model, "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]")`.
 The results indicate that there are no significant differences in the
-regression coefficients across classes, $\chi^{2}(2) = 1.16,p = .56$.
+regression coefficients across classes, $`\chi^2 (2) = 1.16, p = .56`$.

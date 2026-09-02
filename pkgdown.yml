@@ -1,5 +1,5 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   Generating_syntax: Generating_syntax.html
@@ -8,11 +8,13 @@ articles:
   lca_lcga: lca_lcga.html
   lca_ordinal: lca_ordinal.html
   mixed_lca: mixed_lca.html
+  openmx_ordinal: openmx_ordinal.html
   Plotting_graphs: Plotting_graphs.html
+  pmc_tutorial: pmc_tutorial.html
   sem_graph: sem_graph.html
   SMART_LCA_checklist: SMART_LCA_checklist.html
   Tabulating_results: Tabulating_results.html
-last_built: 2026-04-11T12:31Z
+last_built: 2026-09-02T07:28Z
 urls:
   reference: https://cjvanlissa.github.io/tidySEM/reference
   article: https://cjvanlissa.github.io/tidySEM/articles

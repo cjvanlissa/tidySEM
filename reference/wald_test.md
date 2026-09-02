@@ -46,6 +46,6 @@ coef(mod)
 #>   6.5262226  -0.2233611 
 wald_test(mod, "Sepal.Width = 0")
 #> Wald tests for linear hypotheses:
-#>     Hypothesis Res.Df      RSS Df Sum.of.Sq        F         p
-#>  Sepal.Width=0    148 100.7561  1  1.412238 2.074427 0.1518983
+#>       Hypothesis Res.Df      RSS Df Sum.of.Sq        F         p
+#>  Sepal.Width = 0    148 100.7561  1  1.412238 2.074427 0.1518983
 ```

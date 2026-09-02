@@ -69,8 +69,8 @@ always linear.
     - Optionally, verify that the model can capture distributional
       idiosyncracies (see Data Preprocessing).
 6.  Number of classes
-    - Justify the maximum number of classes $k$.
-    - In exploratory LCA, estimate 1:$k$ classes.
+    - Justify the maximum number of classes $`k`$.
+    - In exploratory LCA, estimate 1:$`k`$ classes.
     - In confirmatory LCA, estimate the theoretical number of classes
       and choose other models to benchmark it against. This should
       include a 1-class model, optionally competing theoretical models,

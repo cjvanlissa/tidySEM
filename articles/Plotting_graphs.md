@@ -20,6 +20,7 @@ first.
 Let’s load the required packages:
 
 ``` r
+
 library(tidySEM)
 library(lavaan)
 library(ggplot2)
@@ -61,6 +62,7 @@ As an example, let’s make a graph for a classic `lavaan` tutorial
 example for CFA. First, we conduct the SEM analysis:
 
 ``` r
+
 library(lavaan)
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
@@ -73,6 +75,7 @@ fit <- cfa(HS.model, data=HolzingerSwineford1939)
 At this point, we could simply plot the graph:
 
 ``` r
+
 graph_sem(model = fit)
 ```
 
@@ -110,11 +113,12 @@ function automatically generates a layout for a fit model object. To get
 this layout as a matrix, you can run:
 
 ``` r
+
 get_layout(fit)
-#>      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]
-#> [1,] NA   NA        NA   NA   NA      "visual" NA   NA  
-#> [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"
-#> [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  
+#>      [,1] [,2]    [,3]      [,4]
+#> [1,] "x8" "x6"    "x4"      "x5"
+#> [2,] "x9" "speed" "textual" "x3"
+#> [3,] "x7" "x1"    "visual"  "x2"
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 ```
@@ -127,18 +131,20 @@ to place the nodes. Other layout functions from the `igraph` package can
 be used by specifying the `layout_algorithm = ...` argument:
 
 ``` r
+
 get_layout(fit, layout_algorithm = "layout_in_circle")
-#>      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]
-#> [1,] NA   NA        NA   NA   NA      "visual" NA   NA  
-#> [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"
-#> [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  
+#>      [,1] [,2] [,3]      [,4]    [,5]
+#> [1,] NA   "x5" NA        NA      NA  
+#> [2,] NA   "x6" "x4"      "x3"    "x2"
+#> [3,] "x8" "x7" "textual" "x1"    NA  
+#> [4,] NA   "x9" "visual"  "speed" NA  
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 get_layout(fit, layout_algorithm = "layout_on_grid")
-#>      [,1] [,2]      [,3] [,4] [,5]    [,6]     [,7] [,8]
-#> [1,] NA   NA        NA   NA   NA      "visual" NA   NA  
-#> [2,] NA   "textual" NA   NA   "speed" "x1"     "x2" "x3"
-#> [3,] "x4" "x5"      "x6" "x7" "x8"    "x9"     NA   NA  
+#>      [,1]     [,2]      [,3]    [,4]
+#> [1,] "x6"     "x7"      "x8"    "x9"
+#> [2,] "x2"     "x3"      "x4"    "x5"
+#> [3,] "visual" "textual" "speed" "x1"
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 ```
@@ -150,6 +156,7 @@ empty spaces (`NA` or `""`), and the number of rows of the desired
 layout matrix. For example:
 
 ``` r
+
 get_layout("c", NA,  "d",
            NA,  "e", NA, rows = 2)
 #>      [,1] [,2] [,3]
@@ -173,6 +180,7 @@ To obtain the layout matrix, one can save the spreadsheet as `.csv` file
 and load it in R like this:
 
 ``` r
+
 read.csv("example.csv")
 ```
 
@@ -183,18 +191,16 @@ differently on Windows and Mac.
 On Windows, run:
 
 ``` r
+
 read.table("clipboard", sep = "\t")
 ```
 
 On Mac, run:
 
 ``` r
+
 read.table(pipe("pbpaste"), sep="\t")
 ```
-
-    #>   V1     V2 V3
-    #> 1 x1     x2 x3
-    #> 2    visual
 
 ### Examples of user-defined layout
 
@@ -202,6 +208,7 @@ We can specify a simple layout for two hypothetical nodes `x` and `y` is
 generated as follows:
 
 ``` r
+
 get_layout("x", "y", rows = 1)
 #>      [,1] [,2]
 #> [1,] "x"  "y" 
@@ -212,6 +219,7 @@ get_layout("x", "y", rows = 1)
 For a mediation model, one might specify a layout like this:
 
 ``` r
+
 get_layout("", "m", "",
            "x", "", "y", rows = 2)
 #>      [,1] [,2] [,3]
@@ -224,6 +232,7 @@ get_layout("", "m", "",
 For a three-item CFA model, one might specify:
 
 ``` r
+
 get_layout("", "F", "",
            "y1", "y2", "y3", rows = 2)
 #>      [,1] [,2] [,3]
@@ -236,6 +245,7 @@ get_layout("", "F", "",
 And for the CFA model we estimated above:
 
 ``` r
+
 lay <- get_layout("", "", "visual","","textual","","speed","", "",
                   "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", rows = 2)
 ```
@@ -243,6 +253,7 @@ lay <- get_layout("", "", "visual","","textual","","speed","", "",
 We could plot the CFA model with this custom layout as follows:
 
 ``` r
+
 graph_sem(fit, layout = lay)
 ```
 
@@ -259,6 +270,7 @@ available by running
 [`get_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/get_nodes.md):
 
 ``` r
+
 get_nodes(fit)
 #>       name shape   label
 #> 1   visual  oval  visual
@@ -278,6 +290,7 @@ get_nodes(fit)
 And for the edges:
 
 ``` r
+
 get_edges(fit)
 #>       from      to arrow   label connect_from connect_to curvature linetype
 #> 1   visual      x1  last    1.00           NA         NA        NA        1
@@ -382,6 +395,7 @@ you want to combine the parameter estimate and its confidence interval
 into an edge label:
 
 ``` r
+
 get_edges(fit, label = paste(est, confint))
 #>       from      to arrow             label connect_from connect_to curvature
 #> 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA        NA
@@ -475,6 +489,7 @@ We can re-run the model with a mean structure to get more information
 about the nodes:
 
 ``` r
+
 fit <- cfa(HS.model, data=HolzingerSwineford1939, meanstructure = TRUE)
 ```
 
@@ -483,6 +498,7 @@ Running
 now uses the estimated means in the label:
 
 ``` r
+
 get_nodes(fit)
 #>       name shape         label     lhs op rhs  est   se pval      confint
 #> 1    speed  oval   speed\n0.00   speed ~1     0.00 0.00 <NA> [0.00, 0.00]
@@ -515,6 +531,7 @@ get_nodes(fit)
 These labels can be further customized as shown below:
 
 ``` r
+
 get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
 #>       name shape                      label     lhs op rhs  est   se pval
 #> 1    speed  oval   speed\n0.00 [0.00, 0.00]   speed ~1     0.00 0.00 <NA>
@@ -569,33 +586,34 @@ other properties of the plot) later. First, let’s generate a `sem_graph`
 object and examine the `edges` element:
 
 ``` r
+
 p <- prepare_graph(fit)
 edges(p)
 #>       from      to arrow   label connect_from connect_to curvature linetype
-#> 1   visual      x1  last    1.00       bottom        top        NA        1
-#> 2   visual      x2  last 0.55***       bottom       left        NA        1
-#> 3   visual      x3  last 0.73***        right       left        NA        1
-#> 4  textual      x4  last    1.00       bottom      right        NA        1
-#> 5  textual      x5  last 1.11***       bottom        top        NA        1
-#> 6  textual      x6  last 0.93***       bottom       left        NA        1
-#> 7    speed      x7  last    1.00       bottom      right        NA        1
-#> 8    speed      x8  last 1.18***       bottom        top        NA        1
-#> 9    speed      x9  last 1.08***       bottom       left        NA        1
-#> 10      x1      x1  both 0.55***       bottom     bottom        NA        1
-#> 11      x2      x2  both 1.13***        right      right        NA        1
-#> 12      x3      x3  both 0.84***        right      right        NA        1
-#> 13      x4      x4  both 0.37***         left       left        NA        1
-#> 14      x5      x5  both 0.45***       bottom     bottom        NA        1
+#> 1   visual      x1  last    1.00         left      right        NA        1
+#> 2   visual      x2  last 0.55***         left      right        NA        1
+#> 3   visual      x3  last 0.73***         left      right        NA        1
+#> 4  textual      x4  last    1.00        right       left        NA        1
+#> 5  textual      x5  last 1.11***        right       left        NA        1
+#> 6  textual      x6  last 0.93***        right       left        NA        1
+#> 7    speed      x7  last    1.00        right       left        NA        1
+#> 8    speed      x8  last 1.18***         left      right        NA        1
+#> 9    speed      x9  last 1.08***        right       left        NA        1
+#> 10      x1      x1  both 0.55***         left       left        NA        1
+#> 11      x2      x2  both 1.13***         left       left        NA        1
+#> 12      x3      x3  both 0.84***         left       left        NA        1
+#> 13      x4      x4  both 0.37***        right      right        NA        1
+#> 14      x5      x5  both 0.45***        right      right        NA        1
 #> 15      x6      x6  both 0.36***        right      right        NA        1
-#> 16      x7      x7  both 0.80***         left       left        NA        1
-#> 17      x8      x8  both 0.49***       bottom     bottom        NA        1
+#> 16      x7      x7  both 0.80***        right      right        NA        1
+#> 17      x8      x8  both 0.49***         left       left        NA        1
 #> 18      x9      x9  both 0.57***        right      right        NA        1
-#> 19  visual  visual  both 0.81***          top        top        NA        1
-#> 20 textual textual  both 0.98***          top        top        NA        1
-#> 21   speed   speed  both 0.38***        right      right        NA        1
-#> 22  visual textual  none 0.41***         left      right        60        2
-#> 23  visual   speed  none 0.26***       bottom        top        60        2
-#> 24 textual   speed  none 0.17***        right       left        60        2
+#> 19  visual  visual  both 0.81***       bottom     bottom        NA        1
+#> 20 textual textual  both 0.98***       bottom     bottom        NA        1
+#> 21   speed   speed  both 0.38***       bottom     bottom        NA        1
+#> 22  visual textual  none 0.41***        right       left        60        2
+#> 23  visual   speed  none 0.26***        right       left        60        2
+#> 24 textual   speed  none 0.17***         left      right        60        2
 #>        lhs op     rhs  est   se pval      confint est_sig est_std se_std
 #> 1   visual =~      x1 1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77   0.05
 #> 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06
@@ -654,6 +672,7 @@ construct labels, using the
 function:
 
 ``` r
+
 prepare_graph(fit) %>%
   edit_graph({ label = paste(est_sig_std, "\n", confint_std) }) %>%
   plot()
@@ -664,6 +683,7 @@ prepare_graph(fit) %>%
 The same can be done for the node labels:
 
 ``` r
+
 prepare_graph(fit) %>%
   edit_graph({ label = paste(est_sig_std, "\n", confint_std) }) %>%
   edit_graph({ label = paste(name, "\n", est_sig_std, "\n", confint_std) }, element = "nodes") %>%
@@ -679,6 +699,7 @@ shown). For example, we can change the label color for both nodes and
 edges:
 
 ``` r
+
 prepare_graph(fit) %>%
   edit_graph({ label_color = "blue" }) %>%
   plot()
@@ -698,6 +719,7 @@ plotting. First, use
 to assign the plot data to an object.
 
 ``` r
+
 graph_data <- prepare_graph(model = fit, layout = lay)
 ```
 
@@ -707,6 +729,7 @@ The nodes and edges can be examined using `nodes(graph_data)` and
 `edges(graph_data)`:
 
 ``` r
+
 nodes(graph_data)
 #>       name shape         label  x y node_xmin node_xmax node_ymin node_ymax
 #> 1    speed  oval   speed\n0.00 14 4      13.5      14.5       3.5       4.5
@@ -835,6 +858,7 @@ node labels for latent variables in *Title Case* instead of just using
 the variable names:
 
 ``` r
+
 library(dplyr)
 library(stringr)
 nodes(graph_data) <- nodes(graph_data) %>%
@@ -848,6 +872,7 @@ to connect all nodes top-to-bottom - except for the latent variable
 covariances. We can use the same conditional replacement for the edges:
 
 ``` r
+
 edges(graph_data) %>%
   mutate(connect_from = replace(connect_from, is.na(curvature), "bottom")) %>%
   mutate(connect_to = replace(connect_to, is.na(curvature), "top")) -> edges(graph_data)
@@ -859,6 +884,7 @@ We can plot a customized graph using `plot(graph_data)`; a generic plot
 method for `sem_graph` objects:
 
 ``` r
+
 plot(graph_data)
 ```
 
@@ -880,6 +906,7 @@ by increasing `angle` to a larger number (up to 180 degrees), we can
 also ensure that all nodes are connected top to bottom:
 
 ``` r
+
 graph_sem(model = fit, layout = lay, angle = 170)
 ```
 
@@ -912,6 +939,7 @@ These aesthetics can be customized by adding columns to the edges
 data.frame, whose names correspond to the aesthetics. For example:
 
 ``` r
+
 edg <- data.frame(from = "x",
                   to = "y",
                   linetype = 2,
@@ -941,6 +969,7 @@ Nodes have the following aesthetics (see `?geom_polygon()`):
 These, too, can be appended as extra columns to the nodes data.frame:
 
 ``` r
+
 edg <- data.frame(from = "x",
                   to = "y")
 nod <- data.frame(name = c("x", "y"),
@@ -961,6 +990,7 @@ element, such as the low factor loading for x2 on visual in the CFA
 example from before:
 
 ``` r
+
 edges(graph_data) %>%
   mutate(colour = "black") %>%
   mutate(colour = replace(colour, from == "visual" & to == "x2", "red")) %>%
@@ -1005,6 +1035,7 @@ aesthetics are prefaced by `"label_"`:
   between 0 (beginning) and 1 (end)
 
 ``` r
+
 edg <- data.frame(from = "x",
                   to = "y",
                   label = "text",
@@ -1067,6 +1098,7 @@ example, note that one of the regression paths is positive and the other
 negative. We might want to color positive edges green:
 
 ``` r
+
 set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
@@ -1082,6 +1114,7 @@ color the variance black - and make the variance transparent as well, to
 reduce its visual importance:
 
 ``` r
+
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   color_neg_edges("red") %>%
@@ -1106,6 +1139,7 @@ color every graph element with the number “4” in the column `est` blue,
 you could use:
 
 ``` r
+
 prepare_graph(fit) %>%
   # Add color column to the graph elements
   edit_graph({ color = "black" }) %>% 
@@ -1129,6 +1163,7 @@ user `dumaskvn`, showcases how `plotmath` labels can be displayed (see
 several ways to do this; this is just one example.
 
 ``` r
+
 model <- "
   Sepal.Length ~ Sepal.Width + Petal.Length
   Sepal.Width ~ Petal.Length

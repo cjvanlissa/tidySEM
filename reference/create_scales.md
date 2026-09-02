@@ -89,8 +89,8 @@ out <- create_scales(iris, keys.list = list(scalename =
 #> Warning: When computing factor loadings for scalename: An ultra-Heywood case was detected.  Examine the results carefully
 #> Number of categories should be increased  in order to count frequencies. 
 out$descriptives
-#>    Subscale Items      n mean   sd  min  max  skew skew_2se kurt kurt_2se
-#> 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 1.82     2.32
+#>    Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
+#> 1 scalename  4.00 150.00 3.46 0.78 2.10 5.10 -0.01    -0.02 -1.17    -1.49
 #>   Reliability  Interpret min_load max_load
 #> 1        0.71 Acceptable       NA       NA
 dict <- tidy_sem(iris, split = "\\.")
@@ -102,9 +102,9 @@ create_scales(dict)
 #> v    $correlations
 #> v    $scores
 #> 
-#>   Subscale Items      n mean   sd  min  max  skew skew_2se kurt kurt_2se
-#> 1    Sepal  2.00 150.00 2.61 0.49 1.45 3.50  0.09     0.24 1.99     2.53
-#> 2    Petal  2.00 150.00 2.48 1.25 0.60 4.60 -0.26    -0.66 1.57     1.99
+#>   Subscale Items      n mean   sd  min  max  skew skew_2se  kurt kurt_2se
+#> 1    Sepal  2.00 150.00 2.61 0.49 1.45 3.50  0.10     0.24 -1.00    -1.28
+#> 2    Petal  2.00 150.00 2.48 1.25 0.60 4.60 -0.26    -0.66 -1.44    -1.83
 #>   Reliability    Interpret min_load max_load
 #> 1   -0.27(sb) Unacceptable     0.34     0.34
 #> 2    0.98(sb)         Good     0.98     0.98

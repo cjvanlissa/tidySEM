@@ -58,8 +58,8 @@ table_fit(fit)
 #> 1           0.05             0.8965993              0.08 0.0834983 0.09146781
 #>         srmr srmr_bentler srmr_bentler_nomean       crmr crmr_nomean srmr_mplus
 #> 1 0.06786401   0.06786401           0.0743413 0.07434131  0.08311611 0.06786402
-#>   srmr_mplus_nomean    cn_05    cn_01       gfi      agfi      pgfi       mfi
-#> 1        0.07434131 170.3239 192.4391 0.9950447 0.9888506 0.4422421 0.8934098
-#>        ecvi
-#> 1 0.7835593
+#>   srmr_mplus_nomean       gfi gfi.ci.lower gfi.ci.upper gfi.ci.level    cn_05
+#> 1        0.07434131 0.9560209    0.9332965    0.9744372          0.9 170.3239
+#>      cn_01 gfi_lisrel agfi_lisrel      pgfi       mfi      ecvi
+#> 1 192.4391  0.9950447   0.9888506 0.4422421 0.8934098 0.7835593
 ```

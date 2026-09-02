@@ -18,21 +18,21 @@ A data frame with 439 rows and 13 variables.
 
 ## Details
 
-|                  |           |                                                                                                                                                                                     |
-|------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Ethnic_1**     | `ordered` | when I introduce myself, I would definitely say I belong to this group, answered on a 5-point Likert scale                                                                          |
-| **Ethnic_2**     | `ordered` | I have a strong sense of belonging to this group, answered on a 5-point Likert scale                                                                                                |
-| **Ethnic_3**     | `ordered` | I see myself as a member of this group, answered on a 5-point Likert scale                                                                                                          |
-| **Belgian**      | `ordered` | Do you feel a member of the Belgian group, answered on a 10-point Likert scale                                                                                                      |
-| **Flemish**      | `ordered` | Do you feel a member of the Flemish group, answered on a 10-point Likert scale                                                                                                      |
-| **age**          | `numeric` | Participant age                                                                                                                                                                     |
-| **sex**          | `factor`  | Participant sex                                                                                                                                                                     |
-| **ses**          | `numeric` | Socio-economic status, measured using the International Socio-Economic Index of Occupational Status (ISEI)                                                                          |
-| **belgianborn**  | `factor`  | Whether or not the participant was born in Belgium                                                                                                                                  |
-| **age_belgium**  | `numeric` | Age at which the participant migrated to Belgium                                                                                                                                    |
-| **vict_bully**   | `factor`  | Whether or not the participant has ever been the victim of peer bullying for any reason                                                                                             |
-| **vict_teacher** | `factor`  | Whether or not the participant has ever been insulted, threatened, pushed, treated unfairly or excluded by teachers because of their foreign descent, language use, and skin colour |
-| **depression**   | `numeric` | Scale scores of self-reported depressive feelings, assessed using the a ten-item scale with 5-point Likert-type response options                                                    |
+|  |  |  |
+|----|----|----|
+| **Ethnic_1** | `ordered` | when I introduce myself, I would definitely say I belong to this group, answered on a 5-point Likert scale |
+| **Ethnic_2** | `ordered` | I have a strong sense of belonging to this group, answered on a 5-point Likert scale |
+| **Ethnic_3** | `ordered` | I see myself as a member of this group, answered on a 5-point Likert scale |
+| **Belgian** | `ordered` | Do you feel a member of the Belgian group, answered on a 10-point Likert scale |
+| **Flemish** | `ordered` | Do you feel a member of the Flemish group, answered on a 10-point Likert scale |
+| **age** | `numeric` | Participant age |
+| **sex** | `factor` | Participant sex |
+| **ses** | `numeric` | Socio-economic status, measured using the International Socio-Economic Index of Occupational Status (ISEI) |
+| **belgianborn** | `factor` | Whether or not the participant was born in Belgium |
+| **age_belgium** | `numeric` | Age at which the participant migrated to Belgium |
+| **vict_bully** | `factor` | Whether or not the participant has ever been the victim of peer bullying for any reason |
+| **vict_teacher** | `factor` | Whether or not the participant has ever been insulted, threatened, pushed, treated unfairly or excluded by teachers because of their foreign descent, language use, and skin colour |
+| **depression** | `numeric` | Scale scores of self-reported depressive feelings, assessed using the a ten-item scale with 5-point Likert-type response options |
 
 ## References
 

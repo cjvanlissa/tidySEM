@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Mixed Data LCA • tidySEM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Mixed Data LCA">
 </head>
@@ -39,7 +39,9 @@
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
+    <li><a class="dropdown-item" href="../articles/openmx_ordinal.html">Ordinal Indicators in OpenMx Models</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
+    <li><a class="dropdown-item" href="../articles/pmc_tutorial.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
@@ -171,7 +173,6 @@ model fit. This can be done by passing a vector of class numbers.</p>
 <span>  data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=2237.09546071368, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=2230.08267535054, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267393529, new current best! (was 2230.08267535054)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493314156, worse than previous best (2230.08267393529)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 </span></span></code></pre>
 <p>The result is a list of OpenMx models, one for each class
 solution.</p>
 </div>
@@ -184,16 +185,16 @@ straightforward best-practice approach is to examine the BIC fit index,
 and select the model with the lowest BIC. This is obtained by inspecting
 model fit, by printing the object, or calling
 <code>table_fit(res_1_3)</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;     Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
 <span><span class="co">#&gt; 1  equal       1 -1250.528 200          8 2517.055 2543.442 2518.097 1.0000000</span></span>
 <span><span class="co">#&gt; 2 equal1       2 -1118.542 200         14 2265.083 2311.260 2266.906 0.9304968</span></span>
-<span><span class="co">#&gt; 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447552</span></span>
+<span><span class="co">#&gt; 3 equal2       3 -1115.041 200         20 2270.083 2336.049 2272.687 0.9447551</span></span>
 <span><span class="co">#&gt;    prob_min  prob_max n_min n_max np_ratio  np_local</span></span>
 <span><span class="co">#&gt; 1 1.0000000 1.0000000 1.000 1.000 25.00000 25.000000</span></span>
 <span><span class="co">#&gt; 2 0.9606636 0.9942737 0.295 0.705 14.28571  9.076923</span></span>
-<span><span class="co">#&gt; 3 0.9386331 0.9976012 0.075 0.630 10.00000  2.500000</span></span></code></pre>
+<span><span class="co">#&gt; 3 0.9386326 0.9976012 0.075 0.630 10.00000  2.500000</span></span></code></pre>
 <p>As expected, the BIC for the 2-class solution is lowest. Note that
 the 3-class solution also has an extremely low ratio of cases to
 parameters, so this model is most likely overfit.</p>
@@ -205,7 +206,7 @@ takes a long time to run. To accelerate computations, we can use the
 To track the function’s progress, we use the <code>progressr</code>
 ecosystem, which allows users to choose how they want to be informed.
 The example below uses a progress bar:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://progressr.futureverse.org" class="external-link">progressr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span> <span class="co"># Parallel processing for Windows</span></span>
@@ -226,7 +227,7 @@ could be used to conduct the test, as the model did not converge in
 remaining iterations.</p>
 <p>A third option is to use a predictive model comparison, a method
 conceptually similar to Bayesian posterior predictive checks.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">res_pmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pmc.html">pmc</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">)</span></span>
 <span><span class="va">res_pmc</span></span></code></pre></div>
@@ -237,7 +238,7 @@ conceptually similar to Bayesian posterior predictive checks.</p>
 <span><span class="co">#&gt; 4    dif_one equal var 1 equal var 3 0.46920642 0.05695099 -0.47293413</span></span>
 <span><span class="co">#&gt;            ub sig</span></span>
 <span><span class="co">#&gt; 1 -0.32814646   *</span></span>
-<span><span class="co">#&gt; 2  0.03553645    </span></span>
+<span><span class="co">#&gt; 2  0.03553646    </span></span>
 <span><span class="co">#&gt; 3 -0.32814646   *</span></span>
 <span><span class="co">#&gt; 4 -0.35111805   *</span></span></code></pre>
 <p>This test, too, confirms that the 2-class solution is significantly
@@ -249,7 +250,7 @@ further significant improvement.</p>
 </h3>
 <p>We can investigate the class proportions for the two-class solution
 by calling:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/class_prob.html">class_prob</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum.posterior"</span>, <span class="st">"sum.mostlikely"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; $sum.posterior</span></span>
 <span><span class="co">#&gt;    class     count proportion</span></span>
@@ -268,7 +269,7 @@ for.</p>
 <p>Note that, in this case, both correspond nicely to the simulated
 .3/.7 split. Thus, we should have good class discrimination.</p>
 <p>This is confirmed by checking:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared</span></span>
 <span><span class="co">#&gt; 1            2237.083 200         14                800 786            0</span></span>
@@ -281,7 +282,7 @@ probability, and a high entropy.</p>
 <p>Finally, we can examine the parameter values using
 <code><a href="../reference/table_results.html">table_results()</a></code> on the second element of the model list, or
 the 2-class model:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                       label  est_sig       se pval               confint  class</span></span>
 <span><span class="co">#&gt; 1                  Means.X1  1.94***     0.08 0.00          [1.78, 2.10] class1</span></span>
@@ -298,7 +299,7 @@ the 2-class model:</p>
 <span><span class="co">#&gt; 12                 Means.X3    -0.00     0.07 0.98         [-0.15, 0.14] class2</span></span>
 <span><span class="co">#&gt; 13             Variances.X4     1.00       NA   NA                  &lt;NA&gt; class2</span></span>
 <span><span class="co">#&gt; 14   class2.Thresholds[1,1]  0.65***     0.18 0.00          [0.29, 1.01] class2</span></span>
-<span><span class="co">#&gt; 15   class2.Thresholds[2,1]     7.11 35652.78 1.00 [-69871.05, 69885.28] class2</span></span>
+<span><span class="co">#&gt; 15   class2.Thresholds[2,1]     7.11 35680.19 1.00 [-69924.78, 69939.01] class2</span></span>
 <span><span class="co">#&gt; 16 equal var 2.weights[1,1]     1.00       NA   NA                  &lt;NA&gt;   &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 17 equal var 2.weights[1,2]  0.43***     0.07 0.00          [0.30, 0.57]   &lt;NA&gt;</span></span></code></pre>
 <p>Note that we get free means for each class, with the variances
@@ -308,7 +309,7 @@ For class 1, the probability of scoring within the first response
 category corresponds to <code>pnorm(-2.38, lower.tail = TRUE)</code>, or
 about 1%. To convert these thresholds to the probability scale, we can
 run:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;   Variable Category  Probability  group</span></span>
 <span><span class="co">#&gt; 1       X4        1 1.082529e-01 class1</span></span>
@@ -326,7 +327,7 @@ forwarded to the underlying model-building functions. For example, you
 can release the variance constraints for the continuous indicators by
 passing the <code>variances</code> argument of
 <code><a href="../reference/mx_profiles.html">mx_profiles()</a></code>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_2_free</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_mixed_lca.html">mx_mixed_lca</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -334,7 +335,7 @@ passing the <code>variances</code> argument of
 <span><span class="op">)</span></span></code></pre></div>
 <p>We can compare the BICs of these models to determine whether the
 added complexity improves the model fit:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  fixed_covs <span class="op">=</span> <span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  free_covs <span class="op">=</span> <span class="va">res_2_free</span><span class="op">)</span></span>
@@ -342,9 +343,9 @@ added complexity improves the model fit:</p>
 <pre><code><span><span class="co">#&gt;         Name Classes        LL   n Parameters      AIC      BIC    saBIC</span></span>
 <span><span class="co">#&gt; 1 fixed_covs       2 -1118.542 200         14 2265.083 2311.260 2266.906</span></span>
 <span><span class="co">#&gt; 2  free_covs       2 -1117.967 200         17 2269.935 2326.006 2272.148</span></span>
-<span><span class="co">#&gt;     Entropy  prob_min  prob_max n_min n_max warning np_ratio np_local</span></span>
-<span><span class="co">#&gt; 1 0.9304968 0.9606636 0.9942737 0.295 0.705      NA 14.28571 9.076923</span></span>
-<span><span class="co">#&gt; 2 0.9353582 0.9680273 0.9931100 0.295 0.705    TRUE 11.76471 7.375000</span></span></code></pre>
+<span><span class="co">#&gt;     Entropy  prob_min  prob_max n_min n_max np_ratio np_local</span></span>
+<span><span class="co">#&gt; 1 0.9304968 0.9606636 0.9942737 0.295 0.705 14.28571 9.076923</span></span>
+<span><span class="co">#&gt; 2 0.9353582 0.9680273 0.9931100 0.295 0.705 11.76471 7.375000</span></span></code></pre>
 <p>Note that the BIC of the model with free covariances is higher than
 that of the model with fixed variances, so it fits worse. This is as
 expected, because we did not simulate class-specific variances.</p>
@@ -357,18 +358,15 @@ categorical indicators will not look good in plots for continuous
 indicators, and could lead to errors.</p>
 <p>Thus, for example, we can use a profile plot for the continuous
 indicators:</p>
-<p><img src="mixed_lca_files/figure-html/unnamed-chunk-32-1.png" class="r-plt" alt="" width="700"></p>
-<pre><code><span><span class="co">#&gt; Warning: Using shapes for an ordinal variable is not advised</span></span></code></pre>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mixed_lca_profiles.png"><!-- --></p>
 <p>Alternatively, we can use a bivariate plot with densities:</p>
-<p><img src="mixed_lca_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_bivariate.html">plot_bivariate</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mixed_lca_bivariate.png"><!-- --></p>
 <p>We can plot the categorical variables as follows:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_1_3</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mixed_lca_prob.png"><!-- --></p>
 <div class="section level3">
@@ -390,7 +388,7 @@ R-Package tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/1
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

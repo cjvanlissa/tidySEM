@@ -1,6 +1,7 @@
 # Tabulating results from structural equation models
 
 ``` r
+
 library(tidySEM)
 library(lavaan)
 library(MplusAutomation)
@@ -22,6 +23,7 @@ variable an observed variable belongs to by splitting the names (by
 default, at the last `_` symbol), so it helps to rename the variables:
 
 ``` r
+
 df <- HolzingerSwineford1939
 names(df)[7:15] <- paste0(rep(c("vis", "tex", "spe"), each = 3), "_", rep(1:3, 3))
 df |>
@@ -32,6 +34,7 @@ df |>
 Now, let’s construct the model.
 
 ``` r
+
 df |>
   tidy_sem() |>
   measurement() -> model
@@ -43,6 +46,7 @@ Now, let’s run the model in `lavaan`. You can either use `lavaan` to run
 it,
 
 ``` r
+
 model |>
   estimate_lavaan() -> fit_lav
 ```
@@ -51,6 +55,7 @@ The results can be tabulated using
 [`table_results()`](https://cjvanlissa.github.io/tidySEM/reference/table_results.md):
 
 ``` r
+
 table_results(fit_lav)
 #>              label est_sig   se pval      confint
 #> 1     vis.BY.vis_1    1.00 0.00 <NA> [1.00, 1.00]
@@ -92,6 +97,7 @@ table_results(fit_lav)
 ```
 
 ``` r
+
 table_fit(fit_lav)
 #>      Name Parameters      fmin    chisq df       pvalue baseline.chisq
 #> 1 fit_lav         30 0.1417035 85.30552 24 8.502553e-09       918.8516
@@ -105,10 +111,12 @@ table_fit(fit_lav)
 #> 1 0.0006612368           0.05             0.8395529              0.08
 #>          rmr rmr_nomean      srmr srmr_bentler srmr_bentler_nomean       crmr
 #> 1 0.07502369 0.08218433 0.0595238    0.0595238          0.06520506 0.06520506
-#>   crmr_nomean srmr_mplus srmr_mplus_nomean    cn_05   cn_01       gfi      agfi
-#> 1  0.07290147  0.0595238        0.06520506 129.4902 152.654 0.9960745 0.9911676
-#>        pgfi       mfi      ecvi
-#> 1 0.4426998 0.9031773 0.4827426
+#>   crmr_nomean srmr_mplus srmr_mplus_nomean       gfi gfi.ci.lower gfi.ci.upper
+#> 1  0.07290147  0.0595238        0.06520506 0.9593675    0.9385682    0.9757388
+#>   gfi.ci.level    cn_05   cn_01 gfi_lisrel agfi_lisrel      pgfi       mfi
+#> 1          0.9 129.4902 152.654  0.9960745   0.9911676 0.4426998 0.9031773
+#>        ecvi
+#> 1 0.4827426
 ```
 
 ## Output from OpenMx
@@ -117,6 +125,7 @@ Now, we’ll reproduce the same analysis in ‘OpenMx’. Note that this
 requires loading the `OpenMx` package. First, we run the model:
 
 ``` r
+
 library(OpenMx)
 model |>
   estimate_mx() -> fit_mx
@@ -177,6 +186,7 @@ specify the syntax for this example manually, using the package
 Mplus installed and R can find it. First, we run the model:
 
 ``` r
+
 fit_mplus <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);",
                                 MODEL = c("visual BY vis_1 vis_2 vis_3;",
                                           "textual BY tex_1 tex_2 tex_3;",
@@ -189,6 +199,7 @@ table_results(fit_mplus)
 ```
 
 ``` r
+
 table_results(fit_mplus)
 #> Calculated confidence intervals from est and se.
 #>                           label  est_sig   se pval        confint group

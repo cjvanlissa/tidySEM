@@ -8,7 +8,14 @@ large sample sizes, significant skew/kurtosis is common.
 ## Usage
 
 ``` r
-skew_kurtosis(x, verbose = FALSE, se = FALSE, ...)
+skew_kurtosis(
+  x,
+  verbose = FALSE,
+  se = FALSE,
+  pearson = FALSE,
+  corrected = TRUE,
+  ...
+)
 ```
 
 ## Arguments
@@ -24,7 +31,18 @@ skew_kurtosis(x, verbose = FALSE, se = FALSE, ...)
 
 - se:
 
-  Whether or not to return the standard errors, Default: FALSE
+  Logical. Whether or not to return the standard errors, Default: FALSE
+
+- pearson:
+
+  Logical. Whether or not to return the Pearson's kurtosis alongside
+  excess kurtosis, Default: FALSE
+
+- corrected:
+
+  Logical. Whether or not to correct for bias in skew and kurtosis
+  (Joanes & Gill, 1998). Corrects both the estimates and their standard
+  errors. Default: TRUE
 
 - ...:
 
@@ -32,19 +50,28 @@ skew_kurtosis(x, verbose = FALSE, se = FALSE, ...)
 
 ## Value
 
-A `matrix` of skew and kurtosis statistics for `x`.
+A `matrix` of skew and kurtosis statistics for `x`. The columns labeled
+`_2se` contain the test statistic divided by two times its standard
+error.
+
+## References
+
+Joanes, D. N. & Gill, C. A. (1998). Comparing measures of sample
+skewness and kurtosis. *Journal Of The Royal Statistical Society: Series
+D (The Statistician)*, *47*(1), 183–189.
+[doi:10.1111/1467-9884.00122](https://doi.org/10.1111/1467-9884.00122)
 
 ## Examples
 
 ``` r
 skew_kurtosis(datasets::anscombe)
-#>           skew    skew_2se     kurt  kurt_2se
-#> x1  0.00000000  0.00000000 1.780000 0.6956300
-#> x2  0.00000000  0.00000000 1.780000 0.6956300
-#> x3  0.00000000  0.00000000 1.780000 0.6956300
-#> x4  2.84604989  2.15385490 9.100000 3.5563107
-#> y1 -0.05580807 -0.04223484 2.179061 0.8515845
-#> y2 -1.12910800 -0.85449479 3.007674 1.1754091
-#> y3  1.59223074  1.20498027 5.130453 2.0049984
-#> y4  1.29302529  0.97854534 4.390789 1.7159351
+#>           skew    skew_2se       kurt   kurt_2se
+#> x1  0.00000000  0.00000000 -1.2000000 -0.4689640
+#> x2  0.00000000  0.00000000 -1.2000000 -0.4689640
+#> x3  0.00000000  0.00000000 -1.2000000 -0.4689640
+#> x4  3.31662479  2.50998008 11.0000000  4.2988371
+#> y1 -0.06503555 -0.04921809 -0.5348977 -0.2090398
+#> y2 -1.31579829 -0.99577966  0.8461232  0.3306678
+#> y3  1.85549520  1.40421552  4.3840886  1.7133166
+#> y4  1.50681818  1.14034112  3.1513149  1.2315445
 ```

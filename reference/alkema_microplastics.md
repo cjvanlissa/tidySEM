@@ -18,19 +18,19 @@ A data frame with 6942 rows and 11 variables.
 
 ## Details
 
-|                |           |                                                                              |
-|----------------|-----------|------------------------------------------------------------------------------|
-| **current**    | `factor`  | Which ocean current the sample was taken from                                |
-| **sample**     | `integer` | Sample ID                                                                    |
-| **length**     | `numeric` | Particle length in mm                                                        |
-| **width**      | `numeric` | Particle width in mm                                                         |
-| **height_est** | `numeric` | Estimated particle height in mm                                              |
+|  |  |  |
+|----|----|----|
+| **current** | `factor` | Which ocean current the sample was taken from |
+| **sample** | `integer` | Sample ID |
+| **length** | `numeric` | Particle length in mm |
+| **width** | `numeric` | Particle width in mm |
+| **height_est** | `numeric` | Estimated particle height in mm |
 | **height_obs** | `numeric` | Observed particle height in mm. Height was only measured for large particles |
-| **category**   | `factor`  | Particle category based on visual inspection                                 |
-| **poly_type**  | `factor`  | Polymer type as determined by near infrared spectroscopy (NIR)               |
-| **two_dim**    | `logical` | Whether or not the particle can be treated as two-dimensional                |
-| **film**       | `logical` | Whether or not the particle appears to be a film                             |
-| **line**       | `logical` | Whether or not the particle appears to be a line                             |
+| **category** | `factor` | Particle category based on visual inspection |
+| **poly_type** | `factor` | Polymer type as determined by near infrared spectroscopy (NIR) |
+| **two_dim** | `logical` | Whether or not the particle can be treated as two-dimensional |
+| **film** | `logical` | Whether or not the particle appears to be a film |
+| **line** | `logical` | Whether or not the particle appears to be a line |
 
 ## References
 

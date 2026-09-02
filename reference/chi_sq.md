@@ -1,8 +1,9 @@
 # Calculate Chi Square Statistic
 
-Given two datasets with ordinal variables, computes the lambda
-statistic, which is the chi-square statistic minus the degrees of
-freedom.
+Given two datasets with ordinal variables, computes the chi squared
+statistic. To obtain the lambda statistic as used in
+[`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md),
+subtract the degrees of freedom.
 
 ## Usage
 

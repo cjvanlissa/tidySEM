@@ -42,7 +42,7 @@ are not specified, the model will be run in
 
 ``` r
 library(MplusAutomation)
-#> Version:  1.2
+#> Version:  1.3
 #> We work hard to write this free software. Please help us get credit by citing: 
 #> 
 #> Hallquist, M. N. & Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural Equation Modeling, 25, 621-638. doi: 10.1080/10705511.2017.1402334.

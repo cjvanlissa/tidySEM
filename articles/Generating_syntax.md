@@ -49,6 +49,7 @@ As an example, let’s make a graph for a classic `lavaan` tutorial
 example for CFA. First, we check the data names:
 
 ``` r
+
 df <- HolzingerSwineford1939
 names(df)
 #>  [1] "id"     "sex"    "ageyr"  "agemo"  "school" "grade"  "x1"     "x2"    
@@ -59,6 +60,7 @@ These names are not informative, as the items named `x..` are indicators
 of three different latent variables. We will rename them accordingly:
 
 ``` r
+
 names(df)[grepl("^x", names(df))] <- c("vis_1", "vis_2", "vis_3", "tex_1", "tex_2", "tex_3", "spe_1", "spe_2", "spe_3")
 ```
 
@@ -87,6 +89,7 @@ example, the same scale. When the data have informative names, it is
 possible to construct a data dictionary automatically:
 
 ``` r
+
 model <- tidy_sem(df)
 model
 #> A tidy_sem object
@@ -103,6 +106,7 @@ passing it to a syntax-generating function like
 which adds a measurement model for any scales in the object:
 
 ``` r
+
 model |>
   measurement() -> model
 model
@@ -120,11 +124,12 @@ syntax, or ‘Mplus’ syntax, using the `as_lavaan`, `as_ram`, and
 `as_mplus` functions. For example, using lavaan:
 
 ``` r
+
 model |>
   estimate_lavaan()
 ```
 
-    #> lavaan 0.6-21 ended normally after 35 iterations
+    #> lavaan 0.7-2 ended normally after 35 iterations
     #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
@@ -142,6 +147,7 @@ The same model can be estimated with ‘OpenMx’ through the R-package
 `OpenMx`.
 
 ``` r
+
 model |>
   estimate_mx()
 ```
@@ -150,6 +156,7 @@ The same model can be estimated in ‘Mplus’ through the R-package
 `MplusAutomation`. This requires ‘Mplus’ to be installed.
 
 ``` r
+
 library(MplusAutomation)
 model |>
   estimate_mplus()
@@ -161,6 +168,7 @@ The dictionary and syntax can be examined using `dictionary(model)` and
 `syntax(model)`:
 
 ``` r
+
 dictionary(model)
 #>      name scale      type  label
 #> 1      id  <NA>  observed     id
@@ -184,6 +192,7 @@ dictionary(model)
 ```
 
 ``` r
+
 syntax(model)
 #>      lhs op   rhs block group free label ustart plabel
 #> 1    vis =~ vis_1     1     1    0            1   .p1.
@@ -231,6 +240,7 @@ functions `dictionary(model) <- ...` and `syntax(model) <- ...` can be
 used to modify the dictionary and syntax:
 
 ``` r
+
 dictionary(model) |>
   mutate(label = ifelse(label == "vis", "Visual", label))
 ```
@@ -261,6 +271,7 @@ replace the latent variable “spe” with “tex”, and secondly remove all
 mention of the “spe” latent variable:
 
 ``` r
+
 syntax(model) |>
   mutate(lhs = ifelse(lhs == "spe" & op == "=~", "tex", lhs)) |>
   filter(!(lhs == "spe" | rhs == "spe")) -> syntax(model)
@@ -271,6 +282,7 @@ fixing one indicator to be equal to 1, so we have to free up one of
 them:
 
 ``` r
+
 syntax(model) |>
   mutate(free = ifelse(rhs == "spe_1", 1, free),
   ustart = ifelse(rhs == "spe_1", NA, ustart)) -> syntax(model)
@@ -279,8 +291,9 @@ syntax(model) |>
 The modified model could then be run:
 
 ``` r
+
 estimate_lavaan(model)
-#> lavaan 0.6-21 ended normally after 28 iterations
+#> lavaan 0.7-2 ended normally after 28 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -304,13 +317,14 @@ adding `lavaan` syntax. For example, imagine that - instead of having
 them:
 
 ``` r
+
 model |>
   add_paths("vis ~ tex") |>
   estimate_lavaan() |>
   summary(estimates = TRUE)
 ```
 
-    #> lavaan 0.6-21 ended normally after 25 iterations
+    #> lavaan 0.7-2 ended normally after 25 iterations
     #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
@@ -383,12 +397,13 @@ So, for example, if we want to add a cross-loading from “spe_1” on
 following code:
 
 ``` r
+
 model |>
   add_paths("vis ~ tex", vis =~ spe_1) |>
   estimate_lavaan()
 ```
 
-    #> lavaan 0.6-21 ended normally after 31 iterations
+    #> lavaan 0.7-2 ended normally after 31 iterations
     #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB

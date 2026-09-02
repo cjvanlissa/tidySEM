@@ -1,11 +1,23 @@
 # tidySEM 0.2.11
 
+- Add deviances_to_thresholds() to reparametrize models with ordinal
+  indicators after they have been run, e.g. to facilitate specifying
+  Wald tests.
 - pmc() deprecates pmc_srmr() function
 - Add srmr() function
 - as_ram() gains argument threshold_method
 - Export mx_deviances()
 - Fix bug in get_edges() and get_nodes() for multigroup lavaan models
   with user- defined quantities (`:=`), issue \#109.
+- skew_kurtosis: Add the option to output Pearson’s kurtosis alongside
+  excess kurtosis, and modify the formula for significance to refer to
+  excess kurtosis; see issue \#127.
+- skew_kurtosis: Update to corrected skewness and kurtosis values,
+  implement option to output uncorrected values instead; see issue
+  \#127.
+- Modify the skew_kurtosis methods for matrices and data frames: Add new
+  arguments, make sure arguments are passed down, and remove doubled
+  .matrix function. See issue \#127.
 
 # tidySEM 0.2.10
 

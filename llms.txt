@@ -35,6 +35,7 @@ mind, and interface with the existing suite of packages in the
 You can install the public release of `tidySEM` from CRAN with:
 
 ``` r
+
 install.packages("tidySEM")
 ```
 
@@ -43,6 +44,7 @@ that may not yet be finalized, you can install the development version
 of `tidySEM` from R-universe with:
 
 ``` r
+
 install.packages('tidySEM',
                  repos = c('https://cjvanlissa.r-universe.dev',
                            'https://cloud.r-project.org'))
@@ -53,6 +55,7 @@ to install a specific historical version of the package, you can install
 directly from GitHub with:
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github('cjvanlissa/tidySEM')
 ```
@@ -148,6 +151,8 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
   : Simulated data for mixture model with ordinal indicators
 - [`descriptives()`](https://cjvanlissa.github.io/tidySEM/reference/descriptives.md)
   : Describe a dataset
+- [`deviances_to_thresholds()`](https://cjvanlissa.github.io/tidySEM/reference/deviances_to_thresholds.md)
+  : Convert deviances to thresholds
 - [`dictionary()`](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
   [`` `dictionary<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
   : Extract dictionary from tidy_sem
@@ -627,9 +632,9 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
   : Plot categorical variable probabilities
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
-- [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
-  [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md) :
-  Predictive Model Comparison
+- [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
+  [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
+  : Predictive Model Comparison
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
 - [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
@@ -678,8 +683,12 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
   Indicators](https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.md):
 - [Mixed Data
   LCA](https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.md):
+- [Ordinal Indicators in OpenMx
+  Models](https://cjvanlissa.github.io/tidySEM/articles/openmx_ordinal.md):
 - [Plotting graphs for structural equation
   models](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.md):
+- [Tutorial
+  PMC](https://cjvanlissa.github.io/tidySEM/articles/pmc_tutorial.md):
 - [SEM graphing
   conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.md):
 - [SMART-LCA

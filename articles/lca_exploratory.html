@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Exploratory LPA for Ocean Microplastics • tidySEM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Exploratory LPA for Ocean Microplastics">
 </head>
@@ -39,7 +39,9 @@
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
+    <li><a class="dropdown-item" href="../articles/openmx_ordinal.html">Ordinal Indicators in OpenMx Models</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
+    <li><a class="dropdown-item" href="../articles/pmc_tutorial.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
@@ -301,7 +303,7 @@ fragments
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>.92</mn></mrow><annotation encoding="application/x-tex">r = .92</annotation></semantics></math>)
 than for larger fragments
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>.85</mn></mrow><annotation encoding="application/x-tex">r = .85</annotation></semantics></math>),
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>χ</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>11.56</mn><mo>,</mo><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">\chi^2(1) = 11.56, p &lt; .001</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>χ</mi><mn>2</mn></msup><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>11.56</mn><mo>,</mo><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">\chi^2(1) = 11.56, p &lt; .001</annotation></semantics></math>.
 Thus, small fragments are more coextensive than large fragments.</p>
 <p>There are, however, concerns about the interpretability of this
 solutions: the entropy is <code>.56</code> and the minimum
@@ -331,7 +333,7 @@ differences in polymer type across classes, use
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lr_test.html">lr_test</a></span><span class="op">(</span><span class="va">aux_pt</span><span class="op">)</span></span></code></pre></div>
 <p>The results indicate that there are significant differences in
 polymer types across classes,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>L</mi><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>17.14</mn><mo>,</mo><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">\Delta LL(3) = 17.14, p &lt; .001</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>L</mi><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>17.14</mn><mo>,</mo><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">\Delta LL(3) = 17.14, p &lt; .001</annotation></semantics></math>.
 The results can be reported in probability scale using
 <code>table_prob(aux_pt)</code>. To test differences for specific
 polymer types, we can use Wald tests:</p>
@@ -355,7 +357,7 @@ prevalent in class 2.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

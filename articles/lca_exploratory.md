@@ -30,6 +30,7 @@ fragments. The indicators are fragments’ length and width in
 millimeters. The sample size was not planned.
 
 ``` r
+
 # Load required packages
 library(tidySEM)
 library(ggplot2)
@@ -48,6 +49,7 @@ to describe the data numerically. Because all items are continuous, we
 remove columns for categorical data to de-clutter the table:
 
 ``` r
+
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "unique", "mean", "median",
     "sd", "min", "max", "skew_2se", "kurt_2se")]
@@ -66,6 +68,7 @@ can plot the data. The `ggplot2` function
 is useful to visualize continuous data:
 
 ``` r
+
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
@@ -79,6 +82,7 @@ extremely right-skewed and kurtotic. With this in mind, it can be useful
 to transform and rescale the data. We will use a log transformation.
 
 ``` r
+
 df_plot$Value <- log(df_plot$Value)
 ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
@@ -89,6 +93,7 @@ skew and kurtosis. To confirm this, reshape the data to wide format and
 examine a scatterplot:
 
 ``` r
+
 df <- reshape(df_plot, direction = "wide", v.names = "Value")[,
     -1]
 names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
@@ -112,7 +117,7 @@ clustering.
 
 As this is an exploratory LCA, we will conduct a rather extensive search
 across model specifications and number of classes. We will set the
-maximum number of classes $K$ to three to limit computational demands.
+maximum number of classes $`K`$ to three to limit computational demands.
 We set a seed to ensure replicable results.
 
 As the analysis takes a long time to compute, it is prudent to save the
@@ -122,6 +127,7 @@ later use `res <- readRDS("res_gmm.RData")` to load the analysis from
 the file.
 
 ``` r
+
 library(OpenMx)
 set.seed(123)
 res <- mx_profiles(data = df, classes = 1:3, variances = c("equal",
@@ -137,6 +143,7 @@ using
 We will use the BIC for class enumeration.
 
 ``` r
+
 fit <- table_fit(res)
 ```
 
@@ -149,6 +156,7 @@ size to class-specific parameters is 18 (see `np_local`), which is no
 cause for concern.
 
 ``` r
+
 tbl <- fit[, c("Name", "LL", "Parameters", "BIC", "Entropy",
     "prob_min", "n_min", "np_ratio", "np_local")]
 names(tbl) <- c("Name", "LL", "p", "BIC", "Ent.", "p_min", "n_min",
@@ -181,6 +189,7 @@ As mentioned before, we drop models with \< 10% of cases in the smallest
 class:
 
 ``` r
+
 fit <- fit[!fit$n_min < 0.1, ]
 ```
 
@@ -189,6 +198,7 @@ or plot a scree plot for the BIC by calling `plot(fit)`. Note that, due
 to the large sample size, all ICs give identical conclusions.
 
 ``` r
+
 plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5,
     hjust = 1))
 ```
@@ -211,6 +221,7 @@ relatively uninformative: With a sample size of 5606, every parameter is
 significantly different from zero.
 
 ``` r
+
 res_bic <- res[["free var, free cov 2"]]
 cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est",
@@ -229,6 +240,7 @@ However, we omit the density plots, because
 also includes them.
 
 ``` r
+
 plot_bivariate(res_bic)
 ```
 
@@ -252,8 +264,8 @@ It also appears that the correlation between length and width is
 stronger for small fragments than for large fragments. To test the
 difference, use `wald_test(res_bic, hypothesis = "c11 = c21")`. Results
 indicate that the correlation is indeed significantly larger for small
-fragments ($r = .92$) than for larger fragments ($r = .85$),
-$\chi^{2}(1) = 11.56,p < .001$. Thus, small fragments are more
+fragments ($`r = .92`$) than for larger fragments ($`r = .85`$),
+$`\chi^2(1) = 11.56, p < .001`$. Thus, small fragments are more
 coextensive than large fragments.
 
 There are, however, concerns about the interpretability of this
@@ -273,6 +285,7 @@ polymer type is a nominal variable, we must convert it to dummies and
 estimate a threshold for each dummy:
 
 ``` r
+
 df_pt <- mx_dummies(df_analyze$poly_type)
 aux_pt <- BCH(res_bic, model = "poly_typeOther | t1
                                 poly_typePE | t1
@@ -284,15 +297,17 @@ To obtain an omnibus likelihood ratio test of the significance of the
 differences in polymer type across classes, use `lr_test(aux_pt)`:
 
 ``` r
+
 lr_test(aux_pt)
 ```
 
 The results indicate that there are significant differences in polymer
-types across classes, $\Delta LL(3) = 17.14,p < .001$. The results can
-be reported in probability scale using `table_prob(aux_pt)`. To test
+types across classes, $`\Delta LL(3) = 17.14, p < .001`$. The results
+can be reported in probability scale using `table_prob(aux_pt)`. To test
 differences for specific polymer types, we can use Wald tests:
 
 ``` r
+
 wald_test(aux_pt, "class1.Thresholds[1,1] = class2.Thresholds[1,1];
           class1.Thresholds[1,2] = class2.Thresholds[1,2];
           class1.Thresholds[1,3] = class2.Thresholds[1,3]")

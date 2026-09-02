@@ -16,7 +16,9 @@ deployment in more than 1,000 Dutch military personnel from 2005-2019.
 First, we load all required packages:
 
 ``` r
+
 library(tidySEM)
+library(OpenMx)
 library(ggplot2)
 library(MASS)
 ```
@@ -26,6 +28,7 @@ library(MASS)
 We first examined the descriptive statistics for the sum score scales:
 
 ``` r
+
 # Get descriptives
 df <- plas_depression
 desc <- descriptives(df)
@@ -40,6 +43,7 @@ the lower end of the scale.
 We can examine these distributions visually as well:
 
 ``` r
+
 df_plot <- reshape(df, direction = "long", varying = names(df))
 ggplot(df_plot, aes(x = scl)) + geom_density() + facet_wrap(~time) +
     theme_bw()
@@ -50,6 +54,7 @@ compared several transformations to reduce skew: The square and cube
 root, log, inverse, and Box-Cox transformations.
 
 ``` r
+
 df_scores <- df_plot
 # Store original range of SCL
 rng_scl <- range(df_scores$scl)
@@ -88,6 +93,7 @@ df_scores$scl <- scales::rescale(df_scores$scl, to = c(0, 1))
 We can plot these transformations:
 
 ``` r
+
 # Make plot data
 df_plot <- do.call(rbind, lapply(c("scl", "log", "sqrt", "qrt",
     "boxcox"), function(n) {
@@ -105,6 +111,7 @@ Consequently, we proceeded with the Box-Cox transformed scores for
 analysis.
 
 ``` r
+
 dat <- df_scores[, c("id", "time", "boxcox")]
 dat <- reshape(dat, direction = "wide", v.names = "boxcox", timevar = "time",
     idvar = "id")
@@ -135,6 +142,7 @@ assumes that all measurements are equidistant. Feel free to experiment
 with adjusting this.**
 
 ``` r
+
 set.seed(27796)
 dat[["id"]] <- NULL
 res_step <- mx_growth_mixture(model = "
@@ -152,7 +160,17 @@ res_step <- mx_growth_mixture(model = "
   s ~~ 0*s
   i ~~ 0*s
   i ~~ 0*step
-  s ~~ 0*step",
+  s ~~ 0*step
+  scl1~0*1
+  scl2~0*1
+  scl3~0*1
+  scl4~0*1
+  scl5~0*1
+  scl6~0*1
+  i~NA*1
+  s~NA*1
+  step~NA*1
+  ",
     classes = 1:5, data = dat)
 # Additional iterations because of convergence problems for
 # model 1:
@@ -183,8 +201,8 @@ criteria:
     underidentification
 2.  Lower values for information criteria (AIC, BIC, saBIC) indicate
     better fit
-3.  Significant Lo-Mendell-Rubin LRT test indicates better fit for $k$
-    vs $k - 1$ classes
+3.  Significant Lo-Mendell-Rubin LRT test indicates better fit for $`k`$
+    vs $`k-1`$ classes
 4.  We do not consider solutions with entropy \< .90 because poor class
     separability compromises interpretability of the results
 5.  We do not consider solutions with minimum posterior classification
@@ -192,6 +210,7 @@ criteria:
     interpretability of the results
 
 ``` r
+
 # Get fit table fit
 tab_fit <- table_fit(res_step)
 # Select columns
@@ -219,6 +238,7 @@ the BIC increased after 3 classes. A three-class solution thus appears
 to be the most parsimonious solution with good fit.
 
 ``` r
+
 plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 ```
 
@@ -228,6 +248,7 @@ classes by the value of the intercept `i`. Then, we report the estimated
 parameters.
 
 ``` r
+
 res_final <- mx_switch_labels(res_step[[3]], param = "M[1,7]",
     decreasing = FALSE)
 tab_res <- table_results(res_final, columns = NULL)
@@ -257,6 +278,7 @@ column of the results table above. Alternatively, to see all parameters
 in the model, run:
 
 ``` r
+
 names(coef(res_final))
 ```
 
@@ -271,6 +293,7 @@ time. When conducting many significance tests, consider correcting for
 multiple comparisons however.
 
 ``` r
+
 wald_tests <- wald_test(res_final, "
                    class1.M[1,7] = class2.M[1,7]&
                    class1.M[1,7] = class3.M[1,7];
@@ -294,6 +317,7 @@ the results better, as well as the residual heterogeneity around class
 trajectories.
 
 ``` r
+
 p <- plot_growth(res_step[[3]], rawdata = TRUE, alpha_range = c(0,
     0.05))
 # Add Y-axis breaks in original scale

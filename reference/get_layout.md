@@ -6,7 +6,7 @@ Generate a tidy_layout for a SEM graph.
 
 ``` r
 # S3 method for class 'lavaan'
-get_layout(x, ..., layout_algorithm = "layout_as_tree")
+get_layout(x, ..., layout_algorithm = "fr_grid")
 
 get_layout(x, ...)
 
@@ -84,9 +84,9 @@ fit <- cfa(' visual  =~ x1 + x2 + x3 ',
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
 get_layout(fit)
-#>      [,1] [,2]     [,3]
-#> [1,] NA   "visual" NA  
-#> [2,] "x1" "x2"     "x3"
+#>      [,1] [,2]    
+#> [1,] "x2" "visual"
+#> [2,] "x3" "x1"    
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"        
 

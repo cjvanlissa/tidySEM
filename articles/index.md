@@ -14,8 +14,12 @@
   Indicators](https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.md):
 - [Mixed Data
   LCA](https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.md):
+- [Ordinal Indicators in OpenMx
+  Models](https://cjvanlissa.github.io/tidySEM/articles/openmx_ordinal.md):
 - [Plotting graphs for structural equation
   models](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.md):
+- [Tutorial
+  PMC](https://cjvanlissa.github.io/tidySEM/articles/pmc_tutorial.md):
 - [SEM graphing
   conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.md):
 - [SMART-LCA

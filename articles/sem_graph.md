@@ -22,6 +22,7 @@ measured variables or indicators. Visually, we indicate observed
 variables as rectangles:
 
 ``` r
+
 graph_sem(layout = matrix("x")) + coord_fixed()
 ```
 
@@ -36,6 +37,7 @@ Latent variables are also called “unobserved” variables. Visually, we
 indicate them as ovals or circles:
 
 ``` r
+
 graph_sem(nodes = data.frame(name = "x", shape = "oval"), layout = matrix("x"), fix_coord = TRUE)
 ```
 
@@ -101,6 +103,7 @@ regression. I’m showing the code, so you can reproduce this example for
 yourself. In this model, the variable x predicts the variable y:
 
 ``` r
+
 df <- iris[, 1:2]
 names(df) <- c("x", "y")
 sem("y ~ x", df) %>%
@@ -130,6 +133,7 @@ alternatively, as a “confirmatory factor analysis” (CFA) model. Here is
 an example:
 
 ``` r
+
 df <- iris[ , c(1,3:4)]
 names(df) <- paste0("y_", 1:3)
 
@@ -158,6 +162,7 @@ latent variables.
 Here is a simple example:
 
 ``` r
+
 df <- iris[ , 1:4]
 names(df) <- c("y_1", "x", "y_2", "y_3")
 
@@ -181,6 +186,7 @@ using the
 function:
 
 ``` r
+
 tidy_sem(df) %>%
   measurement() %>%
   add_paths(y ~ x, x ~~ x) %>%

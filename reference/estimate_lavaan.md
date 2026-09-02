@@ -46,7 +46,7 @@ res <- estimate_lavaan(model)
 #>    covariance matrix of latent variables is not positive definite ; use 
 #>    lavInspect(fit, "cov.lv") to investigate.
 summary(res)
-#> lavaan 0.6-21 ended normally after 47 iterations
+#> lavaan 0.7-2 ended normally after 47 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

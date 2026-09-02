@@ -34,6 +34,8 @@
   : Simulated data for mixture model with ordinal indicators
 - [`descriptives()`](https://cjvanlissa.github.io/tidySEM/reference/descriptives.md)
   : Describe a dataset
+- [`deviances_to_thresholds()`](https://cjvanlissa.github.io/tidySEM/reference/deviances_to_thresholds.md)
+  : Convert deviances to thresholds
 - [`dictionary()`](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
   [`` `dictionary<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
   : Extract dictionary from tidy_sem
@@ -513,9 +515,9 @@
   : Plot categorical variable probabilities
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
-- [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
-  [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md) :
-  Predictive Model Comparison
+- [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
+  [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
+  : Predictive Model Comparison
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
 - [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)

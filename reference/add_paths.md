@@ -48,7 +48,7 @@ in a similar way to
 
 ``` r
 library(lavaan)
-#> This is lavaan 0.6-21
+#> This is lavaan 0.7-2
 #> lavaan is FREE software! Please report any bugs.
 df <- iris[, 1:4]
 names(df) <- paste0("x_", 1:4)
@@ -59,7 +59,7 @@ res <- estimate_lavaan(model)
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
 summary(res)
-#> lavaan 0.6-21 ended normally after 31 iterations
+#> lavaan 0.7-2 ended normally after 31 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

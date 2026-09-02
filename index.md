@@ -35,6 +35,7 @@ mind, and interface with the existing suite of packages in the
 You can install the public release of `tidySEM` from CRAN with:
 
 ``` r
+
 install.packages("tidySEM")
 ```
 
@@ -43,6 +44,7 @@ that may not yet be finalized, you can install the development version
 of `tidySEM` from R-universe with:
 
 ``` r
+
 install.packages('tidySEM',
                  repos = c('https://cjvanlissa.r-universe.dev',
                            'https://cloud.r-project.org'))
@@ -53,6 +55,7 @@ to install a specific historical version of the package, you can install
 directly from GitHub with:
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github('cjvanlissa/tidySEM')
 ```
