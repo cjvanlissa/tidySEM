@@ -107,7 +107,6 @@ plot_density.mixture_list <-
              facet_labels = NULL,
              ...) {
         cl <- match.call()
-
         # If no variables have been specified, use all variables
         if(length(x[[1]]@submodels) > 0){
           var_names <- x[[1]]@submodels[[1]]@manifestVars
@@ -123,12 +122,13 @@ plot_density.mixture_list <-
         if (!length(variables))
             stop("No valid variables provided.")
 
-        cl[["variables"]] <- variables
-        cl[[1L]] <- str2lang("tidySEM:::.extract_density_data")
-        cl_extract <- cl[c(1L, match(c("x", "variables"), names(cl)))]
-        cl[["x"]] <- eval.parent(cl_extract)
-        cl[[1L]] <- str2lang("tidySEM::plot_density")
-        eval.parent(cl)
+        Args <- list(
+          x = x,
+          variables = variables
+        )
+        Args$x <- do.call(.extract_density_data, Args)
+        do.call(plot_density, Args)
+
     }
 
 #' @method plot_density MxModel
@@ -150,83 +150,6 @@ plot_density.MxModel <- function(x,
 }
 
 
-.extract_density_data <- function(x,
-                                  variables = NULL, longform = TRUE){
-    if(inherits(x, "tidyProfile")){
-        x <- list(x)
-    }
-    x[sapply(x, function(i){is.null(i[["dff"]])})] <- NULL
-    # Check if all variables (except CPROBs) are identical across models
-    plot_df <- lapply(x, function(x)
-        as.data.frame(x$dff))
-
-
-    plot_df <-
-        lapply(plot_df, function(x) {
-            x <- x[, which(names(x) %in% c(grep("^CPROB", names(x), value = TRUE), variables))]
-            names(x) <- gsub("^CPROB", "Probability.", names(x))
-            data.frame(x, Probability.Total = 1)
-        })
-
-    for (i in names(plot_df)) {
-        plot_df[[i]][, grep("^Probability", names(plot_df[[i]]))] <-
-            lapply(plot_df[[i]][grep("^Probability", names(plot_df[[i]]))], function(x) {
-                x / length(x)
-            })
-    }
-
-    plot_df <- lapply(plot_df, function(x) {
-        reshape(
-            x,
-            direction = "long",
-            varying =
-                grep("^Probability", names(x), value = TRUE),
-            timevar = "Class",
-            idvar = "ID"
-        )
-    })
-
-    if(length(plot_df) > 1){
-        plot_df <-
-            do.call(rbind, lapply(names(plot_df), function(x) {
-                data.frame(Title = gsub("_", " ", x), plot_df[[x]])
-            }))
-    } else {
-        plot_df <- data.frame(Title = "", plot_df[[1]])
-    }
-
-    if(longform){
-        variable_names <-
-            which(!(
-                names(plot_df) %in% c("Title", "Class", "Probability", "ID")
-            ))
-
-        names(plot_df)[variable_names] <-
-            sapply(names(plot_df)[variable_names], function(x) {
-                paste(c(
-                    "Value_____",
-                    toupper(substring(x, 1, 1)),
-                    tolower(substring(x, 2))
-                ), collapse = "")
-            })
-
-        plot_df <- reshape(
-            plot_df,
-            direction = "long",
-            varying =
-                grep("^Value", names(plot_df), value = TRUE),
-            sep = "_____",
-            timevar = "Variable"
-        )[, c("Title", "Variable", "Value", "Class", "Probability")]
-
-        plot_df$Variable <- factor(plot_df$Variable)
-    }
-
-    plot_df$Class <- factor(plot_df$Class)
-    plot_df$Class <-
-        ordered(plot_df$Class, levels = c("Total", levels(plot_df$Class)[-length(levels(plot_df$Class))]))
-    plot_df
-}
 
 .plot_density_fun <- function(plot_df, variables, bw = FALSE, conditional = FALSE, alpha = .2){
     if (conditional) {
@@ -325,6 +248,12 @@ plot_density.MxModel <- function(x,
         x <- list(x)
         names(x) <- x[[1]]@name
     }
+    raw_data <- x[[1]]@data@observed[, variables, drop = FALSE]
+    not_num <- !(sapply(raw_data, inherits, what = c("integer", "numeric")))
+    if(any(not_num)){
+      message("Some variables were not numeric. Attempting to coerce ", paste0(names(not_num)[not_num], collapse = (", ")), " to numeric.")
+      raw_data[not_num] <- lapply(raw_data[not_num], as.numeric)
+    }
     plot_df <- do.call(rbind, lapply(names(x), function(n){
         i <- x[[n]]
         #P <- class_prob(i, "individual")$individual
@@ -333,34 +262,22 @@ plot_density.MxModel <- function(x,
         P <- cbind(P, Total = 1)
         P <- P/nrow(P)
         cbind(Title = n, do.call(rbind, lapply(1:ncol(P), function(c){
-            cbind(i@data@observed, Class = colnames(P)[c], Probability = P[, c])
+            cbind(raw_data[, variables, drop = FALSE], Class = colnames(P)[c], Probability = P[, c])
         })))
     }))
 
-    # if (length(plot_df) > 1) {
-    #     plot_df <- do.call(rbind, lapply(names(plot_df), function(x) {
-    #         data.frame(Title = gsub("_", " ", x), plot_df[[x]])
-    #     }))
-    # }
-    # else {
-    #     plot_df <- data.frame(Title = "", plot_df[[1]])
-    # }
     if (longform) {
-        variable_names <- which(!(names(plot_df) %in% c("Title",
-                                                        "Class", "Probability", "ID")))
-        names(plot_df)[variable_names] <- sapply(names(plot_df)[variable_names],
-                                                 function(x) {
-                                                     paste(c("Value_____", toupper(substring(x, 1,
-                                                                                             1)), tolower(substring(x, 2))), collapse = "")
-                                                 })
-        plot_df <- reshape(plot_df, direction = "long", varying = grep("^Value",
-                                                                       names(plot_df), value = TRUE), sep = "_____", timevar = "Variable")[,
-                                                                                                                                           c("Title", "Variable", "Value", "Class", "Probability")]
-        plot_df$Variable <- factor(plot_df$Variable)
+      plot_df <- do.call(rbind, lapply(variables, function(v){
+        out <- data.frame(Variable = v, plot_df[, c("Title", "Class", "Probability", v)])
+        names(out)[ncol(out)] <- "Value"
+        out[, c("Title", "Variable", "Value", "Class", "Probability")]
+      }))
+      plot_df$Variable <- factor(plot_df$Variable)
+      plot_df <- plot_df[, c("Title", "Variable", "Value", "Class", "Probability")]
     }
     plot_df$Class <- factor(plot_df$Class)
     plot_df$Class <- ordered(plot_df$Class, levels = c("Total",
                                                        levels(plot_df$Class)[-length(levels(plot_df$Class))]))
-    plot_df
+    return(plot_df)
 }
 
