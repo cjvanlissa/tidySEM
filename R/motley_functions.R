@@ -193,13 +193,16 @@ format_numeric <- function(x, digits = 2) {
   UseMethod("format_numeric", x)
 }
 
-
+#' @export
+#' @method format_numeric data.frame
 format_numeric.data.frame <- function(x, digits = 2) {
   numeric_columns <- sapply(x, class) == 'numeric'
   x[numeric_columns] <-  lapply(x[numeric_columns], format_with_na, digits, format = "f")
   x
 }
 
+#' @export
+#' @method format_numeric matrix
 format_numeric.matrix <- function(x, digits = 2) {
   if(is.numeric(x) & !is.integer(x)){
     x[,] <-  format_with_na(x, digits, format = "f")
@@ -207,6 +210,8 @@ format_numeric.matrix <- function(x, digits = 2) {
   return(x)
 }
 
+#' @export
+#' @method format_numeric numeric
 format_numeric.numeric <- function(x, digits = 2) {
   format_with_na(x, digits, format = "f")
 }
