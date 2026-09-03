@@ -27,7 +27,6 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   if(!x@.wasRun) {
     stop("This model has not been run yet. Use `model = tidySEM::run_mx(model)` or `model = OpenMx::mxRun(model)` to estimate a model.")
   }
-  browser()
   Args <- list(x = x)
   digits <- force(digits)
   sum_x <- summary(x)
