@@ -20,20 +20,14 @@ test_that("pseudo_class works", {
                          df_complete = nrow(x) - 1,
                          data = dat)
 
-  overlapping_terms <- c(pct_lv$term, pct_mx$term)
-  overlapping_terms <- overlapping_terms[duplicated(overlapping_terms)]
 
-  stopifnot(length(overlapping_terms) == 2)
-
-  lv_results <- pct_lv[pct_lv$term %in% overlapping_terms, c("estimate", "se")]
-  mx_results <- pct_mx[pct_mx$term %in% overlapping_terms, c("estimate", "se")]
-
-  expect_equivalent(lv_results$estimate, mx_results$estimate, tolerance = .01)
-  expect_equivalent(lv_results$se, mx_results$se, tolerance = .01)
+  expect_equivalent(pct_lv$estimate[pct_lv$term == "SL ~ class"], pct_mx$estimate[pct_mx$term == "Regressions.SL.ON.class"], tolerance = .01)
+  expect_equivalent(pct_lv$estimate[pct_lv$term == "SL ~~ SL"], pct_mx$estimate[pct_mx$term == "Variances.SL"], tolerance = .01)
+  expect_equivalent(pct_lv$se[pct_lv$term == "SL ~ class"], pct_mx$se[pct_mx$term == "Regressions.SL.ON.class"], tolerance = .01)
+  expect_equivalent(pct_lv$se[pct_lv$term == "SL ~~ SL"], pct_mx$se[pct_mx$term == "Variances.SL"], tolerance = .01)
 
 
-  lm_results <- unlist(pct_lm[pct_lm$term == "class", c("estimate", "std.error"), drop = TRUE])
-  lm_specific_lv_results <- unlist(pct_lv[pct_lv$term == "SL ~ class", c("estimate", "se"), drop  = TRUE])
+  expect_equivalent(pct_lv$estimate[pct_lv$term == "SL ~ class"], pct_lm$estimate[pct_lm$term == "class"], tolerance = .01)
+  expect_equivalent(pct_lv$se[pct_lv$term == "SL ~ class"], pct_lm$std.error[pct_lm$term == "class"], tolerance = .01)
 
-  expect_equivalent(lm_results, lm_specific_lv_results, tolerance = .01)
 })
