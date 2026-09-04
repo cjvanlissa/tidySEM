@@ -11,7 +11,7 @@ vignette: >
 
 This Vignette describes the SMART-LCA Checklist: Standards for More Accuracy in Reporting of different Types of Latent Class Analysis,
 introduced in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. <https://doi.org/10.1080/10705511.2023.2250920>.
-This version of the checklist corresponds to the `tidySEM` R-package's version , 0.2.11.
+This version of the checklist corresponds to the `tidySEM` R-package's version , 0.2.12.
 
 The paper discusses the best practices on which the checklist is based and describes specific points to check when writing, reviewing, or reading a paper in greater detail.
 However, this vignette may be updated to keep pace with `tidySEM` package development,

@@ -90,7 +90,7 @@ res_2 <- mx_mixed_lca(
 data = df,
 classes = 2
 )
-#> MxComputeSimAnnealing(tsallis1996) evaluations 2933 fit 2740.69 change -99MxComputeSimAnnealing(tsallis1996) evaluations 6997 fit 5450.68 change 3147MxComputeSimAnnealing(tsallis1996) evaluations 10979 fit 2446.67 change 209.6MxComputeSimAnnealing(tsallis1996) evaluations 14968 fit 2258.96 change 21.87                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1479 fit 4021.8 change 391MxComputeSimAnnealing(tsallis1996) evaluations 3799 fit 3367.8 change 1128MxComputeSimAnnealing(tsallis1996) evaluations 6079 fit 2237.41 change -881.2MxComputeSimAnnealing(tsallis1996) evaluations 8324 fit 2509.61 change 272.5 MxComputeSimAnnealing(tsallis1996) evaluations 10480 fit 2237.3 change -1435MxComputeSimAnnealing(tsallis1996) evaluations 12705 fit 2237.12 change -2962MxComputeSimAnnealing(tsallis1996) evaluations 14911 fit 2237.09 change -0.008666MxComputeSimAnnealing(tsallis1996) evaluations 17113 fit 2237.09 change 0.0001004                                                                                 
 ```
 
 The returned object is an `OpenMx::mxModel`, and can be modified using the functions in that package:
@@ -117,9 +117,9 @@ res_1_3 <- mx_mixed_lca(
 ```
 
 ```
-#> MxComputeSimAnnealing(tsallis1996) evaluations 3417 fit 3063.05 change 0MxComputeSimAnnealing(tsallis1996) evaluations 7465 fit 3131.93 change 883.4MxComputeSimAnnealing(tsallis1996) evaluations 11462 fit 2237.09 change -5.822MxComputeSimAnnealing(tsallis1996) evaluations 15408 fit 2256.54 change 19.45                                                                              
-#> MxComputeSimAnnealing(tsallis1996) evaluations 2548 fit 3496.47 change 24.38MxComputeSimAnnealing(tsallis1996) evaluations 5272 fit 2559.28 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 7987 fit 4324.09 change 1868MxComputeSimAnnealing(tsallis1996) evaluations 10667 fit 2232.92 change -33.02MxComputeSimAnnealing(tsallis1996) evaluations 13327 fit 2231.76 change -0.1636MxComputeSimAnnealing(tsallis1996) evaluations 15993 fit 2722.17 change -1.091e-11MxComputeSimAnnealing(tsallis1996) evaluations 18657 fit 2232.93 change -120.7    MxComputeSimAnnealing(tsallis1996) evaluations 21320 fit 2230.76 change -115.1MxComputeSimAnnealing(tsallis1996) evaluations 23975 fit 2230.77 change -0.02518                                                                                
-#> Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 631 fit 2688.17 change -5.562                                                                         Fit attempt 5, fit=2237.09546071394, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 2036 fit 2230.15 change -0.0196                                                                           Fit attempt 8, fit=2230.08267540371, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267394999, new current best! (was 2230.08267540371)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493321593, worse than previous best (2230.08267394999)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1812 fit 3560.62 change 599.7MxComputeSimAnnealing(tsallis1996) evaluations 4085 fit 5028.84 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 6334 fit 2240.26 change 2.855MxComputeSimAnnealing(tsallis1996) evaluations 8578 fit 2248.32 change 10.39MxComputeSimAnnealing(tsallis1996) evaluations 10800 fit 2524.41 change 215.6MxComputeSimAnnealing(tsallis1996) evaluations 12953 fit 3132.41 change 862.6MxComputeSimAnnealing(tsallis1996) evaluations 15157 fit 2237.23 change 0.1423MxComputeSimAnnealing(tsallis1996) evaluations 17363 fit 2237.09 change -0.06247                                                                                
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1225 fit 3120.78 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2761 fit 3103.51 change 758MxComputeSimAnnealing(tsallis1996) evaluations 4285 fit 2923.86 change 0  MxComputeSimAnnealing(tsallis1996) evaluations 5787 fit 3389.6 change 1093MxComputeSimAnnealing(tsallis1996) evaluations 7278 fit 2422.52 change 0  MxComputeSimAnnealing(tsallis1996) evaluations 8749 fit 2585.78 change 309.4MxComputeSimAnnealing(tsallis1996) evaluations 10171 fit 2237.54 change -85.52MxComputeSimAnnealing(tsallis1996) evaluations 11663 fit 2232.45 change -923.8MxComputeSimAnnealing(tsallis1996) evaluations 13159 fit 2232.25 change 0.9783MxComputeSimAnnealing(tsallis1996) evaluations 14627 fit 3091.46 change 857.5 MxComputeSimAnnealing(tsallis1996) evaluations 16106 fit 2699.99 change 469.1MxComputeSimAnnealing(tsallis1996) evaluations 17601 fit 2244.62 change -115.3MxComputeSimAnnealing(tsallis1996) evaluations 19084 fit 3176.31 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 20575 fit 2233.17 change -574MxComputeSimAnnealing(tsallis1996) evaluations 22057 fit 2232.15 change 1.394MxComputeSimAnnealing(tsallis1996) evaluations 23522 fit 2230.76 change -1.285MxComputeSimAnnealing(tsallis1996) evaluations 24950 fit 2437.57 change 206.8                                                                              
+#> Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 586 fit 2231.59 change -0.2259                                                                          Beginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 274 fit 2237.72 change -1.832                                                                         Beginning fit attempt 5 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 2309 fit 2237.79 change -1.891                                                                          Fit attempt 5, fit=2237.09546071394, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1441 fit 2230.75 change -0.002972                                                                             Beginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=2230.08267540371, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         Fit attempt 9, fit=2230.08267394999, new current best! (was 2230.08267540371)Beginning fit attempt 10 of at maximum 10 extra tries                        MxComputeGradientDescent(SLSQP) evaluations 1268 fit 2230.09 change -0.000781                                                                             Fit attempt 10, fit=2230.08493321593, worse than previous best (2230.08267394999)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 
 ```
 
 The result is a list of OpenMx models, one for each class solution.
@@ -188,6 +188,9 @@ A third option is to use a predictive model comparison, a method conceptually si
 
 
 
+```
+#> Warning: package 'future' was built under R version 4.6.1
+```
 
 ``` r
 set.seed(1)
@@ -341,7 +344,7 @@ res_2_free <- mx_mixed_lca(
   classes = 2,
   variances = "varying"
 )
-#> MxComputeSimAnnealing(tsallis1996) evaluations 2364 fit 3205.91 change 0MxComputeSimAnnealing(tsallis1996) evaluations 6443 fit 2279.25 change 37.28MxComputeSimAnnealing(tsallis1996) evaluations 10466 fit 5986.31 change 298.6MxComputeSimAnnealing(tsallis1996) evaluations 14486 fit 3095.66 change 846.1MxComputeSimAnnealing(tsallis1996) evaluations 18468 fit 2235.94 change -5.777                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1448 fit 3205.91 change 0MxComputeSimAnnealing(tsallis1996) evaluations 3724 fit 2368.9 change -745.2MxComputeSimAnnealing(tsallis1996) evaluations 5995 fit 6436.55 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 8272 fit 2311.46 change -3399MxComputeSimAnnealing(tsallis1996) evaluations 10504 fit 3094.62 change 789.3MxComputeSimAnnealing(tsallis1996) evaluations 12725 fit 2313.02 change -3557MxComputeSimAnnealing(tsallis1996) evaluations 14935 fit 2623.05 change -1368MxComputeSimAnnealing(tsallis1996) evaluations 17124 fit 2235.94 change 0.001493MxComputeSimAnnealing(tsallis1996) evaluations 19238 fit 2235.95 change -174.6  MxComputeSimAnnealing(tsallis1996) evaluations 21440 fit 2236.02 change -856.2                                                                              
 ```
 
 We can compare the BICs of these models to determine whether the added complexity improves the model fit:
@@ -357,12 +360,12 @@ table_fit(compare)
 
 
 ```
-#>         Name Classes    LL   n Parameters  AIC  BIC saBIC
-#> 1 fixed_covs       2 -1119 200         14 2265 2311  2267
-#> 2  free_covs       2 -1118 200         17 2270 2326  2272
-#>   Entropy prob_min prob_max n_min n_max np_ratio np_local
-#> 1    0.93     0.96     0.99  0.29   0.7       14      9.1
-#> 2    0.94     0.97     0.99  0.29   0.7       12      7.4
+#>         Name Classes    LL   n Parameters  AIC  BIC saBIC Entropy
+#> 1 fixed_covs       2 -1119 200         14 2265 2311  2267    0.93
+#> 2  free_covs       2 -1118 200         17 2270 2326  2272    0.94
+#>   prob_min prob_max n_min n_max np_ratio np_local
+#> 1     0.96     0.99  0.29   0.7       14      9.1
+#> 2     0.97     0.99  0.29   0.7       12      7.4
 ```
 
 Note that the BIC of the model with free covariances is higher than that of the model with fixed variances, so it fits worse.
@@ -375,6 +378,10 @@ The model can be plot with the usual functions, but note that categorical indica
 Thus, for example, we can use a profile plot for the continuous indicators:
 
 ![](mixed_lca_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
+
+```
+#> Warning: Using shapes for an ordinal variable is not advised
+```
 
 
 ``` r

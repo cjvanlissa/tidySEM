@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ rows to create a layout matrix. Empty strings (<code>""</code>)
 or <code>NA</code> can be used for empty cells. See Example 1.</p></li>
 <li><p>Call <code>get_layout()</code> on a model object or <code>tidy_results</code>
 object. It will use the function
-<code><a href="https://r.igraph.org/reference/layout_as_tree.html" class="external-link">layout_as_tree</a></code>, or any other layout function
+<code>layout_as_tree</code>, or any other layout function
 from the <code>igraph</code> package, to generate a rudimentary layout. See
 Example 2.</p></li>
 <li><p>Instead of using <code>get_layout()</code>, just use a <code>matrix</code> or
@@ -136,9 +136,9 @@ clipboard (see Example 4)</p></li>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>lavaan-&gt;lav_object_post_check():  </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>    some estimated ov variances are negative</span>
 <span class="r-in"><span><span class="fu">get_layout</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1]     [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "x2"     "x3"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "visual" "x1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2]    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] "x2" "visual"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] "x3" "x1"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "layout_matrix" "matrix"        "array"        </span>
 <span class="r-in"><span></span></span>
