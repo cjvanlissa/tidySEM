@@ -139,7 +139,10 @@ get_layout.tidy_results <- function(x, ..., layout_algorithm = "fr_grid"){
     lo <- fr_layout_integer_compact(nodes = nds, edges = as.matrix(df))
   } else {
     g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
-    lo <- do.call(layout_algorithm, list(g))
+    lo <- do.call(
+      getExportedValue("igraph", layout_algorithm),
+      list(graph = g)
+    )
     rownames(lo) <- igraph::vertex.attributes(g)$name
   }
   lo <- snap_layout_to_grid(lo)
