@@ -81,11 +81,11 @@ graph_sem(model = fit)
 
 ![](pgfig1.png)
 
-This uses a default layout, provided by the `igraph` package. However,
-the node placement is not very aesthetically pleasing. One of the areas
-where `tidySEM` really excels is customization. Because every aspect of
-the graph is represented as tidy data (basically, a spreadsheet), it is
-easy to move nodes around and create a custom layout.
+This uses a default layout. However, the node placement is not very
+aesthetically pleasing. One of the areas where `tidySEM` really excels
+is customization. Because every aspect of the graph is represented as
+tidy data (basically, a spreadsheet), it is easy to move nodes around
+and create a custom layout.
 
 ### Optional step 3: Customizing the layout
 
@@ -125,22 +125,16 @@ get_layout(fit)
 
 The
 [`get_layout()`](https://cjvanlissa.github.io/tidySEM/reference/get_layout.md)
-function relies on
-[`igraph::layout_as_tree()`](https://r.igraph.org/reference/layout_as_tree.html)
-to place the nodes. Other layout functions from the `igraph` package can
+function relies on the Fruchterman Reingold algorithm to place the
+nodes. If the `igraph` package is installed, its layout algorithms can
 be used by specifying the `layout_algorithm = ...` argument:
 
 ``` r
 
-get_layout(fit, layout_algorithm = "layout_in_circle")
-#>      [,1] [,2] [,3]      [,4]    [,5]
-#> [1,] NA   "x5" NA        NA      NA  
-#> [2,] NA   "x6" "x4"      "x3"    "x2"
-#> [3,] "x8" "x7" "textual" "x1"    NA  
-#> [4,] NA   "x9" "visual"  "speed" NA  
-#> attr(,"class")
-#> [1] "layout_matrix" "matrix"        "array"
-get_layout(fit, layout_algorithm = "layout_on_grid")
+if(requireNamespace("igraph", quietly = TRUE)){
+  get_layout(fit, layout_algorithm = "layout_in_circle")
+  get_layout(fit, layout_algorithm = "layout_on_grid")
+}
 #>      [,1]     [,2]      [,3]    [,4]
 #> [1,] "x6"     "x7"      "x8"    "x9"
 #> [2,] "x2"     "x3"      "x4"    "x5"

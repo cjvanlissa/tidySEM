@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -161,12 +161,11 @@ tutorial example for CFA. First, we conduct the SEM analysis:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pgfig1.png" class="r-plt" alt="" width="100%"></p>
-<p>This uses a default layout, provided by the <code>igraph</code>
-package. However, the node placement is not very aesthetically pleasing.
-One of the areas where <code>tidySEM</code> really excels is
-customization. Because every aspect of the graph is represented as tidy
-data (basically, a spreadsheet), it is easy to move nodes around and
-create a custom layout.</p>
+<p>This uses a default layout. However, the node placement is not very
+aesthetically pleasing. One of the areas where <code>tidySEM</code>
+really excels is customization. Because every aspect of the graph is
+represented as tidy data (basically, a spreadsheet), it is easy to move
+nodes around and create a custom layout.</p>
 </div>
 <div class="section level3">
 <h3 id="optional-step-3-customizing-the-layout">Optional step 3: Customizing the layout<a class="anchor" aria-label="anchor" href="#optional-step-3-customizing-the-layout"></a>
@@ -199,20 +198,15 @@ run:</p>
 <span><span class="co">#&gt; [3,] "x7" "x1"    "visual"  "x2"</span></span>
 <span><span class="co">#&gt; attr(,"class")</span></span>
 <span><span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></span></code></pre></div>
-<p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function relies on
-<code><a href="https://r.igraph.org/reference/layout_as_tree.html" class="external-link">igraph::layout_as_tree()</a></code> to place the nodes. Other layout
-functions from the <code>igraph</code> package can be used by specifying
+<p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function relies on the Fruchterman
+Reingold algorithm to place the nodes. If the <code>igraph</code>
+package is installed, its layout algorithms can be used by specifying
 the <code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      [,1] [,2] [,3]      [,4]    [,5]</span></span>
-<span><span class="co">#&gt; [1,] NA   "x5" NA        NA      NA  </span></span>
-<span><span class="co">#&gt; [2,] NA   "x6" "x4"      "x3"    "x2"</span></span>
-<span><span class="co">#&gt; [3,] "x8" "x7" "textual" "x1"    NA  </span></span>
-<span><span class="co">#&gt; [4,] NA   "x9" "visual"  "speed" NA  </span></span>
-<span><span class="co">#&gt; attr(,"class")</span></span>
-<span><span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></span>
-<span><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"igraph"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span><span class="co">#&gt;      [,1]     [,2]      [,3]    [,4]</span></span>
 <span><span class="co">#&gt; [1,] "x6"     "x7"      "x8"    "x9"</span></span>
 <span><span class="co">#&gt; [2,] "x2"     "x3"      "x4"    "x5"</span></span>

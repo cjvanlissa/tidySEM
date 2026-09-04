@@ -56,6 +56,9 @@
   : Estimate tidy_sem using 'Mplus'
 - [`estimate_mx()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_mx.md)
   : Estimate tidy_sem using 'OpenMx'
+- [`format_numeric()`](https://cjvanlissa.github.io/tidySEM/reference/format_numeric.md)
+  : Format numeric columns Formats the numeric columns of a data.frame,
+  to round to a specific number of digits.
 - [`get_data()`](https://cjvanlissa.github.io/tidySEM/reference/get_data.md)
   [`` `get_data<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/get_data.md)
   : Extract data from tidy_sem

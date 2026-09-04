@@ -70,6 +70,15 @@ desc <- desc[, c("name", "n", "missing", "unique", "mean", "median",
 desc
 ```
 
+| name       |   n | missing | unique | mean | median |   sd |   min | max | skew_2se | kurt_2se |
+|:-----------|----:|--------:|-------:|-----:|-------:|-----:|------:|----:|---------:|---------:|
+| burdened   | 509 |    0.01 |    509 |  3.4 |    3.4 | 0.75 |  1.20 | 5.3 |     0.17 |    -0.41 |
+| trapped    | 505 |    0.02 |    505 |  1.7 |    1.8 | 0.90 | -0.86 | 3.8 |    -1.03 |    -1.52 |
+| negaffect  | 506 |    0.01 |    506 |  2.5 |    2.5 | 0.69 |  0.71 | 5.0 |     0.08 |    -0.38 |
+| loneliness | 510 |    0.01 |    510 |  2.7 |    2.7 | 0.62 |  0.98 | 4.2 |    -0.33 |    -0.62 |
+
+Descriptive statistics {.table}
+
 The table indicates two potential causes for concern: there is a small
 percentage of missingness, and all variables have relatively high
 kurtosis. Since there are some missing values, we can conduct an MCAR
@@ -94,6 +103,8 @@ df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
 ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
 ```
+
+![](plot_lpa_desc.png)
 
 ## Conducting Latent Profile Analysis
 
@@ -155,6 +166,16 @@ fit[, c("Name", "LL", "Parameters", "n", "BIC", "Entropy", "prob_min",
     "prob_max", "n_min", "n_max", "np_ratio", "np_local")]
 ```
 
+| Name        |    LL |   p |   n |  BIC | Entropy | p_min | p_max | n_min | n_max |
+|:------------|------:|----:|----:|-----:|--------:|------:|------:|------:|------:|
+| equal var 1 | -2242 |   8 | 513 | 4534 |    1.00 |  1.00 |  1.00 |  1.00 |  1.00 |
+| equal var 2 | -2031 |  13 | 513 | 4144 |    0.74 |  0.91 |  0.93 |  0.42 |  0.58 |
+| equal var 3 | -1951 |  18 | 513 | 4015 |    0.78 |  0.89 |  0.91 |  0.19 |  0.54 |
+| equal var 4 | -1916 |  23 | 513 | 3976 |    0.75 |  0.81 |  0.92 |  0.16 |  0.34 |
+| equal var 5 | -1912 |  28 | 513 | 3999 |    0.79 |  0.81 |  0.92 |  0.00 |  0.34 |
+
+Model fit table {.table}
+
 ### Using ICs
 
 the 4-class solution has the lowest BIC, which means it is preferred
@@ -175,6 +196,15 @@ pairwise model comparisons, except for the 5-class model:
 
 lr_lmr(res)
 ```
+
+| null | alt  |    lr |  df |    p |   w2 | p_w2 |
+|:-----|:-----|------:|----:|-----:|-----:|-----:|
+| mix1 | mix2 | 10.25 |   5 | 0.00 | 0.82 |    0 |
+| mix2 | mix3 |  5.30 |   5 | 0.00 | 0.44 |    0 |
+| mix3 | mix4 |  4.14 |   5 | 0.00 | 0.14 |    0 |
+| mix4 | mix5 |  0.88 |   5 | 0.19 | 0.04 |    0 |
+
+LMR test table {.table}
 
 ### Using BLRT tests
 
@@ -202,6 +232,15 @@ set.seed(1)
 res_blrt <- BLRT(res, replications = 100)
 ```
 
+| null | alt  |    lr |  df | blrt_p | samples |
+|:-----|:-----|------:|----:|-------:|--------:|
+| mix1 | mix2 | 421.2 |   5 |   0.00 |     100 |
+| mix2 | mix3 | 160.0 |   5 |   0.00 |     100 |
+| mix3 | mix4 |  70.2 |   5 |   0.00 |     100 |
+| mix4 | mix5 |   7.8 |   5 |   0.36 |     100 |
+
+BLRT test table {.table}
+
 In sum, across all class enumeration criteria, there is strong support
 for a 4-class solution.
 
@@ -221,6 +260,13 @@ res_alt <- mx_profiles(df, classes = 4, variances = "varying")
 compare <- list(res[[4]], res_alt)
 table_fit(compare)
 ```
+
+| Name |    LL | Parameters |  BIC | Entropy | prob_min | prob_max | n_min | n_max |
+|-----:|------:|-----------:|-----:|--------:|---------:|---------:|------:|------:|
+|    1 | -1916 |         23 | 3976 |    0.75 |     0.81 |     0.92 |  0.16 |  0.34 |
+|    2 | -1909 |         35 | 4037 |    0.78 |     0.84 |     0.92 |  0.16 |  0.32 |
+
+Comparing competing theoretical models {.table}
 
 The alternative model incurs 12 additional parameters for the free
 variances. Yet, it has a higher BIC, which indicates that this
@@ -250,6 +296,35 @@ table_results(res_final, columns = c("label", "est", "se", "confint",
     "class"))
 ```
 
+| label                |  est |   se | confint        | class  |
+|:---------------------|-----:|-----:|:---------------|:-------|
+| Means.burdened       | 3.27 | 0.04 | \[3.18, 3.36\] | class1 |
+| Means.trapped        | 1.28 | 0.05 | \[1.18, 1.38\] | class1 |
+| Means.negaffect      | 2.31 | 0.06 | \[2.20, 2.42\] | class1 |
+| Means.loneliness     | 2.73 | 0.04 | \[2.64, 2.82\] | class1 |
+| Variances.burdened   | 0.23 | 0.02 | \[0.19, 0.27\] | class1 |
+| Variances.trapped    | 0.17 | 0.02 | \[0.14, 0.20\] | class1 |
+| Variances.negaffect  | 0.31 | 0.02 | \[0.27, 0.36\] | class1 |
+| Variances.loneliness | 0.24 | 0.02 | \[0.20, 0.28\] | class1 |
+| Means.burdened       | 3.40 | 0.06 | \[3.28, 3.52\] | class2 |
+| Means.trapped        | 2.27 | 0.06 | \[2.15, 2.38\] | class2 |
+| Means.negaffect      | 2.81 | 0.06 | \[2.70, 2.93\] | class2 |
+| Means.loneliness     | 2.79 | 0.06 | \[2.66, 2.91\] | class2 |
+| Means.burdened       | 4.25 | 0.07 | \[4.12, 4.38\] | class3 |
+| Means.trapped        | 2.67 | 0.05 | \[2.58, 2.77\] | class3 |
+| Means.negaffect      | 2.92 | 0.06 | \[2.80, 3.03\] | class3 |
+| Means.loneliness     | 2.01 | 0.06 | \[1.89, 2.14\] | class3 |
+| Means.burdened       | 2.38 | 0.06 | \[2.26, 2.50\] | class4 |
+| Means.trapped        | 0.38 | 0.05 | \[0.28, 0.49\] | class4 |
+| Means.negaffect      | 1.78 | 0.07 | \[1.65, 1.91\] | class4 |
+| Means.loneliness     | 3.18 | 0.06 | \[3.07, 3.30\] | class4 |
+| mix4.weights\[1,1\]  | 1.00 |   NA | NA             | NA     |
+| mix4.weights\[1,2\]  | 0.86 | 0.15 | \[0.56, 1.15\] | NA     |
+| mix4.weights\[1,3\]  | 0.66 | 0.11 | \[0.44, 0.88\] | NA     |
+| mix4.weights\[1,4\]  | 0.47 | 0.08 | \[0.32, 0.63\] | NA     |
+
+Four-class model results {.table}
+
 The results are best interpreted by examining a plot of the model and
 data, however. Relevant plot functions are
 [`plot_bivariate()`](https://cjvanlissa.github.io/tidySEM/reference/plot_bivariate.md),
@@ -264,6 +339,10 @@ also includes them.
 
 plot_bivariate(res_final)
 ```
+
+![Bivariate profile plot](lpa_bivariate.png)
+
+Bivariate profile plot
 
 On the diagonal of the bivariate plot are weighted density plots: normal
 approximations of the density function of observed data, weighed by
@@ -301,6 +380,10 @@ of class parameters exactly.
 
 plot_profiles(res_final)
 ```
+
+![Bivariate profile plot](lpa_profiles.png)
+
+Bivariate profile plot
 
 ## Auxiliary Analyses
 
@@ -356,6 +439,49 @@ $`\Delta LL(3) = 0.98, p = .81`$. The results can be reported using
 
 table_results(aux_model)
 ```
+
+    #>                                label    est_sig     se pval            confint
+    #> 1  Regressions.freqvisit.ON.distance       0.00   0.00 0.80      [-0.00, 0.00]
+    #> 2                    Means.freqvisit    3.99***   0.18 0.00       [3.64, 4.35]
+    #> 3                     Means.distance  155.25***   3.80 0.00   [147.80, 162.70]
+    #> 4                Variances.freqvisit    0.53***   0.06 0.00       [0.42, 0.64]
+    #> 5                 Variances.distance 2464.07*** 266.70 0.00 [1941.34, 2986.79]
+    #> 6  Regressions.freqvisit.ON.distance       0.00   0.00 0.77      [-0.00, 0.01]
+    #> 7                    Means.freqvisit    3.66***   0.43 0.00       [2.81, 4.51]
+    #> 8                     Means.distance  159.52***   2.79 0.00   [154.05, 164.98]
+    #> 9                Variances.freqvisit    1.19***   0.14 0.00       [0.92, 1.46]
+    #> 10                Variances.distance 1144.27*** 133.42 0.00  [882.77, 1405.76]
+    #> 11 Regressions.freqvisit.ON.distance      -0.00   0.00 0.35      [-0.00, 0.00]
+    #> 12                   Means.freqvisit    3.95***   0.27 0.00       [3.43, 4.47]
+    #> 13                    Means.distance  147.24***   6.09 0.00   [135.30, 159.18]
+    #> 14               Variances.freqvisit    1.29***   0.17 0.00       [0.95, 1.63]
+    #> 15                Variances.distance 4200.66*** 558.63 0.00 [3105.75, 5295.56]
+    #> 16 Regressions.freqvisit.ON.distance      -0.00   0.00 0.91      [-0.00, 0.00]
+    #> 17                   Means.freqvisit    3.32***   0.38 0.00       [2.57, 4.08]
+    #> 18                    Means.distance  167.02***   7.06 0.00   [153.18, 180.86]
+    #> 19               Variances.freqvisit    1.48***   0.23 0.00       [1.02, 1.93]
+    #> 20                Variances.distance 3989.68*** 630.52 0.00 [2753.87, 5225.48]
+    #>     group
+    #> 1  class1
+    #> 2  class1
+    #> 3  class1
+    #> 4  class1
+    #> 5  class1
+    #> 6  class2
+    #> 7  class2
+    #> 8  class2
+    #> 9  class2
+    #> 10 class2
+    #> 11 class3
+    #> 12 class3
+    #> 13 class3
+    #> 14 class3
+    #> 15 class3
+    #> 16 class4
+    #> 17 class4
+    #> 18 class4
+    #> 19 class4
+    #> 20 class4
 
 ## Predicting class membership
 
