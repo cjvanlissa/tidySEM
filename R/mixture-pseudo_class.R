@@ -112,42 +112,18 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
   }
 
   parameters <- lapply(fits, function(fit) {
-
+    parameters <- table_results(fit, format_numeric = F, columns = NULL)
+    parameters$name <- parameters$label
     if (std == TRUE) {
 
       # table_results() is used to get the prettier lhs, op, and rhs
-      parameters_info <- table_results(fit, format_numeric = F, columns = c("lhs", "op", "rhs", "est", "se", "name"))
+      parameters$est <- parameters$std_est
+      parameters$se <- parameters$std_se
 
-      parameters_standardized <- OpenMx::mxStandardizeRAMpaths(fit, SE = TRUE)[,c("name", "Std.Value", "Std.SE")]
-
-      parameters <- merge(parameters_info, parameters_standardized)
-
-      if(nrow(parameters) != nrow(parameters_standardized)) {
-        stop("merge() result is unexpected")
-      }
-
-      parameters$rhs <- ifelse(parameters$op == "~1", "", parameters$rhs)
-
-      parameters$name <- with(parameters, paste(lhs, op, rhs))
-
-      parameters$est <- parameters$Std.Value
-      parameters$se <- parameters$Std.SE
-
-      parameters <- parameters[,c("name", "est", "se")]
-
-    } else {
-
-      parameters <- table_results(fit, format_numeric = F, columns = c("lhs", "op", "rhs", "est", "se"))
-
-      parameters$rhs <- ifelse(parameters$op == "~1", "", parameters$rhs)
-
-      parameters$name <- with(parameters, paste(lhs, op, rhs))
-
-      parameters <- parameters[,-(1:3)][,c("name", "est", "se")]
 
     }
+    parameters[,c("name", "est", "se")]
 
-    parameters
   })
 
   example_fit <- fits[[1]]
@@ -155,7 +131,8 @@ pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...
 
   if (is.null(df_complete)) {
     nparam <- length(OpenMx::omxGetParameters(example_fit, free = TRUE))
-    ntotal <- example_fit@data@numObs
+    sums <- summary(example_fit)
+    ntotal <- sums$numObs
 
     message(paste("The degrees of freedom are assumed to be equal to the total number of observations used in the model (", ntotal, ") minus the number of parameters estimated (", nparam, "). This may not be correct. If necessary, provide a better value via the 'df_complete' argument"))
 
@@ -251,8 +228,13 @@ pseudo_class_analysis <- function(dfs, model, enclos = parent.frame()) {
     })
 }
 
-pseudo_class_analysis_cb <- function(dfs, func) {
-  lapply(X = dfs, FUN = func)
+pseudo_class_analysis_cb <- function(dfs, func, Arg = NULL) {
+  if(!is.null(Arg)){
+    do.call(lapply, c(list(X = dfs, FUN = func), Arg))
+  } else {
+    lapply(X = dfs, FUN = func)
+  }
+
 }
 
 
@@ -437,22 +419,36 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
     }
   } else if (is.character(expr)) {
     # Treat as a tidy_sem
-
-    ramModel <- as_ram(model)
-
-    model <- function(df) {
-
-      model <- OpenMx::mxModel(ramModel,
-              data = OpenMx::mxData(observed = df, type = "raw"),
-              fitfunction = OpenMx::mxFitFunctionML())
-
-      out <- try(run_mx(model, silent = TRUE), silent = TRUE)
-      if(!inherits(out, "try-error")){
-        return(out)
+    if(!grepl("class", model)){
+      textmod <- model
+      model <- function(df) {
+        df <- as.data.frame(df)
+        model <- as_ram(textmod, groups = "class", data = df)
+        out <- try(run_mx(model, silent = TRUE), silent = TRUE)
+        if(!inherits(out, "try-error")){
+          return(out)
+        }
+        NULL
       }
+    } else {
+      ramModel <- as_ram(model)
+      model <- function(df) {
 
-      out
+        model <- OpenMx::mxModel(ramModel,
+                                 data = OpenMx::mxData(observed = df, type = "raw"),
+                                 fitfunction = OpenMx::mxFitFunctionML())
+
+        out <- try(run_mx(model, silent = TRUE), silent = TRUE)
+        if(!inherits(out, "try-error")){
+          return(out)
+        }
+
+        NULL
+      }
     }
+
+
+
 
     analysis_type <- "function"
 
@@ -463,7 +459,6 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
 
   class(x) <- "data.frame"
   dfs <- split(x[, -which(names(x) == "id_dataset"), drop = FALSE], f = factor(x$id_dataset))
-
   # Run the models
   if ( analysis_type == "function" ) {
 

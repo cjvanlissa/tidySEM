@@ -143,11 +143,14 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
                  "label")
   results <- results[, c(firstcols[firstcols %in% names(results)], names(results)[!names(results) %in% firstcols]), drop = FALSE]
   # Format using digits
-  value_columns <- names(results)[can_be_numeric(results)]
   if(format_numeric){
+    value_columns <- names(results)[can_be_numeric(results)]
     results[, value_columns] <- lapply(results[, value_columns],
                                        format_with_na, digits = digits, format = "f")
   }
+  # Add group/class to label
+  if("group" %in% names(results)) results$label <- paste0(results$label, ".", results$group)
+  if("class" %in% names(results)) results$label <- paste0(results$label, ".", results$class)
   results <- results[order(results$name), , drop = FALSE]
   if(!is.null(columns)) {
     results <- results[, na.omit(match(columns, names(results))), drop = FALSE]

@@ -178,26 +178,43 @@ poms <- function(data){
 }
 
 
-# Format numeric columns
+#' Format numeric columns
 #
-# Formats the numeric columns of a data.frame, to round to a specific number
-# of digits.
-# @param x A data.frame.
-# @param digits The desired number of digits.
-# @author Caspar J. van Lissa
-# @export
-# @keywords internal
-# @examples
-# dat <- mtcars
-# format_numeric(dat, 1)
+#' Formats the numeric columns of a data.frame, to round to a specific number
+#' of digits.
+#' @param x A data.frame.
+#' @param digits The desired number of digits.
+#' @author Caspar J. van Lissa
+#' @export
+#' @examples
+#' dat <- mtcars
+#' format_numeric(dat, 1)
 format_numeric <- function(x, digits = 2) {
+  UseMethod("format_numeric", x)
+}
+
+#' @export
+#' @method format_numeric data.frame
+format_numeric.data.frame <- function(x, digits = 2) {
   numeric_columns <- sapply(x, class) == 'numeric'
   x[numeric_columns] <-  lapply(x[numeric_columns], format_with_na, digits, format = "f")
   x
 }
 
+#' @export
+#' @method format_numeric matrix
+format_numeric.matrix <- function(x, digits = 2) {
+  if(is.numeric(x) & !is.integer(x)){
+    x[,] <-  format_with_na(x, digits, format = "f")
+  }
+  return(x)
+}
 
-
+#' @export
+#' @method format_numeric numeric
+format_numeric.numeric <- function(x, digits = 2) {
+  format_with_na(x, digits, format = "f")
+}
 #
 #Get avarage factor loadings over time for a longitudinal dataset
 #
