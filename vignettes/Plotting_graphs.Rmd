@@ -79,7 +79,7 @@ if(generate_pngs) ggsave("pgfig1.png", p, device = "png", width= 9.5, height = 3
 knitr::include_graphics("pgfig1.png")
 ```
 
-This uses a default layout, provided by the `igraph` package. However, the node placement is not very aesthetically pleasing. One of the areas where `tidySEM` really excels is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.
+This uses a default layout. However, the node placement is not very aesthetically pleasing. One of the areas where `tidySEM` really excels is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.
 
 ### Optional step 3: Customizing the layout
 
@@ -109,12 +109,15 @@ fit <- cfa(' visual  =~ x1 + x2 + x3 ',
 get_layout(fit)
 })
 ```
-The `get_layout()` function relies on `igraph::layout_as_tree()` to place the nodes.
-Other layout functions from the `igraph` package can be used by specifying the `layout_algorithm = ...` argument:
+
+The `get_layout()` function relies on the Fruchterman Reingold algorithm to place the nodes.
+If the `igraph` package is installed, its layout algorithms can be used by specifying the `layout_algorithm = ...` argument:
 
 ```{r message=FALSE, warning = FALSE}
-get_layout(fit, layout_algorithm = "layout_in_circle")
-get_layout(fit, layout_algorithm = "layout_on_grid")
+if(requireNamespace("igraph", quietly = TRUE)){
+  get_layout(fit, layout_algorithm = "layout_in_circle")
+  get_layout(fit, layout_algorithm = "layout_on_grid")
+}
 ```
 
 #### Specifying layout manually in R

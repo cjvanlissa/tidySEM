@@ -1,7 +1,7 @@
 Package: tidySEM
 Type: Package
 Title: Tidy Structural Equation Modeling
-Version: 0.2.11
+Version: 0.2.12
 Authors@R: 
     c(person(given = c("Caspar", "J."),
              family = "van Lissa",
@@ -35,7 +35,6 @@ Imports:
     ggplot2 (>= 3.5.0),
     lavaan (>= 0.6-21),
     MplusAutomation,
-    igraph (>= 2.0.0),
     psych,
     methods,
     gtable,
@@ -68,7 +67,8 @@ Suggests:
     rmarkdown,
     blavaan,
     bain,
-    future
+    future,
+    igraph (>= 2.0.0)
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

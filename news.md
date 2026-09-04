@@ -1,3 +1,9 @@
+# tidySEM 0.2.12
+
+* Make igraph a suggest
+* Bugfixes to pseudo_class()
+* Export format_numeric()
+
 # tidySEM 0.2.11
 
 * Add deviances_to_thresholds() to reparametrize models
