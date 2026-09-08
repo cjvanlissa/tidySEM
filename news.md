@@ -3,6 +3,7 @@
 * Make igraph a suggest
 * Bugfixes to pseudo_class()
 * Export format_numeric()
+* Add random_starts()
 
 # tidySEM 0.2.11
 

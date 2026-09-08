@@ -14,8 +14,6 @@ vignette: >
 library(tidySEM)
 library(lavaan)
 library(MplusAutomation)
-#> Warning: package 'MplusAutomation' was built under R version
-#> 4.6.1
 ```
 
 `tidySEM` tabulates the results of different types of models in the same uniform way. This facilitates parsing the output into Tables and Figures for publication. The function to tabulate output is `table_results()`. The function to tabulate fit indices is `table_fit()`.
@@ -100,24 +98,18 @@ table_results(fit_lav)
 
 ``` r
 table_fit(fit_lav)
-#>      Name Parameters fmin chisq df  pvalue baseline.chisq
-#> 1 fit_lav         30 0.14    85 24 8.5e-09            919
-#>   baseline.df baseline.pvalue  cfi tli nnfi  rfi  nfi pnfi  ifi
-#> 1          36               0 0.93 0.9  0.9 0.86 0.91  0.6 0.93
-#>    rni    LL unrestricted.logl  aic  bic   n bic2 rmsea
-#> 1 0.93 -3738             -3695 7535 7647 301 7552 0.092
-#>   rmsea.ci.lower rmsea.ci.upper rmsea.ci.level rmsea.pvalue
-#> 1          0.071           0.11            0.9      0.00066
-#>   rmsea.close.h0 rmsea.notclose.pvalue rmsea.notclose.h0   rmr
-#> 1           0.05                  0.84              0.08 0.075
-#>   rmr_nomean srmr srmr_bentler srmr_bentler_nomean  crmr
-#> 1      0.082 0.06         0.06               0.065 0.065
-#>   crmr_nomean srmr_mplus srmr_mplus_nomean  gfi gfi.ci.lower
-#> 1       0.073       0.06             0.065 0.96         0.94
-#>   gfi.ci.upper gfi.ci.level cn_05 cn_01 gfi_lisrel agfi_lisrel
-#> 1         0.98          0.9   129   153          1        0.99
-#>   pgfi mfi ecvi
-#> 1 0.44 0.9 0.48
+#>      Name Parameters fmin chisq df  pvalue baseline.chisq baseline.df baseline.pvalue
+#> 1 fit_lav         30 0.14    85 24 8.5e-09            919          36               0
+#>    cfi tli nnfi  rfi  nfi pnfi  ifi  rni    LL unrestricted.logl  aic  bic   n bic2
+#> 1 0.93 0.9  0.9 0.86 0.91  0.6 0.93 0.93 -3738             -3695 7535 7647 301 7552
+#>   rmsea rmsea.ci.lower rmsea.ci.upper rmsea.ci.level rmsea.pvalue rmsea.close.h0
+#> 1 0.092          0.071           0.11            0.9      0.00066           0.05
+#>   rmsea.notclose.pvalue rmsea.notclose.h0   rmr rmr_nomean srmr srmr_bentler
+#> 1                  0.84              0.08 0.075      0.082 0.06         0.06
+#>   srmr_bentler_nomean  crmr crmr_nomean srmr_mplus srmr_mplus_nomean  gfi gfi.ci.lower
+#> 1               0.065 0.065       0.073       0.06             0.065 0.96         0.94
+#>   gfi.ci.upper gfi.ci.level cn_05 cn_01 gfi_lisrel agfi_lisrel pgfi mfi ecvi
+#> 1         0.98          0.9   129   153          1        0.99 0.44 0.9 0.48
 ```
 
 ## Output from OpenMx
@@ -171,14 +163,12 @@ table_fit(fit_mx)
 #> 31          Variances.spe_1 0.80*** 0.09 0.00 [0.63, 0.97]
 #> 32          Variances.spe_2 0.49*** 0.09 0.00 [0.31, 0.67]
 #> 33          Variances.spe_3 0.57*** 0.09 0.00 [0.39, 0.74]
-#>   Minus2LogLikelihood   n Parameters observedStatistics   df
-#> 1                7475 301         30               2709 2679
-#>   saturatedDoF independenceDoF saturatedParameters
-#> 1         2655            2691                  54
-#>   independenceParameters ChiDoF satDoF indDoF RMSEANull modelName
-#> 1                     18     24   2655   2691      0.05     model
-#>    AIC  BIC saBIC    LL
-#> 1 7535 7647  7552 -3738
+#>   Minus2LogLikelihood   n Parameters observedStatistics   df saturatedDoF
+#> 1                7475 301         30               2709 2679         2655
+#>   independenceDoF saturatedParameters independenceParameters ChiDoF satDoF indDoF
+#> 1            2691                  54                     18     24   2655   2691
+#>   RMSEANull modelName  AIC  BIC saBIC    LL
+#> 1      0.05     model 7535 7647  7552 -3738
 ```
 
 ## Output from Mplus
@@ -203,165 +193,90 @@ table_results(fit_mplus)
 ``` r
 table_results(fit_mplus)
 #> Calculated confidence intervals from est and se.
-#>                           label  est_sig   se pval        confint
-#> 1            VISUAL.BY.VIS_1.GW     1.00 <NA> <NA>           <NA>
-#> 2            VISUAL.BY.VIS_2.GW  0.58*** 0.11 0.00 [ 0.36,  0.79]
-#> 3            VISUAL.BY.VIS_3.GW  0.80*** 0.13 0.00 [ 0.54,  1.05]
-#> 4           TEXTUAL.BY.TEX_1.GW     1.00 <NA> <NA>           <NA>
-#> 5           TEXTUAL.BY.TEX_2.GW  1.12*** 0.07 0.00 [ 0.99,  1.25]
-#> 6           TEXTUAL.BY.TEX_3.GW  0.93*** 0.06 0.00 [ 0.82,  1.04]
-#> 7             SPEED.BY.SPE_1.GW     1.00 <NA> <NA>           <NA>
-#> 8             SPEED.BY.SPE_2.GW  1.13*** 0.14 0.00 [ 0.86,  1.40]
-#> 9             SPEED.BY.SPE_3.GW  1.01*** 0.16 0.00 [ 0.70,  1.32]
-#> 10       TEXTUAL.WITH.VISUAL.GW  0.43*** 0.10 0.00 [ 0.23,  0.62]
-#> 11         SPEED.WITH.VISUAL.GW  0.33*** 0.08 0.00 [ 0.16,  0.49]
-#> 12        SPEED.WITH.TEXTUAL.GW   0.24** 0.07 0.00 [ 0.09,  0.38]
-#> 13              Means.VISUAL.GW     0.00 <NA> <NA>           <NA>
-#> 14             Means.TEXTUAL.GW     0.00 <NA> <NA>           <NA>
-#> 15               Means.SPEED.GW     0.00 <NA> <NA>           <NA>
-#> 16          Intercepts.VIS_1.GW  4.85*** 0.09 0.00 [ 4.67,  5.04]
-#> 17          Intercepts.VIS_2.GW  6.07*** 0.08 0.00 [ 5.92,  6.22]
-#> 18          Intercepts.VIS_3.GW  2.15*** 0.08 0.00 [ 1.99,  2.32]
-#> 19          Intercepts.TEX_1.GW  3.35*** 0.09 0.00 [ 3.18,  3.53]
-#> 20          Intercepts.TEX_2.GW  4.68*** 0.10 0.00 [ 4.49,  4.87]
-#> 21          Intercepts.TEX_3.GW  2.46*** 0.08 0.00 [ 2.30,  2.63]
-#> 22          Intercepts.SPE_1.GW  4.07*** 0.08 0.00 [ 3.90,  4.23]
-#> 23          Intercepts.SPE_2.GW  5.43*** 0.08 0.00 [ 5.27,  5.59]
-#> 24          Intercepts.SPE_3.GW  5.29*** 0.08 0.00 [ 5.13,  5.44]
-#> 25          Variances.VISUAL.GW  0.71*** 0.16 0.00 [ 0.39,  1.03]
-#> 26         Variances.TEXTUAL.GW  0.87*** 0.13 0.00 [ 0.61,  1.13]
-#> 27           Variances.SPEED.GW  0.50*** 0.12 0.00 [ 0.27,  0.74]
-#> 28  Residual.Variances.VIS_1.GW  0.65*** 0.13 0.00 [ 0.40,  0.91]
-#> 29  Residual.Variances.VIS_2.GW  0.96*** 0.13 0.00 [ 0.72,  1.21]
-#> 30  Residual.Variances.VIS_3.GW  0.64*** 0.11 0.00 [ 0.42,  0.86]
-#> 31  Residual.Variances.TEX_1.GW  0.34*** 0.06 0.00 [ 0.22,  0.47]
-#> 32  Residual.Variances.TEX_2.GW  0.38*** 0.07 0.00 [ 0.23,  0.52]
-#> 33  Residual.Variances.TEX_3.GW  0.44*** 0.07 0.00 [ 0.30,  0.57]
-#> 34  Residual.Variances.SPE_1.GW  0.62*** 0.10 0.00 [ 0.42,  0.83]
-#> 35  Residual.Variances.SPE_2.GW  0.43*** 0.10 0.00 [ 0.24,  0.63]
-#> 36  Residual.Variances.SPE_3.GW  0.52*** 0.10 0.00 [ 0.32,  0.72]
-#> 37          VISUAL.BY.VIS_1.PAS     1.00 <NA> <NA>           <NA>
-#> 38          VISUAL.BY.VIS_2.PAS  0.58*** 0.11 0.00 [ 0.36,  0.79]
-#> 39          VISUAL.BY.VIS_3.PAS  0.80*** 0.13 0.00 [ 0.54,  1.05]
-#> 40         TEXTUAL.BY.TEX_1.PAS     1.00 <NA> <NA>           <NA>
-#> 41         TEXTUAL.BY.TEX_2.PAS  1.12*** 0.07 0.00 [ 0.99,  1.25]
-#> 42         TEXTUAL.BY.TEX_3.PAS  0.93*** 0.06 0.00 [ 0.82,  1.04]
-#> 43           SPEED.BY.SPE_1.PAS     1.00 <NA> <NA>           <NA>
-#> 44           SPEED.BY.SPE_2.PAS  1.13*** 0.14 0.00 [ 0.86,  1.40]
-#> 45           SPEED.BY.SPE_3.PAS  1.01*** 0.16 0.00 [ 0.70,  1.32]
-#> 46      TEXTUAL.WITH.VISUAL.PAS  0.41*** 0.11 0.00 [ 0.20,  0.62]
-#> 47        SPEED.WITH.VISUAL.PAS   0.18** 0.07 0.01 [ 0.05,  0.31]
-#> 48       SPEED.WITH.TEXTUAL.PAS   0.18** 0.06 0.00 [ 0.06,  0.30]
-#> 49             Means.VISUAL.PAS     0.15 0.13 0.24 [-0.10,  0.40]
-#> 50            Means.TEXTUAL.PAS -0.58*** 0.12 0.00 [-0.81, -0.35]
-#> 51              Means.SPEED.PAS     0.18 0.09 0.06 [-0.01,  0.36]
-#> 52         Intercepts.VIS_1.PAS  4.85*** 0.09 0.00 [ 4.67,  5.04]
-#> 53         Intercepts.VIS_2.PAS  6.07*** 0.08 0.00 [ 5.92,  6.22]
-#> 54         Intercepts.VIS_3.PAS  2.15*** 0.08 0.00 [ 1.99,  2.32]
-#> 55         Intercepts.TEX_1.PAS  3.35*** 0.09 0.00 [ 3.18,  3.53]
-#> 56         Intercepts.TEX_2.PAS  4.68*** 0.10 0.00 [ 4.49,  4.87]
-#> 57         Intercepts.TEX_3.PAS  2.46*** 0.08 0.00 [ 2.30,  2.63]
-#> 58         Intercepts.SPE_1.PAS  4.07*** 0.08 0.00 [ 3.90,  4.23]
-#> 59         Intercepts.SPE_2.PAS  5.43*** 0.08 0.00 [ 5.27,  5.59]
-#> 60         Intercepts.SPE_3.PAS  5.29*** 0.08 0.00 [ 5.13,  5.44]
-#> 61         Variances.VISUAL.PAS  0.80*** 0.19 0.00 [ 0.42,  1.17]
-#> 62        Variances.TEXTUAL.PAS  0.88*** 0.13 0.00 [ 0.62,  1.14]
-#> 63          Variances.SPEED.PAS  0.32*** 0.08 0.00 [ 0.16,  0.49]
-#> 64 Residual.Variances.VIS_1.PAS  0.56*** 0.16 0.00 [ 0.25,  0.86]
-#> 65 Residual.Variances.VIS_2.PAS  1.30*** 0.16 0.00 [ 0.98,  1.61]
-#> 66 Residual.Variances.VIS_3.PAS  0.94*** 0.15 0.00 [ 0.65,  1.23]
-#> 67 Residual.Variances.TEX_1.PAS  0.44*** 0.07 0.00 [ 0.30,  0.59]
-#> 68 Residual.Variances.TEX_2.PAS  0.50*** 0.09 0.00 [ 0.33,  0.67]
-#> 69 Residual.Variances.TEX_3.PAS  0.26*** 0.05 0.00 [ 0.16,  0.36]
-#> 70 Residual.Variances.SPE_1.PAS  0.89*** 0.13 0.00 [ 0.64,  1.14]
-#> 71 Residual.Variances.SPE_2.PAS  0.54*** 0.10 0.00 [ 0.35,  0.74]
-#> 72 Residual.Variances.SPE_3.PAS  0.65*** 0.10 0.00 [ 0.46,  0.85]
-#>    group
-#> 1     GW
-#> 2     GW
-#> 3     GW
-#> 4     GW
-#> 5     GW
-#> 6     GW
-#> 7     GW
-#> 8     GW
-#> 9     GW
-#> 10    GW
-#> 11    GW
-#> 12    GW
-#> 13    GW
-#> 14    GW
-#> 15    GW
-#> 16    GW
-#> 17    GW
-#> 18    GW
-#> 19    GW
-#> 20    GW
-#> 21    GW
-#> 22    GW
-#> 23    GW
-#> 24    GW
-#> 25    GW
-#> 26    GW
-#> 27    GW
-#> 28    GW
-#> 29    GW
-#> 30    GW
-#> 31    GW
-#> 32    GW
-#> 33    GW
-#> 34    GW
-#> 35    GW
-#> 36    GW
-#> 37   PAS
-#> 38   PAS
-#> 39   PAS
-#> 40   PAS
-#> 41   PAS
-#> 42   PAS
-#> 43   PAS
-#> 44   PAS
-#> 45   PAS
-#> 46   PAS
-#> 47   PAS
-#> 48   PAS
-#> 49   PAS
-#> 50   PAS
-#> 51   PAS
-#> 52   PAS
-#> 53   PAS
-#> 54   PAS
-#> 55   PAS
-#> 56   PAS
-#> 57   PAS
-#> 58   PAS
-#> 59   PAS
-#> 60   PAS
-#> 61   PAS
-#> 62   PAS
-#> 63   PAS
-#> 64   PAS
-#> 65   PAS
-#> 66   PAS
-#> 67   PAS
-#> 68   PAS
-#> 69   PAS
-#> 70   PAS
-#> 71   PAS
-#> 72   PAS
+#>                           label  est_sig   se pval        confint group
+#> 1            VISUAL.BY.VIS_1.GW     1.00 <NA> <NA>           <NA>    GW
+#> 2            VISUAL.BY.VIS_2.GW  0.58*** 0.11 0.00 [ 0.36,  0.79]    GW
+#> 3            VISUAL.BY.VIS_3.GW  0.80*** 0.13 0.00 [ 0.54,  1.05]    GW
+#> 4           TEXTUAL.BY.TEX_1.GW     1.00 <NA> <NA>           <NA>    GW
+#> 5           TEXTUAL.BY.TEX_2.GW  1.12*** 0.07 0.00 [ 0.99,  1.25]    GW
+#> 6           TEXTUAL.BY.TEX_3.GW  0.93*** 0.06 0.00 [ 0.82,  1.04]    GW
+#> 7             SPEED.BY.SPE_1.GW     1.00 <NA> <NA>           <NA>    GW
+#> 8             SPEED.BY.SPE_2.GW  1.13*** 0.14 0.00 [ 0.86,  1.40]    GW
+#> 9             SPEED.BY.SPE_3.GW  1.01*** 0.16 0.00 [ 0.70,  1.32]    GW
+#> 10       TEXTUAL.WITH.VISUAL.GW  0.43*** 0.10 0.00 [ 0.23,  0.62]    GW
+#> 11         SPEED.WITH.VISUAL.GW  0.33*** 0.08 0.00 [ 0.16,  0.49]    GW
+#> 12        SPEED.WITH.TEXTUAL.GW   0.24** 0.07 0.00 [ 0.09,  0.38]    GW
+#> 13              Means.VISUAL.GW     0.00 <NA> <NA>           <NA>    GW
+#> 14             Means.TEXTUAL.GW     0.00 <NA> <NA>           <NA>    GW
+#> 15               Means.SPEED.GW     0.00 <NA> <NA>           <NA>    GW
+#> 16          Intercepts.VIS_1.GW  4.85*** 0.09 0.00 [ 4.67,  5.04]    GW
+#> 17          Intercepts.VIS_2.GW  6.07*** 0.08 0.00 [ 5.92,  6.22]    GW
+#> 18          Intercepts.VIS_3.GW  2.15*** 0.08 0.00 [ 1.99,  2.32]    GW
+#> 19          Intercepts.TEX_1.GW  3.35*** 0.09 0.00 [ 3.18,  3.53]    GW
+#> 20          Intercepts.TEX_2.GW  4.68*** 0.10 0.00 [ 4.49,  4.87]    GW
+#> 21          Intercepts.TEX_3.GW  2.46*** 0.08 0.00 [ 2.30,  2.63]    GW
+#> 22          Intercepts.SPE_1.GW  4.07*** 0.08 0.00 [ 3.90,  4.23]    GW
+#> 23          Intercepts.SPE_2.GW  5.43*** 0.08 0.00 [ 5.27,  5.59]    GW
+#> 24          Intercepts.SPE_3.GW  5.29*** 0.08 0.00 [ 5.13,  5.44]    GW
+#> 25          Variances.VISUAL.GW  0.71*** 0.16 0.00 [ 0.39,  1.03]    GW
+#> 26         Variances.TEXTUAL.GW  0.87*** 0.13 0.00 [ 0.61,  1.13]    GW
+#> 27           Variances.SPEED.GW  0.50*** 0.12 0.00 [ 0.27,  0.74]    GW
+#> 28  Residual.Variances.VIS_1.GW  0.65*** 0.13 0.00 [ 0.40,  0.91]    GW
+#> 29  Residual.Variances.VIS_2.GW  0.96*** 0.13 0.00 [ 0.72,  1.21]    GW
+#> 30  Residual.Variances.VIS_3.GW  0.64*** 0.11 0.00 [ 0.42,  0.86]    GW
+#> 31  Residual.Variances.TEX_1.GW  0.34*** 0.06 0.00 [ 0.22,  0.47]    GW
+#> 32  Residual.Variances.TEX_2.GW  0.38*** 0.07 0.00 [ 0.23,  0.52]    GW
+#> 33  Residual.Variances.TEX_3.GW  0.44*** 0.07 0.00 [ 0.30,  0.57]    GW
+#> 34  Residual.Variances.SPE_1.GW  0.62*** 0.10 0.00 [ 0.42,  0.83]    GW
+#> 35  Residual.Variances.SPE_2.GW  0.43*** 0.10 0.00 [ 0.24,  0.63]    GW
+#> 36  Residual.Variances.SPE_3.GW  0.52*** 0.10 0.00 [ 0.32,  0.72]    GW
+#> 37          VISUAL.BY.VIS_1.PAS     1.00 <NA> <NA>           <NA>   PAS
+#> 38          VISUAL.BY.VIS_2.PAS  0.58*** 0.11 0.00 [ 0.36,  0.79]   PAS
+#> 39          VISUAL.BY.VIS_3.PAS  0.80*** 0.13 0.00 [ 0.54,  1.05]   PAS
+#> 40         TEXTUAL.BY.TEX_1.PAS     1.00 <NA> <NA>           <NA>   PAS
+#> 41         TEXTUAL.BY.TEX_2.PAS  1.12*** 0.07 0.00 [ 0.99,  1.25]   PAS
+#> 42         TEXTUAL.BY.TEX_3.PAS  0.93*** 0.06 0.00 [ 0.82,  1.04]   PAS
+#> 43           SPEED.BY.SPE_1.PAS     1.00 <NA> <NA>           <NA>   PAS
+#> 44           SPEED.BY.SPE_2.PAS  1.13*** 0.14 0.00 [ 0.86,  1.40]   PAS
+#> 45           SPEED.BY.SPE_3.PAS  1.01*** 0.16 0.00 [ 0.70,  1.32]   PAS
+#> 46      TEXTUAL.WITH.VISUAL.PAS  0.41*** 0.11 0.00 [ 0.20,  0.62]   PAS
+#> 47        SPEED.WITH.VISUAL.PAS   0.18** 0.07 0.01 [ 0.05,  0.31]   PAS
+#> 48       SPEED.WITH.TEXTUAL.PAS   0.18** 0.06 0.00 [ 0.06,  0.30]   PAS
+#> 49             Means.VISUAL.PAS     0.15 0.13 0.24 [-0.10,  0.40]   PAS
+#> 50            Means.TEXTUAL.PAS -0.58*** 0.12 0.00 [-0.81, -0.35]   PAS
+#> 51              Means.SPEED.PAS     0.18 0.09 0.06 [-0.01,  0.36]   PAS
+#> 52         Intercepts.VIS_1.PAS  4.85*** 0.09 0.00 [ 4.67,  5.04]   PAS
+#> 53         Intercepts.VIS_2.PAS  6.07*** 0.08 0.00 [ 5.92,  6.22]   PAS
+#> 54         Intercepts.VIS_3.PAS  2.15*** 0.08 0.00 [ 1.99,  2.32]   PAS
+#> 55         Intercepts.TEX_1.PAS  3.35*** 0.09 0.00 [ 3.18,  3.53]   PAS
+#> 56         Intercepts.TEX_2.PAS  4.68*** 0.10 0.00 [ 4.49,  4.87]   PAS
+#> 57         Intercepts.TEX_3.PAS  2.46*** 0.08 0.00 [ 2.30,  2.63]   PAS
+#> 58         Intercepts.SPE_1.PAS  4.07*** 0.08 0.00 [ 3.90,  4.23]   PAS
+#> 59         Intercepts.SPE_2.PAS  5.43*** 0.08 0.00 [ 5.27,  5.59]   PAS
+#> 60         Intercepts.SPE_3.PAS  5.29*** 0.08 0.00 [ 5.13,  5.44]   PAS
+#> 61         Variances.VISUAL.PAS  0.80*** 0.19 0.00 [ 0.42,  1.17]   PAS
+#> 62        Variances.TEXTUAL.PAS  0.88*** 0.13 0.00 [ 0.62,  1.14]   PAS
+#> 63          Variances.SPEED.PAS  0.32*** 0.08 0.00 [ 0.16,  0.49]   PAS
+#> 64 Residual.Variances.VIS_1.PAS  0.56*** 0.16 0.00 [ 0.25,  0.86]   PAS
+#> 65 Residual.Variances.VIS_2.PAS  1.30*** 0.16 0.00 [ 0.98,  1.61]   PAS
+#> 66 Residual.Variances.VIS_3.PAS  0.94*** 0.15 0.00 [ 0.65,  1.23]   PAS
+#> 67 Residual.Variances.TEX_1.PAS  0.44*** 0.07 0.00 [ 0.30,  0.59]   PAS
+#> 68 Residual.Variances.TEX_2.PAS  0.50*** 0.09 0.00 [ 0.33,  0.67]   PAS
+#> 69 Residual.Variances.TEX_3.PAS  0.26*** 0.05 0.00 [ 0.16,  0.36]   PAS
+#> 70 Residual.Variances.SPE_1.PAS  0.89*** 0.13 0.00 [ 0.64,  1.14]   PAS
+#> 71 Residual.Variances.SPE_2.PAS  0.54*** 0.10 0.00 [ 0.35,  0.74]   PAS
+#> 72 Residual.Variances.SPE_3.PAS  0.65*** 0.10 0.00 [ 0.46,  0.85]   PAS
 table_fit(fit_mplus)
-#>   Mplus.version Name AnalysisType   DataType Estimator   n
-#> 1           8.6           GENERAL INDIVIDUAL        ML 301
-#>   NGroups NDependentVars NIndependentVars NContinuousLatentVars
-#> 1       2              9                0                     3
-#>   Parameters ChiSqM_Value ChiSqM_DF ChiSqM_PValue
-#> 1         48          164        60             0
-#>   ChiSqBaseline_Value ChiSqBaseline_DF ChiSqBaseline_PValue    LL
-#> 1                 958               72                    0 -3706
-#>   UnrestrictedLL  CFI  TLI  AIC  BIC aBIC RMSEA_Estimate
-#> 1          -3624 0.88 0.86 7509 7687 7534           0.11
-#>   RMSEA_90CI_LB RMSEA_90CI_UB RMSEA_pLT05  SRMR AICC    Filename
-#> 1         0.088          0.13           0 0.087 7527 example.out
+#>   Mplus.version Name AnalysisType   DataType Estimator   n NGroups NDependentVars
+#> 1           8.6           GENERAL INDIVIDUAL        ML 301       2              9
+#>   NIndependentVars NContinuousLatentVars Parameters ChiSqM_Value ChiSqM_DF
+#> 1                0                     3         48          164        60
+#>   ChiSqM_PValue ChiSqBaseline_Value ChiSqBaseline_DF ChiSqBaseline_PValue    LL
+#> 1             0                 958               72                    0 -3706
+#>   UnrestrictedLL  CFI  TLI  AIC  BIC aBIC RMSEA_Estimate RMSEA_90CI_LB RMSEA_90CI_UB
+#> 1          -3624 0.88 0.86 7509 7687 7534           0.11         0.088          0.13
+#>   RMSEA_pLT05  SRMR AICC    Filename
+#> 1           0 0.087 7527 example.out
 ```
 
 

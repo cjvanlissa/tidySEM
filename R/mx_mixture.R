@@ -545,6 +545,7 @@ mixture_starts <- function(model,
     if(any(isfac)){
       df_split[which(isfac)] <- lapply(df_split[which(isfac)], as.integer)
     }
+    if(anyNA(df_split)) df_split <- knn_impute(df_split)
     splits <- try({kmeans(x = df_split, centers = classes)$cluster}, silent = TRUE)
     if(inherits(splits, "try-error")){
       message("Could not initialize clusters using K-means, switching to hierarchical clustering.")

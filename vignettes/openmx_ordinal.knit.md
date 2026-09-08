@@ -245,10 +245,8 @@ Use this functionality as follows:
 
 ``` r
 coef(res2)
-#> model.mat_dev[1,1] model.mat_dev[1,2] model.mat_dev[1,3] 
-#>              0.059              0.109             -0.524 
-#> model.mat_dev[2,3] 
-#>              1.533
+#> model.mat_dev[1,1] model.mat_dev[1,2] model.mat_dev[1,3] model.mat_dev[2,3] 
+#>              0.059              0.109             -0.524              1.533
 res2_thresholds <- deviances_to_thresholds(res2)
 coef(res2_thresholds)
 #> model.Thresholds[1,1] model.Thresholds[1,2] model.Thresholds[1,3] 
