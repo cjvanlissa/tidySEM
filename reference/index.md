@@ -527,6 +527,8 @@
   : Prepare graph data
 - [`pseudo_class()`](https://cjvanlissa.github.io/tidySEM/reference/pseudo_class.md)
   : Estimate an Auxiliary Model using the Pseudo-Class Method
+- [`random_starts()`](https://cjvanlissa.github.io/tidySEM/reference/random_starts.md)
+  : Generate random starting values for OpenMx model
 - [`run_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/run_lavaan.md)
   : Run as lavaan model
 - [`run_mx()`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md)

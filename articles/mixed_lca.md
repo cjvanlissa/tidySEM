@@ -247,24 +247,42 @@ on the second element of the model list, or the 2-class model:
 table_results(res_1_3[[2]])
 ```
 
-    #>                       label  est_sig       se pval               confint  class
-    #> 1                  Means.X1  1.94***     0.08 0.00          [1.78, 2.10] class1
-    #> 2                  Means.X2  4.39***     0.17 0.00          [4.05, 4.73] class1
-    #> 3                  Means.X3  1.01***     0.05 0.00          [0.92, 1.11] class1
-    #> 4              Variances.X1  0.89***     0.09 0.00          [0.71, 1.07] class1
-    #> 5              Variances.X2  3.94***     0.42 0.00          [3.12, 4.75] class1
-    #> 6              Variances.X3  0.31***     0.03 0.00          [0.25, 0.37] class1
-    #> 7              Variances.X4     1.00       NA   NA                  <NA> class1
-    #> 8    class1.Thresholds[1,1] -1.24***     0.15 0.00        [-1.52, -0.95] class1
-    #> 9    class1.Thresholds[2,1]  0.89***     0.12 0.00          [0.65, 1.13] class1
-    #> 10                 Means.X1    -0.23     0.13 0.07         [-0.48, 0.02] class2
-    #> 11                 Means.X2    -0.11     0.27 0.67         [-0.64, 0.41] class2
-    #> 12                 Means.X3    -0.00     0.07 0.98         [-0.15, 0.14] class2
-    #> 13             Variances.X4     1.00       NA   NA                  <NA> class2
-    #> 14   class2.Thresholds[1,1]  0.65***     0.18 0.00          [0.29, 1.01] class2
-    #> 15   class2.Thresholds[2,1]     7.11 35680.19 1.00 [-69924.78, 69939.01] class2
-    #> 16 equal var 2.weights[1,1]     1.00       NA   NA                  <NA>   <NA>
-    #> 17 equal var 2.weights[1,2]  0.43***     0.07 0.00          [0.30, 0.57]   <NA>
+    #>                            label  est_sig       se pval               confint
+    #> 1                Means.X1.class1  1.94***     0.08 0.00          [1.78, 2.10]
+    #> 2                Means.X2.class1  4.39***     0.17 0.00          [4.05, 4.73]
+    #> 3                Means.X3.class1  1.01***     0.05 0.00          [0.92, 1.11]
+    #> 4            Variances.X1.class1  0.89***     0.09 0.00          [0.71, 1.07]
+    #> 5            Variances.X2.class1  3.94***     0.42 0.00          [3.12, 4.75]
+    #> 6            Variances.X3.class1  0.31***     0.03 0.00          [0.25, 0.37]
+    #> 7            Variances.X4.class1     1.00       NA   NA                  <NA>
+    #> 8  class1.Thresholds[1,1].class1 -1.24***     0.15 0.00        [-1.52, -0.95]
+    #> 9  class1.Thresholds[2,1].class1  0.89***     0.12 0.00          [0.65, 1.13]
+    #> 10               Means.X1.class2    -0.23     0.13 0.07         [-0.48, 0.02]
+    #> 11               Means.X2.class2    -0.11     0.27 0.67         [-0.64, 0.41]
+    #> 12               Means.X3.class2    -0.00     0.07 0.98         [-0.15, 0.14]
+    #> 13           Variances.X4.class2     1.00       NA   NA                  <NA>
+    #> 14 class2.Thresholds[1,1].class2  0.65***     0.18 0.00          [0.29, 1.01]
+    #> 15 class2.Thresholds[2,1].class2     7.11 35680.19 1.00 [-69924.78, 69939.01]
+    #> 16   equal var 2.weights[1,1].NA     1.00       NA   NA                  <NA>
+    #> 17   equal var 2.weights[1,2].NA  0.43***     0.07 0.00          [0.30, 0.57]
+    #>     class
+    #> 1  class1
+    #> 2  class1
+    #> 3  class1
+    #> 4  class1
+    #> 5  class1
+    #> 6  class1
+    #> 7  class1
+    #> 8  class1
+    #> 9  class1
+    #> 10 class2
+    #> 11 class2
+    #> 12 class2
+    #> 13 class2
+    #> 14 class2
+    #> 15 class2
+    #> 16   <NA>
+    #> 17   <NA>
 
 Note that we get free means for each class, with the variances
 constrained to be equal across classes. For the categorical variable, we
