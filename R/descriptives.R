@@ -122,7 +122,7 @@ descriptives.integer <- descriptives.numeric
 descriptives.default <- function(x, ...) {
   if(is.factor(x)) x <- droplevels(x)
   if(!is.vector(x)) x <- tryCatch(as.vector(x), error = function(e){NA})
-  tb <- tryCatch(table(x, useNA = "always"), error = function(e){NA})
+  tb <- tryCatch(table(x, useNA = "no"), error = function(e){NA})
   data.frame(
     n = tryCatch({sum(!is.na(x))}, error = function(e){NA}),
     missing = sum(is.na(x))/length(x),
