@@ -17,11 +17,16 @@ get_fit <- function(x, ...) {
   UseMethod("table_fit", x)
 }
 
-
+num_classes <- function(x){
+  num_classes_mixture <- tryCatch(length(names(model@submodels)), error = function(e){1})
+  num_classes_remix <- tryCatch(ifelse(is.null(model@matrices$Eta), 1L, nrow(model@matrices$Eta$values)+1L), error = function(e){1})
+  max(c(num_classes_mixture, num_classes_remix))
+}
 
 calc_fitindices <- function(model, ...){
   UseMethod("calc_fitindices", model)
 }
+
 
 #' @export
 calc_fitindices.MxModel <- function (model, type = NULL, ...){
@@ -30,31 +35,31 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
     ll <- sums[["Minus2LogLikelihood"]]/-2
     parameters <- sums[["estimatedParameters"]]
     n <- sums[["numObs"]]
-    if(length(names(model@submodels)) < 2){
+    classes <- num_classes(x)
+    if(classes < 2){
       fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
     } else {
       post_prob <- extract_postprob(model)
       class <- apply(post_prob, 1, which.max)
-      class_tab <- table(factor(class, levels = 1:length(names(model@submodels))))
+      class_tab <- table(factor(class, levels = 1:classes))
       if (length(class_tab) == ncol(post_prob)) {
         prop_n <- range(prop.table(class_tab))
       }
       else {
         prop_n <- c(0, max(prop.table(class_tab)))
       }
-      fits <- c("Classes" = length(names(model@submodels)),
-        ifelse(ncol(post_prob) == 1, 1, 1 + (1/(nrow(post_prob) *
-                                                  log(ncol(post_prob)))) * (sum(rowSums(post_prob *
-                                                                                          log(post_prob + 1e-12))))),
-        range(diag(classification_probs_mostlikely(post_prob, class))),
-        prop_n)
+      fits <- c("Classes" = classes,
+                ifelse(ncol(post_prob) == 1, 1, 1 + (1/(nrow(post_prob) *
+                                                          log(ncol(post_prob)))) * (sum(rowSums(post_prob *
+                                                                                                  log(post_prob + 1e-12))))),
+                range(diag(classification_probs_mostlikely(post_prob, class))),
+                prop_n)
       names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
     }
     c(sums, fits)
   } else {
     sums
   }
-
 }
 
 make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
@@ -158,24 +163,61 @@ extract_postprob <- function(model){
 
 #' @export
 extract_postprob.MxModel <- function(model){
-  if(!inherits(model$expectation, "MxExpectationMixture")){
+  if(num_classes(model) < 2){
     return(matrix(1, nrow = model$data$numObs))
   }
-  weights_name <- model$expectation$weights
-  priors <- model[[weights_name]]$values
-  mix_names <- model$expectation$components
+  if(isTRUE(attr(model, "tidySEM") == "mixture")){
+    weights_name <- model$expectation$weights
+    priors <- model[[weights_name]]$values
+    mix_names <- model$expectation$components
+    liks <- sapply(mix_names, function(x){ attr(model@submodels[[x]], "fitfunction")$result })
+    #First calculate posteriors:
+    posteriors <- sweep(liks, 2, priors, "*")
+    #Then calculate participants' marginal likelihoods (probably not be necessary):
+    marglik <- rowSums(posteriors)
+    # Divide posteriors by marginal likelihood
+    posteriors <- posteriors/marglik
+  } else {
+    yi <- model$Y$values
+    vi <- model$V$values
+    # Extract mixing proportions
+    pi <- as.numeric(OpenMx::mxEval(weights, model))
+    K <- length(pi)
+    n <- length(yi)
 
-  liks <- sapply(mix_names, function(x){ attr(model@submodels[[x]], "fitfunction")$result })
+    # Extract component parameters
+    mu <- vapply(seq_len(K), function(k) {
+      as.numeric(model@matrices[[paste0("Mu", k)]]@values)
+    }, numeric(1))
 
-  #First calculate posteriors:
-  posteriors <- sweep(liks, 2, priors, "*")
-  #Then calculate participants' marginal likelihoods (probably not be necessary):
-  marglik <- rowSums(posteriors)
-  # Divide posteriors by marginal likelihood
-  posteriors <- posteriors/marglik
+    tau2 <- vapply(seq_len(K), function(k) {
+      as.numeric(model@matrices[[paste0("Tau", k)]]@values)
+    }, numeric(1))
+
+    # Log of weighted component densities
+    logdens <- matrix(NA_real_, n, K)
+
+    for (k in seq_len(K)) {
+      logdens[, k] <- log(pi[k]) +
+        dnorm(
+          yi,
+          mean = mu[k],
+          sd = sqrt(vi + tau2[k]),
+          log = TRUE
+        )
+    }
+
+    # Stable normalization
+    row_max <- apply(logdens, 1, max)
+
+    posteriors <- exp(logdens - row_max)
+    colnames(posteriors) <- paste0("class", seq_len(K))
+
+  }
   # then normalize them into probabilities:
   posteriors/rowSums(posteriors)
 }
+
 #' @export
 extract_postprob.mplus.model <- function(model){
   model$savedata[grepl("^CPROB", names(model$savedata))]

@@ -182,6 +182,10 @@ table_fit.MxModel <- function(x, ...) {
     names(add_ic) <- gsub(":", "", names(add_ic), fixed = TRUE)
     fits <- c(fits, add_ic)
   }
+  if(type == "remix"){
+    fits$AIC <- fits$Minus2LogLikelihood + 2 * fits[["estimatedParameters"]]
+    fits$BIC <- fits$Minus2LogLikelihood + log(fits$numObs) * fits[["estimatedParameters"]]
+  }
   if(!is.null(out[["RMSEACI"]])){
     if(any(!is.na(out[["RMSEACI"]]))){
       names(out[["RMSEACI"]]) <- paste0("RMSEA.", names(out[["RMSEACI"]]))
@@ -200,6 +204,7 @@ table_fit.MxModel <- function(x, ...) {
   rownames(out) <- NULL
   out
 }
+
 
 #' @importFrom lavaan fitmeasures
 #' @method table_fit lavaan
