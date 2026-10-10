@@ -39,7 +39,7 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
     ll <- sums[["Minus2LogLikelihood"]]/-2
     parameters <- sums[["estimatedParameters"]]
     n <- sums[["numObs"]]
-    classes <- num_classes(x)
+    classes <- num_classes(model)
     if(classes < 2){
       fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
     } else {
