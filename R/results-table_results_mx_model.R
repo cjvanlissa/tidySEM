@@ -32,18 +32,25 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   sum_x <- summary(x)
   results <- sum_x$parameters
   # Add fixed pars
-  results_fixed <- .mxfixedpars(x)
-  if(!is.null(results_fixed)){
-    if(any(!results_fixed$name %in% results$name)){
-      results <- bind_list(list(results, results_fixed[!results_fixed$name %in% results$name, , drop = FALSE]))
+  if(!is_remix(x)){
+    results_fixed <- .mxfixedpars(x)
+    if(!is.null(results_fixed)){
+      if(any(!results_fixed$name %in% results$name)){
+        results <- bind_list(list(results, results_fixed[!results_fixed$name %in% results$name, , drop = FALSE]))
+      }
     }
   }
+
   results$openmx_label <- results$name
   matrixnames <- grepl("\\[.+?\\]", results$name)
-  results$label[matrixnames] <- NA
-  results$name[!matrixnames] <- get_mx_names(x, results)[!matrixnames]
+  if(any(matrixnames)){
+    results$label[matrixnames] <- NA
+    results$name[!matrixnames] <- get_mx_names(x, results)[!matrixnames]
+  }
+
   # Add standardized --------------------------------------------------------
-  if(is.null(columns) | any(grepl("std_", columns))){ # Conditional, to save time
+  if((is.null(columns) | any(grepl("std_", columns))) & !is_remix(x)){
+    # Conditional, to save time
     results_std <- OpenMx::mxStandardizeRAMPaths(x, SE = TRUE)
     if(inherits(results_std, "list")){
       for(n in names(results_std)){
@@ -76,17 +83,11 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Add algebras ------------------------------------------------------------
   algs <- alg_to_res(x)
   algs$openmx_label <- algs$name
-  results <- bind_list(list(results, algs))
+  results <- tidySEM:::bind_list(list(results, algs))
 
   # Label groups ------------------------------------------------------------
-  results <- .label_groups_internal(x, results)
-  # if(has_submod(x)){
-  #   results <- submodels(x, results, cols = names(results))
-  # } else {
-  #   algs <- alg_to_res(x)
-  #   algs$openmx_label <- algs$name
-  #   results <- bind_list(list(results, algs))
-  # }
+  results <- tidySEM:::.label_groups_internal(x, results)
+
   results$est <- results$Estimate
   results$lhs <- results$row
   results$rhs <- results$col
@@ -115,6 +116,9 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
     if(!all(is.na(sum_x[["CI"]]))) {
       ci_x <- data.frame(name = rownames(sum_x$CI),
                          sum_x$CI)
+      if(is_remix(x)){
+        ci_x$name <- gsub("RE_Mixture\\d{1,}\\.", "", ci_x$name)
+      }
       ci_x$CI <- NA
       ci_x$CI[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)] <- conf_int(x= NULL, lb = ci_x$lbound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)], ub = ci_x$ubound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)])
       ci_x <- ci_x[!is.na(ci_x$CI), ]
@@ -125,8 +129,6 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results$pval <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
   results$est_sig <- est_sig(results$est, sig = results$pval)
   results[c("estimate", "Estimate")] <- NULL
-  miscols <- colSums(is.na(results)) == nrow(results)
-  if(any(miscols)) results <- results[, !miscols, drop = FALSE]
   names(results)[match(c("Std.Error"), names(results))] <- c("se")
   names(results) <- tolower(names(results))
   lav_labs <- mx_to_lavaan_labels(results)
@@ -134,6 +136,12 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Drop internal stuff
   internalstuff <- grepl("(mat_dev|mat_ones)", results$name)
   if(any(internalstuff)) results <- results[!internalstuff, ]
+  if(is_remix(x)){
+    results$formula[which(results$Category == "Weights")] <- NA
+  }
+  # Drop empty columns
+  miscols <- colSums(is.na(results)) == nrow(results)
+  if(any(miscols)) results <- results[, !miscols, drop = FALSE]
   # Make uniform column names
   renam <- c(std.value = "est_std", std.se = "se_std")
   if(any(names(renam) %in% names(results))) names(results)[match(names(renam), names(results))] <- renam
@@ -334,7 +342,11 @@ flat <- function(x){
 }
 
 .alg_to_res_internal <- function(x, ...){
-  algs <- names(x@algebras)
+  if(is_remix(x)){
+    algs <- "weights"
+  } else {
+    algs <- names(x@algebras)
+  }
   out <- list()
   if(!is.null(algs)){
     addthis <- list()
@@ -350,7 +362,9 @@ flat <- function(x){
       }
       dimnam <- dimnames(x[[thisalg]])
       rownam <- rep(dimnam[[1]], length(dimnam[[2]]))
+      if(is.null(rownam)) rownam <- seq_len(dims[1])
       colnam <- rep(dimnam[[2]], each = length(dimnam[[1]]))
+      if(is.null(colnam)) colnam <- seq_len(dims[2])
       addalg <- data.frame(name = nams,
                            matrix =  x[[thisalg]]$name,
                            row = rownam,

@@ -18,9 +18,13 @@ get_fit <- function(x, ...) {
 }
 
 num_classes <- function(x){
-  num_classes_mixture <- tryCatch(length(names(model@submodels)), error = function(e){1})
-  num_classes_remix <- tryCatch(ifelse(is.null(model@matrices$Eta), 1L, nrow(model@matrices$Eta$values)+1L), error = function(e){1})
-  max(c(num_classes_mixture, num_classes_remix))
+  tryCatch({
+    if(is_remix(x)){
+      ifelse(is.null(x@matrices$Eta), 1L, nrow(x@matrices$Eta$values)+1L)
+    } else {
+      length(names(x@submodels))
+    }
+  }, error = function(e){1L})
 }
 
 calc_fitindices <- function(model, ...){
@@ -166,7 +170,8 @@ extract_postprob.MxModel <- function(model){
   if(num_classes(model) < 2){
     return(matrix(1, nrow = model$data$numObs))
   }
-  if(isTRUE(attr(model, "tidySEM") == "mixture")){
+  if(!is.null(model[["expectation"]][["weights"]])){
+    # Handle tidySEM mixture models
     weights_name <- model$expectation$weights
     priors <- model[[weights_name]]$values
     mix_names <- model$expectation$components
@@ -178,6 +183,7 @@ extract_postprob.MxModel <- function(model){
     # Divide posteriors by marginal likelihood
     posteriors <- posteriors/marglik
   } else {
+    # Handle memi mixture models
     yi <- model$Y$values
     vi <- model$V$values
     # Extract mixing proportions
