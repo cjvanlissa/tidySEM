@@ -20,7 +20,7 @@ get_fit <- function(x, ...) {
 num_classes <- function(x){
   tryCatch({
     if(is_remix(x)){
-      ifelse(is.null(x@matrices$Eta), 1L, nrow(x@matrices$Eta$values)+1L)
+      ifelse(is.null(x@matrices$Eta), 1L, ncol(x@matrices$Eta$values)+1L)
     } else {
       length(names(x@submodels))
     }
@@ -125,14 +125,15 @@ class_prob <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikel
 #' @export
 class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "mostlikely.class", "avg.mostlikely", "individual"), ...){
   post_probs <- extract_postprob(x)
-  post_probs_pred <- cbind(post_probs, predicted = apply(post_probs, 1, which.max) )
+  predicted <- apply(post_probs, 1, which.max)
+  post_probs_pred <- cbind(post_probs, predicted = predicted)
 
   out <- lapply(type, function(thetype){
     switch(thetype,
            "mostlikely.class" = classification_probs_mostlikely(post_probs),
            "avg.mostlikely" = avgprobs_mostlikely(post_probs),
            "sum.posterior" = sum_postprob(x),
-           "sum.mostlikely" = sum_mostlikely(x),
+           "sum.mostlikely" = sum_mostlikely(mostlikely = predicted),
            post_probs_pred)
   })
   names(out) <- type
@@ -140,6 +141,12 @@ class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "m
 }
 
 sum_postprob <- function(model){
+  if(is_remix(model)){
+    return(data.frame(class = paste0("class", seq_len(tidySEM:::num_classes(model))),
+               count = drop(model@algebras$weights$result*model@data$numObs),
+               proportion = drop(model@algebras$weights$result)))
+
+  }
   if(!inherits(model$expectation, "MxExpectationMixture")){
     return(data.frame(class = "class1", count = model$data$numObs, proportion = 1))
   }
@@ -150,15 +157,30 @@ sum_postprob <- function(model){
   data.frame(class = mix_names, count = as.vector(priors*numObs), proportion = as.vector(priors))
 }
 
-sum_mostlikely <- function(model){
-  if(!inherits(model$expectation, "MxExpectationMixture")){
-    return(return(data.frame(class = "class1", count = model$data$numObs, proportion = 1)))
+sum_mostlikely <- function(model = NULL, mostlikely = NULL){
+  if(!is.null(mostlikely)){
+    count <- table(mostlikely)
+    return(data.frame(class = paste0("class", unique(mostlikely)),
+                      count = count,
+                      proportion = prop.table(count)))
   }
-  post_prob <- extract_postprob(model)
-  classif <- table(apply(post_prob, 1, which.max))
-  weights_name <- model$expectation$weights
-  mix_names <- model$expectation$components
-  data.frame(class = mix_names, count = as.vector(classif), proportion = as.vector(prop.table(classif)))
+  if(is_remix(model)){
+    return(data.frame(class = paste0("class", seq_len(tidySEM:::num_classes(model))),
+                      count = drop(model@algebras$weights$result*model@data$numObs),
+                      proportion = drop(model@algebras$weights$result)))
+    data.frame(class = mix_names, count = as.vector(classif), proportion = as.vector(prop.table(classif)))
+
+  }
+  tryCatch({
+    post_prob <- extract_postprob(model)
+    classif <- table(apply(post_prob, 1, which.max))
+
+    data.frame(class = paste0("class", seq_len(ncol(post_prob))),
+               count = as.numeric(classif),
+               proportion = as.numeric(prop.table(classif)))
+  }, error = function(e){
+    data.frame(class = "class1", count = model$data$numObs, proportion = 1)
+  })
 }
 
 extract_postprob <- function(model){
