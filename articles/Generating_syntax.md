@@ -129,7 +129,7 @@ model |>
   estimate_lavaan()
 ```
 
-    #> lavaan 0.7-2 ended normally after 35 iterations
+    #> lavaan 0.7-3 ended normally after 35 iterations
     #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
@@ -140,6 +140,11 @@ model |>
     #> Model Test User Model:
     #>                                                       
     #>   Test statistic                                85.306
+    #>   Degrees of freedom                                24
+    #>   P-value (Chi-square)                           0.000
+    #>                                                       
+    #>   Browne's residual (NT model-based) test             
+    #>   Test statistic                                81.368
     #>   Degrees of freedom                                24
     #>   P-value (Chi-square)                           0.000
 
@@ -293,7 +298,7 @@ The modified model could then be run:
 ``` r
 
 estimate_lavaan(model)
-#> lavaan 0.7-2 ended normally after 28 iterations
+#> lavaan 0.7-3 ended normally after 28 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -304,6 +309,11 @@ estimate_lavaan(model)
 #> Model Test User Model:
 #>                                                       
 #>   Test statistic                               236.091
+#>   Degrees of freedom                                26
+#>   P-value (Chi-square)                           0.000
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                               241.203
 #>   Degrees of freedom                                26
 #>   P-value (Chi-square)                           0.000
 ```
@@ -324,7 +334,7 @@ model |>
   summary(estimates = TRUE)
 ```
 
-    #> lavaan 0.7-2 ended normally after 25 iterations
+    #> lavaan 0.7-3 ended normally after 25 iterations
     #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
@@ -335,6 +345,11 @@ model |>
     #> Model Test User Model:
     #>                                                       
     #>   Test statistic                               236.091
+    #>   Degrees of freedom                                26
+    #>   P-value (Chi-square)                           0.000
+    #>                                                       
+    #>   Browne's residual (NT model-based) test             
+    #>   Test statistic                               241.203
     #>   Degrees of freedom                                26
     #>   P-value (Chi-square)                           0.000
     #> 
@@ -403,7 +418,7 @@ model |>
   estimate_lavaan()
 ```
 
-    #> lavaan 0.7-2 ended normally after 31 iterations
+    #> lavaan 0.7-3 ended normally after 31 iterations
     #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
@@ -414,5 +429,10 @@ model |>
     #> Model Test User Model:
     #>                                                       
     #>   Test statistic                               288.451
+    #>   Degrees of freedom                                26
+    #>   P-value (Chi-square)                           0.000
+    #>                                                       
+    #>   Browne's residual (NT model-based) test             
+    #>   Test statistic                               269.541
     #>   Degrees of freedom                                26
     #>   P-value (Chi-square)                           0.000

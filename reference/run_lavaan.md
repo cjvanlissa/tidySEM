@@ -31,9 +31,15 @@ Returns a lavaan object.
 df <- iris[1:3]
 names(df) <- paste0("X_", 1:3)
 run_lavaan(measurement(tidy_sem(df), meanstructure = TRUE))
+#> Warning: lavaan->lav_step11_estoptim():  
+#>    the optimizer (NLMINB) claimed the model converged, but the solution seems 
+#>    to have run away: the estimated residual variance of X_3 is -6.738, while 
+#>    its observed variance is only 3.096; the objective function may not have a 
+#>    minimum (an over-factored or otherwise unidentified model?); consider 
+#>    adding bounds (e.g., bounds = "pos.var").
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
-#> lavaan 0.7-2 ended normally after 84 iterations
+#> lavaan 0.7-3 ended normally after 84 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -44,5 +50,9 @@ run_lavaan(measurement(tidy_sem(df), meanstructure = TRUE))
 #> Model Test User Model:
 #>                                                       
 #>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                                -0.000
 #>   Degrees of freedom                                 0
 ```

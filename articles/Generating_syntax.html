@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -219,7 +219,7 @@ using lavaan:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.7-2 ended normally after 35 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.7-3 ended normally after 35 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -230,6 +230,11 @@ using lavaan:</p>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                                85.306</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                24</span></span>
+<span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
+<span><span class="co">#&gt;   Browne's residual (NT model-based) test             </span></span>
+<span><span class="co">#&gt;   Test statistic                                81.368</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                24</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span></code></pre>
 <p>The same model can be estimated with ‘OpenMx’ through the R-package
@@ -357,7 +362,7 @@ them:</p>
 <p>The modified model could then be run:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lavaan 0.7-2 ended normally after 28 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.7-3 ended normally after 28 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -368,6 +373,11 @@ them:</p>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                               236.091</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
+<span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
+<span><span class="co">#&gt;   Browne's residual (NT model-based) test             </span></span>
+<span><span class="co">#&gt;   Test statistic                               241.203</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span></code></pre></div>
 </div>
@@ -384,7 +394,7 @@ path between them:</p>
 <span>  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>estimates <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.7-2 ended normally after 25 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.7-3 ended normally after 25 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -395,6 +405,11 @@ path between them:</p>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                               236.091</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
+<span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
+<span><span class="co">#&gt;   Browne's residual (NT model-based) test             </span></span>
+<span><span class="co">#&gt;   Test statistic                               241.203</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -458,7 +473,7 @@ following code:</p>
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="st">"vis ~ tex"</span>, vis <span class="op">=</span><span class="op">~</span> <span class="va">spe_1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; lavaan 0.7-2 ended normally after 31 iterations</span></span>
+<pre><code><span><span class="co">#&gt; lavaan 0.7-3 ended normally after 31 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -469,6 +484,11 @@ following code:</p>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                               288.451</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
+<span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
+<span><span class="co">#&gt;   Browne's residual (NT model-based) test             </span></span>
+<span><span class="co">#&gt;   Test statistic                               269.541</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                26</span></span>
 <span><span class="co">#&gt;   P-value (Chi-square)                           0.000</span></span></code></pre>
 </div>

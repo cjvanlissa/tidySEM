@@ -1,3 +1,12 @@
+# tidySEM 0.3.0
+
+- tidySEM now supports mixture models estimated with the memi package
+
+# tidySEM 0.2.13
+
+- Change behavior of descriptives.factor() to not count NA as a unique
+  value
+
 # tidySEM 0.2.12
 
 - Make igraph a suggest

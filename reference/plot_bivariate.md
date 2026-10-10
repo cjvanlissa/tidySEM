@@ -84,4 +84,5 @@ res <- mx_profiles(iris_sample, classes = 2)
 plot_bivariate(res, rawdata = FALSE)
 }
 #> Running mix2 with 7 parameters
+#> Error in model[["expectation"]][["weights"]]: this S4 class is not subsettable
 ```

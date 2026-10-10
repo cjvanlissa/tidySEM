@@ -13,7 +13,7 @@ tidy_sem object on to lavaan."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,9 +87,15 @@ using lavaan. It is intended for use with
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X_"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">run_lavaan</span><span class="op">(</span><span class="fu"><a href="measurement.html">measurement</a></span><span class="op">(</span><span class="fu"><a href="tidy_sem.html">tidy_sem</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, meanstructure <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>lavaan-&gt;lav_step11_estoptim():  </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    the optimizer (NLMINB) claimed the model converged, but the solution seems </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    to have run away: the estimated residual variance of X_3 is -6.738, while </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    its observed variance is only 3.096; the objective function may not have a </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    minimum (an over-factored or otherwise unidentified model?); consider </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>    adding bounds (e.g., bounds = "pos.var").</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>lavaan-&gt;lav_object_post_check():  </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>    some estimated ov variances are negative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.7-2 ended normally after 84 iterations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.7-3 ended normally after 84 iterations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
@@ -100,6 +106,10 @@ using lavaan. It is intended for use with
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Test User Model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Degrees of freedom                                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Browne's residual (NT model-based) test             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                -0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Degrees of freedom                                 0</span>
 </code></pre></div>
     </div>

@@ -57,7 +57,7 @@ descriptives(iris)
 #> 2  Sepal.Width numeric 150       0     23 3.057333   3.00  3.00       <NA>
 #> 3 Petal.Length numeric 150       0     43 3.758000   4.35  4.35       <NA>
 #> 4  Petal.Width numeric 150       0     22 1.199333   1.30  1.30       <NA>
-#> 5      Species  factor 150       0      4       NA     NA 50.00     setosa
+#> 5      Species  factor 150       0      3       NA     NA 50.00     setosa
 #>          sd         v min max range       skew   skew_2se      kurt  kurt_2se
 #> 1 0.8280661        NA 4.3 7.9   3.6  0.3149110  0.7950756 -0.552064 -0.701331
 #> 2 0.4358663        NA 2.0 4.4   2.4  0.3189657  0.8053128  0.228249  0.289963
