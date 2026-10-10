@@ -182,8 +182,10 @@ table_fit.MxModel <- function(x, ...) {
     names(add_ic) <- gsub(":", "", names(add_ic), fixed = TRUE)
     fits <- c(fits, add_ic)
   }
-  if(type == "remix"){
-    fits$AIC <- fits$Minus2LogLikelihood + 2 * fits[["estimatedParameters"]]
+  if(is.na(fits$AIC)){
+    fits$AIC <- tryCatch(fits$Minus2LogLikelihood + 2 * fits[["estimatedParameters"]], error = function(e) NA)
+  }
+  if(is.na(fits$BIC)){
     fits$BIC <- fits$Minus2LogLikelihood + log(fits$numObs) * fits[["estimatedParameters"]]
   }
   if(!is.null(out[["RMSEACI"]])){
