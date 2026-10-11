@@ -82,24 +82,48 @@ chi_sq <- function(x, y){
 #' @importFrom stats quantile
 #' @export
 pmc.mixture_list <- function(x, ..., reps = 100, ci = .95, FUN = NULL){
+  if (length(x) < 2L) {
+    stop("At least two models are required.")
+  }
+  x_input <- x
   FUN <- try(match.fun(FUN), silent = TRUE)
   which_stat <- "custom function"
-  exp_text <- c('assign("y", OpenMx::mxGenerateData(x[[i]]), envir = eval_env)',
-                'as.numeric(eval(body(FUN), envir = eval_env))')
+  if(is_remix(x[[1]])){
+    exp_text <- c('y <- simulate_remix(x_input[[i]], add_vi = TRUE)$yi',
+                  'as.numeric(FUN(x, y))')
+    x <- drop(x_input[[1]]$Y$values)
+  } else {
+    exp_text <- c('y <- OpenMx::mxGenerateData(x_input[[i]])',
+                  'as.numeric(FUN(x, y))')
+    x <- x_input[[1]]$data$observed
+  }
+
   nams <- c("comparison", "null", "alt", "null_stat", "alt_stat", "lb_dif",
             "ub_dif", "sig")
-  if(inherits(FUN, what = "try-error")){
-    if(all(sapply(x[[1]]$data$observed, inherits, what = "ordered"))){
-      tab_obs  <- table(x[[1]]$data$observed)
-      num_obs <- nrow(x[[1]]$data$observed)
+  if(inherits(FUN, what = "try-error") && !is_remix(x_input[[1]])){
+    if (all(sapply(x_input[[1]]$data$observed, inherits, what = "ordered"))) {
+      tab_obs <- table(x_input[[1]]$data$observed)
+      num_obs <- nrow(x_input[[1]]$data$observed)
       which_stat <- "chi squared"
-      exp_text <- c("tab_sim <- table(OpenMx::mxGenerateData(x[[i]]))",
-                    "term <- tab_obs*log(tab_obs/tab_sim)",
-                    "term[is.infinite(term) | is.nan(term) | is.na(term)] <- 0",
-                    "(2*sum(term))-(num_obs - length(coef(x[[i]])))")
+
+      exp_text <- c(
+        "sims <- OpenMx::mxGenerateData(x_input[[i]])",
+        "for (j in seq_along(sims)) {",
+        "  sims[[j]] <- factor(sims[[j]],",
+        "    levels = levels(x_input[[1]]$data$observed[[j]]),",
+        "    ordered = TRUE)",
+        "}",
+        "tab_sim <- table(sims)",
+        "alpha <- 0.5",
+        "expected <- (tab_sim + alpha) / sum(tab_sim + alpha) * sum(tab_obs)",
+        "idx <- tab_obs > 0",
+        "term <- numeric(length(tab_obs))",
+        "term[idx] <- tab_obs[idx] * log(tab_obs[idx] / expected[idx])",
+        "2 * sum(term) - (num_obs - length(coef(x_input[[i]])))"
+      )
     } else {
       which_stat <- "SRMR"
-      dat_obs <- x[[1]]$data$observed
+      dat_obs <- x_input[[1]]$data$observed
       not_num <- !sapply(dat_obs, inherits, what = "numeric")
       if(any(not_num)){
         dat_obs[which(not_num)] <- lapply(dat_obs[which(not_num)], as.numeric)
@@ -107,7 +131,7 @@ pmc.mixture_list <- function(x, ..., reps = 100, ci = .95, FUN = NULL){
       cor_obs <- cor(dat_obs)
       select_these <- lower.tri(cor_obs)
       cor_obs_sel <- cor_obs[select_these]
-      exp_text <- c("sims <- OpenMx::mxGenerateData(x[[i]])",
+      exp_text <- c("sims <- OpenMx::mxGenerateData(x_input[[i]])",
                     "if(any(not_num)){",
                     "  sims[which(not_num)] <- lapply(sims[which(not_num)], as.numeric)",
                     "}",
@@ -115,28 +139,26 @@ pmc.mixture_list <- function(x, ..., reps = 100, ci = .95, FUN = NULL){
                     "sqrt(mean((cor_sim[select_these] - cor_obs_sel)^2))")
     }
   }
-  nams <- do.call(c, lapply(x, function(i) i@name))
-  eval_env <- new.env()
-  assign("x", x[[1]]$data$observed, envir = eval_env)
+  nams <- vapply(x_input, function(m) m@name, character(1))
   THE_EXP <- parse(text = exp_text)
-  rep_stat <- do.call(cbind, lapply(seq_along(x), function(i){
-      if(requireNamespace("future.apply", quietly = TRUE)){
-        do.call(c, future.apply::future_replicate(
-          n = reps,
-          future.seed = TRUE,
-          simplify = FALSE,
-          expr = eval(THE_EXP)
-        ))
-      } else {
-        replicate(reps, eval(THE_EXP))
-      }
-  }))
+  rep_stat <- vapply(seq_along(x_input), FUN.VALUE = numeric(reps), FUN = function(i) {
+    if(requireNamespace("future.apply", quietly = TRUE)){
+      do.call(c, future.apply::future_replicate(
+        n = reps,
+        future.seed = TRUE,
+        simplify = FALSE,
+        expr = eval(THE_EXP)
+      ))
+    } else {
+      replicate(reps, eval(THE_EXP))
+    }
+  })
   # Get summary statistics and prepare output
   meds <- apply(rep_stat, 2, median)
   names(meds) <- nams
   cis <- list(
-    dif_seq = rep_stat[, 2:dim(rep_stat)[2]] - rep_stat[, 1:(dim(rep_stat)-1L)[2]],
-    dif_one = rep_stat[, 2:dim(rep_stat)[2]] - rep_stat[, rep(1, (dim(rep_stat)[2]-1L))]
+    dif_seq = rep_stat[, 2:dim(rep_stat)[2], drop = FALSE] - rep_stat[, 1:(dim(rep_stat)-1L)[2], drop = FALSE],
+    dif_one = rep_stat[, 2:dim(rep_stat)[2], drop = FALSE] - rep_stat[, rep(1, (dim(rep_stat)[2]-1L)), drop = FALSE]
   )
   cis <- do.call(rbind, lapply(cis, function(i){matrix(as.vector(apply(i, 2, stats::quantile, probs = c(((1-ci)/2), 1-((1-ci)/2)))), ncol = 2, byrow = TRUE)}))
   colnames(cis) <- c("lb", "ub")
