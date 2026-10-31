@@ -53,9 +53,9 @@ BCH.MxModel <- function(x, model, data, ...){
   Hmatinv <- solve(Hmat)
   mostlikely <- apply(post_probs, 1, which.max)
   bchweights <- data.frame(Hmatinv[mostlikely, ])
-  names(bchweights) <- paste0("w", x$expectation$components)
+  names(bchweights) <- names(bchweights) <- paste0("wclass", seq_len(num_classes(x)))
   df <- cbind(data, bchweights)
-  grp_names <- x$expectation$components
+  grp_names <- paste0("class", seq_len(num_classes(x)))
 
   if(inherits(model, "character")){
     model <- as_ram(model, meanstructure = TRUE)
