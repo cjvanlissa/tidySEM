@@ -46,7 +46,6 @@ pool_data <- function(x, df_complete = NULL) {
 }
 
 do_pool <- function(parameters, parameter_names, df_complete = NULL) {
-
   m <- array(dim = c(
     length(parameter_names),
     length(parameters),
@@ -76,7 +75,6 @@ do_pool <- function(parameters, parameter_names, df_complete = NULL) {
 
 
 pseudo_class_pool <- function(fits, df_complete = NULL, ...) {
-
   if (!is.list(fits)) {
     fits <- list(fits)
   }
@@ -111,7 +109,6 @@ pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
 
 #' @export
 pseudo_class_pool.MxModel <- function(fits, df_complete = NULL, std = FALSE, ...) {
-
   modelType <- OpenMx::imxTypeName(fits[[1]])
 
   if ( modelType != "RAM" && std == TRUE) {
@@ -348,9 +345,11 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'                          m = 2)
 #'
 #'
+#' if(requireNamespace("nnet", quietly = TRUE)){
 #' pseudo_class(x = fit,
 #'              model = nnet::multinom( class ~ SL + SW + PL, data = data),
 #'              data = dat) -> membership_prediction
+#' }
 #' }
 #'
 #' @references
@@ -400,9 +399,9 @@ pseudo_class.MxModel <- function(x, model, df_complete = NULL, data = NULL, m = 
 
   cl <- match.call(expand.dots = FALSE)
   cl[[1L]] <- quote(tidySEM::pseudo_class)
-  cl <- cl[c(1, which(names(cl) %in% c("", "x", "model", "df_complete", "...")))]
-  # Replace x with a temporary variable
+  cl <- cl[c(1, which(names(cl) %in% c("x", "model", "df_complete", "...")))]
   cl[["x"]] <- quote(.pseudo_draws)
+
   eval(
     substitute(
       local({
@@ -511,5 +510,5 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
   }
 
   # Pool the results
-  return(pseudo_class_pool(fits, ...))
+  return(pseudo_class_pool(fits, df_complete = df_complete, ...))
 }

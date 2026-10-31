@@ -142,11 +142,7 @@ table_fit.model.list <- table_fit.mplusObject
 #' @method table_fit MxModel
 #' @export
 table_fit.MxModel <- function(x, ...) {
-  if(is.null(attr(x, "tidySEM"))) attr(x, "tidySEM") <- "default"
-  out <- switch(attr(x, "tidySEM")[1],
-                "list" = sapply(x, function(i){ table_fit(i, ...)}),
-                "mixture" = calc_fitindices(x, type = "mixture", ...),
-                calc_fitindices(x, ...))
+  out <- calc_fitindices(x, ...)
   out <- as.data.frame(out)
   out <- out[, !colSums(is.na(out)) == nrow(out)]
   if(!"LL" %in% names(out) & "Minus2LogLikelihood" %in% names(out)) out$LL <- out$Minus2LogLikelihood/-2
@@ -155,57 +151,57 @@ table_fit.MxModel <- function(x, ...) {
   out
 }
 
-.table_fit_mx <- function(x, type = NULL){
-  out <- tryCatch({
-    suppressMessages({
-      if(!type == "mixture"){
-        satmod <- OpenMx::mxRefModels(x, run = TRUE)
-        summary(x, refModels = satmod)
-      } else {
-        summary(x)
-      }
-    })
-  },
-  error = function(e){
-    summary(x)
-  },
-  warning = function(w){
-    summary(x)
-  })
-  classes <- sapply(out, function(i){class(i)[1]})
-  is_num <- sapply(out, inherits, what = "numeric")
-  is_char <- sapply(out, inherits, what = "character")
-  atomvect <- sapply(out, function(i){ is.atomic(i) & length(i) == 1})
-  fits <- out[atomvect]
-  if("informationCriteria" %in% names(out)){
-    add_ic <- out$informationCriteria[, "par"]
-    names(add_ic) <- gsub(":", "", names(add_ic), fixed = TRUE)
-    fits <- c(fits, add_ic)
-  }
-  if(is.na(fits$AIC)){
-    fits$AIC <- tryCatch(fits$Minus2LogLikelihood + 2 * fits[["estimatedParameters"]], error = function(e) NA)
-  }
-  if(is.na(fits$BIC)){
-    fits$BIC <- fits$Minus2LogLikelihood + log(fits$numObs) * fits[["estimatedParameters"]]
-  }
-  if(!is.null(out[["RMSEACI"]])){
-    if(any(!is.na(out[["RMSEACI"]]))){
-      names(out[["RMSEACI"]]) <- paste0("RMSEA.", names(out[["RMSEACI"]]))
-      fits <- c(fits, out[["RMSEACI"]])
-    }
-  }
-  if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
-  dropthese <- c("AIC.Mx", "BIC.Mx", "wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
-                 "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
-                 "timestamp", "frontendTime", "backendTime", "independentTime",
-                 "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
-  )
-  fits <- fits[!names(fits) %in% dropthese]
-  fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + fits[["estimatedParameters"]] * log((fits[["numObs"]]+2)/24)
-  out <- as.data.frame(fits)
-  rownames(out) <- NULL
-  out
-}
+# .table_fit_mx <- function(x, type = NULL){
+#   out <- tryCatch({
+#     suppressMessages({
+#       if(!type == "mixture"){
+#         satmod <- OpenMx::mxRefModels(x, run = TRUE)
+#         summary(x, refModels = satmod)
+#       } else {
+#         summary(x)
+#       }
+#     })
+#   },
+#   error = function(e){
+#     summary(x)
+#   },
+#   warning = function(w){
+#     summary(x)
+#   })
+#   classes <- sapply(out, function(i){class(i)[1]})
+#   is_num <- sapply(out, inherits, what = "numeric")
+#   is_char <- sapply(out, inherits, what = "character")
+#   atomvect <- sapply(out, function(i){ is.atomic(i) & length(i) == 1})
+#   fits <- out[atomvect]
+#   if("informationCriteria" %in% names(out)){
+#     add_ic <- out$informationCriteria[, "par"]
+#     names(add_ic) <- gsub(":", "", names(add_ic), fixed = TRUE)
+#     fits <- c(fits, add_ic)
+#   }
+#   if(is.na(fits$AIC)){
+#     fits$AIC <- tryCatch(fits$Minus2LogLikelihood + 2 * fits[["estimatedParameters"]], error = function(e) NA)
+#   }
+#   if(is.na(fits$BIC)){
+#     fits$BIC <- fits$Minus2LogLikelihood + log(fits$numObs) * fits[["estimatedParameters"]]
+#   }
+#   if(!is.null(out[["RMSEACI"]])){
+#     if(any(!is.na(out[["RMSEACI"]]))){
+#       names(out[["RMSEACI"]]) <- paste0("RMSEA.", names(out[["RMSEACI"]]))
+#       fits <- c(fits, out[["RMSEACI"]])
+#     }
+#   }
+#   if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
+#   dropthese <- c("AIC.Mx", "BIC.Mx", "wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
+#                  "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
+#                  "timestamp", "frontendTime", "backendTime", "independentTime",
+#                  "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
+#   )
+#   fits <- fits[!names(fits) %in% dropthese]
+#   fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + fits[["estimatedParameters"]] * log((fits[["numObs"]]+2)/24)
+#   out <- as.data.frame(fits)
+#   rownames(out) <- NULL
+#   out
+# }
 
 
 #' @importFrom lavaan fitmeasures

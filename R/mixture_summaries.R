@@ -31,38 +31,131 @@ calc_fitindices <- function(model, ...){
   UseMethod("calc_fitindices", model)
 }
 
-
+# Try with dispatch_method, from here:
 #' @export
-calc_fitindices.MxModel <- function (model, type = NULL, ...){
-  sums <- .table_fit_mx(model, type = type)
-  if(isTRUE(type == "mixture")){
-    ll <- sums[["Minus2LogLikelihood"]]/-2
-    parameters <- sums[["estimatedParameters"]]
-    n <- sums[["numObs"]]
-    classes <- num_classes(model)
-    if(classes < 2){
-      fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
-    } else {
-      post_prob <- extract_postprob(model)
-      C <- apply(post_prob, 1, which.max)
-      class_tab <- table(factor(C, levels = 1:classes))
-      if (length(class_tab) == ncol(post_prob)) {
-        prop_n <- range(prop.table(class_tab))
-      }
-      else {
-        prop_n <- c(0, max(prop.table(class_tab)))
-      }
-      fits <- c("Classes" = classes,
-                entropy(post_prob),
-                range(diag(classification_probs_mostlikely(post_prob, C))),
-                prop_n)
-      names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
-    }
-    c(sums, fits)
-  } else {
-    sums
-  }
+calc_fitindices.MxModel <- function(model, ...) {
+  dispatch_method(model, "calc_fitindices", ...)
 }
+
+calc_fitindices_MxModel <- function(model, ...) {
+  out <- tryCatch({
+    suppressMessages({
+      satmod <- OpenMx::mxRefModels(model, run = TRUE)
+      summary(model, refModels = satmod)
+    })
+  },
+  error = function(e){
+    summary(model)
+  },
+  warning = function(w){
+    summary(model)
+  })
+  classes <- sapply(out, function(i){class(i)[1]})
+  is_num <- sapply(out, inherits, what = "numeric")
+  is_char <- sapply(out, inherits, what = "character")
+  atomvect <- sapply(out, function(i){ is.atomic(i) & length(i) == 1})
+  fits <- out[atomvect]
+  if("informationCriteria" %in% names(out)){
+    add_ic <- out$informationCriteria[, "par"]
+    names(add_ic) <- gsub(":", "", names(add_ic), fixed = TRUE)
+    fits <- c(fits, add_ic)
+  }
+  if(is.na(fits$AIC)){
+    fits$AIC <- tryCatch(fits$Minus2LogLikelihood + 2 * fits[["estimatedParameters"]], error = function(e) NA)
+  }
+  if(is.na(fits$BIC)){
+    fits$BIC <- fits$Minus2LogLikelihood + log(fits$numObs) * fits[["estimatedParameters"]]
+  }
+  if(!is.null(out[["RMSEACI"]])){
+    if(any(!is.na(out[["RMSEACI"]]))){
+      names(out[["RMSEACI"]]) <- paste0("RMSEA.", names(out[["RMSEACI"]]))
+      fits <- c(fits, out[["RMSEACI"]])
+    }
+  }
+  if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
+  dropthese <- c("AIC.Mx", "BIC.Mx", "wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
+                 "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
+                 "timestamp", "frontendTime", "backendTime", "independentTime",
+                 "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
+  )
+  fits <- fits[!names(fits) %in% dropthese]
+  fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + fits[["estimatedParameters"]] * log((fits[["numObs"]]+2)/24)
+  out <- as.data.frame(fits)
+  rownames(out) <- NULL
+  out
+}
+
+calc_fitindices_mixture <- function(model, ...) {
+
+  sums <- calc_fitindices_MxModel(model)
+  classes <- num_classes(model)
+
+  if (classes == 1L) {
+    fits <- c(
+      Classes = 1,
+      Entropy = 1,
+      prob_min = 1,
+      prob_max = 1,
+      n_min = 1,
+      n_max = 1
+    )
+  } else {
+
+    post_prob <- extract_postprob(model)
+    C <- max.col(post_prob)
+
+    # Classification proportions, including empty classes
+    class_tab <- tabulate(C, nbins = classes)
+    prop_n <- range(class_tab / length(C))
+
+    # Average posterior classification probabilities
+    class_probs <- diag(
+      classification_probs_mostlikely(post_prob, C)
+    )
+
+    fits <- c(
+      Classes = classes,
+      Entropy = entropy(post_prob),
+      prob_min = min(class_probs),
+      prob_max = max(class_probs),
+      n_min = prop_n[1],
+      n_max = prop_n[2]
+    )
+  }
+
+  c(sums, fits)
+}
+# To here
+# calc_fitindices.MxModel <- function (model, type = NULL, ...){
+#   sums <- .table_fit_mx(model, type = type)
+#   if(isTRUE(type == "mixture")){
+#     ll <- sums[["Minus2LogLikelihood"]]/-2
+#     parameters <- sums[["estimatedParameters"]]
+#     n <- sums[["numObs"]]
+#     classes <- num_classes(model)
+#     if(classes < 2){
+#       fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
+#     } else {
+#       post_prob <- extract_postprob(model)
+#       C <- apply(post_prob, 1, which.max)
+#       class_tab <- table(factor(C, levels = 1:classes))
+#       if (length(class_tab) == ncol(post_prob)) {
+#         prop_n <- range(prop.table(class_tab))
+#       }
+#       else {
+#         prop_n <- c(0, max(prop.table(class_tab)))
+#       }
+#       fits <- c("Classes" = classes,
+#                 entropy(post_prob),
+#                 range(diag(classification_probs_mostlikely(post_prob, C))),
+#                 prop_n)
+#       names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
+#     }
+#     c(sums, fits)
+#   } else {
+#     sums
+#   }
+# }
 
 make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
   out <- vector("numeric")

@@ -69,7 +69,8 @@ Suggests:
     bain,
     future,
     igraph (>= 2.0.0),
-    broom
+    broom,
+    nnet
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

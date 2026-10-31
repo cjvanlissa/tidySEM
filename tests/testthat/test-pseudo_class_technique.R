@@ -1,4 +1,3 @@
-library(lavaan)
 test_that("pseudo_class works", {
   testthat::skip_if_not_installed("OpenMx")
   testthat::skip_if_not_installed("mice")
@@ -11,13 +10,13 @@ test_that("pseudo_class works", {
                          data = dat)
 
   pct_lv <- pseudo_class(x = fit,
-                         model = sem( "SL ~ class", data = data),
+                         model = lavaan::sem( "SL ~ class", data = data),
                          df_complete = nrow(dat) - 1,
                          data = dat)
 
   pct_mx <- pseudo_class(x = fit,
                          model = "SL ~ class",
-                         df_complete = nrow(x) - 1,
+                         df_complete = nrow(dat) - 1,
                          data = dat)
 
 
