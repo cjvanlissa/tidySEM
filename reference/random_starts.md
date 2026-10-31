@@ -48,28 +48,6 @@ random_starts(
 
   Additional arguments passed to the model-specific implementation.
 
-- data:
-
-  Optional data on which the model was run, typically taken from the
-  model object itself. Default: `NULL`.
-
-- scale_A:
-
-  Numeric vector of length two giving the lower and upper multipliers
-  for free elements of the `A` matrix. Defaults to `c(-0.5, 0.5)`. These
-  are scaled by the ratio of observed standard deviations.
-
-- scale_mat_dev:
-
-  Numeric vector of length two specifying the uniform sampling range for
-  free elements of `mat_dev`. Defaults to `c(0.001, 1.5)`.
-
-- jitter_thresholds:
-
-  Non-negative numeric value controlling the magnitude of uniform
-  perturbations applied to empirical threshold starting values. Defaults
-  to `0.25`.
-
 ## Value
 
 If `run = TRUE`, the best-fitting OpenMx model with an attribute
@@ -119,6 +97,22 @@ supplied data.
 After random values have been assigned,
 [`OpenMx::omxAssignFirstParameters()`](https://rdrr.io/pkg/OpenMx/man/omxAssignFirstParameters.html)
 ensures that parameters sharing labels have consistent starting values.
+
+## Additional arguments for RAM mixture models
+
+When `attr(x, "tidySEM") == "mixture"`, the following arguments can be
+passed through `...`:
+
+- `data`: Optional observed data.
+
+- `scale_A`: Lower and upper multipliers for free elements of the A
+  matrix. Default: `c(-0.5, 0.5)`.
+
+- `scale_mat_dev`: Sampling range for threshold deviations. Default:
+  `c(0.001, 1.5)`.
+
+- `jitter_thresholds`: Magnitude of random jitter applied to thresholds.
+  Default: `0.25`.
 
 ## Examples
 
