@@ -52,6 +52,9 @@ BCH.MxModel <- function(x, model, data, ...){
   Hmat <- classification_probs_mostlikely(post_probs)
   Hmatinv <- solve(Hmat)
   mostlikely <- apply(post_probs, 1, which.max)
+  if (any(tabulate(mostlikely, nbins = ncol(post_probs)) == 0L)) {
+    stop("At least one class has no modal assignments.")
+  }
   bchweights <- data.frame(Hmatinv[mostlikely, ])
   names(bchweights) <- names(bchweights) <- paste0("wclass", seq_len(num_classes(x)))
   df <- cbind(data, bchweights)

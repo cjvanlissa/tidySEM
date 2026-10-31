@@ -99,7 +99,14 @@ pseudo_class_pool.default <- function(fits, df_complete = NULL, ...) {
     message("Cannot pool fit objects, because package 'mice' is not installed")
     return(NULL)
   }
-  summary(mice::pool(object = fits, dfcom = df_complete, ...))
+  out <- summary(mice::pool(object = fits, dfcom = df_complete, ...))
+  if(requireNamespace("broom", quietly = TRUE)){
+    check_names <- broom::tidy(fits[[1]])
+    if("y.level" %in% names(check_names)){
+      out$term <- paste0(out$term, ".", check_names$y.level)
+    }
+  }
+  out
 }
 
 #' @export
@@ -261,7 +268,10 @@ pseudo_class_analysis_cb <- function(dfs, func, Arg = NULL) {
 #' }
 #' @export
 append_class_draws <- function(x, data = NULL, m = 20) {
-  if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
+  if(is.null(attr(x, "tidySEM"))){
+    stop("Argument 'x' is not a valid mixture model.")
+  }
+  if (!attr(x, "tidySEM") %in% c("mixture", "remix")) {
     stop("Argument 'x' is not a valid mixture model.")
   }
   if(any(names(data) == "id_dataset")){
@@ -338,8 +348,9 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'                          m = 2)
 #'
 #'
-# pseudo_class(x = fit,
-#              model = nnet::multinom( class ~ SL + SW + PL ) ) -> membership_prediction
+#' pseudo_class(x = fit,
+#'              model = nnet::multinom( class ~ SL + SW + PL, data = data),
+#'              data = dat) -> membership_prediction
 #' }
 #'
 #' @references
@@ -382,15 +393,26 @@ pseudo_class.MxModel <- function(x, model, df_complete = NULL, data = NULL, m = 
 
     # Generate the data, uses sample(). Since model might also use the seed,
     # all data is generated first in order to be more reproducible.
-    data <- do.call(append_class_draws, Args)
+    draws <- do.call(append_class_draws, Args)
   } else {
     stop("Function 'pseudo_class()' requires a 'data' argument when called on a 'mx_mixture' model.")
   }
-  cl <- match.call()
-  cl[[1]] <- str2lang("tidySEM::pseudo_class")
-  cl[["x"]] <- data
-  cl <- cl[c(1, which(names(cl) %in% c("x", "model", "df_complete")))]
-  eval.parent(cl)
+
+  cl <- match.call(expand.dots = FALSE)
+  cl[[1L]] <- quote(tidySEM::pseudo_class)
+  cl <- cl[c(1, which(names(cl) %in% c("", "x", "model", "df_complete", "...")))]
+  # Replace x with a temporary variable
+  cl[["x"]] <- quote(.pseudo_draws)
+  eval(
+    substitute(
+      local({
+        .pseudo_draws <- DRAWS
+        CALL
+      }),
+      list(DRAWS = draws, CALL = cl)
+    ),
+    envir = parent.frame()
+  )
 }
 
 #' @method pseudo_class class_draws
@@ -400,7 +422,14 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
   enclos <- parent.frame()
 
   expr <- substitute(model)
+  # Resolve named character variables
+  if (is.symbol(expr)) {
+    value <- eval(expr, envir = enclos)
 
+    if (is.character(value) && length(value) == 1L) {
+      expr <- value
+    }
+  }
   if (methods::is(expr, "name")) {
 
     # Assume names are okay to evaluate
@@ -418,9 +447,8 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
       analysis_type <- "call"
     }
   } else if (is.character(expr)) {
-    # Treat as a tidy_sem
-    if(!grepl("class", model)){
-      textmod <- model
+    if (!grepl("\\bclass\\b", expr)) {
+      textmod <- expr
       model <- function(df) {
         df <- as.data.frame(df)
         model <- as_ram(textmod, groups = "class", data = df)
@@ -431,7 +459,7 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
         NULL
       }
     } else {
-      ramModel <- as_ram(model)
+      ramModel <- as_ram(expr)
       model <- function(df) {
 
         model <- OpenMx::mxModel(ramModel,
@@ -466,7 +494,7 @@ pseudo_class.class_draws <- function(x, model, df_complete = NULL, ...) {
       stop(paste("model '", expr, "' is not a function. The argument 'model' should be a callback function, a call, or a character vector"))
     }
 
-    if ( length( formalArgs(model) ) != 1 ) {
+    if (length(formals(model)) < 1L) {
       stop("'model' is a function but it does not accept an argument. The callback function should accept one argument.")
     }
 

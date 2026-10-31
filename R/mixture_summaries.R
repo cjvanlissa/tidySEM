@@ -92,9 +92,9 @@ make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
 #' membership, based on the highest posterior class probability. Note that
 #' this is subject to measurement error.}
 #' \item{"mostlikely.class"}{If C is the true class of an observation, and N is
-#' the most likely class based on the model, then this table shows the
-#' probability P(N==i|C==j). The diagonal represents the probability that
-#' observations in each class will be correctly classified.}
+#' the assigned class based on highest posterior class probability, then this
+#' table shows the probability P(C==i|N==j). The diagonal represents the
+#' probability that observations in each class will be correctly classified.}
 #' \item{"avg.mostlikely"}{Average posterior probabilities for each class, for
 #' the subset of observations with most likely class of 1:k, where k is the
 #' number of classes.}
@@ -207,6 +207,9 @@ extract_postprob.mplus.model <- function(x, ...){
   x$savedata[grepl("^CPROB", names(x$savedata))]
 }
 
+#Rows: True latent classes \(C=k\).
+#Columns: Assigned classes \(W=j\).
+#Entries: \(H_{kj}=P(W=j\mid C=k)\).
 classification_probs_mostlikely <- function (post_prob, C = NULL)
 {
   if (is.null(dim(post_prob)))

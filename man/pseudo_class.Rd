@@ -70,6 +70,9 @@ pct_func <- pseudo_class(x = fit,
                          m = 2)
 
 
+pseudo_class(x = fit,
+             model = nnet::multinom( class ~ SL + SW + PL, data = data),
+             data = dat) -> membership_prediction
 }
 
 }

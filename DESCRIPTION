@@ -68,7 +68,8 @@ Suggests:
     blavaan,
     bain,
     future,
-    igraph (>= 2.0.0)
+    igraph (>= 2.0.0),
+    broom
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
