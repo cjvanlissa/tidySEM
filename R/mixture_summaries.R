@@ -44,8 +44,8 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
       fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
     } else {
       post_prob <- extract_postprob(model)
-      class <- apply(post_prob, 1, which.max)
-      class_tab <- table(factor(class, levels = 1:classes))
+      C <- apply(post_prob, 1, which.max)
+      class_tab <- table(factor(C, levels = 1:classes))
       if (length(class_tab) == ncol(post_prob)) {
         prop_n <- range(prop.table(class_tab))
       }
@@ -54,7 +54,7 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
       }
       fits <- c("Classes" = classes,
                 entropy(post_prob),
-                range(diag(classification_probs_mostlikely(post_prob, class))),
+                range(diag(classification_probs_mostlikely(post_prob, C))),
                 prop_n)
       names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
     }
@@ -207,15 +207,15 @@ extract_postprob.mplus.model <- function(x, ...){
   x$savedata[grepl("^CPROB", names(x$savedata))]
 }
 
-classification_probs_mostlikely <- function (post_prob, class = NULL)
+classification_probs_mostlikely <- function (post_prob, C = NULL)
 {
   if (is.null(dim(post_prob)))
     return(1)
-  if (is.null(class))
-    class <- apply(post_prob, 1, which.max)
-  avg_probs <- avgprobs_mostlikely(post_prob, class)
+  if (is.null(C))
+    C <- apply(post_prob, 1, which.max)
+  avg_probs <- avgprobs_mostlikely(post_prob, C)
   avg_probs[is.na(avg_probs)] <- 0
-  class_counts <- as.integer(table(ordered(class, levels = 1:ncol(post_prob)))) # Use ordered to ensure empty classes are included
+  class_counts <- as.integer(table(ordered(C, levels = 1:ncol(post_prob)))) # Use ordered to ensure empty classes are included
   tab <- avg_probs * class_counts
   tab <- tab / matrix(colSums(avg_probs * class_counts), ncol = ncol(tab), nrow = nrow(tab), byrow = TRUE)
   rownames(tab) <- paste0("assigned.", 1:nrow(tab))
@@ -224,16 +224,16 @@ classification_probs_mostlikely <- function (post_prob, class = NULL)
 }
 
 
-avgprobs_mostlikely <- function (post_prob, class = NULL)
+avgprobs_mostlikely <- function (post_prob, C = NULL)
 {
   if (is.null(dim(post_prob)))
     return(1)
-  if(is.null(class)) class <- apply(post_prob, 1, which.max)
+  if(is.null(C)) C <- apply(post_prob, 1, which.max)
   tab <- t(sapply(1:ncol(post_prob), function(i) {
-    colMeans(post_prob[class == i, , drop = FALSE])
+    colMeans(post_prob[C == i, , drop = FALSE])
   }))
   rownames(tab) <- paste0("assigned.", 1:nrow(tab))
-  colnames(tab) <- paste0("meanprob.", colnames(tab))
+  colnames(tab) <- paste0("meanprob.", 1:ncol(tab))
   return(tab)
 }
 
