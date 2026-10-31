@@ -83,10 +83,10 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Add algebras ------------------------------------------------------------
   algs <- alg_to_res(x)
   algs$openmx_label <- algs$name
-  results <- tidySEM:::bind_list(list(results, algs))
+  results <- bind_list(list(results, algs))
 
   # Label groups ------------------------------------------------------------
-  results <- tidySEM:::.label_groups_internal(x, results)
+  results <- .label_groups_internal(x, results)
 
   results$est <- results$Estimate
   results$lhs <- results$row

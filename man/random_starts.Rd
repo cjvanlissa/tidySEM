@@ -30,22 +30,6 @@ best-fitting solution. If \code{FALSE}, return a list of models with randomized
 starting values.}
 
 \item{...}{Additional arguments passed to the model-specific implementation.}
-
-\item{data}{Optional data on which the model was run, typically taken from
-the model object itself. Default: \code{NULL}.}
-
-\item{scale_A}{Numeric vector of length two giving the lower
-and upper multipliers for free elements of the \code{A} matrix.
-Defaults to \code{c(-0.5, 0.5)}. These are scaled by the ratio
-of observed standard deviations.}
-
-\item{scale_mat_dev}{Numeric vector of length two specifying
-the uniform sampling range for free elements of \code{mat_dev}.
-Defaults to \code{c(0.001, 1.5)}.}
-
-\item{jitter_thresholds}{Non-negative numeric value controlling
-the magnitude of uniform perturbations applied to empirical
-threshold starting values. Defaults to \code{0.25}.}
 }
 \value{
 If \code{run = TRUE}, the best-fitting OpenMx model with an attribute
@@ -105,6 +89,22 @@ After random values have been assigned,
 \code{OpenMx::omxAssignFirstParameters()} ensures that
 parameters sharing labels have consistent starting values.
 }
+\section{Additional arguments for RAM mixture models}{
+
+
+When \code{attr(x, "tidySEM") == "mixture"}, the following
+arguments can be passed through \code{...}:
+\itemize{
+\item \code{data}: Optional observed data.
+\item \code{scale_A}: Lower and upper multipliers for free
+elements of the A matrix. Default: \code{c(-0.5, 0.5)}.
+\item \code{scale_mat_dev}: Sampling range for threshold
+deviations. Default: \code{c(0.001, 1.5)}.
+\item \code{jitter_thresholds}: Magnitude of random jitter
+applied to thresholds. Default: \code{0.25}.
+}
+}
+
 \examples{
 \dontrun{
 library(OpenMx)

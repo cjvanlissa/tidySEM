@@ -140,7 +140,7 @@ class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "m
 
 sum_postprob <- function(model){
   if(is_remix(model)){
-    return(data.frame(class = paste0("class", seq_len(tidySEM:::num_classes(model))),
+    return(data.frame(class = paste0("class", seq_len(num_classes(model))),
                count = drop(model@algebras$weights$result*model@data$numObs),
                proportion = drop(model@algebras$weights$result)))
 
@@ -161,13 +161,6 @@ sum_mostlikely <- function(model = NULL, mostlikely = NULL){
     return(data.frame(class = paste0("class", unique(mostlikely)),
                       count = count,
                       proportion = prop.table(count)))
-  }
-  if(is_remix(model)){
-    return(data.frame(class = paste0("class", seq_len(tidySEM:::num_classes(model))),
-                      count = drop(model@algebras$weights$result*model@data$numObs),
-                      proportion = drop(model@algebras$weights$result)))
-    data.frame(class = mix_names, count = as.vector(classif), proportion = as.vector(prop.table(classif)))
-
   }
   tryCatch({
     post_prob <- extract_postprob(model)
@@ -192,26 +185,26 @@ extract_postprob <- function(x, ...) {
 }
 
 
-extract_postprob_MxModel <- extract_postprob_mixture <- function(model){
-  if(num_classes(model) < 2){
-    return(matrix(1, nrow = model$data$numObs))
+extract_postprob_MxModel <- extract_postprob_mixture <- function(x){
+  if(num_classes(x) < 2){
+    return(matrix(1, nrow = x$data$numObs))
   }
-    priors <- OpenMx::mxEval(weights, model)[1,]
-    mix_names <- model$expectation$components
-    liks <- sapply(mix_names, function(x){ attr(model@submodels[[x]], "fitfunction")$result })
-    #First calculate posteriors:
-    posteriors <- sweep(liks, 2, priors, "*")
-    #Then calculate participants' marginal likelihoods (probably not be necessary):
-    marglik <- rowSums(posteriors)
-    # Divide posteriors by marginal likelihood
-    posteriors <- posteriors/marglik
+  priors <- OpenMx::mxEvalByName("weights", x)[1,]
+  mix_names <- x$expectation$components
+  liks <- sapply(mix_names, function(nam){ attr(x@submodels[[nam]], "fitfunction")$result })
+  #First calculate posteriors:
+  posteriors <- sweep(liks, 2, priors, "*")
+  #Then calculate participants' marginal likelihoods (probably not be necessary):
+  marglik <- rowSums(posteriors)
+  # Divide posteriors by marginal likelihood
+  posteriors <- posteriors/marglik
   # then normalize them into probabilities:
   posteriors/rowSums(posteriors)
 }
 
 #' @export
-extract_postprob.mplus.model <- function(model){
-  model$savedata[grepl("^CPROB", names(model$savedata))]
+extract_postprob.mplus.model <- function(x, ...){
+  x$savedata[grepl("^CPROB", names(x$savedata))]
 }
 
 classification_probs_mostlikely <- function (post_prob, class = NULL)

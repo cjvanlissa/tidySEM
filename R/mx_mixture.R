@@ -101,7 +101,7 @@ mx_mixture <- function(model,
 #' @examples
 #' \dontrun{
 #' data("empathy")
-#' df <- empathy[1:6]
+#' df <- empathy[1:2]
 #' mx_profiles(data = df,
 #'             classes = 2) -> res
 #' }

@@ -48,14 +48,14 @@ BCH.MxModel <- function(x, model, data, ...){
       data <- data.frame(y = data)
     }
   }
-  cprobs <- class_prob(x)
-  Hmat <- cprobs$mostlikely.class
+  post_probs <- extract_postprob(x)
+  Hmat <- classification_probs_mostlikely(post_probs)
   Hmatinv <- solve(Hmat)
-  mostlikely <- cprobs$individual[,"predicted"]
+  mostlikely <- apply(post_probs, 1, which.max)
   bchweights <- data.frame(Hmatinv[mostlikely, ])
-  names(bchweights) <- paste0("w", cprobs$sum.posterior$class)
+  names(bchweights) <- paste0("w", x$expectation$components)
   df <- cbind(data, bchweights)
-  grp_names <- cprobs$sum.posterior$class
+  grp_names <- x$expectation$components
 
   if(inherits(model, "character")){
     model <- as_ram(model, meanstructure = TRUE)
