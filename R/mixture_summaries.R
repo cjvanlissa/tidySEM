@@ -181,19 +181,22 @@ sum_mostlikely <- function(model = NULL, mostlikely = NULL){
   })
 }
 
-extract_postprob <- function(model){
-  UseMethod("extract_postprob", model)
+#extract_postprob <- function(model){
+#  UseMethod("extract_postprob", model)
+#}
+extract_postprob <- function(x, ...) {
+  if (methods::is(x, "MxModel")) {
+    return(dispatch_method(x, "extract_postprob", ...))
+  }
+  UseMethod("extract_postprob")
 }
 
-#' @export
-extract_postprob.MxModel <- function(model){
+
+extract_postprob_MxModel <- extract_postprob_mixture <- function(model){
   if(num_classes(model) < 2){
     return(matrix(1, nrow = model$data$numObs))
   }
-  if(!is.null(model[["expectation"]][["weights"]])){
-    # Handle tidySEM mixture models
-    weights_name <- model$expectation$weights
-    priors <- model[[weights_name]]$values
+    priors <- OpenMx::mxEval(weights, model)[1,]
     mix_names <- model$expectation$components
     liks <- sapply(mix_names, function(x){ attr(model@submodels[[x]], "fitfunction")$result })
     #First calculate posteriors:
@@ -202,44 +205,6 @@ extract_postprob.MxModel <- function(model){
     marglik <- rowSums(posteriors)
     # Divide posteriors by marginal likelihood
     posteriors <- posteriors/marglik
-  } else {
-    # Handle memi mixture models
-    yi <- model$Y$values
-    vi <- model$V$values
-    # Extract mixing proportions
-    pi <- as.numeric(OpenMx::mxEval(weights, model))
-    K <- length(pi)
-    n <- length(yi)
-
-    # Extract component parameters
-    mu <- vapply(seq_len(K), function(k) {
-      as.numeric(model@matrices[[paste0("Mu", k)]]@values)
-    }, numeric(1))
-
-    tau2 <- vapply(seq_len(K), function(k) {
-      as.numeric(model@matrices[[paste0("Tau", k)]]@values)
-    }, numeric(1))
-
-    # Log of weighted component densities
-    logdens <- matrix(NA_real_, n, K)
-
-    for (k in seq_len(K)) {
-      logdens[, k] <- log(pi[k]) +
-        dnorm(
-          yi,
-          mean = mu[k],
-          sd = sqrt(vi + tau2[k]),
-          log = TRUE
-        )
-    }
-
-    # Stable normalization
-    row_max <- apply(logdens, 1, max)
-
-    posteriors <- exp(logdens - row_max)
-    colnames(posteriors) <- paste0("class", seq_len(K))
-
-  }
   # then normalize them into probabilities:
   posteriors/rowSums(posteriors)
 }
