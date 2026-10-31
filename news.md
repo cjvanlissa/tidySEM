@@ -1,6 +1,7 @@
 # tidySEM 0.3.0
 
-- tidySEM now supports mixture models estimated with the memi package
+- tidySEM now supports mixture models estimated with the metamixture
+  package
 
 # tidySEM 0.2.13
 

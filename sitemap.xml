@@ -61,6 +61,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/measurement.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mixture_starts.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_convergence.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.html</loc></url>
@@ -84,6 +85,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/pseudo_class.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/random_starts.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/register_tidySEM_method.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/report.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/run_lavaan.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/run_mx.html</loc></url>

@@ -1,8 +1,9 @@
-# Generate random starting values for OpenMx model
+# Generate Random Starting Values for OpenMx Models
 
-Generates plausible random starting values for free parameters in
-selected matrices of an OpenMx RAM model. Starting values are scaled,
-where possible, to the data used to construct the model.
+Generates plausible random starting values for OpenMx models. Starting
+values are scaled, where possible, to the observed data. Multiple sets
+of starting values can be evaluated to identify the solution with the
+lowest minus twice log-likelihood.
 
 ## Usage
 
@@ -10,12 +11,10 @@ where possible, to the data used to construct the model.
 random_starts(
   x,
   nstarts = 20,
-  scale_A = c(-0.5, 0.5),
-  scale_mat_dev = c(0.001, 1.5),
-  jitter_thresholds = 0.25,
   tolerance_minus2ll = 1e-06,
   verbose = TRUE,
-  run = TRUE
+  run = TRUE,
+  ...
 )
 ```
 
@@ -23,127 +22,114 @@ random_starts(
 
 - x:
 
-  An `MxModel` with RAM specification.
+  An OpenMx `MxModel` object.
 
 - nstarts:
 
-  Integer, how many sets of starting values to generate?
+  Integer. Number of sets of starting values to generate.
+
+- tolerance_minus2ll:
+
+  Numeric. Maximum difference from the smallest minus twice
+  log-likelihood for solutions to be considered equivalent.
+
+- verbose:
+
+  Logical. Whether to print information about starting values and model
+  fit.
+
+- run:
+
+  Logical. If `TRUE`, estimate the models and return the best-fitting
+  solution. If `FALSE`, return a list of models with randomized starting
+  values.
+
+- ...:
+
+  Additional arguments passed to the model-specific implementation.
+
+- data:
+
+  Optional data on which the model was run, typically taken from the
+  model object itself. Default: `NULL`.
 
 - scale_A:
 
   Numeric vector of length two giving the lower and upper multipliers
-  used when drawing free elements of the `A` matrix. Defaults to
-  `c(-0.5, 0.5)`. For an element `A[i, j]`, these multipliers are
-  applied to `xsd[i] / xsd[j]`.
+  for free elements of the `A` matrix. Defaults to `c(-0.5, 0.5)`. These
+  are scaled by the ratio of observed standard deviations.
 
 - scale_mat_dev:
 
-  Numeric vector of length two giving the lower and upper limits of the
-  uniform distribution used for free elements of `mat_dev`. Defaults to
-  `c(0.001, 1.5)`. The lower bound should generally be strictly positive
-  when `mat_dev` represents positive threshold deviations.
+  Numeric vector of length two specifying the uniform sampling range for
+  free elements of `mat_dev`. Defaults to `c(0.001, 1.5)`.
 
 - jitter_thresholds:
 
-  Non-negative numeric value controlling the magnitude of uniform random
-  perturbation applied to empirical starting thresholds. Thresholds are
-  perturbed by values drawn from
-  `runif(n, -jitter_thresholds, jitter_thresholds)`. Defaults to `0.25`.
-
-- tolerance_minus2ll:
-
-  In order for a -2LL to be considered equal to the smallest -2LL, the
-  difference must be smaller than `tolerance_minus2ll`.
-
-- verbose:
-
-  Whether or not to print the table of random seeds and -2LLs.
-
-- run:
-
-  Whether or not to use
-  [`mxRun`](https://rdrr.io/pkg/OpenMx/man/mxRun.html) to run all
-  models, or alternatively, return them as a list.
+  Non-negative numeric value controlling the magnitude of uniform
+  perturbations applied to empirical threshold starting values. Defaults
+  to `0.25`.
 
 ## Value
 
-If `run = TRUE`, returns the best-fitting OpenMx model. This model has
-`attr(x, "tab_ll")`, a table with random seeds and minus 2 log
-likelihood values. You can use these seeds to reproduce the models. If
-`run = FALSE`, returns a list of OpenMX models.
+If `run = TRUE`, the best-fitting OpenMx model with an attribute
+`tab_ll` containing information about the starting values and their fit
+statistics. If `run = FALSE`, a list of OpenMx models.
 
 ## Details
 
-Columns of the observed data must be numeric, integer, or ordered
-factors. For numeric variables with zero or undefined observed range or
-standard deviation, fallback scaling values are constructed to avoid
-division by zero or non-finite random-start ranges.
+Random starting values are generated using R's random-number generator.
+Use [`set.seed()`](https://rdrr.io/r/base/Random.html) for
+reproducibility.
 
-Only free matrices named `A`, `S`, `F`, `M`, `mat_dev`, and `Thresholds`
-are supported. The `F` matrix may be present, although this function
-does not randomize its elements.
+**RAM mixture models**
 
-The function uses R's global random-number generator. Use
-[`set.seed()`](https://rdrr.io/r/base/Random.html) before calling this
-function when reproducible random starting values are required.
+Starting values are derived from the observed data and the model's RAM
+matrices. The function supports free parameters in matrices named `A`,
+`S`, `M`, `mat_dev`, and `Thresholds`. The `F` matrix may be present but
+is not randomized.
 
-For models containing submodels, the function is applied recursively to
-each submodel. If observed data are stored in `x@data$observed`, those
-data take precedence over the value supplied to `data`.
+For continuous variables, observed ranges and standard deviations are
+used to determine plausible starting values. Fallback scales are used
+when the observed range or standard deviation is zero or undefined.
 
-For continuous variables, the observed minimum, maximum, and standard
-deviation are used to determine plausible starting-value scales. For
-ordinal variables, values already present in the model matrices are used
-where appropriate.
+Free paths in `A` are sampled uniformly after scaling by the ratio of
+the standard deviations of the dependent and predictor variables:
+\$\$A\_{ij} \sim U(a,b)\frac{sd_i}{sd_j}\$\$ where `c(a, b) = scale_A`.
 
-Free paths in the `A` matrix are sampled uniformly after scaling by the
-ratio of the standard deviations of the dependent and predictor
-variables. The resulting interval for element \\A\_{ij}\\ is
-`scale_A * (sd[i] / sd[j])`.
+Starting values for `S` are generated using a random lower-triangular
+Cholesky factor \\L\\, giving \$\$S = LL^\top.\$\$ Diagonal elements of
+\\L\\ are sampled between 0.5 and 1 times the corresponding observed
+standard deviation. Off-diagonal elements are sampled between -0.25 and
+0.25 times that standard deviation.
 
-Starting values for the `S` matrix are generated from a random
-lower-triangular Cholesky factor \\L\\, and the covariance matrix is
-formed as \\S = L L^\top\\. Diagonal elements of \\L\\ are sampled
-uniformly between 0.5 and 1 times the corresponding observed standard
-deviation, while off-diagonal elements are sampled between -0.25 and
-0.25 times that standard deviation. This construction produces a
-positive-definite covariance matrix before any restrictions imposed by
-the pattern of free parameters in `S` are applied.
-
-Free means in the `M` matrix are sampled uniformly between the observed
-minimum and maximum of the corresponding numeric variable.
+Free means in `M` are sampled uniformly between the observed minimum and
+maximum of the corresponding variable.
 
 Free elements of `mat_dev` are sampled uniformly from `scale_mat_dev`.
-These elements are intended for parameterizations in which strictly
-positive deviations are accumulated to construct ordered thresholds.
+For ordinal variables, empirical latent-normal thresholds are obtained
+from cumulative category proportions using
+[`qnorm()`](https://rdrr.io/r/stats/Normal.html), perturbed by uniform
+jitter, and sorted to preserve their ordering.
 
-For a `Thresholds` matrix, empirical latent-normal thresholds are based
-on the cumulative observed category proportions of each ordered
-variable, using [`qnorm()`](https://rdrr.io/r/stats/Normal.html).
-Uniform random jitter is added to these values and the resulting
-thresholds are sorted to preserve their ordering.
+For models containing submodels, initialization is applied recursively.
+Observed data stored in the model take precedence over externally
+supplied data.
 
 After random values have been assigned,
-[`omxAssignFirstParameters`](https://rdrr.io/pkg/OpenMx/man/omxAssignFirstParameters.html)
-is called so that parameters sharing labels receive consistent starting
-values.
+[`OpenMx::omxAssignFirstParameters()`](https://rdrr.io/pkg/OpenMx/man/omxAssignFirstParameters.html)
+ensures that parameters sharing labels have consistent starting values.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-set.seed(1)
-df <- iris[1:4]
-names(df) <- letters[1:4]
-mod <- mx_profiles(data = df, classes = 2, run = FALSE)
-res <- random_starts(mod, nstarts = 2)
-# Get the table of seeds and minus 2 loglikelihoods:
-tab_ll <- attr(res, "tab_ll")
-# Seed for smallest -2LL:
-seed <- tab_ll$seed[which.min(tab_ll$Minus2LogLikelihood)]
-# Set random seed to that seed:
-.Random.seed <- seed
-# Rerun random starts just for that best seed:
-res <- random_starts(mod, nstarts = 1)
+library(OpenMx)
+
+set.seed(123)
+model <- remix(yi, vi, classes = 2, run = FALSE)
+fit <- random_starts(model, nstarts = 20)
+
+attr(fit, "tab_ll")
 } # }
 ```

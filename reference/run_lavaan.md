@@ -39,7 +39,7 @@ run_lavaan(measurement(tidy_sem(df), meanstructure = TRUE))
 #>    adding bounds (e.g., bounds = "pos.var").
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
-#> lavaan 0.7-3 ended normally after 84 iterations
+#> lavaan 0.7-3 ended normally after 86 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -53,6 +53,6 @@ run_lavaan(measurement(tidy_sem(df), meanstructure = TRUE))
 #>   Degrees of freedom                                 0
 #>                                                       
 #>   Browne's residual (NT model-based) test             
-#>   Test statistic                                -0.000
+#>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
 ```

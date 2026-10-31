@@ -4,76 +4,109 @@
 
 - [`BCH()`](https://cjvanlissa.github.io/tidySEM/reference/BCH.md) :
   Estimate an Auxiliary Model using the BCH Method
+
 - [`BLRT()`](https://cjvanlissa.github.io/tidySEM/reference/BLRT.md) :
   Conduct Bootstrapped Likelihood Ratio Test
+
 - [`add_paths()`](https://cjvanlissa.github.io/tidySEM/reference/add_paths.md)
   : Add paths to an object of class 'tidy_sem'
+
 - [`alkema_microplastics`](https://cjvanlissa.github.io/tidySEM/reference/alkema_microplastics.md)
   : Ocean Microplastics Data
+
 - [`append_class_draws()`](https://cjvanlissa.github.io/tidySEM/reference/append_class_draws.md)
   : Append Pseudo-class Draws
+
 - [`as_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/as_lavaan.md)
   : Convert tidy_sem to 'lavaan' syntax
+
 - [`as_mplus()`](https://cjvanlissa.github.io/tidySEM/reference/as_mplus.md)
   : Convert tidy_sem to 'Mplus' syntax
+
 - [`as_ram()`](https://cjvanlissa.github.io/tidySEM/reference/as_ram.md)
   : Convert lavaan syntax to RAM specification
+
 - [`chi_sq()`](https://cjvanlissa.github.io/tidySEM/reference/chi_sq.md)
   : Calculate Chi Square Statistic
+
 - [`class_prob()`](https://cjvanlissa.github.io/tidySEM/reference/class_prob.md)
   : Obtain latent class probabilities
+
 - [`conf_int()`](https://cjvanlissa.github.io/tidySEM/reference/conf_int.md)
   : Format confidence intervals
+
 - [`cors()`](https://cjvanlissa.github.io/tidySEM/reference/cors.md) :
   Generate syntax for correlations
+
 - [`create_scales()`](https://cjvanlissa.github.io/tidySEM/reference/create_scales.md)
   : Create scale scores from observed variables
+
 - [`curry_mac`](https://cjvanlissa.github.io/tidySEM/reference/curry_mac.md)
   : Simulated MAC data
+
 - [`data_mix_ordinal`](https://cjvanlissa.github.io/tidySEM/reference/data_mix_ordinal.md)
   : Simulated data for mixture model with ordinal indicators
+
 - [`descriptives()`](https://cjvanlissa.github.io/tidySEM/reference/descriptives.md)
   : Describe a dataset
+
 - [`deviances_to_thresholds()`](https://cjvanlissa.github.io/tidySEM/reference/deviances_to_thresholds.md)
   : Convert deviances to thresholds
+
 - [`dictionary()`](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
   [`` `dictionary<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/dictionary.md)
   : Extract dictionary from tidy_sem
+
 - [`edges()`](https://cjvanlissa.github.io/tidySEM/reference/edges.md)
   [`` `edges<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/edges.md)
   : Extract edges from sem_graph
+
 - [`edit_graph()`](https://cjvanlissa.github.io/tidySEM/reference/edit_graph.md)
   [`edit_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/edit_graph.md)
   [`edit_edges()`](https://cjvanlissa.github.io/tidySEM/reference/edit_graph.md)
   : Edit graph elements
+
 - [`empathy`](https://cjvanlissa.github.io/tidySEM/reference/empathy.md)
   : Simulated empathy data
+
 - [`est_sig()`](https://cjvanlissa.github.io/tidySEM/reference/est_sig.md)
   : Add significance asterisks to object
+
 - [`estimate_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_lavaan.md)
   : Estimate tidy_sem using 'lavaan'
+
 - [`estimate_mplus()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_mplus.md)
   : Estimate tidy_sem using 'Mplus'
+
 - [`estimate_mx()`](https://cjvanlissa.github.io/tidySEM/reference/estimate_mx.md)
   : Estimate tidy_sem using 'OpenMx'
+
 - [`format_numeric()`](https://cjvanlissa.github.io/tidySEM/reference/format_numeric.md)
   : Format numeric columns Formats the numeric columns of a data.frame,
   to round to a specific number of digits.
+
 - [`get_data()`](https://cjvanlissa.github.io/tidySEM/reference/get_data.md)
   [`` `get_data<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/get_data.md)
   : Extract data from tidy_sem
+
 - [`get_edges()`](https://cjvanlissa.github.io/tidySEM/reference/get_edges.md)
   : Extract edges from a SEM model object
+
 - [`get_fit()`](https://cjvanlissa.github.io/tidySEM/reference/get_fit.md)
   : Get fit indices from objects
+
 - [`get_layout()`](https://cjvanlissa.github.io/tidySEM/reference/get_layout.md)
   : Generate graph layout
+
 - [`get_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/get_nodes.md)
   : Extract nodes from a SEM model object
+
 - [`graph_sem()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
   : Render a graph
+
 - [`ic_weights()`](https://cjvanlissa.github.io/tidySEM/reference/ic_weights.md)
   : Compare Information Criteria
+
 - [`if_edit()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
   [`if_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
   [`if_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
@@ -471,86 +504,134 @@
   [`label_vjust_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
   [`label_lineheight_neg_edges()`](https://cjvanlissa.github.io/tidySEM/reference/if_edit.md)
   : Conditionally edit a sem_graph object
+
 - [`lr_lmr()`](https://cjvanlissa.github.io/tidySEM/reference/lr_lmr.md)
   : Lo-Mendell-Rubin Likelihood Ratio Test
+
 - [`lr_test()`](https://cjvanlissa.github.io/tidySEM/reference/lr_test.md)
   : Conduct Likelihood Ratio tests
+
 - [`lsub()`](https://cjvanlissa.github.io/tidySEM/reference/lsub.md) :
   Apply pattern replacement over a vector
+
 - [`maene_identity`](https://cjvanlissa.github.io/tidySEM/reference/maene_identity.md)
   : National Identity, Discrimination and Depression
+
 - [`measurement()`](https://cjvanlissa.github.io/tidySEM/reference/measurement.md)
   : Generate syntax for a measurement model
+
 - [`mixture_starts()`](https://cjvanlissa.github.io/tidySEM/reference/mixture_starts.md)
   : Automatically set starting values for an OpenMx mixture model
+
 - [`mplus_expand_names()`](https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.md)
   : Expand abbreviated Mplus variable names
+
+- [`mx_convergence()`](https://cjvanlissa.github.io/tidySEM/reference/mx_convergence.md)
+  :
+
+  Check Convergence of an `OpenMx` Model
+
 - [`mx_data_quantiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.md)
   : Data Quantiles
+
 - [`mx_deviances()`](https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.md)
   : Create Thresholds Based on Deviances
+
 - [`mx_dummies()`](https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.md)
   : Dummy Code Factor Variables
+
 - [`mx_growth_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.md)
   : Estimate growth mixture models using OpenMx
+
 - [`mx_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_lca.md)
   : Estimate latent class analyses using OpenMx
+
 - [`mx_mixed_lca()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixed_lca.md)
   : Estimate mixed data latent class analysis using OpenMx
+
 - [`mx_mixture()`](https://cjvanlissa.github.io/tidySEM/reference/mx_mixture.md)
   : Estimate mixture models using OpenMx
+
 - [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md)
   : Estimate latent profile analyses using OpenMx
+
 - [`mx_switch_labels()`](https://cjvanlissa.github.io/tidySEM/reference/mx_switch_labels.md)
   : Switch LCA Class Labels
+
 - [`nodes()`](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
   [`` `nodes<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
   : Extract nodes from sem_graph
+
 - [`paste2()`](https://cjvanlissa.github.io/tidySEM/reference/paste2.md)
   : Concatenate Strings while omitting NA
+
 - [`plas_depression`](https://cjvanlissa.github.io/tidySEM/reference/plas_depression.md)
   : Simulated depression data
+
 - [`plot_bivariate()`](https://cjvanlissa.github.io/tidySEM/reference/plot_bivariate.md)
   : Create correlation plots for a mixture model
+
 - [`plot_density()`](https://cjvanlissa.github.io/tidySEM/reference/plot_density.md)
   : Create density plots for mixture models
+
 - [`plot_prob()`](https://cjvanlissa.github.io/tidySEM/reference/plot_prob.md)
   : Plot categorical variable probabilities
+
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
+
 - [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
   [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
   : Predictive Model Comparison
+
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
+
 - [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
   : Prepare graph data
+
 - [`pseudo_class()`](https://cjvanlissa.github.io/tidySEM/reference/pseudo_class.md)
   : Estimate an Auxiliary Model using the Pseudo-Class Method
+
 - [`random_starts()`](https://cjvanlissa.github.io/tidySEM/reference/random_starts.md)
-  : Generate random starting values for OpenMx model
+  : Generate Random Starting Values for OpenMx Models
+
+- [`register_tidySEM_method()`](https://cjvanlissa.github.io/tidySEM/reference/register_tidySEM_method.md)
+  : Register an External tidySEM Method
+
 - [`run_lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/run_lavaan.md)
   : Run as lavaan model
+
 - [`run_mx()`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md)
   : Run as OpenMx model with sensible defaults
+
 - [`skew_kurtosis()`](https://cjvanlissa.github.io/tidySEM/reference/skew_kurtosis.md)
   : Calculate skew and kurtosis
+
 - [`srmr()`](https://cjvanlissa.github.io/tidySEM/reference/srmr.md) :
   Calculate Standardized Root Mean Residual
+
 - [`syntax()`](https://cjvanlissa.github.io/tidySEM/reference/syntax.md)
   [`` `syntax<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/syntax.md)
   : Extract syntax from tidy_sem
+
 - [`table_cors()`](https://cjvanlissa.github.io/tidySEM/reference/table_cors.md)
   : Extract correlation tables
+
 - [`table_fit()`](https://cjvanlissa.github.io/tidySEM/reference/table_fit.md)
   : Print model fit table formatted for publication
+
 - [`table_prob()`](https://cjvanlissa.github.io/tidySEM/reference/table_prob.md)
   : Results table in probability scale
+
 - [`table_results()`](https://cjvanlissa.github.io/tidySEM/reference/table_results.md)
   : Print results table formatted for publication
+
 - [`tidy_sem()`](https://cjvanlissa.github.io/tidySEM/reference/tidy_sem.md)
   : Create a tidy_sem object
+
 - [`wald_test()`](https://cjvanlissa.github.io/tidySEM/reference/wald_test.md)
   : Wald Test for Linear Hypotheses
+
 - [`zegwaard_carecompass`](https://cjvanlissa.github.io/tidySEM/reference/zegwaard_carecompass.md)
   : Caregiver Compass Data
