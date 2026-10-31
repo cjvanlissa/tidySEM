@@ -2,128 +2,118 @@
 % Please edit documentation in R/random_starts.R
 \name{random_starts}
 \alias{random_starts}
-\title{Generate random starting values for OpenMx model}
+\alias{random_starts_internal_mixture}
+\title{Generate Random Starting Values for OpenMx Models}
 \usage{
 random_starts(
   x,
   nstarts = 20,
-  scale_A = c(-0.5, 0.5),
-  scale_mat_dev = c(0.001, 1.5),
-  jitter_thresholds = 0.25,
   tolerance_minus2ll = 1e-06,
   verbose = TRUE,
-  run = TRUE
+  run = TRUE,
+  ...
 )
 }
 \arguments{
-\item{x}{An \code{MxModel} with RAM specification.}
+\item{x}{An OpenMx \code{MxModel} object.}
 
-\item{nstarts}{Integer, how many sets of starting values to generate?}
+\item{nstarts}{Integer. Number of sets of starting values to generate.}
 
-\item{scale_A}{Numeric vector of length two giving the lower and upper
-multipliers used when drawing free elements of the \code{A} matrix.
-Defaults to \code{c(-0.5, 0.5)}. For an element \code{A[i, j]}, these
-multipliers are applied to \code{xsd[i] / xsd[j]}.}
+\item{tolerance_minus2ll}{Numeric. Maximum difference from the smallest minus
+twice log-likelihood for solutions to be considered equivalent.}
 
-\item{scale_mat_dev}{Numeric vector of length two giving the lower and upper
-limits of the uniform distribution used for free elements of
-\code{mat_dev}. Defaults to \code{c(0.001, 1.5)}. The lower bound should
-generally be strictly positive when \code{mat_dev} represents positive
-threshold deviations.}
+\item{verbose}{Logical. Whether to print information about starting values
+and model fit.}
 
-\item{jitter_thresholds}{Non-negative numeric value controlling the magnitude
-of uniform random perturbation applied to empirical starting thresholds.
-Thresholds are perturbed by values drawn from
-\code{runif(n, -jitter_thresholds, jitter_thresholds)}. Defaults to
-\code{0.25}.}
+\item{run}{Logical. If \code{TRUE}, estimate the models and return the
+best-fitting solution. If \code{FALSE}, return a list of models with randomized
+starting values.}
 
-\item{tolerance_minus2ll}{In order for a -2LL to be considered equal to
-the smallest -2LL, the difference must be smaller than \code{tolerance_minus2ll}.}
+\item{...}{Additional arguments passed to the model-specific implementation.}
 
-\item{verbose}{Whether or not to print the table of random seeds and -2LLs.}
+\item{data}{Optional data on which the model was run, typically taken from
+the model object itself. Default: \code{NULL}.}
 
-\item{run}{Whether or not to use \code{\link[OpenMx]{mxRun}} to run all
-models, or alternatively, return them as a list.}
+\item{scale_A}{Numeric vector of length two giving the lower
+and upper multipliers for free elements of the \code{A} matrix.
+Defaults to \code{c(-0.5, 0.5)}. These are scaled by the ratio
+of observed standard deviations.}
+
+\item{scale_mat_dev}{Numeric vector of length two specifying
+the uniform sampling range for free elements of \code{mat_dev}.
+Defaults to \code{c(0.001, 1.5)}.}
+
+\item{jitter_thresholds}{Non-negative numeric value controlling
+the magnitude of uniform perturbations applied to empirical
+threshold starting values. Defaults to \code{0.25}.}
 }
 \value{
-If \code{run = TRUE}, returns the best-fitting OpenMx model. This model
-has \code{attr(x, "tab_ll")}, a table with random seeds and minus 2 log likelihood
-values. You can use these seeds to reproduce the models.
-If \code{run = FALSE}, returns a list of OpenMX models.
+If \code{run = TRUE}, the best-fitting OpenMx model with an attribute
+\code{tab_ll} containing information about the starting values and their fit
+statistics. If \code{run = FALSE}, a list of OpenMx models.
 }
 \description{
-Generates plausible random starting values for free parameters in selected
-matrices of an OpenMx RAM model. Starting values are scaled, where possible,
-to the data used to construct the model.
+Generates plausible random starting values for OpenMx models.
+Starting values are scaled, where possible, to the observed data.
+Multiple sets of starting values can be evaluated to identify
+the solution with the lowest minus twice log-likelihood.
 }
 \details{
-Columns of the observed data must be numeric, integer, or ordered factors.
-For numeric variables with zero or undefined observed range or standard
-deviation, fallback scaling values are constructed to avoid division by
-zero or non-finite random-start ranges.
+Random starting values are generated using R's random-number
+generator. Use \code{set.seed()} for reproducibility.
 
-Only free matrices named \code{A}, \code{S}, \code{F}, \code{M},
-\code{mat_dev}, and \code{Thresholds} are supported. The \code{F} matrix may
-be present, although this function does not randomize its elements.
+\strong{RAM mixture models}
 
-The function uses R's global random-number generator. Use \code{set.seed()}
-before calling this function when reproducible random starting values are
-required.
+Starting values are derived from the observed data and the
+model's RAM matrices. The function supports free parameters
+in matrices named \code{A}, \code{S}, \code{M}, \code{mat_dev}, and \code{Thresholds}.
+The \code{F} matrix may be present but is not randomized.
 
-For models containing submodels, the function is applied recursively to each
-submodel. If observed data are stored in \code{x@data$observed}, those data
-take precedence over the value supplied to \code{data}.
+For continuous variables, observed ranges and standard
+deviations are used to determine plausible starting values.
+Fallback scales are used when the observed range or standard
+deviation is zero or undefined.
 
-For continuous variables, the observed minimum, maximum, and standard
-deviation are used to determine plausible starting-value scales. For ordinal
-variables, values already present in the model matrices are used where
-appropriate.
+Free paths in \code{A} are sampled uniformly after scaling by
+the ratio of the standard deviations of the dependent and
+predictor variables:
+\deqn{A_{ij} \sim U(a,b)\frac{sd_i}{sd_j}}
+where \code{c(a, b) = scale_A}.
 
-Free paths in the \code{A} matrix are sampled uniformly after scaling by the
-ratio of the standard deviations of the dependent and predictor variables.
-The resulting interval for element \eqn{A_{ij}} is
-\code{scale_A * (sd[i] / sd[j])}.
+Starting values for \code{S} are generated using a random
+lower-triangular Cholesky factor \eqn{L}, giving
+\deqn{S = LL^\top.}
+Diagonal elements of \eqn{L} are sampled between 0.5 and
+1 times the corresponding observed standard deviation.
+Off-diagonal elements are sampled between -0.25 and 0.25
+times that standard deviation.
 
-Starting values for the \code{S} matrix are generated from a random
-lower-triangular Cholesky factor \eqn{L}, and the covariance matrix is formed
-as \eqn{S = L L^\top}. Diagonal elements of \eqn{L} are sampled uniformly
-between 0.5 and 1 times the corresponding observed standard deviation, while
-off-diagonal elements are sampled between -0.25 and 0.25 times that standard
-deviation. This construction produces a positive-definite covariance matrix
-before any restrictions imposed by the pattern of free parameters in
-\code{S} are applied.
-
-Free means in the \code{M} matrix are sampled uniformly between the observed
-minimum and maximum of the corresponding numeric variable.
+Free means in \code{M} are sampled uniformly between the
+observed minimum and maximum of the corresponding variable.
 
 Free elements of \code{mat_dev} are sampled uniformly from
-\code{scale_mat_dev}. These elements are intended for parameterizations in
-which strictly positive deviations are accumulated to construct ordered
-thresholds.
+\code{scale_mat_dev}. For ordinal variables, empirical
+latent-normal thresholds are obtained from cumulative
+category proportions using \code{qnorm()}, perturbed by
+uniform jitter, and sorted to preserve their ordering.
 
-For a \code{Thresholds} matrix, empirical latent-normal thresholds are based
-on the cumulative observed category proportions of each ordered variable,
-using \code{qnorm()}. Uniform random jitter is added to these values and the
-resulting thresholds are sorted to preserve their ordering.
+For models containing submodels, initialization is applied
+recursively. Observed data stored in the model take
+precedence over externally supplied data.
 
 After random values have been assigned,
-\code{\link[OpenMx]{omxAssignFirstParameters}} is called so that parameters
-sharing labels receive consistent starting values.
+\code{OpenMx::omxAssignFirstParameters()} ensures that
+parameters sharing labels have consistent starting values.
 }
 \examples{
 \dontrun{
-set.seed(1)
-df <- iris[1:4]
-names(df) <- letters[1:4]
-mod <- mx_profiles(data = df, classes = 2, run = FALSE)
-res <- random_starts(mod, nstarts = 2)
-# Get the table of seeds and minus 2 loglikelihoods:
-tab_ll <- attr(res, "tab_ll")
-# Seed for smallest -2LL:
-seed <- tab_ll$seed[which.min(tab_ll$Minus2LogLikelihood)]
-# Set random seed to that seed:
-.Random.seed <- seed
-# Rerun random starts just for that best seed:
-res <- random_starts(mod, nstarts = 1)
+library(OpenMx)
+
+set.seed(123)
+model <- remix(yi, vi, classes = 2, run = FALSE)
+fit <- random_starts(model, nstarts = 20)
+
+attr(fit, "tab_ll")
 }
+
 }

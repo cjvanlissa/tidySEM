@@ -53,9 +53,7 @@ calc_fitindices.MxModel <- function (model, type = NULL, ...){
         prop_n <- c(0, max(prop.table(class_tab)))
       }
       fits <- c("Classes" = classes,
-                ifelse(ncol(post_prob) == 1, 1, 1 + (1/(nrow(post_prob) *
-                                                          log(ncol(post_prob)))) * (sum(rowSums(post_prob *
-                                                                                                  log(post_prob + 1e-12))))),
+                entropy(post_prob),
                 range(diag(classification_probs_mostlikely(post_prob, class))),
                 prop_n)
       names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
