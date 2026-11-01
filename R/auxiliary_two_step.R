@@ -105,6 +105,220 @@
 #'
 #' @export
 two_step <- function(x, model = NULL, data, ...) {
+  if (!inherits(x, "MxModel") || !isTRUE(x@.wasRun)) {
+    stop("'x' must be a fitted OpenMx model.")
+  }
+
+  if (num_classes(x) < 2L) {
+    stop("Must have multiple classes.")
+  }
+
+  # Label first-stage parameters before fixing them
+  x <- label_free_parameters(x)
+
+  # Prepare auxiliary outcome
+  if (is.factor(data) || is.numeric(data)) {
+
+    if (is.factor(data)) {
+
+      if (is.ordered(data)) {
+        cats <- nlevels(data)
+
+        if (cats < 2L) {
+          stop("Ordinal outcome must have at least two categories.")
+        }
+
+        model <- paste0(
+          "y | t", seq_len(cats - 1L),
+          collapse = "\n"
+        )
+
+        data <- data.frame(
+          y = OpenMx::mxFactor(
+            data,
+            levels = levels(data)
+          )
+        )
+
+      } else {
+        data <- mx_dummies(data)
+        model <- paste0(
+          names(data), " | t1",
+          collapse = "\n"
+        )
+      }
+
+    } else {
+      model <- "y ~ 1"
+      data <- data.frame(y = as.numeric(data))
+    }
+  }
+
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data.frame or a single outcome vector.")
+  }
+
+  # Construct auxiliary RAM model
+  if (is.character(model)) {
+    model <- as_ram(model, meanstructure = TRUE)
+  }
+
+  if (!inherits(model, "MxRAMModel")) {
+    stop("'model' must be an OpenMx RAM model.")
+  }
+
+  if (length(model@submodels)) {
+    stop("The auxiliary model cannot contain submodels.")
+  }
+
+  # Check number of observations
+  n <- if (is_remix(x)) {
+    nrow(x$Y$values)
+  } else {
+    nrow(x@data$observed)
+  }
+
+  if (n != nrow(data)) {
+    stop(
+      "Auxiliary data must have the same number of rows ",
+      "as the data used to estimate the mixture model."
+    )
+  }
+
+  # Fix first-stage parameters
+  first_stage <- OpenMx::omxGetParameters(
+    x, free = TRUE
+  )
+
+  fixed <- x
+
+  if (length(first_stage)) {
+    fixed <- OpenMx::omxSetParameters(
+      fixed,
+      labels = names(first_stage),
+      free = FALSE
+    )
+  }
+
+  # Construct and estimate model-specific second step
+  out <- two_step_internal(x = fixed, model = model, data = data, ...)
+
+  # Calculate corrected standard errors
+  labels_first <- names(first_stage)
+
+  labels_second <- names(
+    OpenMx::omxGetParameters(out, free = TRUE)
+  )
+
+  V1 <- x@output$vcov
+  V2 <- out@output$vcov
+  V1 <- V1[labels_first, labels_first, drop = FALSE]
+  V2 <- V2[labels_second, labels_second, drop = FALSE]
+  H12 <- cross_information(
+    out,
+    labels_first,
+    labels_second
+  )
+
+  ses <- two_step_vcov(V1, V2, H12)$se
+  names(ses) <- labels_second
+
+  attr(out, "se_robust") <- ses
+  attr(out, "tidySEM") <- "two_step"
+
+  out
+}
+
+two_step_internal <- function(x, ...) {
+  dispatch_method(x, "two_step_internal", ...)
+}
+
+two_step_internal_mixture <- function(x, model, data, ...) {
+  K <- num_classes(x)
+  original_data <- x@data$observed
+  overlap <- intersect(
+    names(original_data),
+    names(data)
+  )
+  if (length(overlap)) {
+    stop("Auxiliary variable names overlap with measurement variables: ", paste(overlap, collapse = ", "))
+  }
+
+  combined_data <- cbind(original_data, data)
+
+  grp_names <- names(x@submodels)
+
+  for (k in seq_len(K)) {
+
+    class_name <- grp_names[k]
+    measurement_model <- x[[class_name]]
+
+    auxiliary_model <- label_auxiliary_parameters(
+      model, k
+    )
+
+    combined <- mx_merge_matrices(
+      measurement_model,
+      auxiliary_model
+    )
+
+    combined@name <- class_name
+
+    combined <- OpenMx::mxModel(
+      combined,
+      OpenMx::mxFitFunctionML(vector = TRUE)
+    )
+
+    x <- OpenMx::mxModel(x, combined)
+  }
+
+  x <- OpenMx::mxModel(
+    x,
+    OpenMx::mxData(
+      observed = combined_data,
+      type = "raw"
+    )
+  )
+
+  OpenMx::mxRun(
+    x,
+    intervals = FALSE,
+    silent = TRUE,
+    ...
+  )
+}
+
+label_auxiliary_parameters <- function(model, k) {
+
+  for (mat_name in names(model@matrices)) {
+
+    mat <- model@matrices[[mat_name]]
+
+    if (!any(mat$free)) next
+
+    labs <- mat$labels
+
+    missing <- mat$free & is.na(labs)
+
+    if (any(missing)) {
+      labs[missing] <- paste0(
+        mat_name, "_",
+        which(missing)
+      )
+    }
+
+    labs[mat$free] <- paste0(
+      "aux", k, "_",
+      labs[mat$free]
+    )
+
+    model@matrices[[mat_name]]$labels <- labs
+  }
+
+  model
+}
+
+two_step <- function(x, model = NULL, data, ...) {
 
   if (!inherits(x$expectation, "MxExpectationMixture")) {
     stop("'x' must be a fitted OpenMx mixture model.")
@@ -234,6 +448,7 @@ two_step <- function(x, model = NULL, data, ...) {
   attr(out, "tidySEM") <- "two_step"
   out
 }
+
 
 
 evaluate_m2ll <- function(model, labels, values) {
