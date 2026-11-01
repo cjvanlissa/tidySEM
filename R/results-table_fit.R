@@ -59,13 +59,6 @@ table_fit.mixture_list <- function(x, ...) {
 #' @method table_fit list
 #' @export
 table_fit.list <- function(x, ...) {
-  if(all(sapply(x, inherits, what = "MxModel"))){
-    cl <- match.call()
-    cl[[1L]] <- str2lang("tidySEM::table_fit")
-    class(x) <- c("mixture_list", class(x))
-    cl[["x"]] <- x
-    return(eval.parent(cl))
-  }
   out <- lapply(x, function(i){
     tryCatch({
       table_fit(i)
@@ -143,7 +136,6 @@ table_fit.model.list <- table_fit.mplusObject
 #' @export
 table_fit.MxModel <- function(x, ...) {
   out <- calc_fitindices(x, ...)
-  out <- as.data.frame(out)
   out <- out[, !colSums(is.na(out)) == nrow(out)]
   if(!"LL" %in% names(out) & "Minus2LogLikelihood" %in% names(out)) out$LL <- out$Minus2LogLikelihood/-2
   out <- .renamefits(out, "mx")

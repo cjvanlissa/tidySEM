@@ -19,11 +19,7 @@ get_fit <- function(x, ...) {
 
 num_classes <- function(x){
   tryCatch({
-    if(is_remix(x)){
-      ifelse(is.null(x@matrices$Eta), 1L, ncol(x@matrices$Eta$values)+1L)
-    } else {
-      length(names(x@submodels))
-    }
+    ncol(OpenMx::mxEvalByName("weights", x))
   }, error = function(e){1L})
 }
 
@@ -72,14 +68,17 @@ calc_fitindices_MxModel <- function(model, ...) {
       fits <- c(fits, out[["RMSEACI"]])
     }
   }
+  fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + fits[["estimatedParameters"]] * log((fits[["numObs"]]+2)/24)
   if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
+  fits[["converged"]] <- mx_convergence(model)$checks_pass
   dropthese <- c("AIC.Mx", "BIC.Mx", "wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
                  "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
                  "timestamp", "frontendTime", "backendTime", "independentTime",
                  "wallTime", "cpuTime", "optimizerEngine", "verbose", "npsolMessage"
   )
   fits <- fits[!names(fits) %in% dropthese]
-  fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + fits[["estimatedParameters"]] * log((fits[["numObs"]]+2)/24)
+  miss_stats <- sapply(fits, is.na)
+  if(any(miss_stats)) fits <- fits[!miss_stats]
   out <- as.data.frame(fits)
   rownames(out) <- NULL
   out
@@ -88,10 +87,11 @@ calc_fitindices_MxModel <- function(model, ...) {
 calc_fitindices_mixture <- function(model, ...) {
 
   sums <- calc_fitindices_MxModel(model)
+  sums$degreesOfFreedom <- (sums$numObs - sums$estimatedParameters)
   classes <- num_classes(model)
 
   if (classes == 1L) {
-    fits <- c(
+    fits <- data.frame(
       Classes = 1,
       Entropy = 1,
       prob_min = 1,
@@ -113,7 +113,7 @@ calc_fitindices_mixture <- function(model, ...) {
       classification_probs_mostlikely(post_prob, C)
     )
 
-    fits <- c(
+    fits <- data.frame(
       Classes = classes,
       Entropy = entropy(post_prob),
       prob_min = min(class_probs),
@@ -122,8 +122,9 @@ calc_fitindices_mixture <- function(model, ...) {
       n_max = prop_n[2]
     )
   }
-
-  c(sums, fits)
+  drop_these <- setdiff(names(sums), c("Minus2LogLikelihood", "numObs", "estimatedParameters", "observedStatistics", "degreesOfFreedom", "RMSEASquared", "RMSEANull", "modelName", "AIC", "BIC", "saBIC", "converged"))
+  if(length(drop_these) > 0) sums <- sums[!names(sums) %in% drop_these]
+  data.frame(sums, fits)
 }
 # To here
 # calc_fitindices.MxModel <- function (model, type = NULL, ...){
