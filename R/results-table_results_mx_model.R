@@ -358,36 +358,56 @@ has_submod <- function(x, depth = 0L) {
 # }
 
 # @importFrom OpenMx mxSE omxGetParameters
-get_algebras <- function(x, ...){
-  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
-    return(NULL)
-  }
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")
-  algs <- eval.parent(cl)
-  Estimate <- unlist_mx(algs, "result")
-  if(is.null(Estimate)) return(NULL)
-  out <- data.frame(name = names(Estimate),
-                    matrix =  unlist_mx(algs, element = "name"),
-                    row = unlist_mx(algs, element = "formula"),
-                    col = ":=",
-                    Estimate = Estimate, row.names = NULL)
-  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
-  out
-}
+# get_algebras <- function(x, ...){
+#   if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+#     return(NULL)
+#   }
+#   cl <- match.call()
+#   cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")
+#   algs <- eval.parent(cl)
+#   Estimate <- unlist_mx(algs, "result")
+#   if(is.null(Estimate)) return(NULL)
+#   out <- data.frame(name = names(Estimate),
+#                     matrix =  unlist_mx(algs, element = "name"),
+#                     row = unlist_mx(algs, element = "formula"),
+#                     col = ":=",
+#                     Estimate = Estimate, row.names = NULL)
+#   out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+#   out
+# }
 
-alg_to_res <- function(x, ...){
+# alg_to_res <- function(x, ...){
+#   out <- .alg_to_res_internal(x, ...)
+#   out <- bind_list(flat(out))
+#   out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+#   out
+# }
+
+alg_to_res <- function(x, ...) {
   out <- .alg_to_res_internal(x, ...)
-  out <- bind_list(flat(out))
-  out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
+  out <- flat(out)
+  if(length(out)) out <- bind_list(out)
+
+  out$Std.Error <- unlist(lapply(
+    out$name,
+    function(thispar) {
+      tryCatch(
+        OpenMx::mxSE(thispar, model = x, silent = TRUE),
+        error = function(e) NA_real_
+      )
+    }
+  ))
+
   out
 }
 
-flat <- function(x){
-  repeat {
-    if(!any(vapply(x, is.list, logical(1)) & !vapply(x, is.data.frame, logical(1)))) return(x)
-    x <- Reduce(c, x)
-  }
+flat <- function(x) {
+  if (is.data.frame(x)) return(list(x))
+  if (!is.list(x) || length(x) == 0L) return(list())
+  unlist(
+    lapply(x, flat),
+    recursive = FALSE
+  )
 }
 
 .alg_to_res_internal <- function(x, ...){
