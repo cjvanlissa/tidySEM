@@ -4,7 +4,8 @@
 #'
 #' The auxiliary model is treated as a multi-group model. All cases are used in
 #' all groups, but they are weighted by group-specific BCH weights as described
-#' in Bolck, Croon, & Hagenaars, 2004.
+#' in Bolck, Croon, & Hagenaars, 2004. Note that the standard errors of this
+#' approach are not valid.
 #' @param x An object for which a method exists.
 #' @param model An object that can be converted to an \code{OpenMx} model
 #' using \code{\link{as_ram}}.

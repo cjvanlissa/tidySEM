@@ -1,87 +1,158 @@
 # For ordinal data: The real beauty of the 0/1 fixed threshold approach is that the rest of the model is entirely equivalent to the continuous case, containing variances, covariances and means. Thus, e.g., a latent growth curve model is straightforward to modify for use with ordinal data.
 
 # For binary data, this is not possible. Make sure to fix the mean and variance for binary variables to 0 and 1
-mx_thresholds <- function (df, variables = names(df), output = "mx")
-{
-  df = df[, variables, drop = FALSE]
-  isordered <- sapply(df, inherits, what = "ordered")
-  numcats <- sapply(df, function(x){length(levels(x))})
-  maxthres <- max(numcats)-1
-  if(any(!isordered)) stop("All variables provided to mx_thresholds() must be ordered categorical.")
-  # labels <- sapply(1:length(variables), function(i){
-  #   paste0(prefix, variables[i], midfix, 1:maxthres, suffix)
-  # })
-  free <- matrix(FALSE, nrow = maxthres, ncol = length(numcats))
-  for(v in seq_along(numcats)){
-    free[1:(numcats[v]-1L), v] <- TRUE
+
+mx_thresholds <- function(df, variables = names(df),
+                          output = "mx") {
+  df <- df[, variables, drop = FALSE]
+  if (!length(variables)) {
+    stop("At least one variable must be supplied.")
   }
-  #labels[!free] <- NA
-  values_thresh <- matrix(1e-3, ncol = length(numcats), nrow = maxthres)
-  for(i in 1:length(variables)){
-    zscore = qnorm(p = cumsum(prop.table(table(df[[i]]))), lower.tail = TRUE)
-    if(any(is.infinite(zscore))){
-      zscore[is.infinite(zscore)] <- NA
+  isordered <- vapply(df, is.ordered, logical(1))
+  if (any(!isordered)) {
+    stop("All variables must be ordered categorical.")
+  }
+  numcats <- vapply(df, nlevels, integer(1))
+  if (any(numcats < 2L)) {
+    stop("Ordinal variables must have at least two levels.")
+  }
+  maxthres <- max(numcats) - 1L
+  nvars <- length(variables)
+
+  # Number of valid thresholds per variable
+  nthres <- numcats - 1L
+
+  # Identify genuine thresholds
+  free <- outer(seq_len(maxthres), nthres, `<=`)
+
+  dimnames(free) <- list(paste0("th_", seq_len(maxthres)), variables)
+
+  # Starting values for thresholds
+  values_thresh <- matrix(
+    0,
+    nrow = maxthres,
+    ncol = nvars,
+    dimnames = dimnames(free)
+  )
+
+  for (i in seq_along(variables)) {
+    tab <- table(df[[i]])
+    prop <- as.numeric(tab) / sum(tab)
+    zscore <- stats::qnorm(
+      cumsum(prop)[seq_len(nthres[i])]
+    )
+    if (any(!is.finite(zscore))) {
+      zscore[!is.finite(zscore)] <- NA_real_
       zscore <- update_thresholds(zscore)
     }
-    values_thresh[1:(numcats[i]-1), i] <- zscore[1:(numcats[i]-1)]
+
+    if (any(!is.finite(zscore))) {
+      stop("Could not construct finite thresholds for ", variables[i])
+    }
+
+    values_thresh[seq_len(nthres[i]), i] <- zscore
   }
+
+  # Threshold specification
   mat_thresh <- list(
     name = "Thresholds",
     type = "Full",
     nrow = maxthres,
-    ncol = length(variables),
+    ncol = nvars,
     free = free,
     values = values_thresh,
-    lbound = matrix(NA, nrow = nrow(values_thresh), ncol = ncol(values_thresh)),
-    ubound = matrix(NA, nrow = nrow(values_thresh), ncol = ncol(values_thresh)),
-    dimnames = list(paste0("th_", 1:maxthres), variables))
-  # Devs
+    lbound = matrix(
+      NA_real_, maxthres, nvars
+    ),
+    ubound = matrix(
+      NA_real_, maxthres, nvars
+    ),
+    dimnames = dimnames(values_thresh)
+  )
+
+  # Convert to deviation parameterization
   values_dev <- values_thresh
-  if (nrow(values_thresh) > 1) {
-    devs <- values_thresh[-1, , drop = FALSE] - values_thresh[-nrow(values_thresh), , drop = FALSE]
-    values_dev[-1, ] <- devs
-    values_dev[!free] <- 1e-3
+
+  if (maxthres > 1L) {
+    values_dev[-1L, ] <- values_thresh[-1L, , drop = FALSE] - values_thresh[-maxthres, , drop = FALSE]
+  }
+  # Set padding to zero
+  values_dev[!free] <- 0
+
+  # Mark padded cells usinglabels
+  labels_dev <- matrix(
+    NA_character_,
+    nrow = maxthres,
+    ncol = nvars,
+    dimnames = dimnames(free)
+  )
+  labels_dev[!free] <- "XXXpaddingXXX"
+
+  # Bounds on positive deviations
+  lbound_dev <- matrix(
+    NA_real_,
+    nrow = maxthres,
+    ncol = nvars
+  )
+
+  if (maxthres > 1L) {
+    lbound_dev[-1L, ] <- 1e-3
   }
 
+  # Padding is fixed, so bounds are unnecessary
+  lbound_dev[!free] <- NA_real_
 
-  mat_indicator <- list(
-    name = "Indicators",
+  mat_dev <- list(
+    name = "mat_dev",
     type = "Full",
     nrow = maxthres,
-    ncol = length(variables),
-    free = FALSE,
-    values = as.integer(free))
+    ncol = nvars,
+    free = free,
+    values = values_dev,
+    labels = labels_dev,
+    lbound = lbound_dev,
+    ubound = matrix(
+      NA_real_, maxthres, nvars
+    ),
+    dimnames = list(
+      paste0("dev_", seq_len(maxthres)),
+      variables
+    )
+  )
 
-  mat_dev <- mat_thresh
-
-  mat_dev$name <- "mat_dev"
-  #mat_dev$labels[,] <- paste0("dev_", mat_dev$labels)
-  mat_dev$values <- values_dev
-  mat_dev$lbound[-1,] <- 1e-3
-  #mat_dev$dimnames[[1]] <- paste0("dev_", mat_dev$dimnames[[1]])
-  mat_ones = list(
+  # Lower-triangular accumulation matrix
+  mat_ones <- list(
     name = "mat_ones",
     type = "Lower",
     nrow = maxthres,
     free = FALSE,
-    values = 1)
+    values = 1
+  )
+
+  # Threshold algebra
   algebra <- list(
-    name = mat_thresh$name,
-    str2lang(paste0(mat_ones$name, " %*% ", mat_dev$name)),
-    dimnames = mat_thresh$dimnames)
-  out <- list(#mat_thresh = mat_thresh,
+    name = "Thresholds",
+    str2lang("mat_ones %*% mat_dev"),
+    dimnames = mat_thresh$dimnames
+  )
+
+  out <- list(
     mat_dev = mat_dev,
     mat_ones = mat_ones,
-    mat_indicator = mat_indicator,
-    alg_thres = algebra)
-  if(output == "list"){
+    alg_thres = algebra
+  )
+
+  if (output == "list") {
     return(out)
   }
-  if(output == "mx"){
+
+  if (output == "mx") {
     return(mx_threshold_matrices(out))
   }
-  return(NULL)
+
+  stop("'output' must be 'list' or 'mx'.")
 }
+
 
 mx_threshold_matrices <- function(x, ...){
   mats <- startsWith(names(x), "mat_")
@@ -134,132 +205,317 @@ mx_threshold_matrices <- function(x, ...){
 #' subsequent deviances.
 #' @rdname mx_deviances
 #' @export
-mx_deviances <- function(vars, nThresh = NA, free = NULL, values = NULL, labels = NA, lbound = NULL, ubound = NULL){
-  if(!requireNamespace("OpenMx", quietly = TRUE)){
-    return(NULL)
-  }
-  if(is.null(free)){
-    free <- matrix(FALSE, nrow = max(nThresh), ncol = length(vars))
-    for(v in seq_along(vars)){
-      free[1:nThresh[v], v] <- TRUE
-    }
-  }
-  if(is.null(values)){
-    values <- OpenMx::mxNormalQuantiles(nBreaks = nThresh)
+mx_deviances <- function(
+    vars,
+    nThresh = NA,
+    free = NULL,
+    values = NULL,
+    labels = NA,
+    lbound = NULL,
+    ubound = NULL
+) {
+
+  if (!requireNamespace("OpenMx", quietly = TRUE)) {
+    stop("Package 'OpenMx' is required.")
   }
 
+  if (!is.character(vars) || !length(vars) || anyNA(vars) || anyDuplicated(vars)) {
+    stop("'vars' must contain unique variable names.")
+  }
+
+  if (length(nThresh) == 1L) {
+    nThresh <- rep(nThresh, length(vars))
+  }
+
+  if (length(nThresh) != length(vars) || anyNA(nThresh) || any(!is.finite(nThresh)) || any(nThresh < 0) || any(nThresh != as.integer(nThresh))) {
+    stop("'nThresh' must contain one nonnegative integer per variable.")
+  }
+
+  nThresh <- as.integer(nThresh)
   maxthres <- max(nThresh)
-  free_mat <- matrix(FALSE, nrow = maxthres, ncol = length(vars))
-  ind <- matrix(0, nrow = maxthres, ncol = length(vars))
-  for(v in seq_along(vars)){
-    # Set indicator matrix
-    ind[1:nThresh[v], v] <- 1
+
+  if (maxthres < 1L) {
+    stop("At least one threshold is required.")
   }
-  if(length(free) == length(free_mat)){
-    free_mat <- free
-  } else {
-    free_mat[] <- ind == 1
+
+  nvars <- length(vars)
+
+  dims <- list(
+    paste0("dev_", seq_len(maxthres)),
+    vars
+  )
+
+  # Identify valid thresholds and padding
+
+  active <- outer(seq_len(maxthres), nThresh, `<=`)
+
+  padding <- !active
+
+  # Helper: expand scalar/vector/matrix arguments
+  expand_arg <- function(z, name, default) {
+
+    if (is.null(z)) {
+      return(matrix(default, maxthres, nvars))
+    }
+
+    if (is.matrix(z)) {
+      if (!identical(dim(z), c(maxthres, nvars))) {
+        stop("Incorrect dimensions for '", name, "'.")
+      }
+      return(z)
+    }
+
+    if (length(z) == 1L) {
+      return(matrix(z, maxthres, nvars))
+    }
+
+    if (length(z) == sum(active)) {
+      out <- matrix(default, maxthres, nvars)
+      out[active] <- z
+      return(out)
+    }
+
+    if (length(z) == maxthres * nvars) {
+      return(matrix(z, maxthres, nvars))
+    }
+
+    stop("Incorrect length for '", name, "'.")
   }
-  mat_ones <- matrix(0, nrow = maxthres, ncol = maxthres)
-  mat_ones[lower.tri(mat_ones, diag = TRUE)] <- 1
-  thresh_mat <- ind
-  if(length(values) == sum(ind)){
-    thresh_mat[which(ind == 1)] <- values
+
+  # Free parameter pattern
+
+  free_mat <- expand_arg(free, "free", TRUE)
+
+  if (!is.logical(free_mat) || anyNA(free_mat[active])) {
+    stop("'free' must contain logical values.")
+  }
+
+  # Padding is always fixed
+  free_mat[padding] <- FALSE
+
+  # Threshold starting values
+  if (is.null(values)) {
+
+    thresh_mat <- matrix(
+      0,
+      maxthres,
+      nvars
+    )
+
+    for (j in seq_len(nvars)) {
+
+      if (nThresh[j] > 0L) {
+
+        thresh_mat[
+          seq_len(nThresh[j]), j
+        ] <- OpenMx::mxNormalQuantiles(
+          nBreaks = nThresh[j]
+        )
+      }
+    }
+
   } else {
-    if(length(values) == length(ind)){
-      thresh_mat[,] <- values
-    } else {
-      stop("Could not initialize thresholds.")
+
+    thresh_mat <- expand_arg(
+      values,
+      "values",
+      0
+    )
+  }
+
+  if (!is.numeric(thresh_mat) ||
+      any(!is.finite(thresh_mat[active]))) {
+    stop("Threshold starting values must be finite.")
+  }
+
+  # Padding repeats the last valid threshold
+  # in the algebra, so its deviation is zero.
+  # For variables with no thresholds, all values are zero.
+  for (j in seq_len(nvars)) {
+
+    if (nThresh[j] < maxthres) {
+
+      idx <- seq.int(nThresh[j] + 1L, maxthres)
+
+      thresh_mat[idx, j] <- if (nThresh[j] > 0L) {
+        thresh_mat[nThresh[j], j]
+      } else {
+        0
+      }
     }
   }
 
-  #solve(mat_ones) %*% (mat_ones %*% mat_dev)
-  values_dev <- solve(mat_ones) %*% thresh_mat
-  # Should I set unused thresholds to a small number?
-  values_dev[which(ind == 0)] <- 1e-3
+  # Convert thresholds to deviations
+  values_dev <- thresh_mat
 
-  if(is.null(lbound)){
-    values_lbound <- matrix(NA, nrow = nrow(values_dev), ncol = ncol(values_dev))
-    values_lbound[-1,] <- 1e-3
+  if (maxthres > 1L) {
+    values_dev[-1L, ] <-
+      thresh_mat[-1L, , drop = FALSE] -
+      thresh_mat[-maxthres, , drop = FALSE]
   }
 
-  mat_thresh <- list(
-    name = "Thresholds",
+  values_dev[padding] <- 0
+
+  # Labels supplied by the user refer to thresholds,
+  # not necessarily to the underlying deviations.
+  labels_mat <- expand_arg(
+    labels,
+    "labels",
+    NA_character_
+  )
+
+  labels_mat <- matrix(
+    as.character(labels_mat),
+    nrow = maxthres,
+    ncol = nvars
+  )
+
+  # Reserve XXXpaddingXXX for unused entries
+  if (any(labels_mat[active] == "XXXpaddingXXX",
+          na.rm = TRUE)) {
+    stop("Label name 'XXXpaddingXXX' is exclusively reserved for unused thresholds.")
+  }
+
+  # Deviations are not directly equality-constrained by threshold labels.
+  labels_dev <- matrix(
+    NA_character_,
+    maxthres,
+    nvars
+  )
+
+  labels_dev[padding] <- "XXXpaddingXXX"
+
+  # Bounds on deviations
+  values_lbound <- matrix(
+    NA_real_,
+    maxthres,
+    nvars
+  )
+
+  if (maxthres > 1L) {
+    values_lbound[-1L, ] <- 1e-3
+  }
+
+  if (!is.null(lbound)) {
+    values_lbound <- expand_arg(
+      lbound,
+      "lbound",
+      NA_real_
+    )
+  }
+
+  values_ubound <- expand_arg(
+    ubound,
+    "ubound",
+    NA_real_
+  )
+
+  # Padding has no bounds
+  values_lbound[padding] <- NA_real_
+  values_ubound[padding] <- NA_real_
+
+  # Check valid starting values against bounds
+  bad_lower <- active & !is.na(values_lbound) &
+    values_dev < values_lbound
+
+  bad_upper <- active & !is.na(values_ubound) &
+    values_dev > values_ubound
+
+  if (any(bad_lower) || any(bad_upper)) {
+    stop("Starting deviations violate parameter bounds.")
+  }
+
+  # Construct threshold matrices
+  mat_dev <- list(
+    name = "mat_dev",
     type = "Full",
     nrow = maxthres,
-    ncol = length(vars),
+    ncol = nvars,
     free = free_mat,
-    values = thresh_mat,
-    lbound = NA,
-    ubound = NA,
-    dimnames = list(paste0("th_", 1:maxthres), vars))
-  # Devs
-  mat_indicator <- list(
-    name = "Indicators",
-    type = "Full",
-    nrow = maxthres,
-    ncol = length(vars),
-    free = FALSE,
-    values = ind)
+    values = values_dev,
+    labels = labels_dev,
+    lbound = values_lbound,
+    ubound = values_ubound,
+    dimnames = dims
+  )
 
-  mat_dev <- mat_thresh
-  mat_dev$name <- "mat_dev"
-  mat_dev$values <- values_dev
-  mat_dev$lbound <- values_lbound
-  if(!is.null(ubound)) mat_dev$ubound <- ubound
-  mat_dev$dimnames <- list(paste0("dev_", 1:maxthres), vars)
-
-  mat_ones = list(
+  mat_ones <- list(
     name = "mat_ones",
     type = "Lower",
     nrow = maxthres,
     free = FALSE,
-    values = 1)
+    values = 1
+  )
+
   algebra <- list(
-    name = mat_thresh$name,
-    str2lang(paste0(mat_ones$name, " %*% ", mat_dev$name)),
-    dimnames = mat_thresh$dimnames)
-  if(any(!is.na(labels))){
-    lab_mat <- thresh_mat
-    lab_mat[] <- labels
-    lab_mat <- as.data.frame.table(lab_mat)
-    lab_mat <- lab_mat[!is.na(lab_mat$Freq), , drop = FALSE]
-    lab_mat[c(1,2)] <- lapply(lab_mat[c(1,2)], as.integer)
-    lab_mat$Threshold <- paste0("Thresholds[", lab_mat$Var1, ",", lab_mat$Var2, "]")
-    cnsts <- do.call(c, lapply(unique(na.omit(labels)), function(labl){
-      these_thresh <- lab_mat$Threshold[lab_mat$Freq == labl]
-      if(length(these_thresh) < 2){
-        return(NULL)
-      }
-      out <- do.call(c, lapply(1:(length(these_thresh)-1L), function(i){
-        lapply(these_thresh[(i+1L):length(these_thresh)], function(withthis){
-          list(
-            name = paste0("const_", labl, "_", i),
-            str2lang(paste0(these_thresh[i], "==", withthis))
-          )
-        })
-      }))
-      # This could be done in the lapply above if I figure out how
-      # to properly index the constraints
-      for(i in 1:length(out)){
-        out[[i]]$name <- gsub("_\\d{1,}$", paste0("_", i), out[[i]]$name)
-        names(out)[[i]] <- out[[i]]$name
-      }
-      out
-    }))
-  } else {
-    cnsts <- list(NULL)
+    name = "Thresholds",
+    str2lang("mat_ones %*% mat_dev"),
+    dimnames = list(
+      paste0("th_", seq_len(maxthres)),
+      vars
+    )
+  )
+
+  # Equality constraints on actual thresholds
+  cnsts <- list()
+
+  valid_labels <- unique(
+    labels_mat[active & !is.na(labels_mat)]
+  )
+
+  for (lab in valid_labels) {
+
+    idx <- which(
+      active & !is.na(labels_mat) & labels_mat == lab,
+      arr.ind = TRUE
+    )
+
+    if (nrow(idx) < 2L) {
+      next
+    }
+
+    # Use first occurrence as reference
+    ref <- paste0(
+      "Thresholds[",
+      idx[1, 1], ",",
+      idx[1, 2], "]"
+    )
+
+    for (i in seq.int(2L, nrow(idx))) {
+
+      target <- paste0(
+        "Thresholds[",
+        idx[i, 1], ",",
+        idx[i, 2], "]"
+      )
+
+      cname <- paste0(
+        "const_threshold_",
+        length(cnsts) + 1L
+      )
+
+      cnsts[[cname]] <- list(
+        name = cname,
+        str2lang(
+          paste0(ref, " == ", target)
+        )
+      )
+    }
   }
-  out <- list(#mat_thresh = mat_thresh,
-    mat_dev = mat_dev,
-    mat_ones = mat_ones,
-    mat_indicator = mat_indicator,
-    alg_thres = algebra)
-  if(length(cnsts) > 0){
-    out <- c(out, cnsts)
-  }
+
+  # Return OpenMx objects
+  out <- c(
+    list(
+      mat_dev = mat_dev,
+      mat_ones = mat_ones,
+      alg_thres = algebra
+    ),
+    cnsts
+  )
+
   return(mx_threshold_matrices(out))
 }
+
 
 #' @title Data Quantiles
 #' @description Get quantiles based on empirical normal distribution of data.
@@ -285,27 +541,5 @@ mx_data_quantiles <- function(df){
   return(vals)
 }
 
-if(FALSE){
-  df <- read.table("ex7.6.dat", header= F)
-  names(df) <- c(paste0("u_", 1:4), "c")
-  df[["c"]] <- NULL
-  df$u_2[df$u_2 == 2] <- 1
-  df[1:4] <- lapply(df[1:4], ordered)
-  test <- OpenMx::mxModel("test",
-                          type = "RAM",
-                          manifestVars = names(df),
-                          OpenMx::mxPath(from = "one", to = names(df), free = FALSE, values = 0),
-                          OpenMx::mxPath(from = names(df), to = names(df), free = FALSE, values = 1, arrows = 2),
-                          OpenMx::mxData(df[1:4], type = "raw"))
-  # res1 <- mxModel(res1, "Thresholds", remove = T)
-  # res1$expectation$thresholds <- "mat_dev"
-  thresholds <- list_to_mx(mx_thresholds(df))
-  test <- do.call(OpenMx::mxModel, c(list(model = test), thresholds))
 
-  test$expectation$thresholds <- "Thresholds"
-  OpenMx::mxRun(test) -> tmp2
-  summary(tmp2)
-  table_results(tmp2)
-
-}
 

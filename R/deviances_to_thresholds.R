@@ -104,7 +104,7 @@ deviances_to_thresholds <- function(model){
                          free = model$mat_dev$free,
                          values = model$Thresholds$result
       )
-      model <- OpenMx::mxModel(model, c("mat_dev", "mat_ones", "Thresholds","Indicators"), remove = TRUE)
+      model <- OpenMx::mxModel(model, c("mat_dev", "mat_ones", "Thresholds"), remove = TRUE)
       model <- OpenMx::mxModel(model, thresh)
     }
   } else {

@@ -27,6 +27,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   if(!x@.wasRun) {
     stop("This model has not been run yet. Use `model = tidySEM::run_mx(model)` or `model = OpenMx::mxRun(model)` to estimate a model.")
   }
+  messages <- mx_convergence(x)$warnings
   Args <- list(x = x)
   digits <- force(digits)
   sum_x <- summary(x)
@@ -49,35 +50,50 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   }
 
   # Add standardized --------------------------------------------------------
-  if((is.null(columns) | any(grepl("std_", columns))) & !is_remix(x)){
+  if((is.null(columns) || any(endsWith(columns, "_std"))) && !is_remix(x)){
     # Conditional, to save time
-    results_std <- OpenMx::mxStandardizeRAMPaths(x, SE = TRUE)
-    if(inherits(results_std, "list")){
-      for(n in names(results_std)){
-        results_std[[n]]$matrix <- paste(n, results_std[[n]]$matrix, sep = ".")
-      }
-      results_std <- bind_list(results_std)
-    }
-    # Remove redundant correlations
-    remove_these <- results_std$name[endsWith(results_std$matrix, ".S") | results_std$matrix == "S"]
-    remove_these <- remove_these[!remove_these %in% results$name]
-    if(length(remove_these) > 0){
-      these_rows <- which(results_std$name %in% remove_these)
-      flip_S <- results_std[these_rows, , drop = FALSE]
-      names(flip_S)[match(c("row", "col"), names(flip_S))] <- c("col", "row")
-      flip_S$name <- gsub("\\[(\\d+),(\\d+)\\]$", "\\[\\2,\\1\\]", flip_S$name)
-      results_std[these_rows, ] <- flip_S[, names(results_std)]
-    }
-    # Rename columns
-    renamez <- c("Raw.Value" = "Estimate", "Raw.SE" = "Std.Error", "Std.Value" = "std_est", "Std.SE" = "std_se", "label" = "openmx_label")
-    names(results_std)[match(names(renamez), names(results_std))] <- renamez[names(renamez) %in% names(results_std)]
+    results_std <- tryCatch(OpenMx::mxStandardizeRAMPaths(x, SE = TRUE), error = function(e) NULL)
+    if (!is.null(results_std)) {
 
-    # Compute p-value and CI
-    results_std$pval_std <- 2*pnorm(abs(results_std$std_est)/results_std$std_se, lower.tail = FALSE)
-    results_std$confint_std <- conf_int(results_std$std_est, se = results_std$std_se)
-    # Clean up name vs label
-    tab <- merge(results, results_std, by = "name", all = TRUE)
-    results <- two_to_one(tab)
+      if (is.list(results_std) && !is.data.frame(results_std)) {
+        results_std <- lapply(names(results_std), function(n) {
+          tab <- results_std[[n]]
+          tab$matrix <- paste(n, tab$matrix, sep = ".")
+          tab
+        })
+        results_std <- bind_list(results_std)
+      }
+
+      # Remove redundant correlations
+      remove_these <- results_std$name[endsWith(results_std$matrix, ".S") | results_std$matrix == "S"]
+      remove_these <- remove_these[!remove_these %in% results$name]
+      if(length(remove_these) > 0){
+        these_rows <- which(results_std$name %in% remove_these)
+        flip_S <- results_std[these_rows, , drop = FALSE]
+        names(flip_S)[match(c("row", "col"), names(flip_S))] <- c("col", "row")
+        flip_S$name <- gsub("\\[(\\d+),(\\d+)\\]$", "\\[\\2,\\1\\]", flip_S$name)
+        results_std[these_rows, ] <- flip_S[, names(results_std)]
+      }
+      # Rename columns
+      renamez <- c(
+        "Raw.Value" = "Estimate",
+        "Raw.SE" = "Std.Error",
+        "Std.Value" = "std_est",
+        "Std.SE" = "std_se",
+        "label" = "openmx_label"
+      )
+
+      idx <- match(names(renamez), names(results_std))
+      keep <- !is.na(idx)
+      names(results_std)[idx[keep]] <- unname(renamez[keep])
+
+      # Compute p-value and CI
+      results_std$pval_std <- 2*pnorm(abs(results_std$std_est)/results_std$std_se, lower.tail = FALSE)
+      results_std$confint_std <- conf_int(results_std$std_est, se = results_std$std_se)
+      # Clean up name vs label
+      tab <- merge(results, results_std, by = "name", all = TRUE)
+      results <- two_to_one(tab)
+    }
   }
 
   # Add algebras ------------------------------------------------------------
@@ -88,6 +104,20 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Label groups ------------------------------------------------------------
   results <- .label_groups_internal(x, results)
 
+  # Check for robust standard errors
+  se_robust <- attr(x, "se_robust")
+
+  if (!is.null(se_robust)) {
+    # Match using original OpenMx parameter labels
+    idx <- match(results$openmx_label, names(se_robust))
+    keep <- which(!is.na(idx))
+    if (length(keep)) {
+      results$Std.Error[keep] <- se_robust[idx[keep]]
+      messages <- c(messages, paste0("Robust standard errors were used for: ", paste(results$openmx_label[keep], collapse = ", "), "."))
+    }
+  }
+
+  # Normalize the output
   results$est <- results$Estimate
   results$lhs <- results$row
   results$rhs <- results$col
@@ -107,7 +137,8 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results$rhs[flip_lhsrhs] <- results$row[flip_lhsrhs]
   lvs <- unique(unlist(from_submodels(x, "latentVars")))
   obsv <- unique(unlist(from_submodels(x, "manifestVars")))
-  fac_load <- results$op == "~" & results$rhs %in% lvs & results$lhs %in% obsv
+  # These are loadings
+  fac_load <- which(!is.na(results$op) & results$op == "~" & results$rhs %in% lvs & results$lhs %in% obsv)
   results$rhs[fac_load] <- results$row[fac_load]
   results$lhs[fac_load] <- results$col[fac_load]
   results$op[fac_load] <- "=~"
@@ -123,7 +154,9 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       ci_x$CI[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)] <- conf_int(x= NULL, lb = ci_x$lbound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)], ub = ci_x$ubound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)])
       ci_x <- ci_x[!is.na(ci_x$CI), ]
 
-      results$confint[match(ci_x$name, results$name)] <- ci_x$CI
+      idx <- match(ci_x$name, results$name)
+      keep <- !is.na(idx)
+      results$confint[idx[keep]] <- ci_x$CI[keep]
     }
   }
   results$pval <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
@@ -135,55 +168,72 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results <- cbind(results, lav_labs)
   # Drop internal stuff
   internalstuff <- grepl("(mat_dev|mat_ones)", results$name)
+  internalstuff[is.na(internalstuff)] <- FALSE
   if(any(internalstuff)) results <- results[!internalstuff, ]
-  if(is_remix(x)){
-    results$formula[which(results$Category == "Weights")] <- NA
+  if (is_remix(x) && all(c("category", "formula") %in% names(results))) {
+    idx <- which(results$category == "Weights")
+    results$formula[idx] <- NA
   }
   # Drop empty columns
   miscols <- colSums(is.na(results)) == nrow(results)
   if(any(miscols)) results <- results[, !miscols, drop = FALSE]
   # Make uniform column names
   renam <- c(std.value = "est_std", std.se = "se_std")
-  if(any(names(renam) %in% names(results))) names(results)[match(names(renam), names(results))] <- renam
+  idx <- match(names(renam), names(results))
+  keep <- !is.na(idx)
+
+  names(results)[idx[keep]] <- unname(renam[keep])
   # Impose similar order to lavaan
   firstcols <- c("lhs", "op", "rhs", "est", "se", "pval", "confint", "est_sig",
                  "est_std", "se_std", "pval_std", "confint_std", "est_sig_std",
                  "label")
   results <- results[, c(firstcols[firstcols %in% names(results)], names(results)[!names(results) %in% firstcols]), drop = FALSE]
+  # Add group/class to label
+  if("group" %in% names(results)) results$label <- paste0(results$label, ".", results$group)
+  if("class" %in% names(results)) results$label <- paste0(results$label, ".", results$class)
+  results <- results[order(results$name), , drop = FALSE]
+  if(!is.null(columns)) {
+    keep <- intersect(columns, names(results))
+    unknown <- setdiff(columns, c("group", "level", names(results)))
+    if (length(unknown)) {
+      warning("Unavailable columns requested: ", paste(unknown, collapse = ", "), call. = FALSE)
+    }
+    results <- results[, keep, drop = FALSE]
+  } else {
+    order_cols <- intersect("label", names(results))
+    remaining_cols <- setdiff(names(results), order_cols)
+    results <- results[ , c(order_cols, remaining_cols), drop = FALSE]
+  }
   # Format using digits
   if(format_numeric){
     value_columns <- names(results)[can_be_numeric(results)]
     results[, value_columns] <- lapply(results[, value_columns],
                                        format_with_na, digits = digits, format = "f")
   }
-  # Add group/class to label
-  if("group" %in% names(results)) results$label <- paste0(results$label, ".", results$group)
-  if("class" %in% names(results)) results$label <- paste0(results$label, ".", results$class)
-  results <- results[order(results$name), , drop = FALSE]
-  if(!is.null(columns)) {
-    results <- results[, na.omit(match(columns, names(results))), drop = FALSE]
-  }
-  else {
-    order_cols <- c("label")
-    order_cols <- order_cols[order_cols %in% names(results)]
-    remaining_cols <- names(results)[(length(order_cols)):(ncol(results))]
-    remaining_cols <- remaining_cols[!remaining_cols %in%
-                                       order_cols]
-    order_cols <- c(match(order_cols, names(results)), match(remaining_cols,
-                                                             names(results)))
-    results <- results[, order_cols, drop = FALSE]
-  }
 
   rownames(results) <- NULL
   class(results) <- c("tidy_results", class(results))
+  attr(results, "messages") <- messages
   return(results)
+}
+
+#' @export
+print.tidy_results <- function(x, ...) {
+  messages <- attr(x, "messages")
+  print.data.frame(x, ...)
+  if (length(messages)) {
+    cat("\n")
+    cat(paste0("Note: ", messages, collapse = "\n"))
+    cat("\n")
+  }
+  invisible(x)
 }
 
 submodels <- function(x, results, cols = c("name", "matrix", "row", "col", "Estimate", "Std.Error", "lbound",
                                            "ubound", "lboundMet", "uboundMet"), ...){
   if(!has_submod(x, depth = 1)){
     submod <- names(attr(x, "submodels"))
-    lapply(submod, function(i){ alg_to_res(x[[i]]) })
+    #lapply(submod, function(i){ alg_to_res(x[[i]]) })
     thisgroup <- rep(NA_character_, times = nrow(results))
     from_group <- grepl(paste0("(", paste0(submod, collapse = "|"), ")\\."), results$matrix)
     thisgroup[from_group] <- gsub(paste0("^.{0,}(", paste0(submod, collapse = "|"), ").{0,}$"), "\\1", results$matrix[from_group])
@@ -280,14 +330,13 @@ from_submodels <- function(x, what = NULL, ...){
   return(results)
 }
 
-has_submod <- function(x, depth = 0){
-  subs <- names(attr(x, "submodels"))
-  if(depth == 0){
-    return(length(names(attr(x, "submodels"))) > 0)
-  } else {
-    if(!(length(subs) > 0)) return(FALSE)
-    return(any(sapply(subs, function(i){has_submod(x[[i]], depth = depth-1)})))
+has_submod <- function(x, depth = 0L) {
+  subs <- x@submodels
+  if (depth == 0L) {
+    return(length(subs) > 0L)
   }
+  if (!length(subs)) return(FALSE)
+  any(vapply(subs, has_submod, logical(1), depth = depth - 1L))
 }
 
 # alg_names <- function(x, ...){
@@ -365,22 +414,26 @@ flat <- function(x){
       if(is.null(rownam)) rownam <- seq_len(dims[1])
       colnam <- rep(dimnam[[2]], each = length(dimnam[[1]]))
       if(is.null(colnam)) colnam <- seq_len(dims[2])
-      addalg <- data.frame(name = nams,
-                           matrix =  x[[thisalg]]$name,
-                           row = rownam,
-                           col = colnam,
-                           Estimate = val,
-                           formula = deparse(x[[thisalg]]$formula),
-                           row.names = NULL)
+      addalg <- data.frame(
+        name = nams,
+        matrix = x[[thisalg]]$name,
+        row = rownam,
+        col = colnam,
+        Estimate = val,
+        formula = deparse(x[[thisalg]]$formula),
+        row.names = NULL
+      )
+
       # Drop unused thresholds
-      if(thisalg == "Thresholds"){
-        if(!is.null(x[["Indicators"]])){
-          # Drop thresholds for deviances that don't have a label, as these should be bogus
-          if(isTRUE(any(x[["Indicators"]]$values == 0))){
-            addalg <- addalg[-which(x[["Indicators"]]$values == 0), , drop = FALSE]
-          }
-        }
+      if (thisalg == "Thresholds" &&
+          "mat_dev" %in% names(x@matrices)) {
+
+        padding <- x$mat_dev$labels == "XXXpaddingXXX"
+        padding[is.na(padding)] <- FALSE
+
+        addalg <- addalg[!as.vector(padding), , drop = FALSE]
       }
+
       addthis <- c(addthis, list(addalg))
     }
     names(addthis) <- algs
