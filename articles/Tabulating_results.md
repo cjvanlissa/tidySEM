@@ -136,6 +136,7 @@ table_fit(fit_mx)
     #> To take full advantage of multiple cores, use:
     #>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now
     #>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
+    #> Warning: Unavailable columns requested: class
     #>                       label est_sig   se pval      confint
     #> 1     Loadings.vis.BY.vis_1    1.00 <NA> <NA>         <NA>
     #> 2     Loadings.vis.BY.vis_2 0.55*** 0.11 0.00 [0.34, 0.77]
@@ -170,12 +171,16 @@ table_fit(fit_mx)
     #> 31          Variances.spe_1 0.80*** 0.09 0.00 [0.63, 0.97]
     #> 32          Variances.spe_2 0.49*** 0.09 0.00 [0.31, 0.67]
     #> 33          Variances.spe_3 0.57*** 0.09 0.00 [0.39, 0.74]
-    #>   Minus2LogLikelihood   n Parameters observedStatistics   df saturatedDoF
-    #> 1             7475.49 301         30               2709 2679         2655
-    #>   independenceDoF saturatedParameters independenceParameters ChiDoF satDoF
-    #> 1            2691                  54                     18     24   2655
-    #>   indDoF RMSEANull modelName     AIC      BIC   saBIC        LL
-    #> 1   2691      0.05     model 7535.49 7646.703 7551.56 -3737.745
+    #>   SaturatedLikelihood IndependenceLikelihood Minus2LogLikelihood   n Parameters
+    #> 1            7390.184               8309.036             7475.49 301         30
+    #>   observedStatistics   df saturatedDoF independenceDoF saturatedParameters
+    #> 1               2709 2679         2655            2691                  54
+    #>   independenceParameters ChiDoF      Chi            p satDoF indDoF       CFI
+    #> 1                     18     24 85.30552 8.502562e-09   2655   2691 0.9305597
+    #>         TLI      RMSEA RMSEASquared   RMSEAClose RMSEANull modelName     AIC
+    #> 1 0.8958395 0.09212148  0.008486368 0.0006612372      0.05     model 7535.49
+    #>        BIC RMSEA.lower RMSEA.upper   saBIC converged        LL
+    #> 1 7646.703  0.06721641   0.1176287 7551.56      TRUE -3737.745
 
 ## Output from Mplus
 

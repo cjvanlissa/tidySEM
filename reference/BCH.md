@@ -6,7 +6,8 @@ mixture modeling (see
 
 The auxiliary model is treated as a multi-group model. All cases are
 used in all groups, but they are weighted by group-specific BCH weights
-as described in Bolck, Croon, & Hagenaars, 2004.
+as described in Bolck, Croon, & Hagenaars, 2004. Note that the standard
+errors of this approach are not valid.
 
 ## Usage
 

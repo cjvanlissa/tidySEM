@@ -50,10 +50,10 @@ The following types are available:
 
 - "mostlikely.class":
 
-  If C is the true class of an observation, and N is the most likely
-  class based on the model, then this table shows the probability
-  P(N==i\|C==j). The diagonal represents the probability that
-  observations in each class will be correctly classified.
+  If C is the true class of an observation, and N is the assigned class
+  based on highest posterior class probability, then this table shows
+  the probability P(C==i\|N==j). The diagonal represents the probability
+  that observations in each class will be correctly classified.
 
 - "avg.mostlikely":
 

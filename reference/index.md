@@ -630,6 +630,9 @@
 - [`tidy_sem()`](https://cjvanlissa.github.io/tidySEM/reference/tidy_sem.md)
   : Create a tidy_sem object
 
+- [`two_step()`](https://cjvanlissa.github.io/tidySEM/reference/two_step.md)
+  : Estimate an Auxiliary Model Using Two-Step Maximum Likelihood
+
 - [`wald_test()`](https://cjvanlissa.github.io/tidySEM/reference/wald_test.md)
   : Wald Test for Linear Hypotheses
 
