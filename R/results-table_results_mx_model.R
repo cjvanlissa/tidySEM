@@ -27,6 +27,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   if(!x@.wasRun) {
     stop("This model has not been run yet. Use `model = tidySEM::run_mx(model)` or `model = OpenMx::mxRun(model)` to estimate a model.")
   }
+  messages <- attr(x, "warnings")
   messages <- mx_convergence(x)$warnings
   Args <- list(x = x)
   digits <- force(digits)
@@ -116,6 +117,9 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
       messages <- c(messages, paste0("Robust standard errors were used for: ", paste(results$openmx_label[keep], collapse = ", "), "."))
     }
   }
+  # Drop empty rows
+  misrows <- rowSums(is.na(results)) == ncol(results)
+  if(any(misrows)) results <- results[-which(misrows), , drop = FALSE]
 
   # Normalize the output
   results$est <- results$Estimate
@@ -212,6 +216,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   }
 
   rownames(results) <- NULL
+
   class(results) <- c("tidy_results", class(results))
   attr(results, "messages") <- messages
   return(results)

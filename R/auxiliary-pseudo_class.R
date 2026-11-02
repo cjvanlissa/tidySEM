@@ -379,23 +379,21 @@ pseudo_class <- function(x, model, df_complete = NULL, ...) {
 #' @rdname pseudo_class
 #' @export
 pseudo_class.MxModel <- function(x, model, df_complete = NULL, data = NULL, m = 20, ...) {
-  if (isTRUE(is.null(attr(x, "tidySEM")) | length(attr(x, "tidySEM") == "mixture") == 0)){
-    stop("Argument 'fit' is not a valid mixture model.")
+  if (!identical(attr(x, "tidySEM"), "mixture") &&
+      !identical(attr(x, "tidySEM"), "remix")) {
+    stop("'x' must be a mixture or remix model.")
   }
-  if(inherits(data, what = "data.frame")){
 
-    Args <- list(
-      x = x,
-      data = data,
-      m = m
-    )
-
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data.frame.")
+  }
     # Generate the data, uses sample(). Since model might also use the seed,
     # all data is generated first in order to be more reproducible.
-    draws <- do.call(append_class_draws, Args)
-  } else {
-    stop("Function 'pseudo_class()' requires a 'data' argument when called on a 'mx_mixture' model.")
-  }
+  draws <- append_class_draws(
+    x = x,
+    data = data,
+    m = m
+  )
 
   cl <- match.call(expand.dots = FALSE)
   cl[[1L]] <- quote(tidySEM::pseudo_class)

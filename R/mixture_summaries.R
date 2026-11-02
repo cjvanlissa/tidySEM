@@ -18,9 +18,12 @@ get_fit <- function(x, ...) {
 }
 
 num_classes <- function(x){
-  tryCatch({
-    ncol(OpenMx::mxEvalByName("weights", x))
-  }, error = function(e){1L})
+  if(!attr(x, "tidySEM") %in% c("mixture", "remix")) return(0)
+  if(model@.wasRun){
+    return(ncol(OpenMx::mxEvalByName("weights", x)))
+  }
+  if(attr(x, "tidySEM") == "mixture") return(length(x@submodels))
+  return(ncol(x@matrices$M[1,]))
 }
 
 calc_fitindices <- function(model, ...){

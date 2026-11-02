@@ -75,11 +75,19 @@ BCH.MxModel <- function(x, model, data, ...){
   grps <- do.call(OpenMx::mxModel, c(list(model = "aux", OpenMx::mxFitFunctionMultigroup(grp_names), grps)))
 
   out <- try(run_mx(grps), silent = TRUE)
-  attr(out, "tidySEM") <- "BCH"
-  if(!inherits(out, "try-error")){
-    return(out)
+  if (inherits(out, "try-error")) {
+    warning(
+      "BCH auxiliary model estimation failed: ",
+      as.character(out),
+      call. = FALSE
+    )
+    return(NULL)
   }
-  NULL
+
+  attr(out, "warnings") <- c(attr(out, "warnings"), "BCH standard errors, confidence intervals, and p-values are uncorrected and should not be used for inference.")
+  attr(out, "tidySEM") <- "BCH"
+  return(out)
+
 }
 
 
