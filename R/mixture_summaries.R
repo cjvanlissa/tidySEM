@@ -17,14 +17,46 @@ get_fit <- function(x, ...) {
   UseMethod("table_fit", x)
 }
 
-num_classes <- function(x){
-  if(!attr(x, "tidySEM") %in% c("mixture", "remix")) return(0)
-  if(model@.wasRun){
-    return(ncol(OpenMx::mxEvalByName("weights", x)))
+num_classes <- function(x) {
+
+  if (methods::is(x, "MxModel")) {
+    return(dispatch_method(x, "num_classes"))
   }
-  if(attr(x, "tidySEM") == "mixture") return(length(x@submodels))
-  return(ncol(x@matrices$M[1,]))
+  # If it should handle other models too, then keep this to dispatch the regular
+  # S3 methods:
+  if(length(x@submodels) > 0L){
+    nms <- names(x@submodels)
+    return(sum(grepl("^class\\d{1,}$", nms)))
+  }
+  0L
 }
+
+
+num_classes_MxModel <- function(x){
+  if(length(x@submodels) > 0L){
+    nms <- names(x@submodels)
+    return(sum(grepl("^class\\d{1,}$", nms)))
+  }
+  0L
+}
+
+num_classes_mixture <- function(x){
+  if(length(x@submodels) == 0L) return(1L)
+  length(x@submodels)
+}
+
+num_classes_remix <- function(x){
+  ncol(x@matrices$M$values)
+}
+
+# num_classes <- function(x){
+#   if(!attr(x, "tidySEM") %in% c("mixture", "remix")) return(0)
+#   if(x@.wasRun){
+#     return(ncol(OpenMx::mxEvalByName("weights", x)))
+#   }
+#   if(attr(x, "tidySEM") == "mixture") return(length(x@submodels))
+#   return(ncol(x@matrices$M[1,]))
+# }
 
 calc_fitindices <- function(model, ...){
   UseMethod("calc_fitindices", model)
