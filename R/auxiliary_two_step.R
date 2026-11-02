@@ -61,7 +61,7 @@
 #' )
 #'
 #' # Continuous distal outcome
-#' res <- tidySEM:::two_step.MxModel(
+#' res <- two_step(
 #'   x = fit,
 #'   data = dat$SL
 #' )
@@ -212,20 +212,18 @@ two_step <- function(x, model = NULL, data, ...) {
 
   V1 <- x@output$vcov
   V2 <- out@output$vcov
-  V1 <- V1[labels_first, labels_first, drop = FALSE]
-  V2 <- V2[labels_second, labels_second, drop = FALSE]
   H12 <- cross_information(
     out,
     labels_first,
     labels_second
   )
 
-  ses <- two_step_vcov(V1, V2, H12)$se
-  names(ses) <- labels_second
-
+  ses <- data.frame(
+    label = labels_second,
+    se = two_step_vcov(V1, V2, H12)$se,
+    type = "sandwich")
   attr(out, "se_robust") <- ses
   attr(out, "tidySEM") <- "two_step"
-
   out
 }
 

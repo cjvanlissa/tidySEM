@@ -73,7 +73,7 @@ fit <- mx_profiles(
 )
 
 # Continuous distal outcome
-res <- tidySEM:::two_step.MxModel(
+res <- two_step(
   x = fit,
   data = dat$SL
 )

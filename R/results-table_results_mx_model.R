@@ -102,21 +102,22 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   algs$openmx_label <- algs$name
   results <- bind_list(list(results, algs))
 
+  # Check for robust standard errors
+  se_robust <- attr(x, "se_robust")
+  if (!is.null(se_robust)) {
+    # Match using original OpenMx parameter labels
+    idx <- match(results$openmx_label, se_robust$label)
+    keep <- which(!is.na(idx))
+    if (length(keep)) {
+      results$Std.Error[keep] <- se_robust$se[idx[keep]]
+    } else {
+      se_robust <- NULL
+    }
+  }
   # Label groups ------------------------------------------------------------
   results <- .label_groups_internal(x, results)
 
-  # Check for robust standard errors
-  se_robust <- attr(x, "se_robust")
 
-  if (!is.null(se_robust)) {
-    # Match using original OpenMx parameter labels
-    idx <- match(results$openmx_label, names(se_robust))
-    keep <- which(!is.na(idx))
-    if (length(keep)) {
-      results$Std.Error[keep] <- se_robust[idx[keep]]
-      messages <- c(messages, paste0("Robust standard errors were used for: ", paste(results$openmx_label[keep], collapse = ", "), "."))
-    }
-  }
   # Drop empty rows
   misrows <- rowSums(is.na(results)) == ncol(results)
   if(any(misrows)) results <- results[-which(misrows), , drop = FALSE]
@@ -196,6 +197,11 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   if("group" %in% names(results)) results$label <- paste0(results$label, ".", results$group)
   if("class" %in% names(results)) results$label <- paste0(results$label, ".", results$class)
   results <- results[order(results$name), , drop = FALSE]
+
+  # Add message about robust parameters, using their definitive names
+  if(!is.null(se_robust)){
+    messages <- c(messages, paste0(se_robust$type[1], " standard errors were used for: ", paste(results$label[match(se_robust$label, results$openmx_label)], collapse = ", "), "."))
+  }
   if(!is.null(columns)) {
     keep <- intersect(columns, names(results))
     unknown <- setdiff(columns, c("group", "level", names(results)))
