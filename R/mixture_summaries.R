@@ -45,10 +45,6 @@ num_classes_mixture <- function(x){
   length(x@submodels)
 }
 
-num_classes_remix <- function(x){
-  ncol(x@matrices$M$values)
-}
-
 # num_classes <- function(x){
 #   if(!attr(x, "tidySEM") %in% c("mixture", "remix")) return(0)
 #   if(x@.wasRun){

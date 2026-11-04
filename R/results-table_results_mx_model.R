@@ -33,6 +33,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   digits <- force(digits)
   sum_x <- summary(x)
   results <- sum_x$parameters
+  results$free <- TRUE
   # Add fixed pars
   if(!is_remix(x)){
     results_fixed <- .mxfixedpars(x)
@@ -99,8 +100,11 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
 
   # Add algebras ------------------------------------------------------------
   algs <- alg_to_res(x)
-  algs$openmx_label <- algs$name
-  results <- bind_list(list(results, algs))
+  if (is.data.frame(algs) && nrow(algs) > 0L) {
+    algs$free <- NA
+    algs$openmx_label <- algs$name
+    results <- bind_list(list(results, algs))
+  }
 
   # Check for robust standard errors
   se_robust <- attr(x, "se_robust")
@@ -147,24 +151,66 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   results$rhs[fac_load] <- results$row[fac_load]
   results$lhs[fac_load] <- results$col[fac_load]
   results$op[fac_load] <- "=~"
-  results$confint <- conf_int(results$est, se = results$Std.Error)
-  if(isTRUE(sum_x[["CI.Requested"]])){
-    if(!all(is.na(sum_x[["CI"]]))) {
-      ci_x <- data.frame(name = rownames(sum_x$CI),
-                         sum_x$CI)
-      if(is_remix(x)){
-        ci_x$name <- gsub("RE_Mixture\\d{1,}\\.", "", ci_x$name)
-      }
-      ci_x$CI <- NA
-      ci_x$CI[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)] <- conf_int(x= NULL, lb = ci_x$lbound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)], ub = ci_x$ubound[!is.na(ci_x$lbound) & !is.na(ci_x$ubound)])
-      ci_x <- ci_x[!is.na(ci_x$CI), ]
 
-      idx <- match(ci_x$name, results$name)
-      keep <- !is.na(idx)
-      results$confint[idx[keep]] <- ci_x$CI[keep]
+  # Calculate Wald confidence intervals
+  # Wald intervals only for estimated or derived parameters
+  valid_wald <- (is.na(results$free) | results$free) &
+    is.finite(results$Estimate) &
+    is.finite(results$Std.Error) &
+    results$Std.Error > 0
+
+  results$confint <- conf_int(
+    results$Estimate,
+    se = results$Std.Error
+  )
+
+  results$confint[!valid_wald] <- NA_character_
+  # Record CI type
+  results$ci_type <- ifelse(
+    valid_wald,
+    "Wald",
+    NA_character_
+  )
+
+  # Check for presence of profile likelihood confidence intervals
+  ci_x <- sum_x[["CI"]]
+  if (!is.null(ci_x) && NROW(ci_x) > 0L) {
+    ci_x <- as.data.frame(ci_x)
+    # Identify parameter names
+    ci_x$name <- rownames(ci_x)
+    # Check required columns
+    if (all(c("lbound", "ubound") %in% names(ci_x))) {
+      # Valid interval bounds
+      valid <- is.finite(ci_x$lbound) & is.finite(ci_x$ubound) & ci_x$lbound <= ci_x$ubound
+      # Check OpenMx interval convergence diagnostics
+      if (all(c("lboundMet", "uboundMet") %in% names(ci_x))) {
+        valid <- valid & !is.na(ci_x$lboundMet) & !is.na(ci_x$uboundMet) & ci_x$lboundMet & ci_x$uboundMet
+      }
+      # Exclude intervals with OpenMx warning notes
+      if ("note" %in% names(ci_x)) {
+        valid <- valid & (is.na(ci_x$note) | trimws(as.character(ci_x$note)) == "")
+      }
+      # Match profile intervals to results
+      idx <- match_mx_names(
+        ci_x$name,
+        results$name
+      )
+      keep <- which(valid & !is.na(idx))
+      if (length(keep)) {
+        results$confint[idx[keep]] <- conf_int(x = NULL, lb = ci_x$lbound[keep], ub = ci_x$ubound[keep])
+        results$ci_type[idx[keep]] <- "Profile"
+      }
     }
   }
-  results$pval <- 2*pnorm(abs(results$Estimate)/results$Std.Error, lower.tail = FALSE)
+
+  results$pval <- rep(NA_real_, nrow(results))
+
+  results$pval[valid_wald] <- 2 * pnorm(
+    abs(results$Estimate[valid_wald]) /
+      results$Std.Error[valid_wald],
+    lower.tail = FALSE
+  )
+
   results$est_sig <- est_sig(results$est, sig = results$pval)
   results[c("estimate", "Estimate")] <- NULL
   names(results)[match(c("Std.Error"), names(results))] <- c("se")
@@ -181,6 +227,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   }
   # Drop empty columns
   miscols <- colSums(is.na(results)) == nrow(results)
+  miscols[names(miscols) %in% c("se", "confint", "ci_type")] <- FALSE
   if(any(miscols)) results <- results[, !miscols, drop = FALSE]
   # Make uniform column names
   renam <- c(std.value = "est_std", std.se = "se_std")
@@ -191,7 +238,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Impose similar order to lavaan
   firstcols <- c("lhs", "op", "rhs", "est", "se", "pval", "confint", "est_sig",
                  "est_std", "se_std", "pval_std", "confint_std", "est_sig_std",
-                 "label")
+                 "label", "free")
   results <- results[, c(firstcols[firstcols %in% names(results)], names(results)[!names(results) %in% firstcols]), drop = FALSE]
   # Add group/class to label
   if("group" %in% names(results)) results$label <- paste0(results$label, ".", results$group)
@@ -395,19 +442,41 @@ has_submod <- function(x, depth = 0L) {
 # }
 
 alg_to_res <- function(x, ...) {
-  out <- .alg_to_res_internal(x, ...)
-  out <- flat(out)
-  if(length(out)) out <- bind_list(out)
 
-  out$Std.Error <- unlist(lapply(
+  out <- flat(.alg_to_res_internal(x, ...))
+
+  # No algebra results
+  if (!length(out)) {
+    return(data.frame(
+      name = character(),
+      Std.Error = numeric()
+    ))
+  }
+
+  out <- bind_list(out)
+
+  if (!is.data.frame(out)) {
+    stop("Could not combine algebra results.")
+  }
+
+  if (!"name" %in% names(out)) {
+    stop("Algebra results must contain a 'name' column.")
+  }
+
+  out$Std.Error <- vapply(
     out$name,
-    function(thispar) {
+    function(par) {
       tryCatch(
-        OpenMx::mxSE(thispar, model = x, silent = TRUE),
+        as.numeric(OpenMx::mxSE(
+          par,
+          model = x,
+          silent = TRUE
+        ))[1L],
         error = function(e) NA_real_
       )
-    }
-  ))
+    },
+    numeric(1)
+  )
 
   out
 }
@@ -714,4 +783,79 @@ two_to_one <- function(tab){
     return(tab)
   }
 
+}
+
+
+
+match_mx_names <- function(nms, targets) {
+
+  idx <- rep(NA_integer_, length(nms))
+
+  # First pass: exact matches
+  for (i in seq_along(nms)) {
+    if (is.na(nms[i])) next
+
+    hits <- which(!is.na(targets) & targets == nms[i])
+    sources <- which(!is.na(nms) & nms == nms[i])
+
+    if (length(hits) == 1L && length(sources) == 1L) {
+      idx[i] <- hits
+    }
+  }
+
+  # Progressively remove prefixes from unmatched names
+  candidates <- nms
+
+  repeat {
+
+    unmatched <- which(is.na(idx) & !is.na(candidates))
+
+    if (!length(unmatched)) break
+
+    # Remove one prefix level
+    dots <- regexpr(".", candidates[unmatched], fixed = TRUE)
+
+    can_strip <- dots > 0L
+
+    if (!any(can_strip)) break
+
+    strip_idx <- unmatched[can_strip]
+
+    candidates[strip_idx] <- substring(
+      candidates[strip_idx],
+      dots[can_strip] + 1L
+    )
+
+    # Only match against unused target rows
+    available <- setdiff(
+      seq_along(targets),
+      idx[!is.na(idx)]
+    )
+
+    # Check uniqueness on both sides
+    for (i in strip_idx) {
+
+      candidate <- candidates[i]
+
+      source_hits <- which(
+        is.na(idx) &
+          !is.na(candidates) &
+          candidates == candidate
+      )
+
+      target_hits <- available[
+        !is.na(targets[available]) &
+          targets[available] == candidate
+      ]
+
+      if (length(source_hits) == 1L &&
+          length(target_hits) == 1L) {
+
+        idx[i] <- target_hits
+        available <- setdiff(available, target_hits)
+      }
+    }
+  }
+
+  idx
 }

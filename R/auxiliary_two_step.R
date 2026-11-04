@@ -221,7 +221,7 @@ two_step <- function(x, model = NULL, data, ...) {
   ses <- data.frame(
     label = labels_second,
     se = two_step_vcov(V1, V2, H12)$se,
-    type = "sandwich")
+    type = "adjusted")
   attr(out, "se_robust") <- ses
   attr(out, "tidySEM") <- "two_step"
   out
