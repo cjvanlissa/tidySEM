@@ -2,6 +2,9 @@
 
 - tidySEM now supports mixture models estimated with the metamixture
   package
+- Bugfixes and improvements to table_results(), mixture_starts(), BCH(),
+  and pseudo_class()
+- Added two_step(), mx_convergence()
 
 # tidySEM 0.2.13
 
