@@ -27,6 +27,7 @@ register_tidySEM_method <- function(generic, type, fun) {
   invisible(NULL)
 }
 
+
 dispatch_method <- function(x, generic, ...) {
 
   type <- attr(x, "tidySEM")
@@ -35,9 +36,9 @@ dispatch_method <- function(x, generic, ...) {
     type <- "MxModel"
   }
 
+  # Check for registered external methods
   key <- paste(generic, type, sep = "::")
 
-  # Check for registered external methods
   if (exists(key, envir = .tidySEM_methods,
              inherits = FALSE)) {
 
@@ -50,21 +51,29 @@ dispatch_method <- function(x, generic, ...) {
     return(fun(x, ...))
   }
 
-  # Fall back to internal tidySEM implementations
-  suffix <- switch(
-    type,
-    mixture = "mixture",
-    MxModel = "MxModel",
-    stop("No method registered for model type: ", type)
-  )
+  # Internal method for this model type
+  method <- paste0(generic, "_", type)
 
-  fun <- get(
-    paste0(generic, "_", suffix),
-    mode = "function"
-  )
+  if (exists(method, mode = "function", inherits = TRUE)) {
+    fun <- get(method, mode = "function", inherits = TRUE)
+    return(fun(x, ...))
+  }
 
-  fun(x, ...)
+  # Fallback to generic MxModel method
+  fallback <- paste0(generic, "_MxModel")
+
+  if (exists(fallback, mode = "function", inherits = TRUE)) {
+    fun <- get(fallback, mode = "function", inherits = TRUE)
+    return(fun(x, ...))
+  }
+
+  stop(
+    "No method found for '", generic,
+    "' with model type '", type,
+    "', and no MxModel fallback is available."
+  )
 }
+
 
 # table_fit <- function(x, ...) {
 #

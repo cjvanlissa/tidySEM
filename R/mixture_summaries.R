@@ -157,37 +157,7 @@ calc_fitindices_mixture <- function(model, ...) {
   if(length(drop_these) > 0) sums <- sums[!names(sums) %in% drop_these]
   data.frame(sums, fits)
 }
-# To here
-# calc_fitindices.MxModel <- function (model, type = NULL, ...){
-#   sums <- .table_fit_mx(model, type = type)
-#   if(isTRUE(type == "mixture")){
-#     ll <- sums[["Minus2LogLikelihood"]]/-2
-#     parameters <- sums[["estimatedParameters"]]
-#     n <- sums[["numObs"]]
-#     classes <- num_classes(model)
-#     if(classes < 2){
-#       fits = c("Classes" = 1, "Entropy" = 1, "prob_min" = 1, "prob_max" = 1, "n_min" = 1, "n_max" = 1)
-#     } else {
-#       post_prob <- extract_postprob(model)
-#       C <- apply(post_prob, 1, which.max)
-#       class_tab <- table(factor(C, levels = 1:classes))
-#       if (length(class_tab) == ncol(post_prob)) {
-#         prop_n <- range(prop.table(class_tab))
-#       }
-#       else {
-#         prop_n <- c(0, max(prop.table(class_tab)))
-#       }
-#       fits <- c("Classes" = classes,
-#                 entropy(post_prob),
-#                 range(diag(classification_probs_mostlikely(post_prob, C))),
-#                 prop_n)
-#       names(fits) <- c("Classes", "Entropy", "prob_min", "prob_max", "n_min", "n_max")
-#     }
-#     c(sums, fits)
-#   } else {
-#     sums
-#   }
-# }
+
 
 make_fitvector <- function(ll, parameters, n, postprob = NULL, fits = NULL){
   out <- vector("numeric")
@@ -264,15 +234,20 @@ class_prob.MxModel <- function(x, type = c("sum.posterior", "sum.mostlikely", "m
 }
 
 sum_postprob <- function(model){
-  if(is_remix(model)){
+  dispatch_method(model, "sum_postprob")
+}
+
+sum_postprob_remix <- function(model){
     return(data.frame(class = paste0("class", seq_len(num_classes(model))),
                count = drop(model@algebras$weights$result*model@data$numObs),
                proportion = drop(model@algebras$weights$result)))
 
-  }
-  if(!inherits(model$expectation, "MxExpectationMixture")){
-    return(data.frame(class = "class1", count = model$data$numObs, proportion = 1))
-  }
+}
+sum_postprob_MxModel <- function(model){
+  return(data.frame(class = "class1", count = model$data$numObs, proportion = 1))
+}
+
+sum_postprob_mixture <- function(model){
   weights_name <- model$expectation$weights
   priors <- prop.table(model[[weights_name]]$values)
   mix_names <- model$expectation$components
@@ -299,9 +274,7 @@ sum_mostlikely <- function(model = NULL, mostlikely = NULL){
   })
 }
 
-#extract_postprob <- function(model){
-#  UseMethod("extract_postprob", model)
-#}
+
 extract_postprob <- function(x, ...) {
   if (methods::is(x, "MxModel")) {
     return(dispatch_method(x, "extract_postprob", ...))

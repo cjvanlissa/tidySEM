@@ -373,6 +373,7 @@ if(requireNamespace("OpenMx", quietly = TRUE)){
   # c2$mat_dev$ubound[,] <- 10
 
   res_tidysem <- mxTryHardOrdinal(mix_tidysem, extraTries = 10)
+  attr(res_tidysem, "tidySEM") <- "mixture"
   tmp_tidysem <- class_prob(res_tidysem)
 
   props_tidysem <- suppressWarnings(table_results(res_tidysem, columns=NULL))

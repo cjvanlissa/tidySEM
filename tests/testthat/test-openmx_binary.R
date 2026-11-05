@@ -171,26 +171,6 @@ u3 | t3{C}*t1
 u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
   })
 
-  # strts <- lapply(1:4, function(i){
-  #   val <- tmp$est[startsWith(tmp$label, paste0("t", i))]
-  #   out <- pnorm(val)
-  #   cbind(out, 1-out)
-  # })
-
-  # df_mp <- df
-  # df_mp[1:4] <- lapply(df, as.integer)
-  # res_mp <- mplusObject(VARIABLE = "categorical are u1-u4;
-  #                         CLASSES = c(2);",
-  #                       ANALYSIS = "type = MIXTURE;
-  #                       starts = 500 20",
-  #             rdata = df_mp,
-  #             modelout = "test.inp",
-  #             run = 1L
-  #             )
-  # res_mx$class1$Thresholds$values <- structure(c(-1.21202423291062, -1.03055648196733, 1.34960931996936,
-  #                                                1.21984168386381), dim = c(1L, 4L))
-  # res_mx$class2$Thresholds$values <- structure(c(1.22655751606709, 1.20822650045262, -1.2762983140788,
-  #                                                -1.14581064840368), dim = c(1L, 4L))
 
   res_mx <- mxTryHardOrdinal(res_mx)
   tmp <- table_results(res_mx, columns=NULL)
@@ -247,7 +227,9 @@ u4 | t4{C}*t1", classes = 2, data = df, run = FALSE)
   #dput(res_tidysem$class2$mat_dev$values, file = "clipboard")
 
   res_tidysem <- OpenMx::mxTryHardOrdinal(mix_tidysem)
+  attr(res_tidysem, "tidySEM") <- "mixture"
   tmp_tidysem <- class_prob(res_tidysem)
+
   fit_tidysem <- table_fit(res_tidysem)
   props_tidysem <- table_results(res_tidysem, columns=NULL)
   props_tidysem <- pnorm(as.numeric(props_tidysem$est[props_tidysem$matrix == "Thresholds"]))
