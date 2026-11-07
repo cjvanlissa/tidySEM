@@ -287,7 +287,6 @@ mx_mixed_lca_simple <- function(data = NULL,
       cl[[1L]] <- str2lang("tidySEM::mx_mixed_lca_simple")
       eval.parent(cl)
     })
-    attr(out, "tidySEM") <- "list"
     class(out) <- c("mixture_list", class(out))
     return(out)
   } else {

@@ -7,7 +7,6 @@ block_diag <- function(a, b, pad) {
   nc <- ncol(a) + ncol(b)
 
   out <- matrix(pad, nr, nc)
-
   out[
     seq_len(nrow(a)),
     seq_len(ncol(a))
@@ -84,7 +83,8 @@ has_ordinal <- function(mod) {
   ordinal_algs <- c("Thresholds")
   ordinal_mats <- c(
     "mat_dev",
-    "mat_ones"
+    "mat_ones",
+    "Thresholds"
   )
   any(ordinal_mats %in% names(mod@matrices)) || any(ordinal_algs %in% names(mod@algebras))
 }
@@ -315,7 +315,6 @@ mx_merge_matrices <- function(x, y) {
 
     dimnames = list(NULL, ramvars)
   )
-
   ordinal_objects <- merge_ordinal_thresholds(x, y)
 
   # Construct combined model

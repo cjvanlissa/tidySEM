@@ -1,6 +1,6 @@
 simple_starts <- function (model, type = c("ULS", "DWLS"))
 {
-
+  type <- type[1]
   isMultiGroupModel <- (is.null(model$expectation) && inherits(model$fitfunction, "MxFitFunctionMultigroup"))
   if (isMultiGroupModel) {
     submNames <- names(model@submodels)
@@ -100,4 +100,268 @@ fix_x <- function(wmodel, model, multigroup){
     # }
   }
   return(model)
+}
+
+
+#' @importFrom stats lm.wfit weighted.mean
+mx_starts_auxiliary <- function(model, data, weights,
+                             alpha = 0.5,
+                             min_variance = 1e-3) {
+
+  stopifnot(
+    inherits(model, "MxModel"),
+    is.data.frame(data),
+    length(weights) == nrow(data)
+  )
+
+  weights <- as.numeric(weights)
+  weights[!is.finite(weights) | weights < 0] <- 0
+
+  if (sum(weights) <= 0) {
+    weights[] <- 1
+  }
+
+  # All manifest variables
+  vars <- intersect(model@manifestVars, names(data))
+
+  continuous <- vars[vapply(
+    data[vars],
+    function(z) is.numeric(z) && !is.factor(z),
+    logical(1)
+  )]
+
+  ordinal <- vars[vapply(
+    data[vars],
+    is.ordered,
+    logical(1)
+  )]
+
+  # Initialize ordinal thresholds
+  if(length(ordinal) > 0){
+    thrsh <- mx_data_quantiles(data[, ordinal, drop = FALSE], weights = weights, alpha = alpha)
+    for (v in ordinal) {
+
+      thresholds <- thrsh[[v]]
+
+      if ("Thresholds" %in% names(model@matrices)) {
+
+        nr <- min(length(thresholds), nrow(model$Thresholds$values))
+
+        free <- model$Thresholds$free[seq_len(nr), v]
+
+        model$Thresholds$values[seq_len(nr)[free], v] <- thresholds[seq_len(nr)][free]
+      }
+
+      if ("mat_dev" %in% names(model@matrices)) {
+
+        deviations <- c(thresholds[1], diff(thresholds))
+
+        nr <- min(length(deviations), nrow(model$mat_dev$values))
+
+        free <- model$mat_dev$free[seq_len(nr), v ]
+
+        model$mat_dev$values[seq_len(nr)[free], v] <- deviations[seq_len(nr)][free]
+      }
+    }
+  }
+
+  # Initialize continuous means, regressions, and residual variances
+  residuals <- list()
+  for (v in continuous) {
+
+    # Predictors of v, based on RAM A matrix
+    predictors <- continuous[
+      vapply(
+        continuous,
+        function(p) isTRUE(model$A$free[v, p]),
+        logical(1)
+      )
+    ]
+
+    if (!length(predictors)) {
+
+      # Intercept-only model
+      mom <- weighted_moments(
+        data[v], weights
+      )
+
+      if (is.null(mom)) next
+
+      if (isTRUE(model$M$free[1, v])) {
+        model$M$values[1, v] <- mom$mean[v]
+      }
+
+      if (isTRUE(model$S$free[v, v])) {
+        model$S$values[v, v] <- max(
+          mom$cov[v, v], min_variance
+        )
+      }
+
+      residuals[[v]] <- data[[v]] -
+        mom$mean[v]
+
+    } else {
+
+      fit <- weighted_regression(
+        y = data[[v]],
+        X = data[predictors],
+        w = weights,
+        min_variance = min_variance)
+
+      if (is.null(fit)) next
+
+      # Regression coefficients
+      for (p in predictors) {
+
+        if (isTRUE(model$A$free[v, p]) &&
+            is.finite(fit$coefficients[p])) {
+
+          model$A$values[v, p] <-
+            fit$coefficients[p]
+        }
+      }
+
+      # Intercept
+      if (isTRUE(model$M$free[1, v]) &&
+          is.finite(fit$coefficients["(Intercept)"])) {
+
+        model$M$values[1, v] <-
+          fit$coefficients["(Intercept)"]
+      }
+
+      # Residual variance
+      if (isTRUE(model$S$free[v, v])) {
+        model$S$values[v, v] <- fit$variance
+      }
+
+      # Residuals for all observations
+      b <- fit$coefficients[predictors]
+      b[is.na(b)] <- 0
+
+      residuals[[v]] <- data[[v]] -
+        fit$coefficients["(Intercept)"] -
+        as.matrix(data[predictors]) %*% b
+    }
+  }
+
+  # Initialize residual covariances
+  if ("S" %in% names(model@matrices)) {
+
+    for (i in seq_along(continuous)) {
+      for (j in seq_len(i - 1L)) {
+
+        v1 <- continuous[i]
+        v2 <- continuous[j]
+
+        if (!isTRUE(model$S$free[v1, v2]) &&
+            !isTRUE(model$S$free[v2, v1])) {
+          next
+        }
+
+        if (is.null(residuals[[v1]]) ||
+            is.null(residuals[[v2]])) {
+          next
+        }
+
+        r1 <- as.numeric(residuals[[v1]])
+        r2 <- as.numeric(residuals[[v2]])
+
+        keep <- is.finite(r1) &
+          is.finite(r2) &
+          weights > 0
+
+        if (sum(keep) < 2L) next
+
+        w <- weights[keep]
+
+        mu1 <- stats::weighted.mean(r1[keep], w)
+        mu2 <- stats::weighted.mean(r2[keep], w)
+
+        covariance <- sum(
+          w *
+            (r1[keep] - mu1) *
+            (r2[keep] - mu2)
+        ) / sum(w)
+
+        if (isTRUE(model$S$free[v1, v2])) {
+          model$S$values[v1, v2] <- covariance
+        }
+
+        if (isTRUE(model$S$free[v2, v1])) {
+          model$S$values[v2, v1] <- covariance
+        }
+      }
+    }
+  }
+
+  model
+}
+
+
+# Weighted mean and covariance, using complete cases
+weighted_moments <- function(dat, w) {
+
+  keep <- complete.cases(dat) & w > 0
+  dat <- as.matrix(dat[keep, , drop = FALSE])
+  w <- w[keep]
+
+  if (!nrow(dat) || sum(w) <= 0) {
+    return(NULL)
+  }
+
+  mu <- colSums(dat * w) / sum(w)
+
+  centered <- sweep(dat, 2, mu, "-")
+
+  cov <- crossprod(
+    centered * sqrt(w),
+    centered * sqrt(w)
+  ) / sum(w)
+
+  list(mean = mu, cov = cov)
+}
+
+# Weighted least squares for one dependent variable
+weighted_regression <- function(y, X, w, min_variance = 1e-3) {
+
+  dat <- data.frame(y = y, X, check.names = FALSE)
+
+  keep <- complete.cases(dat) & w > 0
+
+  if (sum(keep) < 2L) {
+    return(NULL)
+  }
+
+  y <- y[keep]
+  X <- as.matrix(X[keep, , drop = FALSE])
+  w <- w[keep]
+
+  # Intercept and predictors
+  X <- cbind("(Intercept)" = 1, X)
+
+  fit <- tryCatch(
+    stats::lm.wfit(
+      x = X,
+      y = y,
+      w = w
+    ),
+    error = function(e) NULL
+  )
+
+  if (is.null(fit)) {
+    return(NULL)
+  }
+
+  coefs <- fit$coefficients
+  names(coefs) <- colnames(X)
+
+  residuals <- as.numeric(y - X %*% replace(coefs, is.na(coefs), 0))
+
+  variance <- sum(w * residuals^2) / sum(w)
+
+  list(
+    coefficients = coefs,
+    residuals = residuals,
+    variance = max(variance, min_variance)
+  )
 }

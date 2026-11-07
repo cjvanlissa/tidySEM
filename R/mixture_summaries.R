@@ -101,7 +101,10 @@ calc_fitindices_MxModel <- function(model, ...) {
   }
   fits[["saBIC"]] <- fits[["Minus2LogLikelihood"]] + fits[["estimatedParameters"]] * log((fits[["numObs"]]+2)/24)
   if(any(endsWith(names(fits), "Message"))) fits[["warning"]] <- TRUE
-  fits[["converged"]] <- mx_convergence(model)$checks_pass
+  warns <- mx_diagnostics(model)
+  if(!warns$checks_pass){
+    fits[["warning"]] <- TRUE
+  }
   dropthese <- c("AIC.Mx", "BIC.Mx", "wasRun", "stale", "infoDefinite", "conditionNumber", "maxAbsGradient",
                  "fitUnits", "fit", "CI.Requested", "statusCode", "maxRelativeOrdinalError",
                  "timestamp", "frontendTime", "backendTime", "independentTime",
@@ -116,7 +119,6 @@ calc_fitindices_MxModel <- function(model, ...) {
 }
 
 calc_fitindices_mixture <- function(model, ...) {
-
   sums <- calc_fitindices_MxModel(model)
   sums$degreesOfFreedom <- (sums$numObs - sums$estimatedParameters)
   classes <- num_classes(model)
@@ -153,7 +155,7 @@ calc_fitindices_mixture <- function(model, ...) {
       n_max = prop_n[2]
     )
   }
-  drop_these <- setdiff(names(sums), c("Minus2LogLikelihood", "numObs", "estimatedParameters", "observedStatistics", "degreesOfFreedom", "RMSEASquared", "RMSEANull", "modelName", "AIC", "BIC", "saBIC", "converged"))
+  drop_these <- setdiff(names(sums), c("Minus2LogLikelihood", "numObs", "estimatedParameters", "observedStatistics", "degreesOfFreedom", "RMSEASquared", "RMSEANull", "modelName", "AIC", "BIC", "saBIC", "converged", "warning"))
   if(length(drop_these) > 0) sums <- sums[!names(sums) %in% drop_these]
   data.frame(sums, fits)
 }

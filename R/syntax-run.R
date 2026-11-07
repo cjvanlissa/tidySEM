@@ -63,9 +63,11 @@ run_mx.MxModel <- function(x, ...){
   if(!"silent" %in% names(dots)) run_args$silent <- TRUE
 
   # Check if confidence intervals are required
+  do_intervals <- FALSE
   if(length(x@intervals) > 0){
     run_args[["intervals"]] <- TRUE
   }
+  if("intervals" %in% names(dots)) run_args[["intervals"]] <- dots[["intervals"]]
 
   # If this is a mixture model with >1 class, use simulated annealing
   if(isTRUE(attr(x, "tidySEM") == "mixture") & length(names(x@submodels)) > 0){

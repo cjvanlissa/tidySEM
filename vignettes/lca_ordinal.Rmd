@@ -27,16 +27,22 @@ if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, err
 )
 }
 run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+if(!requireNamespace("OpenMx", quietly = TRUE)){
+  run_everything <- eval_results <- FALSE
+} else {
+  library(OpenMx)
+}
 ```
 
 This is an example of exploratory LCA with ordinal indicators using `tidySEM`,
-as explained in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. https://doi.org/10.1080/10705511.2023.2250920.
-The present example uses synthetic data based on a study by Maene and colleagues.
+as explained in [Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling](https://doi.org/10.1080/10705511.2023.2250920).
+
+The present example uses synthetic data based on a study by [Maene, D'hondt, Van Lissa, Thijs, & Stevens (2022)](https://doi.org/10.1007/s10964-022-01665-7).
 In a convenience sample of Flemish (Belgian) high-school students with a migration background,
 this study set out to identify distinct classes based on ordinal indicators of National, Regional, and Heritage identity.
 Sample size was not justified.
 
-The approach to class enumeration was semi-theory driven:
+In the original study, the approach to class enumeration was semi-theory driven:
 The researchers expected to find profiles that were distinct on all three types of identity (national, regional, and heritage) - but the exact number of classes was not pre-specified (hypothesis 1).
 
 Hypothesis 2 stated that adolescents who are nationally integrated would have lower depressive feelings than students from students with other combinations of identifications (hypothesis 2).
@@ -47,14 +53,29 @@ Use the command `?tidySEM::maene_identity` to view the data documentation.
 ## Loading the Data
 
 To load the data, simply attach the `tidySEM` package.
-For convenience, we assign the indicator data to an object called `df`:
+For convenience, we assign the indicator data to an object called `df`.
+As the analyses take a long time to run, this tutorial reduces the data to three identity indicators and collapses their ordered response categories into three levels.
+This is a teaching simplification, do not do this for substantive analyses: collapsing categories discards information and changes the estimated latent classes.
 
 ```{r, echo = TRUE, eval=TRUE}
 # Load required packages
 library(tidySEM) 
 library(ggplot2)
 # Load data
-df <- maene_identity[1:5]
+# Keep one indicator for each identity domain and collapse adjacent categories.
+# This deliberately smaller example makes ordinal mixture estimation faster.
+ordinal3 <- function(x) {
+  z <- as.integer(x)
+  observed <- sort(unique(z[!is.na(z)]))
+  if (length(observed) < 3L) stop("Indicator has fewer than three observed categories")
+  # Collapse ordered response categories into three approximately equal ranges.
+  groups <- cut(seq_along(observed), breaks = 3L, labels = FALSE)
+  ordered(groups[match(z, observed)], levels = 1:3)
+}
+df <- maene_identity[c("Ethnic_1", "Belgian", "Flemish")]
+df[] <- lapply(df, ordinal3)
+# Auxiliary variables must correspond to the same rows as the indicators.
+aux_data <- maene_identity
 ```
 
 ## Examining the Data
@@ -75,11 +96,11 @@ desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "missing", "unique", 
 "mode", "mode_value", "v")
 ]
-write.csv(desc, "lca_desc.csv", row.names = FALSE)
+write.csv(desc, "lca_fast_desc.csv", row.names = FALSE)
 ```
 ```{r tabdesc, echo = FALSE, eval=eval_results}
-desc <- read.csv("lca_desc.csv", stringsAsFactors = FALSE)
-knitr::kable(desc, caption = "Descriptive statistics for ordinal items")
+desc <- read.csv("lca_fast_desc.csv", stringsAsFactors = FALSE)
+knitr::kable(desc, caption = "Descriptive statistics for recoded ordinal items")
 ```
 
 Additionally, we can plot the data.
@@ -102,27 +123,22 @@ p = ggplot(df_plot, aes(x = Value)) +
   geom_bar() +
   facet_wrap(~time, scales = "free")+
   theme_bw()
-ggsave("lca_plot_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave("lca_fast_plot_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
 ```
 
 ```{r, echo = FALSE, eval=eval_results, fig.cap="Bar charts for ordinal indicators", out.width="80%"}
-knitr::include_graphics("lca_plot_desc.png")
+knitr::include_graphics("lca_fast_plot_desc.png")
 ```
 
 As we can see, the `descriptives()` table provides invaluable information about the measurement level of the indicators,
 which is used to specify the model correctly.
 If these data had not been coded as ordinal factors,
-these descriptive statistics would have revealed that each variable has only 5-10 unique values.
+these descriptive statistics would have revealed that each variable has only a few distinct values.
 The proportion of missing values is reported in the `"missing"` column.
 If any variables had missing values, we would report an MCAR test with `mice::mcar()`
 and explain that missing data are accounted for using FIML.
-In our example, we see that there are no missing values, hence we
-proceed with our analysis.
-Note that the ethic identification variables are very right-skewed
-and some response categories have near-zero frequencies;
-this can cause problems in model specification and convergence.
-One potential solution would be to merge small adjacent categories.
-We will not do this here, however.
+In our example, we inspect missingness before proceeding with our analysis.
+
 
 ## Conducting Latent Class Analysis
 
@@ -141,28 +157,29 @@ All of these functions have arguments `data` and number of `classes`.
 All variables in `data` are included in the analysis,
 so relevant variables must be selected first.
 
-We here consider 1-6 class models,
-but note that this may be overfit, as some of the indicators have only 5 response categories.
+We consider one- through three-class models. Limiting the number of classes and categories makes this tutorial faster to reproduce. A substantive analysis should investigate a broader range of plausible models and use the original measurement scale where feasible.
 
 ```{r fitlca, eval = run_everything, echo = FALSE}
+library(OpenMx)
 set.seed(123)
-res <- mx_lca(data = df, classes = 1:6)
-saveRDS(res, "lca_res.RData")
+res <- mx_lca(data = df, classes = 1:3)
+saveRDS(res, "lca_fast_res.rds")
 ```
 ```{r eval = FALSE, echo = TRUE}
+library(OpenMx)
 set.seed(123)
-res <- mx_lca(data = df, classes = 1:6)
+res <- mx_lca(data = df, classes = 1:3)
 ```
 ```{r eval = FALSE, echo = FALSE}
-res <- readRDS("lca_res.RData")
+res <- readRDS("lca_fast_res.rds")
 ```
 
 ## Class Enumeration
 
 In class enumeration, we want to compare a sequence of LCA models fitted
 to the data. 
-First, note that all models converged without issues.
-If this had not been the case,
+Convergence must be checked for each fitted model.
+If a model with ordinal indicators does not converge,
 it is possible to aid convergence using `mxTryHardOrdinal()`, which expands the search for optimal parameter values for models with ordinal indicators.
 It is part of the family of functions based on `mxTryHard()`.
 
@@ -178,41 +195,27 @@ fit[ , c("Name", "LL", "n", "Parameters", "BIC",
 ```
 ```{r echo = FALSE, eval = run_everything}
 fit <- table_fit(res)
-write.csv(fit, "lca_fit.csv", row.names = FALSE)
+write.csv(fit, "lca_fast_fit.csv", row.names = FALSE)
 ```
 ```{r tabfit, echo = FALSE, eval = eval_results}
-fit <- read.csv("lca_fit.csv", stringsAsFactors = FALSE)
+fit <- read.csv("lca_fast_fit.csv", stringsAsFactors = FALSE)
 class(fit) <- c("tidy_fit", "data.frame")
 knitr::kable(fit[ , c("Name", "LL", "n", "Parameters", "BIC",
 "Entropy", "prob_min", "n_min", "np_ratio", 
 "np_local")], caption = "Model fit table", digits = 2)
 ```
 
-Note that both the global and local ratio of cases to parameters is low;
-for models of 3 or more classes, there are just a few observations per parameter in the smallest class (see `np_local`).
-This is a good reason to disqualify those classes.
-We will eliminate classes 4-6 on those criteria,
-but in real data applications, the 3-class solution might also be disqualified.
-
-In terms of classification diagnostics,
-note that the entropy and the minimum classification probabilities are high for all models.
-This indicates that all classes are distinct.
+Inspect the ratio of cases to parameters (`np_ratio` and `np_local`) alongside classification diagnostics such as entropy and minimum classification probability. Models with small classes or unstable estimates require particular caution.
 
 ## Class Enumeration
 
 ### Using BIC
 
-Based on the BIC, we would prefer the 2-class model.
-This decision is also validated by a scree plot of the BIC,
-obtained by running `plot(fit)`.
+Compare the BIC values in the model-fit table. Lower BIC values indicate a preferred balance of fit and complexity. The fitted model ranking may differ from that obtained with the full, uncollapsed dataset.
 
 ### Theoretical considerations
 
-Despite the BIC indicating that the 2-class model is best,
-upon examining the 2-class and 3-class solution,
-it was noted that theoretically crucial distinctions between ethnic, regional (Flemish), and national (Belgian) identity were not captured by the 2-class solution but were captured by the 3-class solution.
-Based on this theoretical consideration,
-the analysis proceeded with the 3-class solution.
+For illustration, we examine the three-class solution. In a substantive analysis, class selection should consider theoretical interpretability, convergence, and class sizes alongside information criteria.
 
 ```{r echo = TRUE, eval = FALSE}
 res_final <- res[[3]]
@@ -223,16 +226,7 @@ res_final <- res[[3]]
 
 ## Interpreting the Final Class Solution
 
-```{r, echo = FALSE, eval = run_everything}
-cp <- class_prob(res_final)
-out <- list(counts = cp$sum.posterior$proportion)
-```
-
-The 3-class model yielded classes of reasonable size;
-the largest class comprised 33%,
-and the smallest comprised 16% of cases.
-The entropy was high, $S = .93$, indicating good class separability.
-Furthermore, the posterior classification probability ranged from $[.94, .99]$, which means that all classes had low classification error.
+Assess class sizes, entropy, and classification probabilities for the fitted three-class solution. The results below are based on the simplified dataset and should not be compared numerically with the original full-data example.
 We can produce a table of results using `table_results(res_final)`.
 However, the results are thresholds,
 indicating quantiles of a standardized normal distribution.
@@ -246,10 +240,10 @@ reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idv
 ```{r echo = FALSE, eval = run_everything}
 tab <- table_prob(res_final)
 tab <- reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
-write.csv(tab, "lca_tab_prob.csv", row.names = FALSE)
+write.csv(tab, "lca_fast_tab_prob.csv", row.names = FALSE)
 ```
 ```{r, eval = eval_results, echo=FALSE}
-tab <- read.csv("lca_tab_prob.csv", stringsAsFactors = FALSE)
+tab <- read.csv("lca_fast_tab_prob.csv", stringsAsFactors = FALSE)
 knitr::kable(tab, caption = "Three-class model results in probability scale")
 ```
 
@@ -260,19 +254,13 @@ plot_prob(res_final, bw = TRUE)
 ```
 ```{r echo = FALSE, eval = run_everything}
 p <- plot_prob(res_final, bw = TRUE)
-ggsave("lca_prob.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
+ggsave("lca_fast_prob.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
 ```{r echo = FALSE, eval = eval_results, fig.cap="Probability plot", out.width="100%"}
-knitr::include_graphics("lca_prob.png")
+knitr::include_graphics("lca_fast_prob.png")
 ```
 
-Note that the first class (33%) has relatively high identification with the ethnic indicators and relatively low identification with Belgian and Flemish identity.
-The second class (16%) has moderate identification with Belgian and Flemish identity,
-and relatively low identification with ethnic identity.
-Finally, the third class (50%) has high identification with all identities.
-
-Based on the probability plot, we can label class 1 as *ethic identifiers*,
-class 2 as *low identifiers*, and class 3 as *high identifiers*.
+Use the response-probability plot to compare the identity patterns across classes. Class labels should be chosen based on the newly estimated probabilities rather than carried over from the original analysis.
 
 ## Auxiliary Analyses
 
@@ -285,27 +273,27 @@ we can call the BCH function and supply the auxiliary variable depression to the
 Below, we estimate an auxiliary model to compare depressive symptoms across classes:
 
 ```{r echo = TRUE, eval=FALSE}
-aux_dep <- BCH(res_final, data = maene_identity$depression)
+aux_dep <- BCH(res_final, data = aux_data$depression)
 ```
 ```{r echo = FALSE, eval=run_everything}
-aux_dep <- BCH(res_final, data = maene_identity$depression)
-saveRDS(aux_dep, "lca_aux_dep.RData")
+aux_dep <- BCH(res_final, data = aux_data$depression)
+saveRDS(aux_dep, "lca_fast_aux_dep.rds")
 ```
 ```{r echo = FALSE, eval=FALSE}
-aux_dep <- readRDS("lca_aux_dep.RData")
+aux_dep <- readRDS("lca_fast_aux_dep.rds")
 ```
 
 To obtain an omnibus likelihood ratio test of the significance of depression differences across classes,
 as well as pairwise comparisons between classes,
 use `lr_test(aux_dep)`.
-The results indicate that there are no significant differences in depression across classes, $\Delta LL(5) = 4.32, p = .50$.
+Interpret the omnibus and pairwise tests using the results from the simplified example; numerical conclusions from the original analysis do not necessarily carry over.
 
 Hypothesis 3 was that, for assimilated and separated adolescents, there would not be a significant effect of perceived teacher discrimination on depressive symptoms.
 To test this hypothesis, 
 we will compare the regression coefficient of discrimination on depressive symptoms across classes.
 
 ```{r echo = TRUE, eval=FALSE}
-df_aux <- maene_identity[, c("vict_teacher", "depression")]
+df_aux <- aux_data[, c("vict_teacher", "depression")]
 # Dummy-code vict_teacher
 df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
 aux_model <- BCH(res_final, 
@@ -313,24 +301,64 @@ aux_model <- BCH(res_final,
                  data = df_aux)
 ```
 ```{r echo = FALSE, eval=run_everything}
-df_aux <- maene_identity[, c("vict_teacher", "depression")]
+df_aux <- aux_data[, c("vict_teacher", "depression")]
 # Dummy-code vict_teacher
 df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
-aux_model <- BCH(res_final, 
+aux_model <- BCH(res_final,
                  model = "depression ~ vict_teacher",
                  data = df_aux)
-```
-```{r echo = FALSE, eval=FALSE}
-aux_model <- readRDS("lca_aux_model.RData")
+saveRDS(aux_model, "lca_fast_aux_model.rds")
 ```
 
-To view the coefficients of this model,
-we can use either `coef(aux_model)` or `table_results(aux_model, columns = NULL)`.
-As evident from the results table,
-the coefficients labeled `class1.A[1,2]` are the regression coefficients.
+To view the coefficients of this model, we can use either
+`coef(aux_model)` or `table_results(aux_model, columns = NULL)`.
+The regression coefficients are represented by paths in the
+class-specific `A` matrices.
 
-There are two ways to test the difference in regression coefficients across classes:
-using `lr_test(aux_model, compare = "A")`,
-to compare the 'A matrix' (regression coefficients) across classes,
-or `wald_test(aux_model, "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]")`.
-The results indicate that there are no significant differences in the regression coefficients across classes, $\chi^2 (2) = 1.16, p = .56$.
+```{r echo=TRUE, eval=FALSE}
+table_results(aux_model, columns = c("label", "est_sig", "se", "pval", "confint", "group", "matrix"))
+```
+
+```{r echo=FALSE, eval=eval_results}
+if (!exists("aux_model")) {
+  aux_model <- readRDS("lca_fast_aux_model.rds")
+}
+table_results(aux_model, c("label", "est_sig", "se", "pval", "confint", "group", "matrix"))
+```
+
+There are two ways to test whether the regression coefficients differ
+across classes.
+
+First, we can use a likelihood-ratio test to compare the regression
+coefficients in the class-specific `A` matrices:
+
+```{r echo=TRUE, eval=FALSE}
+lr_test(aux_model, compare = "A")
+```
+
+```{r echo=FALSE, eval=eval_results}
+lr_test(aux_model, compare = "A")
+```
+
+Alternatively, we can use a Wald test to evaluate the equality
+constraints directly:
+
+```{r echo=TRUE, eval=FALSE}
+wald_test(
+  aux_model,
+  "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]"
+)
+```
+
+```{r echo=FALSE, eval=eval_results}
+wald_test(
+  aux_model,
+  "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]"
+)
+```
+
+Both tests evaluate the null hypothesis that the regression
+coefficient of perceived teacher discrimination on depressive
+symptoms is equal across the three latent classes. Interpret
+the results based on the newly fitted auxiliary model; the
+original test statistics do not apply to this reduced example.

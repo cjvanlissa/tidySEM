@@ -74,7 +74,6 @@ mx_mixed_lca <- function(data = NULL,
       cl[[1L]] <- str2lang("tidySEM::mx_lca")
       eval.parent(cl)
     })
-    attr(out, "tidySEM") <- "list"
     class(out) <- c("mixture_list", class(out))
     return(out)
   } else {
@@ -102,9 +101,6 @@ mx_mixed_lca <- function(data = NULL,
     cl[["data"]] <- data
     cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
     out <- eval.parent(cl)
-    # cl[["model"]] <- out
-    # cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-    # out <- eval.parent(cl)
     if(run){
       cl[["model"]] <- out
       cl[["extraTries"]] <- 10
@@ -112,7 +108,7 @@ mx_mixed_lca <- function(data = NULL,
       keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
       cl <- cl[c(1, keep_these)]
       out <- eval.parent(cl)
-      attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "mixture")
+      attr(out, "tidySEM") <- "mixture"
       return(out)
     } else {
       out

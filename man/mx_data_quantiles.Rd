@@ -4,10 +4,15 @@
 \alias{mx_data_quantiles}
 \title{Data Quantiles}
 \usage{
-mx_data_quantiles(df)
+mx_data_quantiles(df, weights = NULL, alpha = 0.5)
 }
 \arguments{
 \item{df}{A \code{data.frame} with only columns of class \code{ordered}.}
+
+\item{weights}{Optional case weights.}
+
+\item{alpha}{Continuity correction for ordinal variables, in case of missing
+categories.}
 }
 \value{
 A matrix with the appropriate dimensions for the threshold matrix for

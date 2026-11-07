@@ -3,11 +3,13 @@
 by means of mixture modeling (see mx_mixture).
 The auxiliary model is treated as a multi-group model. All cases are used in
 all groups, but they are weighted by group-specific BCH weights as described
-in Bolck, Croon, &amp;amp; Hagenaars, 2004."><meta property="og:description" content="Estimate an auxiliary model based on a latent classification
+in Bolck, Croon, &amp;amp; Hagenaars, 2004. Note that the standard errors of this
+approach are not valid."><meta property="og:description" content="Estimate an auxiliary model based on a latent classification
 by means of mixture modeling (see mx_mixture).
 The auxiliary model is treated as a multi-group model. All cases are used in
 all groups, but they are weighted by group-specific BCH weights as described
-in Bolck, Croon, &amp;amp; Hagenaars, 2004."></head><body>
+in Bolck, Croon, &amp;amp; Hagenaars, 2004. Note that the standard errors of this
+approach are not valid."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -15,7 +17,7 @@ in Bolck, Croon, &amp;amp; Hagenaars, 2004."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,8 +29,10 @@ in Bolck, Croon, &amp;amp; Hagenaars, 2004."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -52,7 +56,7 @@ in Bolck, Croon, &amp;amp; Hagenaars, 2004."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Estimate an Auxiliary Model using the BCH Method</h1>
-      <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/R/mixture-3step.R" class="external-link"><code>R/mixture-3step.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/R/auxiliary-BCH.R" class="external-link"><code>R/auxiliary-BCH.R</code></a></small>
       <div class="d-none name"><code>BCH.Rd</code></div>
     </div>
 
@@ -61,7 +65,8 @@ in Bolck, Croon, &amp;amp; Hagenaars, 2004."></head><body>
 by means of mixture modeling (see <code><a href="mx_mixture.html">mx_mixture</a></code>).</p>
 <p>The auxiliary model is treated as a multi-group model. All cases are used in
 all groups, but they are weighted by group-specific BCH weights as described
-in Bolck, Croon, &amp; Hagenaars, 2004.</p>
+in Bolck, Croon, &amp; Hagenaars, 2004. Note that the standard errors of this
+approach are not valid.</p>
     </div>
 
     <div class="section level2">

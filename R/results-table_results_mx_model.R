@@ -28,7 +28,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
     stop("This model has not been run yet. Use `model = tidySEM::run_mx(model)` or `model = OpenMx::mxRun(model)` to estimate a model.")
   }
   messages <- attr(x, "warnings")
-  messages <- mx_convergence(x)$warnings
+  messages <- mx_diagnostics(x)$warnings
   Args <- list(x = x)
   digits <- force(digits)
   sum_x <- summary(x)
@@ -264,7 +264,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   # Format using digits
   if(format_numeric){
     value_columns <- names(results)[can_be_numeric(results)]
-    results[, value_columns] <- lapply(results[, value_columns],
+    results[value_columns] <- lapply(results[value_columns],
                                        format_with_na, digits = digits, format = "f")
   }
 

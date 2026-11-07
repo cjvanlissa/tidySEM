@@ -2,7 +2,7 @@
 title: "Tutorial PMC"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tutorial_pmc}
+  %\VignetteIndexEntry{Tutorial PMC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

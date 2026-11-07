@@ -15,7 +15,7 @@ classification uncertainty."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,8 +27,10 @@ classification uncertainty."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -52,7 +54,7 @@ classification uncertainty."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Estimate an Auxiliary Model using the Pseudo-Class Method</h1>
-      <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/R/mixture-pseudo_class.R" class="external-link"><code>R/mixture-pseudo_class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/R/auxiliary-pseudo_class.R" class="external-link"><code>R/auxiliary-pseudo_class.R</code></a></small>
       <div class="d-none name"><code>pseudo_class.Rd</code></div>
     </div>
 
@@ -155,12 +157,197 @@ Boca Raton, FL: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9780429
 <span class="r-in"><span>                         m <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"nnet"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">pseudo_class</span><span class="op">(</span>x <span class="op">=</span> <span class="va">fit</span>,</span></span>
+<span class="r-in"><span>             model <span class="op">=</span> <span class="fu">nnet</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></span><span class="op">(</span> <span class="va">class</span> <span class="op">~</span> <span class="va">SL</span> <span class="op">+</span> <span class="va">SW</span> <span class="op">+</span> <span class="va">PL</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">membership_prediction</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running mix3 with 18 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The degrees of freedom are assumed to be equal to the total number of observations used in the model ( 17 ) minus the number of parameters estimated ( 5 ). This may not be correct. If necessary, provide a better value via the 'df_complete' argument</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'lme4':</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   method           from</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   na.action.merMod car </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # weights:  15 (8 variable)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> initial  value 18.676409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  10 value 0.223350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  20 value 0.001033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  30 value 0.000962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  40 value 0.000704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter  50 value 0.000212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 0.000055 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

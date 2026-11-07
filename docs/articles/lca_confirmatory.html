@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Confirmatory LPA for the Caregiver Compass • tidySEM</title>
+<title>Confirmatory Latent Class Analysis • tidySEM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Confirmatory LPA for the Caregiver Compass">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Confirmatory Latent Class Analysis">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -67,7 +69,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Confirmatory LPA for the Caregiver Compass</h1>
+      <h1>Confirmatory Latent Class Analysis</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/cjvanlissa/tidySEM/blob/HEAD/vignettes/lca_confirmatory.Rmd" class="external-link"><code>vignettes/lca_confirmatory.Rmd</code></a></small>
@@ -76,15 +78,171 @@
 
     
     
-<p>This is an example of confirmatory LPA using <code>tidySEM</code>, as
-explained in Van Lissa, C. J., Garnier-Villarreal, M., &amp; Anadria, D.
-(2023). <em>Recommended Practices in Latent Class Analysis using the
-Open-Source R-Package tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link uri">https://doi.org/10.1080/10705511.2023.2250920</a>. The
-simulated data are based on work by Zegwaard and colleagues, who sought
-to establish a typology of caregivers who support a close other
-receiving outpatient psychological care. Qualitative research among
-experts resulted in a theory postulating the existence of four types of
-caregivers (translated from the original Dutch):</p>
+<p>When theory makes specific predictions about the number of latent
+classes, or even their parameter values - a confirmatory use of LCA is
+in order.</p>
+<p>This vignette explains confirmatory Latent Class Analysis (LCA) using
+<code>tidySEM</code>, as discussed in <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link">Van Lissa, C. J.,
+Garnier-Villarreal, M., &amp; Anadria, D. (2023). <em>Recommended
+Practices in Latent Class Analysis using the Open-Source R-Package
+tidySEM.</em> Structural Equation Modeling.</a>.</p>
+<div class="section level2">
+<h2 id="example-1-depression">Example 1: Depression<a class="anchor" aria-label="anchor" href="#example-1-depression"></a>
+</h2>
+<p>For example, suppose that clinical psychological theory proposes the
+existence of two subpopulations:</p>
+<ul>
+<li>people <strong>without depression</strong>
+</li>
+<li>people <strong>with depression</strong>
+</li>
+</ul>
+<p>If all we know is people’s depression score, then we can try to
+identify two latent classes, corresponding to these subpopulations.
+Suppose that the theory further specifies that a depression score of
+about 10 or higher is required to count as depressed. We will use this
+theory to formulate two increasingly specific hypotheses:</p>
+<ol style="list-style-type: decimal">
+<li>a <strong>two-class model</strong> should fit better than a
+one-class model. Adding a third class should not significantly improve
+fit.</li>
+<li>the class means should be close to <strong>0</strong> for the
+non-depressed class and <strong>10</strong> for the depressed
+class.</li>
+</ol>
+<p>The second hypothesis is considerably stronger because it constrains
+the class-specific means to exact values.</p>
+<div class="section level3">
+<h3 id="simulate-example-data">Simulate example data<a class="anchor" aria-label="anchor" href="#simulate-example-data"></a>
+</h3>
+<p>We first create a simple dataset containing a single continuous
+depression score.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>depression <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">50</span>, mean <span class="op">=</span> <span class="fl">6</span>, sd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span><span class="fl">100</span>,</span>
+<span>    <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">depression</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_confirmatory_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" alt="" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="test-the-number-of-classes">Test the number of classes<a class="anchor" aria-label="anchor" href="#test-the-number-of-classes"></a>
+</h3>
+<p>The first confirmatory hypothesis concerns <strong>class
+enumeration</strong>. Theory predicts two classes, so we estimate one-,
+two-, and three-class solutions. Note that some analyses take along time
+to run. For computationally intensive analyses like this, it is
+convenient to save the results to a file using <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>,
+so you can load the results from that file directly without having to
+wait for the code to run.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">x</span>, classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res</span>, <span class="st">"res_depression.rds"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"res_depression.rds"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          Name Classes   LL   n Parameters AIC BIC saBIC Entropy prob_min</span></span>
+<span><span class="co">#&gt; 1 equal var 1       1 -398 150          2 801 807   800    1.00     1.00</span></span>
+<span><span class="co">#&gt; 2 equal var 2       2 -347 150          4 701 713   701    0.95     0.94</span></span>
+<span><span class="co">#&gt; 3 equal var 3       3 -315 150          6 642 660   641    0.97     0.96</span></span>
+<span><span class="co">#&gt;   prob_max n_min n_max np_ratio np_local</span></span>
+<span><span class="co">#&gt; 1     1.00  1.00  1.00       75       75</span></span>
+<span><span class="co">#&gt; 2     1.00  0.17  0.83       38       17</span></span>
+<span><span class="co">#&gt; 3     0.99  0.12  0.72       25       14</span></span></code></pre></div>
+<p>The fit table lets us inspect information criteria and other
+model-fit statistics across the competing class solutions.</p>
+<p>If we want to test the theory, we can compare adjacent class
+solutions using the bootstrapped likelihood ratio test (BLRT).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BLRT.html">BLRT</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res_blrt</span>, <span class="st">"blrt_depression.rds"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"blrt_depression.rds"</span><span class="op">)</span></span>
+<span><span class="va">res_blrt</span></span>
+<span><span class="co">#&gt; Bootstrapped Likelihood Ratio Test:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  null  alt    lr df blrt_p samples</span></span>
+<span><span class="co">#&gt;  mix1 mix2 103.5  2      0      65</span></span>
+<span><span class="co">#&gt;  mix2 mix3  63.2  2      0      94</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="translate-theoretical-assumptions-into-parameter-constraints">Translate theoretical assumptions into parameter constraints<a class="anchor" aria-label="anchor" href="#translate-theoretical-assumptions-into-parameter-constraints"></a>
+</h3>
+<p>The models above still allow all parameters to be estimated freely
+from the data. That tests only the broad hypothesis that two groups
+exist. The groups themselves could diverge substantially from what was
+theorized.</p>
+<p>Our theory posits that the non-depressed class should have a mean
+near 0, whereas the depressed class should have a mean near 10
+(technically, the minimum value in that class should be 10, but that’s a
+bit more difficult to enforce).</p>
+<p>We can represent this stronger hypothesis by fixing the two class
+means to these values, or by e.g. setting a parameter constraint for the
+two classes.</p>
+<p>First, create the two-class profile model without estimating it and
+examine its parameters:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_theory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">x</span>, classes <span class="op">=</span> <span class="fl">2</span>, run <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/omxGetParameters.html" class="external-link">omxGetParameters</a></span><span class="op">(</span><span class="va">res_theory</span><span class="op">)</span></span></code></pre></div>
+<p>The relevant mean parameters are <code>m11</code> and
+<code>m21</code>. We can either fix these means to the exact values of 0
+and 10:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_theory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/omxSetParameters.html" class="external-link">omxSetParameters</a></span><span class="op">(</span><span class="va">res_theory</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m11"</span>,</span>
+<span>    <span class="st">"m21"</span><span class="op">)</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, free <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>Or alternatively, we could set a lower and upper bound for these
+parameters, thus allowing bounded free estimation:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_theory_bounds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/omxSetParameters.html" class="external-link">omxSetParameters</a></span><span class="op">(</span><span class="va">res_theory</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m11"</span>,</span>
+<span>    <span class="st">"m21"</span><span class="op">)</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, free <span class="op">=</span> <span class="cn">TRUE</span>, lbound <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    ubound <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Now, run your chosen model:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_theory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mx.html">run_mx</a></span><span class="op">(</span><span class="va">res_theory</span><span class="op">)</span></span>
+<span><span class="va">res_theory_bounds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mx.html">run_mx</a></span><span class="op">(</span><span class="va">res_theory_bounds</span><span class="op">)</span></span></code></pre></div>
+<p>Next, compare the unconstrained two-class solution with the
+theory-constrained model.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">compare_these</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">res</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, theory <span class="op">=</span> <span class="va">res_theory</span>,</span>
+<span>    theory_bounds <span class="op">=</span> <span class="va">res_theory_bounds</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">compare_these</span><span class="op">)</span></span></code></pre></div>
+<p>We can also compare the models using the BLRT:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">blrt_theory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BLRT.html">BLRT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">res</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="va">res_theory</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">blrt_theory</span>, <span class="st">"blrt_theory.rds"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">blrt_theory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"blrt_theory.rds"</span><span class="op">)</span></span>
+<span><span class="va">blrt_theory</span></span>
+<span><span class="co">#&gt; Bootstrapped Likelihood Ratio Test:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  null         alt    lr df blrt_p samples</span></span>
+<span><span class="co">#&gt;  mix2 equal var 2 -44.1 -2   0.47     100</span></span></code></pre></div>
+<p>Note that fixing the class means to exact values is a very strong
+assumption. In many real applications, theory may imply that class means
+should be <strong>near</strong> certain values rather than exactly equal
+to them. You can also manually specify <strong>start values</strong>,
+and then test if the estimated <strong>parameter values</strong> deviate
+significantly from these:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_theory_starts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/omxSetParameters.html" class="external-link">omxSetParameters</a></span><span class="op">(</span><span class="va">res_theory</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m11"</span>,</span>
+<span>    <span class="st">"m21"</span><span class="op">)</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, free <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">res_theory_starts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mx.html">run_mx</a></span><span class="op">(</span><span class="va">res_theory_starts</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/omxGetParameters.html" class="external-link">omxGetParameters</a></span><span class="op">(</span><span class="va">res_theory_starts</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">res_theory_starts</span>, <span class="st">"m11 = 0; m21 = 10"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example-2-caregiver-compass">Example 2: Caregiver Compass<a class="anchor" aria-label="anchor" href="#example-2-caregiver-compass"></a>
+</h2>
+<p>For this next example, we will use simulated data are based on work
+by Zegwaard and colleagues, who sought to establish a typology of
+caregivers who support a close other receiving outpatient psychological
+care. Qualitative research among experts resulted in a theory
+postulating the existence of four types of caregivers (translated from
+the original Dutch):</p>
 <p><strong>Balanced</strong></p>
 <blockquote>
 <p>The balanced caregiver experiences relative balance between the costs
@@ -109,14 +267,14 @@ class solution in a sample of caregivers. A convenience sample was used,
 with no prior sample size justification. To view the data documentation,
 run the command <code><a href="../reference/zegwaard_carecompass.html">?tidySEM::zegwaard_carecompass</a></code> in the R
 console.</p>
-<div class="section level2">
-<h2 id="loading-the-data">Loading the Data<a class="anchor" aria-label="anchor" href="#loading-the-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="loading-the-data">Loading the Data<a class="anchor" aria-label="anchor" href="#loading-the-data"></a>
+</h3>
 <p>To load the data, simply attach the <code>tidySEM</code> package. For
 convenience, we assign the variables used for analysis to an object
 called <code>df</code>. We first only use the four scales:
 <code>c("burdened", "trapped", "negaffect", "loneliness")</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -125,13 +283,13 @@ called <code>df</code>. We first only use the four scales:
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"burdened"</span>, <span class="st">"trapped"</span>, <span class="st">"negaffect"</span>,</span>
 <span>    <span class="st">"loneliness"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="descriptive-statistics">Descriptive statistics<a class="anchor" aria-label="anchor" href="#descriptive-statistics"></a>
-</h2>
+<div class="section level3">
+<h3 id="descriptive-statistics">Descriptive statistics<a class="anchor" aria-label="anchor" href="#descriptive-statistics"></a>
+</h3>
 <p>We use <code><a href="../reference/descriptives.html">tidySEM::descriptives()</a></code> to describe the data
 numerically. Because all scales are continuous, we select only columns
 for continuous data to de-clutter the table:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="fu">tidySEM</span><span class="fu">::</span><span class="fu"><a href="../reference/descriptives.html">descriptives</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
 <span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"n"</span>, <span class="st">"missing"</span>, <span class="st">"unique"</span>, <span class="st">"mean"</span>, <span class="st">"median"</span>,</span>
 <span>    <span class="st">"sd"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>, <span class="st">"skew_2se"</span>, <span class="st">"kurt_2se"</span><span class="op">)</span><span class="op">]</span></span>
@@ -231,7 +389,7 @@ Missing data will be accounted for using FIML.</p>
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density()</a></code> is useful for continuous data. Visual
 inspection confirms the conclusions from the <code><a href="../reference/descriptives.html">descriptives()</a></code>
 table: the data are kurtotic (peaked).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="va">df</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Value."</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">df_plot</span>, varying <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span>, direction <span class="op">=</span> <span class="st">"long"</span>,</span>
@@ -240,9 +398,9 @@ table: the data are kurtotic (peaked).</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="plot_lpa_desc.png" class="r-plt" alt="" width="80%"></p>
 </div>
-<div class="section level2">
-<h2 id="conducting-latent-profile-analysis">Conducting Latent Profile Analysis<a class="anchor" aria-label="anchor" href="#conducting-latent-profile-analysis"></a>
-</h2>
+<div class="section level3">
+<h3 id="conducting-latent-profile-analysis">Conducting Latent Profile Analysis<a class="anchor" aria-label="anchor" href="#conducting-latent-profile-analysis"></a>
+</h3>
 <p>As all variables are continuous, we can use the convenience function
 <code><a href="../reference/mx_profiles.html">tidySEM::mx_profiles()</a></code>, which is a wrapper for the generic
 function <code><a href="../reference/mx_mixture.html">mx_mixture()</a></code> optimized for continuous indicators.
@@ -256,7 +414,7 @@ maximum number of classes
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
 to one more than the theoretically expected number. We set a seed to
 ensure replicable results.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>This analysis should produce some messages about cluster
@@ -265,9 +423,9 @@ relies on the K-means algorithm and is not robust to missing data. The
 algorithm automatically switches to hierarchical clustering, no further
 action is required.</p>
 </div>
-<div class="section level2">
-<h2 id="class-enumeration">Class Enumeration<a class="anchor" aria-label="anchor" href="#class-enumeration"></a>
-</h2>
+<div class="section level3">
+<h3 id="class-enumeration">Class Enumeration<a class="anchor" aria-label="anchor" href="#class-enumeration"></a>
+</h3>
 <p>To compare the fit of the theoretical model against other models, we
 create a model fit table using <code><a href="../reference/table_fit.html">table_fit()</a></code> and retain
 relevant columns. We also determine whether any models can be
@@ -286,7 +444,7 @@ disqualify the 5-class model.</p>
 solutions, as the entropies and minimum classification probabilities are
 all low. However, in this confirmatory use case, we address this when
 interpreting the results.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>  <span class="co"># model fit table</span></span>
 <span><span class="va">fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"Parameters"</span>, <span class="st">"n"</span>, <span class="st">"BIC"</span>, <span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>,</span>
 <span>    <span class="st">"prob_max"</span>, <span class="st">"n_min"</span>, <span class="st">"n_max"</span>, <span class="st">"np_ratio"</span>, <span class="st">"np_local"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
@@ -379,9 +537,9 @@ interpreting the results.</p>
 </tr>
 </tbody>
 </table>
-<div class="section level3">
-<h3 id="using-ics">Using ICs<a class="anchor" aria-label="anchor" href="#using-ics"></a>
-</h3>
+<div class="section level4">
+<h4 id="using-ics">Using ICs<a class="anchor" aria-label="anchor" href="#using-ics"></a>
+</h4>
 <p>the 4-class solution has the lowest BIC, which means it is preferred
 over all other solutions including a 1-class solution and a solution
 with more classes. Note that a scree plot for the BIC can be plotted by
@@ -391,12 +549,12 @@ three-class solution would also be defensible. The function
 indicates that, conditional on the set of models, the 4-class model has
 a posterior model probability of nearly 100%.</p>
 </div>
-<div class="section level3">
-<h3 id="using-lmr-tests">Using LMR tests<a class="anchor" aria-label="anchor" href="#using-lmr-tests"></a>
-</h3>
+<div class="section level4">
+<h4 id="using-lmr-tests">Using LMR tests<a class="anchor" aria-label="anchor" href="#using-lmr-tests"></a>
+</h4>
 <p>If we conduct LMR tests, we find that the tests are significant for
 all pairwise model comparisons, except for the 5-class model:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lr_lmr.html">lr_lmr</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>LMR test table</caption>
@@ -449,9 +607,9 @@ all pairwise model comparisons, except for the 5-class model:</p>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 id="using-blrt-tests">Using BLRT tests<a class="anchor" aria-label="anchor" href="#using-blrt-tests"></a>
-</h3>
+<div class="section level4">
+<h4 id="using-blrt-tests">Using BLRT tests<a class="anchor" aria-label="anchor" href="#using-blrt-tests"></a>
+</h4>
 <p>We can also use the BLRT test. As it is very computationally
 expensive, we will use a low number of replications here. In practice,
 one might use a much higher number (1000+) for published research. Keep
@@ -465,7 +623,7 @@ appropriate back-end for your system). To track the function’s progress,
 we use the <code>progressr</code> ecosystem, which allows users to
 choose how they want to be informed. The example below uses a progress
 bar:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://progressr.futureverse.org" class="external-link">progressr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>  <span class="co"># Parallel processing for Windows</span></span>
@@ -521,9 +679,9 @@ bar:</p>
 support for a 4-class solution.</p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="optional-alternative-model-specifications">Optional: Alternative Model Specifications<a class="anchor" aria-label="anchor" href="#optional-alternative-model-specifications"></a>
-</h2>
+<div class="section level3">
+<h3 id="optional-alternative-model-specifications">Optional: Alternative Model Specifications<a class="anchor" aria-label="anchor" href="#optional-alternative-model-specifications"></a>
+</h3>
 <p>In the case of confirmatory LCA, the theory would be refuted by
 strong evidence against the hypothesized model and number of classes. In
 the preceding, we only compared the theoretical model against models
@@ -532,25 +690,25 @@ argues that variance ought to be freely estimated across classes. We
 could compare our theoretical model against their competing model as
 follows. Note that we can put two models into a list to compare
 them.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">df</span>, classes <span class="op">=</span> <span class="fl">4</span>, variances <span class="op">=</span> <span class="st">"varying"</span><span class="op">)</span></span>
 <span><span class="va">compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">res</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>, <span class="va">res_alt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">compare</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Comparing competing theoretical models</caption>
 <colgroup>
+<col width="15%">
+<col width="8%">
+<col width="15%">
 <col width="7%">
-<col width="9%">
-<col width="16%">
-<col width="7%">
+<col width="11%">
 <col width="12%">
-<col width="13%">
-<col width="13%">
-<col width="9%">
-<col width="9%">
+<col width="12%">
+<col width="8%">
+<col width="8%">
 </colgroup>
 <thead><tr class="header">
-<th align="right">Name</th>
+<th align="left">Name</th>
 <th align="right">LL</th>
 <th align="right">Parameters</th>
 <th align="right">BIC</th>
@@ -562,7 +720,7 @@ them.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
+<td align="left">mix4</td>
 <td align="right">-1916</td>
 <td align="right">23</td>
 <td align="right">3976</td>
@@ -573,7 +731,7 @@ them.</p>
 <td align="right">0.34</td>
 </tr>
 <tr class="even">
-<td align="right">2</td>
+<td align="left">free var 4</td>
 <td align="right">-1909</td>
 <td align="right">35</td>
 <td align="right">4037</td>
@@ -589,12 +747,12 @@ them.</p>
 variances. Yet, it has a higher BIC, which indicates that this
 additional complexity does not outweigh the increase in fit.</p>
 </div>
-<div class="section level2">
-<h2 id="interpreting-the-final-class-solution">Interpreting the Final Class Solution<a class="anchor" aria-label="anchor" href="#interpreting-the-final-class-solution"></a>
-</h2>
+<div class="section level3">
+<h3 id="interpreting-the-final-class-solution">Interpreting the Final Class Solution<a class="anchor" aria-label="anchor" href="#interpreting-the-final-class-solution"></a>
+</h3>
 <p>To interpret the final class solution, we first reorder the 4-class
 model by class size. This helps prevent label switching.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_switch_labels.html">mx_switch_labels</a></span><span class="op">(</span><span class="va">res</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>The 4-class model yielded classes of reasonable size; using
 <code>class_pro</code>the largest class comprised 33%, and the smallest
@@ -605,7 +763,7 @@ classification probability ranged from
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mn>.81</mn><mo>,</mo><mn>.92</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[.81, .92]</annotation></semantics></math>,
 which means that at least some classes had a high classification error.
 We produce a table of the results below.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_final</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est"</span>, <span class="st">"se"</span>, <span class="st">"confint"</span>,</span>
 <span>    <span class="st">"class"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -793,7 +951,7 @@ data, however. Relevant plot functions are
 <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></code>, <code><a href="../reference/plot_density.html">plot_density()</a></code>, and
 <code><a href="../reference/plot_profiles.html">plot_profiles()</a></code>. However, we omit the density plots,
 because <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></code> also includes them.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_bivariate.html">plot_bivariate</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="lpa_bivariate.png" class="r-plt" alt="Bivariate profile plot" width="80%"><p class="caption">
@@ -829,108 +987,17 @@ relatively low.</p>
 (29%), class 3 as the <em>entrapped</em> type (22%), and class 4 as the
 <em>lonely</em> type (16%). Note however that the observed classes do
 not match the hypothesized pattern of class parameters exactly.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="lpa_profiles.png" class="r-plt" alt="Bivariate profile plot" width="80%"><p class="caption">
-Bivariate profile plot
+<img src="lpa_profiles.png" class="r-plt" alt="Profile plot" width="80%"><p class="caption">
+Profile plot
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="auxiliary-analyses">Auxiliary Analyses<a class="anchor" aria-label="anchor" href="#auxiliary-analyses"></a>
-</h2>
-<p>We may want to compare the different classes on auxiliary variables
-or models. The <code><a href="../reference/BCH.html">BCH()</a></code> function applies three-step analysis,
-which compares the classes using a multi-group model, controlling for
-classification error. We consider two examples: a single variable, and
-an auxiliary model.</p>
 <div class="section level3">
-<h3 id="comparing-means-or-proportions-across-classes">Comparing Means or Proportions Across Classes<a class="anchor" aria-label="anchor" href="#comparing-means-or-proportions-across-classes"></a>
+<h3 id="predicting-class-membership">Predicting class membership<a class="anchor" aria-label="anchor" href="#predicting-class-membership"></a>
 </h3>
-<p>For a single (continuous or ordinal) variable, we can call the BCH
-function and simply supply the auxiliary variable to the
-<code>data</code> argument, omitting the <code>model</code> argument.
-Below, we estimate an auxiliary model to compare the sex of patients
-between classes:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aux_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">res_final</span>, data <span class="op">=</span> <span class="va">zegwaard_carecompass</span><span class="op">$</span><span class="va">sexpatient</span><span class="op">)</span></span></code></pre></div>
-<p>To obtain an omnibus likelihood ratio test of the significance of
-these sex differences across classes, as well as pairwise comparisons
-between classes, use <code>lr_test(aux_sex)</code>. The results indicate
-that there are significant sex differences across classes,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>L</mi><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>8.7</mn><mo>,</mo><mi>p</mi><mo>=</mo><mn>.003</mn></mrow><annotation encoding="application/x-tex">\Delta LL(1) = 8.7, p = .003</annotation></semantics></math>.
-Pairwise comparisons indicate that class 3 differs significantly from
-classes 1 and 2. The results can be reported in probability scale using
-<code>table_prob(aux_sex)</code>. It appears that the entrapped class
-disproportionately cares for female patients.</p>
-</div>
-<div class="section level3">
-<h3 id="comparing-auxiliary-models-across-classes">Comparing Auxiliary Models Across Classes<a class="anchor" aria-label="anchor" href="#comparing-auxiliary-models-across-classes"></a>
-</h3>
-<p>We can also compare a simple model between classes. Specifically, we
-will examine whether the distance predicts the frequency of visits
-differently across classes (treated as continuous).</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_aux</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"freqvisit"</span>, <span class="st">"distance"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">df_aux</span><span class="op">$</span><span class="va">freqvisit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">df_aux</span><span class="op">$</span><span class="va">freqvisit</span><span class="op">)</span></span>
-<span><span class="va">aux_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">res_final</span>, model <span class="op">=</span> <span class="st">"freqvisit ~ distance"</span>, data <span class="op">=</span> <span class="va">df_aux</span><span class="op">)</span></span></code></pre></div>
-<p>To obtain an omnibus likelihood ratio test of the difference in
-regression coefficients across classes and pairwise comparisons between
-classes, use <code>lr_test(aux_model, compare = "A")</code>. The results
-indicate that there are no significant sex differences across classes,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>L</mi><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0.98</mn><mo>,</mo><mi>p</mi><mo>=</mo><mn>.81</mn></mrow><annotation encoding="application/x-tex">\Delta LL(3) = 0.98, p = .81</annotation></semantics></math>.
-The results can be reported using
-<code>table_results(aux_model)</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">aux_model</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                                       label    est_sig     se pval</span></span>
-<span><span class="co">#&gt; 1  Regressions.freqvisit.ON.distance.class1       0.00   0.00 0.80</span></span>
-<span><span class="co">#&gt; 2                    Means.freqvisit.class1    3.99***   0.18 0.00</span></span>
-<span><span class="co">#&gt; 3                     Means.distance.class1  155.25***   3.80 0.00</span></span>
-<span><span class="co">#&gt; 4                Variances.freqvisit.class1    0.53***   0.06 0.00</span></span>
-<span><span class="co">#&gt; 5                 Variances.distance.class1 2464.07*** 266.69 0.00</span></span>
-<span><span class="co">#&gt; 6  Regressions.freqvisit.ON.distance.class2       0.00   0.00 0.77</span></span>
-<span><span class="co">#&gt; 7                    Means.freqvisit.class2    3.66***   0.43 0.00</span></span>
-<span><span class="co">#&gt; 8                     Means.distance.class2  159.52***   2.79 0.00</span></span>
-<span><span class="co">#&gt; 9                Variances.freqvisit.class2    1.19***   0.14 0.00</span></span>
-<span><span class="co">#&gt; 10                Variances.distance.class2 1144.27*** 133.42 0.00</span></span>
-<span><span class="co">#&gt; 11 Regressions.freqvisit.ON.distance.class3      -0.00   0.00 0.35</span></span>
-<span><span class="co">#&gt; 12                   Means.freqvisit.class3    3.95***   0.27 0.00</span></span>
-<span><span class="co">#&gt; 13                    Means.distance.class3  147.24***   6.09 0.00</span></span>
-<span><span class="co">#&gt; 14               Variances.freqvisit.class3    1.29***   0.17 0.00</span></span>
-<span><span class="co">#&gt; 15                Variances.distance.class3 4200.66*** 558.51 0.00</span></span>
-<span><span class="co">#&gt; 16 Regressions.freqvisit.ON.distance.class4      -0.00   0.00 0.91</span></span>
-<span><span class="co">#&gt; 17                   Means.freqvisit.class4    3.32***   0.38 0.00</span></span>
-<span><span class="co">#&gt; 18                    Means.distance.class4  167.02***   7.06 0.00</span></span>
-<span><span class="co">#&gt; 19               Variances.freqvisit.class4    1.48***   0.23 0.00</span></span>
-<span><span class="co">#&gt; 20                Variances.distance.class4 3989.68*** 630.61 0.00</span></span>
-<span><span class="co">#&gt;               confint  group</span></span>
-<span><span class="co">#&gt; 1       [-0.00, 0.00] class1</span></span>
-<span><span class="co">#&gt; 2        [3.64, 4.35] class1</span></span>
-<span><span class="co">#&gt; 3    [147.80, 162.70] class1</span></span>
-<span><span class="co">#&gt; 4        [0.42, 0.64] class1</span></span>
-<span><span class="co">#&gt; 5  [1941.37, 2986.77] class1</span></span>
-<span><span class="co">#&gt; 6       [-0.00, 0.01] class2</span></span>
-<span><span class="co">#&gt; 7        [2.81, 4.51] class2</span></span>
-<span><span class="co">#&gt; 8    [154.05, 164.98] class2</span></span>
-<span><span class="co">#&gt; 9        [0.92, 1.46] class2</span></span>
-<span><span class="co">#&gt; 10  [882.77, 1405.77] class2</span></span>
-<span><span class="co">#&gt; 11      [-0.00, 0.00] class3</span></span>
-<span><span class="co">#&gt; 12       [3.43, 4.47] class3</span></span>
-<span><span class="co">#&gt; 13   [135.30, 159.18] class3</span></span>
-<span><span class="co">#&gt; 14       [0.95, 1.63] class3</span></span>
-<span><span class="co">#&gt; 15 [3105.99, 5295.32] class3</span></span>
-<span><span class="co">#&gt; 16      [-0.00, 0.00] class4</span></span>
-<span><span class="co">#&gt; 17       [2.57, 4.08] class4</span></span>
-<span><span class="co">#&gt; 18   [153.18, 180.86] class4</span></span>
-<span><span class="co">#&gt; 19       [1.02, 1.93] class4</span></span>
-<span><span class="co">#&gt; 20 [2753.69, 5225.66] class4</span></span></code></pre>
-</div>
-</div>
-<div class="section level2">
-<h2 id="predicting-class-membership">Predicting class membership<a class="anchor" aria-label="anchor" href="#predicting-class-membership"></a>
-</h2>
 <p>This LCA model was developed to help classify care providers in a
 clinical context, so that mental healthcare professionals can provide
 tailored support to those who take care of their clients. In
@@ -942,10 +1009,11 @@ individual. We can assign their scale scores to a
 overloaded the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> function) via the
 <code>newdata</code> argument. The result includes the individual’s most
 likely class, as well as posterior probabilities for all classes.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_new</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>burdened <span class="op">=</span> <span class="fl">2</span>, trapped <span class="op">=</span> <span class="fl">0.5</span>, negaffect <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    loneliness <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/predict_class.html">predict_class</a></span><span class="op">(</span><span class="va">res_final</span>, newdata <span class="op">=</span> <span class="va">df_new</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

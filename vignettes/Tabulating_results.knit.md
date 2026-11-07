@@ -1,0 +1,107 @@
+---
+title: "Tabulating results from structural equation models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tabulating results from structural equation models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+
+``` r
+library(tidySEM)
+library(lavaan)
+library(MplusAutomation)
+```
+
+`tidySEM` tabulates the results of different types of models in the same uniform way. This facilitates parsing the output into Tables and Figures for publication. The function to tabulate output is `table_results()`. The function to tabulate fit indices is `table_fit()`.
+
+Let's use a classic `lavaan` tutorial example for a multiple group model, using the `HolzingerSwineford1939` data. The `tidySEM` package has a function `measurement()` to generate measurement models automatically. It guesses which latent variable an observed variable belongs to by splitting the names (by default, at the last `_` symbol), so it helps to rename the variables:
+
+
+``` r
+df <- HolzingerSwineford1939
+names(df)[7:15] <- paste0(rep(c("vis", "tex", "spe"), each = 3), "_", rep(1:3, 3))
+df |>
+  subset(select = c("school", "vis_1", "vis_2", "vis_3", "tex_1", "tex_2", "tex_3", "spe_1", 
+"spe_2", "spe_3")) -> df
+```
+
+
+Now, let's construct the model.
+
+
+``` r
+df |>
+  tidy_sem() |>
+  measurement() -> model
+```
+
+
+## Output from lavaan
+
+Now, let's run the model in `lavaan`. You can either use `lavaan` to run it, 
+
+
+``` r
+model |>
+  estimate_lavaan() -> fit_lav
+```
+
+
+The results can be tabulated using `table_results()`:
+
+
+``` r
+table_results(fit_lav)
+```
+
+
+``` r
+table_fit(fit_lav)
+```
+
+## Output from OpenMx
+
+Now, we'll reproduce the same analysis in 'OpenMx'.
+Note that this requires loading the `OpenMx` package.
+First, we run the model:
+
+
+``` r
+library(OpenMx)
+model |>
+  estimate_mx() -> fit_mx
+table_results(fit_mx)
+table_fit(fit_mx)
+```
+
+
+
+## Output from Mplus
+
+Now, we'll reproduce the same analysis in 'Mplus'. To illustrate the fact that `tidySEM` is compatible with existing solutions, we will specify the syntax for this example manually, using the package `MplusAutomation`. This code will only work on your machine if you have Mplus installed and R can find it. First, we run the model:
+
+
+``` r
+fit_mplus <- mplusModeler(mplusObject(VARIABLE = "grouping IS school (1 = GW 2 = Pas);",
+                                MODEL = c("visual BY vis_1 vis_2 vis_3;",
+                                          "textual BY tex_1 tex_2 tex_3;",
+                                          "speed BY spe_1 spe_2 spe_3;"),
+                                usevariables = names(df),
+                                rdata = df),
+                    modelout = "example.inp",
+                    run = 1L)
+table_results(fit_mplus)
+```
+
+
+
+``` r
+table_results(fit_mplus)
+table_fit(fit_mplus)
+```
+
+

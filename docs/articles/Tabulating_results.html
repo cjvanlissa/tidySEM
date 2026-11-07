@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -187,6 +189,7 @@ model:</p>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">fit_mx</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; Warning: package 'OpenMx' was built under R version 4.6.1</span></span>
+<span><span class="co">#&gt; Warning: Unavailable columns requested: class</span></span>
 <span><span class="co">#&gt;                       label est_sig   se pval      confint</span></span>
 <span><span class="co">#&gt; 1     Loadings.vis.BY.vis_1    1.00 &lt;NA&gt; &lt;NA&gt;         &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 2     Loadings.vis.BY.vis_2 0.55*** 0.11 0.00 [0.34, 0.77]</span></span>
@@ -221,12 +224,16 @@ model:</p>
 <span><span class="co">#&gt; 31          Variances.spe_1 0.80*** 0.09 0.00 [0.63, 0.97]</span></span>
 <span><span class="co">#&gt; 32          Variances.spe_2 0.49*** 0.09 0.00 [0.31, 0.67]</span></span>
 <span><span class="co">#&gt; 33          Variances.spe_3 0.57*** 0.09 0.00 [0.39, 0.74]</span></span>
-<span><span class="co">#&gt;   Minus2LogLikelihood   n Parameters observedStatistics   df saturatedDoF</span></span>
-<span><span class="co">#&gt; 1             7475.49 301         30               2709 2679         2655</span></span>
-<span><span class="co">#&gt;   independenceDoF saturatedParameters independenceParameters ChiDoF satDoF</span></span>
-<span><span class="co">#&gt; 1            2691                  54                     18     24   2655</span></span>
-<span><span class="co">#&gt;   indDoF RMSEANull modelName     AIC      BIC   saBIC        LL</span></span>
-<span><span class="co">#&gt; 1   2691      0.05     model 7535.49 7646.703 7551.56 -3737.745</span></span></code></pre>
+<span><span class="co">#&gt;   SaturatedLikelihood IndependenceLikelihood Minus2LogLikelihood   n Parameters</span></span>
+<span><span class="co">#&gt; 1            7390.184               8309.036             7475.49 301         30</span></span>
+<span><span class="co">#&gt;   observedStatistics   df saturatedDoF independenceDoF saturatedParameters</span></span>
+<span><span class="co">#&gt; 1               2709 2679         2655            2691                  54</span></span>
+<span><span class="co">#&gt;   independenceParameters ChiDoF      Chi            p satDoF indDoF       CFI</span></span>
+<span><span class="co">#&gt; 1                     18     24 85.30552 8.502562e-09   2655   2691 0.9305597</span></span>
+<span><span class="co">#&gt;         TLI      RMSEA RMSEASquared   RMSEAClose RMSEANull modelName     AIC</span></span>
+<span><span class="co">#&gt; 1 0.8958395 0.09212148  0.008486368 0.0006612372      0.05     model 7535.49</span></span>
+<span><span class="co">#&gt;        BIC RMSEA.lower RMSEA.upper   saBIC        LL</span></span>
+<span><span class="co">#&gt; 1 7646.703  0.06721641   0.1176287 7551.56 -3737.745</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="output-from-mplus">Output from Mplus<a class="anchor" aria-label="anchor" href="#output-from-mplus"></a>

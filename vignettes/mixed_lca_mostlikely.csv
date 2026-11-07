@@ -1,3 +1,3 @@
-"class","count","proportion"
-"class1",141,0.705
-"class2",59,0.295
+"class","count.mostlikely","count.Freq","proportion.mostlikely","proportion.Freq"
+"class2","1",141,"1",0.705
+"class1","2",59,"2",0.295

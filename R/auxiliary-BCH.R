@@ -31,24 +31,9 @@ BCH <- function(x, model, data, ...){
 #' @method BCH MxModel
 #' @export
 BCH.MxModel <- function(x, model, data, ...){
-  if(inherits(data, what = c("factor", "numeric", "integer"))){
-    if(inherits(data, what = "factor")){
-      if(!inherits(data, what = c("ordered"))){
-        data <- mx_dummies(data)
-        model <- paste0(
-          names(data), " | t1",
-          collapse = "\n"
-        )
-      } else {
-        cats <- length(levels(data))
-        model <- paste0("y |t", 1:(cats-1), collapse = "\n")
-        data <- data.frame(y = OpenMx::mxFactor(data, levels = levels(data)))
-      }
-    } else {
-      model <- "y ~1"
-      data <- data.frame(y = data)
-    }
-  }
+  prep_model <- prep_auxiliary_model(model, data)
+  model <- prep_model[["model"]]
+  data <- prep_model[["data"]]
   post_probs <- extract_postprob(x)
   Hmat <- classification_probs_mostlikely(post_probs)
   Hmatinv <- solve(Hmat)
@@ -61,10 +46,7 @@ BCH.MxModel <- function(x, model, data, ...){
   df <- cbind(data, bchweights)
   grp_names <- paste0("class", seq_len(num_classes(x)))
 
-  if(inherits(model, "character")){
-    model <- as_ram(model, meanstructure = TRUE)
-  }
-  if(!inherits(model, what = c("MxModel", "MxRAMModel"))) stop("Argument 'model' must be either an object of class 'MxModel', or a character string that can be coerced using as_ram().")
+
 
   grps <- lapply(1:ncol(bchweights), function(i){
     OpenMx::mxModel(model,
@@ -90,6 +72,32 @@ BCH.MxModel <- function(x, model, data, ...){
 
 }
 
+prep_auxiliary_model <- function(model, data){
+
+  if(inherits(data, what = c("factor", "numeric", "integer"))){
+    if(inherits(data, what = "factor")){
+      if(!inherits(data, what = c("ordered"))){
+        data <- mx_dummies(data)
+        model <- paste0(
+          names(data), " | t1",
+          collapse = "\n"
+        )
+      } else {
+        cats <- length(levels(data))
+        model <- paste0("y |t", 1:(cats-1), collapse = "\n")
+        data <- data.frame(y = OpenMx::mxFactor(data, levels = levels(data)))
+      }
+    } else {
+      model <- "y ~1"
+      data <- data.frame(y = data)
+    }
+  }
+  if(inherits(model, "character")){
+    model <- as_ram(model, meanstructure = TRUE)
+  }
+  if(!inherits(model, what = c("MxModel", "MxRAMModel"))) stop("Argument 'model' must be either an object of class 'MxModel', or a character string that can be coerced using as_ram().")
+  return(list(model = model, data = data))
+}
 
 bch_continuous <- function(x, y){
   cl <- match.call()
@@ -146,7 +154,6 @@ lr_test <- function(x, compare = c("All", "A", "S", "F", "M", "Thresholds"), ...
   mod_test <- mod_base <- x
   for(m in mats){
     for(c in submods){
-      mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
       mod_base[[c]][[m]]$labels[,] <- paste0(m, letters[1:length(mod_base[[c]][[m]]$labels)])
     }
   }

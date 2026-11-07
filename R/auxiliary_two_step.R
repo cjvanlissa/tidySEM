@@ -24,8 +24,8 @@
 #'
 #' @param x A fitted latent class model of class `MxModel`.
 #' @param model An auxiliary model specified as an OpenMx RAM model or
-#'   a character string that can be converted to a RAM model using
-#'   [as_ram()]. May be omitted when `data` is a single numeric,
+#' a character string that can be converted to a RAM model using
+#' [tidySEM::as_ram()]. May be omitted when `data` is a single numeric,
 #'   integer, or factor variable.
 #' @param data A `data.frame` containing the auxiliary variables,
 #'   or a single numeric, integer, or factor variable. Observations
@@ -101,8 +101,6 @@
 #' classes and external variables. *Psychometrika, 83*, 871–892.
 #' \doi{10.1007/s11336-017-9592-7}
 #'
-#' @seealso [BCH()], [pseudo_class()]
-#'
 #' @export
 two_step <- function(x, model = NULL, data, ...) {
   if (!inherits(x, "MxModel") || !isTRUE(x@.wasRun)) {
@@ -113,64 +111,15 @@ two_step <- function(x, model = NULL, data, ...) {
     stop("Must have multiple classes.")
   }
 
-  # Label first-stage parameters before fixing them
-  x <- label_free_parameters(x)
-
-  # Prepare auxiliary outcome
-  if (is.factor(data) || is.numeric(data)) {
-
-    if (is.factor(data)) {
-
-      if (is.ordered(data)) {
-        cats <- nlevels(data)
-
-        if (cats < 2L) {
-          stop("Ordinal outcome must have at least two categories.")
-        }
-
-        model <- paste0(
-          "y | t", seq_len(cats - 1L),
-          collapse = "\n"
-        )
-
-        data <- data.frame(
-          y = OpenMx::mxFactor(
-            data,
-            levels = levels(data)
-          )
-        )
-
-      } else {
-        data <- mx_dummies(data)
-        model <- paste0(
-          names(data), " | t1",
-          collapse = "\n"
-        )
-      }
-
-    } else {
-      model <- "y ~ 1"
-      data <- data.frame(y = as.numeric(data))
-    }
-  }
-
-  if (!is.data.frame(data)) {
-    stop("'data' must be a data.frame or a single outcome vector.")
-  }
-
-  # Construct auxiliary RAM model
-  if (is.character(model)) {
-    model <- as_ram(model, meanstructure = TRUE)
-  }
-
-  if (!inherits(model, "MxRAMModel")) {
-    stop("'model' must be an OpenMx RAM model.")
-  }
+  prep_model <- prep_auxiliary_model(model, data)
+  model <- prep_model[["model"]]
+  data <- prep_model[["data"]]
 
   if (length(model@submodels)) {
     stop("The auxiliary model cannot contain submodels.")
   }
-
+  # Label first-stage parameters before fixing them
+  x <- label_free_parameters(x)
   # Check number of observations
   n <- if (is_remix(x)) {
     nrow(x$Y$values)
@@ -201,7 +150,7 @@ two_step <- function(x, model = NULL, data, ...) {
   }
 
   # Construct and estimate model-specific second step
-  out <- two_step_internal(x = fixed, model = model, data = data, ...)
+  out <- auxiliary_internal(x = fixed, model = model, data = data, ...)
 
   # Calculate corrected standard errors
   labels_first <- names(first_stage)
@@ -227,19 +176,86 @@ two_step <- function(x, model = NULL, data, ...) {
   out
 }
 
-two_step_internal <- function(x, ...) {
-  dispatch_method(x, "two_step_internal", ...)
+auxiliary_internal <- function(x, ...) {
+  dispatch_method(x, "auxiliary_internal", ...)
 }
 
-two_step_internal_mixture <- function(x, model, data, ...) {
+# two_step_internal_mixture <- function(x, model, data, ...) {
+#
+#   K <- num_classes(x)
+#   post_probs <- extract_postprob(x)
+#
+#   original_data <- x@data$observed
+#   overlap <- intersect(
+#     names(original_data),
+#     names(data)
+#   )
+#   if (length(overlap)) {
+#     stop("Auxiliary variable names overlap with measurement variables: ", paste(overlap, collapse = ", "))
+#   }
+#
+#   combined_data <- cbind(original_data, data)
+#
+#   grp_names <- names(x@submodels)
+#   for (k in seq_len(K)) {
+#
+#     class_name <- grp_names[k]
+#     measurement_model <- x[[class_name]]
+#
+#     auxiliary_model <- label_auxiliary_parameters(
+#       model, k
+#     )
+#
+#     auxiliary_model <- mx_starts_auxiliary(model = auxiliary_model, data = data, weights = post_probs[, k])
+#     combined <- mx_merge_matrices(
+#       measurement_model,
+#       auxiliary_model
+#     )
+#
+#     combined@name <- class_name
+#
+#     combined <- OpenMx::mxModel(
+#       combined,
+#       OpenMx::mxFitFunctionML(vector = TRUE)
+#     )
+#
+#     x <- OpenMx::mxModel(x, combined)
+#   }
+#
+#   x <- OpenMx::mxModel(
+#     x,
+#     OpenMx::mxData(
+#       observed = combined_data,
+#       type = "raw"
+#     )
+#   )
+#
+#   OpenMx::mxRun(
+#     x,
+#     intervals = FALSE,
+#     silent = TRUE,
+#     ...
+#   )
+# }
+
+auxiliary_internal_mixture <- function(x, model, data, ...) {
+
   K <- num_classes(x)
+
+  post_probs <- extract_postprob(x)
+
   original_data <- x@data$observed
+
   overlap <- intersect(
     names(original_data),
     names(data)
   )
+
   if (length(overlap)) {
-    stop("Auxiliary variable names overlap with measurement variables: ", paste(overlap, collapse = ", "))
+    stop(
+      "Auxiliary variable names overlap with measurement variables: ",
+      paste(overlap, collapse = ", ")
+    )
   }
 
   combined_data <- cbind(original_data, data)
@@ -249,11 +265,17 @@ two_step_internal_mixture <- function(x, model, data, ...) {
   for (k in seq_len(K)) {
 
     class_name <- grp_names[k]
+
     measurement_model <- x[[class_name]]
 
+    # Explicit auxiliary labels are preserved.
+    # Unlabeled free parameters become class-specific.
     auxiliary_model <- label_auxiliary_parameters(
       model, k
     )
+
+    # Posterior-weighted starting values
+    auxiliary_model <- mx_starts_auxiliary(model = auxiliary_model, data = data, weights = post_probs[, k])
 
     combined <- mx_merge_matrices(
       measurement_model,
@@ -269,6 +291,9 @@ two_step_internal_mixture <- function(x, model, data, ...) {
 
     x <- OpenMx::mxModel(x, combined)
   }
+
+  # Reconcile starting values for equality constraints
+  x <- OpenMx::omxAssignFirstParameters(x)
 
   x <- OpenMx::mxModel(
     x,
@@ -286,166 +311,60 @@ two_step_internal_mixture <- function(x, model, data, ...) {
   )
 }
 
+
 label_auxiliary_parameters <- function(model, k) {
 
   for (mat_name in names(model@matrices)) {
 
     mat <- model@matrices[[mat_name]]
 
-    if (!any(mat$free)) next
-
+    free <- mat$free
     labs <- mat$labels
 
-    missing <- mat$free & is.na(labs)
+    if (!any(free)) next
 
-    if (any(missing)) {
-      labs[missing] <- paste0(
-        mat_name, "_",
-        which(missing)
+    if (is.null(labs)) {
+      labs <- matrix(
+        NA_character_,
+        nrow = nrow(free),
+        ncol = ncol(free)
       )
     }
 
-    labs[mat$free] <- paste0(
-      "aux", k, "_",
-      labs[mat$free]
-    )
+    # Only label previously unlabeled free parameters
+    missing <- free & is.na(labs)
+
+    if (!any(missing)) next
+
+    idx <- which(missing, arr.ind = TRUE)
+
+    for (i in seq_len(nrow(idx))) {
+
+      r <- idx[i, 1]
+      c <- idx[i, 2]
+
+      # S is symmetric in RAM models
+      if (mat_name == "S") {
+        ij <- sort(c(r, c))
+        r_label <- ij[1]
+        c_label <- ij[2]
+      } else {
+        r_label <- r
+        c_label <- c
+      }
+
+      labs[r, c] <- paste0(
+        "aux", k, "_",
+        mat_name, "_",
+        r_label, "_", c_label
+      )
+    }
 
     model@matrices[[mat_name]]$labels <- labs
   }
 
   model
 }
-
-# two_step <- function(x, model = NULL, data, ...) {
-#
-#   if (!inherits(x$expectation, "MxExpectationMixture")) {
-#     stop("'x' must be a fitted OpenMx mixture model.")
-#   }
-#   K <- num_classes(x)
-#
-#   if (K < 2L) {
-#     stop("Must have multiple classes.")
-#   }
-#   x <- label_free_parameters(x)
-#   # Prepare auxiliary outcome
-#   if (is.factor(data) || is.numeric(data)) {
-#     if (is.factor(data)) {
-#       if (is.ordered(data)) {
-#         cats <- nlevels(data)
-#         if (cats < 2L) {
-#           stop("Ordinal outcome must have at least two categories.")
-#         }
-#         model <- paste0("y | t", seq_len(cats - 1L), collapse = "\n")
-#
-#         data <- data.frame(y = OpenMx::mxFactor(data, levels = levels(data)))
-#       } else {
-#         # Dummy-code nominal outcome
-#         data <- mx_dummies(data)
-#         model <- paste0(names(data), " | t1", collapse = "\n")
-#       }
-#     } else {
-#       # Continuous outcome
-#       model <- "y ~ 1"
-#       data <- data.frame(y = as.numeric(data))
-#     }
-#   }
-#
-#   if (!is.data.frame(data)) {
-#     stop("'data' must be a data.frame or a single outcome vector.")
-#   }
-#
-#   # Construct auxiliary RAM model
-#   if (is.character(model)) {
-#     model <- as_ram(model, meanstructure = TRUE)
-#   }
-#
-#   if (length(model@submodels)) {
-#     stop("The auxiliary model cannot contain submodels.")
-#   }
-#
-#   # Check observed data
-#   original_data <- x@data$observed
-#   if (nrow(original_data) != nrow(data)) {
-#     stop("Auxiliary data must have the same number of rows as the data used to estimate the mixture model.")
-#   }
-#
-#   overlap <- intersect(names(original_data), names(data))
-#
-#   if (length(overlap)) {
-#     stop("Auxiliary variable names overlap with measurement variables: ", paste(overlap, collapse = ", "))
-#   }
-#
-#   combined_data <- cbind(original_data, data)
-#
-#   # Fix first-stage parameters
-#   first_stage <- OpenMx::omxGetParameters(x, free = TRUE)
-#
-#   if(length(first_stage)){
-#     fixed <- OpenMx::omxSetParameters(x, labels = names(first_stage), free = FALSE)
-#   }
-#
-#   # Merge auxiliary model into each class
-#   grp_names <- names(fixed@submodels)
-#
-#   for (k in seq_len(K)) {
-#     class_name <- grp_names[k]
-#     measurement_model <- fixed[[class_name]]
-#     # Give auxiliary parameters class-specific labels
-#     auxiliary_model <- model
-#     for (mat_name in names(auxiliary_model@matrices)) {
-#       mat <- auxiliary_model[[mat_name]]
-#       if (any(mat$free)) {
-#         labs <- mat$labels
-#         missing_labels <- mat$free & is.na(labs)
-#         if (any(missing_labels)) {
-#           labs[missing_labels] <- paste0(
-#             mat_name, "_",
-#             which(missing_labels)
-#           )
-#         }
-#         # Prefix free parameter labels with class
-#         labs[mat$free] <- paste0("aux", k, "_", labs[mat$free])
-#         auxiliary_model[[mat_name]]$labels <- labs
-#       }
-#     }
-#
-#     # Combine measurement and auxiliary RAM models
-#     combined <- mx_merge_matrices(measurement_model, auxiliary_model)
-#
-#     # Restore class name
-#     combined@name <- class_name
-#
-#     # Add class-specific fit function
-#     combined <- OpenMx::mxModel(combined, OpenMx::mxFitFunctionML(vector = TRUE))
-#
-#     fixed <- OpenMx::mxModel(fixed, combined)
-#   }
-#
-#   # Replace observed data
-#   fixed <- OpenMx::mxModel(fixed, OpenMx::mxData(observed = combined_data, type = "raw"))
-#
-#   # Estimate auxiliary parameters
-#   out <- OpenMx::mxRun(fixed, intervals = FALSE, silent = TRUE, ...)
-#   # First-stage parameter labels
-#   labels_first <- names(OpenMx::omxGetParameters(x, free = TRUE))
-#
-#   # Second-stage parameter labels
-#   labels_second <- names(OpenMx::omxGetParameters(out, free = TRUE))
-#
-#   # First-stage covariance
-#   V1 <- x@output$vcov
-#
-#   # Conditional second-stage covariance
-#   V2 <- out@output$vcov
-#
-#   # Cross-information
-#   H12 <- cross_information(out, labels_first, labels_second)
-#   ses <- two_step_vcov(V1, V2, H12)$se
-#   names(ses) <- labels_second
-#   attr(out, "se_robust") <- ses
-#   attr(out, "tidySEM") <- "two_step"
-#   out
-# }
 
 
 

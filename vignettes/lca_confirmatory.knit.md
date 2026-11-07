@@ -1,17 +1,216 @@
 ---
-title: "Confirmatory LPA for the Caregiver Compass"
+title: "Confirmatory Latent Class Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Confirmatory LPA for the Caregiver Compass}
+  %\VignetteIndexEntry{Confirmatory Latent Class Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 
 
-This is an example of confirmatory LPA using `tidySEM`,
-as explained in Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling. <https://doi.org/10.1080/10705511.2023.2250920>.
-The simulated data are based on work by Zegwaard and colleagues,
+
+When theory makes specific predictions about the number of latent classes, or even their parameter values - a confirmatory use of LCA is in order.
+
+
+This vignette explains confirmatory Latent Class Analysis (LCA) using `tidySEM`,
+as discussed in [Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023). *Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.* Structural Equation Modeling.](https://doi.org/10.1080/10705511.2023.2250920).
+
+
+# Example 1: Depression
+
+For example, suppose that clinical psychological theory proposes the existence of two subpopulations:
+
+- people **without depression**
+- people **with depression**
+
+If all we know is people's depression score, then we can try to identify two latent classes, corresponding to these subpopulations. Suppose that the theory further specifies that a depression score of about 10 or higher is required to count as depressed. We will use this theory to formulate two increasingly specific hypotheses:
+
+1. a **two-class model** should fit better than a one-class model. Adding a third class should not significantly improve fit.
+2. the class means should be close to **0** for the non-depressed class and **10** for the depressed class.
+
+The second hypothesis is considerably stronger because it constrains the class-specific means to exact values.
+
+## Simulate example data
+
+We first create a simple dataset containing a single continuous depression score.
+
+
+``` r
+library(tidySEM)
+library(OpenMx)
+
+set.seed(123)
+x <- data.frame(depression = c(rnorm(50, mean = 6, sd = 4), rbeta(100,
+    2, 3)))
+hist(x$depression)
+```
+
+![](lca_confirmatory_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+## Test the number of classes
+
+The first confirmatory hypothesis concerns **class enumeration**. Theory predicts two classes, so we estimate one-, two-, and three-class solutions.
+Note that some analyses take along time to run.
+For computationally intensive analyses like this, it is convenient to save the results to a file using `saveRDS()`,
+so you can load the results from that file directly without having to wait for the code to run.
+
+
+``` r
+res <- mx_profiles(x, classes = 1:3)
+#> MxComputeSimAnnealing(tsallis1996) evaluations 858 fit 728.958 change -527.9MxComputeSimAnnealing(tsallis1996) evaluations 6518 fit 690.318 change -1722                                                                            
+saveRDS(res, "res_depression.rds")
+```
+
+
+``` r
+res <- readRDS("res_depression.rds")
+table_fit(res)
+#>          Name Classes   LL   n Parameters AIC BIC saBIC Entropy prob_min prob_max n_min n_max
+#> 1 equal var 1       1 -398 150          2 801 807   800    1.00     1.00     1.00  1.00  1.00
+#> 2 equal var 2       2 -347 150          4 701 713   701    0.95     0.94     1.00  0.17  0.83
+#> 3 equal var 3       3 -315 150          6 642 660   641    0.97     0.96     0.99  0.12  0.72
+#>   np_ratio np_local
+#> 1       75       75
+#> 2       38       17
+#> 3       25       14
+```
+
+The fit table lets us inspect information criteria and other model-fit statistics across the competing class solutions.
+
+If we want to test the theory, we can compare adjacent class solutions using the bootstrapped likelihood ratio test (BLRT).
+
+
+``` r
+res_blrt <- BLRT(res)
+saveRDS(res_blrt, "blrt_depression.rds")
+```
+
+
+``` r
+res_blrt <- readRDS("blrt_depression.rds")
+res_blrt
+#> Bootstrapped Likelihood Ratio Test:
+#> 
+#>  null  alt    lr df blrt_p samples
+#>  mix1 mix2 103.5  2      0      65
+#>  mix2 mix3  63.2  2      0      94
+```
+
+
+
+## Translate theoretical assumptions into parameter constraints
+
+The models above still allow all parameters to be estimated freely from the data. That tests only the broad hypothesis that two groups exist.
+The groups themselves could diverge substantially from what was theorized.
+
+Our theory posits that the non-depressed class should have a mean near 0, whereas the depressed class should have a mean near 10 (technically, the minimum value in that class should be 10, but that's a bit more difficult to enforce).
+
+We can represent this stronger hypothesis by fixing the two class means to these values,
+or by e.g. setting a parameter constraint for the two classes.
+
+First, create the two-class profile model without estimating it and examine its parameters:
+
+
+``` r
+res_theory <- mx_profiles(x, classes = 2, run = FALSE)
+omxGetParameters(res_theory)
+#> equal var 2.weights[1,2]                       v1                      m11 
+#>                     0.26                     2.30                     0.73 
+#>                      m21 
+#>                     8.36
+```
+
+The relevant mean parameters are `m11` and `m21`. We can either fix these means to the exact values of 0 and 10:
+
+
+``` r
+res_theory <- omxSetParameters(res_theory, labels = c("m11",
+    "m21"), values = c(0, 10), free = FALSE)
+```
+
+Or alternatively, we could set a lower and upper bound for these parameters, thus allowing bounded free estimation:
+
+
+``` r
+res_theory_bounds <- omxSetParameters(res_theory, labels = c("m11",
+    "m21"), values = c(0, 10), free = TRUE, lbound = c(NA, 10),
+    ubound = c(1, NA))
+```
+
+Now, run your chosen model:
+
+
+``` r
+res_theory <- run_mx(res_theory)
+res_theory_bounds <- run_mx(res_theory_bounds)
+#> MxComputeSimAnnealing(tsallis1996) evaluations 960 fit 1144.66 change -2935                                                                           
+```
+
+Next, compare the unconstrained two-class solution with the theory-constrained model.
+
+
+``` r
+compare_these <- list(baseline = res[[2]], theory = res_theory,
+    theory_bounds = res_theory_bounds)
+
+table_fit(compare_these)
+#>                      Name Classes   LL   n Parameters AIC BIC saBIC Entropy prob_min prob_max
+#> baseline             mix2       2 -347 150          4 701 713   701    0.95     0.94     1.00
+#> theory        equal var 2       2 -369 150          2 741 747   741    0.95     0.96     0.99
+#> theory_bounds equal var 2       2 -351 150          4 709 721   709    0.96     0.97     0.99
+#>               n_min n_max
+#> baseline       0.17  0.83
+#> theory         0.17  0.83
+#> theory_bounds  0.16  0.84
+```
+
+We can also compare the models using the BLRT:
+
+
+``` r
+blrt_theory <- BLRT(list(res[[2]], res_theory))
+saveRDS(blrt_theory, "blrt_theory.rds")
+```
+
+
+``` r
+blrt_theory <- readRDS("blrt_theory.rds")
+blrt_theory
+#> Bootstrapped Likelihood Ratio Test:
+#> 
+#>  null         alt    lr df blrt_p samples
+#>  mix2 equal var 2 -44.1 -2   0.47     100
+```
+
+
+Note that fixing the class means to exact values is a very strong assumption.
+In many real applications, theory may imply that class means should be **near** certain values rather than exactly equal to them.
+You can also manually specify **start values**, and then test if the estimated **parameter values** deviate significantly from these:
+
+
+``` r
+res_theory_starts <- omxSetParameters(res_theory, labels = c("m11",
+    "m21"), values = c(0, 10), free = TRUE)
+res_theory_starts <- run_mx(res_theory_starts)
+#> MxComputeSimAnnealing(tsallis1996) evaluations 3507 fit 693.185 change -0.07426                                                                               
+omxGetParameters(res_theory_starts)
+#> equal var 2.weights[1,2]                       v1                      m11 
+#>                     0.22                     2.49                     0.87 
+#>                      m21 
+#>                     8.84
+wald_test(res_theory_starts, "m11 = 0; m21 = 10")
+#> Wald tests for linear hypotheses:
+#>  Hypothesis df chisq       p
+#>       m11=0  1  31.2 2.3e-08
+#>      m21=10  1   8.8 3.0e-03
+```
+
+
+
+# Example 2: Caregiver Compass
+
+For this next example, we will use simulated data are based on work by Zegwaard and colleagues,
 who sought to establish a typology of caregivers who support a close other receiving outpatient psychological care.
 Qualitative research among experts resulted in a theory postulating the existence of four types of caregivers (translated from the original Dutch):
 
@@ -121,10 +320,10 @@ We set a seed to ensure replicable results.
 
 
 ```
-#> MxComputeSimAnnealing(tsallis1996) evaluations 978 fit 6955.34 change 3.174MxComputeSimAnnealing(tsallis1996) evaluations 2600 fit 7553.37 change 43.21MxComputeSimAnnealing(tsallis1996) evaluations 4206 fit 4518.89 change 139.6MxComputeSimAnnealing(tsallis1996) evaluations 5813 fit 4088.96 change 25.59MxComputeSimAnnealing(tsallis1996) evaluations 7413 fit 4062.98 change 0.1829MxComputeSimAnnealing(tsallis1996) evaluations 8998 fit 4244.39 change 121.2 MxComputeSimAnnealing(tsallis1996) evaluations 10572 fit 4062.74 change -26.14MxComputeSimAnnealing(tsallis1996) evaluations 12141 fit 4062.74 change -152.4MxComputeSimAnnealing(tsallis1996) evaluations 13704 fit 4063.02 change -2237 MxComputeSimAnnealing(tsallis1996) evaluations 15275 fit 7542.52 change 3478                                                                             
-#> MxComputeSimAnnealing(tsallis1996) evaluations 293 fit 4882.66 change 0.1274MxComputeSimAnnealing(tsallis1996) evaluations 1375 fit 7424 change 27.64   MxComputeSimAnnealing(tsallis1996) evaluations 2454 fit 5582.35 change 699.7MxComputeSimAnnealing(tsallis1996) evaluations 3529 fit 5424.59 change 26.11MxComputeSimAnnealing(tsallis1996) evaluations 4599 fit 8909.56 change 2896 MxComputeSimAnnealing(tsallis1996) evaluations 5677 fit 4002.29 change -1657MxComputeSimAnnealing(tsallis1996) evaluations 6748 fit 3989.94 change -1526MxComputeSimAnnealing(tsallis1996) evaluations 7821 fit 3915.27 change -717.8MxComputeSimAnnealing(tsallis1996) evaluations 8891 fit 3905.07 change 0.6553MxComputeSimAnnealing(tsallis1996) evaluations 9953 fit 3906.29 change -1124 MxComputeSimAnnealing(tsallis1996) evaluations 11009 fit 3902.94 change -259.1MxComputeSimAnnealing(tsallis1996) evaluations 12062 fit 4810.24 change 758.3 MxComputeSimAnnealing(tsallis1996) evaluations 13106 fit 3902.73 change 0.008203MxComputeSimAnnealing(tsallis1996) evaluations 14154 fit 3902.98 change -917.4  MxComputeSimAnnealing(tsallis1996) evaluations 15204 fit 5668.67 change 1732  MxComputeSimAnnealing(tsallis1996) evaluations 16258 fit 3902.72 change -0.1153MxComputeSimAnnealing(tsallis1996) evaluations 17313 fit 3902.71 change -1761  MxComputeSimAnnealing(tsallis1996) evaluations 18367 fit 4320.06 change 378.7MxComputeSimAnnealing(tsallis1996) evaluations 19419 fit 5672.78 change 1770 MxComputeSimAnnealing(tsallis1996) evaluations 20464 fit 4970.23 change 1068MxComputeSimAnnealing(tsallis1996) evaluations 21517 fit 3903.72 change -0.5596MxComputeSimAnnealing(tsallis1996) evaluations 22565 fit 3902.71 change -5235                                                                               
-#> MxComputeSimAnnealing(tsallis1996) evaluations 721 fit 8154.64 change 2048MxComputeSimAnnealing(tsallis1996) evaluations 1527 fit 14270.8 change 5809MxComputeSimAnnealing(tsallis1996) evaluations 2340 fit 4649.23 change 6.321MxComputeSimAnnealing(tsallis1996) evaluations 3146 fit 4707.42 change 58.19MxComputeSimAnnealing(tsallis1996) evaluations 3954 fit 4705.7 change 670.4 MxComputeSimAnnealing(tsallis1996) evaluations 4754 fit 4643.16 change -8.845MxComputeSimAnnealing(tsallis1996) evaluations 5561 fit 4665.03 change 52.37 MxComputeSimAnnealing(tsallis1996) evaluations 6362 fit 4598.32 change 500.4MxComputeSimAnnealing(tsallis1996) evaluations 7161 fit 9526.56 change 3460 MxComputeSimAnnealing(tsallis1996) evaluations 7963 fit 4572.99 change 1.074MxComputeSimAnnealing(tsallis1996) evaluations 8762 fit 4709.32 change 873.9MxComputeSimAnnealing(tsallis1996) evaluations 9564 fit 3837.98 change -904.8MxComputeSimAnnealing(tsallis1996) evaluations 10356 fit 4560.41 change 678.5MxComputeSimAnnealing(tsallis1996) evaluations 11149 fit 3845.93 change 9.835MxComputeSimAnnealing(tsallis1996) evaluations 11943 fit 4564.46 change 58.19MxComputeSimAnnealing(tsallis1996) evaluations 12737 fit 4757.49 change 270.1MxComputeSimAnnealing(tsallis1996) evaluations 13532 fit 3918.63 change 85.96MxComputeSimAnnealing(tsallis1996) evaluations 14324 fit 4175.25 change 289.7MxComputeSimAnnealing(tsallis1996) evaluations 15115 fit 3880.96 change -687.2MxComputeSimAnnealing(tsallis1996) evaluations 15901 fit 3855.69 change -2372 MxComputeSimAnnealing(tsallis1996) evaluations 16687 fit 3832.88 change -6513MxComputeSimAnnealing(tsallis1996) evaluations 17479 fit 4645.63 change -143.6MxComputeSimAnnealing(tsallis1996) evaluations 18264 fit 3833.86 change 1.259 MxComputeSimAnnealing(tsallis1996) evaluations 19051 fit 3832.64 change -748.5MxComputeSimAnnealing(tsallis1996) evaluations 19837 fit 3833.09 change -3158 MxComputeSimAnnealing(tsallis1996) evaluations 20627 fit 4786.05 change -4.22MxComputeSimAnnealing(tsallis1996) evaluations 21414 fit 3832.61 change -492.5MxComputeSimAnnealing(tsallis1996) evaluations 22202 fit 4505.34 change 672.7 MxComputeSimAnnealing(tsallis1996) evaluations 22986 fit 4673.44 change 840.9MxComputeSimAnnealing(tsallis1996) evaluations 23774 fit 4498.84 change 662  MxComputeSimAnnealing(tsallis1996) evaluations 24564 fit 3833.36 change 0.7969MxComputeSimAnnealing(tsallis1996) evaluations 25350 fit 3832.52 change -0.05661MxComputeSimAnnealing(tsallis1996) evaluations 26140 fit 3877.46 change -30.05  MxComputeSimAnnealing(tsallis1996) evaluations 26928 fit 3835.42 change 2.895 MxComputeSimAnnealing(tsallis1996) evaluations 27719 fit 3832.6 change 0.08327MxComputeSimAnnealing(tsallis1996) evaluations 28506 fit 3832.6 change -0.1412MxComputeSimAnnealing(tsallis1996) evaluations 29294 fit 3832.52 change -0.02464                                                                                
-#> MxComputeSimAnnealing(tsallis1996) evaluations 443 fit 4607.56 change 7.887MxComputeSimAnnealing(tsallis1996) evaluations 1090 fit 4741.88 change 1.158MxComputeSimAnnealing(tsallis1996) evaluations 1731 fit 4607.56 change 7.887MxComputeSimAnnealing(tsallis1996) evaluations 2374 fit 4599.67 change -6.374MxComputeSimAnnealing(tsallis1996) evaluations 3016 fit 4348.92 change -338.4MxComputeSimAnnealing(tsallis1996) evaluations 3662 fit 4374.51 change -231.5MxComputeSimAnnealing(tsallis1996) evaluations 4304 fit 4612.52 change -74.79MxComputeSimAnnealing(tsallis1996) evaluations 4950 fit 4600.14 change -6.348MxComputeSimAnnealing(tsallis1996) evaluations 5594 fit 4601.44 change -6.342MxComputeSimAnnealing(tsallis1996) evaluations 6237 fit 4624.93 change -6.777MxComputeSimAnnealing(tsallis1996) evaluations 6880 fit 4628.87 change -41.88MxComputeSimAnnealing(tsallis1996) evaluations 7523 fit 4631.94 change 2.001 MxComputeSimAnnealing(tsallis1996) evaluations 8162 fit 6406.44 change -1232MxComputeSimAnnealing(tsallis1996) evaluations 8801 fit 5599.76 change 1754 MxComputeSimAnnealing(tsallis1996) evaluations 9446 fit 6378.21 change 2537MxComputeSimAnnealing(tsallis1996) evaluations 10087 fit 4047.69 change 9.067MxComputeSimAnnealing(tsallis1996) evaluations 10731 fit 4021.91 change -4.777MxComputeSimAnnealing(tsallis1996) evaluations 11368 fit 3969.69 change -613.5MxComputeSimAnnealing(tsallis1996) evaluations 12006 fit 4670.59 change 769.2 MxComputeSimAnnealing(tsallis1996) evaluations 12647 fit 4480.46 change 7.024MxComputeSimAnnealing(tsallis1996) evaluations 13285 fit 3827.46 change -1319MxComputeSimAnnealing(tsallis1996) evaluations 13924 fit 3830.59 change -180.8MxComputeSimAnnealing(tsallis1996) evaluations 14559 fit 3822.2 change -0.1258MxComputeSimAnnealing(tsallis1996) evaluations 15195 fit 3831.08 change 9.561 MxComputeSimAnnealing(tsallis1996) evaluations 15831 fit 5920.47 change 2099 MxComputeSimAnnealing(tsallis1996) evaluations 16471 fit 3821.28 change 0.225MxComputeSimAnnealing(tsallis1996) evaluations 17110 fit 4023.13 change 2.399MxComputeSimAnnealing(tsallis1996) evaluations 17748 fit 4642.33 change -249.4MxComputeSimAnnealing(tsallis1996) evaluations 18384 fit 3827.29 change 3.068 MxComputeSimAnnealing(tsallis1996) evaluations 19022 fit 3820.69 change -0.092MxComputeSimAnnealing(tsallis1996) evaluations 19657 fit 4008.98 change 188.4 MxComputeSimAnnealing(tsallis1996) evaluations 20295 fit 3826.07 change -1082MxComputeSimAnnealing(tsallis1996) evaluations 20928 fit 3820.47 change -0.02837MxComputeSimAnnealing(tsallis1996) evaluations 21565 fit 3820.46 change -218.4  MxComputeSimAnnealing(tsallis1996) evaluations 22199 fit 4927.55 change 653.6 MxComputeSimAnnealing(tsallis1996) evaluations 22835 fit 3820.9 change -1554 MxComputeSimAnnealing(tsallis1996) evaluations 23471 fit 3820.44 change -246.3MxComputeSimAnnealing(tsallis1996) evaluations 24106 fit 3820.44 change -0.000218MxComputeSimAnnealing(tsallis1996) evaluations 24737 fit 3820.75 change 0.3078   MxComputeSimAnnealing(tsallis1996) evaluations 25373 fit 4077.3 change 4.234  MxComputeSimAnnealing(tsallis1996) evaluations 26006 fit 4909.86 change 1089MxComputeSimAnnealing(tsallis1996) evaluations 26641 fit 3821.41 change -7.659MxComputeSimAnnealing(tsallis1996) evaluations 27279 fit 4079.77 change 13.03 MxComputeSimAnnealing(tsallis1996) evaluations 27910 fit 4906.58 change -11.18MxComputeSimAnnealing(tsallis1996) evaluations 28544 fit 3822.17 change 1.721 MxComputeSimAnnealing(tsallis1996) evaluations 29178 fit 3820.88 change 0.4324MxComputeSimAnnealing(tsallis1996) evaluations 29812 fit 4926.96 change 358.2 MxComputeSimAnnealing(tsallis1996) evaluations 30446 fit 3820.61 change -18.77MxComputeSimAnnealing(tsallis1996) evaluations 31078 fit 3820.5 change -842   MxComputeSimAnnealing(tsallis1996) evaluations 31712 fit 3820.65 change 0.2191MxComputeSimAnnealing(tsallis1996) evaluations 32348 fit 3820.44 change -265.3MxComputeSimAnnealing(tsallis1996) evaluations 32984 fit 3820.82 change 0.3914MxComputeSimAnnealing(tsallis1996) evaluations 33618 fit 3820.43 change -10.72MxComputeSimAnnealing(tsallis1996) evaluations 34247 fit 4001.81 change 181.2 MxComputeSimAnnealing(tsallis1996) evaluations 34881 fit 3821.32 change 0.6633MxComputeSimAnnealing(tsallis1996) evaluations 35517 fit 3820.43 change 2.989e-05                                                                                 
+#> MxComputeSimAnnealing(tsallis1996) evaluations 872 fit 6940.28 change -628.1MxComputeSimAnnealing(tsallis1996) evaluations 2425 fit 7076.14 change 395  MxComputeSimAnnealing(tsallis1996) evaluations 3966 fit 6597.95 change -753.7MxComputeSimAnnealing(tsallis1996) evaluations 5478 fit 4723.73 change 656.1 MxComputeSimAnnealing(tsallis1996) evaluations 6999 fit 6216.17 change -137.3MxComputeSimAnnealing(tsallis1996) evaluations 8513 fit 4062.82 change -3493 MxComputeSimAnnealing(tsallis1996) evaluations 10011 fit 4062.77 change -1418MxComputeSimAnnealing(tsallis1996) evaluations 11508 fit 6315.65 change 64.47MxComputeSimAnnealing(tsallis1996) evaluations 12993 fit 4063.13 change -292.4MxComputeSimAnnealing(tsallis1996) evaluations 14478 fit 4790.77 change 726.2 MxComputeSimAnnealing(tsallis1996) evaluations 15967 fit 6308.3 change 4.912                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 526 fit 4882.53 change 2.272MxComputeSimAnnealing(tsallis1996) evaluations 1558 fit 8766.32 change -789.4MxComputeSimAnnealing(tsallis1996) evaluations 2583 fit 7436.28 change -2535 MxComputeSimAnnealing(tsallis1996) evaluations 3607 fit 10772.5 change 6173 MxComputeSimAnnealing(tsallis1996) evaluations 4624 fit 5431.97 change 54  MxComputeSimAnnealing(tsallis1996) evaluations 5650 fit 4026.8 change -1252MxComputeSimAnnealing(tsallis1996) evaluations 6671 fit 9318.88 change 2235MxComputeSimAnnealing(tsallis1996) evaluations 7688 fit 4043.31 change -349.3MxComputeSimAnnealing(tsallis1996) evaluations 8708 fit 3932.42 change -1624 MxComputeSimAnnealing(tsallis1996) evaluations 9723 fit 4806.03 change 8.753MxComputeSimAnnealing(tsallis1996) evaluations 10554 fit 3903.12 change -0.4546MxComputeSimAnnealing(tsallis1996) evaluations 11519 fit 4678.25 change 773.7  MxComputeSimAnnealing(tsallis1996) evaluations 12531 fit 3903.36 change 0.2926MxComputeSimAnnealing(tsallis1996) evaluations 13539 fit 3907.34 change -906.1MxComputeSimAnnealing(tsallis1996) evaluations 14540 fit 3903.45 change 0.3005MxComputeSimAnnealing(tsallis1996) evaluations 15546 fit 5664.87 change 1761  MxComputeSimAnnealing(tsallis1996) evaluations 16555 fit 3902.8 change -1772MxComputeSimAnnealing(tsallis1996) evaluations 17560 fit 4499.09 change 596.4MxComputeSimAnnealing(tsallis1996) evaluations 18562 fit 3902.71 change -48.09MxComputeSimAnnealing(tsallis1996) evaluations 19564 fit 3902.71 change -1767 MxComputeSimAnnealing(tsallis1996) evaluations 20566 fit 3950.27 change 46.96MxComputeSimAnnealing(tsallis1996) evaluations 21568 fit 4823.96 change 1.97 MxComputeSimAnnealing(tsallis1996) evaluations 22567 fit 3915.84 change -3.561                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 703 fit 9260.09 change -92.17MxComputeSimAnnealing(tsallis1996) evaluations 1464 fit 4652.11 change -2.347MxComputeSimAnnealing(tsallis1996) evaluations 2229 fit 4705.7 change 12.15  MxComputeSimAnnealing(tsallis1996) evaluations 2991 fit 4878.86 change -0.1781MxComputeSimAnnealing(tsallis1996) evaluations 3752 fit 4741.14 change -161.1 MxComputeSimAnnealing(tsallis1996) evaluations 4510 fit 4873.02 change 728.1 MxComputeSimAnnealing(tsallis1996) evaluations 5266 fit 4860.55 change 197.5MxComputeSimAnnealing(tsallis1996) evaluations 6023 fit 4681.13 change 488.8MxComputeSimAnnealing(tsallis1996) evaluations 6780 fit 4713.26 change 326.7MxComputeSimAnnealing(tsallis1996) evaluations 7537 fit 4525.43 change -6.681MxComputeSimAnnealing(tsallis1996) evaluations 8296 fit 4472.69 change 541.3 MxComputeSimAnnealing(tsallis1996) evaluations 9054 fit 4489.29 change -2.01MxComputeSimAnnealing(tsallis1996) evaluations 9813 fit 4491.88 change -2.015MxComputeSimAnnealing(tsallis1996) evaluations 10564 fit 3833.68 change -235.8MxComputeSimAnnealing(tsallis1996) evaluations 11320 fit 3835.69 change -55.92MxComputeSimAnnealing(tsallis1996) evaluations 12074 fit 4658.89 change 810.1 MxComputeSimAnnealing(tsallis1996) evaluations 12827 fit 3852.25 change -643.4MxComputeSimAnnealing(tsallis1996) evaluations 13577 fit 4174.07 change -412.2MxComputeSimAnnealing(tsallis1996) evaluations 14328 fit 4661.79 change 659.1 MxComputeSimAnnealing(tsallis1996) evaluations 15079 fit 4492.75 change -6358MxComputeSimAnnealing(tsallis1996) evaluations 15827 fit 3832.92 change 0.3616MxComputeSimAnnealing(tsallis1996) evaluations 16573 fit 3858.99 change 7.476 MxComputeSimAnnealing(tsallis1996) evaluations 17321 fit 4580.67 change 747.9MxComputeSimAnnealing(tsallis1996) evaluations 18067 fit 5621.64 change 1777 MxComputeSimAnnealing(tsallis1996) evaluations 18818 fit 3832.53 change -4.474MxComputeSimAnnealing(tsallis1996) evaluations 19567 fit 4495.43 change 3.675 MxComputeSimAnnealing(tsallis1996) evaluations 20313 fit 4575.96 change 727.2MxComputeSimAnnealing(tsallis1996) evaluations 21058 fit 9167.48 change 5087 MxComputeSimAnnealing(tsallis1996) evaluations 21805 fit 3832.66 change 0.08774MxComputeSimAnnealing(tsallis1996) evaluations 22551 fit 3832.53 change -5.389 MxComputeSimAnnealing(tsallis1996) evaluations 23297 fit 3836.92 change -298.2MxComputeSimAnnealing(tsallis1996) evaluations 24045 fit 3832.61 change -808.4MxComputeSimAnnealing(tsallis1996) evaluations 24789 fit 3840.62 change 8.034 MxComputeSimAnnealing(tsallis1996) evaluations 25534 fit 4583.34 change 645.7MxComputeSimAnnealing(tsallis1996) evaluations 26279 fit 3962.46 change 129.9MxComputeSimAnnealing(tsallis1996) evaluations 27027 fit 4597.95 change -24.08MxComputeSimAnnealing(tsallis1996) evaluations 27774 fit 3832.73 change 0.1978MxComputeSimAnnealing(tsallis1996) evaluations 28514 fit 3840.03 change -658  MxComputeSimAnnealing(tsallis1996) evaluations 29257 fit 3832.57 change -785                                                                            
+#> MxComputeSimAnnealing(tsallis1996) evaluations 100 fit 4689.82 change -8620MxComputeSimAnnealing(tsallis1996) evaluations 709 fit 11163 change 4359   MxComputeSimAnnealing(tsallis1996) evaluations 1323 fit 4110.47 change 10.3MxComputeSimAnnealing(tsallis1996) evaluations 1935 fit 4264.86 change 3.343MxComputeSimAnnealing(tsallis1996) evaluations 2541 fit 4606.05 change -6.474MxComputeSimAnnealing(tsallis1996) evaluations 3150 fit 8867.86 change 3661  MxComputeSimAnnealing(tsallis1996) evaluations 3760 fit 3902.84 change -207.6MxComputeSimAnnealing(tsallis1996) evaluations 4369 fit 4252.9 change -10.65 MxComputeSimAnnealing(tsallis1996) evaluations 4982 fit 4741.76 change 1.159MxComputeSimAnnealing(tsallis1996) evaluations 5593 fit 4607.79 change 561.5MxComputeSimAnnealing(tsallis1996) evaluations 6201 fit 4579.14 change -4842MxComputeSimAnnealing(tsallis1996) evaluations 6807 fit 3900.9 change -331.7MxComputeSimAnnealing(tsallis1996) evaluations 7418 fit 4676.12 change 1.178MxComputeSimAnnealing(tsallis1996) evaluations 8029 fit 4584.5 change 571.4 MxComputeSimAnnealing(tsallis1996) evaluations 8636 fit 7599.22 change -286.1MxComputeSimAnnealing(tsallis1996) evaluations 9243 fit 4142.18 change 269   MxComputeSimAnnealing(tsallis1996) evaluations 9851 fit 4649.63 change 661.8MxComputeSimAnnealing(tsallis1996) evaluations 10461 fit 4445.35 change 503.4MxComputeSimAnnealing(tsallis1996) evaluations 11069 fit 9780 change 5594    MxComputeSimAnnealing(tsallis1996) evaluations 11674 fit 3835.36 change 6.565MxComputeSimAnnealing(tsallis1996) evaluations 12277 fit 6190.97 change 2357 MxComputeSimAnnealing(tsallis1996) evaluations 12884 fit 4005.2 change 163.5MxComputeSimAnnealing(tsallis1996) evaluations 13490 fit 3827.43 change -399.9MxComputeSimAnnealing(tsallis1996) evaluations 14094 fit 4018.55 change -452.8MxComputeSimAnnealing(tsallis1996) evaluations 14696 fit 4625.07 change -242.3MxComputeSimAnnealing(tsallis1996) evaluations 15297 fit 3821.5 change -0.8934MxComputeSimAnnealing(tsallis1996) evaluations 15904 fit 3846.96 change 22.8  MxComputeSimAnnealing(tsallis1996) evaluations 16512 fit 3821.61 change -707.3MxComputeSimAnnealing(tsallis1996) evaluations 17121 fit 4605.2 change 784.2  MxComputeSimAnnealing(tsallis1996) evaluations 17728 fit 4058.62 change 33.6MxComputeSimAnnealing(tsallis1996) evaluations 18332 fit 4885.14 change 337.9MxComputeSimAnnealing(tsallis1996) evaluations 18932 fit 4075.72 change 58.85MxComputeSimAnnealing(tsallis1996) evaluations 19537 fit 4917.9 change -3.147MxComputeSimAnnealing(tsallis1996) evaluations 20143 fit 6766.6 change 2946  MxComputeSimAnnealing(tsallis1996) evaluations 20746 fit 3821.96 change -431.6MxComputeSimAnnealing(tsallis1996) evaluations 21350 fit 3820.99 change -330.8MxComputeSimAnnealing(tsallis1996) evaluations 21953 fit 3820.45 change -91.86MxComputeSimAnnealing(tsallis1996) evaluations 22558 fit 3820.45 change -746.3MxComputeSimAnnealing(tsallis1996) evaluations 23161 fit 3820.98 change -0.6024MxComputeSimAnnealing(tsallis1996) evaluations 23765 fit 3820.45 change -1104  MxComputeSimAnnealing(tsallis1996) evaluations 24365 fit 4071.75 change -8.449MxComputeSimAnnealing(tsallis1996) evaluations 24971 fit 4925.95 change 1105  MxComputeSimAnnealing(tsallis1996) evaluations 25575 fit 3820.44 change -3333MxComputeSimAnnealing(tsallis1996) evaluations 26180 fit 4002.04 change 181.6MxComputeSimAnnealing(tsallis1996) evaluations 26785 fit 3820.44 change -0.006772MxComputeSimAnnealing(tsallis1996) evaluations 27390 fit 4061.25 change -16.74   MxComputeSimAnnealing(tsallis1996) evaluations 27992 fit 3820.45 change -99.9 MxComputeSimAnnealing(tsallis1996) evaluations 28595 fit 3825.13 change -2.218MxComputeSimAnnealing(tsallis1996) evaluations 29198 fit 3820.84 change 0.407 MxComputeSimAnnealing(tsallis1996) evaluations 29800 fit 3820.43 change -264.4MxComputeSimAnnealing(tsallis1996) evaluations 30400 fit 3820.43 change -77.75MxComputeSimAnnealing(tsallis1996) evaluations 31002 fit 3821.04 change -41.45MxComputeSimAnnealing(tsallis1996) evaluations 31606 fit 3840.48 change 19.9  MxComputeSimAnnealing(tsallis1996) evaluations 32210 fit 3888.75 change 68.31MxComputeSimAnnealing(tsallis1996) evaluations 32814 fit 3827.04 change 6.522MxComputeSimAnnealing(tsallis1996) evaluations 33413 fit 4887.72 change 1067 MxComputeSimAnnealing(tsallis1996) evaluations 34017 fit 3820.43 change -833.3MxComputeSimAnnealing(tsallis1996) evaluations 34616 fit 3974.8 change -32.37 MxComputeSimAnnealing(tsallis1996) evaluations 35212 fit 4573.51 change 716.4MxComputeSimAnnealing(tsallis1996) evaluations 35814 fit 3842.61 change 22.08                                                                             
 ```
 
 ``` r
@@ -263,7 +462,7 @@ Note that we can put two models into a list to compare them.
 
 
 ```
-#> MxComputeSimAnnealing(tsallis1996) evaluations 416 fit 4899.78 change -21.74MxComputeSimAnnealing(tsallis1996) evaluations 1211 fit 4625.97 change -39.85MxComputeSimAnnealing(tsallis1996) evaluations 2003 fit 8342.72 change 461.7 MxComputeSimAnnealing(tsallis1996) evaluations 2800 fit 4971.3 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 3597 fit 4925.11 change 569.1MxComputeSimAnnealing(tsallis1996) evaluations 4392 fit 4787.69 change 1.708MxComputeSimAnnealing(tsallis1996) evaluations 5185 fit 4970.65 change 1.532MxComputeSimAnnealing(tsallis1996) evaluations 5975 fit 4658.54 change 12.93MxComputeSimAnnealing(tsallis1996) evaluations 6770 fit 4765.52 change -2.473MxComputeSimAnnealing(tsallis1996) evaluations 7564 fit 4974.41 change 15.08 MxComputeSimAnnealing(tsallis1996) evaluations 8360 fit 4002.63 change -138.5MxComputeSimAnnealing(tsallis1996) evaluations 9155 fit 4004.44 change -617.1MxComputeSimAnnealing(tsallis1996) evaluations 9949 fit 3865.48 change -3156 MxComputeSimAnnealing(tsallis1996) evaluations 10742 fit 4877.94 change -3.227MxComputeSimAnnealing(tsallis1996) evaluations 11534 fit 4618.65 change 784.4 MxComputeSimAnnealing(tsallis1996) evaluations 12326 fit 4721.55 change 875.7MxComputeSimAnnealing(tsallis1996) evaluations 13114 fit 4593.86 change -8.922MxComputeSimAnnealing(tsallis1996) evaluations 13900 fit 4024.7 change -786.9 MxComputeSimAnnealing(tsallis1996) evaluations 14692 fit 4807.24 change 986.8MxComputeSimAnnealing(tsallis1996) evaluations 15469 fit 4766.09 change -26.19MxComputeSimAnnealing(tsallis1996) evaluations 16254 fit 4625.61 change -2.095MxComputeSimAnnealing(tsallis1996) evaluations 17045 fit 3864.19 change -342.3MxComputeSimAnnealing(tsallis1996) evaluations 17833 fit 4677.77 change 40.07 MxComputeSimAnnealing(tsallis1996) evaluations 18624 fit 4770.02 change 13.27MxComputeSimAnnealing(tsallis1996) evaluations 19415 fit 4682.54 change 858  MxComputeSimAnnealing(tsallis1996) evaluations 20206 fit 4670.21 change 851.1MxComputeSimAnnealing(tsallis1996) evaluations 20994 fit 4428.46 change 609.7MxComputeSimAnnealing(tsallis1996) evaluations 21780 fit 4681.58 change -6264MxComputeSimAnnealing(tsallis1996) evaluations 22570 fit 3852.43 change 33.31MxComputeSimAnnealing(tsallis1996) evaluations 23362 fit 3826.38 change -846.6MxComputeSimAnnealing(tsallis1996) evaluations 24152 fit 3900.6 change 80.3   MxComputeSimAnnealing(tsallis1996) evaluations 24942 fit 4691 change 349.7 MxComputeSimAnnealing(tsallis1996) evaluations 25727 fit 4771.84 change 953.2MxComputeSimAnnealing(tsallis1996) evaluations 26515 fit 3820.47 change -37.03MxComputeSimAnnealing(tsallis1996) evaluations 27303 fit 3829.43 change 2.795 MxComputeSimAnnealing(tsallis1996) evaluations 28090 fit 3818.58 change -35.61MxComputeSimAnnealing(tsallis1996) evaluations 28876 fit 3828.95 change -756.4MxComputeSimAnnealing(tsallis1996) evaluations 29661 fit 4633.1 change -67.64 MxComputeSimAnnealing(tsallis1996) evaluations 30448 fit 4636.16 change 817.7MxComputeSimAnnealing(tsallis1996) evaluations 31238 fit 3818.54 change -0.4367MxComputeSimAnnealing(tsallis1996) evaluations 32026 fit 3826.62 change 8.121  MxComputeSimAnnealing(tsallis1996) evaluations 32812 fit 4181.9 change 363.4 MxComputeSimAnnealing(tsallis1996) evaluations 33597 fit 3818.49 change -0.01435MxComputeSimAnnealing(tsallis1996) evaluations 34385 fit 3847.18 change 28.61   MxComputeSimAnnealing(tsallis1996) evaluations 35170 fit 3818.52 change -807.6MxComputeSimAnnealing(tsallis1996) evaluations 35954 fit 9158.65 change 5328  MxComputeSimAnnealing(tsallis1996) evaluations 36738 fit 4710.94 change 882.4MxComputeSimAnnealing(tsallis1996) evaluations 37517 fit 3818.48 change -783.4MxComputeSimAnnealing(tsallis1996) evaluations 38301 fit 3818.49 change -0.0581MxComputeSimAnnealing(tsallis1996) evaluations 39088 fit 3839.01 change 20.54  MxComputeSimAnnealing(tsallis1996) evaluations 39874 fit 3818.49 change -1.57MxComputeSimAnnealing(tsallis1996) evaluations 40657 fit 4505.2 change 686.3 MxComputeSimAnnealing(tsallis1996) evaluations 41438 fit 3818.49 change -96.65MxComputeSimAnnealing(tsallis1996) evaluations 42218 fit 3871.43 change -45.87MxComputeSimAnnealing(tsallis1996) evaluations 43000 fit 3819.81 change -894.6MxComputeSimAnnealing(tsallis1996) evaluations 43780 fit 3829.67 change -225.9MxComputeSimAnnealing(tsallis1996) evaluations 44560 fit 3818.48 change -9.99                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 113 fit 9215.45 change 2111MxComputeSimAnnealing(tsallis1996) evaluations 837 fit 5031.12 change 1.304MxComputeSimAnnealing(tsallis1996) evaluations 1568 fit 5057.53 change 0   MxComputeSimAnnealing(tsallis1996) evaluations 2300 fit 4581.86 change 5.841MxComputeSimAnnealing(tsallis1996) evaluations 3030 fit 4589.16 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 3758 fit 4528.82 change 91.7MxComputeSimAnnealing(tsallis1996) evaluations 4485 fit 4814.15 change 1.369MxComputeSimAnnealing(tsallis1996) evaluations 5213 fit 5056.79 change 25.67MxComputeSimAnnealing(tsallis1996) evaluations 5940 fit 4581.86 change 5.841MxComputeSimAnnealing(tsallis1996) evaluations 6666 fit 4656 change -7.434  MxComputeSimAnnealing(tsallis1996) evaluations 7393 fit 3866.29 change -2825MxComputeSimAnnealing(tsallis1996) evaluations 8123 fit 4780.53 change 622.5MxComputeSimAnnealing(tsallis1996) evaluations 8853 fit 5069.99 change 26.11MxComputeSimAnnealing(tsallis1996) evaluations 9583 fit 5029.79 change 128.9MxComputeSimAnnealing(tsallis1996) evaluations 10309 fit 4439.56 change 83.41MxComputeSimAnnealing(tsallis1996) evaluations 11038 fit 4645.69 change 278.6MxComputeSimAnnealing(tsallis1996) evaluations 11765 fit 3853.02 change -855.6MxComputeSimAnnealing(tsallis1996) evaluations 12490 fit 4239.81 change -314.2MxComputeSimAnnealing(tsallis1996) evaluations 13215 fit 4441 change 0        MxComputeSimAnnealing(tsallis1996) evaluations 13936 fit 4729.28 change 0.01518MxComputeSimAnnealing(tsallis1996) evaluations 14663 fit 3954.13 change -1006  MxComputeSimAnnealing(tsallis1996) evaluations 15390 fit 3822.8 change -649.8MxComputeSimAnnealing(tsallis1996) evaluations 16115 fit 3894.18 change -505.1MxComputeSimAnnealing(tsallis1996) evaluations 16841 fit 4752.67 change 0.01252MxComputeSimAnnealing(tsallis1996) evaluations 17564 fit 4413.34 change 583    MxComputeSimAnnealing(tsallis1996) evaluations 18287 fit 4219.31 change -357.2MxComputeSimAnnealing(tsallis1996) evaluations 19012 fit 3935.83 change 114.7 MxComputeSimAnnealing(tsallis1996) evaluations 19736 fit 4820.95 change -22.02MxComputeSimAnnealing(tsallis1996) evaluations 20458 fit 4008.67 change 56.07 MxComputeSimAnnealing(tsallis1996) evaluations 21178 fit 4766.25 change 945.5MxComputeSimAnnealing(tsallis1996) evaluations 21904 fit 4816.23 change 930.2MxComputeSimAnnealing(tsallis1996) evaluations 22628 fit 4574.06 change 633.9MxComputeSimAnnealing(tsallis1996) evaluations 23352 fit 3820.01 change -957.1MxComputeSimAnnealing(tsallis1996) evaluations 24076 fit 3827.95 change 8.29  MxComputeSimAnnealing(tsallis1996) evaluations 24795 fit 4625.04 change 793.1MxComputeSimAnnealing(tsallis1996) evaluations 25519 fit 4639.74 change 452.9MxComputeSimAnnealing(tsallis1996) evaluations 26241 fit 3819.43 change -4.259MxComputeSimAnnealing(tsallis1996) evaluations 26960 fit 4190.57 change -4797 MxComputeSimAnnealing(tsallis1996) evaluations 27683 fit 4127.03 change 308  MxComputeSimAnnealing(tsallis1996) evaluations 28403 fit 3819.05 change -365.3MxComputeSimAnnealing(tsallis1996) evaluations 29127 fit 4959.2 change 1136   MxComputeSimAnnealing(tsallis1996) evaluations 29849 fit 3818.67 change -836.5MxComputeSimAnnealing(tsallis1996) evaluations 30573 fit 3846.69 change 27.52 MxComputeSimAnnealing(tsallis1996) evaluations 31294 fit 4770.76 change 766.5MxComputeSimAnnealing(tsallis1996) evaluations 32014 fit 3818.56 change -855.3MxComputeSimAnnealing(tsallis1996) evaluations 32737 fit 3990.79 change 30.94 MxComputeSimAnnealing(tsallis1996) evaluations 33459 fit 3819.39 change -812.5MxComputeSimAnnealing(tsallis1996) evaluations 34179 fit 3852.85 change -535.8MxComputeSimAnnealing(tsallis1996) evaluations 34901 fit 3818.5 change -94.21 MxComputeSimAnnealing(tsallis1996) evaluations 35623 fit 3818.71 change 0.2177MxComputeSimAnnealing(tsallis1996) evaluations 36343 fit 4718.35 change 870.8 MxComputeSimAnnealing(tsallis1996) evaluations 37064 fit 3820.08 change -63.68MxComputeSimAnnealing(tsallis1996) evaluations 37787 fit 3818.51 change -895.3MxComputeSimAnnealing(tsallis1996) evaluations 38510 fit 3935.97 change 117.4 MxComputeSimAnnealing(tsallis1996) evaluations 39227 fit 3979.77 change 161.2MxComputeSimAnnealing(tsallis1996) evaluations 39945 fit 3818.48 change -17.99MxComputeSimAnnealing(tsallis1996) evaluations 40668 fit 3823.52 change -16.27MxComputeSimAnnealing(tsallis1996) evaluations 41390 fit 3843.34 change 23.75 MxComputeSimAnnealing(tsallis1996) evaluations 42112 fit 3818.48 change -4   MxComputeSimAnnealing(tsallis1996) evaluations 42831 fit 3828.86 change 9.979MxComputeSimAnnealing(tsallis1996) evaluations 43551 fit 4728.04 change 908.3MxComputeSimAnnealing(tsallis1996) evaluations 44270 fit 3818.48 change -401.1                                                                              
 ```
 
 ``` r
@@ -275,10 +474,10 @@ table_fit(compare)
 
 Table: Comparing competing theoretical models
 
-| Name|    LL| Parameters|  BIC| Entropy| prob_min| prob_max| n_min| n_max|
-|----:|-----:|----------:|----:|-------:|--------:|--------:|-----:|-----:|
-|    1| -1916|         23| 3976|    0.75|     0.81|     0.92|  0.16|  0.34|
-|    2| -1909|         35| 4037|    0.78|     0.84|     0.92|  0.16|  0.32|
+|Name       |    LL| Parameters|  BIC| Entropy| prob_min| prob_max| n_min| n_max|
+|:----------|-----:|----------:|----:|-------:|--------:|--------:|-----:|-----:|
+|mix4       | -1916|         23| 3976|    0.75|     0.81|     0.92|  0.16|  0.34|
+|free var 4 | -1909|         35| 4037|    0.78|     0.84|     0.92|  0.16|  0.32|
 
 
 
@@ -297,7 +496,7 @@ res_final <- mx_switch_labels(res[[4]])
 ```
 
 ```
-#> MxComputeNumericDeriv 169/276                             
+#> MxComputeNumericDeriv 234/276                             
 ```
 
 The 4-class model yielded classes of reasonable size;
@@ -354,7 +553,7 @@ However, we omit the density plots, because `plot_bivariate()` also includes the
 ``` r
 plot_bivariate(res_final)
 ```
-![](lca_confirmatory_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](lca_confirmatory_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
 <div class="figure">
 <img src="lpa_bivariate.png" alt="Bivariate profile plot" width="80%" />
 <p class="caption">Bivariate profile plot</p>
@@ -394,109 +593,11 @@ Note however that the observed classes do not match the hypothesized pattern of 
 ``` r
 plot_profiles(res_final)
 ```
-![](lca_confirmatory_files/figure-html/unnamed-chunk-22-1.png)<!-- -->![](lca_confirmatory_files/figure-html/unnamed-chunk-22-2.png)<!-- -->
+![](lca_confirmatory_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
 <div class="figure">
 <img src="lpa_profiles.png" alt="Bivariate profile plot" width="80%" />
 <p class="caption">Bivariate profile plot</p>
 </div>
-
-## Auxiliary Analyses
-
-We may want to compare the different classes on auxiliary variables or models.
-The `BCH()` function applies three-step analysis,
-which compares the classes using a multi-group model,
-controlling for classification error.
-We consider two examples: a single variable, and an auxiliary model.
-
-### Comparing Means or Proportions Across Classes
-
-For a single (continuous or ordinal) variable,
-we can call the BCH function and simply supply the auxiliary variable to the `data` argument, omitting the `model` argument.
-Below, we estimate an auxiliary model to compare the sex of patients between classes:
-
-
-``` r
-aux_sex <- BCH(res_final, data = zegwaard_carecompass$sexpatient)
-```
-
-
-To obtain an omnibus likelihood ratio test of the significance of these sex differences across classes,
-as well as pairwise comparisons between classes,
-use `lr_test(aux_sex)`.
-The results indicate that there are significant sex differences across classes, $\Delta LL(1) = 8.7, p = .003$.
-Pairwise comparisons indicate that class 3 differs significantly from classes 1 and 2.
-The results can be reported in probability scale using `table_prob(aux_sex)`.
-It appears that the entrapped class disproportionately cares for female patients.
-
-### Comparing Auxiliary Models Across Classes
-
-We can also compare a simple model between classes.
-Specifically, we will examine whether the distance predicts the frequency of visits differently across classes (treated as continuous).
-
-
-``` r
-df_aux <- zegwaard_carecompass[, c("freqvisit", "distance")]
-df_aux$freqvisit <- as.numeric(df_aux$freqvisit)
-aux_model <- BCH(res_final, model = "freqvisit ~ distance", data = df_aux)
-```
-
-
-To obtain an omnibus likelihood ratio test of the difference in regression coefficients across classes
-and pairwise comparisons between classes,
-use `lr_test(aux_model, compare = "A")`.
-The results indicate that there are no significant sex differences across classes, $\Delta LL(3) = 0.98, p = .81$.
-The results can be reported using `table_results(aux_model)`:
-
-
-``` r
-table_results(aux_model)
-```
-
-
-```
-#>                                       label    est_sig     se pval            confint
-#> 1  Regressions.freqvisit.ON.distance.class1       0.00   0.00 0.80      [-0.00, 0.00]
-#> 2                    Means.freqvisit.class1    3.99***   0.18 0.00       [3.64, 4.35]
-#> 3                     Means.distance.class1  155.25***   3.80 0.00   [147.80, 162.70]
-#> 4                Variances.freqvisit.class1    0.53***   0.06 0.00       [0.42, 0.64]
-#> 5                 Variances.distance.class1 2464.07*** 266.69 0.00 [1941.37, 2986.77]
-#> 6  Regressions.freqvisit.ON.distance.class2       0.00   0.00 0.77      [-0.00, 0.01]
-#> 7                    Means.freqvisit.class2    3.66***   0.43 0.00       [2.81, 4.51]
-#> 8                     Means.distance.class2  159.52***   2.79 0.00   [154.05, 164.98]
-#> 9                Variances.freqvisit.class2    1.19***   0.14 0.00       [0.92, 1.46]
-#> 10                Variances.distance.class2 1144.27*** 133.42 0.00  [882.77, 1405.77]
-#> 11 Regressions.freqvisit.ON.distance.class3      -0.00   0.00 0.35      [-0.00, 0.00]
-#> 12                   Means.freqvisit.class3    3.95***   0.27 0.00       [3.43, 4.47]
-#> 13                    Means.distance.class3  147.24***   6.09 0.00   [135.30, 159.18]
-#> 14               Variances.freqvisit.class3    1.29***   0.17 0.00       [0.95, 1.63]
-#> 15                Variances.distance.class3 4200.66*** 558.51 0.00 [3105.99, 5295.32]
-#> 16 Regressions.freqvisit.ON.distance.class4      -0.00   0.00 0.91      [-0.00, 0.00]
-#> 17                   Means.freqvisit.class4    3.32***   0.38 0.00       [2.57, 4.08]
-#> 18                    Means.distance.class4  167.02***   7.06 0.00   [153.18, 180.86]
-#> 19               Variances.freqvisit.class4    1.48***   0.23 0.00       [1.02, 1.93]
-#> 20                Variances.distance.class4 3989.68*** 630.61 0.00 [2753.69, 5225.66]
-#>     group
-#> 1  class1
-#> 2  class1
-#> 3  class1
-#> 4  class1
-#> 5  class1
-#> 6  class2
-#> 7  class2
-#> 8  class2
-#> 9  class2
-#> 10 class2
-#> 11 class3
-#> 12 class3
-#> 13 class3
-#> 14 class3
-#> 15 class3
-#> 16 class4
-#> 17 class4
-#> 18 class4
-#> 19 class4
-#> 20 class4
-```
 
 
 ## Predicting class membership

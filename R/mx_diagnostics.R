@@ -1,8 +1,8 @@
-#' Check Convergence of an `OpenMx` Model
+#' Diagnose an `OpenMx` Model
 #'
 #' Evaluates convergence and numerical diagnostics for an `OpenMx` model.
 #'
-#' @param model A fitted [OpenMx::mxModel()] object.
+#' @param model A fitted `mxModel` object.
 #' @param check Character vector specifying which diagnostics to perform out of
 #' `c("convergence", "fit", "parameters", "standard_errors", "boundaries",
 #' "hessian")`. Default: all diagnostics.
@@ -39,17 +39,17 @@
 #'
 #' fit <- remix(dat$yi, dat$vi, classes = 2)
 #'
-#' # Run all convergence checks
-#' mx_convergence(fit)
+#' # Run all -diagnostic checks
+#' mx_diagnostics(fit)
 #'
 #' # Check only optimizer convergence and model fit
-#' mx_convergence(fit, check = c("convergence", "fit"))
+#' mx_diagnostics(fit, check = c("convergence", "fit"))
 #'
 #' # Overall result
-#' mx_convergence(fit)$checks_pass
+#' mx_diagnostics(fit)$checks_pass
 #' }
 #' @export
-mx_convergence <- function(model, check = c("convergence", "fit", "parameters", "standard_errors", "boundaries", "hessian"), tol = 1e-6) {
+mx_diagnostics <- function(model, check = c("convergence", "fit", "parameters", "standard_errors", "boundaries", "hessian"), tol = 1e-6) {
   # If the model was wrapped in try() and that failed, return checks_pass = FALSE
   if (inherits(model, what = "try-error")) {
     return(list(checks_pass = FALSE))
@@ -151,7 +151,7 @@ mx_convergence <- function(model, check = c("convergence", "fit", "parameters", 
     hessian_ok = hessian_ok,
     warnings = warnings
   )
-  class(out) <- c("mx_convergence", class(out))
+  class(out) <- c("mx_diagnostics", class(out))
   return(out)
 }
 
@@ -180,7 +180,7 @@ mx_boundary_estimates <- function(fit, tol = 1e-6) {
 
 
 #' @export
-print.mx_convergence <- function(x, ...) {
+print.mx_diagnostics <- function(x, ...) {
 
   cat("OpenMx convergence diagnostics\n")
   cat("------------------------------\n")

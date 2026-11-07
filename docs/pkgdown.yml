@@ -3,8 +3,10 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   Generating_syntax: Generating_syntax.html
+  lca_auxiliary: lca_auxiliary.html
   lca_confirmatory: lca_confirmatory.html
   lca_exploratory: lca_exploratory.html
+  lca_introduction: lca_introduction.html
   lca_lcga: lca_lcga.html
   lca_ordinal: lca_ordinal.html
   mixed_lca: mixed_lca.html
@@ -14,7 +16,7 @@ articles:
   sem_graph: sem_graph.html
   SMART_LCA_checklist: SMART_LCA_checklist.html
   Tabulating_results: Tabulating_results.html
-last_built: 2026-09-07T21:27Z
+last_built: 2026-11-07T14:46Z
 urls:
   reference: https://cjvanlissa.github.io/tidySEM/reference
   article: https://cjvanlissa.github.io/tidySEM/articles

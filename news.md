@@ -1,9 +1,13 @@
 # tidySEM 0.3.0
 
 * tidySEM now supports mixture models estimated with the metamixture package
-* Bugfixes and improvements to table_results(), mixture_starts(), BCH(), and
+* Bugfixes and improvements to pmc(), mixture_starts(), BCH(), and
   pseudo_class()
-* Added two_step(), mx_convergence()
+* Added two_step(), mx_diagnostics()
+* table_results() now handles thresholds, fixed parameters, robust standard
+  errors, and profile likelihood confidence intervals better
+* Improved precision of entropy criterion, reported by table_fit() for mixture
+  models
 
 # tidySEM 0.2.13
 

@@ -3,11 +3,12 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/gmm.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/index.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_auxiliary.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.html</loc></url>
-<url><loc>https://cjvanlissa.github.io/tidySEM/articles/LCGA.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa_confiratory.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa_exploratory.html</loc></url>
@@ -79,6 +80,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_diagnostics.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_growth_mixture.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_lca.html</loc></url>
@@ -87,6 +89,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/mx_switch_labels.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/nodes.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/one_step.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/param_label.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/paste2.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/plas_depression.html</loc></url>
@@ -102,6 +105,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/pseudo_class.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/random_starts.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/rbind_tables.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/register_tidySEM_method.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/report.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/report_columns.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/run_lavaan.html</loc></url>
@@ -117,7 +121,9 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/table_prob.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/table_results.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/tidy_sem.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/two_step.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/wald_test.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/zegwaard_carecompass.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/zhao_2025.html</loc></url>
 </urlset>
 

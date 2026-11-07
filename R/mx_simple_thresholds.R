@@ -315,12 +315,22 @@ mx_deviances <- function(
     }
 
   } else {
-
-    thresh_mat <- expand_arg(
-      values,
-      "values",
-      0
-    )
+    thresh_mat <- matrix(0, maxthres, nvars)
+    if (!is.null(dim(values))) {
+      # Matrix or data.frame containing all positions
+      if (!identical(dim(values), dim(thresh_mat))) {
+        stop("Dimensions of 'values' do not match threshold matrix.")
+      }
+      thresh_mat[free_mat] <- as.matrix(values)[free_mat]
+    } else if (length(values) == sum(free_mat)) {
+      # Vector containing only free values
+      thresh_mat[free_mat] <- values
+    } else if (length(values) == length(thresh_mat)) {
+      # Vector containing all positions, in column-major order
+      thresh_mat[free_mat] <- values[as.vector(free_mat)]
+    } else {
+      stop("Invalid length or dimensions for 'values'.")
+    }
   }
 
   if (!is.numeric(thresh_mat) ||
@@ -520,6 +530,9 @@ mx_deviances <- function(
 #' @title Data Quantiles
 #' @description Get quantiles based on empirical normal distribution of data.
 #' @param df A `data.frame` with only columns of class `ordered`.
+#' @param weights Optional case weights.
+#' @param alpha Continuity correction for ordinal variables, in case of missing
+#' categories.
 #' @return A matrix with the appropriate dimensions for the threshold matrix for
 #' `df`, see \code{\link[OpenMx:mxThreshold]{OpenMx::mxThreshold()}}.
 #' @examples
@@ -528,15 +541,31 @@ mx_deviances <- function(
 #' prob = c(.1, .2, .5, .2))))
 #' mx_data_quantiles(df)
 #' @export
-mx_data_quantiles <- function(df){
+mx_data_quantiles <- function(df, weights = NULL, alpha = .5){
   isordered <- sapply(df, inherits, what = "ordered")
   if(any(!isordered)) stop("All variables provided to mx_data_quantiles() must be ordered categorical.")
-  numcats <- sapply(df, function(x){length(levels(x))})
-  maxthres <- max(numcats)-1L
-  vals <- matrix(1e-3, nrow = maxthres, ncol = ncol(df))
-  for(v in seq_along(numcats)){
-    vals[1:(numcats[v]-1L), v] <- qnorm(p = cumsum(prop.table(table(df[[v]]))[1:(numcats[v]-1L)]), lower.tail = TRUE)
-  }
+  if(is.null(weights)) weights <- rep(1, nrow(df))
+  vals <- data.frame(do.call(cbind, lapply(df, function(y){
+    J <- nlevels(y)
+    if (J < 2L) {
+      stop("Ordinal variable must have at least two levels.")
+    }
+    # Weighted category frequencies
+    counts <- vapply(seq_len(J), function(j) {
+        sum(weights[!is.na(y) & as.integer(y) == j], na.rm = TRUE)
+      }, numeric(1))
+
+    # Smooth empty categories
+    if(any(counts == 0)) counts <- counts + alpha
+
+    probs <- counts / sum(counts)
+
+    # Cumulative probabilities excluding final category
+    cumprobs <- cumsum(probs)[seq_len(J - 1L)]
+
+    # Probit thresholds
+    stats::qnorm(cumprobs)
+  })))
   colnames(vals) <- names(df)
   return(vals)
 }

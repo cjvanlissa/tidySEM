@@ -65,6 +65,17 @@ table_fit.list <- function(x, ...) {
     }, error = function(e){NULL})
   })
   out <- bind_list(out)
+  out$Name <- out$modelName
+  out <- .renamefits(out, "mx")
+  remove_these <- c("saturatedDoF", "independenceDoF", "saturatedParameters",
+                    "independenceParameters", "ChiDoF", "satDoF", "indDoF", "RMSEANull",
+                    "TLI", "RMSEA", "modelName", "RMSEASquared", "observedStatistics", "df", "Minus2LogLikelihood", "p")
+
+  out <- out[, !names(out) %in% remove_these, drop = FALSE]
+  ordr <- c("Name", "Classes", "LL", "n", "Parameters",
+            "AIC", "BIC", "saBIC", "Entropy",
+            "prob_min", "prob_max", "n_min", "n_max")
+  out <- out[, c(ordr[ordr %in% names(out)], names(out)[!names(out) %in% ordr])]
   class(out) <- c("tidy_fit", class(out))
   return(out)
 }

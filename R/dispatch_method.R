@@ -30,7 +30,7 @@ register_tidySEM_method <- function(generic, type, fun) {
 
 dispatch_method <- function(x, generic, ...) {
 
-  type <- attr(x, "tidySEM")
+  type <- as.character(attr(x, "tidySEM"))[1]
 
   if (is.null(type)) {
     type <- "MxModel"
