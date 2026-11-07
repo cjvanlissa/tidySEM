@@ -251,7 +251,7 @@ table_results.MxModel <- function (x, columns = c("label", "est_sig", "se", "pva
   }
   if(!is.null(columns)) {
     keep <- intersect(columns, names(results))
-    unknown <- setdiff(columns, c("group", "level", names(results)))
+    unknown <- setdiff(columns, c("group", "level", "class", names(results)))
     if (length(unknown)) {
       warning("Unavailable columns requested: ", paste(unknown, collapse = ", "), call. = FALSE)
     }
