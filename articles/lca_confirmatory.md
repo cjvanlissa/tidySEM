@@ -1,15 +1,196 @@
-# Confirmatory LPA for the Caregiver Compass
+# Confirmatory Latent Class Analysis
 
-This is an example of confirmatory LPA using `tidySEM`, as explained in
-Van Lissa, C. J., Garnier-Villarreal, M., & Anadria, D. (2023).
-*Recommended Practices in Latent Class Analysis using the Open-Source
-R-Package tidySEM.* Structural Equation Modeling.
-<https://doi.org/10.1080/10705511.2023.2250920>. The simulated data are
-based on work by Zegwaard and colleagues, who sought to establish a
-typology of caregivers who support a close other receiving outpatient
-psychological care. Qualitative research among experts resulted in a
-theory postulating the existence of four types of caregivers (translated
-from the original Dutch):
+When theory makes specific predictions about the number of latent
+classes, or even their parameter values - a confirmatory use of LCA is
+in order.
+
+This vignette explains confirmatory Latent Class Analysis (LCA) using
+`tidySEM`, as discussed in [Van Lissa, C. J., Garnier-Villarreal, M., &
+Anadria, D. (2023). *Recommended Practices in Latent Class Analysis
+using the Open-Source R-Package tidySEM.* Structural Equation
+Modeling.](https://doi.org/10.1080/10705511.2023.2250920).
+
+## Example 1: Depression
+
+For example, suppose that clinical psychological theory proposes the
+existence of two subpopulations:
+
+- people **without depression**
+- people **with depression**
+
+If all we know is people’s depression score, then we can try to identify
+two latent classes, corresponding to these subpopulations. Suppose that
+the theory further specifies that a depression score of about 10 or
+higher is required to count as depressed. We will use this theory to
+formulate two increasingly specific hypotheses:
+
+1.  a **two-class model** should fit better than a one-class model.
+    Adding a third class should not significantly improve fit.
+2.  the class means should be close to **0** for the non-depressed class
+    and **10** for the depressed class.
+
+The second hypothesis is considerably stronger because it constrains the
+class-specific means to exact values.
+
+### Simulate example data
+
+We first create a simple dataset containing a single continuous
+depression score.
+
+``` r
+
+library(tidySEM)
+library(OpenMx)
+
+set.seed(123)
+x <- data.frame(depression = c(rnorm(50, mean = 6, sd = 4), rbeta(100,
+    2, 3)))
+hist(x$depression)
+```
+
+![](lca_confirmatory_files/figure-html/unnamed-chunk-1-1.png)
+
+### Test the number of classes
+
+The first confirmatory hypothesis concerns **class enumeration**. Theory
+predicts two classes, so we estimate one-, two-, and three-class
+solutions. Note that some analyses take along time to run. For
+computationally intensive analyses like this, it is convenient to save
+the results to a file using
+[`saveRDS()`](https://rdrr.io/r/base/readRDS.html), so you can load the
+results from that file directly without having to wait for the code to
+run.
+
+``` r
+
+res <- mx_profiles(x, classes = 1:3)
+saveRDS(res, "res_depression.rds")
+```
+
+``` r
+
+res <- readRDS("res_depression.rds")
+table_fit(res)
+```
+
+The fit table lets us inspect information criteria and other model-fit
+statistics across the competing class solutions.
+
+If we want to test the theory, we can compare adjacent class solutions
+using the bootstrapped likelihood ratio test (BLRT).
+
+``` r
+
+res_blrt <- BLRT(res)
+saveRDS(res_blrt, "blrt_depression.rds")
+```
+
+``` r
+
+res_blrt <- readRDS("blrt_depression.rds")
+res_blrt
+```
+
+### Translate theoretical assumptions into parameter constraints
+
+The models above still allow all parameters to be estimated freely from
+the data. That tests only the broad hypothesis that two groups exist.
+The groups themselves could diverge substantially from what was
+theorized.
+
+Our theory posits that the non-depressed class should have a mean near
+0, whereas the depressed class should have a mean near 10 (technically,
+the minimum value in that class should be 10, but that’s a bit more
+difficult to enforce).
+
+We can represent this stronger hypothesis by fixing the two class means
+to these values, or by e.g. setting a parameter constraint for the two
+classes.
+
+First, create the two-class profile model without estimating it and
+examine its parameters:
+
+``` r
+
+res_theory <- mx_profiles(x, classes = 2, run = FALSE)
+omxGetParameters(res_theory)
+```
+
+The relevant mean parameters are `m11` and `m21`. We can either fix
+these means to the exact values of 0 and 10:
+
+``` r
+
+res_theory <- omxSetParameters(res_theory, labels = c("m11",
+    "m21"), values = c(0, 10), free = FALSE)
+```
+
+Or alternatively, we could set a lower and upper bound for these
+parameters, thus allowing bounded free estimation:
+
+``` r
+
+res_theory_bounds <- omxSetParameters(res_theory, labels = c("m11",
+    "m21"), values = c(0, 10), free = TRUE, lbound = c(NA, 10),
+    ubound = c(1, NA))
+```
+
+Now, run your chosen model:
+
+``` r
+
+res_theory <- run_mx(res_theory)
+res_theory_bounds <- run_mx(res_theory_bounds)
+```
+
+Next, compare the unconstrained two-class solution with the
+theory-constrained model.
+
+``` r
+
+compare_these <- list(baseline = res[[2]], theory = res_theory,
+    theory_bounds = res_theory_bounds)
+
+table_fit(compare_these)
+```
+
+We can also compare the models using the BLRT:
+
+``` r
+
+blrt_theory <- BLRT(list(res[[2]], res_theory))
+saveRDS(blrt_theory, "blrt_theory.rds")
+```
+
+``` r
+
+blrt_theory <- readRDS("blrt_theory.rds")
+blrt_theory
+```
+
+Note that fixing the class means to exact values is a very strong
+assumption. In many real applications, theory may imply that class means
+should be **near** certain values rather than exactly equal to them. You
+can also manually specify **start values**, and then test if the
+estimated **parameter values** deviate significantly from these:
+
+``` r
+
+res_theory_starts <- omxSetParameters(res_theory, labels = c("m11",
+    "m21"), values = c(0, 10), free = TRUE)
+res_theory_starts <- run_mx(res_theory_starts)
+omxGetParameters(res_theory_starts)
+wald_test(res_theory_starts, "m11 = 0; m21 = 10")
+```
+
+## Example 2: Caregiver Compass
+
+For this next example, we will use simulated data are based on work by
+Zegwaard and colleagues, who sought to establish a typology of
+caregivers who support a close other receiving outpatient psychological
+care. Qualitative research among experts resulted in a theory
+postulating the existence of four types of caregivers (translated from
+the original Dutch):
 
 **Balanced**
 
@@ -37,7 +218,7 @@ run the command
 [`?tidySEM::zegwaard_carecompass`](https://cjvanlissa.github.io/tidySEM/reference/zegwaard_carecompass.md)
 in the R console.
 
-## Loading the Data
+### Loading the Data
 
 To load the data, simply attach the `tidySEM` package. For convenience,
 we assign the variables used for analysis to an object called `df`. We
@@ -55,7 +236,7 @@ df <- zegwaard_carecompass[, c("burdened", "trapped", "negaffect",
     "loneliness")]
 ```
 
-## Descriptive statistics
+### Descriptive statistics
 
 We use
 [`tidySEM::descriptives()`](https://cjvanlissa.github.io/tidySEM/reference/descriptives.md)
@@ -95,7 +276,7 @@ ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
 ```
 
-## Conducting Latent Profile Analysis
+### Conducting Latent Profile Analysis
 
 As all variables are continuous, we can use the convenience function
 [`tidySEM::mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md),
@@ -123,7 +304,7 @@ K-means algorithm and is not robust to missing data. The algorithm
 automatically switches to hierarchical clustering, no further action is
 required.
 
-## Class Enumeration
+### Class Enumeration
 
 To compare the fit of the theoretical model against other models, we
 create a model fit table using
@@ -155,7 +336,7 @@ fit[, c("Name", "LL", "Parameters", "n", "BIC", "Entropy", "prob_min",
     "prob_max", "n_min", "n_max", "np_ratio", "np_local")]
 ```
 
-### Using ICs
+#### Using ICs
 
 the 4-class solution has the lowest BIC, which means it is preferred
 over all other solutions including a 1-class solution and a solution
@@ -166,7 +347,7 @@ us to compute IC weights; it indicates that, conditional on the set of
 models, the 4-class model has a posterior model probability of nearly
 100%.
 
-### Using LMR tests
+#### Using LMR tests
 
 If we conduct LMR tests, we find that the tests are significant for all
 pairwise model comparisons, except for the 5-class model:
@@ -176,7 +357,7 @@ pairwise model comparisons, except for the 5-class model:
 lr_lmr(res)
 ```
 
-### Using BLRT tests
+#### Using BLRT tests
 
 We can also use the BLRT test. As it is very computationally expensive,
 we will use a low number of replications here. In practice, one might
@@ -205,7 +386,7 @@ res_blrt <- BLRT(res, replications = 100)
 In sum, across all class enumeration criteria, there is strong support
 for a 4-class solution.
 
-## Optional: Alternative Model Specifications
+### Optional: Alternative Model Specifications
 
 In the case of confirmatory LCA, the theory would be refuted by strong
 evidence against the hypothesized model and number of classes. In the
@@ -226,7 +407,7 @@ The alternative model incurs 12 additional parameters for the free
 variances. Yet, it has a higher BIC, which indicates that this
 additional complexity does not outweigh the increase in fit.
 
-## Interpreting the Final Class Solution
+### Interpreting the Final Class Solution
 
 To interpret the final class solution, we first reorder the 4-class
 model by class size. This helps prevent label switching.
@@ -302,62 +483,7 @@ of class parameters exactly.
 plot_profiles(res_final)
 ```
 
-## Auxiliary Analyses
-
-We may want to compare the different classes on auxiliary variables or
-models. The
-[`BCH()`](https://cjvanlissa.github.io/tidySEM/reference/BCH.md)
-function applies three-step analysis, which compares the classes using a
-multi-group model, controlling for classification error. We consider two
-examples: a single variable, and an auxiliary model.
-
-### Comparing Means or Proportions Across Classes
-
-For a single (continuous or ordinal) variable, we can call the BCH
-function and simply supply the auxiliary variable to the `data`
-argument, omitting the `model` argument. Below, we estimate an auxiliary
-model to compare the sex of patients between classes:
-
-``` r
-
-aux_sex <- BCH(res_final, data = zegwaard_carecompass$sexpatient)
-```
-
-To obtain an omnibus likelihood ratio test of the significance of these
-sex differences across classes, as well as pairwise comparisons between
-classes, use `lr_test(aux_sex)`. The results indicate that there are
-significant sex differences across classes,
-$`\Delta LL(1) = 8.7, p = .003`$. Pairwise comparisons indicate that
-class 3 differs significantly from classes 1 and 2. The results can be
-reported in probability scale using `table_prob(aux_sex)`. It appears
-that the entrapped class disproportionately cares for female patients.
-
-### Comparing Auxiliary Models Across Classes
-
-We can also compare a simple model between classes. Specifically, we
-will examine whether the distance predicts the frequency of visits
-differently across classes (treated as continuous).
-
-``` r
-
-df_aux <- zegwaard_carecompass[, c("freqvisit", "distance")]
-df_aux$freqvisit <- as.numeric(df_aux$freqvisit)
-aux_model <- BCH(res_final, model = "freqvisit ~ distance", data = df_aux)
-```
-
-To obtain an omnibus likelihood ratio test of the difference in
-regression coefficients across classes and pairwise comparisons between
-classes, use `lr_test(aux_model, compare = "A")`. The results indicate
-that there are no significant sex differences across classes,
-$`\Delta LL(3) = 0.98, p = .81`$. The results can be reported using
-`table_results(aux_model)`:
-
-``` r
-
-table_results(aux_model)
-```
-
-## Predicting class membership
+### Predicting class membership
 
 This LCA model was developed to help classify care providers in a
 clinical context, so that mental healthcare professionals can provide

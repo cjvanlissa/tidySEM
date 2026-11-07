@@ -74,11 +74,6 @@ Bakk, Z., & Kuha, J. (2018). Two-step estimation of models between
 latent classes and external variables. *Psychometrika, 83*, 871–892.
 [doi:10.1007/s11336-017-9592-7](https://doi.org/10.1007/s11336-017-9592-7)
 
-## See also
-
-[`BCH()`](https://cjvanlissa.github.io/tidySEM/reference/BCH.md),
-[`pseudo_class()`](https://cjvanlissa.github.io/tidySEM/reference/pseudo_class.md)
-
 ## Examples
 
 ``` r

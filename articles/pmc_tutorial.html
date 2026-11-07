@@ -33,8 +33,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -145,10 +147,10 @@ references <code>x</code> and <code>y</code>, where both are of type
 <span><span class="va">res_cat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_lca.html">mx_lca</a></span><span class="op">(</span><span class="va">df</span>, classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pmc.html">pmc</a></span><span class="op">(</span><span class="va">res_cat</span>, reps <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;   comparison null  alt null_stat  alt_stat         lb        ub sig</span></span>
-<span><span class="co">#&gt; 1    dif_seq mix1 mix2 -143.2320 -186.6654 -73.989003 -27.04252   *</span></span>
-<span><span class="co">#&gt; 2    dif_seq mix2 mix3 -186.6654 -181.3458  -3.330308  17.80954    </span></span>
-<span><span class="co">#&gt; 3    dif_one mix1 mix2 -143.2320 -186.6654 -73.989003 -27.04252   *</span></span>
-<span><span class="co">#&gt; 4    dif_one mix1 mix3 -143.2320 -181.3458 -61.632078 -15.16548   *</span></span></code></pre>
+<span><span class="co">#&gt; 1    dif_seq mix1 mix2 -143.5072 -184.0639 -68.635855 -23.52436   *</span></span>
+<span><span class="co">#&gt; 2    dif_seq mix2 mix3 -184.0639 -179.5429  -2.796785  17.04515    </span></span>
+<span><span class="co">#&gt; 3    dif_one mix1 mix2 -143.5072 -184.0639 -68.635855 -23.52436   *</span></span>
+<span><span class="co">#&gt; 4    dif_one mix1 mix3 -143.5072 -179.5429 -57.107537 -15.21607   *</span></span></code></pre>
 <p>The argument <code>FUN</code> allows users to override these
 defaults, and specify any custom function to compare the observed data
 (<code>x</code>) and model-implied data (<code>y</code>).</p>

@@ -4,10 +4,14 @@
 
 - [Generating syntax for structural equation
   models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.md):
-- [Confirmatory LPA for the Caregiver
-  Compass](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.md):
+- [Auxiliary Analyses for Latent
+  Classes](https://cjvanlissa.github.io/tidySEM/articles/lca_auxiliary.md):
+- [Confirmatory Latent Class
+  Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.md):
 - [Exploratory LPA for Ocean
   Microplastics](https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.md):
+- [Introduction to Latent Class
+  Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.md):
 - [Latent Class Growth
   Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.md):
 - [Latent Class Analysis for Ordinal

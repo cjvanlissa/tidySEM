@@ -33,8 +33,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -114,7 +116,7 @@ variables.</p>
 <span><span class="co">#&gt;   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span></span>
 <span><span class="co">#&gt;   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://amices.org/mice/reference/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">300</span>, mean <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">600</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
@@ -123,7 +125,7 @@ variables.</p>
 <span><span class="va">df</span><span class="op">$</span><span class="va">X3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">X3</span>, <span class="fl">3</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><code>set.seed(1)</code> makes the simulation reproducible. The first
 block contributes 100 rows for three variables with mean 2, whereas the
-second contributes 200 rows with mean 0. After <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code>, the
+second contributes 200 rows with mean 0. After <code><a href="https://amices.org/mice/reference/cbind.html" class="external-link">rbind()</a></code>, the
 data set therefore contains 300 observations on three columns, named
 <code>X1</code>, <code>X2</code>, and <code>X3</code> by
 <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code>. The first two variables are converted to

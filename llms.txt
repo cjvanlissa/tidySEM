@@ -643,16 +643,16 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 - [`mplus_expand_names()`](https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.md)
   : Expand abbreviated Mplus variable names
 
-- [`mx_convergence()`](https://cjvanlissa.github.io/tidySEM/reference/mx_convergence.md)
-  :
-
-  Check Convergence of an `OpenMx` Model
-
 - [`mx_data_quantiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.md)
   : Data Quantiles
 
 - [`mx_deviances()`](https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.md)
   : Create Thresholds Based on Deviances
+
+- [`mx_diagnostics()`](https://cjvanlissa.github.io/tidySEM/reference/mx_diagnostics.md)
+  :
+
+  Diagnose an `OpenMx` Model
 
 - [`mx_dummies()`](https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.md)
   : Dummy Code Factor Variables
@@ -678,6 +678,9 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 - [`nodes()`](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
   [`` `nodes<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
   : Extract nodes from sem_graph
+
+- [`one_step()`](https://cjvanlissa.github.io/tidySEM/reference/one_step.md)
+  : One-Step Method for Auxiliary Analysis
 
 - [`paste2()`](https://cjvanlissa.github.io/tidySEM/reference/paste2.md)
   : Concatenate Strings while omitting NA
@@ -756,16 +759,23 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 - [`zegwaard_carecompass`](https://cjvanlissa.github.io/tidySEM/reference/zegwaard_carecompass.md)
   : Caregiver Compass Data
 
+- [`zhao_2025`](https://cjvanlissa.github.io/tidySEM/reference/zhao_2025.md)
+  : Academic Stress, Motivation, and Exercise Behavior
+
 # Articles
 
 ### All vignettes
 
 - [Generating syntax for structural equation
   models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.md):
-- [Confirmatory LPA for the Caregiver
-  Compass](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.md):
+- [Auxiliary Analyses for Latent
+  Classes](https://cjvanlissa.github.io/tidySEM/articles/lca_auxiliary.md):
+- [Confirmatory Latent Class
+  Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.md):
 - [Exploratory LPA for Ocean
   Microplastics](https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.md):
+- [Introduction to Latent Class
+  Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.md):
 - [Latent Class Growth
   Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.md):
 - [Latent Class Analysis for Ordinal

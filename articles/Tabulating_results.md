@@ -179,8 +179,8 @@ table_fit(fit_mx)
     #> 1                     18     24 85.30552 8.502562e-09   2655   2691 0.9305597
     #>         TLI      RMSEA RMSEASquared   RMSEAClose RMSEANull modelName     AIC
     #> 1 0.8958395 0.09212148  0.008486368 0.0006612372      0.05     model 7535.49
-    #>        BIC RMSEA.lower RMSEA.upper   saBIC converged        LL
-    #> 1 7646.703  0.06721641   0.1176287 7551.56      TRUE -3737.745
+    #>        BIC RMSEA.lower RMSEA.upper   saBIC        LL
+    #> 1 7646.703  0.06721641   0.1176287 7551.56 -3737.745
 
 ## Output from Mplus
 

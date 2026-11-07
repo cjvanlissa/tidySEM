@@ -33,8 +33,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Generating_syntax.html">Generating syntax for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory LPA for the Caregiver Compass</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_auxiliary.html">Auxiliary Analyses for Latent Classes</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_confirmatory.html">Confirmatory Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
@@ -308,42 +310,6 @@ Thus, small fragments are more coextensive than large fragments.</p>
 solutions: the entropy is <code>.56</code> and the minimum
 classification probability is<code>.81</code>. This is because of
 substantial overlap in the distributions of the two classes.</p>
-</div>
-<div class="section level2">
-<h2 id="auxiliary-analyses">Auxiliary Analyses<a class="anchor" aria-label="anchor" href="#auxiliary-analyses"></a>
-</h2>
-<p>Finally, we may want to compare the different classes on auxiliary
-variables or models. The <code><a href="../reference/BCH.html">BCH()</a></code> function applies three-step
-analysis, which compares the classes using a multi-group model,
-controlling for classification error. For example, we can test whether
-polymer type differs between the two classes. Because polymer type is a
-nominal variable, we must convert it to dummies and estimate a threshold
-for each dummy:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_dummies.html">mx_dummies</a></span><span class="op">(</span><span class="va">df_analyze</span><span class="op">$</span><span class="va">poly_type</span><span class="op">)</span></span>
-<span><span class="va">aux_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">res_bic</span>, model <span class="op">=</span> <span class="st">"poly_typeOther | t1</span></span>
-<span><span class="st">                                poly_typePE | t1</span></span>
-<span><span class="st">                                poly_typePP | t1"</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">df_pt</span><span class="op">)</span></span></code></pre></div>
-<p>To obtain an omnibus likelihood ratio test of the significance of the
-differences in polymer type across classes, use
-<code>lr_test(aux_pt)</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/lr_test.html">lr_test</a></span><span class="op">(</span><span class="va">aux_pt</span><span class="op">)</span></span></code></pre></div>
-<p>The results indicate that there are significant differences in
-polymer types across classes,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>L</mi><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>17.14</mn><mo>,</mo><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">\Delta LL(3) = 17.14, p &lt; .001</annotation></semantics></math>.
-The results can be reported in probability scale using
-<code>table_prob(aux_pt)</code>. To test differences for specific
-polymer types, we can use Wald tests:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">aux_pt</span>, <span class="st">"class1.Thresholds[1,1] = class2.Thresholds[1,1];</span></span>
-<span><span class="st">          class1.Thresholds[1,2] = class2.Thresholds[1,2];</span></span>
-<span><span class="st">          class1.Thresholds[1,3] = class2.Thresholds[1,3]"</span><span class="op">)</span></span></code></pre></div>
-<p>The results indicate that there is no significant difference in the
-prevalence of “Other” polymer types across classes. However, PE is
-significantly more prevalent in class 1, and PP is significantly more
-prevalent in class 2.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

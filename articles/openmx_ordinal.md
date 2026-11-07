@@ -55,15 +55,16 @@ df$X3 <- ordered(cut(df$X3, 3, labels = FALSE))
 `set.seed(1)` makes the simulation reproducible. The first block
 contributes 100 rows for three variables with mean 2, whereas the second
 contributes 200 rows with mean 0. After
-[`rbind()`](https://rdrr.io/r/base/cbind.html), the data set therefore
-contains 300 observations on three columns, named `X1`, `X2`, and `X3`
-by [`data.frame()`](https://rdrr.io/r/base/data.frame.html). The first
-two variables are converted to ordered factors with two categories; `X3`
-is converted to an ordered factor with three categories. A two-category
-ordinal variable requires one threshold to separate those whose score is
-in category 1 from those in category 2. A three-category ordinal
-variable requires two thresholds. The model therefore contains four
-thresholds in total: one for `X1`, one for `X2`, and two for `X3`.
+[`rbind()`](https://amices.org/mice/reference/cbind.html), the data set
+therefore contains 300 observations on three columns, named `X1`, `X2`,
+and `X3` by [`data.frame()`](https://rdrr.io/r/base/data.frame.html).
+The first two variables are converted to ordered factors with two
+categories; `X3` is converted to an ordered factor with three
+categories. A two-category ordinal variable requires one threshold to
+separate those whose score is in category 1 from those in category 2. A
+three-category ordinal variable requires two thresholds. The model
+therefore contains four thresholds in total: one for `X1`, one for `X2`,
+and two for `X3`.
 
 ## Threshold syntax in `as_ram()`
 

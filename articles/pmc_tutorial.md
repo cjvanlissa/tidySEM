@@ -100,10 +100,10 @@ pmc(res_cat, reps = 20)
 ```
 
     #>   comparison null  alt null_stat  alt_stat         lb        ub sig
-    #> 1    dif_seq mix1 mix2 -143.2320 -186.6654 -73.989003 -27.04252   *
-    #> 2    dif_seq mix2 mix3 -186.6654 -181.3458  -3.330308  17.80954    
-    #> 3    dif_one mix1 mix2 -143.2320 -186.6654 -73.989003 -27.04252   *
-    #> 4    dif_one mix1 mix3 -143.2320 -181.3458 -61.632078 -15.16548   *
+    #> 1    dif_seq mix1 mix2 -143.5072 -184.0639 -68.635855 -23.52436   *
+    #> 2    dif_seq mix2 mix3 -184.0639 -179.5429  -2.796785  17.04515    
+    #> 3    dif_one mix1 mix2 -143.5072 -184.0639 -68.635855 -23.52436   *
+    #> 4    dif_one mix1 mix3 -143.5072 -179.5429 -57.107537 -15.21607   *
 
 The argument `FUN` allows users to override these defaults, and specify
 any custom function to compare the observed data (`x`) and model-implied

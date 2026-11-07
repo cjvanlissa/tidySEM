@@ -526,16 +526,16 @@
 - [`mplus_expand_names()`](https://cjvanlissa.github.io/tidySEM/reference/mplus_expand_names.md)
   : Expand abbreviated Mplus variable names
 
-- [`mx_convergence()`](https://cjvanlissa.github.io/tidySEM/reference/mx_convergence.md)
-  :
-
-  Check Convergence of an `OpenMx` Model
-
 - [`mx_data_quantiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_data_quantiles.md)
   : Data Quantiles
 
 - [`mx_deviances()`](https://cjvanlissa.github.io/tidySEM/reference/mx_deviances.md)
   : Create Thresholds Based on Deviances
+
+- [`mx_diagnostics()`](https://cjvanlissa.github.io/tidySEM/reference/mx_diagnostics.md)
+  :
+
+  Diagnose an `OpenMx` Model
 
 - [`mx_dummies()`](https://cjvanlissa.github.io/tidySEM/reference/mx_dummies.md)
   : Dummy Code Factor Variables
@@ -561,6 +561,9 @@
 - [`nodes()`](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
   [`` `nodes<-`() ``](https://cjvanlissa.github.io/tidySEM/reference/nodes.md)
   : Extract nodes from sem_graph
+
+- [`one_step()`](https://cjvanlissa.github.io/tidySEM/reference/one_step.md)
+  : One-Step Method for Auxiliary Analysis
 
 - [`paste2()`](https://cjvanlissa.github.io/tidySEM/reference/paste2.md)
   : Concatenate Strings while omitting NA
@@ -638,3 +641,6 @@
 
 - [`zegwaard_carecompass`](https://cjvanlissa.github.io/tidySEM/reference/zegwaard_carecompass.md)
   : Caregiver Compass Data
+
+- [`zhao_2025`](https://cjvanlissa.github.io/tidySEM/reference/zhao_2025.md)
+  : Academic Stress, Motivation, and Exercise Behavior

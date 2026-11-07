@@ -118,7 +118,7 @@ dat <- reshape(dat, direction = "wide", v.names = "boxcox", timevar = "time",
 names(dat) <- gsub("boxcox.", "scl", names(dat))
 ```
 
-## Latent Class Growth Analysis
+## Model Estimation
 
 Next, we estimated a latent class growth model for SCL. The model
 included an overall intercept, centered at T1, `i`. To model the

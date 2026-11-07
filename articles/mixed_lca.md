@@ -207,9 +207,9 @@ class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely"))
     #> 2 class2  60.58486  0.3029243
     #> 
     #> $sum.mostlikely
-    #>    class count proportion
-    #> 1 class1   141      0.705
-    #> 2 class2    59      0.295
+    #>    class count.mostlikely count.Freq proportion.mostlikely proportion.Freq
+    #> 1 class2                1        141                     1           0.705
+    #> 2 class1                2         59                     2           0.295
 
 The sum.posterior class probabilities incorporate classification error;
 each case can (fractionally) contribute to multiple classes.
@@ -229,7 +229,7 @@ table_fit(res_1_3[[2]])
 ```
 
     #>   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared
-    #> 1            2237.083 200         14                800 786            0
+    #> 1            2237.083 200         14                800 186            0
     #>   RMSEANull   modelName      AIC     BIC    saBIC Classes   Entropy  prob_min
     #> 1      0.05 equal var 2 2265.083 2311.26 2266.906       2 0.9304968 0.9606636
     #>    prob_max n_min n_max        LL
@@ -332,12 +332,12 @@ compare <- list(
 table_fit(compare)
 ```
 
-    #>         Name Classes        LL   n Parameters      AIC      BIC    saBIC
-    #> 1 fixed_covs       2 -1118.542 200         14 2265.083 2311.260 2266.906
-    #> 2  free_covs       2 -1117.967 200         17 2269.935 2326.006 2272.148
-    #>     Entropy  prob_min  prob_max n_min n_max np_ratio np_local
-    #> 1 0.9304968 0.9606636 0.9942737 0.295 0.705 14.28571 9.076923
-    #> 2 0.9353582 0.9680273 0.9931100 0.295 0.705 11.76471 7.375000
+    #>          Name Classes        LL   n Parameters      AIC      BIC    saBIC
+    #> 1 equal var 2       2 -1118.542 200         14 2265.083 2311.260 2266.906
+    #> 2  free var 2       2 -1117.967 200         17 2269.935 2326.006 2272.148
+    #>     Entropy  prob_min  prob_max n_min n_max
+    #> 1 0.9304968 0.9606636 0.9942737 0.295 0.705
+    #> 2 0.9353582 0.9680273 0.9931100 0.295 0.705
 
 Note that the BIC of the model with free covariances is higher than that
 of the model with fixed variances, so it fits worse. This is as
