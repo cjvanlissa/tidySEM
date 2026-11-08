@@ -4,7 +4,7 @@ Title: Tidy Structural Equation Modeling
 Version: 0.3.0
 Authors@R: 
     c(person(given = c("Caspar", "J."),
-             family = "van Lissa",
+             family = "Van Lissa",
              role = c("aut", "cre"),
              email = "c.j.vanlissa@tilburguniversity.edu",
              comment = c(ORCID = "0000-0002-0808-5024")),

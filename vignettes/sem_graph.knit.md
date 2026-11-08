@@ -30,7 +30,7 @@ An observed variable is a measured quantity; you have "real data" about this var
 graph_sem(layout = matrix("x")) + coord_fixed()
 ```
 
-
+<img src="var_obs.png" alt="" width="20%" />
 
 #### Latent variables
 
@@ -45,7 +45,7 @@ Visually, we indicate them as ovals or circles:
 ``` r
 graph_sem(nodes = data.frame(name = "x", shape = "oval"), layout = matrix("x"), fix_coord = TRUE)
 ```
-
+<img src="var_lat.png" alt="" width="20%" />
 
 ## Edges
 
@@ -61,7 +61,7 @@ you are effectively saying "I assume that `x` causes `y`".
 Regression effects are also called "paths", "directional effects", and "factor loadings".
 In SEM graphs, we represent regression effects as single-headed arrows:
 
-
+<img src="arrow.png" alt="" width="20%" />
 
 #### Covariances
 
@@ -73,7 +73,7 @@ but a covariance is just an unstandardized correlation.
 Covariances will also be referred to as "correlations" (when a graph depicts standardized coefficients), "undirected associations", or "unexplained associations".
 Visually, we indicate covariances as curved (dashed) lines without arrowheads:
 
-
+<img src="curve.png" alt="" width="20%" />
 
 #### (Residual) variances
 
@@ -87,7 +87,7 @@ In `tidySEM`, all error terms are omitted, and all variances (including error va
 are displayed as double-headed arrows. This is a stylistic decision.
 Error variances are displayed like this:
 
-
+<img src="error.png" alt="" width="10%" />
 
 ## Basic models
 
@@ -110,7 +110,7 @@ names(df) <- c("x", "y")
 sem("y ~ x", df) %>%
   graph_sem(spacing_x = 2.5, fix_coord = TRUE)
 ```
-
+<img src="mod_reg.png" alt="" width="50%" />
 
 
 In this graph, we see the observed variables `x` and `y` represented as rectangles.
@@ -141,7 +141,7 @@ tidy_sem(df) %>%
   estimate_lavaan() %>%
   graph_sem()
 ```
-
+<img src="mod_meas.png" alt="" width="50%" />
 
 We see that the model defines a latent variable `y`, with mean fixed to `0` and variance fixed to `1`, which has a causal effect on the three indicators.
 The paths from the latent variable to the indicators are called *factor loadings*,
@@ -166,7 +166,7 @@ tidy_sem(df) %>%
   estimate_lavaan() %>%
   graph_sem()
 ```
-
+<img src="mod_sem1.png" alt="" width="70%" />
 
 
 Instead of having an observed variable `x` predicting an observed variable `y`, we now have it predicting a latent variable `y`. 
@@ -186,6 +186,6 @@ tidy_sem(df) %>%
                          "",     "y",    "",
                          "y_1", "y_2", "y_3", rows = 3))
 ```
-
+<img src="mod_sem2.png" alt="" width="70%" />
 
 For more on customizing SEM graphs, see the [vignette about making graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html).

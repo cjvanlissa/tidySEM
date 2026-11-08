@@ -90,6 +90,7 @@ res_2 <- mx_mixed_lca(
 data = df,
 classes = 2
 )
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1406 fit 3219.71 change -420.2MxComputeSimAnnealing(tsallis1996) evaluations 3583 fit 5162.76 change 2190  MxComputeSimAnnealing(tsallis1996) evaluations 5987 fit 2264.78 change -8.83MxComputeSimAnnealing(tsallis1996) evaluations 8084 fit 2238.61 change -2046MxComputeSimAnnealing(tsallis1996) evaluations 10050 fit 2266.14 change 29.05MxComputeSimAnnealing(tsallis1996) evaluations 12101 fit 3314.01 change 1077 MxComputeSimAnnealing(tsallis1996) evaluations 14124 fit 4054.15 change 1816MxComputeSimAnnealing(tsallis1996) evaluations 16305 fit 2237.09 change -94.58                                                                              
 ```
 
 The returned object is an `OpenMx::mxModel`, and can be modified using the functions in that package:
@@ -97,6 +98,9 @@ The returned object is an `OpenMx::mxModel`, and can be modified using the funct
 
 ``` r
 class(res_2)
+#> [1] "MxModel"
+#> attr(,"package")
+#> [1] "OpenMx"
 ```
 
 ## Estimating Multiple Class Solutions
@@ -112,6 +116,11 @@ res_1_3 <- mx_mixed_lca(
 )
 ```
 
+```
+#> MxComputeSimAnnealing(tsallis1996) evaluations 812 fit 3190.26 change -1076MxComputeSimAnnealing(tsallis1996) evaluations 3181 fit 3075.33 change 399.2MxComputeSimAnnealing(tsallis1996) evaluations 5447 fit 2675.32 change -440.8MxComputeSimAnnealing(tsallis1996) evaluations 7689 fit 3134 change 895.8    MxComputeSimAnnealing(tsallis1996) evaluations 9891 fit 2237.12 change -5.279MxComputeSimAnnealing(tsallis1996) evaluations 12011 fit 2237.09 change -0.005078MxComputeSimAnnealing(tsallis1996) evaluations 14177 fit 2237.1 change 0.01457   MxComputeSimAnnealing(tsallis1996) evaluations 16343 fit 2237.1 change 0.009849                                                                               
+#> MxComputeSimAnnealing(tsallis1996) evaluations 590 fit 5148.1 change 1202MxComputeSimAnnealing(tsallis1996) evaluations 2111 fit 2811.48 change -434.2MxComputeSimAnnealing(tsallis1996) evaluations 3604 fit 2931.03 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 5096 fit 2448.23 change -111.3MxComputeSimAnnealing(tsallis1996) evaluations 6645 fit 2234.2 change -891.2 MxComputeSimAnnealing(tsallis1996) evaluations 8137 fit 2233.84 change 0.6629MxComputeSimAnnealing(tsallis1996) evaluations 9579 fit 2422.15 change 189.9 MxComputeSimAnnealing(tsallis1996) evaluations 11040 fit 2251.18 change -165.3MxComputeSimAnnealing(tsallis1996) evaluations 12475 fit 2232.77 change -317.4MxComputeSimAnnealing(tsallis1996) evaluations 13958 fit 2296.03 change -99.45MxComputeSimAnnealing(tsallis1996) evaluations 15377 fit 2231.01 change -0.2818MxComputeSimAnnealing(tsallis1996) evaluations 16805 fit 2230.9 change -0.985  MxComputeSimAnnealing(tsallis1996) evaluations 18198 fit 2230.82 change -0.04088MxComputeSimAnnealing(tsallis1996) evaluations 19622 fit 2230.85 change -6.549  MxComputeSimAnnealing(tsallis1996) evaluations 21052 fit 2248.9 change 11.19  MxComputeSimAnnealing(tsallis1996) evaluations 22504 fit 2233.28 change 1.47MxComputeSimAnnealing(tsallis1996) evaluations 23921 fit 2296.17 change 49.47MxComputeSimAnnealing(tsallis1996) evaluations 25353 fit 2230.75 change -0.9028                                                                               
+#> Beginning initial fit attemptFit attempt 0, fit=2230.74793595893, new current best! (was 2230.74793595893)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 95 fit 2260.66 change -31.1                                                                       Beginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=2237.09546071394, worse than previous best (2230.74793595893)Beginning fit attempt 6 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 938 fit 2230.92 change -0.048                                                                         Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 724 fit 2236.8 change -1.657                                                                        Fit attempt 8, fit=2230.08267540371, new current best! (was 2230.74793595893)Beginning fit attempt 9 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 975 fit 2230.14 change -0.0323                                                                          Fit attempt 9, fit=2230.08267394999, new current best! (was 2230.08267540371)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=2230.08493321593, worse than previous best (2230.08267394999)Final run, for Hessian and/or standard errors and/or confidence intervals        MxComputeNumericDeriv 46/210                                                                                                     
+```
 
 The result is a list of OpenMx models, one for each class solution.
 
@@ -127,6 +136,16 @@ table_fit(res_1_3)
 ```
 
 
+```
+#>     Name Classes    LL   n Parameters  AIC  BIC saBIC Entropy prob_min prob_max n_min n_max
+#> 1  equal       1 -1251 200          8 2517 2543  2518    1.00     1.00     1.00 1.000  1.00
+#> 2 equal1       2 -1119 200         14 2265 2311  2267    0.93     0.96     0.99 0.295  0.70
+#> 3 equal2       3 -1115 200         20 2270 2336  2273    0.94     0.94     1.00 0.075  0.63
+#>   np_ratio np_local
+#> 1       25     25.0
+#> 2       14      9.1
+#> 3       10      2.5
+```
 
 As expected, the BIC for the 2-class solution is lowest.
 Note that the 3-class solution also has an extremely low ratio of cases to parameters,
@@ -153,6 +172,13 @@ res_blrt
 
 
 
+```
+#> Bootstrapped Likelihood Ratio Test:
+#> 
+#>         null         alt  lr df blrt_p samples
+#>  equal var 1 equal var 2 264  6   0.00      43
+#>  equal var 2 equal var 3   7  6   0.31      11
+```
 
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
@@ -169,6 +195,13 @@ res_pmc <- pmc(res_1_3)
 res_pmc
 ```
 
+```
+#>   comparison        null         alt null_stat alt_stat     lb     ub sig
+#> 1    dif_seq equal var 1 equal var 2     0.469    0.069 -0.459 -0.328   *
+#> 2    dif_seq equal var 2 equal var 3     0.069    0.057 -0.059  0.036    
+#> 3    dif_one equal var 1 equal var 2     0.469    0.069 -0.459 -0.328   *
+#> 4    dif_one equal var 1 equal var 3     0.469    0.057 -0.473 -0.351   *
+```
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
 
@@ -182,6 +215,17 @@ We can investigate the class proportions for the two-class solution by calling:
 class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely"))
 ```
 
+```
+#> $sum.posterior
+#>    class count proportion
+#> 1 class1   139        0.7
+#> 2 class2    61        0.3
+#> 
+#> $sum.mostlikely
+#>    class count.mostlikely count.Freq proportion.mostlikely proportion.Freq
+#> 1 class2                1        141                     1            0.70
+#> 2 class1                2         59                     2            0.29
+```
 
 The sum.posterior class probabilities incorporate classification error; each case can (fractionally) contribute to multiple classes.
 
@@ -197,6 +241,12 @@ table_fit(res_1_3[[2]])
 ```
 
 
+```
+#>   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared RMSEANull   modelName
+#> 1                2237 200         14                800 186            0      0.05 equal var 2
+#>    AIC  BIC saBIC Classes Entropy prob_min prob_max n_min n_max    LL
+#> 1 2265 2311  2267       2    0.93     0.96     0.99  0.29   0.7 -1119
+```
 
 We have a high minimal- and maximal posterior classification probability, and a high entropy.
 
@@ -208,6 +258,26 @@ table_results(res_1_3[[2]])
 ```
 
 
+```
+#>                            label  est_sig       se pval               confint  class
+#> 1                Means.X1.class1  1.94***     0.08 0.00          [1.78, 2.10] class1
+#> 2                Means.X2.class1  4.39***     0.17 0.00          [4.05, 4.73] class1
+#> 3                Means.X3.class1  1.01***     0.05 0.00          [0.92, 1.11] class1
+#> 4            Variances.X1.class1  0.89***     0.09 0.00          [0.71, 1.07] class1
+#> 5            Variances.X2.class1  3.94***     0.42 0.00          [3.12, 4.75] class1
+#> 6            Variances.X3.class1  0.31***     0.03 0.00          [0.25, 0.37] class1
+#> 7            Variances.X4.class1     1.00       NA   NA                  <NA> class1
+#> 8  class1.Thresholds[1,1].class1 -1.24***     0.15 0.00        [-1.52, -0.95] class1
+#> 9  class1.Thresholds[2,1].class1  0.89***     0.12 0.00          [0.65, 1.13] class1
+#> 10               Means.X1.class2    -0.23     0.13 0.07         [-0.48, 0.02] class2
+#> 11               Means.X2.class2    -0.11     0.27 0.67         [-0.64, 0.41] class2
+#> 12               Means.X3.class2    -0.00     0.07 0.98         [-0.15, 0.14] class2
+#> 13           Variances.X4.class2     1.00       NA   NA                  <NA> class2
+#> 14 class2.Thresholds[1,1].class2  0.65***     0.18 0.00          [0.29, 1.01] class2
+#> 15 class2.Thresholds[2,1].class2     7.11 35680.19 1.00 [-69924.78, 69939.01] class2
+#> 16   equal var 2.weights[1,1].NA     1.00       NA   NA                  <NA>   <NA>
+#> 17   equal var 2.weights[1,2].NA  0.43***     0.07 0.00          [0.30, 0.57]   <NA>
+```
 
 Note that we get free means for each class, with the variances constrained to be equal across classes.
 For the categorical variable, we get thresholds:
@@ -222,6 +292,15 @@ table_prob(res_1_3[[2]])
 ```
 
 
+```
+#>   Variable Category Probability  group
+#> 1       X4        1     1.1e-01 class1
+#> 2       X4        2     7.1e-01 class1
+#> 3       X4        3     1.9e-01 class1
+#> 4       X4        1     7.4e-01 class2
+#> 5       X4        2     2.6e-01 class2
+#> 6       X4        3     5.7e-13 class2
+```
 
 ## Advanced Options
 
@@ -237,6 +316,7 @@ res_2_free <- mx_mixed_lca(
   classes = 2,
   variances = "varying"
 )
+#> MxComputeSimAnnealing(tsallis1996) evaluations 2681 fit 4272.7 change 0MxComputeSimAnnealing(tsallis1996) evaluations 6558 fit 2237.1 change -2906MxComputeSimAnnealing(tsallis1996) evaluations 10394 fit 2235.97 change -10.42MxComputeSimAnnealing(tsallis1996) evaluations 14206 fit 2240.91 change 4.961 MxComputeSimAnnealing(tsallis1996) evaluations 18011 fit 2236.39 change 0.2351                                                                              
 ```
 
 We can compare the BICs of these models to determine whether the added complexity improves the model fit:
@@ -251,6 +331,14 @@ table_fit(compare)
 
 
 
+```
+#>          Name Classes    LL   n Parameters  AIC  BIC saBIC Entropy prob_min prob_max n_min
+#> 1 equal var 2       2 -1119 200         14 2265 2311  2267    0.93     0.96     0.99  0.29
+#> 2  free var 2       2 -1118 200         17 2270 2326  2272    0.94     0.97     0.99  0.29
+#>   n_max
+#> 1   0.7
+#> 2   0.7
+```
 
 Note that the BIC of the model with free covariances is higher than that of the model with fixed variances, so it fits worse.
 This is as expected, because we did not simulate class-specific variances.
@@ -263,11 +351,15 @@ Thus, for example, we can use a profile plot for the continuous indicators:
 
 ![](mixed_lca_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
+```
+#> Warning: Using shapes for an ordinal variable is not advised
+```
+
 
 ``` r
 plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
-
+![](mixed_lca_profiles.png)<!-- -->
 
 Alternatively, we can use a bivariate plot with densities:
 
@@ -277,7 +369,7 @@ Alternatively, we can use a bivariate plot with densities:
 ``` r
 plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
-
+![](mixed_lca_bivariate.png)<!-- -->
 
 We can plot the categorical variables as follows:
 
@@ -287,7 +379,7 @@ We can plot the categorical variables as follows:
 ``` r
 plot_prob(res_1_3[[2]])
 ```
-
+![](mixed_lca_prob.png)<!-- -->
 
 ## References
 

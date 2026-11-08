@@ -2,7 +2,7 @@
 title: "Tutorial PMC"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tutorial_pmc}
+  %\VignetteIndexEntry{Tutorial PMC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -41,6 +41,8 @@ Next, we estimate 1-3 class solutions:
 
 ``` r
 res <- mx_profiles(data = df, classes = 1:3)
+#> MxComputeSimAnnealing(tsallis1996) evaluations 3116 fit 1325.71 change -34.19MxComputeSimAnnealing(tsallis1996) evaluations 8099 fit 1314.34 change 0.7249                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1063 fit 1671.83 change -3.005MxComputeSimAnnealing(tsallis1996) evaluations 2871 fit 1769.88 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 4640 fit 1764.35 change -688.3MxComputeSimAnnealing(tsallis1996) evaluations 6396 fit 1310.21 change -1.225MxComputeSimAnnealing(tsallis1996) evaluations 8125 fit 1310.2 change -301.8 MxComputeSimAnnealing(tsallis1996) evaluations 9842 fit 1310.47 change 0.2728MxComputeSimAnnealing(tsallis1996) evaluations 11561 fit 1310.2 change -203                                                                             
 ```
 
 Optionally, one can perform the bootstrapped likelihood ratio test.
@@ -57,6 +59,13 @@ res_blrt
 
 
 
+```
+#> Bootstrapped Likelihood Ratio Test:
+#> 
+#>  null  alt    lr df blrt_p samples
+#>  mix1 mix2 91.95  3   0.00      99
+#>  mix2 mix3  3.41  3   0.44      96
+```
 
 This test confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
 
@@ -70,6 +79,15 @@ res_pmc <- pmc(res)
 ```
 
 
+```
+#> PMC model comparison using SRMR:
+#> 
+#>  comparison null  alt null_stat alt_stat    lb     ub sig
+#>     dif_seq mix1 mix2     0.517    0.036 -0.64 -0.349   *
+#>     dif_seq mix2 mix3     0.036    0.034 -0.07  0.088    
+#>     dif_one mix1 mix2     0.517    0.036 -0.64 -0.349   *
+#>     dif_one mix1 mix3     0.517    0.034 -0.64 -0.364   *
+```
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
 
@@ -89,7 +107,21 @@ res_cat <- mx_lca(df, classes = 1:3)
 pmc(res_cat, reps = 20)
 ```
 
+```
+#> Beginning initial fit attemptFit attempt 0, fit=813.722003986849, new current best! (was 813.72200398685)Beginning fit attempt 1 of at maximum 10 extra tries                        Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=813.722003986846, new current best! (was 813.722003986849)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=763.493917717475, new current best! (was 813.722003986846)Beginning fit attempt 2 of at maximum 10 extra tries                         Fit attempt 2, fit=763.493917717435, new current best! (was 763.493917717475)Beginning fit attempt 3 of at maximum 10 extra tries                         Fit attempt 3, fit=763.493917717433, new current best! (was 763.493917717435)Beginning fit attempt 4 of at maximum 10 extra tries                         Beginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=763.493917717433, new current best! (was 763.493917717433)Beginning fit attempt 6 of at maximum 10 extra tries                         Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFit attempt 10, fit=763.493917717431, new current best! (was 763.493917717433)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                              
+#> Beginning initial fit attemptFit attempt 0, fit=813.722003986846, new current best! (was 813.722003986849)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=763.490198334132, new current best! (was 813.722003986846)Beginning fit attempt 2 of at maximum 10 extra tries                         Beginning fit attempt 3 of at maximum 10 extra triesFit attempt 3, fit=763.490198334131, new current best! (was 763.490198334132)Beginning fit attempt 4 of at maximum 10 extra tries                         Beginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesFit attempt 6, fit=763.49019833413, new current best! (was 763.490198334131)Beginning fit attempt 7 of at maximum 10 extra tries                        Beginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=763.490198334128, new current best! (was 763.49019833413)Beginning fit attempt 9 of at maximum 10 extra tries                        Beginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+```
 
+```
+#> PMC model comparison using chi squared:
+#> 
+#>  comparison null  alt null_stat alt_stat    lb  ub sig
+#>     dif_seq mix1 mix2      -144     -184 -68.6 -24   *
+#>     dif_seq mix2 mix3      -184     -180  -2.8  17    
+#>     dif_one mix1 mix2      -144     -184 -68.6 -24   *
+#>     dif_one mix1 mix3      -144     -180 -57.1 -15   *
+```
 
 The argument `FUN` allows users to override these defaults, and specify any custom function to compare the observed data (`x`) and model-implied data (`y`).
 

@@ -44,7 +44,7 @@ BCH.MxModel <- function(x, model, data, ...){
   bchweights <- data.frame(Hmatinv[mostlikely, ])
   names(bchweights) <- names(bchweights) <- paste0("wclass", seq_len(num_classes(x)))
   df <- cbind(data, bchweights)
-  grp_names <- paste0("class", seq_len(num_classes(x)))
+  grp_names <- paste0("aux", seq_len(num_classes(x)))
 
 
 

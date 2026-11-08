@@ -93,6 +93,15 @@ res <- run_mx(mod)
 
 ``` r
 table_results(res)
+#> Warning: Unavailable columns requested: class
+#>                   label  est_sig   se pval        confint
+#> 1          Variances.X1     1.00 <NA> <NA>           <NA>
+#> 2          Variances.X2     1.00 <NA> <NA>           <NA>
+#> 3          Variances.X3     1.00 <NA> <NA>           <NA>
+#> 4 model.Thresholds[1,1]     0.06 0.07 0.42  [-0.08, 0.20]
+#> 5 model.Thresholds[1,2]     0.11 0.07 0.13  [-0.03, 0.25]
+#> 6 model.Thresholds[1,3] -0.52*** 0.08 0.00 [-0.67, -0.38]
+#> 7 model.Thresholds[2,3]  1.01*** 0.09 0.00   [0.84, 1.18]
 ```
 
 For ordinal indicators, the output includes the estimated threshold parameters along with their standard errors and other model results. This table is usually the most convenient place to inspect the estimates substantively.
@@ -106,6 +115,9 @@ The first Wald test is:
 
 ``` r
 wald_test(res, "model.Thresholds[1,1] = 0")
+#> Wald tests for linear hypotheses:
+#>                 Hypothesis df chisq    p
+#>  model.Thresholds[1,1] = 0  1  0.65 0.42
 ```
 
 Here, the first matrix index refers to the threshold position and the second to the observed variable. Thus, `model.Thresholds[1,1]` is the first threshold of the first ordinal indicator, `X1`.
@@ -119,6 +131,9 @@ The second test is:
 
 ``` r
 wald_test(res, "model.Thresholds[2,3] = 1")
+#> Wald tests for linear hypotheses:
+#>                 Hypothesis df  chisq    p
+#>  model.Thresholds[2,3] = 1  1 0.0089 0.92
 ```
 
 `X3` is the third observed variable, and its second threshold occupies row 2, column 3 of the threshold matrix.
@@ -148,6 +163,15 @@ Fit and summarize this model in the same way:
 ``` r
 res2 <- run_mx(mod2)
 table_results(res2)
+#> Warning: Unavailable columns requested: class
+#>             label  est_sig   se pval        confint
+#> 1    Variances.X1     1.00 <NA> <NA>           <NA>
+#> 2    Variances.X2     1.00 <NA> <NA>           <NA>
+#> 3    Variances.X3     1.00 <NA> <NA>           <NA>
+#> 4 Thresholds[1,1]     0.06 0.07 0.42  [-0.08, 0.20]
+#> 5 Thresholds[1,2]     0.11 0.07 0.13  [-0.03, 0.25]
+#> 6 Thresholds[1,3] -0.52*** 0.08 0.00 [-0.67, -0.38]
+#> 7 Thresholds[2,3]  1.01*** 0.09 0.00   [0.84, 1.18]
 ```
 
 The substantive threshold estimates reported by `table_results()` are already reconstructed from the deviances, and can be interpreted in the same way as before. 
@@ -162,6 +186,9 @@ Because the first threshold is equal to the first deviation, the corresponding t
 
 ``` r
 wald_test(res2, "model.mat_dev[1,1] = 0")
+#> Wald tests for linear hypotheses:
+#>              Hypothesis df chisq    p
+#>  model.mat_dev[1,1] = 0  1  0.65 0.42
 ```
 
 Verify that the test result is identical to:
@@ -169,6 +196,9 @@ Verify that the test result is identical to:
 
 ``` r
 wald_test(res, "model.Thresholds[1,1] = 0")
+#> Wald tests for linear hypotheses:
+#>                 Hypothesis df chisq    p
+#>  model.Thresholds[1,1] = 0  1  0.65 0.42
 ```
 
 
@@ -180,6 +210,9 @@ It must be written as a constraint on the **sum** of the first two deviations:
 
 ``` r
 wald_test(res2, "model.mat_dev[1,3]+model.mat_dev[2,3] = 1")
+#> Wald tests for linear hypotheses:
+#>                                 Hypothesis df  chisq    p
+#>  model.mat_dev[1,3]+model.mat_dev[2,3] = 1  1 0.0089 0.92
 ```
 
 This is the deviation-parameter counterpart of:
@@ -187,6 +220,9 @@ This is the deviation-parameter counterpart of:
 
 ``` r
 wald_test(res, "model.Thresholds[2,3] = 1")
+#> Wald tests for linear hypotheses:
+#>                 Hypothesis df  chisq    p
+#>  model.Thresholds[2,3] = 1  1 0.0089 0.92
 ```
 
 Do not make the mistake of testing only `model.mat_dev[2,3] = 1`. That would test whether the *second deviation* equals 1, not whether the *second threshold* equals 1. Those are different hypotheses because the second threshold is cumulative.
@@ -211,8 +247,15 @@ Use this functionality as follows:
 
 ``` r
 coef(res2)
+#> model.mat_dev[1,1] model.mat_dev[1,2] model.mat_dev[1,3] model.mat_dev[2,3] 
+#>              0.059              0.109             -0.524              1.533
 res2_thresholds <- deviances_to_thresholds(res2)
 coef(res2_thresholds)
+#> model.Thresholds[1,1] model.Thresholds[1,2] model.Thresholds[1,3] model.Thresholds[2,3] 
+#>                 0.059                 0.109                -0.524                 1.008
 wald_test(res2_thresholds, "model.Thresholds[1,1] = 0")
+#> Wald tests for linear hypotheses:
+#>                 Hypothesis df chisq    p
+#>  model.Thresholds[1,1] = 0  1  0.65 0.42
 ```
 

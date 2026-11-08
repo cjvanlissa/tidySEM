@@ -26,3 +26,5 @@ CODE_OF_CONDUCT.md
 ^codecov\.yml$
 ^pkgdown$
 ^publish_package\.R$
+^make_hex\.R$
+^tidySEM_hex\.png$

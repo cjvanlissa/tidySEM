@@ -12,22 +12,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png' align="right" height="139" /></a>
+# tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='https://github.com/cjvanlissa/tidySEM/raw/master/tidySEM_hex.png' align="right" height="139" /></a>
 
 [![CRAN status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue)](https://r-pkg.org/pkg/tidySEM)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![R-CMD-check](https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg)](https://app.codecov.io/gh/cjvanlissa/tidySEM?branch=master)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)-->
 
-The package `tidySEM` provides a 'tidy' workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the free open source R packages `lavaan` or `OpenMx`, or the commercial closed-source program `Mplus` (controlled through the R package `MplusAutomation`). The aim of `tidySEM` is to provide three specific functions:
+`r yaml::read_yaml("DESCRIPTION")$Description`
 
-1. Generate model syntax in a top-down, tidy way,
-    * With particular attention to specifying mixture models in `OpenMx`
-2. Tabulate model output in a publication-ready, uniform manner,
-3. Make easily customizable graphs for SEM-models.
+The `tidySEM` package offers the following functionality:
+
+* Generate SEM model syntax in a top-down, tidy way, regardless of what software is used to estimate it
+* Tabulate model output in a publication-ready, uniform manner,
+* Make easily customizable graphs for SEM-models,
+* Estimate latent class analyses / mixture models in `OpenMx`
 
 These functions are designed with the [*tidy tools manifesto* (Wickham, last updated 23-11-2019)](https://tidyverse.tidyverse.org/articles/manifesto.html) in mind, and interface with the existing suite of packages in the [`tidyverse`](https://tidyverse.tidyverse.org/).
 
@@ -39,42 +40,44 @@ You can install the public release of `tidySEM` from CRAN with:
 install.packages("tidySEM")
 ```
 
-If you want access to the latest developer version,
-including features that may not yet be finalized,
-you can install the development version of `tidySEM` from R-universe with:
+You can install the development version of metamixture from [GitHub](https://github.com/) with:
 
-```{r runiverseinstallation, eval = FALSE}
-install.packages('tidySEM',
-                 repos = c('https://cjvanlissa.r-universe.dev',
-                           'https://cloud.r-project.org'))
-```
-
-And if you are a developer and want to contribute to `tidySEM`,
-or want to install a specific historical version of the package,
-you can install directly from GitHub with:
-
-```{r gh-installation, eval = FALSE}
-install.packages("remotes")
-remotes::install_github('cjvanlissa/tidySEM')
+``` r
+# install.packages("pak")
+pak::pak("cjvanlissa/tidySEM")
 ```
 
 ## Documentation
 
 Every user-facing function in the package is documented, and the documentation can be accessed by running `?function_name` in the R console, e.g., `?graph_sem`.
 
-Furthermore, there are three main vignettes, describing the three main tracks of `tidySEM` functions:
+Furthermore, the `tidySEM` package includes the following vignettes:
 
-1. A [vignette about generating syntax and estimating models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html)
-2. A [vignette about tabulating results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html)
-3. A [vignette about making graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html)
-    * An additional vignette describes the [graphing conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html) for
-    structural equation models.
+**Structural Equation Modeling in General**
+
+- [Generating syntax and estimating models](https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html): Generate model syntax and estimate structural equation models.
+- [Tabulating results](https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html): Extract, format, and report model parameters and fit statistics.
+- [Plotting graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html): Create and customize graphical representations of structural equation models.
+- [Graphing conventions for SEM](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html): Understand the graphical notation and conventions used to represent structural equation models.
+- [Ordinal modeling in OpenMx](https://cjvanlissa.github.io/tidySEM/articles/openmx_ordinal.html): Specify ordinal measurement models in OpenMx, including thresholds and their parameterization.
+
+**Latent Class Analysis / Mixture Modeling**
+
+- [Introduction to latent class analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.html): An introduction to latent class and profile analysis, covering data preparation, model estimation, class enumeration, interpretation, and reporting.
+- [Exploratory latent class analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.html): Explore latent class solutions and determine the appropriate number of classes.
+- [Confirmatory latent class analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.html): Specify and test theoretically motivated latent class models.
+- [Latent class analysis with ordinal indicators](https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.html): Estimate and interpret latent class models with ordered categorical indicators.
+- [Mixed-indicator latent class analysis](https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.html): Estimate latent class models combining continuous and categorical indicators.
+- [Latent class growth analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.html): Identify latent classes with distinct longitudinal trajectories.
+- [Auxiliary variable analyses](https://cjvanlissa.github.io/tidySEM/articles/lca_auxiliary.html): Examine relationships between latent class membership and external variables using BCH, two-step maximum likelihood, and pseudo-class methods.
+- [PMC tutorial](https://cjvanlissa.github.io/tidySEM/articles/pmc_tutorial.html): Compare competing mixture models using Predictive Model Comparison.
+- [SMART-LCA checklist](https://cjvanlissa.github.io/tidySEM/articles/SMART_LCA_checklist.html): Apply reporting guidelines and recommended practices to improve the transparency and reproducibility of latent class analyses.
+
+
 
 ## Citing tidySEM
 
-You can cite the R-package with the following citation:
-
-> Van Lissa, C. J., (2019). *tidySEM: Tidy structural equation modeling.* R package version 0.2.1. https://github.com/cjvanlissa/tidySEM/
+> `r paste(format(citation("tidySEM"), style = "text"), collapse = "\n\n")`
 
 To cite the latent class analysis functionality in tidySEM, cite:
 

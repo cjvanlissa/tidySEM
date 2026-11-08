@@ -14,7 +14,7 @@ Often, researchers also have research questions about variables that were not us
 These are called *auxiliary variables*.
 A distal outcome is an auxiliary variable considered as an outcome; other auxiliary variables may be predictors or covariates.
 
-This vignette introduces three approaches in `tidySEM`: **BCH**, **two-step maximum likelihood**, and **pseudo-class draws**. We illustrate class-specific means, category probabilities, regressions, hypothesis tests, and predictors of class membership. For an introduction to estimating the measurement model, see [Introduction to Latent Class Analysis](vignette:lca_introduction).
+This vignette introduces three approaches in `tidySEM`: **BCH**, **two-step maximum likelihood**, and **pseudo-class draws**. We illustrate class-specific means, category probabilities, regressions, hypothesis tests, and predictors of class membership. For an introduction to estimating the measurement model, see [Introduction to Latent Class Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.html).
 
 ## The Naive Approach
 
@@ -30,7 +30,7 @@ The three approaches below address this uncertainty in different ways.
 ## Example: Caregiver profiles
 
 We use the `zegwaard_carecompass` data included in `tidySEM`.
-As explained in the vignette on [Confirmatory LCA](vignette:lca_confirmatory),
+As explained in the vignette on [Confirmatory LCA](https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.html),
 the measurement model uses four caregiver-experience indicators.
 For the present analyses, auxiliary variables concern the caregiver and the person receiving care.
 One requirement of all analyses presented here is that the auxiliary data must have the same number of rows in **exactly the same order** as the measurement data.
@@ -39,6 +39,7 @@ One requirement of all analyses presented here is that the auxiliary data must h
 ``` r
 library(tidySEM)
 library(OpenMx)
+#> Warning: package 'OpenMx' was built under R version 4.6.1
 df <- zegwaard_carecompass
 indicators <- c("burdened", "trapped", "negaffect", "loneliness")
 measurement_data <- df[, indicators]
@@ -493,49 +494,9 @@ pseudo_pred
 
 The coefficients describe conditional associations with class membership relative to a reference class.
 
-## Choosing an approach
-
-| Approach | Uncertainty correction | Measurement model | Limitations |
-|:--|:--|:--|:--|
-| BCH | Classification-error-corrected weights | Fixed from step 1 | Class only as predictor/moderator; no valid SEs |
-| Two-step ML | Joint auxiliary likelihood with fixed measurement parameters | Fixed from step 1 | Class only as predictor/moderator |
-| Pseudo-class | Repeated posterior class draws and pooling | Fixed from step 1 | N/A |
-
 
 ## Reporting auxiliary analyses
 
-A report should identify the measurement indicators, selected number of classes, classification quality, auxiliary-variable role, estimation method, and treatment of uncertainty. Report class-specific estimates and their units, as well as uncertainty intervals obtained from a justified variance estimator. For comparisons across classes, state which parameters were constrained and how the test was calibrated.
-
-The following code illustrates extraction of a results table for the BCH model; it is only displayed when cached results are enabled.
-
-
-``` r
-tab <- table_results(bch_mean, columns = NULL,
-                     format_numeric = FALSE)
-tab
-```
-
-
-```
-#>                label lhs op rhs  est    se    pval            confint    est_sig pval_std
-#> 1     Means.y.class1   y ~1   1  154   2.9 0.0e+00   [148.02, 159.32]  153.67*** 7.4e-110
-#> 2 Variances.y.class1   y ~~   y 2496 203.7 1.6e-34 [2097.16, 2895.67] 2496.42***  0.0e+00
-#> 3     Means.y.class2   y ~1   1  161   3.8 0.0e+00   [153.17, 168.15]  160.66***  6.5e-76
-#> 4 Variances.y.class2   y ~~   y 3076 299.8 1.1e-24 [2488.48, 3663.83] 3076.16***  0.0e+00
-#>    confint_std free          name lboundmet uboundmet std_est  std_se col matrix  openmx_label
-#> 1 [2.80, 3.35] TRUE class1.M[1,1]     FALSE     FALSE     3.1 1.4e-01   y      M class1.M[1,1]
-#> 2 [1.00, 1.00] TRUE class1.S[1,1]     FALSE     FALSE     1.0 1.8e-13   y      S class1.S[1,1]
-#> 3 [2.59, 3.20] TRUE class2.M[1,1]     FALSE     FALSE     2.9 1.6e-01   y      M class2.M[1,1]
-#> 4 [1.00, 1.00] TRUE class2.S[1,1]     FALSE     FALSE     1.0 1.3e-12   y      S class2.S[1,1]
-#>   row  group ci_type  Category
-#> 1   1 class1    Wald     Means
-#> 2   y class1    Wald Variances
-#> 3   1 class2    Wald     Means
-#> 4   y class2    Wald Variances
-```
-
-For related workflows, see [Introduction to Latent Class Analysis](vignette:lca_introduction) and the help pages `?BCH`, `?two_step`, `?pseudo_class`, and `?append_class_draws`.
-
-## Rebuilding this vignette
-
-By default, `run_everything` and `eval_results` are `FALSE`, so the CRAN vignette builds without fitting mixture or auxiliary models and without embedding large result tables or plots. To regenerate cached model objects, set `TIDYSEM_RUN_EVERYTHING=true` (or put `TRUE` in `run_everything.txt`) and rebuild. To show cached output on pkgdown, set `TIDYSEM_EVAL_RESULTS=true` after the caches have been generated. Do not distribute large `.rds` caches as part of the CRAN source package unless they are genuinely needed by users. The code examples remain visible in all builds.
+A report should identify the measurement indicators, selected number of classes, classification quality, auxiliary-variable role, estimation method, and treatment of uncertainty. Report class-specific estimates and their units, as well as uncertainty intervals.
+Mention what kind of standard errors you used, and whether they are valid.
+For comparisons across classes via likelihood ratio test, state which parameters were constrained.

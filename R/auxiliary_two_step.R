@@ -180,63 +180,6 @@ auxiliary_internal <- function(x, ...) {
   dispatch_method(x, "auxiliary_internal", ...)
 }
 
-# two_step_internal_mixture <- function(x, model, data, ...) {
-#
-#   K <- num_classes(x)
-#   post_probs <- extract_postprob(x)
-#
-#   original_data <- x@data$observed
-#   overlap <- intersect(
-#     names(original_data),
-#     names(data)
-#   )
-#   if (length(overlap)) {
-#     stop("Auxiliary variable names overlap with measurement variables: ", paste(overlap, collapse = ", "))
-#   }
-#
-#   combined_data <- cbind(original_data, data)
-#
-#   grp_names <- names(x@submodels)
-#   for (k in seq_len(K)) {
-#
-#     class_name <- grp_names[k]
-#     measurement_model <- x[[class_name]]
-#
-#     auxiliary_model <- label_auxiliary_parameters(
-#       model, k
-#     )
-#
-#     auxiliary_model <- mx_starts_auxiliary(model = auxiliary_model, data = data, weights = post_probs[, k])
-#     combined <- mx_merge_matrices(
-#       measurement_model,
-#       auxiliary_model
-#     )
-#
-#     combined@name <- class_name
-#
-#     combined <- OpenMx::mxModel(
-#       combined,
-#       OpenMx::mxFitFunctionML(vector = TRUE)
-#     )
-#
-#     x <- OpenMx::mxModel(x, combined)
-#   }
-#
-#   x <- OpenMx::mxModel(
-#     x,
-#     OpenMx::mxData(
-#       observed = combined_data,
-#       type = "raw"
-#     )
-#   )
-#
-#   OpenMx::mxRun(
-#     x,
-#     intervals = FALSE,
-#     silent = TRUE,
-#     ...
-#   )
-# }
 
 auxiliary_internal_mixture <- function(x, model, data, ...) {
 
