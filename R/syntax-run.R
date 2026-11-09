@@ -15,18 +15,10 @@
 #' run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
 #' @rdname run_mx
 #' @export
-# @importFrom OpenMx mxAutoStart mxData mxExpectationMixture mxPath
-# @importFrom OpenMx mxFitFunctionML mxMatrix mxModel mxRun mxTryHard
-# @importFrom OpenMx omxAssignFirstParameters mxCompare mxFitFunctionMultigroup
-# @importFrom lavaan mplus2lavaan.modelSyntax
-# @importFrom stats cutree dist hclust
-# @importFrom OpenMx omxDefaultComputePlan mxComputeSimAnnealing
 run_mx <- function(x, ...){
-  s <- search()
-  # if(!any(grepl("OpenMx", s, fixed = TRUE))){
-  #   message("Please run `library(OpenMx) before running any OpenMx models.`")
-  #   return(NULL)
-  # }
+  if (!requireNamespace("OpenMx", quietly = TRUE)) {
+    stop("Package 'OpenMx' is required.")
+  }
   UseMethod("run_mx", x)
 }
 

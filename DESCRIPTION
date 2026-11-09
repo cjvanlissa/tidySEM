@@ -70,7 +70,8 @@ Suggests:
     future,
     igraph (>= 2.0.0),
     broom,
-    nnet
+    nnet,
+    callr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

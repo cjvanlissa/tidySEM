@@ -32,21 +32,12 @@
 #' @examples
 #' \dontrun{
 #' library(OpenMx)
-#' library(metamixture)
 #'
 #' set.seed(123)
-#' dat <- sim_mix_rma(n = 100)
-#'
-#' fit <- remix(dat$yi, dat$vi, classes = 2)
-#'
-#' # Run all -diagnostic checks
-#' mx_diagnostics(fit)
-#'
-#' # Check only optimizer convergence and model fit
-#' mx_diagnostics(fit, check = c("convergence", "fit"))
-#'
-#' # Overall result
-#' mx_diagnostics(fit)$checks_pass
+#' dat <- iris[1:2]
+#' names(dat) <- c("x", "y")
+#' res <- run_mx(as_ram("y~x", data = dat))
+#' mx_diagnostics(res)
 #' }
 #' @export
 mx_diagnostics <- function(model, check = c("convergence", "fit", "parameters", "standard_errors", "boundaries", "hessian"), tol = 1e-6) {
