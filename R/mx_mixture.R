@@ -105,7 +105,7 @@ mx_mixture <- function(model,
 #' mx_profiles(data = df,
 #'             classes = 2) -> res
 #' }
-# @importFrom OpenMx imxReportProgress
+#' @importFrom OpenMx imxReportProgress
 mx_profiles <- function(data = NULL,
                         classes = 1L,
                         variances = "equal",
@@ -245,7 +245,7 @@ mx_growth_mixture <- function(model,
 #' df[1:4] <- lapply(df, ordered)
 #' mx_lca(data = df,
 #'        classes = 2) -> res
-#' }
+#'
 #'
 #' # Reduce the number of extra tries for model fitting (default: 10)
 #' mx_lca(data = df,
