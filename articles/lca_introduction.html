@@ -9,7 +9,8 @@
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to Latent Class Analysis">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Introduction to Latent Class Analysis">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -453,7 +454,29 @@ with running <em>some</em> analyses yourself, of course.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res_lpa</span>, <span class="st">"res_lpa_different_spect.rds"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_lpa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"res_lpa_different_spect.rds"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                     Name Classes      LL      n Parameters     AIC     BIC</span></span>
+<span><span class="co">#&gt; 1            equal var 1    1.00 -951.56 291.00          4 1911.12 1925.81</span></span>
+<span><span class="co">#&gt; 2            equal var 2    2.00 -914.57 291.00          7 1843.14 1868.86</span></span>
+<span><span class="co">#&gt; 3            equal var 3    3.00 -900.31 291.00         10 1820.62 1857.35</span></span>
+<span><span class="co">#&gt; 4            equal var 4    4.00 -887.52 291.00         13 1801.03 1848.79</span></span>
+<span><span class="co">#&gt; 5            equal var 5    5.00 -882.70 291.00         16 1797.41 1856.18</span></span>
+<span><span class="co">#&gt; 6  free var, equal cov 1    1.00 -920.19 291.00          5 1850.37 1868.74</span></span>
+<span><span class="co">#&gt; 7  free var, equal cov 2    2.00 -901.28 291.00         10 1822.56 1859.29</span></span>
+<span><span class="co">#&gt; 8  free var, equal cov 3    3.00 -888.53 291.00         15 1807.07 1862.17</span></span>
+<span><span class="co">#&gt; 9  free var, equal cov 4    4.00 -879.28 291.00         20 1798.56 1872.03</span></span>
+<span><span class="co">#&gt; 10 free var, equal cov 5    5.00 -866.36 291.00         25 1782.71 1874.54</span></span>
+<span><span class="co">#&gt;      saBIC Entropy prob_min prob_max n_min n_max np_ratio np_local</span></span>
+<span><span class="co">#&gt; 1  1913.13    1.00     1.00     1.00  1.00  1.00    72.75    72.75</span></span>
+<span><span class="co">#&gt; 2  1846.66    0.79     0.77     0.98  0.16  0.84    41.57    15.33</span></span>
+<span><span class="co">#&gt; 3  1825.64    0.68     0.82     0.87  0.12  0.44    29.10    13.12</span></span>
+<span><span class="co">#&gt; 4  1807.56    0.86     0.85     0.95  0.06  0.56    22.38     7.20</span></span>
+<span><span class="co">#&gt; 5  1805.44    0.73     0.76     0.96  0.07  0.32    18.19     7.92</span></span>
+<span><span class="co">#&gt; 6  1852.88    1.00     1.00     1.00  1.00  1.00    58.20    58.20</span></span>
+<span><span class="co">#&gt; 7  1827.58    0.58     0.87     0.88  0.48  0.52    29.10    31.33</span></span>
+<span><span class="co">#&gt; 8  1814.60    0.78     0.83     0.93  0.18  0.52    19.40    12.00</span></span>
+<span><span class="co">#&gt; 9  1808.60    0.78     0.79     0.92  0.13  0.37    14.55     8.71</span></span>
+<span><span class="co">#&gt; 10 1795.26    0.80     0.82     0.94  0.09  0.43    11.64     6.19</span></span></code></pre></div>
 <p>More complex models are not automatically better: extra parameters
 can create unstable solutions, tiny classes, or local maxima. Think
 about which models make sense to estimate, and how many classes your
@@ -497,7 +520,19 @@ variances, the number of parameters for our model is:</p>
 <p>First, extract a model fit table:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lpa_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">)</span></span>
-<span><span class="va">tab_lpa_fit</span></span></code></pre></div>
+<span><span class="va">tab_lpa_fit</span></span>
+<span><span class="co">#&gt;          Name Classes        LL   n Parameters      AIC      BIC    saBIC</span></span>
+<span><span class="co">#&gt; 1 equal var 1       1 -951.5584 291          4 1911.117 1925.810 1913.125</span></span>
+<span><span class="co">#&gt; 2 equal var 2       2 -914.5721 291          7 1843.144 1868.857 1846.659</span></span>
+<span><span class="co">#&gt; 3 equal var 3       3 -893.3834 291         10 1806.767 1843.500 1811.788</span></span>
+<span><span class="co">#&gt; 4 equal var 4       4 -894.5514 291         13 1815.103 1862.856 1821.630</span></span>
+<span><span class="co">#&gt; 5 equal var 5       5 -882.7029 291         16 1797.406 1856.179 1805.440</span></span>
+<span><span class="co">#&gt;     Entropy  prob_min  prob_max      n_min     n_max np_ratio  np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.00000000 1.0000000 72.75000 72.750000</span></span>
+<span><span class="co">#&gt; 2 0.7857956 0.7652851 0.9799943 0.15807560 0.8419244 41.57143 15.333333</span></span>
+<span><span class="co">#&gt; 3 0.8365064 0.8968019 0.9439567 0.12714777 0.5807560 29.10000 13.875000</span></span>
+<span><span class="co">#&gt; 4 0.7317583 0.5928521 0.8994559 0.04467354 0.4432990 22.38462  5.200000</span></span>
+<span><span class="co">#&gt; 5 0.7291737 0.7585690 0.9551134 0.06529210 0.3230241 18.18750  7.916667</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="bic">BIC<a class="anchor" aria-label="anchor" href="#bic"></a>
 </h4>
@@ -507,7 +542,8 @@ The absolute BIC value has no substantive meaning; you can compare BIC
 values of models fitted to the same data, and lower values are
 preferred. We can see that the three-class model has the lowest BIC:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">tab_lpa_fit</span><span class="op">$</span><span class="va">BIC</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">tab_lpa_fit</span><span class="op">$</span><span class="va">BIC</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 3</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="blrt">BLRT<a class="anchor" aria-label="anchor" href="#blrt"></a>
@@ -532,7 +568,12 @@ BLRT:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res_blrt</span>, <span class="st">"res_blrt_intro.rds"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_blrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"res_blrt_intro.rds"</span><span class="op">)</span></span>
-<span><span class="va">res_blrt</span></span></code></pre></div>
+<span><span class="va">res_blrt</span></span>
+<span><span class="co">#&gt; Bootstrapped Likelihood Ratio Test:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  null  alt   lr df blrt_p samples</span></span>
+<span><span class="co">#&gt;  mix1 mix2 74.0  3      0      99</span></span>
+<span><span class="co">#&gt;  mix2 mix3 42.4  3      0      95</span></span></code></pre></div>
 <p>We see that adding classes leads to a significant improvement in
 model fit.</p>
 </div>
@@ -548,11 +589,19 @@ these checks fails, you can examine a detailed report by running
 <code>mx_diagnostics(res_lpa[[model_numer]])</code>, where
 <code>model_number</code> is the number of the failing model:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">res_lpa</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="../reference/mx_diagnostics.html">mx_diagnostics</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">$</span><span class="va">checks_pass</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">res_lpa</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="../reference/mx_diagnostics.html">mx_diagnostics</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">$</span><span class="va">checks_pass</span><span class="op">)</span></span>
+<span><span class="co">#&gt; equal var 1 equal var 2 equal var 3 equal var 4 equal var 5 </span></span>
+<span><span class="co">#&gt;        TRUE        TRUE        TRUE        TRUE        TRUE</span></span></code></pre></div>
 <p>Another consideration is that classification diagnostics are poor for
 the 4-5 class models:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tab_lpa_fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>, <span class="st">"prob_max"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tab_lpa_fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>, <span class="st">"prob_max"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;     Entropy  prob_min  prob_max</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000</span></span>
+<span><span class="co">#&gt; 2 0.7857956 0.7652851 0.9799943</span></span>
+<span><span class="co">#&gt; 3 0.8365064 0.8968019 0.9439567</span></span>
+<span><span class="co">#&gt; 4 0.7317583 0.5928521 0.8994559</span></span>
+<span><span class="co">#&gt; 5 0.7291737 0.7585690 0.9551134</span></span></code></pre></div>
 <p>The entropy statistic is an overall summary of class separation,
 where values approaching 1 indicate clear delineation of classes <span class="citation">[@celeuxEntropyCriterionAssessing1996]</span>.</p>
 <p>The statistics <code>prob_min</code> and <code>prob_max</code> give
@@ -580,6 +629,18 @@ requires reporting to double digits. So let’s consider two options:</p>
 <span><span class="co"># numeric type:</span></span>
 <span><span class="va">tab_lpa_fit_formatted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">tab_lpa_fit</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">tab_lpa_fit_formatted</span></span>
+<span><span class="co">#&gt;          Name Classes   LL   n Parameters  AIC  BIC saBIC Entropy prob_min</span></span>
+<span><span class="co">#&gt; 1 equal var 1       1 -952 291          4 1911 1926  1913    1.00     1.00</span></span>
+<span><span class="co">#&gt; 2 equal var 2       2 -915 291          7 1843 1869  1847    0.79     0.77</span></span>
+<span><span class="co">#&gt; 3 equal var 3       3 -893 291         10 1807 1843  1812    0.84     0.90</span></span>
+<span><span class="co">#&gt; 4 equal var 4       4 -895 291         13 1815 1863  1822    0.73     0.59</span></span>
+<span><span class="co">#&gt; 5 equal var 5       5 -883 291         16 1797 1856  1805    0.73     0.76</span></span>
+<span><span class="co">#&gt;   prob_max n_min n_max np_ratio np_local</span></span>
+<span><span class="co">#&gt; 1     1.00 1.000  1.00       73     72.8</span></span>
+<span><span class="co">#&gt; 2     0.98 0.158  0.84       42     15.3</span></span>
+<span><span class="co">#&gt; 3     0.94 0.127  0.58       29     13.9</span></span>
+<span><span class="co">#&gt; 4     0.90 0.045  0.44       22      5.2</span></span>
+<span><span class="co">#&gt; 5     0.96 0.065  0.32       18      7.9</span></span>
 <span><span class="co"># Using format_numeric; reports 2 digits, but all columns become</span></span>
 <span><span class="co"># character type:</span></span>
 <span><span class="va">tab_lpa_fit_formatted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">tab_lpa_fit</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -588,18 +649,38 @@ requires reporting to double digits. So let’s consider two options:</p>
 significant BLRT tests, we would retain a 3-class model.</p>
 <p>The class proportions of this model are:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/class_prob.html">class_prob</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="st">"sum.posterior"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/class_prob.html">class_prob</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="st">"sum.posterior"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $sum.posterior</span></span>
+<span><span class="co">#&gt;    class     count proportion</span></span>
+<span><span class="co">#&gt; 1 class1 167.04337  0.5740322</span></span>
+<span><span class="co">#&gt; 2 class2  85.72086  0.2945734</span></span>
+<span><span class="co">#&gt; 3 class3  38.23577  0.1313944</span></span></code></pre></div>
 <p>We can examine the parameters of this model as follows:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lpa_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">tab_lpa_res</span></span></code></pre></div>
+<span><span class="va">tab_lpa_res</span></span>
+<span><span class="co">#&gt;                   label est_sig   se pval      confint  class</span></span>
+<span><span class="co">#&gt; 1       Means.AM.class1 4.36*** 0.07 0.00 [4.23, 4.49] class1</span></span>
+<span><span class="co">#&gt; 2       Means.CM.class1 3.24*** 0.08 0.00 [3.09, 3.40] class1</span></span>
+<span><span class="co">#&gt; 3   Variances.AM.class1 0.39*** 0.04 0.00 [0.30, 0.48] class1</span></span>
+<span><span class="co">#&gt; 4   Variances.CM.class1 0.89*** 0.08 0.00 [0.74, 1.04] class1</span></span>
+<span><span class="co">#&gt; 5       Means.AM.class2 6.09*** 0.09 0.00 [5.91, 6.27] class2</span></span>
+<span><span class="co">#&gt; 6       Means.CM.class2 2.56*** 0.11 0.00 [2.34, 2.78] class2</span></span>
+<span><span class="co">#&gt; 7       Means.AM.class3 1.84*** 0.12 0.00 [1.60, 2.08] class3</span></span>
+<span><span class="co">#&gt; 8       Means.CM.class3 4.22*** 0.16 0.00 [3.91, 4.53] class3</span></span>
+<span><span class="co">#&gt; 9  mix3.weights[1,1].NA    1.00 &lt;NA&gt; &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 10 mix3.weights[1,2].NA 0.51*** 0.09 0.00 [0.34, 0.69]   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 11 mix3.weights[1,3].NA 0.23*** 0.04 0.00 [0.14, 0.32]   &lt;NA&gt;</span></span></code></pre></div>
 <p>Notice that we get one estimate for the variances (because these are
 equal across classes), no covariances, and unique estimates for the
 means across classes.</p>
 <p>The pattern of results is easier to see when plotting it:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-26-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-26-2.png" class="r-plt" alt="" width="672"></p>
 <p>Examining the class-specific means, we see that Class 1 has moderate
 values on both indicators, whereas Class 2 does not have high means on
 both autonomous motivation (AM) and controlled motivation (CM).</p>
@@ -618,7 +699,7 @@ parsimonious explanation of the data.</p>
 </h2>
 <p>We can conduct ordinal LCA by using some of the raw items underlying
 the scale scores, for example:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_lca</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AM1"</span>, <span class="st">"AM2"</span>, <span class="st">"AM3"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>For a model with ordinal indicators, there is (currently) only one
 parametrization available. Specifically, we represent each ordinal
@@ -633,7 +714,7 @@ levels of our ordinal indicators, and M is the number of indicators:</p>
 <li>k<em>((L-1)</em>M) thresholds</li>
 </ul>
 <p>Since our indicators have 7 categories, this gives:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
 <span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">df_lca</span><span class="op">$</span><span class="va">AM1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">df_lca</span><span class="op">)</span></span>
@@ -645,24 +726,80 @@ observations per parameter. Thus, we might doubt whether we have enough
 data here to estimate more than one class. For educational purposes - we
 will proceed, but to save time estimating overly complex models, we omit
 the 4-5 class models.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_lca</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_lca.html">mx_lca</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_lca</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res_lca</span>, <span class="st">"res_lca_intro.rds"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_lca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"res_lca_intro.rds"</span><span class="op">)</span></span>
 <span><span class="va">tab_lca_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_lca</span><span class="op">)</span></span>
-<span><span class="va">tab_lca_fit</span></span></code></pre></div>
+<span><span class="va">tab_lca_fit</span></span>
+<span><span class="co">#&gt;   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
+<span><span class="co">#&gt; 1    1       1 -1538.279 291         18 3112.558 3178.678 3121.596 1.0000000</span></span>
+<span><span class="co">#&gt; 2    2       2 -1378.727 291         37 2831.455 2967.368 2850.033 0.9389693</span></span>
+<span><span class="co">#&gt; 3    3       3 -1286.189 291         56 2684.378 2890.084 2712.496 0.9332435</span></span>
+<span><span class="co">#&gt;    prob_min  prob_max     n_min     n_max warning  np_ratio  np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.0000000      NA 16.166667 16.166667</span></span>
+<span><span class="co">#&gt; 2 0.9710441 0.9876977 0.2302405 0.7697595    TRUE  7.864865  3.722222</span></span>
+<span><span class="co">#&gt; 3 0.9469730 0.9882293 0.2302405 0.4536082    TRUE  5.196429  3.722222</span></span></code></pre></div>
 <p>The BIC indicates that adding classes improves model fit. However,
 even for the 2-class model, the number of cases/parameters in the
 smallest class (<code>np_local</code>) is smaller than 10. Thus, we
 might be skeptical about selecting more than 1 class for these data. For
 educational purposes, however, let’s examine the 2-class solution.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lca_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_lca</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">tab_lca_res</span></span></code></pre></div>
+<span><span class="va">tab_lca_res</span></span>
+<span><span class="co">#&gt;                            label est_sig     se pval           confint  class</span></span>
+<span><span class="co">#&gt; 1           Variances.AM1.class1    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 2           Variances.AM2.class1    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 3           Variances.AM3.class1    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 4  class1.Thresholds[1,1].class1   -9.05  27.22 0.74   [-62.40, 44.29] class1</span></span>
+<span><span class="co">#&gt; 5  class1.Thresholds[1,2].class1  -17.42  27.82 0.53   [-71.94, 37.10] class1</span></span>
+<span><span class="co">#&gt; 6  class1.Thresholds[1,3].class1  -18.00  27.78 0.52   [-72.46, 36.46] class1</span></span>
+<span><span class="co">#&gt; 7  class1.Thresholds[2,1].class1   -2.12  54.44 0.97 [-108.81, 104.58] class1</span></span>
+<span><span class="co">#&gt; 8  class1.Thresholds[2,2].class1  -13.11  55.64 0.81  [-122.15, 95.94] class1</span></span>
+<span><span class="co">#&gt; 9  class1.Thresholds[2,3].class1  -15.76  55.57 0.78  [-124.67, 93.15] class1</span></span>
+<span><span class="co">#&gt; 10 class1.Thresholds[3,1].class1   -1.90  81.81 0.98 [-162.24, 158.44] class1</span></span>
+<span><span class="co">#&gt; 11 class1.Thresholds[3,2].class1   -1.99  83.45 0.98 [-165.56, 161.57] class1</span></span>
+<span><span class="co">#&gt; 12 class1.Thresholds[3,3].class1   -2.10  83.35 0.98 [-165.47, 161.27] class1</span></span>
+<span><span class="co">#&gt; 13 class1.Thresholds[4,1].class1   -0.20 108.04 1.00 [-211.95, 211.55] class1</span></span>
+<span><span class="co">#&gt; 14 class1.Thresholds[4,2].class1   -0.50 110.24 1.00 [-216.56, 215.55] class1</span></span>
+<span><span class="co">#&gt; 15 class1.Thresholds[4,3].class1   -0.38 109.93 1.00 [-215.84, 215.08] class1</span></span>
+<span><span class="co">#&gt; 16 class1.Thresholds[5,1].class1    0.37 125.42 1.00 [-245.46, 246.20] class1</span></span>
+<span><span class="co">#&gt; 17 class1.Thresholds[5,2].class1    0.14 129.66 1.00 [-253.98, 254.27] class1</span></span>
+<span><span class="co">#&gt; 18 class1.Thresholds[5,3].class1    0.26 128.24 1.00 [-251.09, 251.61] class1</span></span>
+<span><span class="co">#&gt; 19 class1.Thresholds[6,1].class1    1.27 133.02 0.99 [-259.44, 261.98] class1</span></span>
+<span><span class="co">#&gt; 20 class1.Thresholds[6,2].class1    1.11 138.75 0.99 [-270.85, 273.06] class1</span></span>
+<span><span class="co">#&gt; 21 class1.Thresholds[6,3].class1    0.99 137.90 0.99 [-269.28, 271.27] class1</span></span>
+<span><span class="co">#&gt; 22          Variances.AM1.class2    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 23          Variances.AM2.class2    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 24          Variances.AM3.class2    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 25 class2.Thresholds[1,1].class2   -0.14  13.64 0.99   [-26.88, 26.60] class2</span></span>
+<span><span class="co">#&gt; 26 class2.Thresholds[1,2].class2   -0.64  15.09 0.97   [-30.21, 28.94] class2</span></span>
+<span><span class="co">#&gt; 27 class2.Thresholds[1,3].class2   -0.55  14.40 0.97   [-28.76, 27.67] class2</span></span>
+<span><span class="co">#&gt; 28 class2.Thresholds[2,1].class2    0.18  27.14 0.99   [-53.02, 53.37] class2</span></span>
+<span><span class="co">#&gt; 29 class2.Thresholds[2,2].class2   -0.01  28.66 1.00   [-56.18, 56.15] class2</span></span>
+<span><span class="co">#&gt; 30 class2.Thresholds[2,3].class2   -0.02  27.69 1.00   [-54.30, 54.25] class2</span></span>
+<span><span class="co">#&gt; 31 class2.Thresholds[3,1].class2    1.59  29.57 0.96   [-56.37, 59.55] class2</span></span>
+<span><span class="co">#&gt; 32 class2.Thresholds[3,2].class2    0.46  38.56 0.99   [-75.12, 76.04] class2</span></span>
+<span><span class="co">#&gt; 33 class2.Thresholds[3,3].class2    0.83  34.02 0.98   [-65.85, 67.51] class2</span></span>
+<span><span class="co">#&gt; 34 class2.Thresholds[4,1].class2    7.71  29.57 0.79   [-50.24, 65.67] class2</span></span>
+<span><span class="co">#&gt; 35 class2.Thresholds[4,2].class2    0.77  46.70 0.99   [-90.75, 92.30] class2</span></span>
+<span><span class="co">#&gt; 36 class2.Thresholds[4,3].class2    1.62  36.55 0.96   [-70.03, 73.26] class2</span></span>
+<span><span class="co">#&gt; 37 class2.Thresholds[5,1].class2    8.24  29.57 0.78   [-49.72, 66.19] class2</span></span>
+<span><span class="co">#&gt; 38 class2.Thresholds[5,2].class2    1.42  50.65 0.98  [-97.85, 100.70] class2</span></span>
+<span><span class="co">#&gt; 39 class2.Thresholds[5,3].class2    8.52  36.55 0.82   [-63.12, 80.16] class2</span></span>
+<span><span class="co">#&gt; 40 class2.Thresholds[6,1].class2   10.10  29.57 0.73   [-47.86, 68.05] class2</span></span>
+<span><span class="co">#&gt; 41 class2.Thresholds[6,2].class2    1.43  52.30 0.98 [-101.09, 103.94] class2</span></span>
+<span><span class="co">#&gt; 42 class2.Thresholds[6,3].class2   11.65  36.55 0.75   [-59.99, 83.29] class2</span></span>
+<span><span class="co">#&gt; 43          mix2.weights[1,1].NA    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 44          mix2.weights[1,2].NA    0.29  46.92 0.99   [-91.67, 92.26]   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Note: Standard errors are unavailable or non-finite.</span></span>
+<span><span class="co">#&gt; Note: Hessian is not positive definite.</span></span></code></pre></div>
 <p>We see that all the parameters are thresholds (and a mixture
 weight).</p>
 <p>These thresholds are z-values at which a standard normal distribution
@@ -671,7 +808,7 @@ below the threshold corresponds to the proportion of particiants who
 selected that answer category or lower. We can plot this to give you an
 intuitive understanding, for example, for the thresholds for variable
 AM1 in class 1:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">thresholds</span> <span class="op">&lt;-</span> <span class="va">res_lca</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">class1</span><span class="op">$</span><span class="va">Thresholds</span><span class="op">$</span><span class="va">result</span><span class="op">[</span>, <span class="st">"AM1"</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -679,29 +816,77 @@ AM1 in class 1:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">thresholds</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="va">thresholds</span>, labels <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-32-1.png" class="r-plt" alt="" width="672"></p>
 <p>This figure implies that the most common response to AM1 in class 1
-is 4, quite a few people score 1, and very few people score 6 or 7. We
-can do a sanity check to confirm this interpretation by assigning people
-to their most likely class (note that this ignores classification
-uncertainty), and then tabulating the observed scores of AM1 for the
-people who are assigned class 1:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+is 6, quite a few people score 5 or 7, and very few people score 4 or
+below. We can do a sanity check to confirm this interpretation by
+assigning people to their most likely class (note that this ignores
+classification uncertainty), and then tabulating the observed scores of
+AM1 for the people who are assigned class 1:</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">individual_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_class.html">predict_class</a></span><span class="op">(</span><span class="va">res_lca</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">AM1</span><span class="op">[</span><span class="va">individual_class</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">AM1</span><span class="op">[</span><span class="va">individual_class</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  1  2  3  4  5  6  7 </span></span>
+<span><span class="co">#&gt;  0  4  1 89 50 57 23</span></span></code></pre></div>
 <p>Another way to interpret the threshold parameters is to convert them
 to the estimated probability of choosing each response category:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lca_prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_lca</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Let's format it for easier visual interpretation:</span></span>
-<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">tab_lca_prob</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">tab_lca_prob</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Variable Category Probability  group</span></span>
+<span><span class="co">#&gt; 1       AM1        1        0.00 class1</span></span>
+<span><span class="co">#&gt; 2       AM1        2        0.02 class1</span></span>
+<span><span class="co">#&gt; 3       AM1        3        0.01 class1</span></span>
+<span><span class="co">#&gt; 4       AM1        4        0.39 class1</span></span>
+<span><span class="co">#&gt; 5       AM1        5        0.22 class1</span></span>
+<span><span class="co">#&gt; 6       AM1        6        0.25 class1</span></span>
+<span><span class="co">#&gt; 7       AM1        7        0.10 class1</span></span>
+<span><span class="co">#&gt; 8       AM2        1        0.00 class1</span></span>
+<span><span class="co">#&gt; 9       AM2        2        0.00 class1</span></span>
+<span><span class="co">#&gt; 10      AM2        3        0.02 class1</span></span>
+<span><span class="co">#&gt; 11      AM2        4        0.28 class1</span></span>
+<span><span class="co">#&gt; 12      AM2        5        0.25 class1</span></span>
+<span><span class="co">#&gt; 13      AM2        6        0.31 class1</span></span>
+<span><span class="co">#&gt; 14      AM2        7        0.13 class1</span></span>
+<span><span class="co">#&gt; 15      AM3        1        0.00 class1</span></span>
+<span><span class="co">#&gt; 16      AM3        2        0.00 class1</span></span>
+<span><span class="co">#&gt; 17      AM3        3        0.02 class1</span></span>
+<span><span class="co">#&gt; 18      AM3        4        0.33 class1</span></span>
+<span><span class="co">#&gt; 19      AM3        5        0.25 class1</span></span>
+<span><span class="co">#&gt; 20      AM3        6        0.24 class1</span></span>
+<span><span class="co">#&gt; 21      AM3        7        0.16 class1</span></span>
+<span><span class="co">#&gt; 22      AM1        1        0.45 class2</span></span>
+<span><span class="co">#&gt; 23      AM1        2        0.13 class2</span></span>
+<span><span class="co">#&gt; 24      AM1        3        0.37 class2</span></span>
+<span><span class="co">#&gt; 25      AM1        4        0.06 class2</span></span>
+<span><span class="co">#&gt; 26      AM1        5        0.00 class2</span></span>
+<span><span class="co">#&gt; 27      AM1        6        0.00 class2</span></span>
+<span><span class="co">#&gt; 28      AM1        7        0.00 class2</span></span>
+<span><span class="co">#&gt; 29      AM2        1        0.26 class2</span></span>
+<span><span class="co">#&gt; 30      AM2        2        0.23 class2</span></span>
+<span><span class="co">#&gt; 31      AM2        3        0.18 class2</span></span>
+<span><span class="co">#&gt; 32      AM2        4        0.10 class2</span></span>
+<span><span class="co">#&gt; 33      AM2        5        0.14 class2</span></span>
+<span><span class="co">#&gt; 34      AM2        6        0.00 class2</span></span>
+<span><span class="co">#&gt; 35      AM2        7        0.08 class2</span></span>
+<span><span class="co">#&gt; 36      AM3        1        0.29 class2</span></span>
+<span><span class="co">#&gt; 37      AM3        2        0.20 class2</span></span>
+<span><span class="co">#&gt; 38      AM3        3        0.31 class2</span></span>
+<span><span class="co">#&gt; 39      AM3        4        0.15 class2</span></span>
+<span><span class="co">#&gt; 40      AM3        5        0.05 class2</span></span>
+<span><span class="co">#&gt; 41      AM3        6        0.00 class2</span></span>
+<span><span class="co">#&gt; 42      AM3        7        0.00 class2</span></span></code></pre></div>
 <p>We see that the majority of people in class 1 scored a 4 on all
 indicators, and the majority of people in class 2 scored a 5 or 6 on all
 indicators. Thus, we could call these classes the “moderate AM” class,
 and the “high AM” class, respectively.</p>
 <p>We can also plot this information, leading to the same
 conclusion:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_lca</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-35-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="dichotomous-indicators-mx_lca">Dichotomous indicators: <code>mx_lca()</code><a class="anchor" aria-label="anchor" href="#dichotomous-indicators-mx_lca"></a>
@@ -717,7 +902,7 @@ artificially dichotomize variables, because this loses information.
 Because we saw that the main differences between the two classes in the
 previous example was between people scoring mostly 4 (class 1) versus 5
 and 6 (class 2), it makes sense to cut the variables at this value:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_bin</span> <span class="op">&lt;-</span> <span class="va">df_lca</span></span>
 <span><span class="va">df_bin</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">df_bin</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <!-- ### Loading a New Dataset -->
@@ -742,7 +927,7 @@ ordinal LCA example, but now, the number of levels L is 2. If we divide
 the number of cases by the number of parameters, we see that we could
 estimate up to 4 classes while still having, on average, about 20
 observations per parameter:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
 <span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">df_lca</span><span class="op">)</span></span>
@@ -750,16 +935,26 @@ observations per parameter:</p>
 <span><span class="co">#&gt;  [1] 97.000000 41.571429 26.454545 19.400000 15.315789 12.652174 10.777778</span></span>
 <span><span class="co">#&gt;  [8]  9.387097  8.314286  7.461538</span></span></code></pre></div>
 <p>We can fit the model:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_lca.html">mx_lca</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_bin</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res_bin</span>, <span class="st">"res_bin_intro.rds"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"res_bin_intro.rds"</span><span class="op">)</span></span>
 <span><span class="va">tab_bin_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_bin</span><span class="op">)</span></span>
-<span><span class="va">tab_bin_fit</span></span></code></pre></div>
+<span><span class="va">tab_bin_fit</span></span>
+<span><span class="co">#&gt;   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
+<span><span class="co">#&gt; 1    1       1 -595.6245 291          3 1197.249 1208.269 1198.755 1.0000000</span></span>
+<span><span class="co">#&gt; 2    2       2 -520.4017 291          7 1054.803 1080.517 1058.318 0.8291898</span></span>
+<span><span class="co">#&gt; 3    3       3 -492.9672 291         11 1007.934 1048.341 1013.458 0.6506500</span></span>
+<span><span class="co">#&gt; 4    4       4 -492.9672 291         15 1015.934 1071.034 1023.466 0.5628873</span></span>
+<span><span class="co">#&gt;    prob_min  prob_max     n_min     n_max warning np_ratio np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.0000000      NA 97.00000 97.00000</span></span>
+<span><span class="co">#&gt; 2 0.9323551 0.9927520 0.3917526 0.6082474    TRUE 41.57143 38.00000</span></span>
+<span><span class="co">#&gt; 3 0.3084904 0.9790597 0.1099656 0.4810997    TRUE 26.45455 10.66667</span></span>
+<span><span class="co">#&gt; 4 0.0000000 0.9994600 0.0000000 0.4158076    TRUE 19.40000  0.00000</span></span></code></pre></div>
 <p>Here, we see that the 2-class solution is best according to the BIC,
 and that <code>np_local</code> is near-zero for the 3- and 4-class
 solution. This is happens because (almost) no observations are allocated
@@ -770,18 +965,26 @@ because there are only two response categories, we can ignore half the
 table because the response proportions sum to 1, so half the rows are
 just one minus the other half of the rows. The table now only shows what
 percentage of participants scored 1 on each indicator:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_bin_prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_bin</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">tab_bin_prob</span> <span class="op">&lt;-</span> <span class="va">tab_bin_prob</span><span class="op">[</span><span class="op">!</span><span class="va">tab_bin_prob</span><span class="op">$</span><span class="va">Category</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">-</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="co"># Let's format it for easier visual interpretation:</span></span>
-<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">tab_bin_prob</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">tab_bin_prob</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Variable Probability  group</span></span>
+<span><span class="co">#&gt; 2       AM1        0.99 class1</span></span>
+<span><span class="co">#&gt; 4       AM2        0.80 class1</span></span>
+<span><span class="co">#&gt; 6       AM3        1.00 class1</span></span>
+<span><span class="co">#&gt; 8       AM1        0.32 class2</span></span>
+<span><span class="co">#&gt; 10      AM2        0.21 class2</span></span>
+<span><span class="co">#&gt; 12      AM3        0.21 class2</span></span></code></pre></div>
 <p>We see that people in class 2 tend to score 1 more often than people
 in class 1. This tells us that AM1 is most discriminating (nearly all
 people in class 2 endorse it, but nearly nobody in class 1), whereas AM2
 is less discriminating.</p>
 <p>We can also plot this information:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_bin</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-41-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 </div>
 <div class="section level2">
@@ -791,7 +994,7 @@ is less discriminating.</p>
 or binary indicators. <code><a href="../reference/mx_mixed_lca.html">mx_mixed_lca()</a></code> is designed for this
 setting. As an example, we can combine <code>df_bin</code> with the
 scale score of <code>CM</code>:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_mixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span>, <span class="st">"CM"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>, <span class="va">df_bin</span><span class="op">)</span></span></code></pre></div>
 <p>The parameters are now given as:</p>
 <ul>
@@ -801,7 +1004,7 @@ scale score of <code>CM</code>:</p>
 <li>1 variance for CM (if we keep it constant across classes)</li>
 <li>No covariances</li>
 </ul>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
 <span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">df_lca</span><span class="op">)</span></span>
@@ -810,30 +1013,58 @@ scale score of <code>CM</code>:</p>
 <span><span class="co">#&gt;  [8]  7.275000  6.466667  5.820000</span></span></code></pre></div>
 <p>So following our rule of thumb, we could safely estimate up to 3
 classes:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_mixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_mixed_lca.html">mx_mixed_lca</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_mixed</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">res_mixed</span>, <span class="st">"res_mixed_intro.rds"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_mixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"res_mixed_intro.rds"</span><span class="op">)</span></span>
 <span><span class="va">tab_mixed_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">)</span></span>
-<span><span class="va">tab_mixed_fit</span></span></code></pre></div>
+<span><span class="va">tab_mixed_fit</span></span>
+<span><span class="co">#&gt;     Name Classes         LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
+<span><span class="co">#&gt; 1  equal       1 -1028.0808 291          5 2066.162 2084.528 2068.672 1.0000000</span></span>
+<span><span class="co">#&gt; 2 equal1       2  -912.0007 291         10 1844.001 1880.735 1849.023 0.8044964</span></span>
+<span><span class="co">#&gt; 3 equal2       3  -906.2088 291         15 1842.418 1897.517 1849.949 0.9286165</span></span>
+<span><span class="co">#&gt;    prob_min  prob_max     n_min     n_max warning np_ratio np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.0000000      NA     58.2 58.20000</span></span>
+<span><span class="co">#&gt; 2 0.9349282 0.9646735 0.4914089 0.5085911      NA     29.1 31.77778</span></span>
+<span><span class="co">#&gt; 3 0.9438383 1.0000000 0.1752577 0.4123711    TRUE     19.4 11.76923</span></span></code></pre></div>
 <p>Here, we see that the 2-class solution is best according to the BIC,
 and that <code>np_local</code> is low for the 3-class solution. We can
 examine the results for the 2-class solution. Note that these results
 will now be a combination of means/variances and probabilities
 (thresholds):</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tab_mixed_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">tab_mixed_res</span></span></code></pre></div>
-<p>We can plot the continuous indicators:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="st">"CM"</span><span class="op">)</span></span></code></pre></div>
-<p>And the response probabilities for the binary indicators:</p>
+<code class="sourceCode R"><span><span class="va">tab_mixed_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">tab_mixed_res</span></span>
+<span><span class="co">#&gt;                            label  est_sig   se pval        confint  class</span></span>
+<span><span class="co">#&gt; 1                Means.CM.class1  2.81*** 0.09 0.00   [2.63, 2.99] class1</span></span>
+<span><span class="co">#&gt; 2            Variances.CM.class1  1.03*** 0.09 0.00   [0.86, 1.20] class1</span></span>
+<span><span class="co">#&gt; 3           Variances.AM1.class1     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 4           Variances.AM2.class1     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 5           Variances.AM3.class1     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 6  class1.Thresholds[1,1].class1  1.15*** 0.21 0.00   [0.74, 1.57] class1</span></span>
+<span><span class="co">#&gt; 7  class1.Thresholds[1,2].class1  1.85*** 0.31 0.00   [1.25, 2.46] class1</span></span>
+<span><span class="co">#&gt; 8  class1.Thresholds[1,3].class1  0.96*** 0.15 0.00   [0.66, 1.26] class1</span></span>
+<span><span class="co">#&gt; 9                Means.CM.class2  3.50*** 0.09 0.00   [3.32, 3.67] class2</span></span>
+<span><span class="co">#&gt; 10          Variances.AM1.class2     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 11          Variances.AM2.class2     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 12          Variances.AM3.class2     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 13 class2.Thresholds[1,1].class2 -1.54*** 0.23 0.00 [-2.00, -1.09] class2</span></span>
+<span><span class="co">#&gt; 14 class2.Thresholds[1,2].class2 -0.71*** 0.15 0.00 [-0.99, -0.42] class2</span></span>
+<span><span class="co">#&gt; 15 class2.Thresholds[1,3].class2 -0.75*** 0.13 0.00 [-1.01, -0.49] class2</span></span>
+<span><span class="co">#&gt; 16   equal var 2.weights[1,1].NA     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 17   equal var 2.weights[1,2].NA  1.11*** 0.17 0.00   [0.77, 1.45]   &lt;NA&gt;</span></span></code></pre></div>
+<p>We can plot the continuous indicators:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="st">"CM"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-47-1.png" class="r-plt" alt="" width="672"></p>
+<p>And the response probabilities for the binary indicators:</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-48-1.png" class="r-plt" alt="" width="672"></p>
 <p>The interpretation now depends on the indicator: describe
 class-specific means for continuous variables, response-category
 probabilities for ordinal variables, and endorsement probabilities for
@@ -846,30 +1077,49 @@ dichotomous variables.</p>
 posterior class-membership probabilities (i.e., the probability that
 they belong to each class). The function <code><a href="../reference/class_prob.html">class_prob()</a></code> gives
 you this matrix, and several other diagnostic tables based on it:</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/class_prob.html">class_prob</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">individual</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">individual</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      class1 class2 class3 predicted</span></span>
+<span><span class="co">#&gt; [1,] "1.00" "0.00" "0.00" "1.00"   </span></span>
+<span><span class="co">#&gt; [2,] "0.16" "0.84" "0.00" "2.00"   </span></span>
+<span><span class="co">#&gt; [3,] "0.98" "0.02" "0.00" "1.00"   </span></span>
+<span><span class="co">#&gt; [4,] "0.98" "0.02" "0.00" "1.00"   </span></span>
+<span><span class="co">#&gt; [5,] "0.99" "0.01" "0.00" "1.00"   </span></span>
+<span><span class="co">#&gt; [6,] "0.02" "0.00" "0.98" "3.00"</span></span></code></pre></div>
 <p>This table can be summarized in different ways to summarize the
 classifications, and to diagnose classification accuracy.</p>
 <p>For example, <code>$sum.posterior</code> gives us the column sums of
 the individual classification probabilities; this indicates what
 proportion of your sample contributes to each class (and allows people
 to contribute fractionally to multiple classes):</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">sum.posterior</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">sum.posterior</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    class  count proportion</span></span>
+<span><span class="co">#&gt; 1 class1 167.04       0.57</span></span>
+<span><span class="co">#&gt; 2 class2  85.72       0.29</span></span>
+<span><span class="co">#&gt; 3 class3  38.24       0.13</span></span></code></pre></div>
 <p>If you make a forced choice, assigning every person to the class for
 which they have the highest probability, you would get the following
 statistics. Note that these numbers now have measurement error baked
 into them:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">sum.mostlikely</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">sum.mostlikely</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    class count.mostlikely count.Freq proportion.mostlikely proportion.Freq</span></span>
+<span><span class="co">#&gt; 1 class1                1        169                     1            0.58</span></span>
+<span><span class="co">#&gt; 2 class2                2         85                     2            0.29</span></span>
+<span><span class="co">#&gt; 3 class3                3         37                     3            0.13</span></span></code></pre></div>
 <p>In <span class="citation">@sec-eliminating</span>, we already
 encountered the average classification probabilities for the most likely
 class membership, whose range is represented in the fit table as
 <code>prob_min</code> and <code>prob_max</code>. We can see the full
 matrix by calling:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">mostlikely.class</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">mostlikely.class</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           assigned.1 assigned.2 assigned.3</span></span>
+<span><span class="co">#&gt; avgprob.1 "0.94"     "0.05"     "0.01"    </span></span>
+<span><span class="co">#&gt; avgprob.2 "0.10"     "0.90"     "0.00"    </span></span>
+<span><span class="co">#&gt; avgprob.3 "0.06"     "0.00"     "0.94"</span></span></code></pre></div>
 <p>On the diagonal, we find the average probability that observations
 belongs to the classes they are assigned to. If the classes are
 well-separated, you should see large diagonal values and small
@@ -912,23 +1162,29 @@ another value column). We do not report the variances in this table,
 because they are fixed across classes. We also write it to a
 spreadsheet, so we can easily import it into other desktop publishing
 software:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, columns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">Category</span> <span class="op">==</span> <span class="st">"Means"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lhs"</span>, <span class="st">"class"</span>, <span class="st">"est"</span>, <span class="st">"se"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">tab</span><span class="op">$</span><span class="va">Mean</span> <span class="op">&lt;-</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"{tab$est} ({tab$se})"</span><span class="op">)</span></span>
 <span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">tab</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"class"</span>, <span class="st">"lhs"</span>, <span class="st">"Mean"</span><span class="op">)</span><span class="op">]</span>, direction <span class="op">=</span> <span class="st">"wide"</span>, idvar <span class="op">=</span> <span class="st">"class"</span>, timevar <span class="op">=</span> <span class="st">"lhs"</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">tab</span>, <span class="st">"tab_res.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">tab</span></span></code></pre></div>
+<span><span class="va">tab</span></span>
+<span><span class="co">#&gt;    class     Mean AM     Mean CM</span></span>
+<span><span class="co">#&gt; 1 class1 5.02 (0.08) 2.93 (0.08)</span></span>
+<span><span class="co">#&gt; 5 class2 2.42 (0.30) 4.21 (0.14)</span></span></code></pre></div>
 <p>To produce Figure 1, use the following code. We’re saving the file to
 SVG format, which is a (lossless) type of vector graphic. Other vector
 graphic types include PDF and EPS. Do not save to a raster graphic type
 (PNG, BMP, JPG), because these images will have low quality when
 reproduced in print or digital publication. The dimensions of the
 figure, in millimeter, correspond to A6 paper format:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"figure1.svg"</span>, plot <span class="op">=</span> <span class="va">p</span>, width <span class="op">=</span> <span class="fl">148</span>, height <span class="op">=</span> <span class="fl">105</span>, units <span class="op">=</span> <span class="st">"mm"</span>, dpi <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-54-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"figure1.svg"</span>, plot <span class="op">=</span> <span class="va">p</span>, width <span class="op">=</span> <span class="fl">148</span>, height <span class="op">=</span> <span class="fl">105</span>, units <span class="op">=</span> <span class="st">"mm"</span>, dpi <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
+<p><img src="lca_introduction_files/figure-html/unnamed-chunk-54-2.png" class="r-plt" alt="" width="672"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -937,7 +1193,7 @@ figure, in millimeter, correspond to A6 paper format:</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Caspar J. van Lissa.</p>
+  <p>Developed by Caspar J. Van Lissa.</p>
 </div>
 
 <div class="pkgdown-footer-right">

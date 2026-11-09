@@ -39,7 +39,7 @@ run_lavaan(measurement(tidy_sem(df), meanstructure = TRUE))
 #>    adding bounds (e.g., bounds = "pos.var").
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
-#> lavaan 0.7-3 ended normally after 87 iterations
+#> lavaan 0.7-3 ended normally after 86 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

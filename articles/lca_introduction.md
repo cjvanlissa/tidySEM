@@ -400,6 +400,28 @@ saveRDS(res_lpa, "res_lpa_different_spect.rds")
 
 res_lpa <- readRDS("res_lpa_different_spect.rds")
 format_numeric(table_fit(res_lpa))
+#>                     Name Classes      LL      n Parameters     AIC     BIC
+#> 1            equal var 1    1.00 -951.56 291.00          4 1911.12 1925.81
+#> 2            equal var 2    2.00 -914.57 291.00          7 1843.14 1868.86
+#> 3            equal var 3    3.00 -900.31 291.00         10 1820.62 1857.35
+#> 4            equal var 4    4.00 -887.52 291.00         13 1801.03 1848.79
+#> 5            equal var 5    5.00 -882.70 291.00         16 1797.41 1856.18
+#> 6  free var, equal cov 1    1.00 -920.19 291.00          5 1850.37 1868.74
+#> 7  free var, equal cov 2    2.00 -901.28 291.00         10 1822.56 1859.29
+#> 8  free var, equal cov 3    3.00 -888.53 291.00         15 1807.07 1862.17
+#> 9  free var, equal cov 4    4.00 -879.28 291.00         20 1798.56 1872.03
+#> 10 free var, equal cov 5    5.00 -866.36 291.00         25 1782.71 1874.54
+#>      saBIC Entropy prob_min prob_max n_min n_max np_ratio np_local
+#> 1  1913.13    1.00     1.00     1.00  1.00  1.00    72.75    72.75
+#> 2  1846.66    0.79     0.77     0.98  0.16  0.84    41.57    15.33
+#> 3  1825.64    0.68     0.82     0.87  0.12  0.44    29.10    13.12
+#> 4  1807.56    0.86     0.85     0.95  0.06  0.56    22.38     7.20
+#> 5  1805.44    0.73     0.76     0.96  0.07  0.32    18.19     7.92
+#> 6  1852.88    1.00     1.00     1.00  1.00  1.00    58.20    58.20
+#> 7  1827.58    0.58     0.87     0.88  0.48  0.52    29.10    31.33
+#> 8  1814.60    0.78     0.83     0.93  0.18  0.52    19.40    12.00
+#> 9  1808.60    0.78     0.79     0.92  0.13  0.37    14.55     8.71
+#> 10 1795.26    0.80     0.82     0.94  0.09  0.43    11.64     6.19
 ```
 
 More complex models are not automatically better: extra parameters can
@@ -456,6 +478,18 @@ First, extract a model fit table:
 
 tab_lpa_fit <- table_fit(res_lpa)
 tab_lpa_fit
+#>          Name Classes        LL   n Parameters      AIC      BIC    saBIC
+#> 1 equal var 1       1 -951.5584 291          4 1911.117 1925.810 1913.125
+#> 2 equal var 2       2 -914.5721 291          7 1843.144 1868.857 1846.659
+#> 3 equal var 3       3 -893.3834 291         10 1806.767 1843.500 1811.788
+#> 4 equal var 4       4 -894.5514 291         13 1815.103 1862.856 1821.630
+#> 5 equal var 5       5 -882.7029 291         16 1797.406 1856.179 1805.440
+#>     Entropy  prob_min  prob_max      n_min     n_max np_ratio  np_local
+#> 1 1.0000000 1.0000000 1.0000000 1.00000000 1.0000000 72.75000 72.750000
+#> 2 0.7857956 0.7652851 0.9799943 0.15807560 0.8419244 41.57143 15.333333
+#> 3 0.8365064 0.8968019 0.9439567 0.12714777 0.5807560 29.10000 13.875000
+#> 4 0.7317583 0.5928521 0.8994559 0.04467354 0.4432990 22.38462  5.200000
+#> 5 0.7291737 0.7585690 0.9551134 0.06529210 0.3230241 18.18750  7.916667
 ```
 
 #### BIC
@@ -469,6 +503,7 @@ preferred. We can see that the three-class model has the lowest BIC:
 ``` r
 
 which.min(tab_lpa_fit$BIC)
+#> [1] 3
 ```
 
 #### BLRT
@@ -495,6 +530,11 @@ saveRDS(res_blrt, "res_blrt_intro.rds")
 
 res_blrt <- readRDS("res_blrt_intro.rds")
 res_blrt
+#> Bootstrapped Likelihood Ratio Test:
+#> 
+#>  null  alt   lr df blrt_p samples
+#>  mix1 mix2 74.0  3      0      99
+#>  mix2 mix3 42.4  3      0      95
 ```
 
 We see that adding classes leads to a significant improvement in model
@@ -514,6 +554,8 @@ number of the failing model:
 ``` r
 
 sapply(res_lpa, function(i) mx_diagnostics(i)$checks_pass)
+#> equal var 1 equal var 2 equal var 3 equal var 4 equal var 5 
+#>        TRUE        TRUE        TRUE        TRUE        TRUE
 ```
 
 Another consideration is that classification diagnostics are poor for
@@ -522,6 +564,12 @@ the 4-5 class models:
 ``` r
 
 tab_lpa_fit[, c("Entropy", "prob_min", "prob_max")]
+#>     Entropy  prob_min  prob_max
+#> 1 1.0000000 1.0000000 1.0000000
+#> 2 0.7857956 0.7652851 0.9799943
+#> 3 0.8365064 0.8968019 0.9439567
+#> 4 0.7317583 0.5928521 0.8994559
+#> 5 0.7291737 0.7585690 0.9551134
 ```
 
 The entropy statistic is an overall summary of class separation, where
@@ -554,6 +602,18 @@ requires reporting to double digits. So let’s consider two options:
 # numeric type:
 tab_lpa_fit_formatted <- format(tab_lpa_fit, digits = 2)
 tab_lpa_fit_formatted
+#>          Name Classes   LL   n Parameters  AIC  BIC saBIC Entropy prob_min
+#> 1 equal var 1       1 -952 291          4 1911 1926  1913    1.00     1.00
+#> 2 equal var 2       2 -915 291          7 1843 1869  1847    0.79     0.77
+#> 3 equal var 3       3 -893 291         10 1807 1843  1812    0.84     0.90
+#> 4 equal var 4       4 -895 291         13 1815 1863  1822    0.73     0.59
+#> 5 equal var 5       5 -883 291         16 1797 1856  1805    0.73     0.76
+#>   prob_max n_min n_max np_ratio np_local
+#> 1     1.00 1.000  1.00       73     72.8
+#> 2     0.98 0.158  0.84       42     15.3
+#> 3     0.94 0.127  0.58       29     13.9
+#> 4     0.90 0.045  0.44       22      5.2
+#> 5     0.96 0.065  0.32       18      7.9
 # Using format_numeric; reports 2 digits, but all columns become
 # character type:
 tab_lpa_fit_formatted <- format_numeric(tab_lpa_fit, digits = 2)
@@ -568,6 +628,11 @@ The class proportions of this model are:
 ``` r
 
 class_prob(res_lpa[[3]], "sum.posterior")
+#> $sum.posterior
+#>    class     count proportion
+#> 1 class1 167.04337  0.5740322
+#> 2 class2  85.72086  0.2945734
+#> 3 class3  38.23577  0.1313944
 ```
 
 We can examine the parameters of this model as follows:
@@ -576,6 +641,18 @@ We can examine the parameters of this model as follows:
 
 tab_lpa_res <- table_results(res_lpa[[3]])
 tab_lpa_res
+#>                   label est_sig   se pval      confint  class
+#> 1       Means.AM.class1 4.36*** 0.07 0.00 [4.23, 4.49] class1
+#> 2       Means.CM.class1 3.24*** 0.08 0.00 [3.09, 3.40] class1
+#> 3   Variances.AM.class1 0.39*** 0.04 0.00 [0.30, 0.48] class1
+#> 4   Variances.CM.class1 0.89*** 0.08 0.00 [0.74, 1.04] class1
+#> 5       Means.AM.class2 6.09*** 0.09 0.00 [5.91, 6.27] class2
+#> 6       Means.CM.class2 2.56*** 0.11 0.00 [2.34, 2.78] class2
+#> 7       Means.AM.class3 1.84*** 0.12 0.00 [1.60, 2.08] class3
+#> 8       Means.CM.class3 4.22*** 0.16 0.00 [3.91, 4.53] class3
+#> 9  mix3.weights[1,1].NA    1.00 <NA> <NA>         <NA>   <NA>
+#> 10 mix3.weights[1,2].NA 0.51*** 0.09 0.00 [0.34, 0.69]   <NA>
+#> 11 mix3.weights[1,3].NA 0.23*** 0.04 0.00 [0.14, 0.32]   <NA>
 ```
 
 Notice that we get one estimate for the variances (because these are
@@ -587,8 +664,16 @@ The pattern of results is easier to see when plotting it:
 ``` r
 
 plot_profiles(res_lpa[[3]])
+```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-26-1.png)
+
+``` r
+
 plot_density(res_lpa[[3]])
 ```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-26-2.png)
 
 Examining the class-specific means, we see that Class 1 has moderate
 values on both indicators, whereas Class 2 does not have high means on
@@ -657,6 +742,14 @@ saveRDS(res_lca, "res_lca_intro.rds")
 res_lca <- readRDS("res_lca_intro.rds")
 tab_lca_fit <- table_fit(res_lca)
 tab_lca_fit
+#>   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy
+#> 1    1       1 -1538.279 291         18 3112.558 3178.678 3121.596 1.0000000
+#> 2    2       2 -1378.727 291         37 2831.455 2967.368 2850.033 0.9389693
+#> 3    3       3 -1286.189 291         56 2684.378 2890.084 2712.496 0.9332435
+#>    prob_min  prob_max     n_min     n_max warning  np_ratio  np_local
+#> 1 1.0000000 1.0000000 1.0000000 1.0000000      NA 16.166667 16.166667
+#> 2 0.9710441 0.9876977 0.2302405 0.7697595    TRUE  7.864865  3.722222
+#> 3 0.9469730 0.9882293 0.2302405 0.4536082    TRUE  5.196429  3.722222
 ```
 
 The BIC indicates that adding classes improves model fit. However, even
@@ -669,6 +762,54 @@ however, let’s examine the 2-class solution.
 
 tab_lca_res <- table_results(res_lca[[2]])
 tab_lca_res
+#>                            label est_sig     se pval           confint  class
+#> 1           Variances.AM1.class1    1.00   <NA> <NA>              <NA> class1
+#> 2           Variances.AM2.class1    1.00   <NA> <NA>              <NA> class1
+#> 3           Variances.AM3.class1    1.00   <NA> <NA>              <NA> class1
+#> 4  class1.Thresholds[1,1].class1   -9.05  27.22 0.74   [-62.40, 44.29] class1
+#> 5  class1.Thresholds[1,2].class1  -17.42  27.82 0.53   [-71.94, 37.10] class1
+#> 6  class1.Thresholds[1,3].class1  -18.00  27.78 0.52   [-72.46, 36.46] class1
+#> 7  class1.Thresholds[2,1].class1   -2.12  54.44 0.97 [-108.81, 104.58] class1
+#> 8  class1.Thresholds[2,2].class1  -13.11  55.64 0.81  [-122.15, 95.94] class1
+#> 9  class1.Thresholds[2,3].class1  -15.76  55.57 0.78  [-124.67, 93.15] class1
+#> 10 class1.Thresholds[3,1].class1   -1.90  81.81 0.98 [-162.24, 158.44] class1
+#> 11 class1.Thresholds[3,2].class1   -1.99  83.45 0.98 [-165.56, 161.57] class1
+#> 12 class1.Thresholds[3,3].class1   -2.10  83.35 0.98 [-165.47, 161.27] class1
+#> 13 class1.Thresholds[4,1].class1   -0.20 108.04 1.00 [-211.95, 211.55] class1
+#> 14 class1.Thresholds[4,2].class1   -0.50 110.24 1.00 [-216.56, 215.55] class1
+#> 15 class1.Thresholds[4,3].class1   -0.38 109.93 1.00 [-215.84, 215.08] class1
+#> 16 class1.Thresholds[5,1].class1    0.37 125.42 1.00 [-245.46, 246.20] class1
+#> 17 class1.Thresholds[5,2].class1    0.14 129.66 1.00 [-253.98, 254.27] class1
+#> 18 class1.Thresholds[5,3].class1    0.26 128.24 1.00 [-251.09, 251.61] class1
+#> 19 class1.Thresholds[6,1].class1    1.27 133.02 0.99 [-259.44, 261.98] class1
+#> 20 class1.Thresholds[6,2].class1    1.11 138.75 0.99 [-270.85, 273.06] class1
+#> 21 class1.Thresholds[6,3].class1    0.99 137.90 0.99 [-269.28, 271.27] class1
+#> 22          Variances.AM1.class2    1.00   <NA> <NA>              <NA> class2
+#> 23          Variances.AM2.class2    1.00   <NA> <NA>              <NA> class2
+#> 24          Variances.AM3.class2    1.00   <NA> <NA>              <NA> class2
+#> 25 class2.Thresholds[1,1].class2   -0.14  13.64 0.99   [-26.88, 26.60] class2
+#> 26 class2.Thresholds[1,2].class2   -0.64  15.09 0.97   [-30.21, 28.94] class2
+#> 27 class2.Thresholds[1,3].class2   -0.55  14.40 0.97   [-28.76, 27.67] class2
+#> 28 class2.Thresholds[2,1].class2    0.18  27.14 0.99   [-53.02, 53.37] class2
+#> 29 class2.Thresholds[2,2].class2   -0.01  28.66 1.00   [-56.18, 56.15] class2
+#> 30 class2.Thresholds[2,3].class2   -0.02  27.69 1.00   [-54.30, 54.25] class2
+#> 31 class2.Thresholds[3,1].class2    1.59  29.57 0.96   [-56.37, 59.55] class2
+#> 32 class2.Thresholds[3,2].class2    0.46  38.56 0.99   [-75.12, 76.04] class2
+#> 33 class2.Thresholds[3,3].class2    0.83  34.02 0.98   [-65.85, 67.51] class2
+#> 34 class2.Thresholds[4,1].class2    7.71  29.57 0.79   [-50.24, 65.67] class2
+#> 35 class2.Thresholds[4,2].class2    0.77  46.70 0.99   [-90.75, 92.30] class2
+#> 36 class2.Thresholds[4,3].class2    1.62  36.55 0.96   [-70.03, 73.26] class2
+#> 37 class2.Thresholds[5,1].class2    8.24  29.57 0.78   [-49.72, 66.19] class2
+#> 38 class2.Thresholds[5,2].class2    1.42  50.65 0.98  [-97.85, 100.70] class2
+#> 39 class2.Thresholds[5,3].class2    8.52  36.55 0.82   [-63.12, 80.16] class2
+#> 40 class2.Thresholds[6,1].class2   10.10  29.57 0.73   [-47.86, 68.05] class2
+#> 41 class2.Thresholds[6,2].class2    1.43  52.30 0.98 [-101.09, 103.94] class2
+#> 42 class2.Thresholds[6,3].class2   11.65  36.55 0.75   [-59.99, 83.29] class2
+#> 43          mix2.weights[1,1].NA    1.00   <NA> <NA>              <NA>   <NA>
+#> 44          mix2.weights[1,2].NA    0.29  46.92 0.99   [-91.67, 92.26]   <NA>
+#> 
+#> Note: Standard errors are unavailable or non-finite.
+#> Note: Hessian is not positive definite.
 ```
 
 We see that all the parameters are thresholds (and a mixture weight).
@@ -691,17 +832,22 @@ ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
   theme_bw()
 ```
 
+![](lca_introduction_files/figure-html/unnamed-chunk-32-1.png)
+
 This figure implies that the most common response to AM1 in class 1 is
-4, quite a few people score 1, and very few people score 6 or 7. We can
-do a sanity check to confirm this interpretation by assigning people to
-their most likely class (note that this ignores classification
-uncertainty), and then tabulating the observed scores of AM1 for the
-people who are assigned class 1:
+6, quite a few people score 5 or 7, and very few people score 4 or
+below. We can do a sanity check to confirm this interpretation by
+assigning people to their most likely class (note that this ignores
+classification uncertainty), and then tabulating the observed scores of
+AM1 for the people who are assigned class 1:
 
 ``` r
 
 individual_class <- predict_class(res_lca[[2]])
 table(df$AM1[individual_class == 1])
+#> 
+#>  1  2  3  4  5  6  7 
+#>  0  4  1 89 50 57 23
 ```
 
 Another way to interpret the threshold parameters is to convert them to
@@ -712,6 +858,49 @@ the estimated probability of choosing each response category:
 tab_lca_prob <- table_prob(res_lca[[2]])
 # Let's format it for easier visual interpretation:
 format_numeric(tab_lca_prob, digits = 2)
+#>    Variable Category Probability  group
+#> 1       AM1        1        0.00 class1
+#> 2       AM1        2        0.02 class1
+#> 3       AM1        3        0.01 class1
+#> 4       AM1        4        0.39 class1
+#> 5       AM1        5        0.22 class1
+#> 6       AM1        6        0.25 class1
+#> 7       AM1        7        0.10 class1
+#> 8       AM2        1        0.00 class1
+#> 9       AM2        2        0.00 class1
+#> 10      AM2        3        0.02 class1
+#> 11      AM2        4        0.28 class1
+#> 12      AM2        5        0.25 class1
+#> 13      AM2        6        0.31 class1
+#> 14      AM2        7        0.13 class1
+#> 15      AM3        1        0.00 class1
+#> 16      AM3        2        0.00 class1
+#> 17      AM3        3        0.02 class1
+#> 18      AM3        4        0.33 class1
+#> 19      AM3        5        0.25 class1
+#> 20      AM3        6        0.24 class1
+#> 21      AM3        7        0.16 class1
+#> 22      AM1        1        0.45 class2
+#> 23      AM1        2        0.13 class2
+#> 24      AM1        3        0.37 class2
+#> 25      AM1        4        0.06 class2
+#> 26      AM1        5        0.00 class2
+#> 27      AM1        6        0.00 class2
+#> 28      AM1        7        0.00 class2
+#> 29      AM2        1        0.26 class2
+#> 30      AM2        2        0.23 class2
+#> 31      AM2        3        0.18 class2
+#> 32      AM2        4        0.10 class2
+#> 33      AM2        5        0.14 class2
+#> 34      AM2        6        0.00 class2
+#> 35      AM2        7        0.08 class2
+#> 36      AM3        1        0.29 class2
+#> 37      AM3        2        0.20 class2
+#> 38      AM3        3        0.31 class2
+#> 39      AM3        4        0.15 class2
+#> 40      AM3        5        0.05 class2
+#> 41      AM3        6        0.00 class2
+#> 42      AM3        7        0.00 class2
 ```
 
 We see that the majority of people in class 1 scored a 4 on all
@@ -725,6 +914,8 @@ We can also plot this information, leading to the same conclusion:
 
 plot_prob(res_lca[[2]])
 ```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-35-1.png)
 
 ## Dichotomous indicators: `mx_lca()`
 
@@ -778,6 +969,16 @@ saveRDS(res_bin, "res_bin_intro.rds")
 res_bin <- readRDS("res_bin_intro.rds")
 tab_bin_fit <- table_fit(res_bin)
 tab_bin_fit
+#>   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy
+#> 1    1       1 -595.6245 291          3 1197.249 1208.269 1198.755 1.0000000
+#> 2    2       2 -520.4017 291          7 1054.803 1080.517 1058.318 0.8291898
+#> 3    3       3 -492.9672 291         11 1007.934 1048.341 1013.458 0.6506500
+#> 4    4       4 -492.9672 291         15 1015.934 1071.034 1023.466 0.5628873
+#>    prob_min  prob_max     n_min     n_max warning np_ratio np_local
+#> 1 1.0000000 1.0000000 1.0000000 1.0000000      NA 97.00000 97.00000
+#> 2 0.9323551 0.9927520 0.3917526 0.6082474    TRUE 41.57143 38.00000
+#> 3 0.3084904 0.9790597 0.1099656 0.4810997    TRUE 26.45455 10.66667
+#> 4 0.0000000 0.9994600 0.0000000 0.4158076    TRUE 19.40000  0.00000
 ```
 
 Here, we see that the 2-class solution is best according to the BIC, and
@@ -797,6 +998,13 @@ tab_bin_prob <- table_prob(res_bin[[2]])
 tab_bin_prob <- tab_bin_prob[!tab_bin_prob$Category == 1, -2]
 # Let's format it for easier visual interpretation:
 format_numeric(tab_bin_prob, digits = 2)
+#>    Variable Probability  group
+#> 2       AM1        0.99 class1
+#> 4       AM2        0.80 class1
+#> 6       AM3        1.00 class1
+#> 8       AM1        0.32 class2
+#> 10      AM2        0.21 class2
+#> 12      AM3        0.21 class2
 ```
 
 We see that people in class 2 tend to score 1 more often than people in
@@ -810,6 +1018,8 @@ We can also plot this information:
 
 plot_prob(res_bin[[2]])
 ```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-41-1.png)
 
 ## Mixed indicator types: `mx_mixed_lca()`
 
@@ -859,6 +1069,14 @@ saveRDS(res_mixed, "res_mixed_intro.rds")
 res_mixed <- readRDS("res_mixed_intro.rds")
 tab_mixed_fit <- table_fit(res_mixed)
 tab_mixed_fit
+#>     Name Classes         LL   n Parameters      AIC      BIC    saBIC   Entropy
+#> 1  equal       1 -1028.0808 291          5 2066.162 2084.528 2068.672 1.0000000
+#> 2 equal1       2  -912.0007 291         10 1844.001 1880.735 1849.023 0.8044964
+#> 3 equal2       3  -906.2088 291         15 1842.418 1897.517 1849.949 0.9286165
+#>    prob_min  prob_max     n_min     n_max warning np_ratio np_local
+#> 1 1.0000000 1.0000000 1.0000000 1.0000000      NA     58.2 58.20000
+#> 2 0.9349282 0.9646735 0.4914089 0.5085911      NA     29.1 31.77778
+#> 3 0.9438383 1.0000000 0.1752577 0.4123711    TRUE     19.4 11.76923
 ```
 
 Here, we see that the 2-class solution is best according to the BIC, and
@@ -870,6 +1088,24 @@ combination of means/variances and probabilities (thresholds):
 
 tab_mixed_res <- table_results(res_mixed[[2]])
 tab_mixed_res
+#>                            label  est_sig   se pval        confint  class
+#> 1                Means.CM.class1  2.81*** 0.09 0.00   [2.63, 2.99] class1
+#> 2            Variances.CM.class1  1.03*** 0.09 0.00   [0.86, 1.20] class1
+#> 3           Variances.AM1.class1     1.00 <NA> <NA>           <NA> class1
+#> 4           Variances.AM2.class1     1.00 <NA> <NA>           <NA> class1
+#> 5           Variances.AM3.class1     1.00 <NA> <NA>           <NA> class1
+#> 6  class1.Thresholds[1,1].class1  1.15*** 0.21 0.00   [0.74, 1.57] class1
+#> 7  class1.Thresholds[1,2].class1  1.85*** 0.31 0.00   [1.25, 2.46] class1
+#> 8  class1.Thresholds[1,3].class1  0.96*** 0.15 0.00   [0.66, 1.26] class1
+#> 9                Means.CM.class2  3.50*** 0.09 0.00   [3.32, 3.67] class2
+#> 10          Variances.AM1.class2     1.00 <NA> <NA>           <NA> class2
+#> 11          Variances.AM2.class2     1.00 <NA> <NA>           <NA> class2
+#> 12          Variances.AM3.class2     1.00 <NA> <NA>           <NA> class2
+#> 13 class2.Thresholds[1,1].class2 -1.54*** 0.23 0.00 [-2.00, -1.09] class2
+#> 14 class2.Thresholds[1,2].class2 -0.71*** 0.15 0.00 [-0.99, -0.42] class2
+#> 15 class2.Thresholds[1,3].class2 -0.75*** 0.13 0.00 [-1.01, -0.49] class2
+#> 16   equal var 2.weights[1,1].NA     1.00 <NA> <NA>           <NA>   <NA>
+#> 17   equal var 2.weights[1,2].NA  1.11*** 0.17 0.00   [0.77, 1.45]   <NA>
 ```
 
 We can plot the continuous indicators:
@@ -879,12 +1115,16 @@ We can plot the continuous indicators:
 plot_density(res_mixed[[2]], variables = "CM")
 ```
 
+![](lca_introduction_files/figure-html/unnamed-chunk-47-1.png)
+
 And the response probabilities for the binary indicators:
 
 ``` r
 
 plot_prob(res_mixed[[2]])
 ```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-48-1.png)
 
 The interpretation now depends on the indicator: describe class-specific
 means for continuous variables, response-category probabilities for
@@ -903,6 +1143,13 @@ gives you this matrix, and several other diagnostic tables based on it:
 
 cp <- class_prob(res_lpa[[3]])
 format_numeric(head(cp$individual))
+#>      class1 class2 class3 predicted
+#> [1,] "1.00" "0.00" "0.00" "1.00"   
+#> [2,] "0.16" "0.84" "0.00" "2.00"   
+#> [3,] "0.98" "0.02" "0.00" "1.00"   
+#> [4,] "0.98" "0.02" "0.00" "1.00"   
+#> [5,] "0.99" "0.01" "0.00" "1.00"   
+#> [6,] "0.02" "0.00" "0.98" "3.00"
 ```
 
 This table can be summarized in different ways to summarize the
@@ -916,6 +1163,10 @@ fractionally to multiple classes):
 ``` r
 
 format_numeric(head(cp$sum.posterior))
+#>    class  count proportion
+#> 1 class1 167.04       0.57
+#> 2 class2  85.72       0.29
+#> 3 class3  38.24       0.13
 ```
 
 If you make a forced choice, assigning every person to the class for
@@ -926,6 +1177,10 @@ into them:
 ``` r
 
 format_numeric(head(cp$sum.mostlikely))
+#>    class count.mostlikely count.Freq proportion.mostlikely proportion.Freq
+#> 1 class1                1        169                     1            0.58
+#> 2 class2                2         85                     2            0.29
+#> 3 class3                3         37                     3            0.13
 ```
 
 In @sec-eliminating, we already encountered the average classification
@@ -936,6 +1191,10 @@ the full matrix by calling:
 ``` r
 
 format_numeric(cp$mostlikely.class)
+#>           assigned.1 assigned.2 assigned.3
+#> avgprob.1 "0.94"     "0.05"     "0.01"    
+#> avgprob.2 "0.10"     "0.90"     "0.00"    
+#> avgprob.3 "0.06"     "0.00"     "0.94"
 ```
 
 On the diagonal, we find the average probability that observations
@@ -987,6 +1246,9 @@ tab$Mean <- glue::glue("{tab$est} ({tab$se})")
 tab <- reshape(tab[, c("class", "lhs", "Mean")], direction = "wide", idvar = "class", timevar = "lhs", sep = " ")
 write.csv(tab, "tab_res.csv", row.names = FALSE)
 tab
+#>    class     Mean AM     Mean CM
+#> 1 class1 5.02 (0.08) 2.93 (0.08)
+#> 5 class2 2.42 (0.30) 4.21 (0.14)
 ```
 
 To produce Figure 1, use the following code. We’re saving the file to
@@ -999,6 +1261,14 @@ figure, in millimeter, correspond to A6 paper format:
 ``` r
 
 p <- plot_density(res_lpa[[2]])
+```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-54-1.png)
+
+``` r
+
 ggsave(filename = "figure1.svg", plot = p, width = 148, height = 105, units = "mm", dpi = 300)
 p
 ```
+
+![](lca_introduction_files/figure-html/unnamed-chunk-54-2.png)

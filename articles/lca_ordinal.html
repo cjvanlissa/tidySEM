@@ -9,7 +9,8 @@
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Latent Class Analysis for Ordinal Indicators">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Latent Class Analysis for Ordinal Indicators">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -145,6 +146,61 @@ continuous data to de-clutter the table:</p>
 <span><span class="va">desc</span> <span class="op">&lt;-</span> <span class="va">desc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"type"</span>, <span class="st">"n"</span>, <span class="st">"missing"</span>, <span class="st">"unique"</span>, <span class="st">"mode"</span>,</span>
 <span>    <span class="st">"mode_value"</span>, <span class="st">"v"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">desc</span></span></code></pre></div>
+<table class="table">
+<caption>Descriptive statistics for recoded ordinal items</caption>
+<colgroup>
+<col width="13%">
+<col width="24%">
+<col width="6%">
+<col width="12%">
+<col width="10%">
+<col width="7%">
+<col width="16%">
+<col width="7%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">name</th>
+<th align="left">type</th>
+<th align="right">n</th>
+<th align="right">missing</th>
+<th align="right">unique</th>
+<th align="right">mode</th>
+<th align="right">mode_value</th>
+<th align="right">v</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Ethnic_1</td>
+<td align="left">ordered, factor</td>
+<td align="right">439</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">396</td>
+<td align="right">3</td>
+<td align="right">0.18</td>
+</tr>
+<tr class="even">
+<td align="left">Belgian</td>
+<td align="left">ordered, factor</td>
+<td align="right">439</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">191</td>
+<td align="right">2</td>
+<td align="right">0.63</td>
+</tr>
+<tr class="odd">
+<td align="left">Flemish</td>
+<td align="left">ordered, factor</td>
+<td align="right">439</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">203</td>
+<td align="right">2</td>
+<td align="right">0.64</td>
+</tr>
+</tbody>
+</table>
 <p>Additionally, we can plot the data. The <code>ggplot2</code> function
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> is useful for ordinal data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -153,6 +209,11 @@ continuous data to de-clutter the table:</p>
 <span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">df_plot</span>, varying <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span>, direction <span class="op">=</span> <span class="st">"long"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>,</span>
 <span>    scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="lca_fast_plot_desc.png" class="r-plt" alt="Bar charts for ordinal indicators" width="80%"><p class="caption">
+Bar charts for ordinal indicators
+</p>
+</div>
 <p>As we can see, the <code><a href="../reference/descriptives.html">descriptives()</a></code> table provides
 invaluable information about the measurement level of the indicators,
 which is used to specify the model correctly. If these data had not been
@@ -208,6 +269,71 @@ disqualified.</p>
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="va">fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LL"</span>, <span class="st">"n"</span>, <span class="st">"Parameters"</span>, <span class="st">"BIC"</span>, <span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>,</span>
 <span>    <span class="st">"n_min"</span>, <span class="st">"np_ratio"</span>, <span class="st">"np_local"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<table class="table">
+<caption>Model fit table</caption>
+<colgroup>
+<col width="6%">
+<col width="8%">
+<col width="5%">
+<col width="15%">
+<col width="6%">
+<col width="11%">
+<col width="12%">
+<col width="8%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">Name</th>
+<th align="right">LL</th>
+<th align="right">n</th>
+<th align="right">Parameters</th>
+<th align="right">BIC</th>
+<th align="right">Entropy</th>
+<th align="right">prob_min</th>
+<th align="right">n_min</th>
+<th align="right">np_ratio</th>
+<th align="right">np_local</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">-1078</td>
+<td align="right">439</td>
+<td align="right">6</td>
+<td align="right">2193</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="right">73</td>
+<td align="right">73</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">-1012</td>
+<td align="right">439</td>
+<td align="right">13</td>
+<td align="right">2103</td>
+<td align="right">0.77</td>
+<td align="right">0.85</td>
+<td align="right">0.30</td>
+<td align="right">34</td>
+<td align="right">22</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">-997</td>
+<td align="right">439</td>
+<td align="right">20</td>
+<td align="right">2115</td>
+<td align="right">0.89</td>
+<td align="right">0.88</td>
+<td align="right">0.23</td>
+<td align="right">22</td>
+<td align="right">17</td>
+</tr>
+</tbody>
+</table>
 <p>Inspect the ratio of cases to parameters (<code>np_ratio</code> and
 <code>np_local</code>) alongside classification diagnostics such as
 entropy and minimum classification probability. Models with small
@@ -250,10 +376,97 @@ in probability scale:</p>
 <code class="sourceCode R"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">tab</span>, direction <span class="op">=</span> <span class="st">"wide"</span>, v.names <span class="op">=</span> <span class="st">"Probability"</span>, timevar <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>    idvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Category"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>Three-class model results in probability scale</caption>
+<colgroup>
+<col width="12%">
+<col width="12%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Variable</th>
+<th align="right">Category</th>
+<th align="right">Probability.class1</th>
+<th align="right">Probability.class2</th>
+<th align="right">Probability.class3</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Ethnic_1</td>
+<td align="right">1</td>
+<td align="right">0.04</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">Ethnic_1</td>
+<td align="right">2</td>
+<td align="right">0.06</td>
+<td align="right">0.07</td>
+<td align="right">0.12</td>
+</tr>
+<tr class="odd">
+<td align="left">Ethnic_1</td>
+<td align="right">3</td>
+<td align="right">0.90</td>
+<td align="right">0.93</td>
+<td align="right">0.88</td>
+</tr>
+<tr class="even">
+<td align="left">Belgian</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">0.02</td>
+<td align="right">0.56</td>
+</tr>
+<tr class="odd">
+<td align="left">Belgian</td>
+<td align="right">2</td>
+<td align="right">0.55</td>
+<td align="right">0.29</td>
+<td align="right">0.40</td>
+</tr>
+<tr class="even">
+<td align="left">Belgian</td>
+<td align="right">3</td>
+<td align="right">0.39</td>
+<td align="right">0.69</td>
+<td align="right">0.04</td>
+</tr>
+<tr class="odd">
+<td align="left">Flemish</td>
+<td align="right">1</td>
+<td align="right">0.00</td>
+<td align="right">0.10</td>
+<td align="right">0.90</td>
+</tr>
+<tr class="even">
+<td align="left">Flemish</td>
+<td align="right">2</td>
+<td align="right">1.00</td>
+<td align="right">0.00</td>
+<td align="right">0.10</td>
+</tr>
+<tr class="odd">
+<td align="left">Flemish</td>
+<td align="right">3</td>
+<td align="right">0.00</td>
+<td align="right">0.90</td>
+<td align="right">0.00</td>
+</tr>
+</tbody>
+</table>
 <p>The results can also be interpreted by plotting the response
 probabilities:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_final</span>, bw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="lca_fast_prob.png" class="r-plt" alt="Probability plot" width="100%"><p class="caption">
+Probability plot
+</p>
+</div>
 <p>Use the response-probability plot to compare the identity patterns
 across classes. Class labels should be chosen based on the newly
 estimated probabilities rather than carried over from the original
@@ -297,16 +510,62 @@ coefficients are represented by paths in the class-specific
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">aux_model</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est_sig"</span>, <span class="st">"se"</span>,</span>
 <span>    <span class="st">"pval"</span>, <span class="st">"confint"</span>, <span class="st">"group"</span>, <span class="st">"matrix"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;                                          label est_sig   se pval       confint</span></span>
+<span><span class="co">#&gt; 1  Regressions.depression.ON.vict_teacher.aux1   -0.00 0.10 1.00 [-0.19, 0.19]</span></span>
+<span><span class="co">#&gt; 2                        Means.depression.aux1 2.74*** 0.06 0.00  [2.63, 2.86]</span></span>
+<span><span class="co">#&gt; 3                      Means.vict_teacher.aux1 0.37*** 0.03 0.00  [0.30, 0.44]</span></span>
+<span><span class="co">#&gt; 4                    Variances.depression.aux1 0.41*** 0.04 0.00  [0.33, 0.49]</span></span>
+<span><span class="co">#&gt; 5                  Variances.vict_teacher.aux1 0.23*** 0.02 0.00  [0.19, 0.28]</span></span>
+<span><span class="co">#&gt; 6  Regressions.depression.ON.vict_teacher.aux2   -0.12 0.12 0.32 [-0.35, 0.11]</span></span>
+<span><span class="co">#&gt; 7                        Means.depression.aux2 2.86*** 0.06 0.00  [2.74, 2.97]</span></span>
+<span><span class="co">#&gt; 8                      Means.vict_teacher.aux2 0.25*** 0.04 0.00  [0.17, 0.32]</span></span>
+<span><span class="co">#&gt; 9                    Variances.depression.aux2 0.35*** 0.04 0.00  [0.27, 0.44]</span></span>
+<span><span class="co">#&gt; 10                 Variances.vict_teacher.aux2 0.19*** 0.02 0.00  [0.14, 0.23]</span></span>
+<span><span class="co">#&gt; 11 Regressions.depression.ON.vict_teacher.aux3   -0.14 0.13 0.28 [-0.40, 0.11]</span></span>
+<span><span class="co">#&gt; 12                       Means.depression.aux3 2.66*** 0.08 0.00  [2.51, 2.81]</span></span>
+<span><span class="co">#&gt; 13                     Means.vict_teacher.aux3 0.36*** 0.05 0.00  [0.27, 0.45]</span></span>
+<span><span class="co">#&gt; 14                   Variances.depression.aux3 0.44*** 0.06 0.00  [0.32, 0.55]</span></span>
+<span><span class="co">#&gt; 15                 Variances.vict_teacher.aux3 0.23*** 0.03 0.00  [0.17, 0.29]</span></span>
+<span><span class="co">#&gt;    group matrix</span></span>
+<span><span class="co">#&gt; 1   aux1      A</span></span>
+<span><span class="co">#&gt; 2   aux1      M</span></span>
+<span><span class="co">#&gt; 3   aux1      M</span></span>
+<span><span class="co">#&gt; 4   aux1      S</span></span>
+<span><span class="co">#&gt; 5   aux1      S</span></span>
+<span><span class="co">#&gt; 6   aux2      A</span></span>
+<span><span class="co">#&gt; 7   aux2      M</span></span>
+<span><span class="co">#&gt; 8   aux2      M</span></span>
+<span><span class="co">#&gt; 9   aux2      S</span></span>
+<span><span class="co">#&gt; 10  aux2      S</span></span>
+<span><span class="co">#&gt; 11  aux3      A</span></span>
+<span><span class="co">#&gt; 12  aux3      M</span></span>
+<span><span class="co">#&gt; 13  aux3      M</span></span>
+<span><span class="co">#&gt; 14  aux3      S</span></span>
+<span><span class="co">#&gt; 15  aux3      S</span></span></code></pre>
 <p>There are two ways to test whether the regression coefficients differ
 across classes.</p>
 <p>First, we can use a likelihood-ratio test to compare the regression
 coefficients in the class-specific <code>A</code> matrices:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lr_test.html">lr_test</a></span><span class="op">(</span><span class="va">aux_model</span>, compare <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; BCH test for equality across classes</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Overall likelihood ratio test:</span></span>
+<span><span class="co">#&gt;  LL_baseline LL_restricted LL_dif df   p</span></span>
+<span><span class="co">#&gt;         1414          1415      1  2 0.6</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Pairwise comparisons using likelihood ratio tests:</span></span>
+<span><span class="co">#&gt;  Model1 Model2 LL_baseline LL_restricted LL_dif df    p</span></span>
+<span><span class="co">#&gt;    aux1   aux2        1414          1414   0.60  1 0.44</span></span>
+<span><span class="co">#&gt;    aux1   aux3        1414          1414   0.77  1 0.38</span></span>
+<span><span class="co">#&gt;    aux2   aux3        1414          1414   0.02  1 0.89</span></span></code></pre>
 <p>Alternatively, we can use a Wald test to evaluate the equality
 constraints directly:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">aux_model</span>, <span class="st">"class1.A[1,2]=class2.A[1,2]&amp;class1.A[1,2]=class3.A[1,2]"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">aux_model</span>, <span class="st">"aux1.A[1,2]=aux2.A[1,2]&amp;aux1.A[1,2]=aux3.A[1,2]"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Wald tests for linear hypotheses:</span></span>
+<span><span class="co">#&gt;                                       Hypothesis df chisq   p</span></span>
+<span><span class="co">#&gt;  aux1.A[1,2]=aux2.A[1,2]&amp;aux1.A[1,2]=aux3.A[1,2]  2     1 0.6</span></span></code></pre>
 <p>Both tests evaluate the null hypothesis that the regression
 coefficient of perceived teacher discrimination on depressive symptoms
 is equal across the three latent classes. Interpret the results based on
@@ -320,7 +579,7 @@ apply to this reduced example.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Caspar J. van Lissa.</p>
+  <p>Developed by Caspar J. Van Lissa.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -9,7 +9,8 @@
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tidy Structural Equation Modeling">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Tidy Structural Equation Modeling">
 <meta name="description" content="A tidy workflow for generating, estimating, reporting, and plotting structural equation models using lavaan, OpenMx, or Mplus. Throughout this workflow, elements of syntax, results, and graphs are represented as tidy data, making them easy to customize. Includes functionality to estimate latent class analyses, and to plot dagitty and igraph objects.">
 <meta property="og:description" content="A tidy workflow for generating, estimating, reporting, and plotting structural equation models using lavaan, OpenMx, or Mplus. Throughout this workflow, elements of syntax, results, and graphs are represented as tidy data, making them easy to customize. Includes functionality to estimate latent class analyses, and to plot dagitty and igraph objects.">
 </head>
@@ -64,21 +65,19 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="tidysem-">tidySEM <a href="https://github.com/cjvanlissa/tidySEM" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/raw/master/docs/badge.png" align="right" height="139"></a>
+<div class="page-header"><h1 id="tidysem-">tidySEM <a href="https://github.com/cjvanlissa/tidySEM" class="external-link"><img class="package-hex" src="https://raw.githubusercontent.com/cjvanlissa/metamixture/master/tidySEM_hex.png" align="right" width="120"></a>
 <a class="anchor" aria-label="anchor" href="#tidysem-"></a>
 </h1></div>
-<p><a href="https://cran.r-project.org/package=tidySEM" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidySEM" alt="CRAN status"></a> <a href="https://r-pkg.org/pkg/tidySEM" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue" alt="CRAN RStudio mirror downloads"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a> <a href="https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/cjvanlissa/tidySEM?branch=master" class="external-link"><img src="https://codecov.io/gh/cjvanlissa/tidySEM/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant"></a> <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)--></p>
-<p>The package <code>tidySEM</code> provides a ‘tidy’ workflow for conducting, reporting, and plotting structural equation modeling analyses. It does not perform model estimation, but instead allows users to estimate models in a software-agnostic way, using either the free open source R packages <code>lavaan</code> or <code>OpenMx</code>, or the commercial closed-source program <code>Mplus</code> (controlled through the R package <code>MplusAutomation</code>). The aim of <code>tidySEM</code> is to provide three specific functions:</p>
-<ol style="list-style-type: decimal">
-<li>Generate model syntax in a top-down, tidy way,
+<p><a href="https://cran.r-project.org/package=tidySEM" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidySEM" alt="CRAN status"></a> <a href="https://r-pkg.org/pkg/tidySEM" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tidySEM?color=blue" alt="CRAN RStudio mirror downloads"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a> <a href="https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/cjvanlissa/tidySEM/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" class="external-link"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant"></a> <!--[![Code of Merit](https://img.shields.io/badge/Code%20%20of%20Merit-adopted-ff69b4.svg)](https://codeofmerit.org/CODE_OF_CONDUCT.md)--></p>
+<p>A tidy workflow for generating, estimating, reporting, and plotting structural equation models using ‘lavaan’, ‘OpenMx’, or ‘Mplus’. Throughout this workflow, elements of syntax, results, and graphs are represented as ‘tidy’ data, making them easy to customize. Includes functionality to estimate latent class analyses, and to plot ‘dagitty’ and ‘igraph’ objects.</p>
+<p>The <code>tidySEM</code> package offers the following functionality:</p>
 <ul>
-<li>With particular attention to specifying mixture models in <code>OpenMx</code>
+<li>Generate SEM model syntax in a top-down, tidy way, regardless of what software is used to estimate it</li>
+<li>Tabulate model output in a publication-ready, uniform manner,</li>
+<li>Make easily customizable graphs for SEM-models,</li>
+<li>Estimate latent class analyses / mixture models in <code>OpenMx</code>
 </li>
 </ul>
-</li>
-<li>Tabulate model output in a publication-ready, uniform manner,</li>
-<li>Make easily customizable graphs for SEM-models.</li>
-</ol>
 <p>These functions are designed with the <a href="https://tidyverse.tidyverse.org/articles/manifesto.html" class="external-link"><em>tidy tools manifesto</em> (Wickham, last updated 23-11-2019)</a> in mind, and interface with the existing suite of packages in the <a href="https://tidyverse.tidyverse.org/" class="external-link"><code>tidyverse</code></a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -86,39 +85,60 @@
 <p>You can install the public release of <code>tidySEM</code> from CRAN with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidySEM"</span><span class="op">)</span></span></code></pre></div>
-<p>If you want access to the latest developer version, including features that may not yet be finalized, you can install the development version of <code>tidySEM</code> from R-universe with:</p>
+<p>You can install the development version of metamixture from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidySEM'</span>,</span>
-<span>                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://cjvanlissa.r-universe.dev'</span>,</span>
-<span>                           <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>And if you are a developer and want to contribute to <code>tidySEM</code>, or want to install a specific historical version of the package, you can install directly from GitHub with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'cjvanlissa/tidySEM'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"cjvanlissa/tidySEM"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
 <p>Every user-facing function in the package is documented, and the documentation can be accessed by running <code>?function_name</code> in the R console, e.g., <code><a href="reference/graph_sem.html">?graph_sem</a></code>.</p>
-<p>Furthermore, there are three main vignettes, describing the three main tracks of <code>tidySEM</code> functions:</p>
-<ol style="list-style-type: decimal">
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html">vignette about generating syntax and estimating models</a>
-</li>
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html">vignette about tabulating results</a>
-</li>
-<li>A <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">vignette about making graphs</a>
+<p>Furthermore, the <code>tidySEM</code> package includes the following vignettes:</p>
+<p><strong>Structural Equation Modeling in General</strong></p>
 <ul>
-<li>An additional vignette describes the <a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">graphing conventions</a> for structural equation models.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/Generating_syntax.html">Generating syntax and estimating models</a>: Generate model syntax and estimate structural equation models.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/Tabulating_results.html">Tabulating results</a>: Extract, format, and report model parameters and fit statistics.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">Plotting graphs</a>: Create and customize graphical representations of structural equation models.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/sem_graph.html">Graphing conventions for SEM</a>: Understand the graphical notation and conventions used to represent structural equation models.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/openmx_ordinal.html">Ordinal modeling in OpenMx</a>: Specify ordinal measurement models in OpenMx, including thresholds and their parameterization.</li>
 </ul>
-</li>
-</ol>
+<p><strong>Latent Class Analysis / Mixture Modeling</strong></p>
+<ul>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.html">Introduction to latent class analysis</a>: An introduction to latent class and profile analysis, covering data preparation, model estimation, class enumeration, interpretation, and reporting.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.html">Exploratory latent class analysis</a>: Explore latent class solutions and determine the appropriate number of classes.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/lca_confirmatory.html">Confirmatory latent class analysis</a>: Specify and test theoretically motivated latent class models.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.html">Latent class analysis with ordinal indicators</a>: Estimate and interpret latent class models with ordered categorical indicators.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.html">Mixed-indicator latent class analysis</a>: Estimate latent class models combining continuous and categorical indicators.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.html">Latent class growth analysis</a>: Identify latent classes with distinct longitudinal trajectories.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/lca_auxiliary.html">Auxiliary variable analyses</a>: Examine relationships between latent class membership and external variables using BCH, two-step maximum likelihood, and pseudo-class methods.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/pmc_tutorial.html">PMC tutorial</a>: Compare competing mixture models using Predictive Model Comparison.</li>
+<li>
+<a href="https://cjvanlissa.github.io/tidySEM/articles/SMART_LCA_checklist.html">SMART-LCA checklist</a>: Apply reporting guidelines and recommended practices to improve the transparency and reproducibility of latent class analyses.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="citing-tidysem">Citing tidySEM<a class="anchor" aria-label="anchor" href="#citing-tidysem"></a>
 </h2>
-<p>You can cite the R-package with the following citation:</p>
 <blockquote>
-<p>Van Lissa, C. J., (2019). <em>tidySEM: Tidy structural equation modeling.</em> R package version 0.2.1. <a href="https://github.com/cjvanlissa/tidySEM/" class="external-link uri">https://github.com/cjvanlissa/tidySEM/</a></p>
+<p>Van Lissa CJ (????). <em>tidySEM: Tidy Structural Equation Modeling</em>. R package version 0.3.0, <a href="https://cjvanlissa.github.io/tidySEM/" class="uri">https://cjvanlissa.github.io/tidySEM/</a>.</p>
+</blockquote>
+<p>To cite the latent class analysis functionality in tidySEM, cite:</p>
+<blockquote>
+<p>Van Lissa, C. J., Garnier-Villarreal, M., &amp; Anadria, D. (2023). <em>Recommended Practices in Latent Class Analysis using the Open-Source R-Package tidySEM.</em> Structural Equation Modeling. <a href="https://doi.org/10.1080/10705511.2023.2250920" class="external-link uri">https://doi.org/10.1080/10705511.2023.2250920</a></p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -181,7 +201,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Caspar J. van Lissa <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0808-5024" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Caspar J. Van Lissa <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0808-5024" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -193,7 +213,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Caspar J. van Lissa.</p>
+  <p>Developed by Caspar J. Van Lissa.</p>
 </div>
 
 <div class="pkgdown-footer-right">

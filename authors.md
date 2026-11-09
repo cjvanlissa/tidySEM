@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Caspar J. van Lissa**. Author, maintainer.
+- **Caspar J. Van Lissa**. Author, maintainer.
   [](https://orcid.org/0000-0002-0808-5024)
 
 - **Mauricio Garnier-Villarreal**. Contributor.
@@ -16,12 +16,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/cjvanlissa/tidySEM/blob/master/DESCRIPTION)
 
-van Lissa CJ (2026). *tidySEM: Tidy Structural Equation Modeling*. R
+Van Lissa CJ (2026). *tidySEM: Tidy Structural Equation Modeling*. R
 package version 0.3.0, <https://cjvanlissa.github.io/tidySEM/>.
 
     @Manual{,
       title = {tidySEM: Tidy Structural Equation Modeling},
-      author = {Caspar J. {van Lissa}},
+      author = {Caspar J. {Van Lissa}},
       year = {2026},
       note = {R package version 0.3.0},
       url = {https://cjvanlissa.github.io/tidySEM/},
