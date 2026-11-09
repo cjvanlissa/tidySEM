@@ -14,7 +14,6 @@ vignette: >
 library(tidySEM)
 library(lavaan)
 library(MplusAutomation)
-#> Warning: package 'MplusAutomation' was built under R version 4.6.1
 ```
 
 `tidySEM` tabulates the results of different types of models in the same uniform way. This facilitates parsing the output into Tables and Figures for publication. The function to tabulate output is `table_results()`. The function to tabulate fit indices is `table_fit()`.
@@ -130,7 +129,6 @@ table_fit(fit_mx)
 
 
 ```
-#> Warning: Unavailable columns requested: class
 #>                       label est_sig   se pval      confint
 #> 1     Loadings.vis.BY.vis_1    1.00 <NA> <NA>         <NA>
 #> 2     Loadings.vis.BY.vis_2 0.55*** 0.11 0.00 [0.34, 0.77]
@@ -196,7 +194,6 @@ table_results(fit_mplus)
 
 ``` r
 table_results(fit_mplus)
-#> Calculated confidence intervals from est and se.
 #>                           label  est_sig   se pval        confint group
 #> 1            VISUAL.BY.VIS_1.GW     1.00 <NA> <NA>           <NA>    GW
 #> 2            VISUAL.BY.VIS_2.GW  0.58*** 0.11 0.00 [ 0.36,  0.79]    GW

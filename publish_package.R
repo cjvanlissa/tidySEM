@@ -1,7 +1,7 @@
 writeLines("TRUE", "vignettes/run_everything.txt")
 writeLines("TRUE", "vignettes/pkgdown.txt")
 f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
-for(thisf in f[1:length(f)]){
+for(thisf in f[7:length(f)]){
   rmarkdown::render(thisf, clean = FALSE)
 }
 writeLines("FALSE", "vignettes/run_everything.txt")

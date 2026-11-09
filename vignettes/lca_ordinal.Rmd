@@ -346,14 +346,14 @@ constraints directly:
 ```{r echo=TRUE, eval=FALSE}
 wald_test(
   aux_model,
-  "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]"
+  "aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]"
 )
 ```
 
 ```{r echo=FALSE, eval=eval_results}
 wald_test(
   aux_model,
-  "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]"
+  "aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]"
 )
 ```
 

@@ -10,10 +10,6 @@ vignette: >
 
 
 
-```
-#> Warning: package 'lavaan' was built under R version 4.6.1
-#> Warning: package 'dplyr' was built under R version 4.6.1
-```
 
 `tidySEM` offers a user-friendly, tidy workflow for generating syntax for SEM models. The workflow is top-down, meaning that syntax is generated based on conceptual model elements. In many cases, the generated syntax will suffice - but it is always customizable. The workflow also tries to intelligently guess which variables go together, but these defaults can be overridden.
 

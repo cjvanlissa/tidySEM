@@ -41,8 +41,8 @@ Next, we estimate 1-3 class solutions:
 
 ``` r
 res <- mx_profiles(data = df, classes = 1:3)
-#> MxComputeSimAnnealing(tsallis1996) evaluations 3116 fit 1325.71 change -34.19MxComputeSimAnnealing(tsallis1996) evaluations 8099 fit 1314.34 change 0.7249                                                                             
-#> MxComputeSimAnnealing(tsallis1996) evaluations 1063 fit 1671.83 change -3.005MxComputeSimAnnealing(tsallis1996) evaluations 2871 fit 1769.88 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 4640 fit 1764.35 change -688.3MxComputeSimAnnealing(tsallis1996) evaluations 6396 fit 1310.21 change -1.225MxComputeSimAnnealing(tsallis1996) evaluations 8125 fit 1310.2 change -301.8 MxComputeSimAnnealing(tsallis1996) evaluations 9842 fit 1310.47 change 0.2728MxComputeSimAnnealing(tsallis1996) evaluations 11561 fit 1310.2 change -203                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 185 fit 2002.61 change -974.7MxComputeSimAnnealing(tsallis1996) evaluations 2967 fit 4129.17 change 2553 MxComputeSimAnnealing(tsallis1996) evaluations 5750 fit 1892.96 change 579.3MxComputeSimAnnealing(tsallis1996) evaluations 8483 fit 1313.93 change -666.9                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 701 fit 1870.08 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2693 fit 1477.16 change -164.6MxComputeSimAnnealing(tsallis1996) evaluations 4630 fit 1310.24 change -132.1MxComputeSimAnnealing(tsallis1996) evaluations 6521 fit 1594.38 change -52.3 MxComputeSimAnnealing(tsallis1996) evaluations 8445 fit 1767.87 change 457.6MxComputeSimAnnealing(tsallis1996) evaluations 10349 fit 1449.96 change 139.8MxComputeSimAnnealing(tsallis1996) evaluations 12269 fit 3095.55 change 1785                                                                             
 ```
 
 Optionally, one can perform the bootstrapped likelihood ratio test.

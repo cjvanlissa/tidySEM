@@ -1,0 +1,7 @@
+
+  img[src*="metamixture_hex.png"] {
+    width: 120px !important;
+    height: auto !important;
+    max-width: 120px !important;
+  }
+  

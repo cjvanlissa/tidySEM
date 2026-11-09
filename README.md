@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidySEM <a href='https://github.com/cjvanlissa/tidySEM'><img src='https://github.com/cjvanlissa/tidySEM/raw/master/tidySEM_hex.png' align="right" height="139" /></a>
+# tidySEM <a href="https://github.com/cjvanlissa/tidySEM"><img class="package-hex" src="https://raw.githubusercontent.com/cjvanlissa/metamixture/master/tidySEM_hex.png" align="right" width="120" /></a>
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
@@ -119,10 +119,8 @@ Furthermore, the `tidySEM` package includes the following vignettes:
 
 ## Citing tidySEM
 
-> van Lissa CJ (2026). *tidySEM: Tidy Structural Equation Modeling*. R
-> package version 0.3.0, commit
-> 748c98fe82f013b8456bc6e0a9a9153e8faa250a,
-> <https://github.com/cjvanlissa/tidySEM>.
+> Van Lissa CJ (????). *tidySEM: Tidy Structural Equation Modeling*. R
+> package version 0.3.0, <https://cjvanlissa.github.io/tidySEM/>.
 
 To cite the latent class analysis functionality in tidySEM, cite:
 

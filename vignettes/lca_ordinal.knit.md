@@ -133,8 +133,8 @@ We consider one- through three-class models. Limiting the number of classes and 
 
 ```
 #> Beginning initial fit attemptFit attempt 0, fit=2156.11795699632, new current best! (was 2156.11795699633)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
-#> Beginning initial fit attemptFit attempt 0, fit=2156.11795699633, new current best! (was 2156.11795699634)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=2023.50861619781, new current best! (was 2156.11795699633)Beginning fit attempt 2 of at maximum 10 extra tries                         Beginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesFit attempt 4, fit=2023.50863205212, worse than previous best (2023.50861619781)Beginning fit attempt 5 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 447 fit 2023.51 change -0.01516                                                                           Fit attempt 5, fit=2023.50864665003, worse than previous best (2023.50861619781)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesFit attempt 7, fit=2023.50864178318, worse than previous best (2023.50861619781)Beginning fit attempt 8 of at maximum 10 extra tries                            Fit attempt 8, fit=2023.50862856806, worse than previous best (2023.50861619781)Beginning fit attempt 9 of at maximum 10 extra tries                            Fit attempt 9, fit=2023.50861616775, new current best! (was 2023.50861619781)Beginning fit attempt 10 of at maximum 10 extra tries                        Final run, for Hessian and/or standard errors and/or confidence intervals                                                                         
-#> Beginning initial fit attemptFit attempt 0, fit=2156.11795699633, new current best! (was 2156.11795699634)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 181 fit 2068.85 change -22.46MxComputeGradientDescent(SLSQP) evaluations 6241 fit 1993.47 change -9.88e-06                                                                             Fit attempt 1, fit=1993.46573278004, new current best! (was 2156.11795699633)Beginning fit attempt 2 of at maximum 10 extra tries                         Fit attempt 2, fit=2101.27192331552, worse than previous best (1993.46573278004)Beginning fit attempt 3 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 2197 fit 1993.5 change -0.0007477                                                                             Fit attempt 3, fit=1993.49661026413, worse than previous best (1993.46573278004)Beginning fit attempt 4 of at maximum 10 extra tries                            Fit attempt 4, fit=2041.82548394004, worse than previous best (1993.46573278004)Beginning fit attempt 5 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 752 fit 2021.14 change -0.223                                                                         Fit attempt 5, fit=1993.69071140177, worse than previous best (1993.46573278004)Beginning fit attempt 6 of at maximum 10 extra tries                            Fit attempt 6, fit=2101.27191468948, worse than previous best (1993.46573278004)Beginning fit attempt 7 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 226 fit 2027.53 change -0.9932                                                                          Fit attempt 7, fit=1993.49661026505, worse than previous best (1993.46573278004)Beginning fit attempt 8 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 2618 fit 2001.29 change -0.05406                                                                            Fit attempt 8, fit=2000.80141019404, worse than previous best (1993.46573278004)Beginning fit attempt 9 of at maximum 10 extra tries                            Beginning fit attempt 10 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1022 fit 2048.07 change -5.743                                                                          Fit attempt 10, fit=1996.31204567184, worse than previous best (1993.46573278004)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                                 
+#> Beginning initial fit attemptFit attempt 0, fit=2156.11795699633, new current best! (was 2156.11795699634)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=2023.50861619781, new current best! (was 2156.11795699633)Beginning fit attempt 2 of at maximum 10 extra tries                         Beginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesFit attempt 4, fit=2023.50863205212, worse than previous best (2023.50861619781)Beginning fit attempt 5 of at maximum 10 extra tries                            Fit attempt 5, fit=2023.50864665003, worse than previous best (2023.50861619781)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesFit attempt 7, fit=2023.50864178318, worse than previous best (2023.50861619781)Beginning fit attempt 8 of at maximum 10 extra tries                            Fit attempt 8, fit=2023.50862856806, worse than previous best (2023.50861619781)Beginning fit attempt 9 of at maximum 10 extra tries                            Fit attempt 9, fit=2023.50861616775, new current best! (was 2023.50861619781)Beginning fit attempt 10 of at maximum 10 extra tries                        Final run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=2156.11795699633, new current best! (was 2156.11795699634)Beginning fit attempt 1 of at maximum 10 extra tries                         Fit attempt 1, fit=1993.46573278004, new current best! (was 2156.11795699633)Beginning fit attempt 2 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 887 fit 2104.14 change -1.173                                                                         Fit attempt 2, fit=2101.27192331552, worse than previous best (1993.46573278004)Beginning fit attempt 3 of at maximum 10 extra tries                            Fit attempt 3, fit=1993.49661026413, worse than previous best (1993.46573278004)Beginning fit attempt 4 of at maximum 10 extra tries                            Fit attempt 4, fit=2041.82548394004, worse than previous best (1993.46573278004)Beginning fit attempt 5 of at maximum 10 extra tries                            Fit attempt 5, fit=1993.69071140177, worse than previous best (1993.46573278004)Beginning fit attempt 6 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 317 fit 2137.22 change -5.661                                                                         Fit attempt 6, fit=2101.27191468948, worse than previous best (1993.46573278004)Beginning fit attempt 7 of at maximum 10 extra tries                            Fit attempt 7, fit=1993.49661026505, worse than previous best (1993.46573278004)Beginning fit attempt 8 of at maximum 10 extra tries                            Fit attempt 8, fit=2000.80141019404, worse than previous best (1993.46573278004)Beginning fit attempt 9 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 1352 fit 1993.49 change -0.02563                                                                            Beginning fit attempt 10 of at maximum 10 extra triesFit attempt 10, fit=1996.31204567184, worse than previous best (1993.46573278004)Final run, for Hessian and/or standard errors and/or confidence intervals        MxComputeNumericDeriv 192/210                                                                                                      
 ```
 
 ``` r
@@ -164,9 +164,6 @@ fit[, c("Name", "LL", "n", "Parameters", "BIC", "Entropy", "prob_min",
     "n_min", "np_ratio", "np_local")]
 ```
 
-```
-#> MxComputeGradientDescent(SLSQP) evaluations 394 fit 2052.38 change -11.85                                                                         
-```
 
 
 Table: Model fit table
@@ -294,22 +291,22 @@ table_results(aux_model, columns = c("label", "est_sig", "se",
 
 
 ```
-#>                                            label est_sig   se pval       confint  group matrix
-#> 1  Regressions.depression.ON.vict_teacher.class1   -0.00 0.10 1.00 [-0.19, 0.19] class1      A
-#> 2                        Means.depression.class1 2.74*** 0.06 0.00  [2.63, 2.86] class1      M
-#> 3                      Means.vict_teacher.class1 0.37*** 0.03 0.00  [0.30, 0.44] class1      M
-#> 4                    Variances.depression.class1 0.41*** 0.04 0.00  [0.33, 0.49] class1      S
-#> 5                  Variances.vict_teacher.class1 0.23*** 0.02 0.00  [0.19, 0.28] class1      S
-#> 6  Regressions.depression.ON.vict_teacher.class2   -0.12 0.12 0.32 [-0.35, 0.11] class2      A
-#> 7                        Means.depression.class2 2.86*** 0.06 0.00  [2.74, 2.97] class2      M
-#> 8                      Means.vict_teacher.class2 0.25*** 0.04 0.00  [0.17, 0.32] class2      M
-#> 9                    Variances.depression.class2 0.35*** 0.04 0.00  [0.27, 0.44] class2      S
-#> 10                 Variances.vict_teacher.class2 0.19*** 0.02 0.00  [0.14, 0.23] class2      S
-#> 11 Regressions.depression.ON.vict_teacher.class3   -0.14 0.13 0.28 [-0.40, 0.11] class3      A
-#> 12                       Means.depression.class3 2.66*** 0.08 0.00  [2.51, 2.81] class3      M
-#> 13                     Means.vict_teacher.class3 0.36*** 0.05 0.00  [0.27, 0.45] class3      M
-#> 14                   Variances.depression.class3 0.44*** 0.06 0.00  [0.32, 0.55] class3      S
-#> 15                 Variances.vict_teacher.class3 0.23*** 0.03 0.00  [0.17, 0.29] class3      S
+#>                                          label est_sig   se pval       confint group matrix
+#> 1  Regressions.depression.ON.vict_teacher.aux1   -0.00 0.10 1.00 [-0.19, 0.19]  aux1      A
+#> 2                        Means.depression.aux1 2.74*** 0.06 0.00  [2.63, 2.86]  aux1      M
+#> 3                      Means.vict_teacher.aux1 0.37*** 0.03 0.00  [0.30, 0.44]  aux1      M
+#> 4                    Variances.depression.aux1 0.41*** 0.04 0.00  [0.33, 0.49]  aux1      S
+#> 5                  Variances.vict_teacher.aux1 0.23*** 0.02 0.00  [0.19, 0.28]  aux1      S
+#> 6  Regressions.depression.ON.vict_teacher.aux2   -0.12 0.12 0.32 [-0.35, 0.11]  aux2      A
+#> 7                        Means.depression.aux2 2.86*** 0.06 0.00  [2.74, 2.97]  aux2      M
+#> 8                      Means.vict_teacher.aux2 0.25*** 0.04 0.00  [0.17, 0.32]  aux2      M
+#> 9                    Variances.depression.aux2 0.35*** 0.04 0.00  [0.27, 0.44]  aux2      S
+#> 10                 Variances.vict_teacher.aux2 0.19*** 0.02 0.00  [0.14, 0.23]  aux2      S
+#> 11 Regressions.depression.ON.vict_teacher.aux3   -0.14 0.13 0.28 [-0.40, 0.11]  aux3      A
+#> 12                       Means.depression.aux3 2.66*** 0.08 0.00  [2.51, 2.81]  aux3      M
+#> 13                     Means.vict_teacher.aux3 0.36*** 0.05 0.00  [0.27, 0.45]  aux3      M
+#> 14                   Variances.depression.aux3 0.44*** 0.06 0.00  [0.32, 0.55]  aux3      S
+#> 15                 Variances.vict_teacher.aux3 0.23*** 0.03 0.00  [0.17, 0.29]  aux3      S
 ```
 
 There are two ways to test whether the regression coefficients differ
@@ -333,9 +330,9 @@ lr_test(aux_model, compare = "A")
 #> 
 #> Pairwise comparisons using likelihood ratio tests:
 #>  Model1 Model2 LL_baseline LL_restricted LL_dif df    p
-#>  class1 class2        1414          1414   0.60  1 0.44
-#>  class1 class3        1414          1414   0.77  1 0.38
-#>  class2 class3        1414          1414   0.02  1 0.89
+#>    aux1   aux2        1414          1414   0.60  1 0.44
+#>    aux1   aux3        1414          1414   0.77  1 0.38
+#>    aux2   aux3        1414          1414   0.02  1 0.89
 ```
 
 Alternatively, we can use a Wald test to evaluate the equality
@@ -343,14 +340,14 @@ constraints directly:
 
 
 ``` r
-wald_test(aux_model, "class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]")
+wald_test(aux_model, "aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]")
 ```
 
 
 ```
 #> Wald tests for linear hypotheses:
-#>                                               Hypothesis df chisq   p
-#>  class1.A[1,2]=class2.A[1,2]&class1.A[1,2]=class3.A[1,2]  2     1 0.6
+#>                                       Hypothesis df chisq   p
+#>  aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]  2     1 0.6
 ```
 
 Both tests evaluate the null hypothesis that the regression

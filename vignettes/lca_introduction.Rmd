@@ -482,7 +482,7 @@ ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
   theme_bw()
 ```
 
-This figure implies that the most common response to AM1 in class 1 is 4, quite a few people score 1, and very few people score 6 or 7.
+This figure implies that the most common response to AM1 in class 1 is 6, quite a few people score 5 or 7, and very few people score 4 or below.
 We can do a sanity check to confirm this interpretation by assigning people to their most likely class (note that this ignores classification uncertainty), and then tabulating the observed scores of AM1 for the people who are assigned class 1:
 
 ```{r eval = eval_results}

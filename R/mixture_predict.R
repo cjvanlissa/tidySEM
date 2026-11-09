@@ -22,7 +22,7 @@ predict_class_MxModel <-  function(object,
   eval.parent(cl)
 }
 
-predict_mixture <- function(object, newdata = NULL, ...){
+predict_class_mixture <- function(object, newdata = NULL, ...){
   if(is.null(newdata)){
     return(class_prob(object, "individual")[[1]][,"predicted"])
   } else {

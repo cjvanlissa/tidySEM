@@ -304,7 +304,7 @@ mx_lca <- function(data = NULL,
       keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
       cl <- cl[c(1, keep_these)]
       out <- eval.parent(cl)
-      attr(out, "tidySEM") <- c(attr(out, "tidySEM"), "mixture")
+      attr(out, "tidySEM") <- "mixture"
       return(out)
     } else {
       out

@@ -93,7 +93,6 @@ res <- run_mx(mod)
 
 ``` r
 table_results(res)
-#> Warning: Unavailable columns requested: class
 #>                   label  est_sig   se pval        confint
 #> 1          Variances.X1     1.00 <NA> <NA>           <NA>
 #> 2          Variances.X2     1.00 <NA> <NA>           <NA>
@@ -163,7 +162,6 @@ Fit and summarize this model in the same way:
 ``` r
 res2 <- run_mx(mod2)
 table_results(res2)
-#> Warning: Unavailable columns requested: class
 #>             label  est_sig   se pval        confint
 #> 1    Variances.X1     1.00 <NA> <NA>           <NA>
 #> 2    Variances.X2     1.00 <NA> <NA>           <NA>

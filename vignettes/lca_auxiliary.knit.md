@@ -39,7 +39,6 @@ One requirement of all analyses presented here is that the auxiliary data must h
 ``` r
 library(tidySEM)
 library(OpenMx)
-#> Warning: package 'OpenMx' was built under R version 4.6.1
 df <- zegwaard_carecompass
 indicators <- c("burdened", "trapped", "negaffect", "loneliness")
 measurement_data <- df[, indicators]
@@ -115,21 +114,21 @@ table_results(bch_mean, columns = NULL)
 
 
 ```
-#>                label lhs op rhs     est     se pval            confint    est_sig pval_std
-#> 1     Means.y.class1   y ~1   1  153.67   2.88 0.00   [148.02, 159.32]  153.67***     0.00
-#> 2 Variances.y.class1   y ~~   y 2496.42 203.70 0.00 [2097.16, 2895.67] 2496.42***     0.00
-#> 3     Means.y.class2   y ~1   1  160.66   3.82 0.00   [153.17, 168.15]  160.66***     0.00
-#> 4 Variances.y.class2   y ~~   y 3076.16 299.84 0.00 [2488.48, 3663.83] 3076.16***     0.00
-#>    confint_std free          name lboundmet uboundmet std_est std_se col matrix  openmx_label
-#> 1 [2.80, 3.35] TRUE class1.M[1,1]     FALSE     FALSE    3.08   0.14   y      M class1.M[1,1]
-#> 2 [1.00, 1.00] TRUE class1.S[1,1]     FALSE     FALSE    1.00   0.00   y      S class1.S[1,1]
-#> 3 [2.59, 3.20] TRUE class2.M[1,1]     FALSE     FALSE    2.90   0.16   y      M class2.M[1,1]
-#> 4 [1.00, 1.00] TRUE class2.S[1,1]     FALSE     FALSE    1.00   0.00   y      S class2.S[1,1]
-#>   row  group ci_type  Category
-#> 1   1 class1    Wald     Means
-#> 2   y class1    Wald Variances
-#> 3   1 class2    Wald     Means
-#> 4   y class2    Wald Variances
+#>              label lhs op rhs     est     se pval            confint    est_sig pval_std
+#> 1     Means.y.aux1   y ~1   1  153.67   2.88 0.00   [148.02, 159.32]  153.67***     0.00
+#> 2 Variances.y.aux1   y ~~   y 2496.42 203.70 0.00 [2097.16, 2895.67] 2496.42***     0.00
+#> 3     Means.y.aux2   y ~1   1  160.66   3.82 0.00   [153.17, 168.15]  160.66***     0.00
+#> 4 Variances.y.aux2   y ~~   y 3076.16 299.84 0.00 [2488.48, 3663.83] 3076.16***     0.00
+#>    confint_std free        name lboundmet uboundmet std_est std_se col matrix openmx_label row
+#> 1 [2.80, 3.35] TRUE aux1.M[1,1]     FALSE     FALSE    3.08   0.14   y      M  aux1.M[1,1]   1
+#> 2 [1.00, 1.00] TRUE aux1.S[1,1]     FALSE     FALSE    1.00   0.00   y      S  aux1.S[1,1]   y
+#> 3 [2.59, 3.20] TRUE aux2.M[1,1]     FALSE     FALSE    2.90   0.16   y      M  aux2.M[1,1]   1
+#> 4 [1.00, 1.00] TRUE aux2.S[1,1]     FALSE     FALSE    1.00   0.00   y      S  aux2.S[1,1]   y
+#>   group ci_type  Category
+#> 1  aux1    Wald     Means
+#> 2  aux1    Wald Variances
+#> 3  aux2    Wald     Means
+#> 4  aux2    Wald Variances
 ```
 
 The estimates describe class-specific distal means. They do **not** by themselves test whether the means differ. For an omnibus and pairwise comparison, use `lr_test()`; compare the means (`M`) rather than the entire auxiliary model.
@@ -151,7 +150,7 @@ lr_test(bch_mean, compare = "M")
 #> 
 #> Pairwise comparisons using likelihood ratio tests:
 #>  Model1 Model2 LL_baseline LL_restricted LL_dif df    p
-#>  class1 class2        5491          5494    2.1  1 0.14
+#>    aux1   aux2        5491          5494    2.1  1 0.14
 ```
 
 One crucial limitation of the BCH approach is that its standard errors are not valid,
@@ -173,11 +172,11 @@ table_prob(bch_sex)
 
 
 ```
-#>   Variable Category Probability  group
-#> 1        y        1        0.51 class1
-#> 2        y        2        0.49 class1
-#> 3        y        1        0.46 class2
-#> 4        y        2        0.54 class2
+#>   Variable Category Probability group
+#> 1        y        1        0.51  aux1
+#> 2        y        2        0.49  aux1
+#> 3        y        1        0.46  aux2
+#> 4        y        2        0.54  aux2
 ```
 
 ### A class-specific regression model
@@ -202,39 +201,39 @@ lr_test(bch_reg, compare = "A")
 
 
 ```
-#>                                       label       lhs op       rhs     est     se pval
-#> 1  Regressions.freqvisit.ON.distance.class1 freqvisit  ~  distance   -0.00   0.00 0.74
-#> 2                    Means.freqvisit.class1 freqvisit ~1         1    3.88   0.20 0.00
-#> 3                     Means.distance.class1  distance ~1         1  153.67   2.88 0.00
-#> 4                Variances.freqvisit.class1 freqvisit ~~ freqvisit    1.13   0.09 0.00
-#> 5                 Variances.distance.class1  distance ~~  distance 2496.41 203.70 0.00
-#> 6  Regressions.freqvisit.ON.distance.class2 freqvisit  ~  distance   -0.00   0.00 0.49
-#> 7                    Means.freqvisit.class2 freqvisit ~1         1    3.85   0.22 0.00
-#> 8                     Means.distance.class2  distance ~1         1  160.68   3.82 0.00
-#> 9                Variances.freqvisit.class2 freqvisit ~~ freqvisit    1.05   0.10 0.00
-#> 10                Variances.distance.class2  distance ~~  distance 3076.19 299.82 0.00
-#>               confint    est_sig pval_std   confint_std free          name lboundmet uboundmet
-#> 1       [-0.00, 0.00]      -0.00     0.74 [-0.13, 0.09] TRUE class1.A[1,2]     FALSE     FALSE
-#> 2        [3.50, 4.27]    3.88***     0.00  [3.19, 4.11] TRUE class1.M[1,1]     FALSE     FALSE
-#> 3    [148.02, 159.32]  153.67***     0.00  [2.80, 3.35] TRUE class1.M[1,2]     FALSE     FALSE
-#> 4        [0.95, 1.31]    1.13***     0.00  [1.00, 1.00] TRUE class1.S[1,1]     FALSE     FALSE
-#> 5  [2097.16, 2895.67] 2496.41***     0.00  [1.00, 1.00] TRUE class1.S[2,2]     FALSE     FALSE
-#> 6       [-0.00, 0.00]      -0.00     0.49 [-0.18, 0.09] TRUE class2.A[1,2]     FALSE     FALSE
-#> 7        [3.43, 4.28]    3.85***     0.00  [3.22, 4.28] TRUE class2.M[1,1]     FALSE     FALSE
-#> 8    [153.18, 168.17]  160.68***     0.00  [2.59, 3.20] TRUE class2.M[1,2]     FALSE     FALSE
-#> 9        [0.85, 1.25]    1.05***     0.00  [0.98, 1.01] TRUE class2.S[1,1]     FALSE     FALSE
-#> 10 [2488.55, 3663.83] 3076.19***     0.00  [1.00, 1.00] TRUE class2.S[2,2]     FALSE     FALSE
-#>    std_est std_se       col matrix  openmx_label       row  group ci_type    Category
-#> 1    -0.02   0.06  distance      A class1.A[1,2] freqvisit class1    Wald Regressions
-#> 2     3.65   0.24 freqvisit      M class1.M[1,1]         1 class1    Wald       Means
-#> 3     3.08   0.14  distance      M class1.M[1,2]         1 class1    Wald       Means
-#> 4     1.00   0.00 freqvisit      S class1.S[1,1] freqvisit class1    Wald   Variances
-#> 5     1.00   0.00  distance      S class1.S[2,2]  distance class1    Wald   Variances
-#> 6    -0.05   0.07  distance      A class2.A[1,2] freqvisit class2    Wald Regressions
-#> 7     3.75   0.27 freqvisit      M class2.M[1,1]         1 class2    Wald       Means
-#> 8     2.90   0.16  distance      M class2.M[1,2]         1 class2    Wald       Means
-#> 9     1.00   0.01 freqvisit      S class2.S[1,1] freqvisit class2    Wald   Variances
-#> 10    1.00   0.00  distance      S class2.S[2,2]  distance class2    Wald   Variances
+#>                                     label       lhs op       rhs     est     se pval
+#> 1  Regressions.freqvisit.ON.distance.aux1 freqvisit  ~  distance   -0.00   0.00 0.74
+#> 2                    Means.freqvisit.aux1 freqvisit ~1         1    3.88   0.20 0.00
+#> 3                     Means.distance.aux1  distance ~1         1  153.67   2.88 0.00
+#> 4                Variances.freqvisit.aux1 freqvisit ~~ freqvisit    1.13   0.09 0.00
+#> 5                 Variances.distance.aux1  distance ~~  distance 2496.41 203.70 0.00
+#> 6  Regressions.freqvisit.ON.distance.aux2 freqvisit  ~  distance   -0.00   0.00 0.49
+#> 7                    Means.freqvisit.aux2 freqvisit ~1         1    3.85   0.22 0.00
+#> 8                     Means.distance.aux2  distance ~1         1  160.68   3.82 0.00
+#> 9                Variances.freqvisit.aux2 freqvisit ~~ freqvisit    1.05   0.10 0.00
+#> 10                Variances.distance.aux2  distance ~~  distance 3076.19 299.82 0.00
+#>               confint    est_sig pval_std   confint_std free        name lboundmet uboundmet
+#> 1       [-0.00, 0.00]      -0.00     0.74 [-0.13, 0.09] TRUE aux1.A[1,2]     FALSE     FALSE
+#> 2        [3.50, 4.27]    3.88***     0.00  [3.19, 4.11] TRUE aux1.M[1,1]     FALSE     FALSE
+#> 3    [148.02, 159.32]  153.67***     0.00  [2.80, 3.35] TRUE aux1.M[1,2]     FALSE     FALSE
+#> 4        [0.95, 1.31]    1.13***     0.00  [1.00, 1.00] TRUE aux1.S[1,1]     FALSE     FALSE
+#> 5  [2097.16, 2895.67] 2496.41***     0.00  [1.00, 1.00] TRUE aux1.S[2,2]     FALSE     FALSE
+#> 6       [-0.00, 0.00]      -0.00     0.49 [-0.18, 0.09] TRUE aux2.A[1,2]     FALSE     FALSE
+#> 7        [3.43, 4.28]    3.85***     0.00  [3.22, 4.28] TRUE aux2.M[1,1]     FALSE     FALSE
+#> 8    [153.18, 168.17]  160.68***     0.00  [2.59, 3.20] TRUE aux2.M[1,2]     FALSE     FALSE
+#> 9        [0.85, 1.25]    1.05***     0.00  [0.98, 1.01] TRUE aux2.S[1,1]     FALSE     FALSE
+#> 10 [2488.55, 3663.83] 3076.19***     0.00  [1.00, 1.00] TRUE aux2.S[2,2]     FALSE     FALSE
+#>    std_est std_se       col matrix openmx_label       row group ci_type    Category
+#> 1    -0.02   0.06  distance      A  aux1.A[1,2] freqvisit  aux1    Wald Regressions
+#> 2     3.65   0.24 freqvisit      M  aux1.M[1,1]         1  aux1    Wald       Means
+#> 3     3.08   0.14  distance      M  aux1.M[1,2]         1  aux1    Wald       Means
+#> 4     1.00   0.00 freqvisit      S  aux1.S[1,1] freqvisit  aux1    Wald   Variances
+#> 5     1.00   0.00  distance      S  aux1.S[2,2]  distance  aux1    Wald   Variances
+#> 6    -0.05   0.07  distance      A  aux2.A[1,2] freqvisit  aux2    Wald Regressions
+#> 7     3.75   0.27 freqvisit      M  aux2.M[1,1]         1  aux2    Wald       Means
+#> 8     2.90   0.16  distance      M  aux2.M[1,2]         1  aux2    Wald       Means
+#> 9     1.00   0.01 freqvisit      S  aux2.S[1,1] freqvisit  aux2    Wald   Variances
+#> 10    1.00   0.00  distance      S  aux2.S[2,2]  distance  aux2    Wald   Variances
 #> BCH test for equality across classes
 #> 
 #> Overall likelihood ratio test:
@@ -243,7 +242,7 @@ lr_test(bch_reg, compare = "A")
 #> 
 #> Pairwise comparisons using likelihood ratio tests:
 #>  Model1 Model2 LL_baseline LL_restricted LL_dif df    p
-#>  class1 class2        6987          6987  0.071  1 0.79
+#>    aux1   aux2        6987          6987  0.071  1 0.79
 ```
 
 ## Two-step maximum likelihood

@@ -760,7 +760,6 @@ At this stage, we may want to improve the basic plot slightly. The functions `no
 ``` r
 library(dplyr)
 library(stringr)
-#> Warning: package 'stringr' was built under R version 4.6.1
 nodes(graph_data) <- nodes(graph_data) %>%
   mutate(label = str_to_title(label))
 ```
