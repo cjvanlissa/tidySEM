@@ -1212,7 +1212,7 @@ probabilities of belonging to class 2 or 3.
 Going back to the LPA example, you might report the analysis as follows:
 
 > We conducted exploratory latent profile analysis using `tidySEM`
-> version 0.3.0 and `OpenMx` version 2.22.11. We followed recommended
+> version 0.3.1 and `OpenMx` version 2.22.11. We followed recommended
 > practices by @vanlissaRecommendedPracticesLatent2024. The two
 > continuous indicators were AM and CM. Model parameters were
 > class-varying means and fixed variances across classes. We assumed

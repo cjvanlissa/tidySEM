@@ -1,3 +1,8 @@
+# tidySEM 0.3.1
+
+- pass extraTries argument in mx_lca() to OpenMx’s try-hard model fit
+  routine
+
 # tidySEM 0.3.0
 
 - tidySEM now supports mixture models estimated with the metamixture
