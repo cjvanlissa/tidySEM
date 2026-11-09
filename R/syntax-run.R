@@ -23,10 +23,10 @@
 # @importFrom OpenMx omxDefaultComputePlan mxComputeSimAnnealing
 run_mx <- function(x, ...){
   s <- search()
-  if(!any(grepl("OpenMx", s, fixed = TRUE))){
-    message("Please run `library(OpenMx) before running any OpenMx models.`")
-    return(NULL)
-  }
+  # if(!any(grepl("OpenMx", s, fixed = TRUE))){
+  #   message("Please run `library(OpenMx) before running any OpenMx models.`")
+  #   return(NULL)
+  # }
   UseMethod("run_mx", x)
 }
 
@@ -73,7 +73,7 @@ run_mx.MxModel <- function(x, ...){
   if(isTRUE(attr(x, "tidySEM") == "mixture") & length(names(x@submodels)) > 0){
     # Has to be re-run again later, to get $expectation$output$weights
     x <- OpenMx::mxModel(x, OpenMx::mxComputeSimAnnealing())
-    x <- suppressWarnings(try(OpenMx::mxRun(x), silent = TRUE))
+    x <- suppressWarnings(try(OpenMx::mxRun(x, silent = TRUE)))
     # Reset simulated annealing
     x@compute <- NULL
   }

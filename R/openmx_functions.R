@@ -260,7 +260,7 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = 
       path_list,
       lapply(1:nrow(defined), function(i){
         path <- defined[i, ]
-        cl <- call(name = "mxAlgebra")
+        cl <- call(name = "OpenMx::mxAlgebra")
         cl[["expression"]] <- str2lang(path$rhs)
         cl[["name"]] <- path$lhs
         eval(cl)

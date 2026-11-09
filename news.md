@@ -1,7 +1,3 @@
-# tidySEM 0.3.1
-
-* pass extraTries argument in mx_lca() to OpenMx's try-hard model fit routine
-
 # tidySEM 0.3.0
 
 * tidySEM now supports mixture models estimated with the metamixture package
@@ -12,6 +8,8 @@
   errors, and profile likelihood confidence intervals better
 * Improved precision of entropy criterion, reported by table_fit() for mixture
   models
+* Pass argument `extraTries` in mx_lca() to OpenMx's mxTryHardOrdinal() model
+  fit routine
 
 # tidySEM 0.2.13
 

@@ -30,7 +30,7 @@ predict_class_mixture <- function(object, newdata = NULL, ...){
     parnams <- OpenMx::omxGetParameters(mod_fix, free = TRUE)
     mod_fix <- OpenMx::omxSetParameters(mod_fix, labels = names(parnams), free = FALSE)
     mod_fix$data$observed <- rbind(newdata, mod_fix$data$observed)
-    mod_fix <- OpenMx::mxRun(mod_fix)
+    mod_fix <- OpenMx::mxRun(mod_fix, silent = TRUE)
     return(class_prob(mod_fix, "individual")[[1]][1:nrow(newdata), , drop = FALSE])
   }
 }

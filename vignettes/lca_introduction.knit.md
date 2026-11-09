@@ -66,70 +66,70 @@ number of unique observed values.
 ``` r
 table_desc <- descriptives(df)
 table_desc
-#>      name    type   n missing unique  mean median mode mode_value    sd  v min max range  skew
-#> 1      ID numeric 290  0.0034    182 153.1    158  158         NA 84.82 NA   2 289   287 -0.14
-#> 2   Grade numeric 291  0.0000      3   2.0      2    2         NA  0.89 NA   1   3     2 -0.02
-#> 3     Age numeric 291  0.0000      5  13.7     14   14         NA  0.96 NA  12  15     3 -0.15
-#> 4  Gender numeric 291  0.0000      2   1.6      2    2         NA  0.48 NA   1   2     1 -0.57
-#> 5     TS1 numeric 291  0.0000      7   2.9      3    3         NA  1.52 NA   1   7     6  0.36
-#> 6     TS2 numeric 291  0.0000      7   3.1      3    3         NA  1.46 NA   1   7     6  0.20
-#> 7     TS3 numeric 290  0.0034      7   2.4      2    2         NA  1.56 NA   1   7     6  0.98
-#> 8     TS4 numeric 291  0.0000      7   2.8      3    3         NA  1.56 NA   1   7     6  0.39
-#> 9    SOS1 numeric 290  0.0034      7   4.7      5    5         NA  1.61 NA   1   7     6 -0.20
-#> 10   SOS2 numeric 290  0.0034      7   3.3      3    3         NA  1.72 NA   1   7     6  0.45
-#> 11   SOS3 numeric 290  0.0034      7   2.6      2    2         NA  1.75 NA   1   7     6  0.85
-#> 12   SOS4 numeric 290  0.0034      7   2.9      3    3         NA  1.44 NA   1   7     6  0.51
-#> 13    PS1 numeric 291  0.0000      7   4.5      4    4         NA  1.74 NA   1   7     6 -0.19
-#> 14    PS2 numeric 291  0.0000      7   2.6      2    2         NA  1.65 NA   1   7     6  0.85
-#> 15    PS3 numeric 287  0.0137      7   3.1      3    3         NA  1.70 NA   1   7     6  0.39
-#> 16    PS4 numeric 291  0.0000      7   3.0      3    3         NA  1.85 NA   1   7     6  0.48
-#> 17    PS5 numeric 288  0.0103      7   2.9      2    2         NA  1.71 NA   1   7     6  0.64
-#> 18    AM1 numeric 290  0.0034      7   4.3      4    4         NA  1.65 NA   1   7     6 -0.44
-#> 19    AM2 numeric 288  0.0103      7   4.7      5    5         NA  1.60 NA   1   7     6 -0.64
-#> 20    AM3 numeric 290  0.0034      7   4.6      5    5         NA  1.61 NA   1   7     6 -0.45
-#> 21    AM4 numeric 291  0.0000      7   4.5      4    4         NA  1.55 NA   1   7     6 -0.27
-#> 22    AM5 numeric 290  0.0034      7   4.6      5    5         NA  1.57 NA   1   7     6 -0.53
-#> 23    CM1 numeric 290  0.0034      7   3.0      3    3         NA  1.61 NA   1   7     6  0.72
-#> 24    CM2 numeric 291  0.0000      7   2.9      3    3         NA  1.51 NA   1   7     6  0.42
-#> 25    CM3 numeric 290  0.0034      7   3.4      4    4         NA  1.47 NA   1   7     6  0.33
-#> 26    CM4 numeric 289  0.0069      7   3.5      4    4         NA  1.59 NA   1   7     6  0.34
-#> 27    BI1 numeric 290  0.0034      7   4.6      5    5         NA  1.47 NA   1   7     6 -0.55
-#> 28    BI2 numeric 289  0.0069      7   4.7      5    5         NA  1.40 NA   1   7     6 -0.78
-#> 29    BI3 numeric 289  0.0069      7   4.8      5    5         NA  1.53 NA   1   7     6 -0.88
-#> 30    BH1 numeric 291  0.0000      7   5.0      5    5         NA  1.74 NA   1   7     6 -0.53
-#> 31    BH2 numeric 288  0.0103      7   3.3      3    3         NA  1.45 NA   1   7     6  0.65
-#>    skew_2se   kurt kurt_2se
-#> 1    -0.475 -1.237   -2.168
-#> 2    -0.071 -1.738   -3.052
-#> 3    -0.525 -0.984   -1.727
-#> 4    -1.985 -1.690   -2.968
-#> 5     1.253 -0.572   -1.004
-#> 6     0.714 -0.739   -1.297
-#> 7     3.415  0.132    0.231
-#> 8     1.349 -0.841   -1.477
-#> 9    -0.713 -0.803   -1.408
-#> 10    1.580 -0.663   -1.162
-#> 11    2.965 -0.348   -0.610
-#> 12    1.765 -0.442   -0.775
-#> 13   -0.657 -0.798   -1.401
-#> 14    2.971 -0.187   -0.328
-#> 15    1.367 -0.989   -1.725
-#> 16    1.679 -0.927   -1.627
-#> 17    2.234 -0.568   -0.992
-#> 18   -1.523 -0.373   -0.653
-#> 19   -2.242 -0.084   -0.146
-#> 20   -1.555 -0.228   -0.400
-#> 21   -0.940 -0.234   -0.411
-#> 22   -1.868  0.060    0.105
-#> 23    2.532  0.023    0.041
-#> 24    1.476 -0.502   -0.881
-#> 25    1.146  0.019    0.034
-#> 26    1.175 -0.340   -0.594
-#> 27   -1.923  0.265    0.465
-#> 28   -2.709  0.606    1.061
-#> 29   -3.067  0.460    0.804
-#> 30   -1.868 -0.490   -0.861
-#> 31    2.248  0.299    0.522
+#>      name    type   n     missing unique       mean median mode mode_value         sd  v min
+#> 1      ID numeric 290 0.003436426    182 153.131034    158  158         NA 84.8178390 NA   2
+#> 2   Grade numeric 291 0.000000000      3   2.010309      2    2         NA  0.8885654 NA   1
+#> 3     Age numeric 291 0.000000000      5  13.732907     14   14         NA  0.9584744 NA  12
+#> 4  Gender numeric 291 0.000000000      2   1.635739      2    2         NA  0.4820513 NA   1
+#> 5     TS1 numeric 291 0.000000000      7   2.920962      3    3         NA  1.5235871 NA   1
+#> 6     TS2 numeric 291 0.000000000      7   3.072165      3    3         NA  1.4568323 NA   1
+#> 7     TS3 numeric 290 0.003436426      7   2.403448      2    2         NA  1.5560981 NA   1
+#> 8     TS4 numeric 291 0.000000000      7   2.783505      3    3         NA  1.5639923 NA   1
+#> 9    SOS1 numeric 290 0.003436426      7   4.665517      5    5         NA  1.6072448 NA   1
+#> 10   SOS2 numeric 290 0.003436426      7   3.296552      3    3         NA  1.7235360 NA   1
+#> 11   SOS3 numeric 290 0.003436426      7   2.631034      2    2         NA  1.7464949 NA   1
+#> 12   SOS4 numeric 290 0.003436426      7   2.889655      3    3         NA  1.4366302 NA   1
+#> 13    PS1 numeric 291 0.000000000      7   4.463918      4    4         NA  1.7363965 NA   1
+#> 14    PS2 numeric 291 0.000000000      7   2.587629      2    2         NA  1.6510346 NA   1
+#> 15    PS3 numeric 287 0.013745704      7   3.059233      3    3         NA  1.6994374 NA   1
+#> 16    PS4 numeric 291 0.000000000      7   3.034364      3    3         NA  1.8454570 NA   1
+#> 17    PS5 numeric 288 0.010309278      7   2.868056      2    2         NA  1.7138360 NA   1
+#> 18    AM1 numeric 290 0.003436426      7   4.327586      4    4         NA  1.6532230 NA   1
+#> 19    AM2 numeric 288 0.010309278      7   4.729167      5    5         NA  1.5979898 NA   1
+#> 20    AM3 numeric 290 0.003436426      7   4.575862      5    5         NA  1.6075417 NA   1
+#> 21    AM4 numeric 291 0.000000000      7   4.505155      4    4         NA  1.5522423 NA   1
+#> 22    AM5 numeric 290 0.003436426      7   4.593103      5    5         NA  1.5739952 NA   1
+#> 23    CM1 numeric 290 0.003436426      7   2.968966      3    3         NA  1.6117225 NA   1
+#> 24    CM2 numeric 291 0.000000000      7   2.872852      3    3         NA  1.5134974 NA   1
+#> 25    CM3 numeric 290 0.003436426      7   3.372414      4    4         NA  1.4715048 NA   1
+#> 26    CM4 numeric 289 0.006872852      7   3.463668      4    4         NA  1.5875695 NA   1
+#> 27    BI1 numeric 290 0.003436426      7   4.644828      5    5         NA  1.4651868 NA   1
+#> 28    BI2 numeric 289 0.006872852      7   4.740484      5    5         NA  1.3963448 NA   1
+#> 29    BI3 numeric 289 0.006872852      7   4.806228      5    5         NA  1.5288303 NA   1
+#> 30    BH1 numeric 291 0.000000000      7   5.020619      5    5         NA  1.7359051 NA   1
+#> 31    BH2 numeric 288 0.010309278      7   3.329861      3    3         NA  1.4502952 NA   1
+#>    max range        skew    skew_2se        kurt    kurt_2se
+#> 1  289   287 -0.13605878 -0.47538950 -1.23702373 -2.16834100
+#> 2    3     2 -0.02020154 -0.07070456 -1.73796112 -3.05157911
+#> 3   15     3 -0.14993992 -0.52478349 -0.98374543 -1.72729813
+#> 4    2     1 -0.56706905 -1.98471816 -1.69009615 -2.96753595
+#> 5    7     6  0.35810259  1.25334423 -0.57152889 -1.00351246
+#> 6    7     6  0.20397798  0.71391447 -0.73878365 -1.29718480
+#> 7    7     6  0.97736229  3.41490469  0.13192871  0.23125379
+#> 8    7     6  0.38543102  1.34899258 -0.84100869 -1.47667547
+#> 9    7     6 -0.20393909 -0.71256336 -0.80307039 -1.40767748
+#> 10   7     6  0.45232786  1.58043393 -0.66280704 -1.16181415
+#> 11   7     6  0.84850098  2.96466317 -0.34828509 -0.61049827
+#> 12   7     6  0.50510413  1.76483428 -0.44207245 -0.77489526
+#> 13   7     6 -0.18766355 -0.65681466 -0.79781285 -1.40083054
+#> 14   7     6  0.84891591  2.97117049 -0.18677644 -0.32794927
+#> 15   7     6  0.39324544  1.36694733 -0.98904728 -1.72483072
+#> 16   7     6  0.47961096  1.67861846 -0.92685506 -1.62740783
+#> 17   7     6  0.64148536  2.23368727 -0.56809490 -0.99241401
+#> 18   7     6 -0.43602530 -1.52347277 -0.37259837 -0.65311628
+#> 19   7     6 -0.64387068 -2.24199308 -0.08372378 -0.14625841
+#> 20   7     6 -0.44502468 -1.55491660 -0.22795609 -0.39957724
+#> 21   7     6 -0.26869691 -0.94042803 -0.23399890 -0.41086428
+#> 22   7     6 -0.53473329 -1.86835856  0.05989265  0.10498399
+#> 23   7     6  0.72478103  2.53238553  0.02339709  0.04101204
+#> 24   7     6  0.42162188  1.47565911 -0.50157333 -0.88068179
+#> 25   7     6  0.32791591  1.14573847  0.01942356  0.03404696
+#> 26   7     6  0.33686541  1.17499766 -0.33952285 -0.59412939
+#> 27   7     6 -0.55047037 -1.92334396  0.26543133  0.46526645
+#> 28   7     6 -0.77666405 -2.70902985  0.60647064  1.06126003
+#> 29   7     6 -0.87923548 -3.06680238  0.45955236  0.80416846
+#> 30   7     6 -0.53371071 -1.86796534 -0.49033875 -0.86095567
+#> 31   7     6  0.64559662  2.24800289  0.29855650  0.52155308
 ```
 
 The `type` column tells you the measurement level of each variable. The `tidySEM` package supports latent class analysis with `numeric` (or `integer`) and `ordered` variables. 
@@ -331,14 +331,14 @@ res_lpa <- mx_profiles(
   variances = c("equal", "varying"),
   covariances = c("zero", "equal")
 )
-#> MxComputeSimAnnealing(tsallis1996) evaluations 100 fit 3712.02 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2213 fit 3411.67 change 1558MxComputeSimAnnealing(tsallis1996) evaluations 4289 fit 2109.3 change 203.1MxComputeSimAnnealing(tsallis1996) evaluations 6468 fit 1873.55 change -262MxComputeSimAnnealing(tsallis1996) evaluations 8493 fit 4569.39 change 2729                                                                           
-#> MxComputeSimAnnealing(tsallis1996) evaluations 524 fit 2251.13 change -290.2MxComputeSimAnnealing(tsallis1996) evaluations 1955 fit 2075.99 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 3402 fit 2391.45 change -52.05MxComputeSimAnnealing(tsallis1996) evaluations 4852 fit 2238.15 change -144.2MxComputeSimAnnealing(tsallis1996) evaluations 6224 fit 1800.71 change -798.9MxComputeSimAnnealing(tsallis1996) evaluations 7651 fit 2370.3 change -0.01142MxComputeSimAnnealing(tsallis1996) evaluations 9035 fit 1812.88 change 12.1   MxComputeSimAnnealing(tsallis1996) evaluations 10418 fit 1809.71 change 1.003MxComputeSimAnnealing(tsallis1996) evaluations 11794 fit 2045.27 change 3.433                                                                             
-#> MxComputeSimAnnealing(tsallis1996) evaluations 567 fit 3856.48 change 460.1MxComputeSimAnnealing(tsallis1996) evaluations 1618 fit 2476.33 change 0   MxComputeSimAnnealing(tsallis1996) evaluations 2668 fit 2206.45 change 170.9MxComputeSimAnnealing(tsallis1996) evaluations 3720 fit 1802.45 change -260.9MxComputeSimAnnealing(tsallis1996) evaluations 4769 fit 1935.3 change -1934  MxComputeSimAnnealing(tsallis1996) evaluations 5780 fit 3010.41 change 1226MxComputeSimAnnealing(tsallis1996) evaluations 6820 fit 2293.39 change 483.9MxComputeSimAnnealing(tsallis1996) evaluations 7882 fit 2356.26 change 361.8MxComputeSimAnnealing(tsallis1996) evaluations 8938 fit 2030.3 change 247.7 MxComputeSimAnnealing(tsallis1996) evaluations 9970 fit 2031.44 change 151.8MxComputeSimAnnealing(tsallis1996) evaluations 11000 fit 2132.35 change 350 MxComputeSimAnnealing(tsallis1996) evaluations 12055 fit 1782.04 change -105.2MxComputeSimAnnealing(tsallis1996) evaluations 13095 fit 2372.44 change 590.6 MxComputeSimAnnealing(tsallis1996) evaluations 14089 fit 1781.63 change 0.001622MxComputeSimAnnealing(tsallis1996) evaluations 15144 fit 1940.99 change 159.7   MxComputeSimAnnealing(tsallis1996) evaluations 16153 fit 1971.33 change 190.2                                                                             
-#> MxComputeSimAnnealing(tsallis1996) evaluations 310 fit 2371.1 change 350.4MxComputeSimAnnealing(tsallis1996) evaluations 1182 fit 2269.39 change -460.5MxComputeSimAnnealing(tsallis1996) evaluations 2042 fit 3971.37 change 438.4 MxComputeSimAnnealing(tsallis1996) evaluations 2899 fit 2169.21 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 3759 fit 2108.59 change 43.71MxComputeSimAnnealing(tsallis1996) evaluations 4611 fit 2071.23 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 5460 fit 1858.79 change 91.48MxComputeSimAnnealing(tsallis1996) evaluations 6324 fit 1863.05 change -6.145MxComputeSimAnnealing(tsallis1996) evaluations 7167 fit 1765.81 change -363.4MxComputeSimAnnealing(tsallis1996) evaluations 8026 fit 1766.64 change 0.704 MxComputeSimAnnealing(tsallis1996) evaluations 8884 fit 1863.9 change 97.83 MxComputeSimAnnealing(tsallis1996) evaluations 9740 fit 1779.71 change 14.17MxComputeSimAnnealing(tsallis1996) evaluations 10597 fit 1863.02 change 96.21MxComputeSimAnnealing(tsallis1996) evaluations 11485 fit 1792.63 change -6.347MxComputeSimAnnealing(tsallis1996) evaluations 12339 fit 2088.39 change 322.9 MxComputeSimAnnealing(tsallis1996) evaluations 13187 fit 1765.43 change -322.7MxComputeSimAnnealing(tsallis1996) evaluations 14065 fit 2200.1 change 0      MxComputeSimAnnealing(tsallis1996) evaluations 14944 fit 1765.41 change -0.09004MxComputeSimAnnealing(tsallis1996) evaluations 15795 fit 1766.6 change -322.5   MxComputeSimAnnealing(tsallis1996) evaluations 16626 fit 1765.42 change -4.011MxComputeSimAnnealing(tsallis1996) evaluations 17475 fit 2063.17 change 280.8 MxComputeSimAnnealing(tsallis1996) evaluations 18326 fit 1765.42 change -0.00418MxComputeSimAnnealing(tsallis1996) evaluations 19165 fit 1767.89 change -384    MxComputeSimAnnealing(tsallis1996) evaluations 20004 fit 1777.72 change 12.31                                                                             
-#> MxComputeSimAnnealing(tsallis1996) evaluations 833 fit 2515.16 change -111.2MxComputeSimAnnealing(tsallis1996) evaluations 2989 fit 1806.67 change -1295MxComputeSimAnnealing(tsallis1996) evaluations 5174 fit 2462.36 change 534.4MxComputeSimAnnealing(tsallis1996) evaluations 7203 fit 2026.49 change 223.8MxComputeSimAnnealing(tsallis1996) evaluations 9283 fit 1848.91 change 46.29MxComputeSimAnnealing(tsallis1996) evaluations 11438 fit 1802.65 change -117.2                                                                              
-#> MxComputeSimAnnealing(tsallis1996) evaluations 1124 fit 2571.57 change 517MxComputeSimAnnealing(tsallis1996) evaluations 2581 fit 3024.48 change 0  MxComputeSimAnnealing(tsallis1996) evaluations 4001 fit 2416.32 change 0MxComputeSimAnnealing(tsallis1996) evaluations 5435 fit 2454.88 change 0MxComputeSimAnnealing(tsallis1996) evaluations 6836 fit 2410.49 change 0MxComputeSimAnnealing(tsallis1996) evaluations 8280 fit 1778.82 change -0.6648MxComputeSimAnnealing(tsallis1996) evaluations 9632 fit 2769.49 change -138.3 MxComputeSimAnnealing(tsallis1996) evaluations 10997 fit 1867.04 change 63.08MxComputeSimAnnealing(tsallis1996) evaluations 12375 fit 2800.31 change 1001 MxComputeSimAnnealing(tsallis1996) evaluations 13760 fit 1793.56 change 15.95MxComputeSimAnnealing(tsallis1996) evaluations 15139 fit 1777.18 change -0.5101MxComputeSimAnnealing(tsallis1996) evaluations 16489 fit 2336.67 change 559.6  MxComputeSimAnnealing(tsallis1996) evaluations 17870 fit 1777.41 change 0.3276                                                                              
-#> MxComputeSimAnnealing(tsallis1996) evaluations 72 fit 2628.82 change -6.346MxComputeSimAnnealing(tsallis1996) evaluations 1122 fit 2096.75 change 0   MxComputeSimAnnealing(tsallis1996) evaluations 2207 fit 2747.25 change 247.5MxComputeSimAnnealing(tsallis1996) evaluations 3269 fit 2089.82 change 110.4MxComputeSimAnnealing(tsallis1996) evaluations 4332 fit 2577.26 change 544.8MxComputeSimAnnealing(tsallis1996) evaluations 5400 fit 1765.69 change -30.72MxComputeSimAnnealing(tsallis1996) evaluations 6445 fit 2326.87 change 321.6 MxComputeSimAnnealing(tsallis1996) evaluations 7489 fit 3548.41 change 1553 MxComputeSimAnnealing(tsallis1996) evaluations 8562 fit 2080.71 change 320 MxComputeSimAnnealing(tsallis1996) evaluations 9639 fit 1770.69 change -465.7MxComputeSimAnnealing(tsallis1996) evaluations 10698 fit 2270.19 change 510.7MxComputeSimAnnealing(tsallis1996) evaluations 11767 fit 1760.56 change -471.6MxComputeSimAnnealing(tsallis1996) evaluations 12807 fit 1773.73 change 7.346 MxComputeSimAnnealing(tsallis1996) evaluations 13890 fit 2473.1 change 714.1 MxComputeSimAnnealing(tsallis1996) evaluations 14954 fit 1758.89 change -708.4MxComputeSimAnnealing(tsallis1996) evaluations 16016 fit 2017.21 change 252.6 MxComputeSimAnnealing(tsallis1996) evaluations 17080 fit 1815.47 change 24.4 MxComputeSimAnnealing(tsallis1996) evaluations 18124 fit 2215.44 change 73.72MxComputeSimAnnealing(tsallis1996) evaluations 19192 fit 2431.1 change 672.4 MxComputeSimAnnealing(tsallis1996) evaluations 20243 fit 1758.95 change -2.589MxComputeSimAnnealing(tsallis1996) evaluations 21305 fit 1758.61 change 0.002535MxComputeSimAnnealing(tsallis1996) evaluations 22369 fit 4223.58 change 2423    MxComputeSimAnnealing(tsallis1996) evaluations 23438 fit 2416.76 change 613.8MxComputeSimAnnealing(tsallis1996) evaluations 24443 fit 1758.75 change 0.1756MxComputeSimAnnealing(tsallis1996) evaluations 25486 fit 1758.58 change -1.257                                                                              
-#> MxComputeSimAnnealing(tsallis1996) evaluations 284 fit 6423.61 change 2057MxComputeSimAnnealing(tsallis1996) evaluations 1155 fit 2025.44 change 0  MxComputeSimAnnealing(tsallis1996) evaluations 2048 fit 2126.59 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2920 fit 2280.35 change 0MxComputeSimAnnealing(tsallis1996) evaluations 3792 fit 2280.35 change -86.74MxComputeSimAnnealing(tsallis1996) evaluations 4658 fit 2630.28 change 604.8 MxComputeSimAnnealing(tsallis1996) evaluations 5519 fit 2148.3 change 181.8 MxComputeSimAnnealing(tsallis1996) evaluations 6355 fit 1990.27 change 0   MxComputeSimAnnealing(tsallis1996) evaluations 7246 fit 1910.04 change 166.8MxComputeSimAnnealing(tsallis1996) evaluations 8108 fit 1911.8 change 169.8 MxComputeSimAnnealing(tsallis1996) evaluations 8974 fit 1907.45 change 11.29MxComputeSimAnnealing(tsallis1996) evaluations 9816 fit 2435.74 change 686.8MxComputeSimAnnealing(tsallis1996) evaluations 10681 fit 1740.22 change -16.2MxComputeSimAnnealing(tsallis1996) evaluations 11531 fit 2167.24 change 427.8MxComputeSimAnnealing(tsallis1996) evaluations 12393 fit 1755.09 change 16.07MxComputeSimAnnealing(tsallis1996) evaluations 13249 fit 1737.51 change -68.74MxComputeSimAnnealing(tsallis1996) evaluations 14094 fit 2022.61 change 281.1 MxComputeSimAnnealing(tsallis1996) evaluations 14932 fit 2206.65 change 471.2MxComputeSimAnnealing(tsallis1996) evaluations 15774 fit 1843.02 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 16603 fit 1737.27 change 2.998MxComputeSimAnnealing(tsallis1996) evaluations 17466 fit 1755.5 change -4.965MxComputeSimAnnealing(tsallis1996) evaluations 18315 fit 2026.36 change -627.3MxComputeSimAnnealing(tsallis1996) evaluations 19177 fit 1733.34 change 0.08658MxComputeSimAnnealing(tsallis1996) evaluations 20017 fit 1965.67 change 232.5  MxComputeSimAnnealing(tsallis1996) evaluations 20889 fit 1733.08 change -0.7912MxComputeSimAnnealing(tsallis1996) evaluations 21756 fit 1732.99 change -456.9 MxComputeSimAnnealing(tsallis1996) evaluations 22612 fit 1733.01 change -50.4 MxComputeSimAnnealing(tsallis1996) evaluations 23431 fit 1732.91 change -62.62MxComputeSimAnnealing(tsallis1996) evaluations 24265 fit 1733.38 change 0.4922MxComputeSimAnnealing(tsallis1996) evaluations 25109 fit 1736.39 change -20.19MxComputeSimAnnealing(tsallis1996) evaluations 25959 fit 1746.12 change 13.35 MxComputeSimAnnealing(tsallis1996) evaluations 26808 fit 1767.9 change 35.13 MxComputeSimAnnealing(tsallis1996) evaluations 27643 fit 1959.92 change 227.2MxComputeSimAnnealing(tsallis1996) evaluations 28494 fit 1732.74 change -0.002563MxComputeSimAnnealing(tsallis1996) evaluations 29330 fit 1861.97 change 129.2    MxComputeSimAnnealing(tsallis1996) evaluations 30186 fit 1745.38 change 12.64MxComputeSimAnnealing(tsallis1996) evaluations 31050 fit 1732.73 change -15.42MxComputeSimAnnealing(tsallis1996) evaluations 31885 fit 1733.96 change 1.231                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1891 fit 3322.89 change 131.7MxComputeSimAnnealing(tsallis1996) evaluations 5702 fit 1829.24 change -6.29                                                                            
+#> MxComputeSimAnnealing(tsallis1996) evaluations 2300 fit 1807.56 change -69.26MxComputeSimAnnealing(tsallis1996) evaluations 4905 fit 2019.89 change 218.9 MxComputeSimAnnealing(tsallis1996) evaluations 7480 fit 2366.63 change 566  MxComputeSimAnnealing(tsallis1996) evaluations 10058 fit 1800.63 change -3070MxComputeSimAnnealing(tsallis1996) evaluations 12628 fit 1803.41 change 2.785                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1104 fit 2369.75 change -3738MxComputeSimAnnealing(tsallis1996) evaluations 3092 fit 6733.31 change 3350 MxComputeSimAnnealing(tsallis1996) evaluations 5072 fit 1986.64 change 0   MxComputeSimAnnealing(tsallis1996) evaluations 7048 fit 1792.14 change 8.728MxComputeSimAnnealing(tsallis1996) evaluations 9006 fit 2525.47 change 742.4MxComputeSimAnnealing(tsallis1996) evaluations 10968 fit 6777.71 change 4995MxComputeSimAnnealing(tsallis1996) evaluations 12930 fit 2084.03 change -615.5MxComputeSimAnnealing(tsallis1996) evaluations 14884 fit 1987.88 change 182.7                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 786 fit 2166.07 change -34.24MxComputeSimAnnealing(tsallis1996) evaluations 2375 fit 1984.7 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 3965 fit 2521.48 change -2628MxComputeSimAnnealing(tsallis1996) evaluations 5553 fit 1800.32 change -249.6MxComputeSimAnnealing(tsallis1996) evaluations 7138 fit 2081.37 change 109.5 MxComputeSimAnnealing(tsallis1996) evaluations 8712 fit 2706.08 change 839.3MxComputeSimAnnealing(tsallis1996) evaluations 10296 fit 1785.64 change -76.79MxComputeSimAnnealing(tsallis1996) evaluations 11875 fit 1799.79 change 34.36 MxComputeSimAnnealing(tsallis1996) evaluations 13455 fit 2211.02 change -0.0358MxComputeSimAnnealing(tsallis1996) evaluations 15028 fit 1775.82 change -308.8 MxComputeSimAnnealing(tsallis1996) evaluations 16595 fit 1765.44 change 0.02047MxComputeSimAnnealing(tsallis1996) evaluations 18164 fit 1765.42 change 0.0002289MxComputeSimAnnealing(tsallis1996) evaluations 19735 fit 1765.41 change -0.008017                                                                                 
+#> MxComputeSimAnnealing(tsallis1996) evaluations 13 fit 2626.39 change 0MxComputeSimAnnealing(tsallis1996) evaluations 3956 fit 2028.28 change -289.1MxComputeSimAnnealing(tsallis1996) evaluations 7825 fit 2134.07 change 331.2 MxComputeSimAnnealing(tsallis1996) evaluations 11668 fit 1803.19 change 0.6312                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1125 fit 3041.14 change 0MxComputeSimAnnealing(tsallis1996) evaluations 3768 fit 1947.04 change -51.22MxComputeSimAnnealing(tsallis1996) evaluations 6398 fit 2382.93 change 603.3 MxComputeSimAnnealing(tsallis1996) evaluations 8986 fit 1783.33 change 4.876MxComputeSimAnnealing(tsallis1996) evaluations 11572 fit 1777.46 change -0.11MxComputeSimAnnealing(tsallis1996) evaluations 14150 fit 1777.15 change -2.549MxComputeSimAnnealing(tsallis1996) evaluations 16729 fit 1777.1 change -1058                                                                              
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1092 fit 2597.25 change 27.53MxComputeSimAnnealing(tsallis1996) evaluations 3077 fit 2338.77 change 383.9MxComputeSimAnnealing(tsallis1996) evaluations 5066 fit 1812.3 change -481  MxComputeSimAnnealing(tsallis1996) evaluations 7052 fit 2460.28 change 700.4MxComputeSimAnnealing(tsallis1996) evaluations 9032 fit 1927.92 change 102.4MxComputeSimAnnealing(tsallis1996) evaluations 11003 fit 1898.27 change 139 MxComputeSimAnnealing(tsallis1996) evaluations 12960 fit 1801.2 change 42.31MxComputeSimAnnealing(tsallis1996) evaluations 14925 fit 1758.62 change -43.13MxComputeSimAnnealing(tsallis1996) evaluations 16889 fit 2303.74 change 544.7 MxComputeSimAnnealing(tsallis1996) evaluations 18853 fit 1760.69 change -648.9MxComputeSimAnnealing(tsallis1996) evaluations 20817 fit 2421.52 change 663   MxComputeSimAnnealing(tsallis1996) evaluations 22775 fit 2430.81 change 23.17MxComputeSimAnnealing(tsallis1996) evaluations 24735 fit 1758.57 change -0.009263                                                                                 
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1268 fit 2139.64 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2860 fit 2838.84 change -2074MxComputeSimAnnealing(tsallis1996) evaluations 4448 fit 2301.64 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 6039 fit 2259.87 change 0MxComputeSimAnnealing(tsallis1996) evaluations 7624 fit 1926.45 change 176.4MxComputeSimAnnealing(tsallis1996) evaluations 9211 fit 2423.89 change 676.3MxComputeSimAnnealing(tsallis1996) evaluations 10800 fit 2002.17 change -11.05MxComputeSimAnnealing(tsallis1996) evaluations 12374 fit 1979.45 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 13958 fit 2465.52 change 719.9MxComputeSimAnnealing(tsallis1996) evaluations 15534 fit 1744.03 change 2.725MxComputeSimAnnealing(tsallis1996) evaluations 17109 fit 1740.3 change 0.02475MxComputeSimAnnealing(tsallis1996) evaluations 18685 fit 1853.65 change 114.2 MxComputeSimAnnealing(tsallis1996) evaluations 20253 fit 1739.24 change -562.9MxComputeSimAnnealing(tsallis1996) evaluations 21826 fit 1739.13 change -0.06655MxComputeSimAnnealing(tsallis1996) evaluations 23397 fit 1739.07 change 0.002638MxComputeSimAnnealing(tsallis1996) evaluations 24968 fit 1736.51 change -0.3853 MxComputeSimAnnealing(tsallis1996) evaluations 26543 fit 1733.78 change -5.635 MxComputeSimAnnealing(tsallis1996) evaluations 28086 fit 1733.07 change -242.8MxComputeSimAnnealing(tsallis1996) evaluations 29658 fit 1732.96 change 0.1332MxComputeSimAnnealing(tsallis1996) evaluations 31232 fit 2326.02 change 593.3                                                                              
 saveRDS(res_lpa, "res_lpa_different_spect.rds")
 ```
 
@@ -388,7 +388,8 @@ Which would give this many cases per parameter:
 ``` r
 k <- 1:10
 nrow(df) / (1+3*k)
-#>  [1] 72.8 41.6 29.1 22.4 18.2 15.3 13.2 11.6 10.4  9.4
+#>  [1] 72.750000 41.571429 29.100000 22.384615 18.187500 15.315789 13.227273 11.640000 10.392857
+#> [10]  9.387097
 ```
 
 So we could estimate at least 4 classes. Let's round up and estimate 1:5 class solutions:
@@ -401,10 +402,10 @@ res_lpa <- mx_profiles(
   variances = "equal",
   covariances = "zero"
 )
-#> MxComputeSimAnnealing(tsallis1996) evaluations 1354 fit 2481.96 change -1152MxComputeSimAnnealing(tsallis1996) evaluations 3452 fit 4035.01 change 2204 MxComputeSimAnnealing(tsallis1996) evaluations 5508 fit 1835.13 change -246.9MxComputeSimAnnealing(tsallis1996) evaluations 7535 fit 2197.38 change -2344                                                                             
-#> MxComputeSimAnnealing(tsallis1996) evaluations 1113 fit 2483.15 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2527 fit 3455.88 change 677.2MxComputeSimAnnealing(tsallis1996) evaluations 3928 fit 1837.6 change -4904 MxComputeSimAnnealing(tsallis1996) evaluations 5461 fit 1825.25 change -120.9MxComputeSimAnnealing(tsallis1996) evaluations 6882 fit 2458.68 change 608.2 MxComputeSimAnnealing(tsallis1996) evaluations 8329 fit 1786.78 change -0.04701MxComputeSimAnnealing(tsallis1996) evaluations 9748 fit 1787.22 change -287.5  MxComputeSimAnnealing(tsallis1996) evaluations 11051 fit 1790.05 change -267 MxComputeSimAnnealing(tsallis1996) evaluations 12390 fit 3148.31 change 1362                                                                            
-#> MxComputeSimAnnealing(tsallis1996) evaluations 1014 fit 2565.46 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2064 fit 4351.51 change -282.8MxComputeSimAnnealing(tsallis1996) evaluations 3112 fit 2211.72 change 412.8 MxComputeSimAnnealing(tsallis1996) evaluations 4146 fit 2368.81 change 324.6MxComputeSimAnnealing(tsallis1996) evaluations 5193 fit 1891.89 change 101  MxComputeSimAnnealing(tsallis1996) evaluations 6242 fit 1790.23 change -698.6MxComputeSimAnnealing(tsallis1996) evaluations 7314 fit 3790.95 change 2002  MxComputeSimAnnealing(tsallis1996) evaluations 8362 fit 1789.21 change -767.6MxComputeSimAnnealing(tsallis1996) evaluations 9404 fit 2071.6 change 279    MxComputeSimAnnealing(tsallis1996) evaluations 10464 fit 2353.96 change -746.7MxComputeSimAnnealing(tsallis1996) evaluations 11500 fit 1789.34 change -234.5MxComputeSimAnnealing(tsallis1996) evaluations 12518 fit 2356.39 change -322.6MxComputeSimAnnealing(tsallis1996) evaluations 13571 fit 1789.54 change 0.4175MxComputeSimAnnealing(tsallis1996) evaluations 14625 fit 2323.04 change 533.9 MxComputeSimAnnealing(tsallis1996) evaluations 15668 fit 1789.65 change -767.9                                                                              
-#> MxComputeSimAnnealing(tsallis1996) evaluations 839 fit 2371.1 change 0MxComputeSimAnnealing(tsallis1996) evaluations 1682 fit 2253.64 change 19.33MxComputeSimAnnealing(tsallis1996) evaluations 2530 fit 2256.42 change 20.04MxComputeSimAnnealing(tsallis1996) evaluations 3374 fit 2278.19 change -1599MxComputeSimAnnealing(tsallis1996) evaluations 4210 fit 2097.58 change -7.089MxComputeSimAnnealing(tsallis1996) evaluations 5057 fit 2117.04 change 244.3 MxComputeSimAnnealing(tsallis1996) evaluations 5896 fit 3228.56 change 937.3MxComputeSimAnnealing(tsallis1996) evaluations 6746 fit 2670.7 change -224.1MxComputeSimAnnealing(tsallis1996) evaluations 7608 fit 1767.88 change -371.9MxComputeSimAnnealing(tsallis1996) evaluations 8479 fit 2121.69 change 0.06272MxComputeSimAnnealing(tsallis1996) evaluations 9336 fit 1769.6 change 0.7301  MxComputeSimAnnealing(tsallis1996) evaluations 10175 fit 1773.41 change 7.947MxComputeSimAnnealing(tsallis1996) evaluations 11029 fit 1790.23 change 22.93MxComputeSimAnnealing(tsallis1996) evaluations 11879 fit 1765.63 change 0.04868MxComputeSimAnnealing(tsallis1996) evaluations 12709 fit 1765.43 change -98.68 MxComputeSimAnnealing(tsallis1996) evaluations 13554 fit 1765.62 change 0.156 MxComputeSimAnnealing(tsallis1996) evaluations 14396 fit 1765.43 change 0.008216MxComputeSimAnnealing(tsallis1996) evaluations 15233 fit 1766.9 change -285.1   MxComputeSimAnnealing(tsallis1996) evaluations 16086 fit 1769.49 change -95.28MxComputeSimAnnealing(tsallis1996) evaluations 16946 fit 1767.76 change -0.9488MxComputeSimAnnealing(tsallis1996) evaluations 17782 fit 1767.65 change 2.236  MxComputeSimAnnealing(tsallis1996) evaluations 18649 fit 1765.42 change -169.1MxComputeSimAnnealing(tsallis1996) evaluations 19519 fit 1766.96 change -18.2 MxComputeSimAnnealing(tsallis1996) evaluations 20381 fit 1863.77 change 97.2                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 3524 fit 1830.01 change -2298MxComputeSimAnnealing(tsallis1996) evaluations 7318 fit 1876.19 change 47.02                                                                            
+#> MxComputeSimAnnealing(tsallis1996) evaluations 823 fit 2541.32 change 0MxComputeSimAnnealing(tsallis1996) evaluations 3450 fit 2826.7 change 946.7MxComputeSimAnnealing(tsallis1996) evaluations 6040 fit 1786.91 change -2.551MxComputeSimAnnealing(tsallis1996) evaluations 8605 fit 1786.97 change -549  MxComputeSimAnnealing(tsallis1996) evaluations 11169 fit 1786.78 change -1128                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1941 fit 1934.3 change 0MxComputeSimAnnealing(tsallis1996) evaluations 3907 fit 1917.27 change 45.05MxComputeSimAnnealing(tsallis1996) evaluations 5874 fit 1798.2 change -1721 MxComputeSimAnnealing(tsallis1996) evaluations 7846 fit 1789.12 change -281.5MxComputeSimAnnealing(tsallis1996) evaluations 9810 fit 1794.54 change -14.19MxComputeSimAnnealing(tsallis1996) evaluations 11770 fit 1797.5 change -53.08MxComputeSimAnnealing(tsallis1996) evaluations 13727 fit 1789.12 change -3.42MxComputeSimAnnealing(tsallis1996) evaluations 15678 fit 1789.11 change -0.01114                                                                                
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1513 fit 3919.58 change 475.1MxComputeSimAnnealing(tsallis1996) evaluations 3108 fit 1952.42 change -602.8MxComputeSimAnnealing(tsallis1996) evaluations 4692 fit 1882.74 change -635.3MxComputeSimAnnealing(tsallis1996) evaluations 6276 fit 1814.71 change -758.4MxComputeSimAnnealing(tsallis1996) evaluations 7859 fit 1773.7 change -0.7669MxComputeSimAnnealing(tsallis1996) evaluations 9439 fit 1810.21 change -238.7MxComputeSimAnnealing(tsallis1996) evaluations 11022 fit 1773.06 change -17.28MxComputeSimAnnealing(tsallis1996) evaluations 12604 fit 4513.05 change 2610  MxComputeSimAnnealing(tsallis1996) evaluations 14176 fit 1772.7 change -0.2893MxComputeSimAnnealing(tsallis1996) evaluations 15754 fit 1772.54 change 0.0001085MxComputeSimAnnealing(tsallis1996) evaluations 17333 fit 1772.45 change -0.4516  MxComputeSimAnnealing(tsallis1996) evaluations 18915 fit 1772.38 change 0.01646MxComputeSimAnnealing(tsallis1996) evaluations 20494 fit 1828.7 change 56.39                                                                               
 saveRDS(res_lpa, "res_lpa_equal.rds")
 ```
 
@@ -421,18 +422,18 @@ First, extract a model fit table:
 ``` r
 tab_lpa_fit <- table_fit(res_lpa)
 tab_lpa_fit
-#>          Name Classes   LL   n Parameters  AIC  BIC saBIC Entropy prob_min prob_max n_min
-#> 1 equal var 1       1 -952 291          4 1911 1926  1913    1.00     1.00     1.00 1.000
-#> 2 equal var 2       2 -915 291          7 1843 1869  1847    0.79     0.77     0.98 0.158
-#> 3 equal var 3       3 -893 291         10 1807 1843  1812    0.84     0.90     0.94 0.127
-#> 4 equal var 4       4 -895 291         13 1815 1863  1822    0.73     0.59     0.90 0.045
-#> 5 equal var 5       5 -883 291         16 1797 1856  1805    0.73     0.76     0.96 0.065
-#>   n_max np_ratio np_local
-#> 1  1.00       73     72.8
-#> 2  0.84       42     15.3
-#> 3  0.58       29     13.9
-#> 4  0.44       22      5.2
-#> 5  0.32       18      7.9
+#>          Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy  prob_min
+#> 1 equal var 1       1 -951.5584 291          4 1911.117 1925.810 1913.125 1.0000000 1.0000000
+#> 2 equal var 2       2 -914.5721 291          7 1843.144 1868.857 1846.659 0.7857956 0.7652851
+#> 3 equal var 3       3 -893.3834 291         10 1806.767 1843.500 1811.788 0.8365068 0.8968021
+#> 4 equal var 4       4 -894.5514 291         13 1815.103 1862.856 1821.630 0.7317583 0.5928521
+#> 5 equal var 5       5 -885.9574 291         16 1803.915 1862.688 1811.949 0.7636743 0.4887870
+#>    prob_max      n_min     n_max np_ratio np_local
+#> 1 1.0000000 1.00000000 1.0000000 72.75000 72.75000
+#> 2 0.9799943 0.15807560 0.8419244 41.57143 15.33333
+#> 3 0.9439569 0.12714777 0.5807560 29.10000 13.87500
+#> 4 0.8994559 0.04467354 0.4432990 22.38462  5.20000
+#> 5 0.9183118 0.06185567 0.4845361 18.18750  7.50000
 ```
 
 #### BIC
@@ -473,7 +474,7 @@ res_blrt
 #> 
 #>  null  alt   lr df blrt_p samples
 #>  mix1 mix2 74.0  3      0      99
-#>  mix2 mix3 42.4  3      0      95
+#>  mix2 mix3 42.4  3      0      98
 ```
 
 We see that adding classes leads to a significant improvement in model fit.
@@ -498,12 +499,12 @@ Another consideration is that classification diagnostics are poor for the 4-5 cl
 
 ``` r
 tab_lpa_fit[, c("Entropy", "prob_min", "prob_max")]
-#>   Entropy prob_min prob_max
-#> 1    1.00     1.00     1.00
-#> 2    0.79     0.77     0.98
-#> 3    0.84     0.90     0.94
-#> 4    0.73     0.59     0.90
-#> 5    0.73     0.76     0.96
+#>     Entropy  prob_min  prob_max
+#> 1 1.0000000 1.0000000 1.0000000
+#> 2 0.7857956 0.7652851 0.9799943
+#> 3 0.8365068 0.8968021 0.9439569
+#> 4 0.7317583 0.5928521 0.8994559
+#> 5 0.7636743 0.4887870 0.9183118
 ```
 
 The entropy statistic is an overall summary of class separation, where values approaching 1 indicate clear delineation of classes [@celeuxEntropyCriterionAssessing1996].
@@ -536,13 +537,13 @@ tab_lpa_fit_formatted
 #> 2 equal var 2       2 -915 291          7 1843 1869  1847    0.79     0.77     0.98 0.158
 #> 3 equal var 3       3 -893 291         10 1807 1843  1812    0.84     0.90     0.94 0.127
 #> 4 equal var 4       4 -895 291         13 1815 1863  1822    0.73     0.59     0.90 0.045
-#> 5 equal var 5       5 -883 291         16 1797 1856  1805    0.73     0.76     0.96 0.065
+#> 5 equal var 5       5 -886 291         16 1804 1863  1812    0.76     0.49     0.92 0.062
 #>   n_max np_ratio np_local
 #> 1  1.00       73     72.8
 #> 2  0.84       42     15.3
 #> 3  0.58       29     13.9
 #> 4  0.44       22      5.2
-#> 5  0.32       18      7.9
+#> 5  0.48       18      7.5
 # Using format_numeric; reports 2 digits, but all columns become
 # character type:
 tab_lpa_fit_formatted <- format_numeric(tab_lpa_fit, digits = 2)
@@ -557,10 +558,10 @@ The class proportions of this model are:
 ``` r
 class_prob(res_lpa[[3]], "sum.posterior")
 #> $sum.posterior
-#>    class count proportion
-#> 1 class1   167       0.57
-#> 2 class2    86       0.29
-#> 3 class3    38       0.13
+#>    class     count proportion
+#> 1 class1 167.04348  0.5740326
+#> 2 class2  85.72089  0.2945735
+#> 3 class3  38.23563  0.1313939
 ```
 
 We can examine the parameters of this model as follows:
@@ -632,7 +633,8 @@ k <- 1:10
 L <- length(unique(df_lca$AM1))
 M <- ncol(df_lca)
 nrow(df) / ((k-1)+k*((L-1)*M))
-#>  [1] 13.9  6.8  4.5  3.3  2.7  2.2  1.9  1.7  1.5  1.3
+#>  [1] 13.857143  6.767442  4.476923  3.344828  2.669725  2.221374  1.901961  1.662857  1.477157
+#> [10]  1.328767
 ```
 
 Note that even for a 1-class model, we have fewer than 20 observations per parameter.
@@ -645,9 +647,9 @@ res_lca <- mx_lca(
   df_lca,
   classes = 1:3
 )
-#> Beginning initial fit attemptFit attempt 0, fit=3076.55795135632, new current best! (was 3076.55795135632)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 207 fit 3112.25 change -5.341                                                                         Beginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 970 fit 3085.47 change -1.325                                                                         Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 926 fit 3076.56 change -0.0001775                                                                             Final run, for Hessian and/or standard errors and/or confidence intervals                                                                         
-#> Beginning initial fit attemptFit attempt 0, fit=3076.55795135632, new current best! (was 3076.55795135632)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 951 fit 2822.94 change -7.403MxComputeGradientDescent(SLSQP) evaluations 3203 fit 2757.52 change -0.03195                                                                            Fit attempt 1, fit=2757.45486738943, new current best! (was 3076.55795135632)Beginning fit attempt 2 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 1878 fit 2758.74 change -0.1122                                                                           Beginning fit attempt 3 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 802 fit 2890.76 change -3.417MxComputeGradientDescent(SLSQP) evaluations 2756 fit 2764.91 change -0.8369                                                                           Fit attempt 3, fit=2763.82195749593, worse than previous best (2757.45486738943)Beginning fit attempt 4 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 159 fit 2958.02 change -1944MxComputeGradientDescent(SLSQP) evaluations 2045 fit 2764.58 change -3.225MxComputeGradientDescent(SLSQP) evaluations 3951 fit 2757.45 change -1.688e-05                                                                              Beginning fit attempt 5 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1195 fit 2775.33 change -3.261MxComputeGradientDescent(SLSQP) evaluations 3052 fit 2757.45 change -0.004885                                                                             Fit attempt 5, fit=2757.45486737805, new current best! (was 2757.45486738943)Beginning fit attempt 6 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 1504 fit 2760.04 change -0.7078                                                                           Beginning fit attempt 7 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 320 fit 2867.74 change -118.7MxComputeGradientDescent(SLSQP) evaluations 2199 fit 2770.29 change -0.1139                                                                           Beginning fit attempt 8 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 479 fit 2774.08 change -6.426MxComputeGradientDescent(SLSQP) evaluations 2352 fit 2757.46 change -0.04123                                                                            Fit attempt 8, fit=2757.45486737507, new current best! (was 2757.45486737805)Beginning fit attempt 9 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 1424 fit 2824.88 change -1.414MxComputeGradientDescent(SLSQP) evaluations 3198 fit 2758.3 change -0.1323                                                                          Beginning fit attempt 10 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 807 fit 3107.12 change -2.63MxComputeGradientDescent(SLSQP) evaluations 2916 fit 2854.89 change -8.738MxComputeGradientDescent(SLSQP) evaluations 5128 fit 2772.3 change -0.01489                                                                           Fit attempt 10, fit=2772.29504642962, worse than previous best (2757.45486737507)Final run, for Hessian and/or standard errors and/or confidence intervals        MxComputeNumericDeriv 246/703MxComputeNumericDeriv 561/703                                                                                                      
-#> Beginning initial fit attemptFit attempt 0, fit=3076.55795135631, new current best! (was 3076.55795135632)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 235 fit 2932.83 change -186.7MxComputeGradientDescent(SLSQP) evaluations 1984 fit 2658.95 change -0.6951MxComputeGradientDescent(SLSQP) evaluations 3491 fit 2639.13 change -2.165 MxComputeGradientDescent(SLSQP) evaluations 5100 fit 2628.29 change -0.1363MxComputeGradientDescent(SLSQP) evaluations 6696 fit 2627.93 change -0.002172MxComputeGradientDescent(SLSQP) evaluations 8406 fit 2627.92 change -1.492e-05                                                                              Fit attempt 1, fit=2627.92477729493, new current best! (was 3076.55795135631)Beginning fit attempt 2 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 117 fit 6476.66MxComputeGradientDescent(SLSQP) evaluations 1533 fit 2760.78 change -4.523MxComputeGradientDescent(SLSQP) evaluations 3042 fit 2682.59 change -2.291MxComputeGradientDescent(SLSQP) evaluations 4542 fit 2630.45 change -1.191MxComputeGradientDescent(SLSQP) evaluations 6024 fit 2628.86 change -0.01091MxComputeGradientDescent(SLSQP) evaluations 7506 fit 2628.86 change -6.86e-07                                                                             Fit attempt 2, fit=2628.85548409314, worse than previous best (2627.92477729493)Beginning fit attempt 3 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 838 fit 3607.68 change -68.68MxComputeGradientDescent(SLSQP) evaluations 2133 fit 2851.72 change -31.94MxComputeGradientDescent(SLSQP) evaluations 3535 fit 2735.67 change -3.563MxComputeGradientDescent(SLSQP) evaluations 4924 fit 2672.2 change -4.11  MxComputeGradientDescent(SLSQP) evaluations 6181 fit 2584.91 change -0.6791MxComputeGradientDescent(SLSQP) evaluations 7437 fit 2582.01 change -1.186 MxComputeGradientDescent(SLSQP) evaluations 8812 fit 2572.72 change -0.2211MxComputeGradientDescent(SLSQP) evaluations 10180 fit 2572.51 change -0.001475MxComputeGradientDescent(SLSQP) evaluations 11776 fit 2572.5 change -0.00118  MxComputeGradientDescent(SLSQP) evaluations 13144 fit 2572.49 change -4.074e-05MxComputeGradientDescent(SLSQP) evaluations 14401 fit 2572.48 change -9.709e-06MxComputeGradientDescent(SLSQP) evaluations 15656 fit 2572.48 change -0.0001146MxComputeGradientDescent(SLSQP) evaluations 16933 fit 2572.48 change -3.905e-05MxComputeGradientDescent(SLSQP) evaluations 18098 fit 2572.48 change -5.999e-05MxComputeGradientDescent(SLSQP) evaluations 19369 fit 2572.47 change -0.008841 MxComputeGradientDescent(SLSQP) evaluations 20527 fit 2572.44 change -0.004264MxComputeGradientDescent(SLSQP) evaluations 21789 fit 2572.38 change -4.333e-07MxComputeGradientDescent(SLSQP) evaluations 22929 fit 2572.38 change -1.649e-06                                                                               Fit attempt 3, fit=2572.37757501822, new current best! (was 2627.92477729493)Beginning fit attempt 4 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 470 fit 2607.29 change -19.26MxComputeGradientDescent(SLSQP) evaluations 1751 fit 2580.35 change -0.5965MxComputeGradientDescent(SLSQP) evaluations 3025 fit 2573.65 change -0.1384MxComputeGradientDescent(SLSQP) evaluations 4294 fit 2572.66 change -0.09478                                                                            Fit attempt 4, fit=2572.3775750087, new current best! (was 2572.37757501822)Beginning fit attempt 5 of at maximum 10 extra tries                        MxComputeGradientDescent(SLSQP) evaluations 117 fit 6358.65MxComputeGradientDescent(SLSQP) evaluations 1176 fit 2716.57 change -3.293MxComputeGradientDescent(SLSQP) evaluations 2456 fit 2671.77 change -6.257MxComputeGradientDescent(SLSQP) evaluations 3733 fit 2608.11 change -5.298MxComputeGradientDescent(SLSQP) evaluations 4887 fit 2575.73 change -3.079MxComputeGradientDescent(SLSQP) evaluations 6027 fit 2572.42 change -0.01491                                                                            Fit attempt 5, fit=2572.37759073324, worse than previous best (2572.3775750087)Beginning fit attempt 6 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 1176 fit 2735.5 change -4.991MxComputeGradientDescent(SLSQP) evaluations 2459 fit 2650.41 change -1.784MxComputeGradientDescent(SLSQP) evaluations 3731 fit 2638.56 change -0.1122MxComputeGradientDescent(SLSQP) evaluations 4880 fit 2636.48 change -0.7118MxComputeGradientDescent(SLSQP) evaluations 6139 fit 2609.97 change -3.217 MxComputeGradientDescent(SLSQP) evaluations 7279 fit 2602.93 change -0.003328MxComputeGradientDescent(SLSQP) evaluations 8533 fit 2602.92 change -4.604e-07                                                                              Fit attempt 6, fit=2602.92155913919, worse than previous best (2572.3775750087)Beginning fit attempt 7 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 957 fit 2906.66 change -74.79MxComputeGradientDescent(SLSQP) evaluations 2252 fit 2768.76 change -11.54MxComputeGradientDescent(SLSQP) evaluations 3528 fit 2732.93 change -2.459MxComputeGradientDescent(SLSQP) evaluations 4798 fit 2672.16 change -8.534MxComputeGradientDescent(SLSQP) evaluations 6056 fit 2614.91 change -1.834MxComputeGradientDescent(SLSQP) evaluations 7310 fit 2574.41 change -0.01942MxComputeGradientDescent(SLSQP) evaluations 8564 fit 2573.42 change -0.01615MxComputeGradientDescent(SLSQP) evaluations 9818 fit 2572.48 change -7.702e-05                                                                              Fit attempt 7, fit=2572.48494290614, worse than previous best (2572.3775750087)Beginning fit attempt 8 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 828 fit 2739.5 change -23.04MxComputeGradientDescent(SLSQP) evaluations 2112 fit 2684.26 change -5.996MxComputeGradientDescent(SLSQP) evaluations 3387 fit 2652.15 change -0.6092MxComputeGradientDescent(SLSQP) evaluations 4656 fit 2596.07 change -8.069 MxComputeGradientDescent(SLSQP) evaluations 5914 fit 2572.67 change -0.2454MxComputeGradientDescent(SLSQP) evaluations 7168 fit 2572.48 change -4.348e-07MxComputeGradientDescent(SLSQP) evaluations 8544 fit 2572.42 change -0.008128 MxComputeGradientDescent(SLSQP) evaluations 9798 fit 2572.38 change -4.734e-08                                                                              Beginning fit attempt 9 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1069 fit 3335.01 change -60.59MxComputeGradientDescent(SLSQP) evaluations 2245 fit 2957.53 change -120.5MxComputeGradientDescent(SLSQP) evaluations 3296 fit 2809.71 change -3.397MxComputeGradientDescent(SLSQP) evaluations 4329 fit 2751.45 change -2.638MxComputeGradientDescent(SLSQP) evaluations 5355 fit 2748.18 change -0.03322MxComputeGradientDescent(SLSQP) evaluations 6381 fit 2747.98 change -0.001428MxComputeGradientDescent(SLSQP) evaluations 7407 fit 2747.98 change -6.696e-07MxComputeGradientDescent(SLSQP) evaluations 8319 fit 2747.98 change -8.235e-06MxComputeGradientDescent(SLSQP) evaluations 9345 fit 2747.98 change -1.022e-05MxComputeGradientDescent(SLSQP) evaluations 10143 fit 2747.98 change -3.06e-06                                                                              Fit attempt 9, fit=2747.976691787, worse than previous best (2572.3775750087)Beginning fit attempt 10 of at maximum 10 extra tries                        MxComputeGradientDescent(SLSQP) evaluations 355 fit 7090.3 change -463.8MxComputeGradientDescent(SLSQP) evaluations 1421 fit 4031.23 change -42.1MxComputeGradientDescent(SLSQP) evaluations 2371 fit 3556.53 change -57.05MxComputeGradientDescent(SLSQP) evaluations 3315 fit 3099.63 change -25.54MxComputeGradientDescent(SLSQP) evaluations 4355 fit 2869.51 change -6.864MxComputeGradientDescent(SLSQP) evaluations 5392 fit 2805.67 change -9.376MxComputeGradientDescent(SLSQP) evaluations 6419 fit 2792.83 change -0.729MxComputeGradientDescent(SLSQP) evaluations 7445 fit 2788.71 change -0.5331MxComputeGradientDescent(SLSQP) evaluations 8471 fit 2785.46 change -0.06649MxComputeGradientDescent(SLSQP) evaluations 9497 fit 2784.63 change -0.1087 MxComputeGradientDescent(SLSQP) evaluations 10523 fit 2783.56 change -0.4024MxComputeGradientDescent(SLSQP) evaluations 11435 fit 2782.22 change -0.1345MxComputeGradientDescent(SLSQP) evaluations 12347 fit 2781.77 change -0.08574MxComputeGradientDescent(SLSQP) evaluations 13487 fit 2780.9 change -0.05752 MxComputeGradientDescent(SLSQP) evaluations 14399 fit 2780.74 change -0.0008138MxComputeGradientDescent(SLSQP) evaluations 15425 fit 2780.39 change -0.008286 MxComputeGradientDescent(SLSQP) evaluations 16452 fit 2779.6 change -0.3323   MxComputeGradientDescent(SLSQP) evaluations 17601 fit 2740.46 change -11.71MxComputeGradientDescent(SLSQP) evaluations 18641 fit 2635.63 change -2.771MxComputeGradientDescent(SLSQP) evaluations 19669 fit 2580.85 change -0.3936MxComputeGradientDescent(SLSQP) evaluations 20812 fit 2575.23 change -0.5824MxComputeGradientDescent(SLSQP) evaluations 21838 fit 2574.66 change -0.0009908MxComputeGradientDescent(SLSQP) evaluations 22978 fit 2574.64 change -0.0015   MxComputeGradientDescent(SLSQP) evaluations 24121 fit 2573.23 change -0.4036MxComputeGradientDescent(SLSQP) evaluations 25148 fit 2572.9 change -2.125e-05                                                                              Fit attempt 10, fit=2572.90464047946, worse than previous best (2572.3775750087)Final run, for Hessian and/or standard errors and/or confidence intervals       MxComputeNumericDeriv 82/1596MxComputeNumericDeriv 296/1596MxComputeNumericDeriv 506/1596MxComputeNumericDeriv 723/1596MxComputeNumericDeriv 923/1596MxComputeNumericDeriv 1130/1596MxComputeNumericDeriv 1332/1596MxComputeNumericDeriv 1543/1596                                                                                                        
+#> Beginning initial fit attemptFit attempt 0, fit=3076.55795135632, new current best! (was 3076.55795135632)Beginning fit attempt 1 of at maximum 10 extra tries                         Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=3076.55795135632, new current best! (was 3076.55795135632)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 2676 fit 2774.98 change -0.4001                                                                           Fit attempt 1, fit=2749.45980344113, new current best! (was 3076.55795135632)Beginning fit attempt 2 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 2111 fit 2749.87 change -0.09518                                                                            Fit attempt 2, fit=2748.74290395434, new current best! (was 2749.45980344113)Beginning fit attempt 3 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 1881 fit 2748.91 change -0.09803                                                                            Fit attempt 3, fit=2748.7429037639, new current best! (was 2748.74290395434)Beginning fit attempt 4 of at maximum 10 extra tries                        Fit attempt 4, fit=2756.77295021122, worse than previous best (2748.7429037639)Beginning fit attempt 5 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 1524 fit 2873.45 change -16.71                                                                          Fit attempt 5, fit=2756.77305395651, worse than previous best (2748.7429037639)Beginning fit attempt 6 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 3195 fit 2749 change -0.1246                                                                        Beginning fit attempt 7 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 4119 fit 2750.66 change -0.41                                                                         Fit attempt 7, fit=2749.45960750765, worse than previous best (2748.7429037639)Beginning fit attempt 8 of at maximum 10 extra tries                           Fit attempt 8, fit=2748.74290375754, new current best! (was 2748.7429037639)Beginning fit attempt 9 of at maximum 10 extra tries                        Fit attempt 9, fit=3071.28046735898, worse than previous best (2748.74290375754)Beginning fit attempt 10 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 78 fit 3211.06                                                          Fit attempt 10, fit=2748.74290375012, new current best! (was 2748.74290375754)Final run, for Hessian and/or standard errors and/or confidence intervals     MxComputeNumericDeriv 604/703                                                                                                      
+#> Beginning initial fit attemptFit attempt 0, fit=3076.55795135631, new current best! (was 3076.55795135632)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 2805 fit 2509.84 change -1.667MxComputeGradientDescent(SLSQP) evaluations 6024 fit 2498.89 change -0.003768MxComputeGradientDescent(SLSQP) evaluations 8876 fit 2498.88 change -4.426e-06                                                                              Fit attempt 1, fit=2498.88370292598, new current best! (was 3076.55795135631)Beginning fit attempt 2 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 117 fit 3128.42MxComputeGradientDescent(SLSQP) evaluations 2576 fit 2527.13 change -6.374MxComputeGradientDescent(SLSQP) evaluations 5111 fit 2498.89 change -0.003923                                                                             Beginning fit attempt 3 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1640 fit 2555.78 change -19.53MxComputeGradientDescent(SLSQP) evaluations 4070 fit 2499.45 change -0.188                                                                          Beginning fit attempt 4 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 947 fit 2722.33 change -3.441MxComputeGradientDescent(SLSQP) evaluations 3391 fit 2661.86 change -2.036MxComputeGradientDescent(SLSQP) evaluations 5808 fit 2500.88 change -0.002946MxComputeGradientDescent(SLSQP) evaluations 8316 fit 2500.88 change -2.202e-05MxComputeGradientDescent(SLSQP) evaluations 10724 fit 2500.88 change -9.144e-07MxComputeGradientDescent(SLSQP) evaluations 13139 fit 2500.88 change -7.138e-08                                                                               Fit attempt 4, fit=2500.87565672186, worse than previous best (2498.88370292598)Beginning fit attempt 5 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 1524 fit 2708.87 change -2.395MxComputeGradientDescent(SLSQP) evaluations 3840 fit 2654.32 change -2.993MxComputeGradientDescent(SLSQP) evaluations 6015 fit 2509.82 change -0.0006752MxComputeGradientDescent(SLSQP) evaluations 8181 fit 2509.82 change -2.379e-07                                                                              Fit attempt 5, fit=2509.81842706664, worse than previous best (2498.88370292598)Beginning fit attempt 6 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 1880 fit 2615.1 change -8.78MxComputeGradientDescent(SLSQP) evaluations 4309 fit 2516.49 change -7.587                                                                          Fit attempt 6, fit=2503.16473810832, worse than previous best (2498.88370292598)Beginning fit attempt 7 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 354 fit 2654.86 change -284.6MxComputeGradientDescent(SLSQP) evaluations 2798 fit 2562.67 change -0.9031MxComputeGradientDescent(SLSQP) evaluations 5215 fit 2499.96 change -0.04344MxComputeGradientDescent(SLSQP) evaluations 7609 fit 2499.9 change -6.579e-05MxComputeGradientDescent(SLSQP) evaluations 9693 fit 2499.78 change -0.04194 MxComputeGradientDescent(SLSQP) evaluations 11781 fit 2499.12 change -0.03633MxComputeGradientDescent(SLSQP) evaluations 13980 fit 2498.88 change -1.997e-06                                                                               Fit attempt 7, fit=2498.8837028373, new current best! (was 2498.88370292598)Beginning fit attempt 8 of at maximum 10 extra tries                        MxComputeGradientDescent(SLSQP) evaluations 1662 fit 2883.54 change -41.56MxComputeGradientDescent(SLSQP) evaluations 3758 fit 2666.15 change -1.039MxComputeGradientDescent(SLSQP) evaluations 5823 fit 2509.99 change -9.493MxComputeGradientDescent(SLSQP) evaluations 7992 fit 2503.89 change -1.605MxComputeGradientDescent(SLSQP) evaluations 9816 fit 2500.88 change -0.02002                                                                            Fit attempt 8, fit=2500.87584202547, worse than previous best (2498.8837028373)Beginning fit attempt 9 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 1526 fit 2597.82 change -2.774MxComputeGradientDescent(SLSQP) evaluations 3730 fit 2557.5 change -1.657 MxComputeGradientDescent(SLSQP) evaluations 5790 fit 2498.89 change -0.003705                                                                             Beginning fit attempt 10 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1295 fit 2658.74 change -1.365MxComputeGradientDescent(SLSQP) evaluations 3381 fit 2608.84 change -19.2 MxComputeGradientDescent(SLSQP) evaluations 5675 fit 2499.9 change -0.0002253                                                                             Fit attempt 10, fit=2499.89749179674, worse than previous best (2498.8837028373)Final run, for Hessian and/or standard errors and/or confidence intervals       MxComputeNumericDeriv 223/1596MxComputeNumericDeriv 501/1596MxComputeNumericDeriv 780/1596MxComputeNumericDeriv 1060/1596MxComputeNumericDeriv 1339/1596                                                                                                        
 saveRDS(res_lca, "res_lca_intro.rds")
 ```
 
@@ -655,16 +657,16 @@ saveRDS(res_lca, "res_lca_intro.rds")
 ``` r
 res_lca <- readRDS("res_lca_intro.rds")
 tab_lca_fit <- table_fit(res_lca)
-#> MxComputeGradientDescent(SLSQP) evaluations 335 fit 2813.17 change -20.23MxComputeGradientDescent(SLSQP) evaluations 996 fit 2686.34 change -39.18MxComputeGradientDescent(SLSQP) evaluations 1622 fit 2561.72 change -0.007703                                                                             MxComputeGradientDescent(SLSQP) evaluations 163 fit 3126.19 change -117.7                                                                         
+#> MxComputeGradientDescent(SLSQP) evaluations 1534 fit 2561.75 change -0.03825                                                                            
 tab_lca_fit
-#>   Name Classes    LL   n Parameters  AIC  BIC saBIC Entropy prob_min prob_max n_min n_max
-#> 1    1       1 -1538 291         18 3113 3179  3122    1.00     1.00     1.00  1.00  1.00
-#> 2    2       2 -1379 291         37 2831 2967  2850    0.94     0.97     0.99  0.23  0.77
-#> 3    3       3 -1286 291         56 2684 2890  2712    0.93     0.95     0.99  0.23  0.45
-#>   warning np_ratio np_local
-#> 1      NA     16.2     16.2
-#> 2    TRUE      7.9      3.7
-#> 3    TRUE      5.2      3.7
+#>   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy  prob_min
+#> 1    1       1 -1538.279 291         18 3112.558 3178.678 3121.596 1.0000000 1.0000000
+#> 2    2       2 -1374.371 291         37 2822.743 2958.656 2841.321 0.8960743 0.9555562
+#> 3    3       3 -1249.442 291         56 2610.884 2816.590 2639.002 0.9544476 0.9723859
+#>    prob_max     n_min     n_max warning  np_ratio  np_local
+#> 1 1.0000000 1.0000000 1.0000000      NA 16.166667 16.166667
+#> 2 0.9826240 0.3711340 0.6288660    TRUE  7.864865  6.000000
+#> 3 0.9899082 0.1443299 0.5051546    TRUE  5.196429  2.333333
 ```
 
 The BIC indicates that adding classes improves model fit.
@@ -676,51 +678,51 @@ For educational purposes, however, let's examine the 2-class solution.
 ``` r
 tab_lca_res <- table_results(res_lca[[2]])
 tab_lca_res
-#>                            label est_sig     se pval           confint  class
-#> 1           Variances.AM1.class1    1.00   <NA> <NA>              <NA> class1
-#> 2           Variances.AM2.class1    1.00   <NA> <NA>              <NA> class1
-#> 3           Variances.AM3.class1    1.00   <NA> <NA>              <NA> class1
-#> 4  class1.Thresholds[1,1].class1   -9.05  27.22 0.74   [-62.40, 44.29] class1
-#> 5  class1.Thresholds[1,2].class1  -17.42  27.82 0.53   [-71.94, 37.10] class1
-#> 6  class1.Thresholds[1,3].class1  -18.00  27.78 0.52   [-72.46, 36.46] class1
-#> 7  class1.Thresholds[2,1].class1   -2.12  54.44 0.97 [-108.81, 104.58] class1
-#> 8  class1.Thresholds[2,2].class1  -13.11  55.64 0.81  [-122.15, 95.94] class1
-#> 9  class1.Thresholds[2,3].class1  -15.76  55.57 0.78  [-124.67, 93.15] class1
-#> 10 class1.Thresholds[3,1].class1   -1.90  81.81 0.98 [-162.24, 158.44] class1
-#> 11 class1.Thresholds[3,2].class1   -1.99  83.45 0.98 [-165.56, 161.57] class1
-#> 12 class1.Thresholds[3,3].class1   -2.10  83.35 0.98 [-165.47, 161.27] class1
-#> 13 class1.Thresholds[4,1].class1   -0.20 108.04 1.00 [-211.95, 211.55] class1
-#> 14 class1.Thresholds[4,2].class1   -0.50 110.24 1.00 [-216.56, 215.55] class1
-#> 15 class1.Thresholds[4,3].class1   -0.38 109.93 1.00 [-215.84, 215.08] class1
-#> 16 class1.Thresholds[5,1].class1    0.37 125.42 1.00 [-245.46, 246.20] class1
-#> 17 class1.Thresholds[5,2].class1    0.14 129.66 1.00 [-253.98, 254.27] class1
-#> 18 class1.Thresholds[5,3].class1    0.26 128.24 1.00 [-251.09, 251.61] class1
-#> 19 class1.Thresholds[6,1].class1    1.27 133.02 0.99 [-259.44, 261.98] class1
-#> 20 class1.Thresholds[6,2].class1    1.11 138.75 0.99 [-270.85, 273.06] class1
-#> 21 class1.Thresholds[6,3].class1    0.99 137.90 0.99 [-269.28, 271.27] class1
-#> 22          Variances.AM1.class2    1.00   <NA> <NA>              <NA> class2
-#> 23          Variances.AM2.class2    1.00   <NA> <NA>              <NA> class2
-#> 24          Variances.AM3.class2    1.00   <NA> <NA>              <NA> class2
-#> 25 class2.Thresholds[1,1].class2   -0.14  13.64 0.99   [-26.88, 26.60] class2
-#> 26 class2.Thresholds[1,2].class2   -0.64  15.09 0.97   [-30.21, 28.94] class2
-#> 27 class2.Thresholds[1,3].class2   -0.55  14.40 0.97   [-28.76, 27.67] class2
-#> 28 class2.Thresholds[2,1].class2    0.18  27.14 0.99   [-53.02, 53.37] class2
-#> 29 class2.Thresholds[2,2].class2   -0.01  28.66 1.00   [-56.18, 56.15] class2
-#> 30 class2.Thresholds[2,3].class2   -0.02  27.69 1.00   [-54.30, 54.25] class2
-#> 31 class2.Thresholds[3,1].class2    1.59  29.57 0.96   [-56.37, 59.55] class2
-#> 32 class2.Thresholds[3,2].class2    0.46  38.56 0.99   [-75.12, 76.04] class2
-#> 33 class2.Thresholds[3,3].class2    0.83  34.02 0.98   [-65.85, 67.51] class2
-#> 34 class2.Thresholds[4,1].class2    7.71  29.57 0.79   [-50.24, 65.67] class2
-#> 35 class2.Thresholds[4,2].class2    0.77  46.70 0.99   [-90.75, 92.30] class2
-#> 36 class2.Thresholds[4,3].class2    1.62  36.55 0.96   [-70.03, 73.26] class2
-#> 37 class2.Thresholds[5,1].class2    8.24  29.57 0.78   [-49.72, 66.19] class2
-#> 38 class2.Thresholds[5,2].class2    1.42  50.65 0.98  [-97.85, 100.70] class2
-#> 39 class2.Thresholds[5,3].class2    8.52  36.55 0.82   [-63.12, 80.16] class2
-#> 40 class2.Thresholds[6,1].class2   10.10  29.57 0.73   [-47.86, 68.05] class2
-#> 41 class2.Thresholds[6,2].class2    1.43  52.30 0.98 [-101.09, 103.94] class2
-#> 42 class2.Thresholds[6,3].class2   11.65  36.55 0.75   [-59.99, 83.29] class2
-#> 43          mix2.weights[1,1].NA    1.00   <NA> <NA>              <NA>   <NA>
-#> 44          mix2.weights[1,2].NA    0.29  46.92 0.99   [-91.67, 92.26]   <NA>
+#>                            label  est_sig      se pval             confint  class
+#> 1           Variances.AM1.class1     1.00    <NA> <NA>                <NA> class1
+#> 2           Variances.AM2.class1     1.00    <NA> <NA>                <NA> class1
+#> 3           Variances.AM3.class1     1.00    <NA> <NA>                <NA> class1
+#> 4  class1.Thresholds[1,1].class1 -0.99***    0.11 0.00      [-1.21, -0.77] class1
+#> 5  class1.Thresholds[1,2].class1 -1.31***    0.13 0.00      [-1.57, -1.05] class1
+#> 6  class1.Thresholds[1,3].class1 -1.25***    0.13 0.00      [-1.50, -1.00] class1
+#> 7  class1.Thresholds[2,1].class1 -0.75***    0.11 0.00      [-0.96, -0.54] class1
+#> 8  class1.Thresholds[2,2].class1 -0.92***    0.11 0.00      [-1.14, -0.70] class1
+#> 9  class1.Thresholds[2,3].class1 -0.92***    0.11 0.00      [-1.14, -0.71] class1
+#> 10 class1.Thresholds[3,1].class1  -0.31**    0.10 0.00      [-0.51, -0.12] class1
+#> 11 class1.Thresholds[3,2].class1 -0.60***    0.10 0.00      [-0.80, -0.40] class1
+#> 12 class1.Thresholds[3,3].class1 -0.52***    0.10 0.00      [-0.72, -0.32] class1
+#> 13 class1.Thresholds[4,1].class1  1.00***    0.14 0.00        [0.73, 1.27] class1
+#> 14 class1.Thresholds[4,2].class1  0.38***    0.10 0.00        [0.17, 0.58] class1
+#> 15 class1.Thresholds[4,3].class1  0.57***    0.11 0.00        [0.35, 0.78] class1
+#> 16 class1.Thresholds[5,1].class1  2.31***    0.45 0.00        [1.43, 3.19] class1
+#> 17 class1.Thresholds[5,2].class1  1.82***    0.19 0.00        [1.45, 2.20] class1
+#> 18 class1.Thresholds[5,3].class1  1.41***    0.16 0.00        [1.09, 1.72] class1
+#> 19 class1.Thresholds[6,1].class1     7.34    <NA> <NA>                <NA> class1
+#> 20 class1.Thresholds[6,2].class1  1.82***    0.19 0.00        [1.45, 2.20] class1
+#> 21 class1.Thresholds[6,3].class1  2.10***    0.28 0.00        [1.54, 2.65] class1
+#> 22          Variances.AM1.class2     1.00    <NA> <NA>                <NA> class2
+#> 23          Variances.AM2.class2     1.00    <NA> <NA>                <NA> class2
+#> 24          Variances.AM3.class2     1.00    <NA> <NA>                <NA> class2
+#> 25 class2.Thresholds[1,1].class2   -14.68 1010.75 0.99 [-1995.71, 1966.34] class2
+#> 26 class2.Thresholds[1,2].class2    -8.15    <NA> <NA>                <NA> class2
+#> 27 class2.Thresholds[1,3].class2   -13.10 2839.51 1.00 [-5578.44, 5552.24] class2
+#> 28 class2.Thresholds[2,1].class2    -9.43    <NA> <NA>                <NA> class2
+#> 29 class2.Thresholds[2,2].class2    -7.61    <NA> <NA>                <NA> class2
+#> 30 class2.Thresholds[2,3].class2    -9.64 4268.64 1.00 [-8376.02, 8356.74] class2
+#> 31 class2.Thresholds[3,1].class2    -8.10    <NA> <NA>                <NA> class2
+#> 32 class2.Thresholds[3,2].class2    -7.30 1927.09 1.00 [-3784.32, 3769.72] class2
+#> 33 class2.Thresholds[3,3].class2    -2.14    <NA> <NA>                <NA> class2
+#> 34 class2.Thresholds[4,1].class2    -1.43    <NA> <NA>                <NA> class2
+#> 35 class2.Thresholds[4,2].class2    -1.89    1.00 0.06       [-3.84, 0.07] class2
+#> 36 class2.Thresholds[4,3].class2    -1.23    <NA> <NA>                <NA> class2
+#> 37 class2.Thresholds[5,1].class2    -0.56    <NA> <NA>                <NA> class2
+#> 38 class2.Thresholds[5,2].class2    -1.27    0.95 0.18       [-3.14, 0.59] class2
+#> 39 class2.Thresholds[5,3].class2    -0.47    <NA> <NA>                <NA> class2
+#> 40 class2.Thresholds[6,1].class2     0.81    <NA> <NA>                <NA> class2
+#> 41 class2.Thresholds[6,2].class2     0.63    0.92 0.49       [-1.17, 2.42] class2
+#> 42 class2.Thresholds[6,3].class2     0.53    <NA> <NA>                <NA> class2
+#> 43          mix2.weights[1,1].NA     1.00    <NA> <NA>                <NA>   <NA>
+#> 44          mix2.weights[1,2].NA  0.61***    0.09 0.00        [0.43, 0.78]   <NA>
 #> 
 #> Note: Standard errors are unavailable or non-finite.
 #> Note: Hessian is not positive definite.
@@ -753,7 +755,7 @@ individual_class <- predict_class(res_lca[[2]])
 table(df$AM1[individual_class == 1])
 #> 
 #>  1  2  3  4  5  6  7 
-#>  0  4  1 89 50 57 23
+#> 29 12 27 85 27  2  0
 ```
 
 
@@ -765,48 +767,48 @@ tab_lca_prob <- table_prob(res_lca[[2]])
 # Let's format it for easier visual interpretation:
 format_numeric(tab_lca_prob, digits = 2)
 #>    Variable Category Probability  group
-#> 1       AM1        1        0.00 class1
-#> 2       AM1        2        0.02 class1
-#> 3       AM1        3        0.01 class1
-#> 4       AM1        4        0.39 class1
-#> 5       AM1        5        0.22 class1
-#> 6       AM1        6        0.25 class1
-#> 7       AM1        7        0.10 class1
-#> 8       AM2        1        0.00 class1
-#> 9       AM2        2        0.00 class1
-#> 10      AM2        3        0.02 class1
-#> 11      AM2        4        0.28 class1
-#> 12      AM2        5        0.25 class1
-#> 13      AM2        6        0.31 class1
-#> 14      AM2        7        0.13 class1
-#> 15      AM3        1        0.00 class1
-#> 16      AM3        2        0.00 class1
-#> 17      AM3        3        0.02 class1
-#> 18      AM3        4        0.33 class1
-#> 19      AM3        5        0.25 class1
-#> 20      AM3        6        0.24 class1
-#> 21      AM3        7        0.16 class1
-#> 22      AM1        1        0.45 class2
-#> 23      AM1        2        0.13 class2
-#> 24      AM1        3        0.37 class2
-#> 25      AM1        4        0.06 class2
-#> 26      AM1        5        0.00 class2
-#> 27      AM1        6        0.00 class2
-#> 28      AM1        7        0.00 class2
-#> 29      AM2        1        0.26 class2
-#> 30      AM2        2        0.23 class2
-#> 31      AM2        3        0.18 class2
-#> 32      AM2        4        0.10 class2
-#> 33      AM2        5        0.14 class2
-#> 34      AM2        6        0.00 class2
-#> 35      AM2        7        0.08 class2
-#> 36      AM3        1        0.29 class2
-#> 37      AM3        2        0.20 class2
-#> 38      AM3        3        0.31 class2
-#> 39      AM3        4        0.15 class2
-#> 40      AM3        5        0.05 class2
-#> 41      AM3        6        0.00 class2
-#> 42      AM3        7        0.00 class2
+#> 1       AM1        1        0.16 class1
+#> 2       AM1        2        0.07 class1
+#> 3       AM1        3        0.15 class1
+#> 4       AM1        4        0.46 class1
+#> 5       AM1        5        0.15 class1
+#> 6       AM1        6        0.01 class1
+#> 7       AM1        7        0.00 class1
+#> 8       AM2        1        0.09 class1
+#> 9       AM2        2        0.08 class1
+#> 10      AM2        3        0.09 class1
+#> 11      AM2        4        0.37 class1
+#> 12      AM2        5        0.32 class1
+#> 13      AM2        6        0.00 class1
+#> 14      AM2        7        0.03 class1
+#> 15      AM3        1        0.11 class1
+#> 16      AM3        2        0.07 class1
+#> 17      AM3        3        0.12 class1
+#> 18      AM3        4        0.41 class1
+#> 19      AM3        5        0.21 class1
+#> 20      AM3        6        0.06 class1
+#> 21      AM3        7        0.02 class1
+#> 22      AM1        1        0.00 class2
+#> 23      AM1        2        0.00 class2
+#> 24      AM1        3        0.00 class2
+#> 25      AM1        4        0.08 class2
+#> 26      AM1        5        0.21 class2
+#> 27      AM1        6        0.50 class2
+#> 28      AM1        7        0.21 class2
+#> 29      AM2        1        0.00 class2
+#> 30      AM2        2        0.00 class2
+#> 31      AM2        3        0.00 class2
+#> 32      AM2        4        0.03 class2
+#> 33      AM2        5        0.07 class2
+#> 34      AM2        6        0.63 class2
+#> 35      AM2        7        0.27 class2
+#> 36      AM3        1        0.00 class2
+#> 37      AM3        2        0.00 class2
+#> 38      AM3        3        0.02 class2
+#> 39      AM3        4        0.09 class2
+#> 40      AM3        5        0.21 class2
+#> 41      AM3        6        0.38 class2
+#> 42      AM3        7        0.30 class2
 ```
 
 We see that the majority of people in class 1 scored a 4 on all indicators,
@@ -875,7 +877,8 @@ k <- 1:10
 L <- 2
 M <- ncol(df_lca)
 nrow(df) / ((k-1)+k*((L-1)*M))
-#>  [1] 97.0 41.6 26.5 19.4 15.3 12.7 10.8  9.4  8.3  7.5
+#>  [1] 97.000000 41.571429 26.454545 19.400000 15.315789 12.652174 10.777778  9.387097  8.314286
+#> [10]  7.461538
 ```
 
 We can fit the model:
@@ -886,10 +889,10 @@ res_bin <- mx_lca(
   df_bin,
   classes = 1:4
 )
-#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesFit attempt 3, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 4 of at maximum 10 extra tries                       Beginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
-#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Fit attempt 1, fit=1040.8033489588, new current best! (was 1191.2490839595)Beginning fit attempt 2 of at maximum 10 extra tries                       Beginning fit attempt 3 of at maximum 10 extra triesFit attempt 3, fit=1040.80334895879, new current best! (was 1040.8033489588)Beginning fit attempt 4 of at maximum 10 extra tries                        Beginning fit attempt 5 of at maximum 10 extra triesFit attempt 5, fit=1040.80334895879, new current best! (was 1040.80334895879)Beginning fit attempt 6 of at maximum 10 extra tries                         Beginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
-#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Fit attempt 1, fit=985.934481289332, new current best! (was 1191.2490839595)Beginning fit attempt 2 of at maximum 10 extra tries                        Fit attempt 2, fit=985.934481289203, new current best! (was 985.934481289332)Beginning fit attempt 3 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 54 fit 988.24 change -11.17                                                                       Beginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
-#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Fit attempt 1, fit=985.93448128921, new current best! (was 1191.2490839595)Beginning fit attempt 2 of at maximum 10 extra tries                       Beginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesBeginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesFit attempt 6, fit=985.934481289206, new current best! (was 985.93448128921)Beginning fit attempt 7 of at maximum 10 extra tries                        MxComputeGradientDescent(SLSQP) evaluations 36 fit 994.158                                                          Beginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Beginning fit attempt 2 of at maximum 10 extra triesBeginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesFit attempt 4, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 5 of at maximum 10 extra tries                       Beginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Fit attempt 1, fit=986.83537240976, new current best! (was 1191.2490839595)Beginning fit attempt 2 of at maximum 10 extra tries                       Fit attempt 2, fit=986.835372409652, new current best! (was 986.83537240976)Beginning fit attempt 3 of at maximum 10 extra tries                        Fit attempt 3, fit=986.835372409652, new current best! (was 986.835372409652)Beginning fit attempt 4 of at maximum 10 extra tries                         Beginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesFit attempt 9, fit=986.835372409651, new current best! (was 986.835372409652)Beginning fit attempt 10 of at maximum 10 extra tries                        Final run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Fit attempt 1, fit=985.934481289206, new current best! (was 1191.2490839595)Beginning fit attempt 2 of at maximum 10 extra tries                        Beginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 56 fit 991.723 change -9.943                                                                        Beginning fit attempt 5 of at maximum 10 extra triesBeginning fit attempt 6 of at maximum 10 extra triesFit attempt 6, fit=985.934481289206, new current best! (was 985.934481289206)Beginning fit attempt 7 of at maximum 10 extra tries                         Beginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesBeginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
+#> Beginning initial fit attemptFit attempt 0, fit=1191.2490839595, new current best! (was 1191.2490839595)Beginning fit attempt 1 of at maximum 10 extra tries                       Fit attempt 1, fit=985.934481289252, new current best! (was 1191.2490839595)Beginning fit attempt 2 of at maximum 10 extra tries                        Fit attempt 2, fit=985.934481289216, new current best! (was 985.934481289252)Beginning fit attempt 3 of at maximum 10 extra tries                         Beginning fit attempt 4 of at maximum 10 extra triesFit attempt 4, fit=985.934481289207, new current best! (was 985.934481289216)Beginning fit attempt 5 of at maximum 10 extra tries                         Beginning fit attempt 6 of at maximum 10 extra triesBeginning fit attempt 7 of at maximum 10 extra triesBeginning fit attempt 8 of at maximum 10 extra triesBeginning fit attempt 9 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 307 fit 985.943 change -0.02357                                                                           Beginning fit attempt 10 of at maximum 10 extra triesFinal run, for Hessian and/or standard errors and/or confidence intervals                                                                         
 saveRDS(res_bin, "res_bin_intro.rds")
 ```
 
@@ -898,16 +901,16 @@ saveRDS(res_bin, "res_bin_intro.rds")
 res_bin <- readRDS("res_bin_intro.rds")
 tab_bin_fit <- table_fit(res_bin)
 tab_bin_fit
-#>   Name Classes   LL   n Parameters  AIC  BIC saBIC Entropy prob_min prob_max n_min n_max
-#> 1    1       1 -596 291          3 1197 1208  1199    1.00     1.00     1.00  1.00  1.00
-#> 2    2       2 -520 291          7 1055 1081  1058    0.83     0.93     0.99  0.39  0.61
-#> 3    3       3 -493 291         11 1008 1048  1013    0.65     0.31     0.98  0.11  0.48
-#> 4    4       4 -493 291         15 1016 1071  1023    0.56     0.00     1.00  0.00  0.42
-#>   warning np_ratio np_local
-#> 1      NA       97       97
-#> 2    TRUE       42       38
-#> 3    TRUE       26       11
-#> 4    TRUE       19        0
+#>   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy  prob_min
+#> 1    1       1 -595.6245 291          3 1197.249 1208.269 1198.755 1.0000000 1.0000000
+#> 2    2       2 -493.4177 291          7 1000.835 1026.549 1004.350 0.8265864 0.9149059
+#> 3    3       3 -492.9672 291         11 1007.934 1048.341 1013.458 0.9142715 0.9395589
+#> 4    4       4 -492.9672 291         15 1015.934 1071.034 1023.466 0.5909632 0.0000000
+#>    prob_max     n_min     n_max warning np_ratio np_local
+#> 1 1.0000000 1.0000000 1.0000000      NA 97.00000 97.00000
+#> 2 0.9846493 0.4810997 0.5189003    TRUE 41.57143 46.66667
+#> 3 1.0000000 0.1752577 0.4123711    TRUE 26.45455 17.00000
+#> 4 0.9926952 0.0000000 0.4123711    TRUE 19.40000  0.00000
 ```
 
 Here, we see that the 2-class solution is best according to the BIC, and that `np_local` is near-zero for the 3- and 4-class solution.
@@ -925,12 +928,12 @@ tab_bin_prob <- tab_bin_prob[!tab_bin_prob$Category == 1, -2]
 # Let's format it for easier visual interpretation:
 format_numeric(tab_bin_prob, digits = 2)
 #>    Variable Probability  group
-#> 2       AM1        0.99 class1
-#> 4       AM2        0.80 class1
-#> 6       AM3        1.00 class1
-#> 8       AM1        0.32 class2
-#> 10      AM2        0.21 class2
-#> 12      AM3        0.21 class2
+#> 2       AM1        0.91 class1
+#> 4       AM2        0.74 class1
+#> 6       AM3        0.74 class1
+#> 8       AM1        0.09 class2
+#> 10      AM2        0.00 class2
+#> 12      AM3        0.16 class2
 ```
 
 We see that people in class 2 tend to score 1 more often than people in class 1.
@@ -970,7 +973,8 @@ k <- 1:10
 L <- 2
 M <- ncol(df_lca)
 nrow(df) / ((k-1)+k*((L-1)*M) + 1 + k) 
-#>  [1] 58.2 29.1 19.4 14.6 11.6  9.7  8.3  7.3  6.5  5.8
+#>  [1] 58.200000 29.100000 19.400000 14.550000 11.640000  9.700000  8.314286  7.275000  6.466667
+#> [10]  5.820000
 ```
 
 So following our rule of thumb, we could safely estimate up to 3 classes:
@@ -981,9 +985,9 @@ res_mixed <- mx_mixed_lca(
   df_mixed,
   classes = 1:3
 )
-#> MxComputeSimAnnealing(tsallis1996) evaluations 839 fit 3445.92 change 0MxComputeSimAnnealing(tsallis1996) evaluations 1883 fit 2586.2 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2860 fit 1844.31 change 5.227MxComputeSimAnnealing(tsallis1996) evaluations 3832 fit 3323.57 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 4764 fit 3043.16 change 1091MxComputeSimAnnealing(tsallis1996) evaluations 5712 fit 1824.02 change -1581MxComputeSimAnnealing(tsallis1996) evaluations 6655 fit 2534.14 change 709.9MxComputeSimAnnealing(tsallis1996) evaluations 7597 fit 3077.35 change 1243 MxComputeSimAnnealing(tsallis1996) evaluations 8517 fit 1824.91 change -180.9MxComputeSimAnnealing(tsallis1996) evaluations 9465 fit 1824.36 change 0.3513MxComputeSimAnnealing(tsallis1996) evaluations 10375 fit 1824.01 change -4.976MxComputeSimAnnealing(tsallis1996) evaluations 11304 fit 1824.08 change 0.07132MxComputeSimAnnealing(tsallis1996) evaluations 12226 fit 1824.01 change -28.23                                                                               
-#> MxComputeSimAnnealing(tsallis1996) evaluations 182 fit 2210.3 change -731.2MxComputeSimAnnealing(tsallis1996) evaluations 854 fit 2941.54 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 1525 fit 2854.66 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2186 fit 2854.66 change 0MxComputeSimAnnealing(tsallis1996) evaluations 2848 fit 2778.4 change 419.2MxComputeSimAnnealing(tsallis1996) evaluations 3486 fit 2019.83 change 48.25MxComputeSimAnnealing(tsallis1996) evaluations 4120 fit 2466.54 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 4745 fit 1884.81 change -78.1MxComputeSimAnnealing(tsallis1996) evaluations 5372 fit 1825.31 change -1523MxComputeSimAnnealing(tsallis1996) evaluations 6007 fit 7659.07 change 5751 MxComputeSimAnnealing(tsallis1996) evaluations 6645 fit 1818.43 change 0.8217MxComputeSimAnnealing(tsallis1996) evaluations 7279 fit 1925.15 change 0     MxComputeSimAnnealing(tsallis1996) evaluations 7897 fit 6510.39 change 4691MxComputeSimAnnealing(tsallis1996) evaluations 8515 fit 2157.38 change 339.1MxComputeSimAnnealing(tsallis1996) evaluations 9131 fit 1818.14 change -20.92MxComputeSimAnnealing(tsallis1996) evaluations 9747 fit 2224.04 change 406.5 MxComputeSimAnnealing(tsallis1996) evaluations 10362 fit 2344.94 change 0   MxComputeSimAnnealing(tsallis1996) evaluations 10948 fit 3611.29 change 1794MxComputeSimAnnealing(tsallis1996) evaluations 11544 fit 1817.24 change 0.05512MxComputeSimAnnealing(tsallis1996) evaluations 12116 fit 1828.43 change 11.21  MxComputeSimAnnealing(tsallis1996) evaluations 12706 fit 1818.96 change -1810MxComputeSimAnnealing(tsallis1996) evaluations 13341 fit 1817.28 change -95.15MxComputeSimAnnealing(tsallis1996) evaluations 13943 fit 1817.19 change -0.0006145MxComputeSimAnnealing(tsallis1996) evaluations 14548 fit 1819.68 change 2.492     MxComputeSimAnnealing(tsallis1996) evaluations 15120 fit 1819.91 change 2.245MxComputeSimAnnealing(tsallis1996) evaluations 15712 fit 1817.19 change -0.002278MxComputeSimAnnealing(tsallis1996) evaluations 16324 fit 1817.18 change 2.352e-06MxComputeSimAnnealing(tsallis1996) evaluations 16924 fit 1817.19 change -94.12   MxComputeSimAnnealing(tsallis1996) evaluations 17481 fit 2279.22 change 462   MxComputeSimAnnealing(tsallis1996) evaluations 18073 fit 3608.99 change 1792MxComputeSimAnnealing(tsallis1996) evaluations 18631 fit 1817.18 change -0.332MxComputeSimAnnealing(tsallis1996) evaluations 19216 fit 1817.25 change -1.152                                                                              
-#> Beginning initial fit attemptFit attempt 0, fit=1817.17759927602, new current best! (was 1817.17759927603)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 454 fit 1827.5 change -1.119MxComputeGradientDescent(SLSQP) evaluations 1457 fit 1812.42 change -0.0003981                                                                              Fit attempt 1, fit=1812.41758632867, new current best! (was 1817.17759927602)Beginning fit attempt 2 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 811 fit 1837.4 change -0.6629MxComputeGradientDescent(SLSQP) evaluations 2241 fit 1830.04 change -0.0001283                                                                              Fit attempt 2, fit=1830.0374329713, worse than previous best (1812.41758632867)Beginning fit attempt 3 of at maximum 10 extra tries                           MxComputeGradientDescent(SLSQP) evaluations 446 fit 1812.48 change -0.2234                                                                          Beginning fit attempt 4 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1499 fit 2056.17 change -0.00143                                                                            Fit attempt 4, fit=2056.16156919076, worse than previous best (1812.41758632867)Beginning fit attempt 5 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 378 fit 1813.69 change -1.001                                                                         Fit attempt 5, fit=1812.41760007133, worse than previous best (1812.41758632867)Beginning fit attempt 6 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 967 fit 1836.16 change -0.0109MxComputeGradientDescent(SLSQP) evaluations 2391 fit 1833.97 change -3.164e-05                                                                              Fit attempt 6, fit=1829.80298406985, worse than previous best (1812.41758632867)Beginning fit attempt 7 of at maximum 10 extra tries                            MxComputeGradientDescent(SLSQP) evaluations 278 fit 1833.33 change -7.455                                                                         Fit attempt 7, fit=1812.41758614693, new current best! (was 1812.41758632867)Beginning fit attempt 8 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 510 fit 1812.48 change -0.1278                                                                          Beginning fit attempt 9 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 1085 fit 1827.5 change -0.04015MxComputeGradientDescent(SLSQP) evaluations 2493 fit 1827.38 change -1.906e-07                                                                              Fit attempt 9, fit=1827.37644993461, worse than previous best (1812.41758614693)Beginning fit attempt 10 of at maximum 10 extra tries                           Fit attempt 10, fit=1812.41758580936, new current best! (was 1812.41758614693)Final run, for Hessian and/or standard errors and/or confidence intervals     MxComputeNumericDeriv 10/120                                                                                                     
+#> MxComputeSimAnnealing(tsallis1996) evaluations 1147 fit 3445.92 change 38.97MxComputeSimAnnealing(tsallis1996) evaluations 3049 fit 88603.3 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 4870 fit 1895.9 change -1105MxComputeSimAnnealing(tsallis1996) evaluations 6648 fit 1855.35 change -1221MxComputeSimAnnealing(tsallis1996) evaluations 8401 fit 2708.71 change 883  MxComputeSimAnnealing(tsallis1996) evaluations 10154 fit 1824.01 change -1287MxComputeSimAnnealing(tsallis1996) evaluations 11897 fit 3082.74 change 1252                                                                             
+#> MxComputeSimAnnealing(tsallis1996) evaluations 646 fit 2809.81 change 0MxComputeSimAnnealing(tsallis1996) evaluations 1901 fit 2479.94 change 367MxComputeSimAnnealing(tsallis1996) evaluations 3144 fit 2403.96 change 303.6MxComputeSimAnnealing(tsallis1996) evaluations 4364 fit 1861.04 change -402 MxComputeSimAnnealing(tsallis1996) evaluations 5589 fit 1843.95 change 19.71MxComputeSimAnnealing(tsallis1996) evaluations 6795 fit 2213.56 change 0    MxComputeSimAnnealing(tsallis1996) evaluations 7987 fit 1822.15 change -9.223MxComputeSimAnnealing(tsallis1996) evaluations 9178 fit 2183.53 change -1336 MxComputeSimAnnealing(tsallis1996) evaluations 10367 fit 2318.54 change 499 MxComputeSimAnnealing(tsallis1996) evaluations 11552 fit 1821.46 change -359.2MxComputeSimAnnealing(tsallis1996) evaluations 12728 fit 1823.22 change -1389 MxComputeSimAnnealing(tsallis1996) evaluations 13904 fit 1819.43 change -363.5MxComputeSimAnnealing(tsallis1996) evaluations 15083 fit 1825.93 change -5431 MxComputeSimAnnealing(tsallis1996) evaluations 16261 fit 1819.39 change 0.0001143MxComputeSimAnnealing(tsallis1996) evaluations 17438 fit 1821.83 change 2.458    MxComputeSimAnnealing(tsallis1996) evaluations 18605 fit 1819.61 change -562.4                                                                              
+#> Beginning initial fit attemptFit attempt 0, fit=1816.55996468621, new current best! (was 1816.55996468621)Beginning fit attempt 1 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 141 fit 1818.7 change -1.057                                                                        Fit attempt 1, fit=1816.55996466704, new current best! (was 1816.55996468621)Beginning fit attempt 2 of at maximum 10 extra tries                         Beginning fit attempt 3 of at maximum 10 extra triesBeginning fit attempt 4 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 577 fit 1842.55 change -0.01754                                                                           Fit attempt 4, fit=1842.54658261721, worse than previous best (1816.55996466704)Beginning fit attempt 5 of at maximum 10 extra tries                            Fit attempt 5, fit=1862.16933299608, worse than previous best (1816.55996466704)Beginning fit attempt 6 of at maximum 10 extra tries                            Beginning fit attempt 7 of at maximum 10 extra triesMxComputeGradientDescent(SLSQP) evaluations 734 fit 1816.56 change -4.873e-06                                                                             Beginning fit attempt 8 of at maximum 10 extra triesFit attempt 8, fit=1816.55996202299, new current best! (was 1816.55996466704)Beginning fit attempt 9 of at maximum 10 extra tries                         MxComputeGradientDescent(SLSQP) evaluations 1073 fit 1816.42 change -0.03468                                                                            Fit attempt 9, fit=1816.30859957993, new current best! (was 1816.55996202299)Beginning fit attempt 10 of at maximum 10 extra tries                        Fit attempt 10, fit=1816.30859942127, new current best! (was 1816.30859957993)Final run, for Hessian and/or standard errors and/or confidence intervals     MxComputeNumericDeriv 47/120                                                                                                     
 saveRDS(res_mixed, "res_mixed_intro.rds")
 ```
 
@@ -991,16 +995,15 @@ saveRDS(res_mixed, "res_mixed_intro.rds")
 ``` r
 res_mixed <- readRDS("res_mixed_intro.rds")
 tab_mixed_fit <- table_fit(res_mixed)
-#> MxComputeGradientDescent(SLSQP) evaluations 248 fit 2082.62 change -2.512                                                                         
 tab_mixed_fit
-#>     Name Classes    LL   n Parameters  AIC  BIC saBIC Entropy prob_min prob_max n_min n_max
-#> 1  equal       1 -1028 291          5 2066 2085  2069    1.00     1.00     1.00  1.00  1.00
-#> 2 equal1       2  -912 291         10 1844 1881  1849    0.80     0.93     0.96  0.49  0.51
-#> 3 equal2       3  -906 291         15 1842 1898  1850    0.93     0.94     1.00  0.18  0.41
-#>   warning np_ratio np_local
-#> 1      NA       58       58
-#> 2      NA       29       32
-#> 3    TRUE       19       12
+#>     Name Classes         LL   n Parameters      AIC      BIC    saBIC   Entropy  prob_min
+#> 1  equal       1 -1028.0808 291          5 2066.162 2084.528 2068.672 1.0000000 1.0000000
+#> 2 equal1       2  -912.0007 291         10 1844.001 1880.735 1849.023 0.8044964 0.9349282
+#> 3 equal2       3  -908.1543 291         15 1846.309 1901.408 1853.840 0.8299415 0.8154539
+#>    prob_max     n_min     n_max warning np_ratio np_local
+#> 1 1.0000000 1.0000000 1.0000000      NA     58.2 58.20000
+#> 2 0.9646735 0.4914089 0.5085911      NA     29.1 31.77778
+#> 3 1.0000000 0.1958763 0.4226804    TRUE     19.4 13.15385
 ```
 
 Here, we see that the 2-class solution is best according to the BIC, and that `np_local` is low for the 3-class solution.
@@ -1128,13 +1131,13 @@ We also write it to a spreadsheet, so we can easily import it into other desktop
 ``` r
 tab <- table_results(res_lpa[[2]], columns = NULL)
 tab <- tab[tab$Category == "Means", c("lhs", "class", "est", "se")]
-tab$Mean <- glue::glue("{tab$est} ({tab$se})")
+tab$Mean <- paste0(tab$est, "(", tab$se, ")")
 tab <- reshape(tab[, c("class", "lhs", "Mean")], direction = "wide", idvar = "class", timevar = "lhs", sep = " ")
 write.csv(tab, "tab_res.csv", row.names = FALSE)
 tab
-#>    class     Mean AM     Mean CM
-#> 1 class1 5.02 (0.08) 2.93 (0.08)
-#> 5 class2 2.42 (0.30) 4.21 (0.14)
+#>    class    Mean AM    Mean CM
+#> 1 class1 5.02(0.08) 2.93(0.08)
+#> 5 class2 2.42(0.30) 4.21(0.14)
 ```
 
 To produce Figure 1, use the following code.

@@ -18,6 +18,10 @@ if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, err
   results = "markup"
 )
 }
+if(!requireNamespace("OpenMx", quietly = TRUE)){
+  run_everything <- FALSE
+  eval_results <- FALSE
+}
 cache_dir <- "lca_auxiliary_cache"
 cache_file <- function(name) file.path(cache_dir, paste0(name, ".rds"))
 
@@ -28,6 +32,7 @@ read_cached <- function(name) {
     ". Rebuild with run_everything=TRUE before enabling eval_results.")
   readRDS(file)
 }
+
 ```
 
 Latent class analysis (LCA) and latent profile analysis (LPA) identify unobserved groups using a set of observed indicator variables.

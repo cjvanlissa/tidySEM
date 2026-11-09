@@ -719,7 +719,7 @@ We also write it to a spreadsheet, so we can easily import it into other desktop
 ```{r eval = eval_results}
 tab <- table_results(res_lpa[[2]], columns = NULL)
 tab <- tab[tab$Category == "Means", c("lhs", "class", "est", "se")]
-tab$Mean <- glue::glue("{tab$est} ({tab$se})")
+tab$Mean <- paste0(tab$est, "(", tab$se, ")")
 tab <- reshape(tab[, c("class", "lhs", "Mean")], direction = "wide", idvar = "class", timevar = "lhs", sep = " ")
 write.csv(tab, "tab_res.csv", row.names = FALSE)
 tab

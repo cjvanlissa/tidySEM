@@ -31,6 +31,11 @@ df <- data_mix_ordinal
 df[1:4] <- lapply(df, ordered)
 mx_lca(data = df,
        classes = 2) -> res
+
+# Reduce the number of extra tries for model fitting (default: 10)
+mx_lca(data = df,
+       classes = 2,
+       extraTries = 2) -> res
 }
 }
 \references{
