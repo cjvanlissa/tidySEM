@@ -246,6 +246,12 @@ mx_growth_mixture <- function(model,
 #' mx_lca(data = df,
 #'        classes = 2) -> res
 #' }
+#'
+#' # Reduce the number of extra tries for model fitting (default: 10)
+#' mx_lca(data = df,
+#'        classes = 2,
+#'        extraTries = 2) -> res
+#' }
 # mx_lca(data = df,
 #        classes = 2, run = FALSE) -> res
 # res$class1 <- mxModel(model = res$class1,
@@ -299,7 +305,9 @@ mx_lca <- function(data = NULL,
     # out <- eval.parent(cl)
     if(run){
       cl[["model"]] <- out
-      cl[["extraTries"]] <- 10
+      if (is.null(cl[["extraTries"]])) {
+        cl[["extraTries"]] <- 10
+      }
       cl[[1L]] <- str2lang("OpenMx::mxTryHardOrdinal")
       keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
       cl <- cl[c(1, keep_these)]
