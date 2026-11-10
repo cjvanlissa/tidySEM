@@ -42,7 +42,6 @@ classification uncertainty.
 }
 \examples{
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 set.seed(2)
 dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 colnames(dat) <- c("SL", "SW", "PL", "PW")

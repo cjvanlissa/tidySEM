@@ -26,7 +26,6 @@ that class according to the model in \code{x}.
 }
 \examples{
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 dat <- iris[c(1:5, 50:55, 100:105),1:3]
 colnames(dat) <- letters[1:3]
 fit <- mx_profiles(data = dat, classes = 2)

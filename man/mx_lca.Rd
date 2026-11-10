@@ -29,6 +29,7 @@ binary or ordinal indicators.
 \dontrun{
 df <- data_mix_ordinal
 df[1:4] <- lapply(df, ordered)
+df <- df[1:100, 1, drop = FALSE]
 mx_lca(data = df,
        classes = 2) -> res
 

@@ -8,31 +8,17 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = requireNamespace("OpenMx", quietly = TRUE))
-run_everything <- suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
-options(scipen = 1, digits = 2)
-eval_results <- FALSE
-if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
-  eval_results <- TRUE
-  knitr::opts_chunk$set(
-  results = "markup"
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>",
+  eval = requireNamespace("OpenMx", quietly = TRUE),
+  out.width = "100%"
 )
-}
-if(!requireNamespace("OpenMx", quietly = TRUE)){
-  run_everything <- FALSE
-  eval_results <- FALSE
-}
-cache_dir <- "lca_auxiliary_cache"
-cache_file <- function(name) file.path(cache_dir, paste0(name, ".rds"))
-
-if (run_everything) dir.create(cache_dir, showWarnings = FALSE)
-read_cached <- function(name) {
-  file <- cache_file(name)
-  if (!file.exists(file)) stop("Missing cached result: ", file,
-    ". Rebuild with run_everything=TRUE before enabling eval_results.")
-  readRDS(file)
-}
-
+run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false"))))
+show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
+if (!run_openmx) run_everything <- show_results <- FALSE
+options(scipen = 1, digits = 2)
+if (show_results) knitr::opts_chunk$set(results = "markup")
 ```
 
 Latent class analysis (LCA) and latent profile analysis (LPA) identify unobserved groups using a set of observed indicator variables.
@@ -74,17 +60,14 @@ For the examples in this vignette, we will just fit a simple two-class model:
 ```{r fit-model-code, eval=FALSE}
 set.seed(297)
 lpa_model <- mx_profiles(measurement_data, classes = 2)
-saveRDS(lpa_model, cache_file("measurement"))
 ```
 
-```{r fit-model, include=FALSE, eval=run_everything}
+```{r fit-model, include=FALSE, eval=run_openmx && (run_everything || show_results)}
 set.seed(297)
-lpa_model <- mx_profiles(measurement_data, classes = 2)
-saveRDS(lpa_model, cache_file("measurement"))
+lpa_model <- tidySEM:::run_cached(mx_profiles(measurement_data, classes = 2))
 ```
 
-```{r fit-results, eval=eval_results}
-lpa_model <- read_cached("measurement")
+```{r fit-results, eval=show_results && run_openmx}
 table_fit(lpa_model)
 ```
 
@@ -96,8 +79,8 @@ head(cp$individual)
 cp$mostlikely.class
 ```
 
-```{r classification-results, echo=FALSE, eval=eval_results}
-cp <- class_prob(read_cached("measurement"))
+```{r classification-results, echo=FALSE, eval=show_results && run_openmx}
+cp <- class_prob(lpa_model)
 format_numeric(head(cp$individual))
 format_numeric(cp$mostlikely.class)
 ```
@@ -123,13 +106,12 @@ bch_mean <- BCH(lpa_model, data = df$distance)
 table_results(bch_mean, columns = NULL)
 ```
 
-```{r bch-mean-fit, include=FALSE, eval=run_everything}
-bch_mean <- BCH(lpa_model, data = df$distance)
-saveRDS(bch_mean, cache_file("bch_mean"))
+```{r bch-mean-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
+bch_mean <- tidySEM:::run_cached(BCH(lpa_model, data = df$distance))
 ```
 
-```{r bch-mean-results, echo=FALSE, eval=eval_results}
-table_results(read_cached("bch_mean"), columns = NULL)
+```{r bch-mean-results, echo=FALSE, eval=show_results && run_openmx}
+table_results(bch_mean, columns = NULL)
 ```
 
 The estimates describe class-specific distal means. They do **not** by themselves test whether the means differ. For an omnibus and pairwise comparison, use `lr_test()`; compare the means (`M`) rather than the entire auxiliary model.
@@ -138,13 +120,12 @@ The estimates describe class-specific distal means. They do **not** by themselve
 lr_test(bch_mean, compare = "M")
 ```
 
-```{r bch-lr-fit, include=FALSE, eval=run_everything}
-bch_lr <- lr_test(bch_mean, compare = "M")
-saveRDS(bch_lr, cache_file("bch_lr"))
+```{r bch-lr-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
+bch_lr <- tidySEM:::run_cached(lr_test(bch_mean, compare = "M"))
 ```
 
-```{r bch-lr-results, echo=FALSE, eval=eval_results}
-read_cached("bch_lr")
+```{r bch-lr-results, echo=FALSE, eval=show_results && run_openmx}
+bch_lr
 ```
 
 One crucial limitation of the BCH approach is that its standard errors are not valid,
@@ -161,14 +142,13 @@ bch_sex <- BCH(lpa_model, data = sex)
 table_prob(bch_sex)
 ```
 
-```{r bch-ordinal-fit, include=FALSE, eval=run_everything}
+```{r bch-ordinal-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
 sex <- ordered(df$sexpatient, levels = c("male", "female"))
-bch_sex <- BCH(lpa_model, data = sex)
-saveRDS(bch_sex, cache_file("bch_sex"))
+bch_sex <- tidySEM:::run_cached(BCH(lpa_model, data = sex))
 ```
 
-```{r bch-ordinal-results, echo=FALSE, eval=eval_results}
-table_prob(read_cached("bch_sex"))
+```{r bch-ordinal-results, echo=FALSE, eval=show_results && run_openmx}
+table_prob(bch_sex)
 ```
 
 ### A class-specific regression model
@@ -188,18 +168,19 @@ table_results(bch_reg, columns = c("label", "est_sig", "se", "pval", "confint", 
 lr_test(bch_reg, compare = "A")
 ```
 
-```{r bch-regression-fit, include=FALSE, eval=run_everything}
+```{r bch-regression-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
 df_aux <- df[, c("freqvisit", "distance"), drop = FALSE]
 df_aux$freqvisit <- as.numeric(df_aux$freqvisit)
-bch_reg <- BCH(lpa_model, model = "freqvisit ~ distance", data = df_aux)
-saveRDS(bch_reg, cache_file("bch_reg"))
-bch_reg_lr <- lr_test(bch_reg, compare = "A")
-saveRDS(bch_reg_lr, cache_file("bch_reg_lr"))
+bch_reg <- tidySEM:::run_cached(BCH(lpa_model, model = "freqvisit ~ distance", data = df_aux))
 ```
 
-```{r bch-regression-results, echo=FALSE, eval=eval_results}
-table_results(read_cached("bch_reg"), columns = NULL)
-read_cached("bch_reg_lr")
+```{r bch-regression-lr-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
+bch_reg_lr <- tidySEM:::run_cached(lr_test(bch_reg, compare = "A"))
+```
+
+```{r bch-regression-results, echo=FALSE, eval=show_results && run_openmx}
+table_results(bch_reg, columns = NULL)
+bch_reg_lr
 ```
 
 ## Two-step maximum likelihood
@@ -217,13 +198,11 @@ two_mean <- two_step(lpa_model, data = df$distance)
 table_results(two_mean, columns = NULL)
 ```
 
-```{r two-step-fit, include=FALSE, eval=run_everything}
-two_mean <- two_step(lpa_model, data = df$distance)
-saveRDS(two_mean, cache_file("two_mean"))
+```{r two-step-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
+two_mean <- tidySEM:::run_cached(two_step(lpa_model, data = df$distance))
 ```
 
-```{r two-step-results, echo=FALSE, eval=eval_results}
-two_mean <- read_cached("two_mean")
+```{r two-step-results, echo=FALSE, eval=show_results && run_openmx}
 table_results(two_mean, columns = NULL)
 ```
 
@@ -234,24 +213,20 @@ These are available in the attribute `attr(model, "se_robust")`, and `table_resu
 attr(two_mean, "se_robust")
 ```
 
-```{r two-step-se-results, echo=FALSE, eval=eval_results}
-attr(read_cached("two_mean"), "se_robust")
+```{r two-step-se-results, echo=FALSE, eval=show_results && run_openmx}
+attr(two_mean, "se_robust")
 ```
 
 For a custom auxiliary RAM model, the syntax can include multiple outcomes and regressions:
 
-```{r include=FALSE, eval=run_everything}
-two_reg <- two_step(
+```{r two-reg-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
+two_reg <- tidySEM:::run_cached(two_step(
   lpa_model,
   model = "freqvisit ~ distance",
   data = df_aux
-)
-saveRDS(two_reg, cache_file("two_reg"))
+))
 ```
 
-```{r include=FALSE, eval=eval_results}
-two_reg <- read_cached("two_reg")
-```
 
 ```{r echo = TRUE, eval = FALSE}
 two_reg <- two_step(
@@ -287,18 +262,17 @@ pseudo_mean <- pseudo_class(
 pseudo_mean
 ```
 
-```{r pseudo-lm-fit, include=FALSE, eval=run_everything}
+```{r pseudo-lm-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
 set.seed(2027)
-pseudo_mean <- pseudo_class(
+pseudo_mean <- tidySEM:::run_cached(pseudo_class(
   x = lpa_model,
   model = lm(distance ~ I(factor(class)) - 1, data = data),
   data = df[, "distance", drop = FALSE], m = 20
-)
-saveRDS(pseudo_mean, cache_file("pseudo_mean"))
+))
 ```
 
-```{r pseudo-lm-results, echo=FALSE, eval=eval_results}
-read_cached("pseudo_mean")
+```{r pseudo-lm-results, echo=FALSE, eval=show_results && run_openmx}
+pseudo_mean
 ```
 
 
@@ -317,17 +291,16 @@ pseudo_ram <- pseudo_class(
 pseudo_ram
 ```
 
-```{r pseudo-ram-fit, include=FALSE, eval=run_everything}
+```{r pseudo-ram-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
 set.seed(2028)
-pseudo_ram <- pseudo_class(
+pseudo_ram <- tidySEM:::run_cached(pseudo_class(
   x = lpa_model, model = "distance ~ 1",
   data = df[, "distance", drop = FALSE], m = 20
-)
-saveRDS(pseudo_ram, cache_file("pseudo_ram"))
+))
 ```
 
-```{r pseudo-ram-results, echo=FALSE, eval=eval_results}
-read_cached("pseudo_ram")
+```{r pseudo-ram-results, echo=FALSE, eval=show_results && run_openmx}
+pseudo_ram
 ```
 
 
@@ -353,21 +326,20 @@ pseudo_pred <- pseudo_class(
 pseudo_pred
 ```
 
-```{r pseudo-predict-fit, include=FALSE, eval=run_everything}
+```{r pseudo-predict-fit, include=FALSE, eval=run_openmx && (run_everything || show_results)}
 if (requireNamespace("nnet", quietly = TRUE)) {
   set.seed(2030)
-  pseudo_pred <- pseudo_class(
+  pseudo_pred <- tidySEM:::run_cached(pseudo_class(
     x = lpa_model,
     model = function(data) nnet::multinom(
       class ~ distance + freqvisit, data = data, trace = FALSE),
     data = df_aux, m = 20
-  )
-  saveRDS(pseudo_pred, cache_file("pseudo_pred"))
+  ))
 }
 ```
 
-```{r pseudo-predict-results, echo=FALSE, eval=eval_results}
-if (file.exists(cache_file("pseudo_pred"))) read_cached("pseudo_pred")
+```{r pseudo-predict-results, echo=FALSE, eval=show_results && run_openmx}
+if (exists("pseudo_pred", inherits = FALSE)) pseudo_pred
 ```
 
 The coefficients describe conditional associations with class membership relative to a reference class.

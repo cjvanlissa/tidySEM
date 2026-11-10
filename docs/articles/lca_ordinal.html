@@ -167,7 +167,7 @@ continuous data to de-clutter the table:</p>
 <th align="right">missing</th>
 <th align="right">unique</th>
 <th align="right">mode</th>
-<th align="right">mode_value</th>
+<th align="left">mode_value</th>
 <th align="right">v</th>
 </tr></thead>
 <tbody>
@@ -178,7 +178,7 @@ continuous data to de-clutter the table:</p>
 <td align="right">0</td>
 <td align="right">3</td>
 <td align="right">396</td>
-<td align="right">3</td>
+<td align="left">3</td>
 <td align="right">0.18</td>
 </tr>
 <tr class="even">
@@ -188,7 +188,7 @@ continuous data to de-clutter the table:</p>
 <td align="right">0</td>
 <td align="right">3</td>
 <td align="right">191</td>
-<td align="right">2</td>
+<td align="left">2</td>
 <td align="right">0.63</td>
 </tr>
 <tr class="odd">
@@ -198,7 +198,7 @@ continuous data to de-clutter the table:</p>
 <td align="right">0</td>
 <td align="right">3</td>
 <td align="right">203</td>
-<td align="right">2</td>
+<td align="left">2</td>
 <td align="right">0.64</td>
 </tr>
 </tbody>
@@ -212,7 +212,7 @@ continuous data to de-clutter the table:</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>,</span>
 <span>    scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="lca_fast_plot_desc.png" class="r-plt" alt="Bar charts for ordinal indicators" width="80%"><p class="caption">
+<img src="cache_lca_ordinal/lca_fast_plot_desc.png" class="r-plt" alt="Bar charts for ordinal indicators" width="100%"><p class="caption">
 Bar charts for ordinal indicators
 </p>
 </div>
@@ -286,7 +286,7 @@ disqualified.</p>
 <col width="12%">
 </colgroup>
 <thead><tr class="header">
-<th align="right">Name</th>
+<th align="left">Name</th>
 <th align="right">LL</th>
 <th align="right">n</th>
 <th align="right">Parameters</th>
@@ -299,7 +299,7 @@ disqualified.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
+<td align="left">1</td>
 <td align="right">-1078</td>
 <td align="right">439</td>
 <td align="right">6</td>
@@ -311,7 +311,7 @@ disqualified.</p>
 <td align="right">73</td>
 </tr>
 <tr class="even">
-<td align="right">2</td>
+<td align="left">2</td>
 <td align="right">-1012</td>
 <td align="right">439</td>
 <td align="right">13</td>
@@ -323,7 +323,7 @@ disqualified.</p>
 <td align="right">22</td>
 </tr>
 <tr class="odd">
-<td align="right">3</td>
+<td align="left">3</td>
 <td align="right">-997</td>
 <td align="right">439</td>
 <td align="right">20</td>
@@ -465,7 +465,7 @@ probabilities:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prob.html">plot_prob</a></span><span class="op">(</span><span class="va">res_final</span>, bw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="lca_fast_prob.png" class="r-plt" alt="Probability plot" width="100%"><p class="caption">
+<img src="cache_lca_ordinal/lca_fast_prob.png" class="r-plt" alt="Probability plot" width="100%"><p class="caption">
 Probability plot
 </p>
 </div>

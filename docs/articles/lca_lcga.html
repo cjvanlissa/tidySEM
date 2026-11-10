@@ -191,7 +191,7 @@ at the lower end of the scale.</p>
 <code class="sourceCode R"><span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">df</span>, direction <span class="op">=</span> <span class="st">"long"</span>, varying <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">scl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_dist.png" class="r-plt" alt="" width="80%"></p>
+<p><img src="cache_lca_lcga/plot_dist.png" class="r-plt" alt="" width="100%"></p>
 <p>As this type of skew can result in convergence problems in LCGA, we
 compared several transformations to reduce skew: The square and cube
 root, log, inverse, and Box-Cox transformations.</p>
@@ -241,15 +241,10 @@ root, log, inverse, and Box-Cox transformations.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span>, colour <span class="op">=</span> <span class="va">Transformation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"scl (rescaled to 0-1)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_trans.png" class="r-plt" alt="" width="80%"></p>
+<p><img src="cache_lca_lcga/plot_trans.png" class="r-plt" alt="" width="100%"></p>
 <p>Evidently, the Box-Cox transformation reduced skew the most.
 Consequently, we proceeded with the Box-Cox transformed scores for
 analysis.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">df_scores</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"time"</span>, <span class="st">"boxcox"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">dat</span>, direction <span class="op">=</span> <span class="st">"wide"</span>, v.names <span class="op">=</span> <span class="st">"boxcox"</span>, timevar <span class="op">=</span> <span class="st">"time"</span>,</span>
-<span>    idvar <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"boxcox."</span>, <span class="st">"scl"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="model-estimation">Model Estimation<a class="anchor" aria-label="anchor" href="#model-estimation"></a>
@@ -272,7 +267,7 @@ growth pattern this models will not be able to identify it.</p>
 <p><strong>NOTE: The time scales in this model are not correct; it
 currently assumes that all measurements are equidistant. Feel free to
 experiment with adjusting this.</strong></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">27796</span><span class="op">)</span></span>
 <span><span class="va">dat</span><span class="op">[[</span><span class="st">"id"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">res_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_growth_mixture.html">mx_growth_mixture</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"</span></span>
@@ -301,22 +296,19 @@ experiment with adjusting this.</strong></p>
 <span><span class="st">  s~NA*1</span></span>
 <span><span class="st">  step~NA*1</span></span>
 <span><span class="st">  "</span>,</span>
-<span>    classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
-<span><span class="co"># Additional iterations because of convergence problems for</span></span>
-<span><span class="co"># model 1:</span></span>
-<span><span class="va">res_step</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHardWideSearch</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, extraTries <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
-<p>Note that the first model showed convergence problems, throwing the
-error: <em>The model does not satisfy the first-order optimality
-conditions to the required accuracy, and no improved point for the merit
-function could be found during the final linesearch.</em> To address
-this problem, we performed additional iterations to<br>
-find a better solution, using
-<code><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">OpenMx::mxTryHardWideSearch()</a></code>. This also illustrates that
-<code>tidySEM</code> mixture models inherit from <code>OpenMx</code>’s
-<code>MxModel</code>, and thus, different <code>OpenMx</code> functions
-can be used to act on models specified via <code>tidySEM</code>.</p>
-<p>The fifth model also evidenced convergence problems, but this (as we
-will see) is because the solution is overfitted.</p>
+<span>    classes <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<!-- Note that the first model showed convergence problems, throwing the error: -->
+<!-- *The model does not satisfy the  -->
+<!-- first-order optimality conditions to -->
+<!-- the required accuracy, and no improved -->
+<!-- point for the merit function could be -->
+<!-- found during the final linesearch.* -->
+<!-- To address this problem, we performed -->
+<!-- additional iterations to   -->
+<!-- find a better solution, using `OpenMx::mxTryHardWideSearch()`. -->
+<!-- This also illustrates that `tidySEM` mixture models inherit from `OpenMx`'s `MxModel`, -->
+<!-- and thus, different `OpenMx` functions can be used to act on models specified via `tidySEM`. -->
+<!-- The fifth model also evidenced convergence problems, but this (as we will see) is because the solution is overfitted. -->
 <div class="section level3">
 <h3 id="class-enumeration">Class enumeration<a class="anchor" aria-label="anchor" href="#class-enumeration"></a>
 </h3>
@@ -339,7 +331,7 @@ class separability compromises interpretability of the results</li>
 probability &lt; .90 because poor class separability compromises
 interpretability of the results</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get fit table fit</span></span>
 <span><span class="va">tab_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">)</span></span>
 <span><span class="co"># Select columns</span></span>
@@ -348,7 +340,7 @@ interpretability of the results</li>
 <table class="table">
 <caption>Fit of LCGA models</caption>
 <thead><tr class="header">
-<th align="right">Name</th>
+<th align="left">Name</th>
 <th align="right">Classes</th>
 <th align="right">LL</th>
 <th align="right">Parameters</th>
@@ -359,7 +351,7 @@ interpretability of the results</li>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
+<td align="left">1</td>
 <td align="right">1</td>
 <td align="right">2593</td>
 <td align="right">9</td>
@@ -369,7 +361,7 @@ interpretability of the results</li>
 <td align="right">1.00</td>
 </tr>
 <tr class="even">
-<td align="right">2</td>
+<td align="left">2</td>
 <td align="right">2</td>
 <td align="right">3876</td>
 <td align="right">13</td>
@@ -379,7 +371,7 @@ interpretability of the results</li>
 <td align="right">0.24</td>
 </tr>
 <tr class="odd">
-<td align="right">3</td>
+<td align="left">3</td>
 <td align="right">3</td>
 <td align="right">4174</td>
 <td align="right">17</td>
@@ -389,23 +381,13 @@ interpretability of the results</li>
 <td align="right">0.06</td>
 </tr>
 <tr class="even">
-<td align="right">4</td>
+<td align="left">4</td>
 <td align="right">4</td>
 <td align="right">4278</td>
 <td align="right">21</td>
 <td align="right">-8412</td>
 <td align="right">0.89</td>
 <td align="right">0.85</td>
-<td align="right">0.04</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">5</td>
-<td align="right">4315</td>
-<td align="right">25</td>
-<td align="right">-8457</td>
-<td align="right">0.86</td>
-<td align="right">0.73</td>
 <td align="right">0.04</td>
 </tr>
 </tbody>
@@ -427,14 +409,14 @@ model should be selected from 1-3 classes.</p>
 1-2 classes, and the inflection point for all ICs is at 3 classes.
 Moreover, the BIC increased after 3 classes. A three-class solution thus
 appears to be the most parsimonious solution with good fit.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tab_fit</span>, statistics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AIC"</span>, <span class="st">"BIC"</span>, <span class="st">"saBIC"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="lcga_plot_fit.png" class="r-plt" alt="" width="80%"></p>
+<p><img src="cache_lca_lcga/lcga_plot_fit.png" class="r-plt" alt="" width="100%"></p>
 <p>Based on the aforementioned criteria, we selected a 3-class model for
 further analyses. First, to prevent label switching, we re-order these
 classes by the value of the intercept <code>i</code>. Then, we report
 the estimated parameters.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_switch_labels.html">mx_switch_labels</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, param <span class="op">=</span> <span class="st">"M[1,7]"</span>,</span>
 <span>    decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">tab_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_final</span>, columns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
@@ -448,9 +430,9 @@ the estimated parameters.</p>
 <th align="left"></th>
 <th align="left">Category</th>
 <th align="left">lhs</th>
-<th align="right">est</th>
-<th align="right">se</th>
-<th align="right">pval</th>
+<th align="left">est</th>
+<th align="left">se</th>
+<th align="left">pval</th>
 <th align="left">confint</th>
 <th align="left">name</th>
 </tr></thead>
@@ -459,9 +441,9 @@ the estimated parameters.</p>
 <td align="left">16</td>
 <td align="left">Means</td>
 <td align="left">i</td>
-<td align="right">0.33</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.33</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.32, 0.33]</td>
 <td align="left">class1.M[1,7]</td>
 </tr>
@@ -469,9 +451,9 @@ the estimated parameters.</p>
 <td align="left">17</td>
 <td align="left">Means</td>
 <td align="left">step</td>
-<td align="right">-0.02</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
+<td align="left">-0.02</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
 <td align="left">[-0.03, -0.01]</td>
 <td align="left">class1.M[1,8]</td>
 </tr>
@@ -479,9 +461,9 @@ the estimated parameters.</p>
 <td align="left">18</td>
 <td align="left">Means</td>
 <td align="left">s</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.00, 0.01]</td>
 <td align="left">class1.M[1,9]</td>
 </tr>
@@ -489,9 +471,9 @@ the estimated parameters.</p>
 <td align="left">19</td>
 <td align="left">Variances</td>
 <td align="left">scl1</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[1,1]</td>
 </tr>
@@ -499,9 +481,9 @@ the estimated parameters.</p>
 <td align="left">20</td>
 <td align="left">Variances</td>
 <td align="left">scl2</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[2,2]</td>
 </tr>
@@ -509,9 +491,9 @@ the estimated parameters.</p>
 <td align="left">21</td>
 <td align="left">Variances</td>
 <td align="left">scl3</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[3,3]</td>
 </tr>
@@ -519,9 +501,9 @@ the estimated parameters.</p>
 <td align="left">22</td>
 <td align="left">Variances</td>
 <td align="left">scl4</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[4,4]</td>
 </tr>
@@ -529,9 +511,9 @@ the estimated parameters.</p>
 <td align="left">23</td>
 <td align="left">Variances</td>
 <td align="left">scl5</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class1.S[5,5]</td>
 </tr>
@@ -539,9 +521,9 @@ the estimated parameters.</p>
 <td align="left">24</td>
 <td align="left">Variances</td>
 <td align="left">scl6</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class1.S[6,6]</td>
 </tr>
@@ -549,9 +531,9 @@ the estimated parameters.</p>
 <td align="left">40</td>
 <td align="left">Means</td>
 <td align="left">i</td>
-<td align="right">0.45</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
+<td align="left">0.45</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
 <td align="left">[0.43, 0.46]</td>
 <td align="left">class2.M[1,7]</td>
 </tr>
@@ -559,9 +541,9 @@ the estimated parameters.</p>
 <td align="left">41</td>
 <td align="left">Means</td>
 <td align="left">step</td>
-<td align="right">0.03</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
+<td align="left">0.03</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.05]</td>
 <td align="left">class2.M[1,8]</td>
 </tr>
@@ -569,9 +551,9 @@ the estimated parameters.</p>
 <td align="left">42</td>
 <td align="left">Means</td>
 <td align="left">s</td>
-<td align="right">0.02</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.02</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class2.M[1,9]</td>
 </tr>
@@ -579,9 +561,9 @@ the estimated parameters.</p>
 <td align="left">43</td>
 <td align="left">Variances</td>
 <td align="left">scl1</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[1,1]</td>
 </tr>
@@ -589,9 +571,9 @@ the estimated parameters.</p>
 <td align="left">44</td>
 <td align="left">Variances</td>
 <td align="left">scl2</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[2,2]</td>
 </tr>
@@ -599,9 +581,9 @@ the estimated parameters.</p>
 <td align="left">45</td>
 <td align="left">Variances</td>
 <td align="left">scl3</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[3,3]</td>
 </tr>
@@ -609,9 +591,9 @@ the estimated parameters.</p>
 <td align="left">46</td>
 <td align="left">Variances</td>
 <td align="left">scl4</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[4,4]</td>
 </tr>
@@ -619,9 +601,9 @@ the estimated parameters.</p>
 <td align="left">47</td>
 <td align="left">Variances</td>
 <td align="left">scl5</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class2.S[5,5]</td>
 </tr>
@@ -629,9 +611,9 @@ the estimated parameters.</p>
 <td align="left">48</td>
 <td align="left">Variances</td>
 <td align="left">scl6</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class2.S[6,6]</td>
 </tr>
@@ -639,9 +621,9 @@ the estimated parameters.</p>
 <td align="left">64</td>
 <td align="left">Means</td>
 <td align="left">i</td>
-<td align="right">0.60</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
+<td align="left">0.60</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
 <td align="left">[0.57, 0.63]</td>
 <td align="left">class3.M[1,7]</td>
 </tr>
@@ -649,9 +631,9 @@ the estimated parameters.</p>
 <td align="left">65</td>
 <td align="left">Means</td>
 <td align="left">step</td>
-<td align="right">0.10</td>
-<td align="right">0.02</td>
-<td align="right">0.00</td>
+<td align="left">0.10</td>
+<td align="left">0.02</td>
+<td align="left">0.00</td>
 <td align="left">[0.07, 0.14]</td>
 <td align="left">class3.M[1,8]</td>
 </tr>
@@ -659,9 +641,9 @@ the estimated parameters.</p>
 <td align="left">66</td>
 <td align="left">Means</td>
 <td align="left">s</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.08</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.08</td>
 <td align="left">[-0.00, 0.02]</td>
 <td align="left">class3.M[1,9]</td>
 </tr>
@@ -669,9 +651,9 @@ the estimated parameters.</p>
 <td align="left">67</td>
 <td align="left">Variances</td>
 <td align="left">scl1</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[1,1]</td>
 </tr>
@@ -679,9 +661,9 @@ the estimated parameters.</p>
 <td align="left">68</td>
 <td align="left">Variances</td>
 <td align="left">scl2</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[2,2]</td>
 </tr>
@@ -689,9 +671,9 @@ the estimated parameters.</p>
 <td align="left">69</td>
 <td align="left">Variances</td>
 <td align="left">scl3</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[3,3]</td>
 </tr>
@@ -699,9 +681,9 @@ the estimated parameters.</p>
 <td align="left">70</td>
 <td align="left">Variances</td>
 <td align="left">scl4</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[4,4]</td>
 </tr>
@@ -709,9 +691,9 @@ the estimated parameters.</p>
 <td align="left">71</td>
 <td align="left">Variances</td>
 <td align="left">scl5</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.01]</td>
 <td align="left">class3.S[5,5]</td>
 </tr>
@@ -719,9 +701,9 @@ the estimated parameters.</p>
 <td align="left">72</td>
 <td align="left">Variances</td>
 <td align="left">scl6</td>
-<td align="right">0.01</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
+<td align="left">0.01</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
 <td align="left">[0.01, 0.02]</td>
 <td align="left">class3.S[6,6]</td>
 </tr>
@@ -746,7 +728,7 @@ parameters in the model, using the hypothesis syntax from the
 <p>To identify the names of parameters in the model, we can use the
 <code>name</code> column of the results table above. Alternatively, to
 see all parameters in the model, run:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;  [1] "mix3.weights[1,2]" "mix3.weights[1,3]" "vscl1"            </span></span>
 <span><span class="co">#&gt;  [4] "vscl2"             "vscl3"             "vscl4"            </span></span>
@@ -761,7 +743,7 @@ specified as follows:</p>
 <p>It is also possible to consider comparisons between two classes at a
 time. When conducting many significance tests, consider correcting for
 multiple comparisons however.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wald_tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wald_test.html">wald_test</a></span><span class="op">(</span><span class="va">res_final</span>, <span class="st">"</span></span>
 <span><span class="st">                   class1.M[1,7] = class2.M[1,7]&amp;</span></span>
 <span><span class="st">                   class1.M[1,7] = class3.M[1,7];</span></span>
@@ -811,7 +793,7 @@ three classes.</p>
 <p>Finally, we can plot the growth trajectories. This can help interpret
 the results better, as well as the residual heterogeneity around class
 trajectories.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_growth.html">plot_growth</a></span><span class="op">(</span><span class="va">res_step</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span>, alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,</span>
 <span>    <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Add Y-axis breaks in original scale</span></span>
@@ -821,7 +803,7 @@ trajectories.</p>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="va">labs</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"SCL (rescaled from Box-Cox)"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="plot_traj.png" class="r-plt" alt="" width="80%"></p>
+<p><img src="cache_lca_lcga/plot_traj.png" class="r-plt" alt="" width="100%"></p>
 <p>Note that the observed individual trajectories show very high
 variability within classes.</p>
 </div>

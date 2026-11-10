@@ -169,8 +169,7 @@ plot_profiles.default <- function(x, variables = NULL, ci = .95, sd = TRUE, add_
     if(length(unique(df_plot$Model)) > 1){
         classplot <- classplot + facet_wrap(~ Model, labeller = label_both)
     }
-    suppressWarnings(print(classplot))
-    return(invisible(classplot))
+    return(classplot)
 }
 
 #' @method plot_profiles mixture_list

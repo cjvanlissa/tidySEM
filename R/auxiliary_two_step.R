@@ -48,8 +48,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(OpenMx)
-#'
 #' # Estimate a latent profile model
 #' dat <- iris[, 1:4]
 #' names(dat) <- c("SL", "SW", "PL", "PW")

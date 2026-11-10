@@ -47,8 +47,6 @@ necessarily imply optimization failure.
 }
 \examples{
 \dontrun{
-library(OpenMx)
-
 set.seed(123)
 dat <- iris[1:2]
 names(dat) <- c("x", "y")

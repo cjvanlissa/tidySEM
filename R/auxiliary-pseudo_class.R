@@ -256,7 +256,6 @@ pseudo_class_analysis_cb <- function(dfs, func, Arg = NULL) {
 #' @returns A data.frame of class `class_draws`.
 #' @examples
 #' if(requireNamespace("OpenMx", quietly = TRUE)){
-#' library(OpenMx)
 #' dat <- iris[c(1:5, 50:55, 100:105),1:3]
 #' colnames(dat) <- letters[1:3]
 #' fit <- mx_profiles(data = dat, classes = 2)
@@ -317,7 +316,6 @@ append_class_draws <- function(x, data = NULL, m = 20) {
 #'
 #' @examples
 #' if(requireNamespace("OpenMx", quietly = TRUE)){
-#' library(OpenMx)
 #' set.seed(2)
 #' dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 #' colnames(dat) <- c("SL", "SW", "PL", "PW")

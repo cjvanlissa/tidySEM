@@ -26,7 +26,6 @@
 #' \dontrun{
 #' if(isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
 #' library(tidySEM)
-#' library(OpenMx)
 #' # Construct dataset with ordinal and categorical indicators
 #' set.seed(1)
 #' n = 200

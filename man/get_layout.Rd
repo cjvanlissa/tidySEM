@@ -84,9 +84,9 @@ read.csv(file.path(tempdir(), "example3.csv"))
 # copy to clipboard. Reading from the clipboard works differently in Windows
 # and Mac. For this example, I used Microsoft Excel.
 # On Windows, run:
-read.table("clipboard", sep = "\t")
+# read.table("clipboard", sep = "\t")
 # On Mac, run:
-read.table(pipe("pbpaste"), sep="\t")
+# read.table(pipe("pbpaste"), sep="\t")
 }
 }
 \keyword{tidy_graph}

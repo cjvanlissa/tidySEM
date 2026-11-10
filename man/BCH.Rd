@@ -30,7 +30,6 @@ approach are not valid.
 }
 \examples{
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 dat <- data.frame(x = iris$Petal.Length)
 mixmod <- mx_profiles(dat,
                       classes = 2)

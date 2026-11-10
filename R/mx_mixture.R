@@ -188,15 +188,11 @@ mx_profiles <- function(data = NULL,
 #' @examples
 #' \dontrun{
 #' data("empathy")
-#' df <- empathy[1:6]
-#' mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
-#'                            s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6
+#' df <- empathy[1:2]
+#' mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2
+#'                            s =~ 0*ec1 + 1*ec2
 #'                            ec1 ~~ vec1*ec1
 #'                            ec2 ~~ vec2*ec2
-#'                            ec3 ~~ vec3*ec3
-#'                            ec4 ~~ vec4*ec4
-#'                            ec5 ~~ vec5*ec5
-#'                            ec6 ~~ vec6*ec6
 #'                            i ~~ 0*i
 #'                            s ~~ 0*s
 #'                            i ~~ 0*s",
@@ -243,6 +239,7 @@ mx_growth_mixture <- function(model,
 #' \dontrun{
 #' df <- data_mix_ordinal
 #' df[1:4] <- lapply(df, ordered)
+#' df <- df[1:100, 1, drop = FALSE]
 #' mx_lca(data = df,
 #'        classes = 2) -> res
 #'
@@ -322,51 +319,87 @@ mx_mixture.character <- function(model,
                                  classes = 1L,
                                  data = NULL,
                                  run = TRUE,
-                                 ...){
-  cl <- match.call()
+                                 ...) {
   dots <- list(...)
+
   # Recursive function
-  if(length(classes) > 1){
-    out <- lapply(classes, function(i){
-      cl[["classes"]] <- i
-      cl[[1L]] <- str2lang("tidySEM::mx_mixture")
-      eval.parent(cl)
+  if (length(classes) > 1L) {
+    out <- lapply(classes, function(i) {
+      mx_mixture.character(
+        model = model,
+        classes = i,
+        data = data,
+        run = run,
+        ...
+      )
     })
     attr(out, "tidySEM") <- "list"
     class(out) <- c("mixture_list", class(out))
     return(out)
-  } else {
-    dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
-    dots_asram <- dots[dots_asram]
-    model <- lsub(model, 1:classes)
-    model <- lapply(1:length(model), function(i){
-      do.call(as_ram, c(
+  }
+
+  dots_asram <- names(dots)[
+    names(dots) %in% unique(c(
+      formalArgs(lavaan::lavaanify),
+      formalArgs(OpenMx::mxModel)
+    ))
+  ]
+
+  dots_asram <- dots[dots_asram]
+
+  model <- lsub(model, 1:classes)
+
+  model <- lapply(seq_along(model), function(i) {
+    do.call(
+      as_ram,
+      c(
         list(
           x = model[[i]],
-          model = paste0("class", i)),
-        dots_asram))
-    })
-    cl[["classes"]] <- classes
-    cl[["model"]] <- model
-    cl[["data"]] <- data
-    cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
-    out <- eval.parent(cl)
-    # Check for hidden argument run_mixture_starts with TRUE as default:
-    run_mixture_starts <- tryCatch({!isFALSE(dots[["run_mixture_starts"]])}, error = function(e){TRUE})
-    if(run_mixture_starts){
-      cl[["model"]] <- out
-      cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-      out <- eval.parent(cl)
-    }
-    if(run){
-      cl[["x"]] <- out
-      cl[["model"]] <- NULL
-      cl[[1L]] <- str2lang("tidySEM:::run_mx")
-      return(eval.parent(cl))
-    } else {
-      out
-    }
+          model = paste0("class", i)
+        ),
+        dots_asram
+      )
+    )
+  })
+
+  out <- do.call(
+    as_mx_mixture,
+    c(
+      list(
+        model = model,
+        classes = classes,
+        data = data
+      ),
+      dots
+    )
+  )
+
+  # Check for hidden argument run_mixture_starts
+  run_mixture_starts <- !isFALSE(
+    dots[["run_mixture_starts"]]
+  )
+
+  if (run_mixture_starts) {
+    out <- do.call(
+      mixture_starts,
+      c(
+        list(model = out, classes = classes, data = data),
+        dots
+      )
+    )
   }
+
+  if (run) {
+    out <- do.call(
+      run_mx,
+      c(
+        list(x = out, classes = classes, data = data),
+        dots
+      )
+    )
+  }
+
+  out
 }
 
 #' @method mx_mixture MxModel

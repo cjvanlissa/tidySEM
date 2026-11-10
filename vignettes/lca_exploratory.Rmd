@@ -11,6 +11,7 @@ vignette: >
 ```{r setup, include = FALSE}
 library(yaml)
 library(scales)
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -20,15 +21,14 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = requireNamespace("formatR", quietly = TRUE)
 )
 options(scipen = 1, digits = 2)
-eval_results <- FALSE
-if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
-  eval_results <- TRUE
-  knitr::opts_chunk$set(
-  results = "markup"
-)
-}
-run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
-
+run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false"))))
+show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
+if (!run_openmx) run_everything <- show_results <- FALSE
+if (show_results) knitr::opts_chunk$set(results = "markup")
+input <- knitr::current_input(dir = TRUE)
+if (is.null(input) || !nzchar(input)) stop("Cannot determine the vignette filename.")
+cache_dir <- file.path(dirname(input), paste0("cache_", tools::file_path_sans_ext(basename(input))))
+if (run_everything) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 ```
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
@@ -85,6 +85,12 @@ and explain that missing data are accounted for using FIML.
 Additionally, we can plot the data.
 The `ggplot2` function `geom_density()` is useful to visualize continuous data:
 
+```{r prepare-plot-data, include = FALSE}
+df_plot <- df
+names(df_plot) <- paste0("Value.", names(df_plot))
+df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
+                   timevar = "Variable")
+```
 ```{r, echo = TRUE, eval = FALSE}
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
@@ -95,7 +101,7 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~Variable)+
   theme_bw()
 ```
-```{r, echo = FALSE, eval = run_everything}
+```{r image-desc, echo = FALSE, eval = run_everything}
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
@@ -104,20 +110,23 @@ p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("plot_gmm_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave(file.path(cache_dir, "plot_gmm_desc.png"), p, device = "png", width = 100, height = 100, units = "mm")
 ```
-```{r figdesc, echo = FALSE, eval = eval_results}
+```{r figdesc, echo = FALSE, eval = show_results, out.width = "100%"}
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
                    timevar = "Variable")
-knitr::include_graphics("plot_gmm_desc.png")
+knitr::include_graphics(file.path(cache_dir, "plot_gmm_desc.png"))
 ```
 
 Both the table above and the density plot indicate that the data are extremely right-skewed and kurtotic.
 With this in mind, it can be useful to transform and rescale the data.
 We will use a log transformation.
 
+```{r prepare-log-data, include = FALSE}
+df_plot$Value <- log(df_plot$Value)
+```
 ```{r, echo = TRUE, eval = FALSE}
 df_plot$Value <- log(df_plot$Value)
 ggplot(df_plot, aes(x = Value)) +
@@ -125,22 +134,25 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~Variable)+
   theme_bw()
 ```
-```{r, echo = FALSE, eval = run_everything}
-df_plot$Value <- log(df_plot$Value)
+```{r image-desc-log, echo = FALSE, eval = run_everything}
 p <- ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave("plot_gmm_desc_log.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave(file.path(cache_dir, "plot_gmm_desc_log.png"), p, device = "png", width = 100, height = 100, units = "mm")
 ```
-```{r figdesclog, echo = FALSE, eval = eval_results}
-knitr::include_graphics("plot_gmm_desc_log.png")
+```{r figdesclog, echo = FALSE, eval = show_results, out.width = "100%"}
+knitr::include_graphics(file.path(cache_dir, "plot_gmm_desc_log.png"))
 ```
 
 The log transformation addresses the aforementioned concerns regarding skew and kurtosis.
 To confirm this, reshape the data to wide format
 and examine a scatterplot:
 
+```{r prepare-analysis-data, include = FALSE}
+df <- reshape(df_plot, direction = "wide", v.names = "Value")[, -1]
+names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
+```
 ```{r, eval = FALSE, echo = TRUE}
 df <- reshape(df_plot, direction = "wide", v.names = "Value")[, -1]
 names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
@@ -148,16 +160,14 @@ ggplot(df, aes(x = length, y = width)) +
   geom_point(alpha = .1) +
   theme_bw()
 ```
-```{r, eval = run_everything, echo = FALSE}
-df <- reshape(df_plot, direction = "wide", v.names = "Value")[, -1]
-names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
+```{r image-scatter, eval = run_everything, echo = FALSE}
 p <- ggplot(df, aes(x = length, y = width)) +
   geom_point(alpha = .1) +
   theme_bw()
-ggsave("plot_gmm_scatter.png", p, device = "png", width = 100, height = 100, units = "mm")
+ggsave(file.path(cache_dir, "plot_gmm_scatter.png"), p, device = "png", width = 100, height = 100, units = "mm")
 ```
-```{r figscatter, eval = eval_results, echo = FALSE}
-knitr::include_graphics("plot_gmm_scatter.png")
+```{r figscatter, eval = show_results, echo = FALSE, out.width = "100%"}
+knitr::include_graphics(file.path(cache_dir, "plot_gmm_scatter.png"))
 ```
 
 <!-- As evident from the scatterplot, there is a very strong linear tend in the data. -->
@@ -202,16 +212,16 @@ res <- mx_profiles(data = df,
                    variances = c("equal", "varying"),
                    covariances = c("equal", "varying"),
                    expand_grid = TRUE)
-saveRDS(res, "res_gmm.RData")
 ```
-```{r eval = run_everything, echo = FALSE}
-library(OpenMx)
-set.seed(123)
-res <- mx_profiles(data = df,
-                   classes = 1:3,
-                   variances = c("equal", "varying"),
-                   covariances = c("equal", "varying"),
-                   expand_grid = TRUE)
+```{r fitlca-cached, eval = run_everything || show_results, echo = FALSE}
+res <- tidySEM:::run_cached({
+  set.seed(123)
+  mx_profiles(data = df,
+              classes = 1:3,
+              variances = c("equal", "varying"),
+              covariances = c("equal", "varying"),
+              expand_grid = TRUE)
+})
 ```
 
 
@@ -235,13 +245,8 @@ We will use the BIC for class enumeration.
 ```{r echo = TRUE, eval=FALSE}
 fit <- table_fit(res)
 ```
-```{r echo = FALSE, eval=run_everything}
+```{r fit-table-compute, eval = run_everything || show_results, echo = FALSE}
 fit <- table_fit(res)
-write.csv(fit, "gmm_tabfit.csv", row.names = FALSE)
-```
-```{r eval = TRUE, echo = FALSE}
-fit <- read.csv("gmm_tabfit.csv", stringsAsFactors = FALSE)
-class(fit) <- c("tidy_fit", "data.frame")
 ```
 
 First, we determine whether any models can be disqualified.
@@ -251,7 +256,7 @@ Next, we check for global and local identifiability.
 The global ratio of observations per parameter is large, as the minimum `np_ratio` is 244.
 The smallest ratio of class size to class-specific parameters is 18 (see `np_local`), which is no cause for concern.
 
-```{r tabfit, echo = TRUE, eval = eval_results}
+```{r tabfit, echo = TRUE, eval = show_results}
 tbl <- fit[ , c("Name", "LL", "Parameters",
          "BIC", "Entropy",
          "prob_min",
@@ -283,7 +288,7 @@ because we will likely come to a different decision depending on which criteria 
 
 As mentioned before, we drop models with < 10% of cases in the smallest class:
 
-```{r echo = TRUE, eval = run_everything}
+```{r echo = TRUE, eval = run_everything || show_results}
 fit <- fit[!fit$n_min < .1, ]
 ```
 
@@ -295,12 +300,12 @@ Note that, due to the large sample size, all ICs give identical conclusions.
 ```{r echo = TRUE, eval = FALSE}
 plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
-```{r echo = FALSE, eval = run_everything}
+```{r image-fit, echo = FALSE, eval = run_everything}
 p <- plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("gmm_plotfit.png", p, device = "png", width = 100, height = 100, units = "mm", scale = 1)
+ggsave(file.path(cache_dir, "gmm_plotfit.png"), p, device = "png", width = 100, height = 100, units = "mm", scale = 1)
 ```
-```{r echo = FALSE, eval = eval_results, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("gmm_plotfit.png")
+```{r echo = FALSE, eval = show_results, fig.cap="Bivariate profile plot", out.width="100%"}
+knitr::include_graphics(file.path(cache_dir, "gmm_plotfit.png"))
 ```
 
 Looking at the blocks of 1-4 class models for each model specification,
@@ -326,14 +331,12 @@ cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est", "std_est"))
 results
 ```
-```{r echo = FALSE, eval = run_everything}
+```{r results-compute, echo = FALSE, eval = run_everything || show_results}
 res_bic <- res[["free var, free cov 2"]]
 cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est", "est_std"))
-write.csv(results, "gmm_results.csv", row.names = FALSE)
 ```
-```{r eval = eval_results, echo = FALSE}
-results <- read.csv("gmm_results.csv", stringsAsFactors = FALSE)
+```{r results-table, eval = show_results, echo = FALSE}
 knitr::kable(results, digits = 2, caption = "Results of a 2-class model with free (co)variances")
 ```
 
@@ -344,12 +347,12 @@ However, we omit the density plots, because `plot_bivariate()` also includes the
 ```{r echo = TRUE, eval = FALSE}
 plot_bivariate(res_bic)
 ```
-```{r echo = FALSE, eval = run_everything}
+```{r image-bivariate, echo = FALSE, eval = run_everything}
 p <- plot_bivariate(res_bic)
-ggsave("gmm_bivariate_bic.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
+ggsave(file.path(cache_dir, "gmm_bivariate_bic.png"), p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
 ```
-```{r echo = FALSE, eval = eval_results, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics("gmm_bivariate_bic.png")
+```{r echo = FALSE, eval = show_results, fig.cap="Bivariate profile plot", out.width="100%"}
+knitr::include_graphics(file.path(cache_dir, "gmm_bivariate_bic.png"))
 ```
 
 On the diagonal of the bivariate plot are weighted density plots:

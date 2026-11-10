@@ -7,21 +7,22 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-run_chunks <- requireNamespace("OpenMx", quietly = TRUE)
+```{r setup, include = FALSE}
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
+run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false")))) && run_openmx
+show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false")))) && run_openmx
+run_chunks <- run_openmx && (run_everything || show_results)
 knitr::opts_chunk$set(
   collapse = TRUE,
   message = FALSE,
-  eval = run_chunks,
-  comment = "#>"
+  warning = FALSE,
+  comment = "#>",
+  out.width = "100%"
 )
-
-show_plots <- FALSE
-if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
-  show_plots <- TRUE
-}
-run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+input <- knitr::current_input(dir = TRUE)
+cache_dir <- file.path(dirname(input), paste0("cache_", tools::file_path_sans_ext(basename(input))))
 ```
+
 
 Latent class analysis for categorical indicators (LCA) and latent profile analysis for continuous indicators (LPA) are widely used
 mixture modeling techniques for identifying unobserved subgroups in a
@@ -96,16 +97,19 @@ df$X4 <- mxFactor(df$X4, levels = 1:3)
 
 To estimate a 2-class mixed-data latent class model, use the following code:
 
-```{r eval = run_chunks}
+```{r eval = FALSE}
 res_2 <- mx_mixed_lca(
 data = df,
 classes = 2
 )
 ```
+```{r mixed-fit-two, echo = FALSE, eval = run_chunks}
+res_2 <- tidySEM:::run_cached(mx_mixed_lca(data = df, classes = 2))
+```
 
 The returned object is an `OpenMx::mxModel`, and can be modified using the functions in that package:
 
-```{r eval = run_chunks}
+```{r eval = show_results}
 class(res_2)
 ```
 
@@ -120,11 +124,8 @@ res_1_3 <- mx_mixed_lca(
   classes = 1:3
 )
 ```
-```{r eval = run_everything, echo = FALSE}
-res_1_3 <- mx_mixed_lca(
-  data = df,
-  classes = 1:3
-)
+```{r mixed-fit-one-three, eval = run_chunks, echo = FALSE}
+res_1_3 <- tidySEM:::run_cached(mx_mixed_lca(data = df, classes = 1:3))
 ```
 
 The result is a list of OpenMx models, one for each class solution.
@@ -138,14 +139,9 @@ This is obtained by inspecting model fit, by printing the object, or calling `ta
 ```{r eval = FALSE}
 table_fit(res_1_3)
 ```
-```{r eval = run_everything, echo = FALSE}
-tab <- table_fit(res_1_3)
-write.csv(tab, "mixed_lca_table_fit.csv", row.names = FALSE)
-```
-```{r eval = TRUE, echo=FALSE}
-tab <- read.csv("mixed_lca_table_fit.csv", stringsAsFactors = FALSE)
-class(tab) <- c("tidy_fit"   , "data.frame")
-tab
+```{r mixed-fit-table, eval = run_chunks, echo = FALSE}
+tab <- tidySEM:::run_cached(table_fit(res_1_3))
+if (show_results) tab
 ```
 
 As expected, the BIC for the 2-class solution is lowest.
@@ -169,21 +165,16 @@ set.seed(1)
 res_blrt <- BLRT(res_1_3, replications = 100)
 res_blrt
 ```
-```{r eval = FALSE, echo = FALSE, warning=FALSE}
-library(future)
-library(progressr)
-plan(multisession) # Parallel processing for Windows
-handlers("progress") # Progress bar
-set.seed(1)
-res_blrt <- BLRT(res_1_3, replications = 100)
-write.csv(res_blrt, "mixed_lca_res_blrt.csv", row.names = FALSE)
-```
-
-```{r eval = TRUE, echo = FALSE}
-res_blrt <- read.csv("mixed_lca_res_blrt.csv", stringsAsFactors = FALSE)
-class(res_blrt) <- c("LRT", "data.frame")
-attr(res_blrt, "type") <- "Bootstrapped"
-res_blrt
+```{r mixed-blrt, eval = run_chunks, echo = FALSE}
+res_blrt <- tidySEM:::run_cached({
+  library(future)
+  library(progressr)
+  plan(multisession) # Parallel processing for Windows
+  handlers("progress") # Progress bar
+  set.seed(1)
+  BLRT(res_1_3, replications = 100)
+})
+if (show_results) res_blrt
 ```
 
 
@@ -193,20 +184,19 @@ Note that, by default, the BLRT conducts 100 bootstrapped analyses - but only so
 A third option is to use a predictive model comparison, a method conceptually similar to Bayesian posterior predictive checks.
 
 
-```{r eval = run_everything, echo = FALSE}
-set.seed(1)
-res_pmc <- pmc(res_1_3)
-write.csv(res_pmc, "mixed_lca_res_pmc.csv", row.names = F)
+```{r mixed-pmc, eval = run_chunks, echo = FALSE}
+res_pmc <- tidySEM:::run_cached({
+  set.seed(1)
+  pmc(res_1_3)
+})
+if (show_results) res_pmc
 ```
 ```{r echo = TRUE, eval = FALSE}
 set.seed(1)
 res_pmc <- pmc(res_1_3)
 res_pmc
 ```
-```{r echo = FALSE}
-res_pmc <- read.csv("mixed_lca_res_pmc.csv", stringsAsFactors = F)
-res_pmc
-```
+
 
 This test, too, confirms that the 2-class solution is significantly better than the 1-class solution - but the 3-class solution offers no further significant improvement.
 
@@ -214,17 +204,14 @@ This test, too, confirms that the 2-class solution is significantly better than 
 
 We can investigate the class proportions for the two-class solution by calling:
 
-```{r eval = run_everything, echo = FALSE}
-tmp <- class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely"))
-write.csv(tmp$sum.posterior, "mixed_lca_posterior.csv", row.names = F)
-write.csv(tmp$sum.mostlikely, "mixed_lca_mostlikely.csv", row.names = F)
+```{r mixed-class-prob, eval = run_chunks, echo = FALSE}
+class_probs <- tidySEM:::run_cached(class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely")))
+if (show_results) class_probs
 ```
 ```{r eval = FALSE, echo = TRUE}
 class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely"))
 ```
-```{r eval = TRUE, echo = FALSE}
-list(sum.posterior = read.csv("mixed_lca_posterior.csv", stringsAsFactors = F), sum.mostlikely = read.csv("mixed_lca_mostlikely.csv", stringsAsFactors = F))
-```
+
 
 The sum.posterior class probabilities incorporate classification error; each case can (fractionally) contribute to multiple classes.
 
@@ -237,14 +224,9 @@ This is confirmed by checking:
 ```{r eval = FALSE, echo = TRUE}
 table_fit(res_1_3[[2]])
 ```
-```{r eval = run_everything, echo = FALSE}
-tmp <- table_fit(res_1_3[[2]])
-write.csv(tmp, "mixed_lca_fit2.csv", row.names = F)
-```
-```{r eval = TRUE, echo = FALSE}
-tmp <- read.csv("mixed_lca_fit2.csv", stringsAsFactors = F)
-class(tmp) <- c("tidy_fit", "data.frame")
-tmp
+```{r mixed-fit-two-table, eval = run_chunks, echo = FALSE}
+fit_two <- tidySEM:::run_cached(table_fit(res_1_3[[2]]))
+if (show_results) fit_two
 ```
 
 We have a high minimal- and maximal posterior classification probability, and a high entropy.
@@ -254,14 +236,9 @@ Finally, we can examine the parameter values using `table_results()` on the seco
 ```{r eval = FALSE, echo = TRUE}
 table_results(res_1_3[[2]])
 ```
-```{r eval = run_everything, echo = FALSE}
-tmp <- table_results(res_1_3[[2]])
-write.csv(tmp, "mixed_lca_res2.csv", row.names = F)
-```
-```{r eval = TRUE, echo = FALSE}
-tmp <- read.csv("mixed_lca_res2.csv", stringsAsFactors = F)
-class(tmp) <- c("tidy_results","data.frame"  )
-tmp
+```{r mixed-results-two, eval = run_chunks, echo = FALSE}
+results_two <- tidySEM:::run_cached(table_results(res_1_3[[2]]))
+if (show_results) results_two
 ```
 
 Note that we get free means for each class, with the variances constrained to be equal across classes.
@@ -274,12 +251,9 @@ To convert these thresholds to the probability scale, we can run:
 ```{r eval = FALSE, echo = TRUE}
 table_prob(res_1_3[[2]])
 ```
-```{r eval = run_everything, echo = FALSE}
-tmp <- table_prob(res_1_3[[2]])
-write.csv(tmp, "mixed_lca_prob2.csv", row.names = F)
-```
-```{r eval = TRUE, echo = FALSE}
-read.csv("mixed_lca_prob2.csv", stringsAsFactors = F)
+```{r mixed-prob-two, eval = run_chunks, echo = FALSE}
+prob_two <- tidySEM:::run_cached(table_prob(res_1_3[[2]]))
+if (show_results) prob_two
 ```
 
 ## Advanced Options
@@ -289,12 +263,15 @@ model-building functions. For example,
 you can release the variance constraints for
 the continuous indicators by passing the `variances` argument of `mx_profiles()`:
 
-```{r, eval = run_everything, echo = TRUE}
+```{r eval = FALSE}
 res_2_free <- mx_mixed_lca(
   data = df,
   classes = 2,
   variances = "varying"
 )
+```
+```{r mixed-free-variances, eval = run_chunks, echo = FALSE}
+res_2_free <- tidySEM:::run_cached(mx_mixed_lca(data = df, classes = 2, variances = "varying"))
 ```
 
 We can compare the BICs of these models to determine whether the added complexity improves the model fit:
@@ -306,17 +283,12 @@ compare <- list(
 table_fit(compare)
 ```
 
-```{r eval = run_everything, echo = FALSE}
-compare <- list(
-  fixed_covs = res_1_3[[2]],
-  free_covs = res_2_free)
-fit_compare <- table_fit(compare)
-write.csv(fit_compare, "mixed_lca_compare.csv", row.names = FALSE)
-```
-```{r tabfitcomp, echo = FALSE, eval = TRUE}
-fit_compare <- read.csv("mixed_lca_compare.csv", stringsAsFactors = FALSE)
-class(fit_compare) <- c("tidy_fit", "data.frame")
-fit_compare
+```{r tabfitcomp, echo = FALSE, eval = run_chunks}
+fit_compare <- tidySEM:::run_cached({
+  compare <- list(fixed_covs = res_1_3[[2]], free_covs = res_2_free)
+  table_fit(compare)
+})
+if (show_results) fit_compare
 ```
 
 Note that the BIC of the model with free covariances is higher than that of the model with fixed variances, so it fits worse.
@@ -328,44 +300,47 @@ The model can be plot with the usual functions, but note that categorical indica
 
 Thus, for example, we can use a profile plot for the continuous indicators:
 
-```{r eval = run_everything, echo = FALSE}
+```{r mixed-plot-profiles-save, eval = run_everything, echo = FALSE}
+dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 p <- plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
-ggplot2::ggsave("mixed_lca_profiles.png", p, device = "png", width = 4, height = 3, dpi = 150)
+ggplot2::ggsave(file.path(cache_dir, "mixed_lca_profiles.png"), p, device = "png", width = 4, height = 3, dpi = 150)
 ```
 
 ```{r eval = FALSE, echo = TRUE}
 plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
-```{r eval = TRUE, echo = FALSE}
-knitr::include_graphics("mixed_lca_profiles.png")
+```{r mixed-plot-profiles, eval = show_results, echo = FALSE, out.width = "100%"}
+knitr::include_graphics(file.path(cache_dir, "mixed_lca_profiles.png"))
 ```
 
 Alternatively, we can use a bivariate plot with densities:
 
-```{r eval = run_everything, echo = FALSE}
+```{r mixed-plot-bivariate-save, eval = run_everything, echo = FALSE}
+dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 p <- plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
-ggplot2::ggsave("mixed_lca_bivariate.png", p, device = "png", width = 4, height = 4, dpi = 150)
+ggplot2::ggsave(file.path(cache_dir, "mixed_lca_bivariate.png"), p, device = "png", width = 4, height = 4, dpi = 150)
 ```
 
 ```{r eval = FALSE, echo = TRUE}
 plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
-```{r eval = TRUE, echo = FALSE}
-knitr::include_graphics("mixed_lca_bivariate.png")
+```{r mixed-plot-bivariate, eval = show_results, echo = FALSE, out.width = "100%"}
+knitr::include_graphics(file.path(cache_dir, "mixed_lca_bivariate.png"))
 ```
 
 We can plot the categorical variables as follows:
 
-```{r eval = run_everything, echo = FALSE}
+```{r mixed-plot-prob-save, eval = run_everything, echo = FALSE}
+dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 p <- plot_prob(res_1_3[[2]])
-ggplot2::ggsave("mixed_lca_prob.png", p, device = "png", width = 3, height = 3, dpi = 150)
+ggplot2::ggsave(file.path(cache_dir, "mixed_lca_prob.png"), p, device = "png", width = 3, height = 3, dpi = 150)
 ```
 
 ```{r eval = FALSE, echo = TRUE}
 plot_prob(res_1_3[[2]])
 ```
-```{r eval = TRUE, echo = FALSE}
-knitr::include_graphics("mixed_lca_prob.png")
+```{r mixed-plot-prob, eval = show_results, echo = FALSE, out.width = "100%"}
+knitr::include_graphics(file.path(cache_dir, "mixed_lca_prob.png"))
 ```
 
 ## References

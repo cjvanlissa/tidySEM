@@ -12,7 +12,21 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-generate_pngs <- TRUE
+run_everything <- as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false")))
+show_results <- as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false")))
+cache_dir <- "plotting_cache"
+Sys.setenv(TIDYSEM_CACHE_DIR = cache_dir)
+if(!dir.exists(cache_dir)){
+  dir.create(cache_dir, showWarnings = FALSE)
+  cat(
+  "\n!vignettes/plotting_cache/\n",
+  "!vignettes/plotting_cache/**\n",
+  file = "../.gitignore",
+  append = TRUE,
+  sep = ""
+)
+}
+generate_pngs <- show_results
 ```
 
 `tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programmatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
@@ -73,7 +87,7 @@ At this point, we could simply plot the graph:
 ```{r, echo = TRUE, eval = FALSE}
 graph_sem(model = fit)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%', eval = show_results}
 p <- graph_sem(model = fit, text_size = 2, fix_coord = TRUE)
 if(generate_pngs) ggsave("pgfig1.png", p, device = "png", width= 9.5, height = 3)
 knitr::include_graphics("pgfig1.png")
@@ -208,7 +222,7 @@ We could plot the CFA model with this custom layout as follows:
 ```{r, eval = FALSE}
 graph_sem(fit, layout = lay)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%', eval = show_results}
 p <- graph_sem(fit, layout = lay) + coord_fixed()
 if(generate_pngs) ggsave("pgfig2_1.png", p, device = "png", width= 9.5, height = 3)
 knitr::include_graphics("pgfig2_1.png")
@@ -360,7 +374,7 @@ We can plot a customized graph using `plot(graph_data)`; a generic plot method f
 ```{r, eval = FALSE}
 plot(graph_data)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%', eval = show_results}
 p <- plot(graph_data) + coord_fixed()
 if(generate_pngs) ggsave("pgfig2.png", p, device = "png", width= 9.5, height = 3)
 knitr::include_graphics("pgfig2.png")
@@ -373,7 +387,7 @@ The functions `graph_sem()` and `prepare_graph()` will always try to connect nod
 ```{r, eval = FALSE}
 graph_sem(model = fit, layout = lay, angle = 170)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%', eval = show_results}
 p <- graph_sem(model = fit, layout = lay, angle = 170)
 if(generate_pngs) ggsave("pgfig3.png", p, device = "png", width= 9.5, height = 3)
 knitr::include_graphics("pgfig3.png")
@@ -406,7 +420,7 @@ edg <- data.frame(from = "x",
 
 graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%', eval = show_results}
 edg <- data.frame(from = "x",
                   to = "y",
                   linetype = 2,
@@ -444,7 +458,7 @@ nod <- data.frame(name = c("x", "y"),
                     alpha = .5)
 graph_sem(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%', eval = show_results}
 edg <- data.frame(from = "x",
                   to = "y")
 nod <- data.frame(name = c("x", "y"),
@@ -472,7 +486,7 @@ edges(graph_data) %>%
   mutate(alpha = replace(alpha, from == "visual" & to == "x2", .5)) -> edges(graph_data)
 plot(graph_data)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%', eval = show_results}
 edges(graph_data) %>%
   mutate(colour = "black") %>%
   mutate(colour = replace(colour, from == "visual" & to == "x2", "red")) %>%
@@ -519,7 +533,7 @@ edg <- data.frame(from = "x",
 
 graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%', eval = show_results}
 edg <- data.frame(from = "x",
                   to = "y",
                   label = "text",
@@ -565,7 +579,7 @@ prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   plot()
 ```
-```{r, echo = FALSE, out.width="300px"}
+```{r, echo = FALSE, out.width="300px", eval = show_results}
 set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
@@ -586,7 +600,7 @@ prepare_graph(fit) %>%
   alpha_var(.2) %>%
   plot()
 ```
-```{r, echo = FALSE, out.width="300px"}
+```{r, echo = FALSE, out.width="300px", eval = show_results}
 set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
@@ -613,7 +627,7 @@ prepare_graph(fit) %>%
   if_edit(grepl("4", est), {color = "blue"}) %>%
   plot()
 ```
-```{r, echo = FALSE, out.width="300px"}
+```{r, echo = FALSE, out.width="300px", eval = show_results}
 set.seed(6)
 prepare_graph(fit) %>%
   # Add color column to the graph elements
@@ -660,7 +674,7 @@ plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
 
 ```
 
-```{r, echo = FALSE, out.width="300px"}
+```{r, echo = FALSE, out.width="300px", eval = show_results}
 set.seed(6)
 model <- "
   Sepal.Length ~ Sepal.Width + Petal.Length

@@ -7,24 +7,32 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-
-run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
+```{r setup, include = FALSE}
+run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false"))))
+show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
+if (!run_openmx) run_everything <- show_results <- FALSE
 
 knitr::opts_chunk$set(
   collapse = TRUE,
   message = FALSE,
   warning = FALSE,
-  eval = run_everything,
-  comment = "#>"
+  comment = "#>",
+  out.width = "100%"
 )
+
+# Match the vignette-specific directory used by tidySEM:::run_cached().
+input <- knitr::current_input(dir = TRUE)
+if (is.null(input) || !nzchar(input)) stop("Cannot determine the vignette filename.")
+cache_dir <- file.path(dirname(input), paste0("cache_", tools::file_path_sans_ext(basename(input))))
 ```
+
 
 
 This tutorial requires `tidySEM` version `0.2.11` or higher and `OpenMx`. Make sure both packages are
 installed and loaded.
 
-```{r }
+```{r, eval = run_openmx}
 library(tidySEM)
 library(OpenMx)
 ```
@@ -33,7 +41,7 @@ library(OpenMx)
 
 We simulate a dataset with two continuous indicators, and two latent classes.
 
-```{r}
+```{r, eval = run_openmx}
 set.seed(10)
 n <- 200
 # Set class-specific means
@@ -47,8 +55,12 @@ names(df) <- paste0("X", 1:2)
 
 Next, we estimate 1-3 class solutions:
 
-```{r}
+```{r profiles-example, eval = FALSE}
 res <- mx_profiles(data = df, classes = 1:3)
+```
+
+```{r profiles-cache, echo = FALSE, eval = run_openmx && (run_everything || show_results), results = "hide"}
+res <- tidySEM:::run_cached(mx_profiles(data = df, classes = 1:3))
 ```
 
 Optionally, one can perform the bootstrapped likelihood ratio test.
@@ -62,16 +74,14 @@ res_blrt <- BLRT(res, replications = 100)
 res_blrt
 ```
 
-```{r eval = run_everything, echo = FALSE}
-library(future)
-plan(multisession)
-res_blrt <- BLRT(res, replications = 100)
-write.csv(res_blrt, "pmc_res_blrt.csv", row.names = FALSE)
+```{r blrt-cache, eval = run_openmx && (run_everything || show_results), echo = FALSE, results = "hide"}
+res_blrt <- tidySEM:::run_cached({
+  library(future)
+  plan(multisession)
+  BLRT(res, replications = 100)
+})
 ```
-```{r eval = TRUE, echo=FALSE}
-res_blrt <- read.csv("pmc_res_blrt.csv", stringsAsFactors = FALSE)
-class(res_blrt) <- c("LRT", "data.frame")
-attr(res_blrt, "type") <- "Bootstrapped"
+```{r blrt-results, eval = run_openmx && show_results, echo = FALSE, results = "markup"}
 res_blrt
 ```
 
@@ -84,15 +94,13 @@ the function `pmc()` uses the `srmr()` function to compare the standardized root
 set.seed(1)
 res_pmc <- pmc(res)
 ```
-```{r eval = run_everything, echo = FALSE}
-set.seed(1)
-res_pmc <- pmc(res)
-write.csv(res_pmc, "pmc_res_pmc.csv", row.names = FALSE)
+```{r pmc-continuous-cache, eval = run_openmx && (run_everything || show_results), echo = FALSE, results = "hide"}
+res_pmc <- tidySEM:::run_cached({
+  set.seed(1)
+  pmc(res)
+})
 ```
-```{r eval = TRUE, echo=FALSE}
-res_pmc <- read.csv("pmc_res_pmc.csv", stringsAsFactors = FALSE)
-class(res_pmc) <- c("pmc_df", "data.frame")
-attr(res_pmc, "stat") <- "SRMR"
+```{r pmc-continuous-results, eval = run_openmx && show_results, echo = FALSE, results = "markup"}
 res_pmc
 ```
 
@@ -112,23 +120,21 @@ df[] <- lapply(df, mxFactor, levels = 1:3)
 res_cat <- mx_lca(df, classes = 1:3)
 pmc(res_cat, reps = 20)
 ```
-```{r eval = run_everything, echo = FALSE}
-df[] <- lapply(df, cut, breaks = 3, labels = FALSE)
-df[] <- lapply(df, mxFactor, levels = 1:3)
-res_cat <- mx_lca(df, classes = 1:3)
-chisq_function <- function(x, y){
-  tab_obs <- table(x)
-  tab_sim <- table(y)
-  tab_sim[tab_sim == 0] <- NA
-  sum((tab_obs - tab_sim)^2 / tab_sim, na.rm = TRUE)
-}
-res_pmc <- pmc(res_cat, reps = 20)
-write.csv(res_pmc, "pmc_res_chi2.csv", row.names = FALSE)
+```{r pmc-ordinal-cache, eval = run_openmx && (run_everything || show_results), echo = FALSE, results = "hide"}
+res_pmc <- tidySEM:::run_cached({
+  df[] <- lapply(df, cut, breaks = 3, labels = FALSE)
+  df[] <- lapply(df, mxFactor, levels = 1:3)
+  res_cat <- mx_lca(df, classes = 1:3)
+  chisq_function <- function(x, y){
+    tab_obs <- table(x)
+    tab_sim <- table(y)
+    tab_sim[tab_sim == 0] <- NA
+    sum((tab_obs - tab_sim)^2 / tab_sim, na.rm = TRUE)
+  }
+  pmc(res_cat, reps = 20)
+})
 ```
-```{r eval = TRUE, echo=FALSE}
-res_pmc <- read.csv("pmc_res_chi2.csv", stringsAsFactors = FALSE)
-class(res_pmc) <- c("pmc_df", "data.frame")
-attr(res_pmc, "stat") <- "chi squared"
+```{r pmc-ordinal-results, eval = run_openmx && show_results, echo = FALSE, results = "markup"}
 res_pmc
 ```
 

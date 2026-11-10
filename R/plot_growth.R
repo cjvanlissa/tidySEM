@@ -43,21 +43,19 @@
 #' @examples
 #' \dontrun{
 #' data("empathy")
-#' df <- empathy[1:6]
-#' mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
-#'                            s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6
+#' df <- empathy[1:2]
+#' mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2
+#'                            s =~ 0*ec1 + 1*ec2
 #'                            ec1 ~~ vec1*ec1
 #'                            ec2 ~~ vec2*ec2
-#'                            ec3 ~~ vec3*ec3
-#'                            ec4 ~~ vec4*ec4
-#'                            ec5 ~~ vec5*ec5
-#'                            ec6 ~~ vec6*ec6
 #'                            i ~~ 0*i
 #'                            s ~~ 0*s
-#'                            i ~~ 0*s",
+#'                            i ~~ 0*s
+#'                            i ~NA*1
+#'                            s ~NA*1",
 #'                   classes = 2,
 #'                   data = df) -> res
-#' plot_growth(res, rawdata = FALSE)
+#' plot_growth(res)
 #' }
 plot_growth <- function(x,
                         items = NULL,
@@ -82,30 +80,35 @@ plot_growth <- function(x,
     items <- x[[submods[1]]]$manifestVars
   }
   loadings <- lapply(submods, function(thismod) {
-    x[[thismod]]$A$values[items, growth_variables]
+    OpenMx::mxEvalByName(
+      "A",
+      model = x[[thismod]],
+      compute = TRUE
+    )[items, growth_variables, drop = FALSE]
   })
 
   estimates <- lapply(submods, function(thismod) {
-    matrix(
-      x[[thismod]]$M$values[1, growth_variables],
-      nrow = nrow(loadings[[1]]),
-      ncol = length(growth_variables),
-      byrow = TRUE
-    )
+    OpenMx::mxEvalByName(
+      "M",
+      model = x[[thismod]],
+      compute = TRUE
+    )[1, growth_variables, drop = FALSE]
   })
 
   if (is.null(time_scale)) {
     time_scale <- seq_along(items)
   }
 
-  predicted_trajectories <- do.call(rbind,
-                                    lapply(1:length(submods), function(x) {
-                                      data.frame(
-                                        Time = time_scale,
-                                        Value = rowSums(loadings[[x]] * estimates[[x]]),
-                                        Class = submods[x]
-                                      )
-                                    }))
+  predicted_trajectories <- do.call(
+    rbind,
+    lapply(seq_along(submods), function(i) {
+      data.frame(
+        Time = time_scale,
+        Value = as.numeric(loadings[[i]] %*% t(estimates[[i]])),
+        Class = submods[i]
+      )
+    })
+  )
   predicted_trajectories$Class <-
     ordered(predicted_trajectories$Class, levels = submods)
   line_plot <- ggplot(NULL)
@@ -238,13 +241,22 @@ plot_one_growth <- function (x, items = NULL, growth_variables = NULL, time_scal
   if (is.null(items)) {
     items <- x$manifestVars
   }
-  loadings <- x$A$values[items, growth_variables]
-  estimates <- matrix(x$M$values[1, growth_variables], nrow = nrow(loadings),
-                      ncol = length(growth_variables), byrow = TRUE)
-  if (is.null(time_scale)) {
-    time_scale <- seq_along(items)
-  }
-  predicted_trajectories <- data.frame(Time = time_scale, Value = rowSums(loadings * estimates))
+  loadings <- OpenMx::mxEvalByName(
+    "A",
+    model = x,
+    compute = TRUE
+  )[items, growth_variables, drop = FALSE]
+
+  estimates <- OpenMx::mxEvalByName(
+    "M",
+    model = x,
+    compute = TRUE
+  )[1, growth_variables, drop = FALSE]
+
+  predicted_trajectories <- data.frame(
+    Time = time_scale,
+    Value = as.numeric(loadings %*% t(estimates))
+  )
   line_plot <- ggplot(NULL)
   if (rawdata) {
     rawdata <- x$data$observed[, items]

@@ -39,8 +39,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(OpenMx)
-#'
 #' dat <- iris[, 1:4]
 #' names(dat) <- c("SL", "SW", "PL", "PW")
 #'

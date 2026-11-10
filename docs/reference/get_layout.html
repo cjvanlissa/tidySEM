@@ -158,9 +158,9 @@ clipboard (see Example 4)</p></li>
 <span class="r-in"><span><span class="co"># copy to clipboard. Reading from the clipboard works differently in Windows</span></span></span>
 <span class="r-in"><span><span class="co"># and Mac. For this example, I used Microsoft Excel.</span></span></span>
 <span class="r-in"><span><span class="co"># On Windows, run:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"clipboard"</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># read.table("clipboard", sep = "\t")</span></span></span>
 <span class="r-in"><span><span class="co"># On Mac, run:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">pipe</a></span><span class="op">(</span><span class="st">"pbpaste"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># read.table(pipe("pbpaste"), sep="\t")</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

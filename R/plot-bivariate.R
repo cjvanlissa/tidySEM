@@ -89,7 +89,6 @@ get_cordat.MxModel <- function(x){
 #' @export
 #' @examples
 #' if(requireNamespace("OpenMx", quietly = TRUE)){
-#' library(OpenMx)
 #' iris_sample <- iris[c(1:5, 145:150), c("Sepal.Length", "Sepal.Width")]
 #' names(iris_sample) <- c("x", "y")
 #' res <- mx_profiles(iris_sample, classes = 2)
@@ -292,6 +291,13 @@ get_palette <- function(x){
   }
 }
 
+#' @export
+print.corplot <- function(x, ...) {
+  grid::grid.newpage()
+  grid::grid.draw(x)
+  invisible(x)
+}
+
 #' @import grid gtable
 #' @importFrom stats na.omit
 merge_corplots <- function(plots, ...) {
@@ -392,9 +398,8 @@ merge_corplots <- function(plots, ...) {
       #                       l = 1, r = 1, z = Inf)
       # gt <- gtable_add_cols(gt, widths = unit(0.5, "line"))
 
-      grid.newpage()
-      grid.draw(gt)
-      invisible(gt)
+      class(gt) <- c("corplot", class(gt))
+      gt
     })
   })
 }

@@ -1,12 +1,22 @@
-writeLines("TRUE", "vignettes/run_everything.txt")
-writeLines("TRUE", "vignettes/pkgdown.txt")
+Sys.setenv(
+  TIDYSEM_RUN_EVERYTHING = "true",
+  TIDYSEM_SHOW_RESULTS = "true"
+)
 f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
-for(thisf in f[7:length(f)]){
-  rmarkdown::render(thisf, clean = FALSE)
+for(thisf in f[1:length(f)]){
+  rmarkdown::render(thisf)
 }
-writeLines("FALSE", "vignettes/run_everything.txt")
+Sys.setenv(
+  TIDYSEM_RUN_EVERYTHING = "false",
+  TIDYSEM_SHOW_RESULTS = "true"
+)
+
 pkgdown::build_site()
 
-writeLines("FALSE", "vignettes/pkgdown.txt")
+Sys.setenv(
+  TIDYSEM_RUN_EVERYTHING = "false",
+  TIDYSEM_SHOW_RESULTS = "false"
+)
 devtools::check()
+devtools::run_examples(run_dontrun = TRUE, run_donttest = TRUE)
 worcs::git_update("run everything in vignettes and update site")
