@@ -40,7 +40,6 @@ First, we load all required packages:
 
 ```{r echo = TRUE}
 library(tidySEM)
-library(OpenMx)
 library(ggplot2)
 library(MASS)
 ```

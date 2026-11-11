@@ -106,61 +106,79 @@ mx_mixture <- function(model,
 #'             classes = 2) -> res
 #' }
 # @importFrom OpenMx imxReportProgress
+
 mx_profiles <- function(data = NULL,
                         classes = 1L,
                         variances = "equal",
                         covariances = "zero",
                         run = TRUE,
                         expand_grid = FALSE,
-                        ...){
-  if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
+                        ...) {
+  if (!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
     return(NULL)
   }
-  if(expand_grid){
+
+  if (expand_grid) {
     grd <- expand.grid(variances, covariances, stringsAsFactors = FALSE)
     variances <- grd[[1]]
     covariances <- grd[[2]]
   }
-  if(length(variances) > 0 & (!hasArg(covariances) | length(covariances) == 1)){
+
+  if (length(variances) > 0 &&
+      (!hasArg(covariances) || length(covariances) == 1)) {
     covariances <- rep(covariances, length(variances))
   }
-  if(length(covariances) > 0 & (!hasArg(variances) | length(variances) == 1)){
+
+  if (length(covariances) > 0 &&
+      (!hasArg(variances) || length(variances) == 1)) {
     variances <- rep(variances, length(covariances))
   }
+
   if (length(variances) != length(covariances)) {
     stop(
       "The 'variances' and 'covariances' arguments must be vectors of equal length. Together, they describe the models to be run."
     )
   }
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM:::mx_mixture")
-  if("variances" %in% names(cl)) cl[["variances"]] <- NULL
-  if("covariances" %in% names(cl)) cl[["covariances"]] <- NULL
-  cl[["data"]] <- data
-  if(length(variances) == 1){
-    cl[["model"]] <- profile_syntax(variances, covariances, names(data))
-    out <- eval.parent(cl)
+
+  # Fit models for each variance/covariance specification
+  out <- mapply(
+    function(v, c) {
+      mx_mixture(
+        model = profile_syntax(v, c, names(data)),
+        data = data,
+        classes = classes,
+        run = run,
+        ...
+      )
+    },
+    v = variances,
+    c = covariances,
+    SIMPLIFY = FALSE
+  )
+
+  out <- if (length(out) == 1L) {
+    out[[1L]]
   } else {
-    out <- mapply(function(v, c){
-      cl[["model"]] <- profile_syntax(variances = v, covariances = c, names(data))
-      eval.parent(cl)
-    }, v = variances, c = covariances, SIMPLIFY = FALSE)
-    out <- do.call(c, out)
+    do.call(c, out)
   }
+
+  # Generate model labels
   vlab <- paste0(c(varying = "free", equal = "equal")[variances], " var")
   clab <- paste0(c(zero = "no", varying = "free", equal = "equal")[covariances], " cov")
   clab[clab == "no cov"] <- NA
   lbs <- gsub(", $", "", paste2(vlab, clab, sep = ", "))
   lbs <- paste(rep(lbs, each = length(classes)), rep(classes, length(lbs)))
-  if(inherits(out, "list")){
+  # Set model classes and names
+  if (inherits(out, "list")) {
     class(out) <- c("mixture_list", class(out))
     names(out) <- lbs
   }
-  if(inherits(out, what = c("MxModel", "MxRAMModel"))){
+  if (inherits(out, what = c("MxModel", "MxRAMModel"))) {
     out <- OpenMx::mxModel(out, name = lbs)
   }
   out
 }
+
 
 
 #' Estimate growth mixture models using OpenMx
@@ -203,18 +221,34 @@ mx_growth_mixture <- function(model,
                               classes = 1L,
                               data = NULL,
                               run = TRUE,
-                              ...){
-  defaults <- list(meanstructure = TRUE, int.ov.free = FALSE,
-                   int.lv.free = TRUE, auto.fix.first = TRUE,
-                   auto.fix.single = TRUE, auto.var = TRUE,
-                   auto.cov.lv.x = TRUE, auto.efa = TRUE,
-                   auto.th = TRUE, auto.delta = TRUE,
-                   auto.cov.y = TRUE)
+                              ...) {
+  defaults <- list(
+    meanstructure = TRUE,
+    int.ov.free = FALSE,
+    int.lv.free = TRUE,
+    auto.fix.first = TRUE,
+    auto.fix.single = TRUE,
+    auto.var = TRUE,
+    auto.cov.lv.x = TRUE,
+    auto.efa = TRUE,
+    auto.th = TRUE,
+    auto.delta = TRUE,
+    auto.cov.y = TRUE
+  )
+
   dots <- list(...)
-  cl <- match.call()
-  cl[names(defaults)[!names(defaults) %in% names(cl)]] <- defaults[!names(defaults) %in% names(cl)]
-  cl[[1L]] <- str2lang("tidySEM:::mx_mixture")
-  eval.parent(cl)
+
+  args <- c(
+    list(
+      model = model,
+      classes = classes,
+      data = data,
+      run = run
+    ),
+    dots,
+    defaults[!names(defaults) %in% names(dots)]
+  )
+  do.call(mx_mixture, args)
 }
 
 #' Estimate latent class analyses using OpenMx
@@ -251,67 +285,140 @@ mx_growth_mixture <- function(model,
 mx_lca <- function(data = NULL,
                    classes = 1L,
                    run = TRUE,
-                   ...){
-  if(!all(sapply(data, inherits, what = "ordered"))) stop("Function mx_lca() only accepts data of an ordinal (binary or ordered categorical) level of measurement.")
-  cl <- match.call()
+                   ...) {
+
+  if (!all(vapply(data, inherits, logical(1), what = "ordered"))) {
+    stop("Function mx_lca() only accepts data of an ordinal (binary or ordered categorical) level of measurement.")
+  }
+
   dots <- list(...)
 
   # Recursive function
-  if(length(classes) > 1){
-    out <- lapply(classes, function(i){
-      cl[["classes"]] <- i
-      cl[[1L]] <- str2lang("tidySEM::mx_lca")
-      eval.parent(cl)
+  if (length(classes) > 1L) {
+    out <- lapply(classes, function(i) {
+      mx_lca(
+        data = data,
+        classes = i,
+        run = run,
+        ...
+      )
     })
+
     class(out) <- c("mixture_list", class(out))
     return(out)
-  } else {
-    # One class model
-    thresh <- mx_deviances(vars = names(data), nThresh = sapply(data, function(x){length(levels(x))})-1L, free = TRUE, values = mx_data_quantiles(data))
+  }
 
+  # One-class model
+  thresh <- mx_deviances(
+    vars = names(data),
+    nThresh = vapply(data, nlevels, integer(1)) - 1L,
+    free = TRUE,
+    values = mx_data_quantiles(data)
+  )
 
-    dots_mxmod <- names(dots)[names(dots) %in% formalArgs(OpenMx::mxModel)]
-    dots_mxmod <- dots[dots_mxmod]
-    c1 <- do.call(OpenMx::mxModel, c(
+  dots_mxmod <- dots[
+    names(dots) %in% formalArgs(OpenMx::mxModel)
+  ]
+
+  c1 <- do.call(
+    OpenMx::mxModel,
+    c(
       list(
         model = "class1",
         type = "RAM",
         manifestVars = names(data),
-        OpenMx::mxPath(from = "one", to = names(data), free = FALSE, values = 0),
-        OpenMx::mxPath(from = names(data), to = names(data), free = FALSE, values = 1, arrows = 2),
-        thresh),
-      dots_mxmod))
-    c1$expectation$thresholds <- "Thresholds"
-    model <- lapply(1:classes, function(i){
-      do.call(OpenMx::mxModel, list(
-        model = c1,
-        name = paste0("class", i)))
-    })
-    cl[["classes"]] <- classes
-    cl[["model"]] <- model
-    cl[["data"]] <- data
-    cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
-    out <- eval.parent(cl)
-    # cl[["model"]] <- out
-    # cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-    # out <- eval.parent(cl)
-    if(run){
-      cl[["model"]] <- out
-      if (is.null(cl[["extraTries"]])) {
-        cl[["extraTries"]] <- 10
-      }
-      cl[[1L]] <- str2lang("OpenMx::mxTryHardOrdinal")
-      keep_these <- which(names(cl) %in% unique(c(formalArgs(OpenMx::mxTryHard), formalArgs(OpenMx::mxTryHardOrdinal))))
-      cl <- cl[c(1, keep_these)]
-      out <- eval.parent(cl)
-      attr(out, "tidySEM") <- "mixture"
-      return(out)
-    } else {
-      out
+        OpenMx::mxPath(
+          from = "one",
+          to = names(data),
+          free = FALSE,
+          values = 0
+        ),
+        OpenMx::mxPath(
+          from = names(data),
+          to = names(data),
+          free = FALSE,
+          values = 1,
+          arrows = 2
+        ),
+        thresh
+      ),
+      dots_mxmod
+    )
+  )
+
+  c1$expectation$thresholds <- "Thresholds"
+
+  model <- lapply(seq_len(classes), function(i) {
+    OpenMx::mxModel(c1, name = paste0("class", i))
+  })
+
+  # Construct mixture model
+  out <- do.call(
+    as_mx_mixture,
+    c(
+      list(
+        model = model,
+        classes = classes,
+        data = data,
+        run = run
+      ),
+      dots
+    )
+  )
+
+  if (run) {
+    # Arguments accepted by mxTryHard / mxTryHardOrdinal
+    tryhard_args <- unique(c(
+      formalArgs(OpenMx::mxTryHard),
+      formalArgs(OpenMx::mxTryHardOrdinal)
+    ))
+
+    dots_tryhard <- dots[
+      names(dots) %in% tryhard_args
+    ]
+
+    if (is.null(dots_tryhard$extraTries)) {
+      dots_tryhard$extraTries <- 10
     }
+    if (is.null(dots_tryhard$silent)) {
+      dots_tryhard$silent <- TRUE
+    }
+    out <- do.call(
+      run_ordinal,
+      c(
+        list(model = out),
+        dots_tryhard
+      )
+    )
+
+    attr(out, "tidySEM") <- "mixture"
   }
+  out
 }
 
+run_ordinal <- function(model, ...) {
+  if (!requireNamespace("OpenMx", quietly = TRUE)) {
+    stop("OpenMx is required.")
+  }
+
+  attached <- "package:OpenMx" %in% search()
+
+  if (!attached) {
+    suppressPackageStartupMessages(
+      do.call(base::library, list(
+        package = "OpenMx",
+        character.only = TRUE
+      ))
+    )
+
+    on.exit(
+      detach("package:OpenMx", unload = FALSE),
+      add = TRUE
+    )
+  }
+
+  OpenMx::mxTryHardOrdinal(model, ...)
+}
 
 #' @method mx_mixture character
 #' @export
@@ -414,55 +521,106 @@ mx_mixture.MxModel <- function(model,
 
 #' @method mx_mixture list
 #' @export
+
 mx_mixture.list <- function(model,
                             classes = 1L,
                             data = NULL,
                             run = TRUE,
-                            ...){
-  #browser() # Check before CRAN
-  cl <- match.call()
+                            ...) {
   dots <- list(...)
-  if(length(classes) > 1){
-    if(classes != length(model)){
-      message("When calling mx_mixture() on a list, the number of classes is inferred from the length of the list. Argument 'classes = ", deparse(classes), "' was ignored.")
+
+  if (length(classes) > 1L) {
+    if (!identical(classes, length(model))) {
+      message(
+        "When calling mx_mixture() on a list, the number of classes ",
+        "is inferred from the length of the list. Argument 'classes = ",
+        deparse(classes), "' was ignored."
+      )
     }
   }
+
   classes <- length(model)
-  if(all(sapply(model, inherits, "character"))){
-    dots_asram <- names(dots)[names(dots) %in% unique(c(formalArgs(lavaan::lavaanify), formalArgs(OpenMx::mxModel)))]
-    dots_asram <- dots[dots_asram]
-    model <- lapply(1:length(model), function(i){
-      do.call(as_ram, c(
-        list(
-          x = model[[i]],
-          model = paste0("class", i)),
-        dots_asram))
+
+  if (all(vapply(model, inherits, logical(1), "character"))) {
+
+    dots_asram <- dots[
+      names(dots) %in% unique(c(
+        formalArgs(lavaan::lavaanify),
+        formalArgs(OpenMx::mxModel)
+      ))
+    ]
+
+    model <- lapply(seq_along(model), function(i) {
+      do.call(
+        as_ram,
+        c(
+          list(
+            x = model[[i]],
+            model = paste0("class", i)
+          ),
+          dots_asram
+        )
+      )
     })
+
   } else {
-    if(!all(sapply(model, inherits, what = c("MxModel", "MxRAMModel")))){
-      stop("Function mx_mixture.list() requires argument 'model' to be a list of lavaan syntaxes or MxModels.")
+
+    if (!all(vapply(
+      model, inherits, logical(1),
+      what = c("MxModel", "MxRAMModel")
+    ))) {
+      stop(
+        "Function mx_mixture.list() requires argument 'model' ",
+        "to be a list of lavaan syntaxes or MxModels."
+      )
     }
-    # Develop functionality for MxModels
-    model <- lapply(1:length(model), function(i){
-      OpenMx::mxModel(name = paste0("class", i),
-              model[[i]])
+
+    model <- lapply(seq_along(model), function(i) {
+      OpenMx::mxModel(
+        model[[i]],
+        name = paste0("class", i)
+      )
     })
   }
-  if(run){
-    cl[["model"]] <- model
-    cl[["classes"]] <- classes
-    cl[["data"]] <- data
-    cl[[1L]] <- str2lang("tidySEM:::as_mx_mixture")
-    cl[["model"]] <- eval.parent(cl)
-    cl[[1L]] <- str2lang("tidySEM:::mixture_starts")
-    cl[["x"]] <- eval.parent(cl)
-    cl[["model"]] <- NULL
-    cl[[1L]] <- str2lang("tidySEM:::run_mx")
-    return(eval.parent(cl))
-  } else {
-    model
+
+  if (!run) {
+    return(model)
   }
+
+  # Construct the mixture model
+  out <- do.call(
+    as_mx_mixture,
+    c(
+      list(
+        model = model,
+        classes = classes,
+        data = data
+      ),
+      dots
+    )
+  )
+
+  # Generate starting values
+  out <- do.call(
+    mixture_starts,
+    c(
+      list(model = out),
+      dots
+    )
+  )
+
+  # Fit the mixture model
+  out <- do.call(
+    run_mx,
+    c(
+      list(x = out),
+      dots
+    )
+  )
+
+  out
 }
+
 
 as_mx_mixture <- function(model,
                           classes,

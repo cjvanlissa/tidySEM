@@ -1,9 +1,20 @@
 # Test that exported mx functions work without library(OpenMx)
 if(requireNamespace("callr", quietly = TRUE)){
   test_openmx <- function(code, tolerance = 1e-6) {
+    testthat::skip_on_cran()
     code <- substitute(code)
 
     run <- function(attach_openmx) {
+      # Create a dedicated temporary directory
+      tmp <- tempfile("tidysem-callr-")
+      dir.create(tmp)
+
+      # Clean up even if the test fails
+      on.exit(
+        unlink(tmp, recursive = TRUE, force = TRUE),
+        add = TRUE
+      )
+
       callr::r(
         function(attach_openmx, code) {
           if (attach_openmx) {
@@ -38,7 +49,13 @@ if(requireNamespace("callr", quietly = TRUE)){
           attach_openmx = attach_openmx,
           code = code
         ),
-        package = FALSE
+        package = FALSE,
+        wd = tmp,
+        env = c(
+          TMPDIR = tmp,
+          TMP = tmp,
+          TEMP = tmp
+        )
       )
     }
 

@@ -40,7 +40,6 @@ We begin by simulating a small data set with three ordinal variables.
 
 ```{r data}
 library(tidySEM)
-library(OpenMx)
 set.seed(1)
 df <- data.frame(rbind(
   matrix(rnorm(300, mean = 2), ncol = 3),

@@ -43,7 +43,6 @@ These data are available in the object `zhao_2025`, and we can load them as foll
 
 ```{r intro-1}
 library(tidySEM)
-library(OpenMx)
 library(ggplot2)
 df <- zhao_2025
 ```
@@ -237,7 +236,7 @@ Note that standardizing indicators is not required and should not affect results
 ### Model Specification
 
 The arguments `variances` and `covariances` control the model specification for LPA.
-For example, a model with equal variances and zero covariances assumpes that every indicator has the same residual variance across classes, and that indicators are "locally independent" (=uncorrelated) within each class, even if they should be correlated at the sample level.
+For example, a model with equal variances and zero covariances assumes that every indicator has the same residual variance across classes, and that indicators are "locally independent" (=uncorrelated) within each class, even if they should be correlated at the sample level.
 Note that you can also specify different (co)variance structures, either for thorough exploration of because you have some theory about e.g., smaller variance in some classes, or different correlations between classes.
 See the help file by running `?mx_profiles`. For example, you could specify the code below. 
 

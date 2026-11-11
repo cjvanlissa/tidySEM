@@ -139,25 +139,19 @@ parse_dag_properties <- function(x){
 prepare_graph.dagitty <- function(model,
                                   rect_height = .5,
                                   rect_width = .5,
-                                  ...){
-  cl <- match.call()
-  if(!"edges" %in% names(cl)) cl[["edges"]] <- get_edges(model)
-  if(!"nodes" %in% names(cl)) cl[["nodes"]] <- get_nodes(model)
-  if(!"layout" %in% names(cl)) cl[["layout"]] <- get_layout(model)
-  cl[["rect_height"]] <- rect_height
-  cl[["rect_width"]] <- rect_width
-  cl[["model"]] <- NULL
-  cl[[1]] <- str2lang("tidySEM::prepare_graph")
-  eval.parent(cl)
+                                  ...) {
+  args <- list(...)
+  if (is.null(args$edges)) args$edges <- get_edges(model)
+  if (is.null(args$nodes)) args$nodes <- get_nodes(model)
+  if (is.null(args$layout)) args$layout <- get_layout(model)
+  args$rect_height <- rect_height
+  args$rect_width <- rect_width
+  do.call(prepare_graph, args)
 }
 
 #' @method graph_sem dagitty
 #' @rdname graph_sem
 #' @export
-graph_sem.dagitty <- function(model,
-                              ...){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM::prepare_graph")
-  out <- eval.parent(cl)
-  return(plot(out))
+graph_sem.dagitty <- function(model, ...) {
+  plot(prepare_graph(model, ...))
 }

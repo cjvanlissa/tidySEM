@@ -161,7 +161,6 @@ res <- tidySEM:::run_cached({
 })
 ```
 ```{r eval = FALSE, echo = TRUE}
-library(OpenMx)
 set.seed(123)
 res <- mx_lca(data = df, classes = 1:3)
 ```

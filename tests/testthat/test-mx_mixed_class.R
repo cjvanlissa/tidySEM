@@ -1,5 +1,4 @@
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 set.seed(1)
 df <- data.frame(rbind(
   matrix(rnorm(300, mean = 2), ncol = 3),

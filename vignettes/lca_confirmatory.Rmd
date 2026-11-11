@@ -74,7 +74,6 @@ We first create a simple dataset containing a single continuous depression score
 
 ```{r}
 library(tidySEM)
-library(OpenMx)
 
 set.seed(123)
 x <- data.frame(
@@ -132,7 +131,7 @@ Our theory posits that the non-depressed class should have a mean near 0, wherea
 We can represent this stronger hypothesis by fixing the two class means to these values,
 or by e.g. setting a parameter constraint for the two classes.
 
-First, create the two-class profile model without estimating it and examine its parameters:
+First, create the two-class profile model without estimating it and examine its parameters. For this, we will use the `OpenMx` function `omxGetParameters()`:
 
 ```{r eval = run_everything || show_results}
 res_theory <- mx_profiles(
@@ -140,6 +139,7 @@ res_theory <- mx_profiles(
   classes = 2,
   run = FALSE
 )
+library(OpenMx)
 omxGetParameters(res_theory)
 ```
 
@@ -278,7 +278,6 @@ We first only use the four scales: `c("burdened", "trapped", "negaffect", "lonel
 # Load required packages
 library(tidySEM) 
 library(ggplot2)
-library(OpenMx)
 # Load data
 df <- zegwaard_carecompass[, c("burdened", "trapped", "negaffect", "loneliness")]
 ```

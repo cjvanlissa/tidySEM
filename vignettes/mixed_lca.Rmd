@@ -45,8 +45,9 @@ This vignette demonstrates how to:
 
 ## Requirements
 
-The `mx_mixed_lca()` function relies on `OpenMx`. Make sure both packages are
-installed and loaded.
+The `mx_mixed_lca()` function relies on `OpenMx`.
+In this tutorial, we also use the `OpenMx` function `mxFactor()`.
+Make sure both `tidySEM` and `OpenMx` are installed and loaded.
 
 ```{r eval = run_chunks}
 library(tidySEM)

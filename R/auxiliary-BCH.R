@@ -98,24 +98,22 @@ prep_auxiliary_model <- function(model, data){
   return(list(model = model, data = data))
 }
 
-bch_continuous <- function(x, y){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM::BCH")
-  cl[["y"]] <- NULL
-  cl[["model"]] <- "y ~1"
-  cl[["data"]] <- data.frame(y = y)
-  eval.parent(cl)
+bch_continuous <- function(x, y) {
+  tidySEM::BCH(
+    x = x,
+    model = "y ~1",
+    data = data.frame(y = y)
+  )
 }
 
-bch_categorical <- function(x, y){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM::BCH")
-  cl[["y"]] <- NULL
+bch_categorical <- function(x, y) {
   cats <- length(levels(y))
-  mod <- paste0("y |t", 1:(cats-1), collapse = "\n")
-  cl[["model"]] <- mod
-  cl[["data"]] <- data.frame(y = OpenMx::mxFactor(y, levels = levels(y)))
-  eval.parent(cl)
+  mod <- paste0("y |t", seq_len(cats - 1), collapse = "\n")
+  tidySEM::BCH(
+    x = x,
+    model = mod,
+    data = data.frame(y = OpenMx::mxFactor(y, levels = levels(y)))
+  )
 }
 
 

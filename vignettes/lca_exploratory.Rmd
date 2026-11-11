@@ -205,7 +205,6 @@ For this, we use the function `saveRDS()`.
 We can later use `res <- readRDS("res_gmm.RData")` to load the analysis from the file.
 
 ```{r fitlca, eval = FALSE, echo = TRUE}
-library(OpenMx)
 set.seed(123)
 res <- mx_profiles(data = df,
                    classes = 1:3,

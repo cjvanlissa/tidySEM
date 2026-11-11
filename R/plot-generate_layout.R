@@ -296,39 +296,56 @@ get_layout <- function(x, ...){
 #' @rdname get_layout
 #' @method get_layout default
 #' @export
-get_layout.default <- function(x, ..., rows = NULL){
-  Args <- as.list(match.call()[-1])
-  if("rows" %in% names(Args)){
-    Args$rows <- NULL
-  } else {
-    if(sum(sapply(Args, is.numeric)) == 1){
-      Args[which(sapply(Args, is.numeric))] <- NULL
+get_layout.default <- function(x, ..., rows = NULL) {
+  dots <- list(...)
+
+  # Determine whether rows was supplied
+  if (is.null(rows)) {
+    numeric_args <- which(vapply(dots, is.numeric, logical(1)))
+
+    if (length(numeric_args) == 1L) {
+      rows <- dots[[numeric_args]]
+      dots <- dots[-numeric_args]
     } else {
-      dots <- list(...)
-      cl <- match.call()
-      cl["columns"] <- list(NULL)
-      cl[[1L]] <- str2lang("tidySEM::table_results")
-      cl$x <- tryCatch(eval.parent(cl), error = function(e){
-        stop("Could not create layout for object.")
-      })
-      if("columns" %in% names(dots)){
-        cl["columns"] <- dots["columns"]
-      }
-      cl[[1L]] <- str2lang("tidySEM::get_layout")
-      return(eval.parent(cl))
+      # Convert object to a results table
+      columns <- dots$columns
+      dots$columns <- NULL
+
+      tab <- tryCatch(
+        do.call(
+          table_results,
+          c(list(x = x, columns = NULL), dots)
+        ),
+        error = function(e) {
+          stop("Could not create layout for object.", call. = FALSE)
+        }
+      )
+
+      return(
+        get_layout(tab, columns = columns)
+      )
     }
   }
-  if(isFALSE(length(Args) %% rows == 0)){
-    stop("Number of arguments is not a multiple of rows = ", rows, call. = FALSE)
+
+  # Construct layout matrix
+  vec <- do.call(c, c(list(x), dots))
+
+  if (length(vec) %% rows != 0L) {
+    stop(
+      "Number of arguments is not a multiple of rows = ",
+      rows,
+      call. = FALSE
+    )
   }
-  vec <- do.call(c, Args)
-  out <- do.call(matrix, list(
+
+  out <- matrix(
     data = vec,
     nrow = rows,
     byrow = TRUE
-  ))
+  )
+
   class(out) <- c("layout_matrix", class(out))
-  return(out)
+  out
 }
 
 

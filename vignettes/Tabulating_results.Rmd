@@ -79,7 +79,6 @@ Note that this requires loading the `OpenMx` package.
 First, we run the model:
 
 ```{r, echo = TRUE, eval = FALSE}
-library(OpenMx)
 model |>
   estimate_mx() -> fit_mx
 table_results(fit_mx)
@@ -87,7 +86,6 @@ table_fit(fit_mx)
 ```
 
 ```{r, eval = requireNamespace("OpenMx", quietly = TRUE), echo = FALSE}
-library(OpenMx)
 estimate_mx(model) -> fit_mx
 table_results(fit_mx)
 table_fit(fit_mx)

@@ -49,7 +49,6 @@ One requirement of all analyses presented here is that the auxiliary data must h
 
 ```{r data}
 library(tidySEM)
-library(OpenMx)
 df <- zegwaard_carecompass
 indicators <- c("burdened", "trapped", "negaffect", "loneliness")
 measurement_data <- df[, indicators]

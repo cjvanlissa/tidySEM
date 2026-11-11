@@ -1,9 +1,11 @@
+devtools::document()
+devtools::spell_check()
 Sys.setenv(
   TIDYSEM_RUN_EVERYTHING = "true",
   TIDYSEM_SHOW_RESULTS = "true"
 )
 f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
-for(thisf in f[1:length(f)]){
+for(thisf in f){
   rmarkdown::render(thisf)
 }
 Sys.setenv(
