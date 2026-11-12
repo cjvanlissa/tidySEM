@@ -24,14 +24,14 @@ filter_graph <- function(x, subset, select, element = "edges", ...){
 
 # @method filter_graph sem_graph
 #' @export
-filter_graph.sem_graph <- function(x, subset, select, element = "edges", ...){
-  if(!element %in% names(x)){
-    stop("Element ", element, " is not an element of the sem_graph object.", call. = FALSE)
-  }
-  Args <- as.list(match.call())
-  Args$x <- x[[element]]
-  Args[[1]] <- as.symbol("subset")
-  x[[element]] <- eval.parent(as.call(Args))
+filter_graph.sem_graph <- function(x, subset, select,
+                                   element = "edges", ...) {
+  cl <- match.call()
+  cl[[1L]] <- quote(base::subset)
+  cl$x <- x[[element]]
+  cl$element <- NULL
+
+  x[[element]] <- eval(cl, envir = parent.frame())
   x
 }
 
@@ -180,9 +180,8 @@ graph_sem.default <- function(edges = NULL,
                               curvature = 60,
                               angle = NULL,
                               fix_coord = FALSE,
-                              ...){
+                              ...) {
   cl <- match.call()
-
   cl[[1L]] <- str2lang("tidySEM::prepare_graph")
   prep <- eval.parent(cl)
   plot(prep)
@@ -202,11 +201,11 @@ graph_sem.lavaan <- function(model,
                              edges = NULL,
                              layout = NULL,
                              nodes = NULL,
-                             ...){
+                             ...) {
   cl <- match.call()
   cl[[1]] <- str2lang("tidySEM::prepare_graph")
   prep <- eval.parent(cl)
-  return(plot(prep))
+  plot(prep)
 }
 
 #' @method graph_sem MxModel
@@ -354,13 +353,9 @@ prepare_graph.default <- function(edges = NULL,
                                   fix_coord = FALSE,
                                   ...
 ){
-
-  Args <- as.list(match.call())[-1]
-  myfor <- formals(prepare_graph.default)
-  for ( v in names(myfor)){
-    if (!(v %in% names(Args)))
-      Args <- append(Args,myfor[v])
-  }
+  Args <- mget(names(formals(prepare_graph.default)),
+               envir = environment(),
+               inherits = FALSE)
 
   # Check if nodes exist in edges and layout --------------------------------
   if(!inherits(layout, "tidy_layout")){
@@ -609,9 +604,9 @@ prepare_graph.lavaan <- function(model,
 #' @method prepare_graph MxModel
 #' @rdname prepare_graph
 #' @export
-prepare_graph.MxModel <- function(model, ...){
+prepare_graph.MxModel <- function(model, ...) {
   cl <- match.call()
-  tab <- table_results(model)
+  tab <- table_results(model, columns = NULL)
   if(!"edges" %in% names(cl)) cl[["edges"]] <- get_edges(tab)
   if(!"nodes" %in% names(cl)) cl[["nodes"]] <- get_nodes(tab)
   if(!"layout" %in% names(cl)) cl[["layout"]] <- get_layout(tab)
@@ -850,29 +845,6 @@ get_nodes <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   UseMethod("get_nodes", x)
 }
 
-# # @method get_nodes mplus.model
-# # @export
-# get_nodes.mplus.model <- function(x, label = "est_sig", ...){
-#   Args <- as.list(match.call()[-1])
-#   Args$x <- table_results(x, columns = NULL)
-#   do.call(get_nodes, Args)
-# }
-
-# @method get_nodes character
-# @export
-# get_nodes.character <- function(x, label = NULL, ...){
-#   dots <- list(...)
-#   cl <- match.call()
-#   cl["columns"] <- list(NULL)
-#   cl[[1L]] <- str2lang("tidySEM::table_results")
-#   cl$x <- eval.parent(cl)
-#   if("columns" %in% names(dots)){
-#     cl["columns"] <- dots["columns"]
-#   }
-#   cl[[1L]] <- str2lang("tidySEM::get_nodes")
-#   eval.parent(cl)
-# }
-
 
 
 #' @method get_nodes lavaan
@@ -884,9 +856,6 @@ get_nodes.lavaan <- function(x, label = paste2(name, est_sig, sep = "\n"), ...){
   cl["columns"] <- list(NULL)
   cl[[1L]] <- str2lang("tidySEM::table_results")
   cl$x <- eval.parent(cl)
-  # if(!fit@Options[["meanstructure"]]){
-  #   message("Use the argument 'meanstructure = TRUE' in the lavaan call to obtain information about node means.")
-  # }
   if("columns" %in% names(dots)){
     cl["columns"] <- dots["columns"]
   }
@@ -1088,20 +1057,7 @@ get_edges.default <- function(x, label = paste2(name, est_sig, sep = "\n"), ...)
   eval.parent(cl)
 }
 
-# @method get_edges character
-# @export
-# get_edges.character <- function(x, label = NULL, ...){
-#   dots <- list(...)
-#   cl <- match.call()
-#   cl["columns"] <- list(NULL)
-#   cl[[1L]] <- str2lang("tidySEM::table_results")
-#   cl$x <- eval.parent(cl)
-#   if("columns" %in% names(dots)){
-#     cl["columns"] <- dots["columns"]
-#   }
-#   cl[[1L]] <- quote(get_edges)
-#   eval.parent(cl)
-# }
+
 
 #' @method get_edges lavaan
 #' @export
@@ -1137,32 +1093,41 @@ get_edges.mplus.model <- get_edges.lavaan
 
 #' @method get_edges tidy_results
 #' @export
-get_edges.tidy_results <- function(x, label = "est_sig", ...){
+get_edges.tidy_results <- function(x, label = "est_sig", ...) {
   dots <- list(...)
   cl <- match.call()
-  if(!is.null(attr(x, "user_specified"))){
+  cl[[1L]] <- quote(tidySEM::get_edges)
+  if (!is.null(attr(x, "user_specified"))) {
     x$show <- attr(x, "user_specified")
   }
-  if("group" %in% names(x)){
-    x_list <- lapply(na.omit(unique(x$group)), function(i){
-      cl$x <- x[x$group == i, -which(names(x) == "group")]
+  if ("group" %in% names(x)) {
+    x_list <- lapply(na.omit(unique(x$group)), function(i) {
+      cl$x <- x[x$group == i, names(x) != "group", drop = FALSE]
+
       tmp <- eval.parent(cl)
-      if(!is.null(tmp)){
+
+      if (!is.null(tmp)) {
         tmp$group <- i
       }
       tmp
     })
     return(bind_list(x_list))
   }
-  if("level" %in% names(x)){
-    x_list <- lapply(na.omit(unique(x$level)), function(i){
-      cl$x <- x[x$level == i, -which(names(x) == "level")]
+  if ("level" %in% names(x)) {
+    x_list <- lapply(na.omit(unique(x$level)), function(i) {
+      cl$x <- x[x$level == i, names(x) != "level", drop = FALSE]
+
       tmp <- eval.parent(cl)
-      tmp$from <- paste0(tmp$from, ".", i)
-      tmp$to <- paste0(tmp$to, ".", i)
-      tmp$level <- i
+
+      if (!is.null(tmp)) {
+        tmp$from <- paste0(tmp$from, ".", i)
+        tmp$to <- paste0(tmp$to, ".", i)
+        tmp$level <- i
+      }
+
       tmp
     })
+
     return(bind_list(x_list))
   }
   if(!all(c("lhs", "rhs", "op") %in% names(x))){

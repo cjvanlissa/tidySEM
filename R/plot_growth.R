@@ -68,10 +68,18 @@ plot_growth <- function(x,
                         jitter_lines = NULL)
 {
   submods <- names(x@submodels)
-  if(is.null(submods)){
-    cl <- match.call()
-    cl[[1L]] <- str2lang("tidySEM:::plot_one_growth")
-    return(eval.parent(cl))
+  if (is.null(submods)) {
+    return(plot_one_growth(
+      x = x,
+      items = items,
+      growth_variables = growth_variables,
+      time_scale = time_scale,
+      bw = bw,
+      rawdata = rawdata,
+      estimated = estimated,
+      alpha_range = alpha_range,
+      jitter_lines = jitter_lines
+    ))
   }
   if (is.null(growth_variables)) {
     growth_variables <- x[[submods[1]]]$latentVars

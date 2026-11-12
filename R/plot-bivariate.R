@@ -103,15 +103,38 @@ plot_bivariate <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata 
 
 #' @method plot_bivariate mixture_list
 #' @export
-plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
-  Args <- match.call()
-  if(length(x) == 1){
-    Args$x <- x[[1]]
-    Args[[1]] <- as.name("plot_bivariate")
-    eval.parent(Args)
-  } else {
-    stop("plot_bivariate can only plot a single mixture model. This object contains ", length(x), " model objects. Extract one of these objects using '$' or '[[]]' and try again. E.g., \n  > plot_bivariate(", deparse(substitute(x)), "[[1]])")
+plot_bivariate.mixture_list <- function(
+    x,
+    variables = NULL,
+    sd = TRUE,
+    cors = TRUE,
+    rawdata = TRUE,
+    bw = FALSE,
+    alpha_range = c(0, .1),
+    return_list = FALSE,
+    ...) {
+
+  if (length(x) != 1L) {
+    stop(
+      "plot_bivariate can only plot a single mixture model. ",
+      "This object contains ", length(x), " model objects. ",
+      "Extract one of these objects using '$' or '[[]]' ",
+      "and try again. E.g., \n  > plot_bivariate(",
+      deparse(substitute(x)), "[[1]])"
+    )
   }
+
+  plot_bivariate(
+    x = x[[1]],
+    variables = variables,
+    sd = sd,
+    cors = cors,
+    rawdata = rawdata,
+    bw = bw,
+    alpha_range = alpha_range,
+    return_list = return_list,
+    ...
+  )
 }
 
 #' @method plot_bivariate MxModel

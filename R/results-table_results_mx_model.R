@@ -1,18 +1,31 @@
 #' @method table_results mixture_list
 #' @export
-table_results.mixture_list <- function (x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "class", "level"), digits = 2, format_numeric = TRUE, ...)
-{
-  cl <- match.call()
-  out <- suppressWarnings(lapply(x, function(thismod){
-    cl[[1L]] <- str2lang("tidySEM::table_results")
-    cl[["x"]] <- thismod
-    tmp <- eval.parent(cl)
+table_results.mixture_list <- function(
+    x,
+    columns = c("label", "est_sig", "se", "pval", "confint",
+                "group", "class", "level"),
+    digits = 2,
+    format_numeric = TRUE,
+    ...) {
+
+  out <- suppressWarnings(lapply(x, function(thismod) {
+    tmp <- table_results(
+      x = thismod,
+      columns = columns,
+      digits = digits,
+      format_numeric = format_numeric,
+      ...
+    )
+
     tmp$model <- thismod$name
-    if(!"class" %in% names(tmp) & thismod$name == "mix1"){
+
+    if (!"class" %in% names(tmp) && thismod$name == "mix1") {
       tmp$class <- "class1"
     }
+
     tmp
   }))
+
   out <- bind_list(out)
   rownames(out) <- NULL
   out
@@ -397,50 +410,6 @@ has_submod <- function(x, depth = 0L) {
   any(vapply(subs, has_submod, logical(1), depth = depth - 1L))
 }
 
-# alg_names <- function(x, ...){
-#   if(!is.null(names(x@algebras))){
-#     out <- list(names(x@algebras))
-#   } else {
-#     out <- list()
-#   }
-#   if(tidySEM:::has_submod(x)){
-#     subs <- names(attr(x, "submodels"))
-#     fromsubs <- lapply(subs, function(thesub){alg_names(x[[thesub]])})
-#     names(fromsubs) <- subs
-#     out <- c(out, fromsubs)
-#   } else {
-#     return(out)
-#   }
-#   out <- unlist(out, use.names = TRUE)
-#   paste(names(out), out, sep = ".")
-# }
-
-# @importFrom OpenMx mxSE omxGetParameters
-# get_algebras <- function(x, ...){
-#   if(!isTRUE(requireNamespace("OpenMx", quietly = TRUE))) {
-#     return(NULL)
-#   }
-#   cl <- match.call()
-#   cl[[1L]] <- str2lang("tidySEM:::.get_algebras_internal")
-#   algs <- eval.parent(cl)
-#   Estimate <- unlist_mx(algs, "result")
-#   if(is.null(Estimate)) return(NULL)
-#   out <- data.frame(name = names(Estimate),
-#                     matrix =  unlist_mx(algs, element = "name"),
-#                     row = unlist_mx(algs, element = "formula"),
-#                     col = ":=",
-#                     Estimate = Estimate, row.names = NULL)
-#   out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
-#   out
-# }
-
-# alg_to_res <- function(x, ...){
-#   out <- .alg_to_res_internal(x, ...)
-#   out <- bind_list(flat(out))
-#   out$Std.Error <- unlist(lapply(out$name, function(thispar){ tryCatch(OpenMx::mxSE(thispar, model = x, silent = TRUE), error = function(e){ NA }) }))
-#   out
-# }
-
 alg_to_res <- function(x, ...) {
 
   out <- flat(.alg_to_res_internal(x, ...))
@@ -575,35 +544,17 @@ flat <- function(x) {
   out
 }
 
-# tmp <- get_algebras(resSD)
-# alg_names <- names(unlist(tmp))
 
-# unlist_mx <- function(x){
-#   lapply(x, function(i){
-#     if(inherits(i, "list")){
-#       lapply(i, unlist_mx)
-#     } else {
-#       out <- i$result
-#       if(sum(dim(i$result)) == 2){
-#         names(out) <- i$name
-#       } else {
-#         out <- as.vector(out)
-#         names(out) <- paste0(i$name, "[",
-#                paste(rep(1:dim(i$result)[1], dim(i$result)[2]),
-#                      rep(1:dim(i$result)[2], each = dim(i$result)[1]), sep = ","), "]")
-#       }
-#       out
-#     }
-#   })
-#}
+unlist_mx <- function(i, element, ...) {
+  out <- unlist(unlist_mx2(i = i, element = element, ...))
 
-unlist_mx <- function(i, element, ...){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM:::unlist_mx2")
-  out <- unlist(eval.parent(cl))
-  if(!is.null(out)) names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
+  if (!is.null(out)) {
+    names(out) <- gsub(".[", "[", names(out), fixed = TRUE)
+  }
+
   out
 }
+
 unlist_mx2 <- function(i, element, ...){
   if(inherits(i, "list")){
     out <- lapply(i, unlist_mx2, element = element, ...)

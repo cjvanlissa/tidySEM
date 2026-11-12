@@ -2,12 +2,9 @@
 % Please edit documentation in R/lazy_bootstrap.R
 \name{pmc}
 \alias{pmc}
-\alias{pmc_srmr}
 \title{Predictive Model Comparison}
 \usage{
 pmc(x, ..., reps = 20, ci = 0.95, FUN = NULL)
-
-pmc_srmr(x, ..., reps = 20, ci = 0.95)
 }
 \arguments{
 \item{x}{An object for which a method exists.}

@@ -17,15 +17,6 @@ pmc <- function(x, ..., reps = 20, ci = .95, FUN = NULL){
   UseMethod("pmc", x)
 }
 
-#' @rdname pmc
-#' @export
-pmc_srmr <- function(x, ..., reps = 20, ci = .95){
-  .Deprecated("pmc")
-  cl <- match.call()
-  cl[[1]] <- quote(pmc)
-  eval.parent(cl)
-}
-
 #' @title Calculate Standardized Root Mean Residual
 #' @description Given two datasets, computes the correlation matrix for both,
 #' and then calculates the standardized root mean residual difference between

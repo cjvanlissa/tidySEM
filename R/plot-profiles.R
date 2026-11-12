@@ -259,16 +259,28 @@ plot_profiles.mixture_list <- function(x, variables = NULL, ci = .95, sd = TRUE,
 
 #' @method plot_profiles MxModel
 #' @export
-plot_profiles.MxModel <- function(x, variables = NULL, ci = .95, sd = TRUE, add_line = FALSE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), ...){
-   cl <- match.call()
-   cl[[1L]] <- str2lang("tidySEM:::plot_profiles")
-   x <- list(model = x)
-   names(x) <- x$model@name
-   class(x) <- c("mixture_list", class(x))
-   cl[["x"]] <- x
-   eval.parent(cl)
-}
+plot_profiles.MxModel <- function(x, variables = NULL, ci = .95,
+                                  sd = TRUE, add_line = FALSE,
+                                  rawdata = TRUE, bw = FALSE,
+                                  alpha_range = c(0, .1), ...) {
+  x <- structure(
+    list(x),
+    names = x@name,
+    class = c("mixture_list", "list")
+  )
 
+  plot_profiles(
+    x = x,
+    variables = variables,
+    ci = ci,
+    sd = sd,
+    add_line = add_line,
+    rawdata = rawdata,
+    bw = bw,
+    alpha_range = alpha_range,
+    ...
+  )
+}
 .get_long_data <- function (x, ...)
 {
     if (inherits(x, what = c("MxModel", "MxRAMModel"))) {

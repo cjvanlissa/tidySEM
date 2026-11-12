@@ -140,15 +140,24 @@ plot_density.MxModel <- function(x,
                                  alpha = .2,
                                  facet_labels = NULL,
                                  ...) {
-    cl <- match.call()
-    cl[[1L]] <- str2lang("tidySEM:::plot_density")
-    x <- list(model = x)
-    names(x) <- x$model@name
-    class(x) <- c("mixture_list", class(x))
-    cl[["x"]] <- x
-    eval.parent(cl)
-}
+  model_name <- x@name
 
+  x <- structure(
+    list(x),
+    names = model_name,
+    class = c("mixture_list", "list")
+  )
+
+  plot_density(
+    x = x,
+    variables = variables,
+    bw = bw,
+    conditional = conditional,
+    alpha = alpha,
+    facet_labels = facet_labels,
+    ...
+  )
+}
 
 
 .plot_density_fun <- function(plot_df, variables, bw = FALSE, conditional = FALSE, alpha = .2){

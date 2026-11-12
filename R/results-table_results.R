@@ -99,11 +99,20 @@ table_results <- function(x, columns = c("label", "est_sig", "se", "pval", "conf
 
 #' @method table_results mplusObject
 #' @export
-table_results.mplusObject <- function(x, columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"), digits = 2, format_numeric = TRUE, ...){
-  cl <- match.call()
-  cl$x <- x$results
-  cl[[1L]] <- str2lang("tidySEM::table_results")
-  eval.parent(cl)
+table_results.mplusObject <- function(
+    x,
+    columns = c("label", "est_sig", "se", "pval", "confint", "group", "level"),
+    digits = 2,
+    format_numeric = TRUE,
+    ...) {
+
+  table_results(
+    x = x$results,
+    columns = columns,
+    digits = digits,
+    format_numeric = format_numeric,
+    ...
+  )
 }
 
 
@@ -728,13 +737,10 @@ can_be_numeric <- function(x){
   out & !sapply(x, inherits, what = "logical")
 }
 
-format_with_na <- function(x, ...){
-  cl <- match.call()
+format_with_na <- function(x, ...) {
   missings <- is.na(x)
-  out <- rep(NA, length(x))
-  cl$x <- na.omit(x)
-  cl[[1L]] <- quote(formatC)
-  out[!missings] <- eval.parent(cl)
+  out <- rep(NA_character_, length(x))
+  out[!missings] <- formatC(x[!missings], ...)
   out
 }
 
