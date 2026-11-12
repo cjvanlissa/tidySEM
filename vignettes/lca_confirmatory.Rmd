@@ -41,9 +41,6 @@ if (show_results) {
 if (!run_openmx) {
   run_everything <- show_results <- FALSE
 }
-# Identify the Rmd being rendered
-input <- knitr::current_input(dir = TRUE)
-cache_dir <- file.path(dirname(input), paste0("cache_", tools::file_path_sans_ext(basename(input))))
 ```
 
 
@@ -327,20 +324,18 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~Variable)+
   theme_bw()
 ```
-```{r, echo = FALSE, eval = run_everything}
-# mcartest <- mice::mcar(df)
-df_plot <- df
-names(df_plot) <- paste0("Value.", names(df_plot))
-df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
-                   timevar = "Variable")
-p <- ggplot(df_plot, aes(x = Value)) +
-  geom_density() +
-  facet_wrap(~Variable)+
-  theme_bw()
-ggsave(file.path(cache_dir, "plot_lpa_desc.png"), p, device = "png", width = 100, height = 100, units = "mm")
-```
-```{r figdesc, echo = FALSE, eval = show_results, out.width="80%"}
-knitr::include_graphics(file.path(cache_dir, "plot_lpa_desc.png"))
+```{r figdesc, echo = FALSE, eval = run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+  # mcartest <- mice::mcar(df)
+  df_plot <- df
+  names(df_plot) <- paste0("Value.", names(df_plot))
+  df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
+                     timevar = "Variable")
+  ggplot(df_plot, aes(x = Value)) +
+    geom_density() +
+    facet_wrap(~Variable) +
+    theme_bw()
+}, type = "png", width = 100 / 25.4, height = 100 / 25.4)
 ```
 
 ## Conducting Latent Profile Analysis
@@ -563,14 +558,12 @@ However, we omit the density plots, because `plot_bivariate()` also includes the
 ```{r echo = TRUE, eval = FALSE}
 plot_bivariate(res_final)
 ```
-```{r echo = FALSE, eval = run_everything, results='hide'}
-p <- plot_bivariate(res_final, return_list = TRUE)
-p[[1]] <- p[[1]] + scale_y_continuous(breaks= c(0, .1, .2, .3), labels = c(".0", ".1", ".2", ".3"))
-p <- tidySEM:::merge_corplots(p)
-ggsave(file.path(cache_dir, "lpa_bivariate.png"), p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
-```
-```{r echo = FALSE, eval = show_results, fig.cap="Bivariate profile plot", out.width="80%"}
-knitr::include_graphics(file.path(cache_dir, "lpa_bivariate.png"))
+```{r lpa-bivariate-plot, echo = FALSE, eval = run_everything || show_results, fig.cap="Bivariate profile plot", out.width="100%"}
+tidySEM:::run_cached({
+  p <- plot_bivariate(res_final, return_list = TRUE)
+  p[[1]] <- p[[1]] + scale_y_continuous(breaks = c(0, .1, .2, .3), labels = c(".0", ".1", ".2", ".3"))
+  tidySEM:::merge_corplots(p)
+}, type = "png", width = 315 / 25.4, height = 150 / 25.4)
 ```
 
 On the diagonal of the bivariate plot are weighted density plots:
@@ -606,12 +599,13 @@ Note however that the observed classes do not match the hypothesized pattern of 
 ```{r echo = TRUE, eval = FALSE}
 plot_profiles(res_final)
 ```
-```{r echo = FALSE, eval = run_everything, results='hide'}
-p <- plot_profiles(res_final)
-ggsave(file.path(cache_dir, "lpa_profiles.png"), p, device = "png", width = 100, height = 100, units = "mm", scale = 1)
-```
-```{r echo = FALSE, eval = show_results, fig.cap="Profile plot", out.width="80%"}
-knitr::include_graphics(file.path(cache_dir, "lpa_profiles.png"))
+```{r lpa-profiles-plot, echo = FALSE, eval = run_everything || show_results, fig.cap="Profile plot", out.width="100%"}
+tidySEM:::run_cached(
+  plot_profiles(res_final),
+  type = "png",
+  width = 100 / 25.4,
+  height = 100 / 25.4
+)
 ```
 
 

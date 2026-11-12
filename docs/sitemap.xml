@@ -8,7 +8,9 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_exploratory.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_mixed.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/articles/lca_pmc.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa_confiratory.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/articles/lpa_exploratory.html</loc></url>
@@ -113,6 +115,7 @@
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/run_mx.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/SBChisquare.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/SB_chisq_Pvalues.html</loc></url>
+<url><loc>https://cjvanlissa.github.io/tidySEM/reference/score_items.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/skew_kurtosis.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/srmr.html</loc></url>
 <url><loc>https://cjvanlissa.github.io/tidySEM/reference/syntax.html</loc></url>

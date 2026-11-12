@@ -40,11 +40,11 @@
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
     <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_mixed.html">Mixed Data LCA</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
-    <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_pmc.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/openmx_ordinal.html">Ordinal Indicators in OpenMx Models</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/pmc_tutorial.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
@@ -190,7 +190,7 @@ at the lower end of the scale.</p>
 <code class="sourceCode R"><span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">df</span>, direction <span class="op">=</span> <span class="st">"long"</span>, varying <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">scl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cache_lca_lcga/plot_dist.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="cache_lca_lcga/lcga-plot-dist.png" class="r-plt" alt="" width="100%"></p>
 <p>As this type of skew can result in convergence problems in LCGA, we
 compared several transformations to reduce skew: The square and cube
 root, log, inverse, and Box-Cox transformations.</p>
@@ -240,7 +240,7 @@ root, log, inverse, and Box-Cox transformations.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span>, colour <span class="op">=</span> <span class="va">Transformation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"scl (rescaled to 0-1)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cache_lca_lcga/plot_trans.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="cache_lca_lcga/lcga-plot-trans.png" class="r-plt" alt="" width="100%"></p>
 <p>Evidently, the Box-Cox transformation reduced skew the most.
 Consequently, we proceeded with the Box-Cox transformed scores for
 analysis.</p>
@@ -410,7 +410,7 @@ Moreover, the BIC increased after 3 classes. A three-class solution thus
 appears to be the most parsimonious solution with good fit.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tab_fit</span>, statistics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AIC"</span>, <span class="st">"BIC"</span>, <span class="st">"saBIC"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cache_lca_lcga/lcga_plot_fit.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="cache_lca_lcga/lcga-plot-fit.png" class="r-plt" alt="" width="100%"></p>
 <p>Based on the aforementioned criteria, we selected a 3-class model for
 further analyses. First, to prevent label switching, we re-order these
 classes by the value of the intercept <code>i</code>. Then, we report
@@ -802,7 +802,7 @@ trajectories.</p>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="va">labs</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"SCL (rescaled from Box-Cox)"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<p><img src="cache_lca_lcga/plot_traj.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="cache_lca_lcga/lcga-plot-traj.png" class="r-plt" alt="" width="100%"></p>
 <p>Note that the observed individual trajectories show very high
 variability within classes.</p>
 </div>

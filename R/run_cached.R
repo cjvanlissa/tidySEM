@@ -1,69 +1,63 @@
-run_cached <- function(expr) {
-  run_everything <- isTRUE(as.logical(toupper(
-    Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false")
-  )))
-
+run_cached <- function(expr, type = c("rds", "png"),
+                       width = 7, height = 4.5, dpi = 150) {
   expr <- substitute(expr)
+  type <- match.arg(type)
 
   # Identify the Rmd being rendered
   input <- knitr::current_input(dir = TRUE)
 
+  # Interactive execution: evaluate without caching
   if (is.null(input) || !nzchar(input)) {
-    stop("run_cached() must be called while rendering an Rmd file.")
+    return(eval(expr, envir = parent.frame()))
   }
+  input <- normalizePath(input, mustWork = TRUE)
+  run_everything <- isTRUE(as.logical(toupper(
+    Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false")
+  )))
 
-  # Create a cache directory specific to the Rmd
+  # Create vignette-specific cache directory
+  input <- normalizePath(input, mustWork = TRUE)
+
   cache_dir <- file.path(
     dirname(input),
     paste0("cache_", tools::file_path_sans_ext(basename(input)))
   )
 
-  # Get current chunk label
   label <- knitr::opts_current$get("label")
 
   if (is.null(label) || !nzchar(label)) {
-    stop("run_cached() must be called inside a labeled R Markdown chunk.")
+    stop("run_cached() requires a labeled R Markdown chunk.")
   }
 
-  # Create cache directory if needed
-  if (!dir.exists(cache_dir)) {
-    dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-  }
-
-  # Add cache directory to .gitignore
-  gitignore <- file.path(dirname(input), "..", ".gitignore")
-
-  ignore_rule <- paste0(
-    "!vignettes/", basename(cache_dir), "/"
-  )
-
-  ignore_contents <- if (file.exists(gitignore)) {
-    readLines(gitignore, warn = FALSE)
-  } else {
-    character()
-  }
-
-  if (!ignore_rule %in% ignore_contents) {
-    cat(
-      "\n", ignore_rule, "\n",
-      paste0(ignore_rule, "**"), "\n",
-      file = gitignore,
-      append = TRUE,
-      sep = ""
-    )
-  }
-
-  path <- file.path(cache_dir, paste0(label, ".rds"))
+  path <- file.path(cache_dir, paste0(label, ".", type))
 
   if (run_everything) {
+    dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+
     result <- eval(expr, envir = parent.frame())
-    saveRDS(result, path)
+
+    if (type == "rds") {
+      saveRDS(result, path)
+    } else {
+      ggplot2::ggsave(
+        filename = path,
+        plot = result,
+        width = width,
+        height = height,
+        dpi = dpi
+      )
+    }
+
   } else {
     if (!file.exists(path)) {
       stop("Cached result not found: ", path)
     }
 
-    result <- readRDS(path)
+    result <- if (type == "rds") {
+      readRDS(path)
+    } else {
+      knitr::include_graphics(path)
+    }
   }
 
   result

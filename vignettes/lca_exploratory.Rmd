@@ -25,10 +25,6 @@ run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING",
 show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
 if (!run_openmx) run_everything <- show_results <- FALSE
 if (show_results) knitr::opts_chunk$set(results = "markup")
-input <- knitr::current_input(dir = TRUE)
-if (is.null(input) || !nzchar(input)) stop("Cannot determine the vignette filename.")
-cache_dir <- file.path(dirname(input), paste0("cache_", tools::file_path_sans_ext(basename(input))))
-if (run_everything) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 ```
 
 This is an example of exploratory latent class analysis (LCA) with continuous indicators,
@@ -101,23 +97,17 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~Variable)+
   theme_bw()
 ```
-```{r image-desc, echo = FALSE, eval = run_everything}
+```{r image-desc, echo = FALSE, eval = run_everything || show_results, out.width = "100%"}
+tidySEM:::run_cached({
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
                    timevar = "Variable")
-p <- ggplot(df_plot, aes(x = Value)) +
+ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave(file.path(cache_dir, "plot_gmm_desc.png"), p, device = "png", width = 100, height = 100, units = "mm")
-```
-```{r figdesc, echo = FALSE, eval = show_results, out.width = "100%"}
-df_plot <- df
-names(df_plot) <- paste0("Value.", names(df_plot))
-df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
-                   timevar = "Variable")
-knitr::include_graphics(file.path(cache_dir, "plot_gmm_desc.png"))
+}, type = "png", width = 100/25.4, height = 100/25.4, dpi = 150)
 ```
 
 Both the table above and the density plot indicate that the data are extremely right-skewed and kurtotic.
@@ -134,15 +124,13 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~Variable)+
   theme_bw()
 ```
-```{r image-desc-log, echo = FALSE, eval = run_everything}
-p <- ggplot(df_plot, aes(x = Value)) +
+```{r image-desc-log, echo = FALSE, eval = run_everything || show_results, out.width = "100%"}
+tidySEM:::run_cached({
+ggplot(df_plot, aes(x = Value)) +
   geom_density() +
   facet_wrap(~Variable)+
   theme_bw()
-ggsave(file.path(cache_dir, "plot_gmm_desc_log.png"), p, device = "png", width = 100, height = 100, units = "mm")
-```
-```{r figdesclog, echo = FALSE, eval = show_results, out.width = "100%"}
-knitr::include_graphics(file.path(cache_dir, "plot_gmm_desc_log.png"))
+}, type = "png", width = 100/25.4, height = 100/25.4, dpi = 150)
 ```
 
 The log transformation addresses the aforementioned concerns regarding skew and kurtosis.
@@ -160,14 +148,12 @@ ggplot(df, aes(x = length, y = width)) +
   geom_point(alpha = .1) +
   theme_bw()
 ```
-```{r image-scatter, eval = run_everything, echo = FALSE}
-p <- ggplot(df, aes(x = length, y = width)) +
+```{r image-scatter, echo = FALSE, eval = run_everything || show_results, out.width = "100%"}
+tidySEM:::run_cached({
+ggplot(df, aes(x = length, y = width)) +
   geom_point(alpha = .1) +
   theme_bw()
-ggsave(file.path(cache_dir, "plot_gmm_scatter.png"), p, device = "png", width = 100, height = 100, units = "mm")
-```
-```{r figscatter, eval = show_results, echo = FALSE, out.width = "100%"}
-knitr::include_graphics(file.path(cache_dir, "plot_gmm_scatter.png"))
+}, type = "png", width = 100/25.4, height = 100/25.4, dpi = 150)
 ```
 
 <!-- As evident from the scatterplot, there is a very strong linear tend in the data. -->
@@ -299,12 +285,10 @@ Note that, due to the large sample size, all ICs give identical conclusions.
 ```{r echo = TRUE, eval = FALSE}
 plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
-```{r image-fit, echo = FALSE, eval = run_everything}
-p <- plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave(file.path(cache_dir, "gmm_plotfit.png"), p, device = "png", width = 100, height = 100, units = "mm", scale = 1)
-```
-```{r echo = FALSE, eval = show_results, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics(file.path(cache_dir, "gmm_plotfit.png"))
+```{r image-fit, echo = FALSE, eval = run_everything || show_results, out.width = "100%", fig.cap="Bivariate profile plot"}
+tidySEM:::run_cached({
+plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}, type = "png", width = 100/25.4, height = 100/25.4, dpi = 150)
 ```
 
 Looking at the blocks of 1-4 class models for each model specification,
@@ -346,12 +330,10 @@ However, we omit the density plots, because `plot_bivariate()` also includes the
 ```{r echo = TRUE, eval = FALSE}
 plot_bivariate(res_bic)
 ```
-```{r image-bivariate, echo = FALSE, eval = run_everything}
-p <- plot_bivariate(res_bic)
-ggsave(file.path(cache_dir, "gmm_bivariate_bic.png"), p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
-```
-```{r echo = FALSE, eval = show_results, fig.cap="Bivariate profile plot", out.width="100%"}
-knitr::include_graphics(file.path(cache_dir, "gmm_bivariate_bic.png"))
+```{r image-bivariate, echo = FALSE, eval = run_everything || show_results, out.width = "100%", fig.cap="Bivariate profile plot"}
+tidySEM:::run_cached({
+plot_bivariate(res_bic)
+}, type = "png", width = 315/25.4, height = 150/25.4, dpi = 150)
 ```
 
 On the diagonal of the bivariate plot are weighted density plots:

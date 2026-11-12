@@ -40,11 +40,11 @@
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
     <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_mixed.html">Mixed Data LCA</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
-    <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_pmc.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/openmx_ordinal.html">Ordinal Indicators in OpenMx Models</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/pmc_tutorial.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
@@ -412,7 +412,7 @@ table: the data are kurtotic (peaked).</p>
 <span>    timevar <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Variable</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cache_lca_confirmatory/plot_lpa_desc.png" class="r-plt" alt="" width="80%"></p>
+<p><img src="cache_lca_confirmatory/figdesc.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="conducting-latent-profile-analysis">Conducting Latent Profile Analysis<a class="anchor" aria-label="anchor" href="#conducting-latent-profile-analysis"></a>
@@ -978,7 +978,7 @@ because <code><a href="../reference/plot_bivariate.html">plot_bivariate()</a></c
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_bivariate.html">plot_bivariate</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="cache_lca_confirmatory/lpa_bivariate.png" class="r-plt" alt="Bivariate profile plot" width="80%"><p class="caption">
+<img src="cache_lca_confirmatory/lpa-bivariate-plot.png" class="r-plt" alt="Bivariate profile plot" width="100%"><p class="caption">
 Bivariate profile plot
 </p>
 </div>
@@ -1014,7 +1014,7 @@ not match the hypothesized pattern of class parameters exactly.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res_final</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="cache_lca_confirmatory/lpa_profiles.png" class="r-plt" alt="Profile plot" width="80%"><p class="caption">
+<img src="cache_lca_confirmatory/lpa-profiles-plot.png" class="r-plt" alt="Profile plot" width="100%"><p class="caption">
 Profile plot
 </p>
 </div>

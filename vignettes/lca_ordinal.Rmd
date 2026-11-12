@@ -24,10 +24,6 @@ run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING",
 show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
 if (!run_openmx) run_everything <- show_results <- FALSE
 if (show_results) knitr::opts_chunk$set(results = "markup")
-# run_cached() manages the directory and Git rules when invoked.
-input <- knitr::current_input(dir = TRUE)
-if (is.null(input) || !nzchar(input)) stop("Cannot determine the vignette filename.")
-cache_dir <- file.path(dirname(input), paste0("cache_", tools::file_path_sans_ext(basename(input))))
 
 ```
 
@@ -110,19 +106,14 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~time, scales = "free")+
   theme_bw()
 ```
-```{r cache-plot-desc, echo = FALSE, eval = run_everything}
-df_plot <- df
-names(df_plot) <- paste0("Value.", names(df_plot))
-df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
-p <- ggplot(df_plot, aes(x = Value)) +
-  geom_bar() + facet_wrap(~time, scales = "free") + theme_bw()
-dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-ggsave(file.path(cache_dir, "lca_fast_plot_desc.png"), p,
-       device = "png", width = 100, height = 100, units = "mm")
-```
-
-```{r figdesc, echo = FALSE, eval = show_results, fig.cap="Bar charts for ordinal indicators", out.width="100%"}
-knitr::include_graphics(file.path(cache_dir, "lca_fast_plot_desc.png"))
+```{r figdesc, echo = FALSE, eval = run_everything || show_results, fig.cap="Bar charts for ordinal indicators", out.width="100%"}
+tidySEM:::run_cached({
+  df_plot <- df
+  names(df_plot) <- paste0("Value.", names(df_plot))
+  df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
+  ggplot(df_plot, aes(x = Value)) +
+    geom_bar() + facet_wrap(~time, scales = "free") + theme_bw()
+}, type = "png", width = 100 / 25.4, height = 100 / 25.4)
 ```
 
 As we can see, the `descriptives()` table provides invaluable information about the measurement level of the indicators,
@@ -242,14 +233,13 @@ The results can also be interpreted by plotting the response probabilities:
 ```{r echo = TRUE, eval = FALSE}
 plot_prob(res_final, bw = TRUE)
 ```
-```{r cache-plot-prob, echo = FALSE, eval = run_everything}
-p <- plot_prob(res_final, bw = TRUE)
-dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
-ggsave(file.path(cache_dir, "lca_fast_prob.png"), p,
-       device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
-```
-```{r figprob, echo = FALSE, eval = show_results, fig.cap="Probability plot", out.width="100%"}
-knitr::include_graphics(file.path(cache_dir, "lca_fast_prob.png"))
+```{r figprob, echo = FALSE, eval = run_everything || show_results, fig.cap="Probability plot", out.width="100%"}
+tidySEM:::run_cached(
+  plot_prob(res_final, bw = TRUE),
+  type = "png",
+  width = 210 / 25.4 * 1.5,
+  height = 100 / 25.4 * 1.5
+)
 ```
 
 Use the response-probability plot to compare the identity patterns across classes. Class labels should be chosen based on the newly estimated probabilities rather than carried over from the original analysis.

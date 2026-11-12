@@ -5,7 +5,7 @@ Sys.setenv(
   TIDYSEM_SHOW_RESULTS = "true"
 )
 f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
-for(thisf in f){
+for(thisf in f[1:length(f)]){
   rmarkdown::render(thisf)
 }
 Sys.setenv(

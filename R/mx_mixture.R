@@ -359,8 +359,7 @@ mx_lca <- function(data = NULL,
       list(
         model = model,
         classes = classes,
-        data = data,
-        run = run
+        data = data
       ),
       dots
     )
@@ -380,17 +379,21 @@ mx_lca <- function(data = NULL,
     if (is.null(dots_tryhard$extraTries)) {
       dots_tryhard$extraTries <- 10
     }
-    if (is.null(dots_tryhard$silent)) {
-      dots_tryhard$silent <- TRUE
-    }
-    out <- do.call(
-      run_ordinal,
-      c(
-        list(model = out),
-        dots_tryhard
+    silent <- !isFALSE(dots_tryhard$silent)
+    dots_tryhard$silent <- FALSE
+    if (silent) {
+      out <- suppressMessages(
+        do.call(
+          OpenMx::mxTryHardOrdinal,
+          c(list(model = out), dots_tryhard)
+        )
       )
-    )
-
+    } else {
+      out <- do.call(
+        OpenMx::mxTryHardOrdinal,
+        c(list(model = out), dots_tryhard)
+      )
+    }
     attr(out, "tidySEM") <- "mixture"
   }
   out
