@@ -79,8 +79,6 @@ At this point, we could simply plot the graph:
 graph_sem(model = fit)
 ```
 
-![](pgfig1.png)
-
 This uses a default layout. However, the node placement is not very
 aesthetically pleasing. One of the areas where `tidySEM` really excels
 is customization. Because every aspect of the graph is represented as
@@ -116,9 +114,9 @@ this layout as a matrix, you can run:
 
 get_layout(fit)
 #>      [,1] [,2]    [,3]      [,4]
-#> [1,] "x8" "x6"    "x4"      "x5"
-#> [2,] "x9" "speed" "textual" "x3"
-#> [3,] "x7" "x1"    "visual"  "x2"
+#> [1,] "x9" "x5"    "textual" "x6"
+#> [2,] "x7" "speed" "visual"  "x4"
+#> [3,] "x8" "x1"    "x2"      "x3"
 #> attr(,"class")
 #> [1] "layout_matrix" "matrix"        "array"
 ```
@@ -250,8 +248,6 @@ We could plot the CFA model with this custom layout as follows:
 
 graph_sem(fit, layout = lay)
 ```
-
-![](pgfig2_1.png)
 
 ### Step 4: Customize nodes and edges
 
@@ -584,29 +580,29 @@ object and examine the `edges` element:
 p <- prepare_graph(fit)
 edges(p)
 #>       from      to arrow   label connect_from connect_to curvature linetype
-#> 1   visual      x1  last    1.00         left      right        NA        1
-#> 2   visual      x2  last 0.55***         left      right        NA        1
-#> 3   visual      x3  last 0.73***         left      right        NA        1
-#> 4  textual      x4  last    1.00        right       left        NA        1
+#> 1   visual      x1  last    1.00        right       left        NA        1
+#> 2   visual      x2  last 0.55***        right       left        NA        1
+#> 3   visual      x3  last 0.73***        right       left        NA        1
+#> 4  textual      x4  last    1.00         left      right        NA        1
 #> 5  textual      x5  last 1.11***        right       left        NA        1
 #> 6  textual      x6  last 0.93***        right       left        NA        1
-#> 7    speed      x7  last    1.00        right       left        NA        1
+#> 7    speed      x7  last    1.00         left      right        NA        1
 #> 8    speed      x8  last 1.18***         left      right        NA        1
-#> 9    speed      x9  last 1.08***        right       left        NA        1
-#> 10      x1      x1  both 0.55***         left       left        NA        1
-#> 11      x2      x2  both 1.13***         left       left        NA        1
-#> 12      x3      x3  both 0.84***         left       left        NA        1
-#> 13      x4      x4  both 0.37***        right      right        NA        1
+#> 9    speed      x9  last 1.08***         left      right        NA        1
+#> 10      x1      x1  both 0.55***        right      right        NA        1
+#> 11      x2      x2  both 1.13***        right      right        NA        1
+#> 12      x3      x3  both 0.84***        right      right        NA        1
+#> 13      x4      x4  both 0.37***         left       left        NA        1
 #> 14      x5      x5  both 0.45***        right      right        NA        1
 #> 15      x6      x6  both 0.36***        right      right        NA        1
-#> 16      x7      x7  both 0.80***        right      right        NA        1
+#> 16      x7      x7  both 0.80***         left       left        NA        1
 #> 17      x8      x8  both 0.49***         left       left        NA        1
-#> 18      x9      x9  both 0.57***        right      right        NA        1
+#> 18      x9      x9  both 0.57***         left       left        NA        1
 #> 19  visual  visual  both 0.81***       bottom     bottom        NA        1
 #> 20 textual textual  both 0.98***       bottom     bottom        NA        1
 #> 21   speed   speed  both 0.38***       bottom     bottom        NA        1
-#> 22  visual textual  none 0.41***        right       left        60        2
-#> 23  visual   speed  none 0.26***        right       left        60        2
+#> 22  visual textual  none 0.41***         left      right        60        2
+#> 23  visual   speed  none 0.26***         left      right        60        2
 #> 24 textual   speed  none 0.17***         left      right        60        2
 #>        lhs op     rhs  est   se pval      confint est_sig est_std se_std
 #> 1   visual =~      x1 1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77   0.05
@@ -672,7 +668,7 @@ prepare_graph(fit) %>%
   plot()
 ```
 
-![](Plotting_graphs_files/figure-html/unnamed-chunk-29-1.png)
+![](Plotting_graphs_files/figure-html/unnamed-chunk-26-1.png)
 
 The same can be done for the node labels:
 
@@ -684,7 +680,7 @@ prepare_graph(fit) %>%
   plot()
 ```
 
-![](Plotting_graphs_files/figure-html/unnamed-chunk-30-1.png)
+![](Plotting_graphs_files/figure-html/unnamed-chunk-27-1.png)
 
 Note that, by specifying both `"nodes"` and `"edges")`, both nodes and
 edges are edited - but in the preceding example, we actually want
@@ -699,7 +695,7 @@ prepare_graph(fit) %>%
   plot()
 ```
 
-![](Plotting_graphs_files/figure-html/unnamed-chunk-31-1.png)
+![](Plotting_graphs_files/figure-html/unnamed-chunk-28-1.png)
 
 The section on **Visual aspects** further demonstrates how to use these
 auxiliary columns to customize visual properties of the graph.
@@ -882,8 +878,6 @@ method for `sem_graph` objects:
 plot(graph_data)
 ```
 
-![](pgfig2.png)
-
 ## Connecting nodes
 
 The functions
@@ -903,8 +897,6 @@ also ensure that all nodes are connected top to bottom:
 
 graph_sem(model = fit, layout = lay, angle = 170)
 ```
-
-![](pgfig3.png)
 
 ## Visual aspects
 
@@ -944,8 +936,6 @@ edg <- data.frame(from = "x",
 graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
 
-![](pgfig4.png)
-
 ### Visual aspects of nodes
 
 Nodes have the following aesthetics (see `?geom_polygon()`):
@@ -976,8 +966,6 @@ nod <- data.frame(name = c("x", "y"),
 graph_sem(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
 ```
 
-![](pgfig5.png)
-
 These aesthetics can also be passed to the `sem_graph` object after
 preparing the data, for example, for highlighting a specific model
 element, such as the low factor loading for x2 on visual in the CFA
@@ -994,8 +982,6 @@ edges(graph_data) %>%
   mutate(alpha = replace(alpha, from == "visual" & to == "x2", .5)) -> edges(graph_data)
 plot(graph_data)
 ```
-
-![](pgfig6.png)
 
 ### Visual aspects of edge labels
 
@@ -1048,8 +1034,6 @@ edg <- data.frame(from = "x",
 graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
 
-![](pgfig7.png)
-
 ### Conditionally customize visual aspects
 
 The functions
@@ -1099,8 +1083,6 @@ prepare_graph(fit) %>%
   plot()
 ```
 
-![](pgfig8.png)
-
 However, the variance arrow is also colored green, because it is an edge
 as well. This is where other conditional formatting functions come in
 handy. Imagine we want to color the negative regression path red, and
@@ -1116,8 +1098,6 @@ prepare_graph(fit) %>%
   alpha_var(.2) %>%
   plot()
 ```
-
-![](pgfig9.png)
 
 There are many dedicated conditional customization functions like these.
 They make use of the generic function
@@ -1141,8 +1121,6 @@ prepare_graph(fit) %>%
   if_edit(grepl("4", est), {color = "blue"}) %>%
   plot()
 ```
-
-![](pgfig10.png)
 
 ## Math Notation in Graphs
 
@@ -1184,5 +1162,3 @@ p$nodes$label <- ""
 # Plot, treat as ggplot object and add parsed node labels
 plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
 ```
-
-![](pgfig11.png)

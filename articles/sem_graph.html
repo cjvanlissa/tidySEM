@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,11 +39,11 @@
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
     <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_mixed.html">Mixed Data LCA</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
-    <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_pmc.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/openmx_ordinal.html">Ordinal Indicators in OpenMx Models</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/pmc_tutorial.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
@@ -98,7 +98,6 @@ called measured variables or indicators. Visually, we indicate observed
 variables as rectangles:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="var_obs.png" class="r-plt" alt="" width="20%"></p>
 </div>
 <div class="section level4">
 <h4 id="latent-variables">Latent variables<a class="anchor" aria-label="anchor" href="#latent-variables"></a>
@@ -110,7 +109,6 @@ variables. Latent variables are also called “unobserved” variables.
 Visually, we indicate them as ovals or circles:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"x"</span>, shape <span class="op">=</span> <span class="st">"oval"</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span>, fix_coord <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="var_lat.png" class="r-plt" alt="" width="20%"></p>
 </div>
 </div>
 <div class="section level2">
@@ -128,7 +126,6 @@ not a conclusion. So if you specify a regression effect between
 that <code>x</code> causes <code>y</code>”. Regression effects are also
 called “paths”, “directional effects”, and “factor loadings”. In SEM
 graphs, we represent regression effects as single-headed arrows:</p>
-<p><img src="arrow.png" class="r-plt" alt="" width="20%"></p>
 </div>
 <div class="section level4">
 <h4 id="covariances">Covariances<a class="anchor" aria-label="anchor" href="#covariances"></a>
@@ -141,7 +138,6 @@ correlation. Covariances will also be referred to as “correlations”
 (when a graph depicts standardized coefficients), “undirected
 associations”, or “unexplained associations”. Visually, we indicate
 covariances as curved (dashed) lines without arrowheads:</p>
-<p><img src="curve.png" class="r-plt" alt="" width="20%"></p>
 </div>
 <div class="section level4">
 <h4 id="residual-variances">(Residual) variances<a class="anchor" aria-label="anchor" href="#residual-variances"></a>
@@ -157,7 +153,6 @@ represents the “error variance”, also known as “residual variance” or
 omitted, and all variances (including error variances) are displayed as
 double-headed arrows. This is a stylistic decision. Error variances are
 displayed like this:</p>
-<p><img src="error.png" class="r-plt" alt="" width="10%"></p>
 </div>
 </div>
 <div class="section level2">
@@ -179,7 +174,6 @@ variable y:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="st">"y ~ x"</span>, <span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>spacing_x <span class="op">=</span> <span class="fl">2.5</span>, fix_coord <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="mod_reg.png" class="r-plt" alt="" width="50%"></p>
 <p>In this graph, we see the observed variables <code>x</code> and
 <code>y</code> represented as rectangles. We see the regression effect
 represented as a single-headed arrow, and we see the variances
@@ -208,7 +202,6 @@ an example:</p>
 <span>  <span class="fu"><a href="../reference/measurement.html">measurement</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="mod_meas.png" class="r-plt" alt="" width="50%"></p>
 <p>We see that the model defines a latent variable <code>y</code>, with
 mean fixed to <code>0</code> and variance fixed to <code>1</code>, which
 has a causal effect on the three indicators. The paths from the latent
@@ -235,7 +228,6 @@ with some latent variables.</p>
 <span>  <span class="fu"><a href="../reference/add_paths.html">add_paths</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, <span class="va">x</span> <span class="op">~</span><span class="op">~</span> <span class="va">x</span>, <span class="va">x</span> <span class="op">~</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/estimate_lavaan.html">estimate_lavaan</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="mod_sem1.png" class="r-plt" alt="" width="70%"></p>
 <p>Instead of having an observed variable <code>x</code> predicting an
 observed variable <code>y</code>, we now have it predicting a latent
 variable <code>y</code>. This is one of the simplest possible structural
@@ -252,7 +244,6 @@ above using the <code><a href="../reference/get_layout.html">get_layout()</a></c
 <span>              <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>,     <span class="st">"x"</span>,    <span class="st">""</span>,</span>
 <span>                         <span class="st">""</span>,     <span class="st">"y"</span>,    <span class="st">""</span>,</span>
 <span>                         <span class="st">"y_1"</span>, <span class="st">"y_2"</span>, <span class="st">"y_3"</span>, rows <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="mod_sem2.png" class="r-plt" alt="" width="70%"></p>
 <p>For more on customizing SEM graphs, see the <a href="https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html">vignette
 about making graphs</a>.</p>
 </div>

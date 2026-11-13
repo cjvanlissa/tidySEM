@@ -7,8 +7,6 @@ model-simulated data.
 
 ``` r
 pmc(x, ..., reps = 20, ci = 0.95, FUN = NULL)
-
-pmc_srmr(x, ..., reps = 20, ci = 0.95)
 ```
 
 ## Arguments

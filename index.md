@@ -1,4 +1,4 @@
-# tidySEM [![](https://raw.githubusercontent.com/cjvanlissa/metamixture/master/tidySEM_hex.png)](https://github.com/cjvanlissa/tidySEM)
+# tidySEM [![](https://raw.githubusercontent.com/cjvanlissa/tidySEM/b6eb160cad950964ccb82652bfc3a33217055923/tidySEM_hex.png)](https://github.com/cjvanlissa/tidySEM)
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)

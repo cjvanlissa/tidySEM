@@ -72,7 +72,6 @@ of Missing Data. Second Edition. Boca Raton, FL: Chapman & Hall/CRC.
 
 ``` r
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 set.seed(2)
 dat <- iris[c(1:5, 50:55, 100:105), 1:4]
 colnames(dat) <- c("SL", "SW", "PL", "PW")
@@ -106,7 +105,6 @@ pseudo_class(x = fit,
              data = dat) -> membership_prediction
 }
 }
-#> Running mix3 with 18 parameters
 #> The degrees of freedom are assumed to be equal to the total number of observations used in the model ( 17 ) minus the number of parameters estimated ( 5 ). This may not be correct. If necessary, provide a better value via the 'df_complete' argument
 #> Registered S3 method overwritten by 'lme4':
 #>   method           from

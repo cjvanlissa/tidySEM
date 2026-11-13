@@ -49,14 +49,9 @@ estimators. Political Analysis, 12(1), 3-27.
 
 ``` r
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 dat <- data.frame(x = iris$Petal.Length)
 mixmod <- mx_profiles(dat,
                       classes = 2)
 res <- BCH(mixmod, "y ~ 1", data = data.frame(y = iris$Sepal.Length))
 }
-#> To take full advantage of multiple cores, use:
-#>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now
-#>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
-#> Running mix2 with 4 parameters
 ```

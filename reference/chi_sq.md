@@ -30,7 +30,8 @@ chi_sq(x, y)
 ``` r
 if (FALSE) { # \dontrun{
 if(interactive()){
- chi_sq(iris[1:2], iris[3:4])
+ set.seed(1)
+ chi_sq(iris$Species[sample.int(nrow(iris), 10)], iris$Species[sample.int(nrow(iris), 10)])
 }
 } # }
 ```

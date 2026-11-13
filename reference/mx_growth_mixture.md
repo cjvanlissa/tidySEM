@@ -58,15 +58,11 @@ R-Package tidySEM. Structural Equation Modeling.
 ``` r
 if (FALSE) { # \dontrun{
 data("empathy")
-df <- empathy[1:6]
-mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2 + 1*ec3 +1*ec4 +1*ec5 +1*ec6
-                           s =~ 0*ec1 + 1*ec2 + 2*ec3 +3*ec4 +4*ec5 +5*ec6
+df <- empathy[1:2]
+mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2
+                           s =~ 0*ec1 + 1*ec2
                            ec1 ~~ vec1*ec1
                            ec2 ~~ vec2*ec2
-                           ec3 ~~ vec3*ec3
-                           ec4 ~~ vec4*ec4
-                           ec5 ~~ vec5*ec5
-                           ec6 ~~ vec6*ec6
                            i ~~ 0*i
                            s ~~ 0*s
                            i ~~ 0*s",

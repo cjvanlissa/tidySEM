@@ -118,12 +118,10 @@ passed through `...`:
 
 ``` r
 if (FALSE) { # \dontrun{
-library(OpenMx)
-
 set.seed(123)
-model <- remix(yi, vi, classes = 2, run = FALSE)
-fit <- random_starts(model, nstarts = 20)
-
+model <- mx_profiles(data = data.frame(x = iris$Sepal.Length),
+classes = 2, run = FALSE)
+fit <- random_starts(model, nstarts = 3)
 attr(fit, "tab_ll")
 } # }
 ```

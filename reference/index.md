@@ -583,9 +583,8 @@
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
 
-- [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
-  [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
-  : Predictive Model Comparison
+- [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md) :
+  Predictive Model Comparison
 
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
@@ -607,6 +606,9 @@
 
 - [`run_mx()`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md)
   : Run as OpenMx model with sensible defaults
+
+- [`score_items()`](https://cjvanlissa.github.io/tidySEM/reference/score_items.md)
+  : Compute Scale Scores
 
 - [`skew_kurtosis()`](https://cjvanlissa.github.io/tidySEM/reference/skew_kurtosis.md)
   : Calculate skew and kurtosis

@@ -77,11 +77,9 @@ Caspar J. van Lissa
 
 ``` r
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 iris_sample <- iris[c(1:5, 145:150), c("Sepal.Length", "Sepal.Width")]
 names(iris_sample) <- c("x", "y")
 res <- mx_profiles(iris_sample, classes = 2)
 plot_bivariate(res, rawdata = FALSE)
 }
-#> Running mix2 with 7 parameters
 ```

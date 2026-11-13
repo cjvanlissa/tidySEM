@@ -47,10 +47,6 @@ the same order** as the measurement data.
 ``` r
 
 library(tidySEM)
-library(OpenMx)
-#> To take full advantage of multiple cores, use:
-#>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now
-#>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
 df <- zegwaard_carecompass
 indicators <- c("burdened", "trapped", "negaffect", "loneliness")
 measurement_data <- df[, indicators]
@@ -63,19 +59,11 @@ model:
 
 set.seed(297)
 lpa_model <- mx_profiles(measurement_data, classes = 2)
-saveRDS(lpa_model, cache_file("measurement"))
 ```
 
 ``` r
 
-lpa_model <- read_cached("measurement")
 table_fit(lpa_model)
-#>   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared
-#> 1                4063 513         13               2030 500            0
-#>   RMSEANull   modelName  AIC  BIC saBIC Classes Entropy prob_min prob_max n_min
-#> 1      0.05 equal var 2 4089 4144  4103       2    0.74     0.91     0.93  0.42
-#>   n_max    LL
-#> 1  0.58 -2031
 ```
 
 ### Classification uncertainty
@@ -86,17 +74,6 @@ cp <- class_prob(lpa_model)
 head(cp$individual)
 cp$mostlikely.class
 ```
-
-    #>      class1 class2 predicted
-    #> [1,] "0.69" "0.31" "1.00"   
-    #> [2,] "0.00" "1.00" "2.00"   
-    #> [3,] "0.77" "0.23" "1.00"   
-    #> [4,] "0.05" "0.95" "2.00"   
-    #> [5,] "0.16" "0.84" "2.00"   
-    #> [6,] "1.00" "0.00" "1.00"
-    #>           assigned.1 assigned.2
-    #> avgprob.1 "0.93"     "0.07"    
-    #> avgprob.2 "0.09"     "0.91"
 
 This table shows the average probability that individuals belong to each
 true class (rows), and their probability of being assigned to each class
@@ -130,22 +107,6 @@ bch_mean <- BCH(lpa_model, data = df$distance)
 table_results(bch_mean, columns = NULL)
 ```
 
-    #>              label lhs op rhs     est     se pval            confint    est_sig
-    #> 1     Means.y.aux1   y ~1   1  153.67   2.88 0.00   [148.02, 159.32]  153.67***
-    #> 2 Variances.y.aux1   y ~~   y 2496.42 203.70 0.00 [2097.16, 2895.67] 2496.42***
-    #> 3     Means.y.aux2   y ~1   1  160.66   3.82 0.00   [153.17, 168.15]  160.66***
-    #> 4 Variances.y.aux2   y ~~   y 3076.16 299.84 0.00 [2488.48, 3663.83] 3076.16***
-    #>   pval_std  confint_std free        name lboundmet uboundmet std_est std_se col
-    #> 1     0.00 [2.80, 3.35] TRUE aux1.M[1,1]     FALSE     FALSE    3.08   0.14   y
-    #> 2     0.00 [1.00, 1.00] TRUE aux1.S[1,1]     FALSE     FALSE    1.00   0.00   y
-    #> 3     0.00 [2.59, 3.20] TRUE aux2.M[1,1]     FALSE     FALSE    2.90   0.16   y
-    #> 4     0.00 [1.00, 1.00] TRUE aux2.S[1,1]     FALSE     FALSE    1.00   0.00   y
-    #>   matrix openmx_label row group ci_type  Category
-    #> 1      M  aux1.M[1,1]   1  aux1    Wald     Means
-    #> 2      S  aux1.S[1,1]   y  aux1    Wald Variances
-    #> 3      M  aux2.M[1,1]   1  aux2    Wald     Means
-    #> 4      S  aux2.S[1,1]   y  aux2    Wald Variances
-
 The estimates describe class-specific distal means. They do **not** by
 themselves test whether the means differ. For an omnibus and pairwise
 comparison, use
@@ -156,16 +117,6 @@ compare the means (`M`) rather than the entire auxiliary model.
 
 lr_test(bch_mean, compare = "M")
 ```
-
-    #> BCH test for equality across classes
-    #> 
-    #> Overall likelihood ratio test:
-    #>  LL_baseline LL_restricted LL_dif df    p
-    #>         5491          5494    2.1  1 0.14
-    #> 
-    #> Pairwise comparisons using likelihood ratio tests:
-    #>  Model1 Model2 LL_baseline LL_restricted LL_dif df    p
-    #>    aux1   aux2        5491          5494    2.1  1 0.14
 
 One crucial limitation of the BCH approach is that its standard errors
 are not valid, so be careful drawing inferences about parameters in
@@ -185,12 +136,6 @@ sex <- ordered(df$sexpatient, levels = c("male", "female"))
 bch_sex <- BCH(lpa_model, data = sex)
 table_prob(bch_sex)
 ```
-
-    #>   Variable Category Probability group
-    #> 1        y        1        0.51  aux1
-    #> 2        y        2        0.49  aux1
-    #> 3        y        1        0.46  aux2
-    #> 4        y        2        0.54  aux2
 
 ### A class-specific regression model
 
@@ -213,60 +158,6 @@ table_results(bch_reg, columns = c("label", "est_sig", "se", "pval", "confint", 
 lr_test(bch_reg, compare = "A")
 ```
 
-    #>                                     label       lhs op       rhs     est     se
-    #> 1  Regressions.freqvisit.ON.distance.aux1 freqvisit  ~  distance   -0.00   0.00
-    #> 2                    Means.freqvisit.aux1 freqvisit ~1         1    3.88   0.20
-    #> 3                     Means.distance.aux1  distance ~1         1  153.67   2.88
-    #> 4                Variances.freqvisit.aux1 freqvisit ~~ freqvisit    1.13   0.09
-    #> 5                 Variances.distance.aux1  distance ~~  distance 2496.41 203.70
-    #> 6  Regressions.freqvisit.ON.distance.aux2 freqvisit  ~  distance   -0.00   0.00
-    #> 7                    Means.freqvisit.aux2 freqvisit ~1         1    3.85   0.22
-    #> 8                     Means.distance.aux2  distance ~1         1  160.68   3.82
-    #> 9                Variances.freqvisit.aux2 freqvisit ~~ freqvisit    1.05   0.10
-    #> 10                Variances.distance.aux2  distance ~~  distance 3076.19 299.82
-    #>    pval            confint    est_sig pval_std   confint_std free        name
-    #> 1  0.74      [-0.00, 0.00]      -0.00     0.74 [-0.13, 0.09] TRUE aux1.A[1,2]
-    #> 2  0.00       [3.50, 4.27]    3.88***     0.00  [3.19, 4.11] TRUE aux1.M[1,1]
-    #> 3  0.00   [148.02, 159.32]  153.67***     0.00  [2.80, 3.35] TRUE aux1.M[1,2]
-    #> 4  0.00       [0.95, 1.31]    1.13***     0.00  [1.00, 1.00] TRUE aux1.S[1,1]
-    #> 5  0.00 [2097.16, 2895.67] 2496.41***     0.00  [1.00, 1.00] TRUE aux1.S[2,2]
-    #> 6  0.49      [-0.00, 0.00]      -0.00     0.49 [-0.18, 0.09] TRUE aux2.A[1,2]
-    #> 7  0.00       [3.43, 4.28]    3.85***     0.00  [3.22, 4.28] TRUE aux2.M[1,1]
-    #> 8  0.00   [153.18, 168.17]  160.68***     0.00  [2.59, 3.20] TRUE aux2.M[1,2]
-    #> 9  0.00       [0.85, 1.25]    1.05***     0.00  [0.98, 1.01] TRUE aux2.S[1,1]
-    #> 10 0.00 [2488.55, 3663.83] 3076.19***     0.00  [1.00, 1.00] TRUE aux2.S[2,2]
-    #>    lboundmet uboundmet std_est std_se       col matrix openmx_label       row
-    #> 1      FALSE     FALSE   -0.02   0.06  distance      A  aux1.A[1,2] freqvisit
-    #> 2      FALSE     FALSE    3.65   0.24 freqvisit      M  aux1.M[1,1]         1
-    #> 3      FALSE     FALSE    3.08   0.14  distance      M  aux1.M[1,2]         1
-    #> 4      FALSE     FALSE    1.00   0.00 freqvisit      S  aux1.S[1,1] freqvisit
-    #> 5      FALSE     FALSE    1.00   0.00  distance      S  aux1.S[2,2]  distance
-    #> 6      FALSE     FALSE   -0.05   0.07  distance      A  aux2.A[1,2] freqvisit
-    #> 7      FALSE     FALSE    3.75   0.27 freqvisit      M  aux2.M[1,1]         1
-    #> 8      FALSE     FALSE    2.90   0.16  distance      M  aux2.M[1,2]         1
-    #> 9      FALSE     FALSE    1.00   0.01 freqvisit      S  aux2.S[1,1] freqvisit
-    #> 10     FALSE     FALSE    1.00   0.00  distance      S  aux2.S[2,2]  distance
-    #>    group ci_type    Category
-    #> 1   aux1    Wald Regressions
-    #> 2   aux1    Wald       Means
-    #> 3   aux1    Wald       Means
-    #> 4   aux1    Wald   Variances
-    #> 5   aux1    Wald   Variances
-    #> 6   aux2    Wald Regressions
-    #> 7   aux2    Wald       Means
-    #> 8   aux2    Wald       Means
-    #> 9   aux2    Wald   Variances
-    #> 10  aux2    Wald   Variances
-    #> BCH test for equality across classes
-    #> 
-    #> Overall likelihood ratio test:
-    #>  LL_baseline LL_restricted LL_dif df    p
-    #>         6987          6987  0.071  1 0.79
-    #> 
-    #> Pairwise comparisons using likelihood ratio tests:
-    #>  Model1 Model2 LL_baseline LL_restricted LL_dif df    p
-    #>    aux1   aux2        6987          6987  0.071  1 0.79
-
 ## Two-step maximum likelihood
 
 A different approach to auxiliary analysis is the
@@ -287,101 +178,6 @@ two_mean <- two_step(lpa_model, data = df$distance)
 table_results(two_mean, columns = NULL)
 ```
 
-    #>                          label        lhs   op        rhs     est     se pval
-    #> 1        Means.burdened.class1   burdened   ~1          1    3.74   0.00 <NA>
-    #> 2         Means.trapped.class1    trapped   ~1          1    2.30   0.00 <NA>
-    #> 3       Means.negaffect.class1  negaffect   ~1          1    2.83   0.00 <NA>
-    #> 4      Means.loneliness.class1 loneliness   ~1          1    2.45   0.00 <NA>
-    #> 5               Means.y.class1          y   ~1          1  153.82   3.04 0.00
-    #> 6    Variances.burdened.class1   burdened   ~~   burdened    0.37   0.00 <NA>
-    #> 7     Variances.trapped.class1    trapped   ~~    trapped    0.34   0.00 <NA>
-    #> 8   Variances.negaffect.class1  negaffect   ~~  negaffect    0.32   0.00 <NA>
-    #> 9  Variances.loneliness.class1 loneliness   ~~ loneliness    0.32   0.00 <NA>
-    #> 10          Variances.y.class1          y   ~~          y 2524.65 217.00 0.00
-    #> 11       Means.burdened.class2   burdened   ~1          1    2.88   0.00 <NA>
-    #> 12        Means.trapped.class2    trapped   ~1          1    0.92   0.00 <NA>
-    #> 13      Means.negaffect.class2  negaffect   ~1          1    2.04   0.00 <NA>
-    #> 14     Means.loneliness.class2 loneliness   ~1          1    2.96   0.00 <NA>
-    #> 15              Means.y.class2          y   ~1          1  160.44   4.04 0.00
-    #> 16   Variances.burdened.class2   burdened   ~~   burdened    0.37   0.00 <NA>
-    #> 17    Variances.trapped.class2    trapped   ~~    trapped    0.34   0.00 <NA>
-    #> 18  Variances.negaffect.class2  negaffect   ~~  negaffect    0.32   0.00 <NA>
-    #> 19 Variances.loneliness.class2 loneliness   ~~ loneliness    0.32   0.00 <NA>
-    #> 20          Variances.y.class2          y   ~~          y 3039.23 317.83 0.00
-    #> 21 equal var 2.weights[1,1].NA          1 <NA>          1    1.00   <NA> <NA>
-    #> 22 equal var 2.weights[1,2].NA          1 <NA>          2    0.71   <NA> <NA>
-    #>               confint    est_sig pval_std  confint_std  free
-    #> 1                <NA>       3.74     0.00 [6.13, 6.13] FALSE
-    #> 2                <NA>       2.30     0.00 [3.97, 3.97] FALSE
-    #> 3                <NA>       2.83     0.00 [5.00, 5.00] FALSE
-    #> 4                <NA>       2.45     0.00 [4.34, 4.34] FALSE
-    #> 5    [147.87, 159.78]  153.82***     0.00 [2.78, 3.35]  TRUE
-    #> 6                <NA>       0.37     0.00 [1.00, 1.00] FALSE
-    #> 7                <NA>       0.34     0.00 [1.00, 1.00] FALSE
-    #> 8                <NA>       0.32     0.00 [1.00, 1.00] FALSE
-    #> 9                <NA>       0.32     0.00 [1.00, 1.00] FALSE
-    #> 10 [2099.33, 2949.97] 2524.65***     0.00 [1.00, 1.00]  TRUE
-    #> 11               <NA>       2.88     0.00 [4.71, 4.71] FALSE
-    #> 12               <NA>       0.92     0.00 [1.58, 1.58] FALSE
-    #> 13               <NA>       2.04     0.00 [3.60, 3.60] FALSE
-    #> 14               <NA>       2.96     0.00 [5.24, 5.24] FALSE
-    #> 15   [152.52, 168.35]  160.44***     0.00 [2.58, 3.24]  TRUE
-    #> 16               <NA>       0.37     0.00 [1.00, 1.00] FALSE
-    #> 17               <NA>       0.34     0.00 [1.00, 1.00] FALSE
-    #> 18               <NA>       0.32     0.00 [1.00, 1.00] FALSE
-    #> 19               <NA>       0.32     0.00 [1.00, 1.00] FALSE
-    #> 20 [2416.29, 3662.16] 3039.23***     0.00 [1.00, 1.00]  TRUE
-    #> 21               <NA>       1.00     <NA>         <NA> FALSE
-    #> 22               <NA>       0.71     <NA>         <NA> FALSE
-    #>                        name lboundmet uboundmet std_est std_se        col
-    #> 1             class1.M[1,1]        NA        NA    6.13   0.00   burdened
-    #> 2             class1.M[1,2]        NA        NA    3.97   0.00    trapped
-    #> 3             class1.M[1,3]        NA        NA    5.00   0.00  negaffect
-    #> 4             class1.M[1,4]        NA        NA    4.34   0.00 loneliness
-    #> 5             class1.M[1,5]     FALSE     FALSE    3.06   0.15          y
-    #> 6             class1.S[1,1]        NA        NA    1.00   0.00   burdened
-    #> 7             class1.S[2,2]        NA        NA    1.00   0.00    trapped
-    #> 8             class1.S[3,3]        NA        NA    1.00   0.00  negaffect
-    #> 9             class1.S[4,4]        NA        NA    1.00   0.00 loneliness
-    #> 10            class1.S[5,5]     FALSE     FALSE    1.00   0.00          y
-    #> 11            class2.M[1,1]        NA        NA    4.71   0.00   burdened
-    #> 12            class2.M[1,2]        NA        NA    1.58   0.00    trapped
-    #> 13            class2.M[1,3]        NA        NA    3.60   0.00  negaffect
-    #> 14            class2.M[1,4]        NA        NA    5.24   0.00 loneliness
-    #> 15            class2.M[1,5]     FALSE     FALSE    2.91   0.17          y
-    #> 16            class2.S[1,1]        NA        NA    1.00   0.00   burdened
-    #> 17            class2.S[2,2]        NA        NA    1.00   0.00    trapped
-    #> 18            class2.S[3,3]        NA        NA    1.00   0.00  negaffect
-    #> 19            class2.S[4,4]        NA        NA    1.00   0.00 loneliness
-    #> 20            class2.S[5,5]     FALSE     FALSE    1.00   0.00          y
-    #> 21 equal var 2.weights[1,1]        NA        NA    <NA>   <NA>          1
-    #> 22 equal var 2.weights[1,2]        NA        NA    <NA>   <NA>          2
-    #>     matrix             openmx_label        row  class ci_type  Category
-    #> 1        M            class1.M[1,1]          1 class1    <NA>     Means
-    #> 2        M            class1.M[1,2]          1 class1    <NA>     Means
-    #> 3        M            class1.M[1,3]          1 class1    <NA>     Means
-    #> 4        M            class1.M[1,4]          1 class1    <NA>     Means
-    #> 5        M               aux1_M_1_1          1 class1    Wald     Means
-    #> 6        S            class1.S[1,1]   burdened class1    <NA> Variances
-    #> 7        S            class1.S[2,2]    trapped class1    <NA> Variances
-    #> 8        S            class1.S[3,3]  negaffect class1    <NA> Variances
-    #> 9        S            class1.S[4,4] loneliness class1    <NA> Variances
-    #> 10       S               aux1_S_1_1          y class1    Wald Variances
-    #> 11       M            class2.M[1,1]          1 class2    <NA>     Means
-    #> 12       M            class2.M[1,2]          1 class2    <NA>     Means
-    #> 13       M            class2.M[1,3]          1 class2    <NA>     Means
-    #> 14       M            class2.M[1,4]          1 class2    <NA>     Means
-    #> 15       M               aux2_M_1_1          1 class2    Wald     Means
-    #> 16       S            class2.S[1,1]   burdened class2    <NA> Variances
-    #> 17       S            class2.S[2,2]    trapped class2    <NA> Variances
-    #> 18       S            class2.S[3,3]  negaffect class2    <NA> Variances
-    #> 19       S            class2.S[4,4] loneliness class2    <NA> Variances
-    #> 20       S               aux2_S_1_1          y class2    Wald Variances
-    #> 21 weights equal var 2.weights[1,1]          1   <NA>    <NA>   Weights
-    #> 22 weights equal var 2.weights[1,2]          1   <NA>    <NA>   Weights
-    #> 
-    #> Note: adjusted standard errors were used for: Variances.y.class1, Means.y.class1, Variances.y.class2, Means.y.class2.
-
 Ordinary standard errors for the auxiliary model are also not valid, but
 `tidySEM` replaces them with corrected two-step standard errors. These
 are available in the attribute `attr(model, "se_robust")`, and
@@ -392,12 +188,6 @@ shows them by default.
 
 attr(two_mean, "se_robust")
 ```
-
-    #>        label  se     type
-    #> 1 aux1_S_1_1 217 adjusted
-    #> 2 aux1_M_1_1   3 adjusted
-    #> 3 aux2_S_1_1 318 adjusted
-    #> 4 aux2_M_1_1   4 adjusted
 
 For a custom auxiliary RAM model, the syntax can include multiple
 outcomes and regressions:
@@ -445,10 +235,6 @@ pseudo_mean <- pseudo_class(
 pseudo_mean
 ```
 
-    #>                term estimate std.error statistic  df  p.value
-    #> 1 I(factor(class))1      154       3.2        48 330 5.7e-150
-    #> 2 I(factor(class))2      160       4.0        40 251 1.7e-111
-
 ### Use RAM syntax
 
 The
@@ -468,12 +254,6 @@ pseudo_ram <- pseudo_class(
 )
 pseudo_ram
 ```
-
-    #>                   term estimate    se statistic  df df_complete   pvalue
-    #> 1     Means.distance.1      154   3.0      51.1 441         509 1.7e-187
-    #> 2 Variances.distance.1     2560 216.5      11.8 425         509  4.4e-28
-    #> 3     Means.distance.2      160   3.9      41.1 420         509 3.8e-149
-    #> 4 Variances.distance.2     2990 303.0       9.9 412         509  9.3e-21
 
 ## Predicting class membership
 
@@ -500,11 +280,6 @@ pseudo_pred <- pseudo_class(
 )
 pseudo_pred
 ```
-
-    #>            term estimate std.error statistic  df p.value
-    #> 1 (Intercept).1   -0.480    0.4785     -1.00 274    0.32
-    #> 2    distance.1    0.002    0.0019      1.04 212    0.30
-    #> 3   freqvisit.1   -0.050    0.0901     -0.55 389    0.58
 
 The coefficients describe conditional associations with class membership
 relative to a reference class.

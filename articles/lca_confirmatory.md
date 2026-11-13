@@ -40,7 +40,6 @@ depression score.
 ``` r
 
 library(tidySEM)
-library(OpenMx)
 
 set.seed(123)
 x <- data.frame(depression = c(rnorm(50, mean = 6, sd = 4), rbeta(100,
@@ -63,22 +62,12 @@ run.
 
 ``` r
 
-res <- mx_profiles(x, classes = 1:3)
-saveRDS(res, "res_depression.rds")
+res <- tidySEM:::run_cached(mx_profiles(x, classes = 1:3))
 ```
 
 ``` r
 
-res <- readRDS("res_depression.rds")
 table_fit(res)
-#>          Name Classes   LL   n Parameters AIC BIC saBIC Entropy prob_min
-#> 1 equal var 1       1 -398 150          2 801 807   800    1.00     1.00
-#> 2 equal var 2       2 -347 150          4 701 713   701    0.95     0.94
-#> 3 equal var 3       3 -315 150          6 642 660   641    0.97     0.96
-#>   prob_max n_min n_max np_ratio np_local
-#> 1     1.00  1.00  1.00       75       75
-#> 2     1.00  0.17  0.83       38       17
-#> 3     0.99  0.12  0.72       25       14
 ```
 
 The fit table lets us inspect information criteria and other model-fit
@@ -90,18 +79,11 @@ using the bootstrapped likelihood ratio test (BLRT).
 ``` r
 
 res_blrt <- BLRT(res)
-saveRDS(res_blrt, "blrt_depression.rds")
 ```
 
 ``` r
 
-res_blrt <- readRDS("blrt_depression.rds")
 res_blrt
-#> Bootstrapped Likelihood Ratio Test:
-#> 
-#>  null  alt    lr df blrt_p samples
-#>  mix1 mix2 103.5  2      0      65
-#>  mix2 mix3  63.2  2      0      94
 ```
 
 ### Translate theoretical assumptions into parameter constraints
@@ -121,11 +103,13 @@ to these values, or by e.g. setting a parameter constraint for the two
 classes.
 
 First, create the two-class profile model without estimating it and
-examine its parameters:
+examine its parameters. For this, we will use the `OpenMx` function
+[`omxGetParameters()`](https://rdrr.io/pkg/OpenMx/man/omxGetParameters.html):
 
 ``` r
 
 res_theory <- mx_profiles(x, classes = 2, run = FALSE)
+library(OpenMx)
 omxGetParameters(res_theory)
 ```
 
@@ -172,17 +156,11 @@ We can also compare the models using the BLRT:
 ``` r
 
 blrt_theory <- BLRT(list(res[[2]], res_theory))
-saveRDS(blrt_theory, "blrt_theory.rds")
 ```
 
 ``` r
 
-blrt_theory <- readRDS("blrt_theory.rds")
 blrt_theory
-#> Bootstrapped Likelihood Ratio Test:
-#> 
-#>  null         alt    lr df blrt_p samples
-#>  mix2 equal var 2 -44.1 -2   0.47     100
 ```
 
 Note that fixing the class means to exact values is a very strong
@@ -196,6 +174,10 @@ estimated **parameter values** deviate significantly from these:
 res_theory_starts <- omxSetParameters(res_theory, labels = c("m11",
     "m21"), values = c(0, 10), free = TRUE)
 res_theory_starts <- run_mx(res_theory_starts)
+```
+
+``` r
+
 omxGetParameters(res_theory_starts)
 wald_test(res_theory_starts, "m11 = 0; m21 = 10")
 ```
@@ -247,7 +229,6 @@ first only use the four scales:
 # Load required packages
 library(tidySEM)
 library(ggplot2)
-library(OpenMx)
 # Load data
 df <- zegwaard_carecompass[, c("burdened", "trapped", "negaffect",
     "loneliness")]
@@ -267,15 +248,6 @@ desc <- desc[, c("name", "n", "missing", "unique", "mean", "median",
     "sd", "min", "max", "skew_2se", "kurt_2se")]
 desc
 ```
-
-| name       |   n | missing | unique | mean | median |   sd |   min | max | skew_2se | kurt_2se |
-|:-----------|----:|--------:|-------:|-----:|-------:|-----:|------:|----:|---------:|---------:|
-| burdened   | 509 |    0.01 |    509 |  3.4 |    3.4 | 0.75 |  1.20 | 5.3 |     0.17 |    -0.41 |
-| trapped    | 505 |    0.02 |    505 |  1.7 |    1.8 | 0.90 | -0.86 | 3.8 |    -1.03 |    -1.52 |
-| negaffect  | 506 |    0.01 |    506 |  2.5 |    2.5 | 0.69 |  0.71 | 5.0 |     0.08 |    -0.38 |
-| loneliness | 510 |    0.01 |    510 |  2.7 |    2.7 | 0.62 |  0.98 | 4.2 |    -0.33 |    -0.62 |
-
-Descriptive statistics {.table}
 
 The table indicates two potential causes for concern: there is a small
 percentage of missingness, and all variables have relatively high
@@ -302,8 +274,6 @@ ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
 ```
 
-![](plot_lpa_desc.png)
-
 ### Conducting Latent Profile Analysis
 
 As all variables are continuous, we can use the convenience function
@@ -324,6 +294,11 @@ results.
 
 set.seed(123)
 res <- mx_profiles(data = df, classes = 1:5)
+```
+
+``` r
+
+fit <- table_fit(res)
 ```
 
 This analysis should produce some messages about cluster initialization.
@@ -364,16 +339,6 @@ fit[, c("Name", "LL", "Parameters", "n", "BIC", "Entropy", "prob_min",
     "prob_max", "n_min", "n_max", "np_ratio", "np_local")]
 ```
 
-| Name        |    LL |   p |   n |  BIC | Entropy | p_min | p_max | n_min | n_max |
-|:------------|------:|----:|----:|-----:|--------:|------:|------:|------:|------:|
-| equal var 1 | -2242 |   8 | 513 | 4534 |    1.00 |  1.00 |  1.00 |  1.00 |  1.00 |
-| equal var 2 | -2031 |  13 | 513 | 4144 |    0.74 |  0.91 |  0.93 |  0.42 |  0.58 |
-| equal var 3 | -1951 |  18 | 513 | 4015 |    0.78 |  0.89 |  0.91 |  0.19 |  0.54 |
-| equal var 4 | -1916 |  23 | 513 | 3976 |    0.75 |  0.81 |  0.92 |  0.16 |  0.34 |
-| equal var 5 | -1910 |  28 | 513 | 3995 |    0.76 |  0.64 |  0.92 |  0.08 |  0.34 |
-
-Model fit table {.table}
-
 #### Using ICs
 
 the 4-class solution has the lowest BIC, which means it is preferred
@@ -394,15 +359,6 @@ pairwise model comparisons, except for the 5-class model:
 
 lr_lmr(res)
 ```
-
-| null | alt  |   lr |  df |    p |   w2 | p_w2 |
-|:-----|:-----|-----:|----:|-----:|-----:|-----:|
-| mix1 | mix2 | 10.2 |   5 | 0.00 | 0.82 | 0.00 |
-| mix2 | mix3 |  5.3 |   5 | 0.00 | 0.44 | 0.00 |
-| mix3 | mix4 |  4.1 |   5 | 0.00 | 0.14 | 0.00 |
-| mix4 | mix5 |  1.6 |   5 | 0.05 | 0.03 | 0.04 |
-
-LMR test table {.table}
 
 #### Using BLRT tests
 
@@ -428,16 +384,8 @@ plan(multisession)  # Parallel processing for Windows
 handlers("progress")  # Progress bar
 set.seed(1)
 res_blrt <- BLRT(res, replications = 100)
+res_blrt
 ```
-
-| null | alt  |    lr |  df | blrt_p | samples |
-|:-----|:-----|------:|----:|-------:|--------:|
-| mix1 | mix2 | 421.2 |   5 |   0.00 |     100 |
-| mix2 | mix3 | 160.0 |   5 |   0.00 |     100 |
-| mix3 | mix4 |  70.2 |   5 |   0.00 |     100 |
-| mix4 | mix5 |   7.8 |   5 |   0.36 |     100 |
-
-BLRT test table {.table}
 
 In sum, across all class enumeration criteria, there is strong support
 for a 4-class solution.
@@ -458,13 +406,6 @@ res_alt <- mx_profiles(df, classes = 4, variances = "varying")
 compare <- list(res[[4]], res_alt)
 table_fit(compare)
 ```
-
-| Name       |    LL | Parameters |  BIC | Entropy | prob_min | prob_max | n_min | n_max |
-|:-----------|------:|-----------:|-----:|--------:|---------:|---------:|------:|------:|
-| mix4       | -1916 |         23 | 3976 |    0.75 |     0.81 |     0.92 |  0.16 |  0.34 |
-| free var 4 | -1909 |         35 | 4037 |    0.78 |     0.84 |     0.92 |  0.16 |  0.32 |
-
-Comparing competing theoretical models {.table}
 
 The alternative model incurs 12 additional parameters for the free
 variances. Yet, it has a higher BIC, which indicates that this
@@ -494,35 +435,6 @@ table_results(res_final, columns = c("label", "est", "se", "confint",
     "class"))
 ```
 
-| label                       |  est |   se | confint        | class  |
-|:----------------------------|-----:|-----:|:---------------|:-------|
-| Means.burdened.class1       | 3.27 | 0.04 | \[3.18, 3.36\] | class1 |
-| Means.trapped.class1        | 1.28 | 0.05 | \[1.18, 1.38\] | class1 |
-| Means.negaffect.class1      | 2.31 | 0.06 | \[2.20, 2.42\] | class1 |
-| Means.loneliness.class1     | 2.73 | 0.04 | \[2.64, 2.82\] | class1 |
-| Variances.burdened.class1   | 0.23 | 0.02 | \[0.19, 0.27\] | class1 |
-| Variances.trapped.class1    | 0.17 | 0.02 | \[0.14, 0.20\] | class1 |
-| Variances.negaffect.class1  | 0.31 | 0.02 | \[0.27, 0.36\] | class1 |
-| Variances.loneliness.class1 | 0.24 | 0.02 | \[0.20, 0.28\] | class1 |
-| Means.burdened.class2       | 3.40 | 0.06 | \[3.28, 3.52\] | class2 |
-| Means.trapped.class2        | 2.27 | 0.06 | \[2.15, 2.38\] | class2 |
-| Means.negaffect.class2      | 2.81 | 0.06 | \[2.70, 2.93\] | class2 |
-| Means.loneliness.class2     | 2.79 | 0.06 | \[2.66, 2.91\] | class2 |
-| Means.burdened.class3       | 4.25 | 0.07 | \[4.12, 4.38\] | class3 |
-| Means.trapped.class3        | 2.67 | 0.05 | \[2.58, 2.77\] | class3 |
-| Means.negaffect.class3      | 2.92 | 0.06 | \[2.80, 3.03\] | class3 |
-| Means.loneliness.class3     | 2.01 | 0.06 | \[1.89, 2.14\] | class3 |
-| Means.burdened.class4       | 2.38 | 0.06 | \[2.26, 2.50\] | class4 |
-| Means.trapped.class4        | 0.38 | 0.05 | \[0.28, 0.49\] | class4 |
-| Means.negaffect.class4      | 1.78 | 0.07 | \[1.65, 1.91\] | class4 |
-| Means.loneliness.class4     | 3.18 | 0.06 | \[3.07, 3.30\] | class4 |
-| mix4.weights\[1,1\].NA      | 1.00 |   NA | NA             | NA     |
-| mix4.weights\[1,2\].NA      | 0.86 | 0.15 | \[0.56, 1.15\] | NA     |
-| mix4.weights\[1,3\].NA      | 0.66 | 0.11 | \[0.44, 0.88\] | NA     |
-| mix4.weights\[1,4\].NA      | 0.47 | 0.08 | \[0.32, 0.63\] | NA     |
-
-Four-class model results {.table}
-
 The results are best interpreted by examining a plot of the model and
 data, however. Relevant plot functions are
 [`plot_bivariate()`](https://cjvanlissa.github.io/tidySEM/reference/plot_bivariate.md),
@@ -537,10 +449,6 @@ also includes them.
 
 plot_bivariate(res_final)
 ```
-
-![Bivariate profile plot](lpa_bivariate.png)
-
-Bivariate profile plot
 
 On the diagonal of the bivariate plot are weighted density plots: normal
 approximations of the density function of observed data, weighed by
@@ -578,10 +486,6 @@ of class parameters exactly.
 
 plot_profiles(res_final)
 ```
-
-![Profile plot](lpa_profiles.png)
-
-Profile plot
 
 ### Predicting class membership
 

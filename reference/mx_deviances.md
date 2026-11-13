@@ -36,16 +36,13 @@ mx_deviances(
 
 - values:
 
-  Numeric vector of starting values. Default uses
-  [`mxNormalQuantiles()`](https://rdrr.io/pkg/OpenMx/man/mxNormalQuantiles.html).
+  Numeric vector of starting values. Default uses `mxNormalQuantiles()`.
 
 - labels:
 
   Character vector. Note that constraints specified using these labels
-  are applied using
-  [`mxConstraint()`](https://rdrr.io/pkg/OpenMx/man/mxConstraint.html),
-  because the thresholds are derived quantities, not parameters of the
-  model (the deviances are).
+  are applied using `mxConstraint()`, because the thresholds are derived
+  quantities, not parameters of the model (the deviances are).
 
 - lbound:
 

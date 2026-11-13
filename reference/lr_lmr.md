@@ -58,13 +58,11 @@ structural equation models. Psychological Methods, 21, 151-163.
 
 ``` r
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 df <- iris[c(1:5, 100:105), 1:3]
 names(df) <- letters[1:3]
 res <- mx_profiles(df, classes = 1:2)
 lr_lmr(res)
 }
-#> Running mix2 with 10 parameters
 #> Running mix1 with 6 parameters
 #> Lo-Mendell-Rubin adjusted Likelihood Ratio Test:
 #> 

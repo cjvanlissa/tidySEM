@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidySEM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,11 +39,11 @@
     <li><a class="dropdown-item" href="../articles/lca_exploratory.html">Exploratory LPA for Ocean Microplastics</a></li>
     <li><a class="dropdown-item" href="../articles/lca_introduction.html">Introduction to Latent Class Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/lca_lcga.html">Latent Class Growth Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_mixed.html">Mixed Data LCA</a></li>
     <li><a class="dropdown-item" href="../articles/lca_ordinal.html">Latent Class Analysis for Ordinal Indicators</a></li>
-    <li><a class="dropdown-item" href="../articles/mixed_lca.html">Mixed Data LCA</a></li>
+    <li><a class="dropdown-item" href="../articles/lca_pmc.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/openmx_ordinal.html">Ordinal Indicators in OpenMx Models</a></li>
     <li><a class="dropdown-item" href="../articles/Plotting_graphs.html">Plotting graphs for structural equation models</a></li>
-    <li><a class="dropdown-item" href="../articles/pmc_tutorial.html">Tutorial PMC</a></li>
     <li><a class="dropdown-item" href="../articles/sem_graph.html">SEM graphing conventions</a></li>
     <li><a class="dropdown-item" href="../articles/SMART_LCA_checklist.html">SMART-LCA Checklist</a></li>
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
@@ -124,10 +124,6 @@ rows in <strong>exactly the same order</strong> as the measurement
 data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cjvanlissa.github.io/tidySEM/">tidySEM</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; To take full advantage of multiple cores, use:</span></span>
-<span><span class="co">#&gt;   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span></span>
-<span><span class="co">#&gt;   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">zegwaard_carecompass</span></span>
 <span><span class="va">indicators</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"burdened"</span>, <span class="st">"trapped"</span>, <span class="st">"negaffect"</span>, <span class="st">"loneliness"</span><span class="op">)</span></span>
 <span><span class="va">measurement_data</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span>, <span class="va">indicators</span><span class="op">]</span></span></code></pre></div>
@@ -135,17 +131,9 @@ data.</p>
 two-class model:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">297</span><span class="op">)</span></span>
-<span><span class="va">lpa_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">measurement_data</span>, classes <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">lpa_model</span>, <span class="fu">cache_file</span><span class="op">(</span><span class="st">"measurement"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">lpa_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mx_profiles.html">mx_profiles</a></span><span class="op">(</span><span class="va">measurement_data</span>, classes <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lpa_model</span> <span class="op">&lt;-</span> <span class="fu">read_cached</span><span class="op">(</span><span class="st">"measurement"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">lpa_model</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared</span></span>
-<span><span class="co">#&gt; 1                4063 513         13               2030 500            0</span></span>
-<span><span class="co">#&gt;   RMSEANull   modelName  AIC  BIC saBIC Classes Entropy prob_min prob_max n_min</span></span>
-<span><span class="co">#&gt; 1      0.05 equal var 2 4089 4144  4103       2    0.74     0.91     0.93  0.42</span></span>
-<span><span class="co">#&gt;   n_max    LL</span></span>
-<span><span class="co">#&gt; 1  0.58 -2031</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/table_fit.html">table_fit</a></span><span class="op">(</span><span class="va">lpa_model</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="classification-uncertainty">Classification uncertainty<a class="anchor" aria-label="anchor" href="#classification-uncertainty"></a>
 </h3>
@@ -153,16 +141,6 @@ two-class model:</p>
 <code class="sourceCode R"><span><span class="va">cp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/class_prob.html">class_prob</a></span><span class="op">(</span><span class="va">lpa_model</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">individual</span><span class="op">)</span></span>
 <span><span class="va">cp</span><span class="op">$</span><span class="va">mostlikely.class</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      class1 class2 predicted</span></span>
-<span><span class="co">#&gt; [1,] "0.69" "0.31" "1.00"   </span></span>
-<span><span class="co">#&gt; [2,] "0.00" "1.00" "2.00"   </span></span>
-<span><span class="co">#&gt; [3,] "0.77" "0.23" "1.00"   </span></span>
-<span><span class="co">#&gt; [4,] "0.05" "0.95" "2.00"   </span></span>
-<span><span class="co">#&gt; [5,] "0.16" "0.84" "2.00"   </span></span>
-<span><span class="co">#&gt; [6,] "1.00" "0.00" "1.00"</span></span>
-<span><span class="co">#&gt;           assigned.1 assigned.2</span></span>
-<span><span class="co">#&gt; avgprob.1 "0.93"     "0.07"    </span></span>
-<span><span class="co">#&gt; avgprob.2 "0.09"     "0.91"</span></span></code></pre>
 <p>This table shows the average probability that individuals belong to
 each true class (rows), and their probability of being assigned to each
 class (columns). The diagonal of this table thus represents the
@@ -189,39 +167,15 @@ outcome, or an entire auxiliary structural equation model.</p>
 <p>Here we compare caregiver distance across classes. The default
 numeric-outcome specification estimates class-specific means and
 variances.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bch_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">lpa_model</span>, data <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">distance</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">bch_mean</span>, columns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;              label lhs op rhs     est     se pval            confint    est_sig</span></span>
-<span><span class="co">#&gt; 1     Means.y.aux1   y ~1   1  153.67   2.88 0.00   [148.02, 159.32]  153.67***</span></span>
-<span><span class="co">#&gt; 2 Variances.y.aux1   y ~~   y 2496.42 203.70 0.00 [2097.16, 2895.67] 2496.42***</span></span>
-<span><span class="co">#&gt; 3     Means.y.aux2   y ~1   1  160.66   3.82 0.00   [153.17, 168.15]  160.66***</span></span>
-<span><span class="co">#&gt; 4 Variances.y.aux2   y ~~   y 3076.16 299.84 0.00 [2488.48, 3663.83] 3076.16***</span></span>
-<span><span class="co">#&gt;   pval_std  confint_std free        name lboundmet uboundmet std_est std_se col</span></span>
-<span><span class="co">#&gt; 1     0.00 [2.80, 3.35] TRUE aux1.M[1,1]     FALSE     FALSE    3.08   0.14   y</span></span>
-<span><span class="co">#&gt; 2     0.00 [1.00, 1.00] TRUE aux1.S[1,1]     FALSE     FALSE    1.00   0.00   y</span></span>
-<span><span class="co">#&gt; 3     0.00 [2.59, 3.20] TRUE aux2.M[1,1]     FALSE     FALSE    2.90   0.16   y</span></span>
-<span><span class="co">#&gt; 4     0.00 [1.00, 1.00] TRUE aux2.S[1,1]     FALSE     FALSE    1.00   0.00   y</span></span>
-<span><span class="co">#&gt;   matrix openmx_label row group ci_type  Category</span></span>
-<span><span class="co">#&gt; 1      M  aux1.M[1,1]   1  aux1    Wald     Means</span></span>
-<span><span class="co">#&gt; 2      S  aux1.S[1,1]   y  aux1    Wald Variances</span></span>
-<span><span class="co">#&gt; 3      M  aux2.M[1,1]   1  aux2    Wald     Means</span></span>
-<span><span class="co">#&gt; 4      S  aux2.S[1,1]   y  aux2    Wald Variances</span></span></code></pre>
 <p>The estimates describe class-specific distal means. They do
 <strong>not</strong> by themselves test whether the means differ. For an
 omnibus and pairwise comparison, use <code><a href="../reference/lr_test.html">lr_test()</a></code>; compare the
 means (<code>M</code>) rather than the entire auxiliary model.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lr_test.html">lr_test</a></span><span class="op">(</span><span class="va">bch_mean</span>, compare <span class="op">=</span> <span class="st">"M"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; BCH test for equality across classes</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Overall likelihood ratio test:</span></span>
-<span><span class="co">#&gt;  LL_baseline LL_restricted LL_dif df    p</span></span>
-<span><span class="co">#&gt;         5491          5494    2.1  1 0.14</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Pairwise comparisons using likelihood ratio tests:</span></span>
-<span><span class="co">#&gt;  Model1 Model2 LL_baseline LL_restricted LL_dif df    p</span></span>
-<span><span class="co">#&gt;    aux1   aux2        5491          5494    2.1  1 0.14</span></span></code></pre>
 <p>One crucial limitation of the BCH approach is that its standard
 errors are not valid, so be careful drawing inferences about parameters
 in these distal models.</p>
@@ -233,15 +187,10 @@ in these distal models.</p>
 class-specific thresholds. The function <code><a href="../reference/table_prob.html">table_prob()</a></code>
 represents these in the more interpretable response probability
 scale:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">ordered</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">sexpatient</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"male"</span>, <span class="st">"female"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">bch_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">lpa_model</span>, data <span class="op">=</span> <span class="va">sex</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_prob.html">table_prob</a></span><span class="op">(</span><span class="va">bch_sex</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;   Variable Category Probability group</span></span>
-<span><span class="co">#&gt; 1        y        1        0.51  aux1</span></span>
-<span><span class="co">#&gt; 2        y        2        0.49  aux1</span></span>
-<span><span class="co">#&gt; 3        y        1        0.46  aux2</span></span>
-<span><span class="co">#&gt; 4        y        2        0.54  aux2</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="a-class-specific-regression-model">A class-specific regression model<a class="anchor" aria-label="anchor" href="#a-class-specific-regression-model"></a>
@@ -254,7 +203,7 @@ in the <code>"A"</code> matrix (asymmetric effects, in other words:
 regressions). A likelihood ratio test of the <code>"A"</code> matrix
 thus investigates whether the regression coefficient differs
 significantly between the two classes:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_aux</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"freqvisit"</span>, <span class="st">"distance"</span><span class="op">)</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span><span class="va">df_aux</span><span class="op">$</span><span class="va">freqvisit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">df_aux</span><span class="op">$</span><span class="va">freqvisit</span><span class="op">)</span></span>
 <span><span class="va">bch_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BCH.html">BCH</a></span><span class="op">(</span><span class="va">lpa_model</span>,</span>
@@ -262,59 +211,6 @@ significantly between the two classes:</p>
 <span>               data <span class="op">=</span> <span class="va">df_aux</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">bch_reg</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"est_sig"</span>, <span class="st">"se"</span>, <span class="st">"pval"</span>, <span class="st">"confint"</span>, <span class="st">"group"</span>, <span class="st">"matrix"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/lr_test.html">lr_test</a></span><span class="op">(</span><span class="va">bch_reg</span>, compare <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                                     label       lhs op       rhs     est     se</span></span>
-<span><span class="co">#&gt; 1  Regressions.freqvisit.ON.distance.aux1 freqvisit  ~  distance   -0.00   0.00</span></span>
-<span><span class="co">#&gt; 2                    Means.freqvisit.aux1 freqvisit ~1         1    3.88   0.20</span></span>
-<span><span class="co">#&gt; 3                     Means.distance.aux1  distance ~1         1  153.67   2.88</span></span>
-<span><span class="co">#&gt; 4                Variances.freqvisit.aux1 freqvisit ~~ freqvisit    1.13   0.09</span></span>
-<span><span class="co">#&gt; 5                 Variances.distance.aux1  distance ~~  distance 2496.41 203.70</span></span>
-<span><span class="co">#&gt; 6  Regressions.freqvisit.ON.distance.aux2 freqvisit  ~  distance   -0.00   0.00</span></span>
-<span><span class="co">#&gt; 7                    Means.freqvisit.aux2 freqvisit ~1         1    3.85   0.22</span></span>
-<span><span class="co">#&gt; 8                     Means.distance.aux2  distance ~1         1  160.68   3.82</span></span>
-<span><span class="co">#&gt; 9                Variances.freqvisit.aux2 freqvisit ~~ freqvisit    1.05   0.10</span></span>
-<span><span class="co">#&gt; 10                Variances.distance.aux2  distance ~~  distance 3076.19 299.82</span></span>
-<span><span class="co">#&gt;    pval            confint    est_sig pval_std   confint_std free        name</span></span>
-<span><span class="co">#&gt; 1  0.74      [-0.00, 0.00]      -0.00     0.74 [-0.13, 0.09] TRUE aux1.A[1,2]</span></span>
-<span><span class="co">#&gt; 2  0.00       [3.50, 4.27]    3.88***     0.00  [3.19, 4.11] TRUE aux1.M[1,1]</span></span>
-<span><span class="co">#&gt; 3  0.00   [148.02, 159.32]  153.67***     0.00  [2.80, 3.35] TRUE aux1.M[1,2]</span></span>
-<span><span class="co">#&gt; 4  0.00       [0.95, 1.31]    1.13***     0.00  [1.00, 1.00] TRUE aux1.S[1,1]</span></span>
-<span><span class="co">#&gt; 5  0.00 [2097.16, 2895.67] 2496.41***     0.00  [1.00, 1.00] TRUE aux1.S[2,2]</span></span>
-<span><span class="co">#&gt; 6  0.49      [-0.00, 0.00]      -0.00     0.49 [-0.18, 0.09] TRUE aux2.A[1,2]</span></span>
-<span><span class="co">#&gt; 7  0.00       [3.43, 4.28]    3.85***     0.00  [3.22, 4.28] TRUE aux2.M[1,1]</span></span>
-<span><span class="co">#&gt; 8  0.00   [153.18, 168.17]  160.68***     0.00  [2.59, 3.20] TRUE aux2.M[1,2]</span></span>
-<span><span class="co">#&gt; 9  0.00       [0.85, 1.25]    1.05***     0.00  [0.98, 1.01] TRUE aux2.S[1,1]</span></span>
-<span><span class="co">#&gt; 10 0.00 [2488.55, 3663.83] 3076.19***     0.00  [1.00, 1.00] TRUE aux2.S[2,2]</span></span>
-<span><span class="co">#&gt;    lboundmet uboundmet std_est std_se       col matrix openmx_label       row</span></span>
-<span><span class="co">#&gt; 1      FALSE     FALSE   -0.02   0.06  distance      A  aux1.A[1,2] freqvisit</span></span>
-<span><span class="co">#&gt; 2      FALSE     FALSE    3.65   0.24 freqvisit      M  aux1.M[1,1]         1</span></span>
-<span><span class="co">#&gt; 3      FALSE     FALSE    3.08   0.14  distance      M  aux1.M[1,2]         1</span></span>
-<span><span class="co">#&gt; 4      FALSE     FALSE    1.00   0.00 freqvisit      S  aux1.S[1,1] freqvisit</span></span>
-<span><span class="co">#&gt; 5      FALSE     FALSE    1.00   0.00  distance      S  aux1.S[2,2]  distance</span></span>
-<span><span class="co">#&gt; 6      FALSE     FALSE   -0.05   0.07  distance      A  aux2.A[1,2] freqvisit</span></span>
-<span><span class="co">#&gt; 7      FALSE     FALSE    3.75   0.27 freqvisit      M  aux2.M[1,1]         1</span></span>
-<span><span class="co">#&gt; 8      FALSE     FALSE    2.90   0.16  distance      M  aux2.M[1,2]         1</span></span>
-<span><span class="co">#&gt; 9      FALSE     FALSE    1.00   0.01 freqvisit      S  aux2.S[1,1] freqvisit</span></span>
-<span><span class="co">#&gt; 10     FALSE     FALSE    1.00   0.00  distance      S  aux2.S[2,2]  distance</span></span>
-<span><span class="co">#&gt;    group ci_type    Category</span></span>
-<span><span class="co">#&gt; 1   aux1    Wald Regressions</span></span>
-<span><span class="co">#&gt; 2   aux1    Wald       Means</span></span>
-<span><span class="co">#&gt; 3   aux1    Wald       Means</span></span>
-<span><span class="co">#&gt; 4   aux1    Wald   Variances</span></span>
-<span><span class="co">#&gt; 5   aux1    Wald   Variances</span></span>
-<span><span class="co">#&gt; 6   aux2    Wald Regressions</span></span>
-<span><span class="co">#&gt; 7   aux2    Wald       Means</span></span>
-<span><span class="co">#&gt; 8   aux2    Wald       Means</span></span>
-<span><span class="co">#&gt; 9   aux2    Wald   Variances</span></span>
-<span><span class="co">#&gt; 10  aux2    Wald   Variances</span></span>
-<span><span class="co">#&gt; BCH test for equality across classes</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Overall likelihood ratio test:</span></span>
-<span><span class="co">#&gt;  LL_baseline LL_restricted LL_dif df    p</span></span>
-<span><span class="co">#&gt;         6987          6987  0.071  1 0.79</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Pairwise comparisons using likelihood ratio tests:</span></span>
-<span><span class="co">#&gt;  Model1 Model2 LL_baseline LL_restricted LL_dif df    p</span></span>
-<span><span class="co">#&gt;    aux1   aux2        6987          6987  0.071  1 0.79</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -328,118 +224,19 @@ from influencing the class solution. Unlike BCH, the auxiliary outcomes
 enter the likelihood directly; posterior class probabilities can
 therefore change even though measurement parameters stay fixed.</p>
 <p>The interface of this function is similar to <code><a href="../reference/BCH.html">BCH()</a></code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">two_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/two_step.html">two_step</a></span><span class="op">(</span><span class="va">lpa_model</span>, data <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">distance</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">two_mean</span>, columns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                          label        lhs   op        rhs     est     se pval</span></span>
-<span><span class="co">#&gt; 1        Means.burdened.class1   burdened   ~1          1    3.74   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2         Means.trapped.class1    trapped   ~1          1    2.30   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3       Means.negaffect.class1  negaffect   ~1          1    2.83   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 4      Means.loneliness.class1 loneliness   ~1          1    2.45   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 5               Means.y.class1          y   ~1          1  153.82   3.04 0.00</span></span>
-<span><span class="co">#&gt; 6    Variances.burdened.class1   burdened   ~~   burdened    0.37   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 7     Variances.trapped.class1    trapped   ~~    trapped    0.34   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 8   Variances.negaffect.class1  negaffect   ~~  negaffect    0.32   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 9  Variances.loneliness.class1 loneliness   ~~ loneliness    0.32   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 10          Variances.y.class1          y   ~~          y 2524.65 217.00 0.00</span></span>
-<span><span class="co">#&gt; 11       Means.burdened.class2   burdened   ~1          1    2.88   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 12        Means.trapped.class2    trapped   ~1          1    0.92   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 13      Means.negaffect.class2  negaffect   ~1          1    2.04   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 14     Means.loneliness.class2 loneliness   ~1          1    2.96   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 15              Means.y.class2          y   ~1          1  160.44   4.04 0.00</span></span>
-<span><span class="co">#&gt; 16   Variances.burdened.class2   burdened   ~~   burdened    0.37   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 17    Variances.trapped.class2    trapped   ~~    trapped    0.34   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 18  Variances.negaffect.class2  negaffect   ~~  negaffect    0.32   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 19 Variances.loneliness.class2 loneliness   ~~ loneliness    0.32   0.00 &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 20          Variances.y.class2          y   ~~          y 3039.23 317.83 0.00</span></span>
-<span><span class="co">#&gt; 21 equal var 2.weights[1,1].NA          1 &lt;NA&gt;          1    1.00   &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 22 equal var 2.weights[1,2].NA          1 &lt;NA&gt;          2    0.71   &lt;NA&gt; &lt;NA&gt;</span></span>
-<span><span class="co">#&gt;               confint    est_sig pval_std  confint_std  free</span></span>
-<span><span class="co">#&gt; 1                &lt;NA&gt;       3.74     0.00 [6.13, 6.13] FALSE</span></span>
-<span><span class="co">#&gt; 2                &lt;NA&gt;       2.30     0.00 [3.97, 3.97] FALSE</span></span>
-<span><span class="co">#&gt; 3                &lt;NA&gt;       2.83     0.00 [5.00, 5.00] FALSE</span></span>
-<span><span class="co">#&gt; 4                &lt;NA&gt;       2.45     0.00 [4.34, 4.34] FALSE</span></span>
-<span><span class="co">#&gt; 5    [147.87, 159.78]  153.82***     0.00 [2.78, 3.35]  TRUE</span></span>
-<span><span class="co">#&gt; 6                &lt;NA&gt;       0.37     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 7                &lt;NA&gt;       0.34     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 8                &lt;NA&gt;       0.32     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 9                &lt;NA&gt;       0.32     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 10 [2099.33, 2949.97] 2524.65***     0.00 [1.00, 1.00]  TRUE</span></span>
-<span><span class="co">#&gt; 11               &lt;NA&gt;       2.88     0.00 [4.71, 4.71] FALSE</span></span>
-<span><span class="co">#&gt; 12               &lt;NA&gt;       0.92     0.00 [1.58, 1.58] FALSE</span></span>
-<span><span class="co">#&gt; 13               &lt;NA&gt;       2.04     0.00 [3.60, 3.60] FALSE</span></span>
-<span><span class="co">#&gt; 14               &lt;NA&gt;       2.96     0.00 [5.24, 5.24] FALSE</span></span>
-<span><span class="co">#&gt; 15   [152.52, 168.35]  160.44***     0.00 [2.58, 3.24]  TRUE</span></span>
-<span><span class="co">#&gt; 16               &lt;NA&gt;       0.37     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 17               &lt;NA&gt;       0.34     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 18               &lt;NA&gt;       0.32     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 19               &lt;NA&gt;       0.32     0.00 [1.00, 1.00] FALSE</span></span>
-<span><span class="co">#&gt; 20 [2416.29, 3662.16] 3039.23***     0.00 [1.00, 1.00]  TRUE</span></span>
-<span><span class="co">#&gt; 21               &lt;NA&gt;       1.00     &lt;NA&gt;         &lt;NA&gt; FALSE</span></span>
-<span><span class="co">#&gt; 22               &lt;NA&gt;       0.71     &lt;NA&gt;         &lt;NA&gt; FALSE</span></span>
-<span><span class="co">#&gt;                        name lboundmet uboundmet std_est std_se        col</span></span>
-<span><span class="co">#&gt; 1             class1.M[1,1]        NA        NA    6.13   0.00   burdened</span></span>
-<span><span class="co">#&gt; 2             class1.M[1,2]        NA        NA    3.97   0.00    trapped</span></span>
-<span><span class="co">#&gt; 3             class1.M[1,3]        NA        NA    5.00   0.00  negaffect</span></span>
-<span><span class="co">#&gt; 4             class1.M[1,4]        NA        NA    4.34   0.00 loneliness</span></span>
-<span><span class="co">#&gt; 5             class1.M[1,5]     FALSE     FALSE    3.06   0.15          y</span></span>
-<span><span class="co">#&gt; 6             class1.S[1,1]        NA        NA    1.00   0.00   burdened</span></span>
-<span><span class="co">#&gt; 7             class1.S[2,2]        NA        NA    1.00   0.00    trapped</span></span>
-<span><span class="co">#&gt; 8             class1.S[3,3]        NA        NA    1.00   0.00  negaffect</span></span>
-<span><span class="co">#&gt; 9             class1.S[4,4]        NA        NA    1.00   0.00 loneliness</span></span>
-<span><span class="co">#&gt; 10            class1.S[5,5]     FALSE     FALSE    1.00   0.00          y</span></span>
-<span><span class="co">#&gt; 11            class2.M[1,1]        NA        NA    4.71   0.00   burdened</span></span>
-<span><span class="co">#&gt; 12            class2.M[1,2]        NA        NA    1.58   0.00    trapped</span></span>
-<span><span class="co">#&gt; 13            class2.M[1,3]        NA        NA    3.60   0.00  negaffect</span></span>
-<span><span class="co">#&gt; 14            class2.M[1,4]        NA        NA    5.24   0.00 loneliness</span></span>
-<span><span class="co">#&gt; 15            class2.M[1,5]     FALSE     FALSE    2.91   0.17          y</span></span>
-<span><span class="co">#&gt; 16            class2.S[1,1]        NA        NA    1.00   0.00   burdened</span></span>
-<span><span class="co">#&gt; 17            class2.S[2,2]        NA        NA    1.00   0.00    trapped</span></span>
-<span><span class="co">#&gt; 18            class2.S[3,3]        NA        NA    1.00   0.00  negaffect</span></span>
-<span><span class="co">#&gt; 19            class2.S[4,4]        NA        NA    1.00   0.00 loneliness</span></span>
-<span><span class="co">#&gt; 20            class2.S[5,5]     FALSE     FALSE    1.00   0.00          y</span></span>
-<span><span class="co">#&gt; 21 equal var 2.weights[1,1]        NA        NA    &lt;NA&gt;   &lt;NA&gt;          1</span></span>
-<span><span class="co">#&gt; 22 equal var 2.weights[1,2]        NA        NA    &lt;NA&gt;   &lt;NA&gt;          2</span></span>
-<span><span class="co">#&gt;     matrix             openmx_label        row  class ci_type  Category</span></span>
-<span><span class="co">#&gt; 1        M            class1.M[1,1]          1 class1    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 2        M            class1.M[1,2]          1 class1    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 3        M            class1.M[1,3]          1 class1    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 4        M            class1.M[1,4]          1 class1    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 5        M               aux1_M_1_1          1 class1    Wald     Means</span></span>
-<span><span class="co">#&gt; 6        S            class1.S[1,1]   burdened class1    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 7        S            class1.S[2,2]    trapped class1    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 8        S            class1.S[3,3]  negaffect class1    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 9        S            class1.S[4,4] loneliness class1    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 10       S               aux1_S_1_1          y class1    Wald Variances</span></span>
-<span><span class="co">#&gt; 11       M            class2.M[1,1]          1 class2    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 12       M            class2.M[1,2]          1 class2    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 13       M            class2.M[1,3]          1 class2    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 14       M            class2.M[1,4]          1 class2    &lt;NA&gt;     Means</span></span>
-<span><span class="co">#&gt; 15       M               aux2_M_1_1          1 class2    Wald     Means</span></span>
-<span><span class="co">#&gt; 16       S            class2.S[1,1]   burdened class2    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 17       S            class2.S[2,2]    trapped class2    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 18       S            class2.S[3,3]  negaffect class2    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 19       S            class2.S[4,4] loneliness class2    &lt;NA&gt; Variances</span></span>
-<span><span class="co">#&gt; 20       S               aux2_S_1_1          y class2    Wald Variances</span></span>
-<span><span class="co">#&gt; 21 weights equal var 2.weights[1,1]          1   &lt;NA&gt;    &lt;NA&gt;   Weights</span></span>
-<span><span class="co">#&gt; 22 weights equal var 2.weights[1,2]          1   &lt;NA&gt;    &lt;NA&gt;   Weights</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Note: adjusted standard errors were used for: Variances.y.class1, Means.y.class1, Variances.y.class2, Means.y.class2.</span></span></code></pre>
 <p>Ordinary standard errors for the auxiliary model are also not valid,
 but <code>tidySEM</code> replaces them with corrected two-step standard
 errors. These are available in the attribute
 <code>attr(model, "se_robust")</code>, and <code><a href="../reference/table_results.html">table_results()</a></code>
 shows them by default.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">two_mean</span>, <span class="st">"se_robust"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;        label  se     type</span></span>
-<span><span class="co">#&gt; 1 aux1_S_1_1 217 adjusted</span></span>
-<span><span class="co">#&gt; 2 aux1_M_1_1   3 adjusted</span></span>
-<span><span class="co">#&gt; 3 aux2_S_1_1 318 adjusted</span></span>
-<span><span class="co">#&gt; 4 aux2_M_1_1   4 adjusted</span></span></code></pre>
 <p>For a custom auxiliary RAM model, the syntax can include multiple
 outcomes and regressions:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">two_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/two_step.html">two_step</a></span><span class="op">(</span></span>
 <span>  <span class="va">lpa_model</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"freqvisit ~ distance"</span>,</span>
@@ -468,7 +265,7 @@ the draws. Increasing the number of draws reduces Monte Carlo error.</p>
 <p>Here we use <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code> with a factor-coded class variable and
 no intercept, yielding one coefficient per class. The <code>model</code>
 expression is evaluated in each pseudo-class dataset.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2027</span><span class="op">)</span></span>
 <span><span class="va">pseudo_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pseudo_class.html">pseudo_class</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">lpa_model</span>,</span>
@@ -477,9 +274,6 @@ expression is evaluated in each pseudo-class dataset.</p>
 <span>  m <span class="op">=</span> <span class="fl">20</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">pseudo_mean</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                term estimate std.error statistic  df  p.value</span></span>
-<span><span class="co">#&gt; 1 I(factor(class))1      154       3.2        48 330 5.7e-150</span></span>
-<span><span class="co">#&gt; 2 I(factor(class))2      160       4.0        40 251 1.7e-111</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="use-ram-syntax">Use RAM syntax<a class="anchor" aria-label="anchor" href="#use-ram-syntax"></a>
@@ -488,7 +282,7 @@ expression is evaluated in each pseudo-class dataset.</p>
 models expressed using <code>lavaan</code> syntax. If the model does not
 explicitly reference <code>class</code>, the function treats class as a
 grouping variable.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2028</span><span class="op">)</span></span>
 <span><span class="va">pseudo_ram</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pseudo_class.html">pseudo_class</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">lpa_model</span>,</span>
@@ -497,11 +291,6 @@ grouping variable.</p>
 <span>  m <span class="op">=</span> <span class="fl">20</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">pseudo_ram</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   term estimate    se statistic  df df_complete   pvalue</span></span>
-<span><span class="co">#&gt; 1     Means.distance.1      154   3.0      51.1 441         509 1.7e-187</span></span>
-<span><span class="co">#&gt; 2 Variances.distance.1     2560 216.5      11.8 425         509  4.4e-28</span></span>
-<span><span class="co">#&gt; 3     Means.distance.2      160   3.9      41.1 420         509 3.8e-149</span></span>
-<span><span class="co">#&gt; 4 Variances.distance.2     2990 303.0       9.9 412         509  9.3e-21</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -515,7 +304,7 @@ coefficients of a multinomial regression adjusted for other
 predictors.</p>
 <p>For example, a multinomial model can be fitted across pseudo-class
 draws using <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">nnet::multinom()</a></code>:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2030</span><span class="op">)</span></span>
 <span><span class="va">pseudo_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pseudo_class.html">pseudo_class</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">lpa_model</span>,</span>
@@ -527,10 +316,6 @@ draws using <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="ex
 <span>  m <span class="op">=</span> <span class="fl">20</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">pseudo_pred</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;            term estimate std.error statistic  df p.value</span></span>
-<span><span class="co">#&gt; 1 (Intercept).1   -0.480    0.4785     -1.00 274    0.32</span></span>
-<span><span class="co">#&gt; 2    distance.1    0.002    0.0019      1.04 212    0.30</span></span>
-<span><span class="co">#&gt; 3   freqvisit.1   -0.050    0.0901     -0.55 389    0.58</span></span></code></pre>
 <p>The coefficients describe conditional associations with class
 membership relative to a reference class.</p>
 </div>

@@ -28,12 +28,14 @@ An object of class `MxModel`.
 ## Examples
 
 ``` r
+if(requireNamespace("OpenMx", quietly = TRUE)){
 df <- iris[1:4]
 names(df) <- paste0("x_", 1:4)
 model <- tidy_sem(df)
 model <- measurement(model)
 res <- estimate_mx(model)
 summary(res)
+}
 #> Summary of model 
 #>  
 #> free parameters:
@@ -63,8 +65,8 @@ summary(res)
 #> AIC:      -356.5774               843.4226                 845.7000
 #> BIC:     -2126.8309               879.5503                 841.5725
 #> To get additional fit indices, see help(mxRefModels)
-#> timestamp: 2026-11-09 12:04:38 
-#> Wall clock time: 0.02570057 secs 
+#> timestamp: 2026-11-13 11:40:09 
+#> Wall clock time: 0.01650262 secs 
 #> optimizer:  SLSQP 
 #> OpenMx version number: 2.22.11 
 #> Need help?  See help(mxSummary) 

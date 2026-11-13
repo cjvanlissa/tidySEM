@@ -1,4 +1,4 @@
-# tidySEM [![](https://raw.githubusercontent.com/cjvanlissa/metamixture/master/tidySEM_hex.png)](https://github.com/cjvanlissa/tidySEM)
+# tidySEM [![](https://raw.githubusercontent.com/cjvanlissa/tidySEM/b6eb160cad950964ccb82652bfc3a33217055923/tidySEM_hex.png)](https://github.com/cjvanlissa/tidySEM)
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/tidySEM)](https://cran.r-project.org/package=tidySEM)
@@ -740,9 +740,8 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 - [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
   : Create latent profile plots
 
-- [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
-  [`pmc_srmr()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md)
-  : Predictive Model Comparison
+- [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md) :
+  Predictive Model Comparison
 
 - [`predict_class()`](https://cjvanlissa.github.io/tidySEM/reference/predict_class.md)
   : Predict Class Membership
@@ -764,6 +763,9 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
 
 - [`run_mx()`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md)
   : Run as OpenMx model with sensible defaults
+
+- [`score_items()`](https://cjvanlissa.github.io/tidySEM/reference/score_items.md)
+  : Compute Scale Scores
 
 - [`skew_kurtosis()`](https://cjvanlissa.github.io/tidySEM/reference/skew_kurtosis.md)
   : Calculate skew and kurtosis
@@ -818,16 +820,16 @@ Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)
   Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_introduction.md):
 - [Latent Class Growth
   Analysis](https://cjvanlissa.github.io/tidySEM/articles/lca_lcga.md):
+- [Mixed Data
+  LCA](https://cjvanlissa.github.io/tidySEM/articles/lca_mixed.md):
 - [Latent Class Analysis for Ordinal
   Indicators](https://cjvanlissa.github.io/tidySEM/articles/lca_ordinal.md):
-- [Mixed Data
-  LCA](https://cjvanlissa.github.io/tidySEM/articles/mixed_lca.md):
+- [Tutorial
+  PMC](https://cjvanlissa.github.io/tidySEM/articles/lca_pmc.md):
 - [Ordinal Indicators in OpenMx
   Models](https://cjvanlissa.github.io/tidySEM/articles/openmx_ordinal.md):
 - [Plotting graphs for structural equation
   models](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.md):
-- [Tutorial
-  PMC](https://cjvanlissa.github.io/tidySEM/articles/pmc_tutorial.md):
 - [SEM graphing
   conventions](https://cjvanlissa.github.io/tidySEM/articles/sem_graph.md):
 - [SMART-LCA

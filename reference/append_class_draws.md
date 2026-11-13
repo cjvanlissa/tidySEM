@@ -35,14 +35,12 @@ A data.frame of class `class_draws`.
 
 ``` r
 if(requireNamespace("OpenMx", quietly = TRUE)){
-library(OpenMx)
 dat <- iris[c(1:5, 50:55, 100:105),1:3]
 colnames(dat) <- letters[1:3]
 fit <- mx_profiles(data = dat, classes = 2)
 
 append_class_draws(fit, data = iris[c(1:5, 50:55, 100:105), 4, drop = FALSE])
 }
-#> Running mix2 with 10 parameters
 #>       id_dataset Petal.Width class
 #> 1              1         0.2     2
 #> 2              1         0.2     2

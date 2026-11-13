@@ -26,8 +26,6 @@ variables as rectangles:
 graph_sem(layout = matrix("x")) + coord_fixed()
 ```
 
-![](var_obs.png)
-
 #### Latent variables
 
 A latent variable is something that exists (according to your theory),
@@ -40,8 +38,6 @@ indicate them as ovals or circles:
 
 graph_sem(nodes = data.frame(name = "x", shape = "oval"), layout = matrix("x"), fix_coord = TRUE)
 ```
-
-![](var_lat.png)
 
 ## Edges
 
@@ -58,8 +54,6 @@ Regression effects are also called “paths”, “directional effects”, and
 “factor loadings”. In SEM graphs, we represent regression effects as
 single-headed arrows:
 
-![](arrow.png)
-
 #### Covariances
 
 If (you assume that) two variables are associated, but you have no
@@ -70,8 +64,6 @@ correlation. Covariances will also be referred to as “correlations”
 (when a graph depicts standardized coefficients), “undirected
 associations”, or “unexplained associations”. Visually, we indicate
 covariances as curved (dashed) lines without arrowheads:
-
-![](curve.png)
 
 #### (Residual) variances
 
@@ -86,8 +78,6 @@ represents the “error variance”, also known as “residual variance” or
 all variances (including error variances) are displayed as double-headed
 arrows. This is a stylistic decision. Error variances are displayed like
 this:
-
-![](error.png)
 
 ## Basic models
 
@@ -109,8 +99,6 @@ names(df) <- c("x", "y")
 sem("y ~ x", df) %>%
   graph_sem(spacing_x = 2.5, fix_coord = TRUE)
 ```
-
-![](mod_reg.png)
 
 In this graph, we see the observed variables `x` and `y` represented as
 rectangles. We see the regression effect represented as a single-headed
@@ -143,8 +131,6 @@ tidy_sem(df) %>%
   graph_sem()
 ```
 
-![](mod_meas.png)
-
 We see that the model defines a latent variable `y`, with mean fixed to
 `0` and variance fixed to `1`, which has a causal effect on the three
 indicators. The paths from the latent variable to the indicators are
@@ -173,8 +159,6 @@ tidy_sem(df) %>%
   graph_sem()
 ```
 
-![](mod_sem1.png)
-
 Instead of having an observed variable `x` predicting an observed
 variable `y`, we now have it predicting a latent variable `y`. This is
 one of the simplest possible structural equation models, but models of
@@ -196,8 +180,6 @@ tidy_sem(df) %>%
                          "",     "y",    "",
                          "y_1", "y_2", "y_3", rows = 3))
 ```
-
-![](mod_sem2.png)
 
 For more on customizing SEM graphs, see the [vignette about making
 graphs](https://cjvanlissa.github.io/tidySEM/articles/Plotting_graphs.html).

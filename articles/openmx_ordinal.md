@@ -38,10 +38,6 @@ We begin by simulating a small data set with three ordinal variables.
 ``` r
 
 library(tidySEM)
-library(OpenMx)
-#> To take full advantage of multiple cores, use:
-#>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now
-#>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
 set.seed(1)
 df <- data.frame(rbind(
   matrix(rnorm(300, mean = 2), ncol = 3),
