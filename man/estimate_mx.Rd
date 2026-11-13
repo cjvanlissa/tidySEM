@@ -19,10 +19,12 @@ This function is a wrapper for the \code{\link{as_ram}}
 and \code{\link{run_mx}} functions.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 df <- iris[1:4]
 names(df) <- paste0("x_", 1:4)
 model <- tidy_sem(df)
 model <- measurement(model)
 res <- estimate_mx(model)
 summary(res)
+}
 }

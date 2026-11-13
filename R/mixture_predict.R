@@ -17,9 +17,13 @@ predict_class <- function(object,
 predict_class_MxModel <-  function(object,
                                    newdata,
                                    ...){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("OpenMx:::predict.MxModel")
-  eval.parent(cl)
+  tidyatt <- attr(object, "tidySEM")
+  if(!is.null(tidyatt)){
+    message(paste0("No method implemented to predict classes for an `MxModel` with tidySEM type ", tidyatt, "."))
+  } else {
+    message("No method implemented to predict classes for a regular `MxModel` object.")
+  }
+  return(NULL)
 }
 
 predict_class_mixture <- function(object, newdata = NULL, ...){

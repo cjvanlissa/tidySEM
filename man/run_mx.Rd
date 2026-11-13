@@ -24,7 +24,9 @@ mixture models created using \code{\link{mx_mixture}}.
 Knowledgeable users may want to run models manually.
 }
 \examples{
+if(requireNamespace("OpenMx", quietly = TRUE)){
 df <- iris[1:3]
 names(df) <- paste0("X_", 1:3)
 run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
+}
 }

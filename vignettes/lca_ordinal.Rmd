@@ -19,19 +19,12 @@ knitr::opts_chunk$set(
   tidy.opts = list(width.cutoff = 60), tidy = requireNamespace("formatR", quietly = TRUE)
 )
 options(scipen = 1, digits = 2)
-eval_results <- FALSE
-if(suppressWarnings(tryCatch({isTRUE(as.logical(readLines("pkgdown.txt")))}, error = function(e){FALSE}))){
-  eval_results <- TRUE
-  knitr::opts_chunk$set(
-  results = "markup"
-)
-}
-run_everything = suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
-if(!requireNamespace("OpenMx", quietly = TRUE)){
-  run_everything <- eval_results <- FALSE
-} else {
-  library(OpenMx)
-}
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
+run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false"))))
+show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
+if (!run_openmx) run_everything <- show_results <- FALSE
+if (show_results) knitr::opts_chunk$set(results = "markup")
+
 ```
 
 This is an example of exploratory LCA with ordinal indicators using `tidySEM`,
@@ -91,15 +84,13 @@ desc <- desc[, c("name", "type", "n", "missing", "unique",
 ]
 desc
 ```
-```{r echo = FALSE, eval=run_everything}
-desc <- tidySEM::descriptives(df)
-desc <- desc[, c("name", "type", "n", "missing", "unique", 
-"mode", "mode_value", "v")
-]
-write.csv(desc, "lca_fast_desc.csv", row.names = FALSE)
+```{r cache-desc, echo = FALSE, eval = run_everything || show_results}
+desc <- tidySEM:::run_cached({
+  desc <- tidySEM::descriptives(df)
+  desc[, c("name", "type", "n", "missing", "unique", "mode", "mode_value", "v")]
+})
 ```
-```{r tabdesc, echo = FALSE, eval=eval_results}
-desc <- read.csv("lca_fast_desc.csv", stringsAsFactors = FALSE)
+```{r tabdesc, echo = FALSE, eval = show_results}
 knitr::kable(desc, caption = "Descriptive statistics for recoded ordinal items")
 ```
 
@@ -115,19 +106,14 @@ ggplot(df_plot, aes(x = Value)) +
   facet_wrap(~time, scales = "free")+
   theme_bw()
 ```
-```{r, echo = FALSE, eval = run_everything}
-df_plot <- df
-names(df_plot) <- paste0("Value.", names(df_plot))
-df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
-p = ggplot(df_plot, aes(x = Value)) +
-  geom_bar() +
-  facet_wrap(~time, scales = "free")+
-  theme_bw()
-ggsave("lca_fast_plot_desc.png", p, device = "png", width = 100, height = 100, units = "mm")
-```
-
-```{r, echo = FALSE, eval=eval_results, fig.cap="Bar charts for ordinal indicators", out.width="80%"}
-knitr::include_graphics("lca_fast_plot_desc.png")
+```{r figdesc, echo = FALSE, eval = run_everything || show_results, fig.cap="Bar charts for ordinal indicators", out.width="100%"}
+tidySEM:::run_cached({
+  df_plot <- df
+  names(df_plot) <- paste0("Value.", names(df_plot))
+  df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
+  ggplot(df_plot, aes(x = Value)) +
+    geom_bar() + facet_wrap(~time, scales = "free") + theme_bw()
+}, type = "png", width = 100 / 25.4, height = 100 / 25.4)
 ```
 
 As we can see, the `descriptives()` table provides invaluable information about the measurement level of the indicators,
@@ -159,20 +145,17 @@ so relevant variables must be selected first.
 
 We consider one- through three-class models. Limiting the number of classes and categories makes this tutorial faster to reproduce. A substantive analysis should investigate a broader range of plausible models and use the original measurement scale where feasible.
 
-```{r fitlca, eval = run_everything, echo = FALSE}
-library(OpenMx)
-set.seed(123)
-res <- mx_lca(data = df, classes = 1:3)
-saveRDS(res, "lca_fast_res.rds")
+```{r fitlca, eval = run_everything || show_results, echo = FALSE}
+res <- tidySEM:::run_cached({
+  set.seed(123)
+  mx_lca(data = df, classes = 1:3)
+})
 ```
 ```{r eval = FALSE, echo = TRUE}
-library(OpenMx)
 set.seed(123)
 res <- mx_lca(data = df, classes = 1:3)
 ```
-```{r eval = FALSE, echo = FALSE}
-res <- readRDS("lca_fast_res.rds")
-```
+
 
 ## Class Enumeration
 
@@ -193,16 +176,13 @@ fit[ , c("Name", "LL", "n", "Parameters", "BIC",
 "Entropy", "prob_min", "n_min", "np_ratio", 
 "np_local")]
 ```
-```{r echo = FALSE, eval = run_everything}
-fit <- table_fit(res)
-write.csv(fit, "lca_fast_fit.csv", row.names = FALSE)
+```{r cache-fit, echo = FALSE, eval = run_everything || show_results}
+fit <- tidySEM:::run_cached(table_fit(res))
 ```
-```{r tabfit, echo = FALSE, eval = eval_results}
-fit <- read.csv("lca_fast_fit.csv", stringsAsFactors = FALSE)
-class(fit) <- c("tidy_fit", "data.frame")
+```{r tabfit, echo = FALSE, eval = show_results}
 knitr::kable(fit[ , c("Name", "LL", "n", "Parameters", "BIC",
-"Entropy", "prob_min", "n_min", "np_ratio", 
-"np_local")], caption = "Model fit table", digits = 2)
+"Entropy", "prob_min", "n_min", "np_ratio", "np_local")],
+caption = "Model fit table", digits = 2)
 ```
 
 Inspect the ratio of cases to parameters (`np_ratio` and `np_local`) alongside classification diagnostics such as entropy and minimum classification probability. Models with small classes or unstable estimates require particular caution.
@@ -220,7 +200,7 @@ For illustration, we examine the three-class solution. In a substantive analysis
 ```{r echo = TRUE, eval = FALSE}
 res_final <- res[[3]]
 ```
-```{r echo = FALSE, eval = run_everything}
+```{r select-final, echo = FALSE, eval = run_everything || show_results}
 res_final <- res[[3]]
 ```
 
@@ -237,13 +217,14 @@ Therefore, we ask for the results in probability scale:
 tab <- table_prob(res_final)
 reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
 ```
-```{r echo = FALSE, eval = run_everything}
-tab <- table_prob(res_final)
-tab <- reshape(tab, direction = "wide", v.names = "Probability", timevar = "group", idvar = c("Variable", "Category"))
-write.csv(tab, "lca_fast_tab_prob.csv", row.names = FALSE)
+```{r cache-prob-table, echo = FALSE, eval = run_everything || show_results}
+tab <- tidySEM:::run_cached({
+  tab <- table_prob(res_final)
+  reshape(tab, direction = "wide", v.names = "Probability",
+          timevar = "group", idvar = c("Variable", "Category"))
+})
 ```
-```{r, eval = eval_results, echo=FALSE}
-tab <- read.csv("lca_fast_tab_prob.csv", stringsAsFactors = FALSE)
+```{r tabprob, eval = show_results, echo = FALSE}
 knitr::kable(tab, caption = "Three-class model results in probability scale")
 ```
 
@@ -252,12 +233,13 @@ The results can also be interpreted by plotting the response probabilities:
 ```{r echo = TRUE, eval = FALSE}
 plot_prob(res_final, bw = TRUE)
 ```
-```{r echo = FALSE, eval = run_everything}
-p <- plot_prob(res_final, bw = TRUE)
-ggsave("lca_fast_prob.png", p, device = "png", width = 210, height = 100, units = "mm", scale = 1.5)
-```
-```{r echo = FALSE, eval = eval_results, fig.cap="Probability plot", out.width="100%"}
-knitr::include_graphics("lca_fast_prob.png")
+```{r figprob, echo = FALSE, eval = run_everything || show_results, fig.cap="Probability plot", out.width="100%"}
+tidySEM:::run_cached(
+  plot_prob(res_final, bw = TRUE),
+  type = "png",
+  width = 210 / 25.4 * 1.5,
+  height = 100 / 25.4 * 1.5
+)
 ```
 
 Use the response-probability plot to compare the identity patterns across classes. Class labels should be chosen based on the newly estimated probabilities rather than carried over from the original analysis.
@@ -275,13 +257,10 @@ Below, we estimate an auxiliary model to compare depressive symptoms across clas
 ```{r echo = TRUE, eval=FALSE}
 aux_dep <- BCH(res_final, data = aux_data$depression)
 ```
-```{r echo = FALSE, eval=run_everything}
-aux_dep <- BCH(res_final, data = aux_data$depression)
-saveRDS(aux_dep, "lca_fast_aux_dep.rds")
+```{r cache-aux-dep, echo = FALSE, eval = run_everything || show_results}
+aux_dep <- tidySEM:::run_cached(BCH(res_final, data = aux_data$depression))
 ```
-```{r echo = FALSE, eval=FALSE}
-aux_dep <- readRDS("lca_fast_aux_dep.rds")
-```
+
 
 To obtain an omnibus likelihood ratio test of the significance of depression differences across classes,
 as well as pairwise comparisons between classes,
@@ -300,14 +279,12 @@ aux_model <- BCH(res_final,
                  model = "depression ~ vict_teacher",
                  data = df_aux)
 ```
-```{r echo = FALSE, eval=run_everything}
-df_aux <- aux_data[, c("vict_teacher", "depression")]
-# Dummy-code vict_teacher
-df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
-aux_model <- BCH(res_final,
-                 model = "depression ~ vict_teacher",
-                 data = df_aux)
-saveRDS(aux_model, "lca_fast_aux_model.rds")
+```{r cache-aux-model, echo = FALSE, eval = run_everything || show_results}
+aux_model <- tidySEM:::run_cached({
+  df_aux <- aux_data[, c("vict_teacher", "depression")]
+  df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher)-1)
+  BCH(res_final, model = "depression ~ vict_teacher", data = df_aux)
+})
 ```
 
 To view the coefficients of this model, we can use either
@@ -319,10 +296,7 @@ class-specific `A` matrices.
 table_results(aux_model, columns = c("label", "est_sig", "se", "pval", "confint", "group", "matrix"))
 ```
 
-```{r echo=FALSE, eval=eval_results}
-if (!exists("aux_model")) {
-  aux_model <- readRDS("lca_fast_aux_model.rds")
-}
+```{r aux-results, echo = FALSE, eval = show_results, results = "markup"}
 table_results(aux_model, c("label", "est_sig", "se", "pval", "confint", "group", "matrix"))
 ```
 
@@ -336,7 +310,7 @@ coefficients in the class-specific `A` matrices:
 lr_test(aux_model, compare = "A")
 ```
 
-```{r echo=FALSE, eval=eval_results}
+```{r aux-lr, echo = FALSE, eval = show_results, results = "markup"}
 lr_test(aux_model, compare = "A")
 ```
 
@@ -350,11 +324,8 @@ wald_test(
 )
 ```
 
-```{r echo=FALSE, eval=eval_results}
-wald_test(
-  aux_model,
-  "aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]"
-)
+```{r aux-wald, echo = FALSE, eval = show_results, results = "markup"}
+wald_test(aux_model, "aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]")
 ```
 
 Both tests evaluate the null hypothesis that the regression

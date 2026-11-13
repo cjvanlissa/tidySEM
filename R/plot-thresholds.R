@@ -29,11 +29,20 @@ plot_prob <- function(x, variables = NULL, bars = c("Variable", "group", "class"
 
 #' @method plot_prob MxModel
 #' @export
-plot_prob.MxModel <- function(x, variables = NULL, bars = c("Variable", "group", "class"), facet = c("group", "class", "Variable"), bw = FALSE, ...){
-    cl <- match.call()
-    cl[["x"]] <- table_prob(x)
-    cl[[1]] <- str2lang("tidySEM::plot_prob")
-    eval.parent(cl)
+plot_prob.MxModel <- function(x,
+                              variables = NULL,
+                              bars = c("Variable", "group", "class"),
+                              facet = c("group", "class", "Variable"),
+                              bw = FALSE,
+                              ...) {
+  plot_prob(
+    x = table_prob(x),
+    variables = variables,
+    bars = bars,
+    facet = facet,
+    bw = bw,
+    ...
+  )
 }
 
 #' @import ggplot2

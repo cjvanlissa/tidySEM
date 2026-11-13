@@ -28,3 +28,4 @@ CODE_OF_CONDUCT.md
 ^publish_package\.R$
 ^make_hex\.R$
 ^tidySEM_hex\.png$
+^vignettes/cache_

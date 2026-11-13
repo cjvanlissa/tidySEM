@@ -4,19 +4,28 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to Latent Class Analysis}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEncoding{UTF-_8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", warning = FALSE,
-                      message = FALSE, fig.width = 7, fig.height = 4.5)
-run_everything <- suppressWarnings(tryCatch({isTRUE(as.logical(readLines("run_everything.txt")))}, error = function(e){FALSE}))
-eval_results <- suppressWarnings(tryCatch(
-  isTRUE(as.logical(readLines("pkgdown.txt", warn = FALSE)[1])),
-  error = function(e) FALSE))
-# Fit only when explicitly requested. Display larger outputs only on pkgdown.
-# CRAN builds therefore need neither precomputed .rds files nor external datasets.
-show_results <- eval_results && run_everything
+                      message = FALSE, fig.width = 7, fig.height = 4.5,
+                      out.width = "100%")
+run_openmx <- requireNamespace("OpenMx", quietly = TRUE)
+run_everything <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false"))))
+show_results <- isTRUE(as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false"))))
+if (!run_openmx) run_everything <- show_results <- FALSE
+# run_cached() manages RDS and PNG files; this path remains for CSV and SVG exports.
+input <- knitr::current_input(dir = TRUE)
+cache_dir <- if (is.null(input) || !nzchar(input)) {
+  file.path(tempdir(), "cache_interactive")
+} else {
+  file.path(
+    dirname(input),
+    paste0("cache_", tools::file_path_sans_ext(basename(input)))
+  )
+}
+if (run_everything) dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 ```
 
 This vignette covers the core ideas behind LCA,
@@ -38,9 +47,8 @@ We will use data from [Zhao K, Zhao Y, Xu W. Relationship between middle school 
 
 These data are available in the object `zhao_2025`, and we can load them as follows:
 
-```{r}
+```{r intro-1}
 library(tidySEM)
-library(OpenMx)
 library(ggplot2)
 df <- zhao_2025
 ```
@@ -70,7 +78,7 @@ understand the structure of the data and identify features such as
 variable ranges, means, standard deviations, missing values, and the
 number of unique observed values.
 
-```{r}
+```{r intro-3}
 table_desc <- descriptives(df)
 table_desc
 ```
@@ -94,7 +102,7 @@ You should therefore inspect both the variable type and the meaning of the varia
 
 If a variable is incorrectly coded, you may be able to restore its correct type. Here are a few examples of type conversions:
 
-```{r}
+```{r intro-4, eval = run_openmx}
 # This is a character variable, because someone misstyped a t:
 v1 <- c("5.1", "4.9", "4.7", "4.6t", "5", "5.4")
 class(v1)
@@ -125,7 +133,7 @@ The 'levels' argument specifies the original codes found in the dataset,
 while 'labels' specifies the corresponding category names that R should
 display instead.
 
-```{r}
+```{r intro-5}
 df$Gender <- factor(df$Gender,
                     levels = c(1,2),
                     labels = c("M", "F"))
@@ -145,31 +153,20 @@ For example, the scale named TS consists of TS1 through TS4, while SOS
 consists of SOS1 through SOS4. 
 I like to store this information in a list, as this would allow you to, for example, easily perform psychometric analyses for every scale automatically (which is out of scope for the current tutorial).
 
-```{r}
-# To prepare the scales list, I used:
-scales_list <- grep("\\w{2}\\d", names(df), value = TRUE)
-scalenames <- unique(gsub("\\d", "", scales_list))
-scales_list <- lapply(scalenames, grep, x = names(df), value = TRUE)
-names(scales_list) <- scalenames
-
-# This gives the list below; you can also construct it for your dataset by hand:
-scales_list <- list(
-  TS = c("TS1", "TS2", "TS3", "TS4"),
-  SOS = c("SOS1", "SOS2", "SOS3", "SOS4"),
-  PS = c("PS1", "PS2", "PS3", "PS4", "PS5"),
-  AM = c("AM1", "AM2", "AM3", "AM4", "AM5"),
-  CM = c("CM1", "CM2", "CM3", "CM4"),
-  BI = c("BI1", "BI2", "BI3"),
-  BH = c("BH1", "BH2")
-  )
+```{r intro-6}
+# First, insert a separator character between scale names and item numbers:
+names(df)
+names(df) <- gsub("(?=\\d)", "_", names(df), perl = TRUE)
+names(df)
 ```
 
 To compute mean scale scores, we can use:
 
-```{r}
-df_scales <- sapply(scales_list, function(items){
-  rowMeans(df[, items, drop = FALSE], na.rm = TRUE)
-})
+```{r intro-7}
+# Make a tidy_sem object
+df_tidysem <- tidy_sem(df)
+# Construct mean scale scores, removing missing values
+df_scales <- score_items(df_tidysem, na.rm = TRUE)
 # Add them to df:
 df <- data.frame(df, df_scales)
 ```
@@ -177,16 +174,14 @@ df <- data.frame(df, df_scales)
 Second, the encode these items as ordered variables, we could grab all relevant variables based on the naming pattern (these variable names end with a number),
 or we can take all items in the `scales_list` using `unlist()`:
 
-```{r}
+```{r intro-8}
 ord_vars <- grep("\\d$", names(df), value = TRUE)
 ord_vars
-# Or alternatively:
-ord_vars <- unlist(scales_list)
 ```
 
 Then, we can recode these variables as ordered:
 
-```{r}
+```{r intro-9}
 df[ord_vars] <- lapply(df[ord_vars], ordered)
 ```
 
@@ -225,7 +220,7 @@ specifically, `c("AM", "CM")`, which represent autonomous and controlled motivat
 You can increase the challenge level of this tutorial by using your own dataset, or by selecting different scales.
 For example, `c("TS", "SOS", "PS")`, which represent three sources of stress/pressure: teacher stress, social stress, and parent stress.
 
-```{r}
+```{r intro-11}
 df_lpa <- df[, c("AM", "CM")]
 ```
 
@@ -234,7 +229,7 @@ Note that standardizing indicators is not required and should not affect results
 ### Model Specification
 
 The arguments `variances` and `covariances` control the model specification for LPA.
-For example, a model with equal variances and zero covariances assumpes that every indicator has the same residual variance across classes, and that indicators are "locally independent" (=uncorrelated) within each class, even if they should be correlated at the sample level.
+For example, a model with equal variances and zero covariances assumes that every indicator has the same residual variance across classes, and that indicators are "locally independent" (=uncorrelated) within each class, even if they should be correlated at the sample level.
 Note that you can also specify different (co)variance structures, either for thorough exploration of because you have some theory about e.g., smaller variance in some classes, or different correlations between classes.
 See the help file by running `?mx_profiles`. For example, you could specify the code below. 
 
@@ -242,19 +237,28 @@ Note that this analysis will take a very long time because these are many models
 For any computationally intensive analyses like this, we can save the results to a file, so you can load the results from that file directly without having to wait for the code to run.
 We do recommend that you experiment with running *some* analyses yourself, of course.
 
-```{r eval = run_everything}
+```{r intro-code-12, eval=FALSE}
 res_lpa <- mx_profiles(
   df_lpa,
   classes = 1:5,
   variances = c("equal", "varying"),
   covariances = c("zero", "equal")
 )
-saveRDS(res_lpa, "res_lpa_different_spect.rds")
 ```
 
-```{r eval = eval_results}
-res_lpa <- readRDS("res_lpa_different_spect.rds")
-format_numeric(table_fit(res_lpa))
+```{r intro-fit-12, echo=FALSE, eval=run_everything || show_results}
+res_lpa_different <- tidySEM:::run_cached({
+mx_profiles(
+  df_lpa,
+  classes = 1:5,
+  variances = c("equal", "varying"),
+  covariances = c("zero", "equal")
+)
+})
+```
+
+```{r intro-result-13, eval=show_results}
+format_numeric(table_fit(res_lpa_different))
 ```
 
 More complex models are not automatically better: extra parameters can create unstable solutions, tiny classes, or local maxima.
@@ -271,32 +275,40 @@ With 2 indicators, zero covariances, and equal variances, the number of paramete
 
 Which would give this many cases per parameter:
 
-```{r}
+```{r intro-14}
 k <- 1:10
 nrow(df) / (1+3*k)
 ```
 
 So we could estimate at least 4 classes. Let's round up and estimate 1:5 class solutions:
 
-```{r eval = run_everything}
+```{r intro-code-15, eval=FALSE}
 res_lpa <- mx_profiles(
   df_lpa,
   classes = 1:5,
   variances = "equal",
   covariances = "zero"
 )
-saveRDS(res_lpa, "res_lpa_equal.rds")
 ```
 
-```{r eval = eval_results}
-res_lpa <- readRDS("res_lpa_equal.rds")
+```{r intro-fit-15, echo=FALSE, eval=run_everything || show_results}
+res_lpa <- tidySEM:::run_cached({
+mx_profiles(
+  df_lpa,
+  classes = 1:5,
+  variances = "equal",
+  covariances = "zero"
+)
+})
 ```
+
+
 
 ### Class Enumeration
 
 First, extract a model fit table:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_lpa_fit <- table_fit(res_lpa)
 tab_lpa_fit
 ```
@@ -308,7 +320,7 @@ a relative fit index that rewards good fit and penalizes model complexity.
 The absolute BIC value has no substantive meaning; you can compare BIC values of models fitted to the same data, and lower values are preferred.
 We can see that the three-class model has the lowest BIC:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 which.min(tab_lpa_fit$BIC)
 ```
 
@@ -321,15 +333,21 @@ Before we do so, it is useful to check if we can eliminate some models from cons
 For example, note that `np_local`, the minimum number of cases assigned to a class divided by the number of parameters in that class, is as low as 2.4 for models with 4-5 classes.
 You want a healthy number of cases per parameter, so we can exclude these two models, then perform our BLRT:
 
-```{r eval = run_everything}
+```{r intro-code-19, eval=FALSE}
 res_lpa_blrt <- res_lpa
 res_lpa_blrt[c(4, 5)] <- NULL
 res_blrt <- BLRT(res_lpa_blrt)
-saveRDS(res_blrt, "res_blrt_intro.rds")
 ```
 
-```{r eval = eval_results}
-res_blrt <- readRDS("res_blrt_intro.rds")
+```{r intro-fit-19, echo=FALSE, eval=run_everything || show_results}
+res_blrt <- tidySEM:::run_cached({
+res_lpa_blrt <- res_lpa
+res_lpa_blrt[c(4, 5)] <- NULL
+BLRT(res_lpa_blrt)
+})
+```
+
+```{r intro-result-20, eval=show_results}
 res_blrt
 ```
 
@@ -343,13 +361,13 @@ As mentioned before, we will eliminate the 4-5 class models because they have a 
 We can also check model diagnostics for any problems with convergence, parameter values near the boundaries, et cetera.
 If one of these checks fails, you can examine a detailed report by running `mx_diagnostics(res_lpa[[model_numer]])`, where `model_number` is the number of the failing model:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 sapply(res_lpa, function(i) mx_diagnostics(i)$checks_pass)
 ```
 
 Another consideration is that classification diagnostics are poor for the 4-5 class models:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_lpa_fit[, c("Entropy", "prob_min", "prob_max")]
 ```
 
@@ -372,7 +390,7 @@ This is a design choice in R, and has to do with the principle of "significant f
 However, APA style simply requires reporting to double digits.
 So let's consider two options:
 
-```{r eval = eval_results}
+```{r intro-result-23-show, eval=FALSE}
 # Standard R formatting, some columns get 3 digits, some get 1, but they remain
 # numeric type:
 tab_lpa_fit_formatted <- format(tab_lpa_fit, digits = 2)
@@ -382,18 +400,27 @@ tab_lpa_fit_formatted
 tab_lpa_fit_formatted <- format_numeric(tab_lpa_fit, digits = 2)
 write.csv(tab_lpa_fit_formatted, "tab_lpa_fit.csv", row.names = FALSE)
 ```
+```{r intro-result-23, eval=show_results, echo = FALSE}
+# Standard R formatting, some columns get 3 digits, some get 1, but they remain
+# numeric type:
+tab_lpa_fit_formatted <- format(tab_lpa_fit, digits = 2)
+tab_lpa_fit_formatted
+# Using format_numeric; reports 2 digits, but all columns become
+# character type:
+tab_lpa_fit_formatted <- format_numeric(tab_lpa_fit, digits = 2)
+```
 
 Based on the BIC, the elimination of the 4-5 class models, and significant BLRT tests, we would retain a 3-class model.
 
 The class proportions of this model are:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 class_prob(res_lpa[[3]], "sum.posterior")
 ```
 
 We can examine the parameters of this model as follows:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_lpa_res <- table_results(res_lpa[[3]])
 tab_lpa_res
 ```
@@ -402,9 +429,21 @@ Notice that we get one estimate for the variances (because these are equal acros
 
 The pattern of results is easier to see when plotting it:
 
-```{r eval = eval_results}
+```{r intro-plot-code-26, eval=FALSE}
 plot_profiles(res_lpa[[3]])
 plot_density(res_lpa[[3]])
+```
+
+```{r intro-plot-26-1, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+plot_profiles(res_lpa[[3]])
+}, type = "png", width = 7, height = 4.5, dpi = 150)
+```
+
+```{r intro-plot-26-2, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+plot_density(res_lpa[[3]])
+}, type = "png", width = 7, height = 4.5, dpi = 150)
 ```
 
 Examining the class-specific means, we see that Class 1 has moderate values on both indicators, whereas Class 2 does not have high means on both autonomous motivation (AM) and controlled motivation (CM).
@@ -418,8 +457,8 @@ We should therefore seriously consider whether a model without latent classes mi
 
 We can conduct ordinal LCA by using some of the raw items underlying the scale scores, for example:
 
-```{r}
-df_lca <- df[, c("AM1", "AM2", "AM3")]
+```{r intro-27}
+df_lca <- df[, c("AM_1", "AM_2", "AM_3")]
 ```
 
 For a model with ordinal indicators, there is (currently) only one parametrization available.
@@ -432,9 +471,9 @@ It is easy to see that this model will have more parameters than the LPA model. 
 
 Since our indicators have 7 categories, this gives:
 
-```{r}
+```{r intro-28}
 k <- 1:10
-L <- length(unique(df_lca$AM1))
+L <- length(unique(df_lca$AM_1))
 M <- ncol(df_lca)
 nrow(df) / ((k-1)+k*((L-1)*M))
 ```
@@ -443,16 +482,27 @@ Note that even for a 1-class model, we have fewer than 20 observations per param
 Thus, we might doubt whether we have enough data here to estimate more than one class.
 For educational purposes - we will proceed, but to save time estimating overly complex models, we omit the 4-5 class models.
 
-```{r eval = run_everything}
+```{r intro-code-29, eval=FALSE}
 res_lca <- mx_lca(
   df_lca,
   classes = 1:3
 )
-saveRDS(res_lca, "res_lca_intro.rds")
 ```
 
-```{r eval = eval_results}
-res_lca <- readRDS("res_lca_intro.rds")
+```{r intro-fit-29, echo=FALSE, eval=run_everything || show_results}
+message("Starting ordinal LCA")
+
+res_lca <- tidySEM:::run_cached({
+mx_lca(
+  df_lca,
+  classes = 1:3
+)
+})
+
+message("Finished ordinal LCA")
+```
+
+```{r intro-result-30, eval=show_results}
 tab_lca_fit <- table_fit(res_lca)
 tab_lca_fit
 ```
@@ -462,7 +512,7 @@ However, even for the 2-class model, the number of cases/parameters in the small
 Thus, we might be skeptical about selecting more than 1 class for these data.
 For educational purposes, however, let's examine the 2-class solution.
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_lca_res <- table_results(res_lca[[2]])
 tab_lca_res
 ```
@@ -472,9 +522,9 @@ We see that all the parameters are thresholds (and a mixture weight).
 These thresholds are z-values at which a standard normal distribution would be intersected so that the proportion of participants falling below the threshold corresponds to the proportion of particiants who selected that answer category or lower.
 We can plot this to give you an intuitive understanding, for example, for the thresholds for variable AM1 in class 1:
 
-```{r eval = eval_results}
+```{r intro-plot-code-32, eval=FALSE}
 library(ggplot2)
-thresholds <- res_lca[[2]]$class1$Thresholds$result[, "AM1"]
+thresholds <- res_lca[[2]]$class1$Thresholds$result[, "AM_1"]
 ggplot(data.frame(x = c(-4, 4)), aes(x = x)) + 
   stat_function(fun = dnorm, color = "red") +
   geom_vline(xintercept = thresholds) +
@@ -482,18 +532,30 @@ ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
   theme_bw()
 ```
 
-This figure implies that the most common response to AM1 in class 1 is 6, quite a few people score 5 or 7, and very few people score 4 or below.
-We can do a sanity check to confirm this interpretation by assigning people to their most likely class (note that this ignores classification uncertainty), and then tabulating the observed scores of AM1 for the people who are assigned class 1:
+```{r intro-plot-32, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+library(ggplot2)
+thresholds <- res_lca[[2]]$class1$Thresholds$result[, "AM_1"]
+ggplot(data.frame(x = c(-4, 4)), aes(x = x)) + 
+  stat_function(fun = dnorm, color = "red") +
+  geom_vline(xintercept = thresholds) +
+  scale_x_continuous(breaks = thresholds, labels = 1:6) +
+  theme_bw()
+}, type = "png", width = 7, height = 4.5, dpi = 150)
+```
 
-```{r eval = eval_results}
+This figure implies that the most common response to AM_1 in class 1 is 6, quite a few people score 5 or 7, and very few people score 4 or below.
+We can do a sanity check to confirm this interpretation by assigning people to their most likely class (note that this ignores classification uncertainty), and then tabulating the observed scores of AM_1 for the people who are assigned class 1:
+
+```{r eval = show_results}
 individual_class <- predict_class(res_lca[[2]])
-table(df$AM1[individual_class == 1])
+table(df$AM_1[individual_class == 1])
 ```
 
 
 Another way to interpret the threshold parameters is to convert them to the estimated probability of choosing each response category:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_lca_prob <- table_prob(res_lca[[2]])
 # Let's format it for easier visual interpretation:
 format_numeric(tab_lca_prob, digits = 2)
@@ -505,8 +567,14 @@ Thus, we could call these classes the "moderate AM" class, and the "high AM" cla
 
 We can also plot this information, leading to the same conclusion:
 
-```{r eval = eval_results}
+```{r intro-plot-code-35, eval=FALSE}
 plot_prob(res_lca[[2]])
+```
+
+```{r intro-plot-35, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+plot_prob(res_lca[[2]])
+}, type = "png", width = 7, height = 4.5, dpi = 150)
 ```
 
 
@@ -523,7 +591,7 @@ Note that in real-world analyses, one should (almost) never artificially dichoto
 Because we saw that the main differences between the two classes in the previous example was between people scoring mostly 4 (class 1) versus 5 and 6 (class 2),
 it makes sense to cut the variables at this value:
 
-```{r}
+```{r intro-36}
 df_bin <- df_lca
 df_bin[] <- lapply(df_bin, function(x) ordered(as.integer(x <= 4)))
 ```
@@ -555,7 +623,7 @@ df_bin[] <- lapply(df_bin, function(x) ordered(as.integer(x <= 4)))
 The number of parameters is calculated the same as for the other ordinal LCA example, but now, the number of levels L is 2.
 If we divide the number of cases by the number of parameters, we see that we could estimate up to 4 classes while still having, on average, about 20 observations per parameter:
 
-```{r}
+```{r intro-37}
 k <- 1:10
 L <- 2
 M <- ncol(df_lca)
@@ -564,16 +632,23 @@ nrow(df) / ((k-1)+k*((L-1)*M))
 
 We can fit the model:
 
-```{r eval = run_everything}
+```{r intro-code-38, eval=FALSE}
 res_bin <- mx_lca(
   df_bin,
   classes = 1:4
 )
-saveRDS(res_bin, "res_bin_intro.rds")
 ```
 
-```{r eval = eval_results}
-res_bin <- readRDS("res_bin_intro.rds")
+```{r intro-fit-38, echo=FALSE, eval=run_everything || show_results}
+res_bin <- tidySEM:::run_cached({
+mx_lca(
+  df_bin,
+  classes = 1:4
+)
+})
+```
+
+```{r intro-result-39, eval=show_results}
 tab_bin_fit <- table_fit(res_bin)
 tab_bin_fit
 ```
@@ -586,7 +661,7 @@ We can examine the results for the 2-class solution.
 Note that, because there are only two response categories, we can ignore half the table because the response proportions sum to 1, so half the rows are just one minus the other half of the rows.
 The table now only shows what percentage of participants scored 1 on each indicator:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_bin_prob <- table_prob(res_bin[[2]])
 tab_bin_prob <- tab_bin_prob[!tab_bin_prob$Category == 1, -2]
 # Let's format it for easier visual interpretation:
@@ -594,12 +669,18 @@ format_numeric(tab_bin_prob, digits = 2)
 ```
 
 We see that people in class 2 tend to score 1 more often than people in class 1.
-This tells us that AM1 is most discriminating (nearly all people in class 2 endorse it, but nearly nobody in class 1), whereas AM2 is less discriminating.
+This tells us that AM_1 is most discriminating (nearly all people in class 2 endorse it, but nearly nobody in class 1), whereas AM_2 is less discriminating.
 
 We can also plot this information:
 
-```{r eval = eval_results}
+```{r intro-plot-code-41, eval=FALSE}
 plot_prob(res_bin[[2]])
+```
+
+```{r intro-plot-41, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+plot_prob(res_bin[[2]])
+}, type = "png", width = 7, height = 4.5, dpi = 150)
 ```
 
 
@@ -608,7 +689,7 @@ plot_prob(res_bin[[2]])
 Many applied datasets contain continuous outcomes alongside ordered or binary indicators. `mx_mixed_lca()` is designed for this setting.
 As an example, we can combine `df_bin` with the scale score of `CM`:
 
-```{r}
+```{r intro-42}
 df_mixed <- data.frame(df[, "CM", drop = FALSE], df_bin)
 ```
 
@@ -620,25 +701,32 @@ The parameters are now given as:
 * 1 variance for CM (if we keep it constant across classes)
 * No covariances
 
-```{r}
+```{r intro-43}
 k <- 1:10
 L <- 2
 M <- ncol(df_lca)
-nrow(df) / ((k-1)+k*((L-1)*M) + 1 + k) 
+nrow(df) / ((k-1)+k*((L-1)*M) + 1 + k)
 ```
 
 So following our rule of thumb, we could safely estimate up to 3 classes:
 
-```{r eval = run_everything}
+```{r intro-code-44, eval=FALSE}
 res_mixed <- mx_mixed_lca(
   df_mixed,
   classes = 1:3
 )
-saveRDS(res_mixed, "res_mixed_intro.rds")
 ```
 
-```{r eval = eval_results}
-res_mixed <- readRDS("res_mixed_intro.rds")
+```{r intro-fit-44, echo=FALSE, eval=run_everything || show_results}
+res_mixed <- tidySEM:::run_cached({
+mx_mixed_lca(
+  df_mixed,
+  classes = 1:3
+)
+})
+```
+
+```{r intro-result-45, eval=show_results}
 tab_mixed_fit <- table_fit(res_mixed)
 tab_mixed_fit
 ```
@@ -647,21 +735,33 @@ Here, we see that the 2-class solution is best according to the BIC, and that `n
 We can examine the results for the 2-class solution.
 Note that these results will now be a combination of means/variances and probabilities (thresholds):
 
-```{r eval = eval_results}
+```{r eval = show_results}
 tab_mixed_res <- table_results(res_mixed[[2]])
 tab_mixed_res
 ```
 
 We can plot the continuous indicators:
 
-```{r eval = eval_results}
+```{r intro-plot-code-47, eval=FALSE}
 plot_density(res_mixed[[2]], variables = "CM")
+```
+
+```{r intro-plot-47, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+plot_density(res_mixed[[2]], variables = "CM")
+}, type = "png", width = 7, height = 4.5, dpi = 150)
 ```
 
 And the response probabilities for the binary indicators:
 
-```{r eval = eval_results}
+```{r intro-plot-code-48, eval=FALSE}
 plot_prob(res_mixed[[2]])
+```
+
+```{r intro-plot-48, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+plot_prob(res_mixed[[2]])
+}, type = "png", width = 7, height = 4.5, dpi = 150)
 ```
 
 
@@ -672,7 +772,7 @@ The interpretation now depends on the indicator: describe class-specific means f
 After estimating a mixture model, every participant has a vector of posterior class-membership probabilities (i.e., the probability that they belong to each class).
 The function `class_prob()` gives you this matrix, and several other diagnostic tables based on it:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 cp <- class_prob(res_lpa[[3]])
 format_numeric(head(cp$individual))
 ```
@@ -681,20 +781,20 @@ This table can be summarized in different ways to summarize the classifications,
 
 For example, `$sum.posterior` gives us the column sums of the individual classification probabilities; this indicates what proportion of your sample contributes to each class (and allows people to contribute fractionally to multiple classes):
 
-```{r eval = eval_results}
+```{r eval = show_results}
 format_numeric(head(cp$sum.posterior))
 ```
 
 If you make a forced choice, assigning every person to the class for which they have the highest probability, you would get the following statistics. Note that these numbers now have measurement error baked into them:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 format_numeric(head(cp$sum.mostlikely))
 ```
 
 In @sec-eliminating, we already encountered the average classification probabilities for the most likely class membership, whose range is represented in the fit table as `prob_min` and `prob_max`.
 We can see the full matrix by calling:
 
-```{r eval = eval_results}
+```{r eval = show_results}
 format_numeric(cp$mostlikely.class)
 ```
 
@@ -708,7 +808,7 @@ For instance, you see that the people who are assigned to class 1 have an averag
 
 Going back to the LPA example, you might report the analysis as follows:
 
-> We conducted exploratory latent profile analysis using `tidySEM` version `r packageVersion("tidySEM")` and `OpenMx` version `r packageVersion("OpenMx")`.
+> We conducted exploratory latent profile analysis using `tidySEM` version `0.3.0` and `OpenMx` version `2.22.11`.
 We followed recommended practices by @vanlissaRecommendedPracticesLatent2024.
 The two continuous indicators were AM and CM. Model parameters were class-varying means and fixed variances across classes. We assumed conditional independence of these indicators within classes. Based on the available sample size, we considered a maximum of five classes. This model has 16 parameters, which allows for a maximum of about 20 observations per parameter. We selected the best-fitting model based on the BIC and significant BLRT test. We eliminated solutions with classes where the number of observations to parameters was smaller than 10.
 Based on these criteria, a 3-class solution was retained.  This model had reasonable classification accuracy: entropy was .82, and the probability that observations in each class were correctly classified ranged from [.87, .95]. The smallest class contained 9.7% of participants. The model parameters are show in Table 1, and are visually represented in Figure 1. The retained classes were characterized as [label 1], [label 2], and [label 3] based on their estimated [means / category-response probabilities / endorsement probabilities].
@@ -716,12 +816,19 @@ Based on these criteria, a 3-class solution was retained.  This model had reason
 Here is the code to produce Table 1; we extract the means and paste the SE behind it (note that you can also use `est_sig` or another value column). We do not report the variances in this table, because they are fixed across classes.
 We also write it to a spreadsheet, so we can easily import it into other desktop publishing software:
 
-```{r eval = eval_results}
+```{r intro-result-53-show, eval=FALSE}
 tab <- table_results(res_lpa[[2]], columns = NULL)
 tab <- tab[tab$Category == "Means", c("lhs", "class", "est", "se")]
 tab$Mean <- paste0(tab$est, "(", tab$se, ")")
 tab <- reshape(tab[, c("class", "lhs", "Mean")], direction = "wide", idvar = "class", timevar = "lhs", sep = " ")
 write.csv(tab, "tab_res.csv", row.names = FALSE)
+tab
+```
+```{r intro-result-53, eval=show_results, echo = FALSE}
+tab <- table_results(res_lpa[[2]], columns = NULL)
+tab <- tab[tab$Category == "Means", c("lhs", "class", "est", "se")]
+tab$Mean <- paste0(tab$est, "(", tab$se, ")")
+tab <- reshape(tab[, c("class", "lhs", "Mean")], direction = "wide", idvar = "class", timevar = "lhs", sep = " ")
 tab
 ```
 
@@ -731,10 +838,16 @@ Other vector graphic types include PDF and EPS.
 Do not save to a raster graphic type (PNG, BMP, JPG), because these images will have low quality when reproduced in print or digital publication.
 The dimensions of the figure, in millimeter, correspond to A6 paper format:
 
-```{r eval = eval_results}
+```{r intro-plot-code-54, eval=FALSE}
 p <- plot_density(res_lpa[[2]])
 ggsave(filename = "figure1.svg", plot = p, width = 148, height = 105, units = "mm", dpi = 300)
 p
 ```
 
+```{r intro-plot-54, echo=FALSE, eval=run_everything || show_results, out.width="100%"}
+tidySEM:::run_cached({
+p <- plot_density(res_lpa[[2]])
+p
+}, type = "png", width = 7, height = 4.5, dpi = 150)
+```
 

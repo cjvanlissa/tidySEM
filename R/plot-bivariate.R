@@ -89,7 +89,6 @@ get_cordat.MxModel <- function(x){
 #' @export
 #' @examples
 #' if(requireNamespace("OpenMx", quietly = TRUE)){
-#' library(OpenMx)
 #' iris_sample <- iris[c(1:5, 145:150), c("Sepal.Length", "Sepal.Width")]
 #' names(iris_sample) <- c("x", "y")
 #' res <- mx_profiles(iris_sample, classes = 2)
@@ -104,15 +103,38 @@ plot_bivariate <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata 
 
 #' @method plot_bivariate mixture_list
 #' @export
-plot_bivariate.mixture_list <- function(x, variables = NULL, sd = TRUE, cors = TRUE, rawdata = TRUE, bw = FALSE, alpha_range = c(0, .1), return_list = FALSE, ...){
-  Args <- match.call()
-  if(length(x) == 1){
-    Args$x <- x[[1]]
-    Args[[1]] <- as.name("plot_bivariate")
-    eval.parent(Args)
-  } else {
-    stop("plot_bivariate can only plot a single mixture model. This object contains ", length(x), " model objects. Extract one of these objects using '$' or '[[]]' and try again. E.g., \n  > plot_bivariate(", deparse(substitute(x)), "[[1]])")
+plot_bivariate.mixture_list <- function(
+    x,
+    variables = NULL,
+    sd = TRUE,
+    cors = TRUE,
+    rawdata = TRUE,
+    bw = FALSE,
+    alpha_range = c(0, .1),
+    return_list = FALSE,
+    ...) {
+
+  if (length(x) != 1L) {
+    stop(
+      "plot_bivariate can only plot a single mixture model. ",
+      "This object contains ", length(x), " model objects. ",
+      "Extract one of these objects using '$' or '[[]]' ",
+      "and try again. E.g., \n  > plot_bivariate(",
+      deparse(substitute(x)), "[[1]])"
+    )
   }
+
+  plot_bivariate(
+    x = x[[1]],
+    variables = variables,
+    sd = sd,
+    cors = cors,
+    rawdata = rawdata,
+    bw = bw,
+    alpha_range = alpha_range,
+    return_list = return_list,
+    ...
+  )
 }
 
 #' @method plot_bivariate MxModel
@@ -292,6 +314,13 @@ get_palette <- function(x){
   }
 }
 
+#' @export
+print.corplot <- function(x, ...) {
+  grid::grid.newpage()
+  grid::grid.draw(x)
+  invisible(x)
+}
+
 #' @import grid gtable
 #' @importFrom stats na.omit
 merge_corplots <- function(plots, ...) {
@@ -392,9 +421,8 @@ merge_corplots <- function(plots, ...) {
       #                       l = 1, r = 1, z = Inf)
       # gt <- gtable_add_cols(gt, widths = unit(0.5, "line"))
 
-      grid.newpage()
-      grid.draw(gt)
-      invisible(gt)
+      class(gt) <- c("corplot", class(gt))
+      gt
     })
   })
 }

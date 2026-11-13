@@ -1,5 +1,4 @@
 if(requireNamespace("OpenMx", quietly = TRUE)){
-  library(OpenMx)
   df = iris[1:3]
   names(df) <- letters[1:3]
   res <- mx_profiles(df, 2)

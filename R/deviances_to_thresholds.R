@@ -15,8 +15,6 @@
 #' @examples
 #' # Plain model
 #' if(isTRUE(requireNamespace("OpenMx", quietly = TRUE))){
-#' library(OpenMx)
-#'
 #' set.seed(1)
 #' dat <- data.frame(
 #'   X1 = ordered(sample(1:2, 200, replace = TRUE)),
@@ -63,7 +61,7 @@
 #'   data = dat1,
 #'   threshold_method = "mx_deviances"
 #' )
-#' group1 <- mxModel(group1, name = "group1")
+#' group1 <- OpenMx::mxModel(group1, name = "group1")
 #'
 #' group2 <- as_ram(
 #'   "
@@ -75,13 +73,13 @@
 #'   data = dat2,
 #'   threshold_method = "mx_deviances"
 #' )
-#' group2 <- mxModel(group2, name = "group2")
+#' group2 <- OpenMx::mxModel(group2, name = "group2")
 #'
-#' multigroup <- mxModel(
+#' multigroup <- OpenMx::mxModel(
 #'   "multigroup",
 #'   group1,
 #'   group2,
-#'   mxFitFunctionMultigroup(c("group1", "group2"))
+#'   OpenMx::mxFitFunctionMultigroup(c("group1", "group2"))
 #' )
 #' res2 <- run_mx(multigroup)
 #' coef(res2)

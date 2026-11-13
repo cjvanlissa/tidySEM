@@ -19,6 +19,7 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' set.seed(1)
 #' df <- data_mix_ordinal
 #' df[1:4] <- lapply(df, ordered)
 #' mx_lca(data = df,

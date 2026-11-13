@@ -12,7 +12,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-generate_pngs <- TRUE
+run_everything <- as.logical(toupper(Sys.getenv("TIDYSEM_RUN_EVERYTHING", "false")))
+show_results <- as.logical(toupper(Sys.getenv("TIDYSEM_SHOW_RESULTS", "false")))
+
 ```
 
 `tidySEM` offers a user-friendly, tidy workflow for plotting graphs for SEM models. The workflow is largely *programmatic*, meaning that graphs are created mostly automatically from the output of an analysis. At the same time, all elements of the graph are stored as `data.frame`s, which allows swift and easy customization of graphics, and artistic freedom. Some existing graphing packages  automatically create a layout, but are very difficult to customize. Particularly for complex SEM models, it may be preferable to make the layout by hand, including only nodes one wishes to plot, and reporting the rest in a comprehensive table of coefficients (e.g., one obtained through `table_results()`.
@@ -73,10 +75,11 @@ At this point, we could simply plot the graph:
 ```{r, echo = TRUE, eval = FALSE}
 graph_sem(model = fit)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r plotting-cache-1, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 p <- graph_sem(model = fit, text_size = 2, fix_coord = TRUE)
-if(generate_pngs) ggsave("pgfig1.png", p, device = "png", width= 9.5, height = 3)
-knitr::include_graphics("pgfig1.png")
+p
+}, type = "png", width = 9.5, height = 3, dpi = 150)
 ```
 
 This uses a default layout. However, the node placement is not very aesthetically pleasing. One of the areas where `tidySEM` really excels is customization. Because every aspect of the graph is represented as tidy data (basically, a spreadsheet), it is easy to move nodes around and create a custom layout.
@@ -143,11 +146,6 @@ To obtain the layout matrix, one can save the spreadsheet as `.csv` file and loa
 read.csv("example.csv")
 ```
 
-```{r echo = FALSE, eval = FALSE}
-write.csv(matrix(c("x1", "x2",  "x3", "",  "visual", ""), nrow = 2, byrow = TRUE), file = "example.csv", row.names = FALSE)
-read.csv("example.csv")
-file.remove("example.csv")
-```
 
 Alternatively, one can select the layout as in the image above, copy it to the clipboard, and then read it into R from the clipboard. This works differently on Windows and Mac.
 
@@ -208,10 +206,11 @@ We could plot the CFA model with this custom layout as follows:
 ```{r, eval = FALSE}
 graph_sem(fit, layout = lay)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r plotting-cache-2, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 p <- graph_sem(fit, layout = lay) + coord_fixed()
-if(generate_pngs) ggsave("pgfig2_1.png", p, device = "png", width= 9.5, height = 3)
-knitr::include_graphics("pgfig2_1.png")
+p
+}, type = "png", width = 9.5, height = 3, dpi = 150)
 ```
 
 ### Step 4: Customize nodes and edges
@@ -360,10 +359,11 @@ We can plot a customized graph using `plot(graph_data)`; a generic plot method f
 ```{r, eval = FALSE}
 plot(graph_data)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r plotting-cache-3, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 p <- plot(graph_data) + coord_fixed()
-if(generate_pngs) ggsave("pgfig2.png", p, device = "png", width= 9.5, height = 3)
-knitr::include_graphics("pgfig2.png")
+p
+}, type = "png", width = 9.5, height = 3, dpi = 150)
 ```
 
 ## Connecting nodes
@@ -373,10 +373,11 @@ The functions `graph_sem()` and `prepare_graph()` will always try to connect nod
 ```{r, eval = FALSE}
 graph_sem(model = fit, layout = lay, angle = 170)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r plotting-cache-4, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 p <- graph_sem(model = fit, layout = lay, angle = 170)
-if(generate_pngs) ggsave("pgfig3.png", p, device = "png", width= 9.5, height = 3)
-knitr::include_graphics("pgfig3.png")
+p
+}, type = "png", width = 9.5, height = 3, dpi = 150)
 ```
 
 ## Visual aspects
@@ -406,7 +407,8 @@ edg <- data.frame(from = "x",
 
 graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r plotting-cache-5, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 edg <- data.frame(from = "x",
                   to = "y",
                   linetype = 2,
@@ -415,9 +417,8 @@ edg <- data.frame(from = "x",
                   alpha = .5)
 
 p <- graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
-
-if(generate_pngs) ggsave("pgfig4.png", p, device = "png", width= 4, height = 1)
-knitr::include_graphics("pgfig4.png")
+p
+}, type = "png", width = 4, height = 1, dpi = 150)
 ```
 
 ### Visual aspects of nodes
@@ -444,7 +445,8 @@ nod <- data.frame(name = c("x", "y"),
                     alpha = .5)
 graph_sem(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r plotting-cache-6, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 edg <- data.frame(from = "x",
                   to = "y")
 nod <- data.frame(name = c("x", "y"),
@@ -455,9 +457,8 @@ nod <- data.frame(name = c("x", "y"),
                     size = c(2, 2),
                     alpha = .5)
 p <- graph_sem(edges = edg, nodes = nod, layout = get_layout("x", "y", rows = 1))
-
-if(generate_pngs) ggsave("pgfig5.png", p, device = "png", width= 4, height = 1)
-knitr::include_graphics("pgfig5.png")
+p
+}, type = "png", width = 4, height = 1, dpi = 150)
 ```
 
 These aesthetics can also be passed to the `sem_graph` object after preparing the data, for example, for highlighting a specific model element, such as the low factor loading for x2 on visual in the CFA example from before:
@@ -472,7 +473,8 @@ edges(graph_data) %>%
   mutate(alpha = replace(alpha, from == "visual" & to == "x2", .5)) -> edges(graph_data)
 plot(graph_data)
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='100%'}
+```{r plotting-cache-7, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 edges(graph_data) %>%
   mutate(colour = "black") %>%
   mutate(colour = replace(colour, from == "visual" & to == "x2", "red")) %>%
@@ -481,9 +483,8 @@ edges(graph_data) %>%
   mutate(alpha = 1) %>%
   mutate(alpha = replace(alpha, from == "visual" & to == "x2", .5)) -> edges(graph_data)
 p <- plot(graph_data)
-
-if(generate_pngs) ggsave("pgfig6.png", p, device = "png", width= 9.5, height = 3)
-knitr::include_graphics("pgfig6.png")
+p
+}, type = "png", width = 9.5, height = 3, dpi = 150)
 ```
 
 ### Visual aspects of edge labels
@@ -519,7 +520,8 @@ edg <- data.frame(from = "x",
 
 graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
 ```
-```{r echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
+```{r plotting-cache-8, echo = FALSE, warning = FALSE, message = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 edg <- data.frame(from = "x",
                   to = "y",
                   label = "text",
@@ -536,9 +538,8 @@ edg <- data.frame(from = "x",
                   )
 
 p = graph_sem(edges = edg, layout = get_layout("x", "y", rows = 1))
-
-if(generate_pngs) ggsave("pgfig7.png", p, device = "png", width= 4, height = 1)
-knitr::include_graphics("pgfig7.png")
+p
+}, type = "png", width = 4, height = 1, dpi = 150)
 ```
 
 ### Conditionally customize visual aspects
@@ -565,13 +566,14 @@ prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   plot()
 ```
-```{r, echo = FALSE, out.width="300px"}
+```{r plotting-cache-9,, echo = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   plot() -> p
-ggsave("pgfig8.png", p, device = "png", width= 4, height = 4)
-knitr::include_graphics("pgfig8.png")
+p
+}, type = "png", width = 4, height = 4, dpi = 150)
 ```
 
 However, the variance arrow is also colored green, because it is an edge as well.
@@ -586,7 +588,8 @@ prepare_graph(fit) %>%
   alpha_var(.2) %>%
   plot()
 ```
-```{r, echo = FALSE, out.width="300px"}
+```{r plotting-cache-10,, echo = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
@@ -594,8 +597,8 @@ prepare_graph(fit) %>%
   color_var("black") %>%
   alpha_var(.2) %>%
   plot() -> p
-ggsave("pgfig9.png", p, device = "png", width= 4, height = 4)
-knitr::include_graphics("pgfig9.png")
+p
+}, type = "png", width = 4, height = 4, dpi = 150)
 ```
 
 There are many dedicated conditional customization functions like these.
@@ -613,7 +616,8 @@ prepare_graph(fit) %>%
   if_edit(grepl("4", est), {color = "blue"}) %>%
   plot()
 ```
-```{r, echo = FALSE, out.width="300px"}
+```{r plotting-cache-11,, echo = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 set.seed(6)
 prepare_graph(fit) %>%
   # Add color column to the graph elements
@@ -621,8 +625,8 @@ prepare_graph(fit) %>%
   # Conditionally change color to blue when the column 'est' contains the number 4
   if_edit(grepl("4", est), {color = "blue"}) %>%
   plot()->p
-ggsave("pgfig10.png", p, device = "png", width= 4, height = 4)
-knitr::include_graphics("pgfig10.png")
+p
+}, type = "png", width = 4, height = 4, dpi = 150)
 ```
 
 ## Math Notation in Graphs
@@ -660,7 +664,8 @@ plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
 
 ```
 
-```{r, echo = FALSE, out.width="300px"}
+```{r plotting-cache-12,, echo = FALSE, out.width="100%", eval = run_everything || show_results}
+tidySEM:::run_cached({
 set.seed(6)
 model <- "
   Sepal.Length ~ Sepal.Width + Petal.Length
@@ -687,8 +692,8 @@ p$nodes$label <- ""
 
 # Plot, treat as ggplot object and add parsed node labels
 p <- plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
-ggsave("pgfig11.png", p, device = "png", width= 5, height = 5)
-knitr::include_graphics("pgfig11.png")
+p
+}, type = "png", width = 5, height = 5, dpi = 150)
 ```
 
 <!--As explained before, the functions `get_edges()` and `get_nodes()`,
@@ -724,7 +729,5 @@ edges(p) %>%
 
 p <- plot(p)
 
-ggsave("pgfig8.png", p, device = "png", width= 4, height = 4)
-knitr::include_graphics("pgfig8.png")
 ```
 -->

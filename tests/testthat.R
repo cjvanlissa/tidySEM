@@ -1,6 +1,7 @@
 library(testthat)
 library(tidySEM)
 if(requireNamespace("OpenMx", quietly = TRUE)) require("OpenMx")
+if(requireNamespace("callr", quietly = TRUE)) require("callr")
 if(requireNamespace("umx", quietly = TRUE)) require("umx")
 data_mix_ordinal <- read.csv("testthat/data_mix_ordinal.csv", stringsAsFactors = FALSE)
 options("test_mplus" = FALSE)

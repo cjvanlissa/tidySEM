@@ -59,17 +59,14 @@ get_layout.igraph <- function(x, ..., layout_algorithm = "layout_nicely"){
 
 #' @method prepare_graph igraph
 #' @export
-prepare_graph.igraph <- function(model, ...){
-  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
+prepare_graph.igraph <- function(model, ...) {
+  if (!requireNamespace("igraph", quietly = TRUE)) {
     message('Run `install.packages("igraph")` before using functions that require it.')
     return(NULL)
   }
-  cl <- match.call()
-  if(!"edges" %in% names(cl)) cl[["edges"]] <- get_edges(model)
-  if(!"nodes" %in% names(cl)) cl[["nodes"]] <- get_nodes(model)
-  if(!"layout" %in% names(cl)) cl[["layout"]] <- get_layout(model)
-  cl[["model"]] <- NULL
-  cl[[1]] <- str2lang("tidySEM::prepare_graph")
-  eval.parent(cl)
+  args <- list(...)
+  if (!"edges" %in% names(args)) args$edges <- get_edges(model)
+  if (!"nodes" %in% names(args)) args$nodes <- get_nodes(model)
+  if (!"layout" %in% names(args)) args$layout <- get_layout(model)
+  do.call(prepare_graph, args)
 }
-

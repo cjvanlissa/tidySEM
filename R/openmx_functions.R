@@ -73,46 +73,48 @@ as_ram <- function(x, ...){
 
 #' @method as_ram character
 #' @export
-as_ram.character <- function(x, groups = NULL, data = NULL, ...){
-  # defaults <- list(int.ov.free = TRUE, int.lv.free = FALSE, auto.fix.first = FALSE,
-  #                  auto.fix.single = TRUE, auto.var = TRUE, auto.cov.lv.x = TRUE,
-  #                  auto.efa = TRUE, auto.th = TRUE, auto.delta = TRUE, auto.cov.y = TRUE,
-  #                  meanstructure = TRUE)
-  dots <- list(...)
+as_ram.character <- function(x, groups = NULL, data = NULL, ...) {
   Args_lav <- lav_from_dots(...)
-  cl <- match.call()
-  cl[names(Args_lav)] <- Args_lav
-  cl[["model"]] <- x
-  if(!is.null(groups)){
-    if(length(groups) == 1 & !is.null(data)){
-      cl[["ngroups"]] <- length(unique(data[[groups]]))
+
+  # Construct arguments without duplicates
+  args <- Args_lav
+  args$model <- x
+
+  # data is not an argument to lavaanify()
+  args$data <- NULL
+
+  if (!is.null(groups)) {
+    args$ngroups <- if (length(groups) == 1L && !is.null(data)) {
+      length(unique(data[[groups]]))
     } else {
-      cl[["ngroups"]] <- length(groups)
+      length(groups)
     }
   }
-  cl <- cl[c(1L, which(names(cl) %in% c("model", "ngroups", "data", names(Args_lav))))]#lavaan_dots, names(defaults))))]
-  cl[[1L]] <- str2lang("tidySEM:::tidysem_lavaanify")
-  x <- eval.parent(cl)
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM::as_ram")
-  cl[["x"]] <- x
-  eval.parent(cl)
+
+  x <- do.call(tidysem_lavaanify, args)
+
+  as_ram(
+    x = x,
+    groups = groups,
+    data = data,
+    ...
+  )
 }
 
 #' @method as_ram tidy_sem
 #' @export
-as_ram.tidy_sem <- function(x, ...){
-  cl <- match.call()
-  cl[[1L]] <- str2lang("tidySEM::as_ram")
-  cl[["x"]] <- x$syntax
-  if(is.null(cl[["data"]])) cl[["data"]] <- x$data
-  gv <- group_var(x)
-  if(!is.null(gv)){
-    cl[["groups"]] <- gv
+as_ram.tidy_sem <- function(x, ...) {
+  args <- list(x = x$syntax)
+  args[names(list(...))] <- list(...)
+  if (is.null(args$data)) {
+    args$data <- x$data
   }
-  eval.parent(cl)
+  gv <- group_var(x)
+  if (!is.null(gv)) {
+    args$groups <- gv
+  }
+  do.call(as_ram, args)
 }
-
 #' @method as_ram data.frame
 #' @param groups Character, either corresponding to the name of a column in
 #' `data`, or else a vector of group names.
@@ -123,38 +125,66 @@ as_ram.tidy_sem <- function(x, ...){
 #' \code{\link{mx_deviances}}, respectively.
 #' @rdname as_ram
 #' @export
-as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = "mxThreshold", ...){
-  if(!all(c("lhs", "rhs", "op", "free", "ustart") %in% names(x))){
+as_ram.data.frame <- function(x, groups = NULL, data = NULL,
+                              threshold_method = "mxThreshold", ...) {
+  if (!all(c("lhs", "rhs", "op", "free", "ustart") %in% names(x))) {
     stop("Not a valid lavaan parameter table.")
   }
+
   groupnames <- groups
   usedata <- !is.null(data)
-  if(length(groups) == 1 & usedata){
+
+  if (length(groups) == 1L && usedata) {
     groupnames <- as.character(unique(data[[groups]]))
   }
-  if(!is.null(x[["group"]])){
-    x <- x[!(x$group == 0), ]
-    if(length(unique(x[["group"]])) > 1){
-      cl <- match.call()
-      grps <- lapply(1:length(groupnames), function(i){
-        cl[["x"]] <- x[x$group == i, -which(names(x) == "group"), drop = FALSE]
-        if(usedata){
-          cl[["data"]] <- data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE]
+
+  if (!is.null(x[["group"]])) {
+    x <- x[x$group != 0, , drop = FALSE]
+
+    if (length(unique(x[["group"]])) > 1L) {
+      grps <- lapply(seq_along(groupnames), function(i) {
+
+        group_x <- x[
+          x$group == i,
+          names(x) != "group",
+          drop = FALSE
+        ]
+
+        group_data <- if (usedata) {
+          data[
+            data[[groups]] == groupnames[i],
+            names(data) != groups,
+            drop = FALSE
+          ]
+        } else {
+          NULL
         }
-        cl[[1L]] <- str2lang("tidySEM::as_ram")
-        out <- eval.parent(cl)
-        Args <- list(
+
+        out <- as_ram(
+          x = group_x,
+          data = group_data,
+          threshold_method = threshold_method,
+          ...
+        )
+
+        OpenMx::mxModel(
           out,
           name = groupnames[i],
           OpenMx::mxFitFunctionML()
         )
-        # if(usedata) {
-        #   Args <-
-        #     c(Args, list(mxData(data[data[[groups]] == groupnames[i], -which(names(data) == groups), drop = FALSE], type = "raw")))
-        # }
-        do.call(OpenMx::mxModel, Args)
       })
-      grps <- do.call(OpenMx::mxModel, c(list(model = "mg", OpenMx::mxFitFunctionMultigroup(groupnames), grps)))
+
+      grps <- do.call(
+        OpenMx::mxModel,
+        c(
+          list(
+            model = "mg",
+            OpenMx::mxFitFunctionMultigroup(groupnames)
+          ),
+          grps
+        )
+      )
+
       return(grps)
     }
   }
@@ -288,11 +318,8 @@ as_ram.data.frame <- function(x, groups = NULL, data = NULL, threshold_method = 
     }
   }
   # Add data if available
-  if(usedata){
-    cl <- match.call()
-    cl[[1L]] <- str2lang("tidySEM:::mx_add_data")
-    cl[["x"]] <- out
-    out <- eval.parent(cl)
+  if (usedata) {
+    out <- mx_add_data(x = out, data = data, ...)
   }
   out
 }
