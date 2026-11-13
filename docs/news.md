@@ -1,0 +1,258 @@
+# tidySEM 0.3.0
+
+- tidySEM now supports mixture models estimated with the metamixture
+  package
+- Bugfixes and improvements to pmc(), mixture_starts(), BCH(), and
+  pseudo_class()
+- Added two_step(), mx_diagnostics()
+- table_results() now handles thresholds, fixed parameters, robust
+  standard errors, and profile likelihood confidence intervals better
+- Improved precision of entropy criterion, reported by table_fit() for
+  mixture models
+- Pass argument `extraTries` in mx_lca() to OpenMx’s mxTryHardOrdinal()
+  model fit routine
+
+# tidySEM 0.2.13
+
+- Change behavior of descriptives.factor() to not count NA as a unique
+  value
+
+# tidySEM 0.2.12
+
+- Make igraph a suggest
+- Bugfixes to pseudo_class()
+- Export format_numeric()
+- Add random_starts()
+
+# tidySEM 0.2.11
+
+- Add deviances_to_thresholds() to reparametrize models with ordinal
+  indicators after they have been run, e.g. to facilitate specifying
+  Wald tests.
+- pmc() deprecates pmc_srmr() function
+- Add srmr() function
+- as_ram() gains argument threshold_method
+- Export mx_deviances()
+- Fix bug in get_edges() and get_nodes() for multigroup lavaan models
+  with user- defined quantities (`:=`), issue \#109.
+- skew_kurtosis: Add the option to output Pearson’s kurtosis alongside
+  excess kurtosis, and modify the formula for significance to refer to
+  excess kurtosis; see issue \#127.
+- skew_kurtosis: Update to corrected skewness and kurtosis values,
+  implement option to output uncorrected values instead; see issue
+  \#127.
+- Modify the skew_kurtosis methods for matrices and data frames: Add new
+  arguments, make sure arguments are passed down, and remove doubled
+  .matrix function. See issue \#127.
+
+# tidySEM 0.2.10
+
+- Export predict_class() instead of masking OpenMx::predict.mxModel()
+  with tidySEM::predict.mxModel()
+- Add pmc_srmr() for class enumeration
+- Add mx_mixed_lca() for latent class analysis with continuous and
+  categorical indicators.
+- Add mx_data_quantiles() for data-driven starting values for
+  categorical indicators.
+- Internal mixgrads() function is now incorporated in OpenMx version \>=
+  2.21.13, so require that version and rely on OpenMx::imxRowGradients()
+- Rewrite run_mx()
+- Bugfix to plot_density()
+- Bugfix to graph_sem()
+- Bugfix to table_results.mxModel()
+- Fix GitGub issue \#116: lavaan is deprecating lavaan:::vnames,
+  replaced with lavaan::lavNames()
+- Fix GitHub issue \#115: Wald tests resulted in empty data.frame when
+  progress was not loaded.
+- Vignettes should show that OpenMx must be loaded in order to run
+  functions that depend on it (i.e., latent class analyses)
+- Remove spaces from lavaan operators to be compatible with new parser
+
+# tidySEM 0.2.9
+
+- Make it clear that OpenMx functions require a library(OpenMx) call
+  - Updated examples and vignettes
+  - Add informative message() to run_mx() in case OpenMx is not loaded
+- Add support for igraph: get_nodes.igraph(), get_edges.igraph(),
+  get_layout.igraph()
+- Fix bug in plot_bivariate()
+- Fix CRAN check on r-release-macos-arm64: Do not error but instead
+  print message and return NULL when mice is not installed.
+
+# tidySEM 0.2.8
+
+- Make OpenMx a Suggest instead of an Import
+- Improve parsing of dagitty objects
+- Allow floating point coordinates in layouts of class `tidy_layout`
+  (mostly for dagitty plots)
+- Fix CRAN check NOTES:
+  - “Rd file(s) with Rd targets missing package anchors”
+
+# tidySEM 0.2.7
+
+- Stop calling tidySEM functions as default arguments of
+  prepare_graph.lavaan(). This ensures that tidySEM works when its
+  namespace is not attached.
+- Frank Gootjes contributed pseudo class functionality, new functions
+  are append_class_draws() and pseudo_class()
+
+# tidySEM 0.2.6
+
+- Fix bug in BLRT()
+- Patch to anticipate change in lavaan parser that would break
+  add_paths()
+- Improve vignette Generating_syntax.Rmd
+
+# tidySEM 0.2.5
+
+- Add reference to best practices paper
+- Include vignettes corresponding to the appendices of that paper
+- Correct implementation of
+  [`lr_lmr()`](https://cjvanlissa.github.io/tidySEM/reference/lr_lmr.md)
+  using
+  [`nonnest2::vuongtest()`](https://rdrr.io/pkg/nonnest2/man/vuongtest.html)
+
+# tidySEM 0.2.4
+
+- Update maintainer email address
+- Fixed bug in
+  [`plot_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/plot_profiles.md)
+  when covariances are free
+- Improved starting values for latent class analysis
+- Documentation incorrectly referred to `data_mixture_ordinal`, instead
+  of `data_mix_ordinal`
+- Added legend to `plot_probs()`
+- Added `np_ratio` and `np_local` to
+  [`table_fit()`](https://cjvanlissa.github.io/tidySEM/reference/table_fit.md)
+  output for mixture models
+- Reimplement
+  [`BLRT()`](https://cjvanlissa.github.io/tidySEM/reference/BLRT.md) to
+  avoid slow OpenMx implementation
+- Add functions
+  [`lr_test()`](https://cjvanlissa.github.io/tidySEM/reference/lr_test.md)
+  and
+  [`lr_lmr()`](https://cjvanlissa.github.io/tidySEM/reference/lr_lmr.md)
+
+# tidySEM 0.2.3
+
+- Fix Issue \#45 , argument `label` was not passed correctly to
+  [`get_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/get_nodes.md)
+  and
+  [`get_edges()`](https://cjvanlissa.github.io/tidySEM/reference/get_edges.md)
+  in
+  [`graph_sem()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
+  and
+  [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
+- Fix Issue \#47, list of character vectors was not properly converted
+  to an mxModel
+
+# tidySEM 0.2.2
+
+- table_fit() now reports information criteria with parameter penalty
+- BCH() now accepts an MxModel as auxiliary model
+- Prevent Mplus tests from throwing error on CRAN
+
+# tidySEM 0.2.1
+
+- Fix CRAN check errors related to OpenMx
+- Add mx_lca(), a dedicated function for estimating mixture models with
+  ordinal/binary data that avoids convergence problems when using
+  mx_mixture() with those data types
+- Add table_prob() to tabulate category probabilities for models with
+  ordinal indicators
+- Add plot_prob() to plot category probabilities for models with ordinal
+  indicators
+
+# tidySEM 0.2.0
+
+- Add functions for OpenMx
+- Add functions for mixture models
+- Add methods for chisq_sb()
+- Minor bugfixes and feature enhancements
+
+# tidySEM 0.1.9
+
+- Removed LazyData entry from DESCRIPTION (no data included in package)
+- Add methods for mplusObjects
+- Fixed bug where nodes from multilevel models were incorrectly merged,
+  due to lack of within-level intercepts
+- Fixed bug where get_layout did not work for multilevel models because
+  it used table_results() instead of get_edges()
+- Fixed bug in create_scales
+
+# tidySEM 0.1.8
+
+- Fixed bug where table_results() was broken by renaming ‘label’ column
+  to ‘mplus_label’
+
+# tidySEM 0.1.7
+
+- Fixed several bugs in plotting, caused by multiple columns called
+  “label” generated by mplus and lavaan, which overlap with the “label”
+  column used for plotting. Renamed other “label” columns to
+  “mplus_label” and “lavaan_label”
+- Fixed bug where arguments were not passed from prepare_graph() and
+  graph_sem() to get_nodes() and get_edges(), e.g., digits was not
+  passed on
+- Fixed bug where linetype did not work when using a mix of numeric
+  (e.g., 1) and character (e.g., “dashed”) values
+- Node labels can now be customized just like edge labels
+- Added convenience functions to conditionally customize graphs based on
+  if_edit(), e.g.: sig_colour(plot, “green”)
+- Improved functionality of edit_graph() methods
+- Added wrappers for edit_graph(): edit_edges() and edit_nodes()
+- graph_sem(fix_coord = TRUE) now works for multi-group models
+
+# tidySEM 0.1.6
+
+- Fixed another faulty URI in README.md
+
+# tidySEM 0.1.5
+
+- Fixed URI in README.md
+
+# tidySEM 0.1.4
+
+- Fixed bug in direction of arrow for curved paths
+- Support argument “color” in addition to “colour”
+- The “label” argument of get_edges() and get_nodes() now accepts an
+  expression, that is evaluated in the context of a data.frame generated
+  by table_results(). This allows users to specify compound labels.
+
+# tidySEM 0.1.3
+
+- Changed arguments for graph_sem.lavaan and graph_sem.mplus.model;
+  these gain arguments “label”, “edges”, “layout”, and “nodes”, which
+  apply get_edges(), get_layout(), and get_nodes() to the model
+  argument, respectively, passing on the “label” argument to get_edges()
+  and get_nodes().
+- The default label has been changed to “est_sig” throughout the
+  package. Some functions used “est_sig_std” instead.
+- Minor bugfixes
+- Fix bug where \> 26 nodes resulted in wrong plot
+
+# tidySEM 0.1.2
+
+- create_scales() no longer writes .csv files
+- add_paths() now relies on lavaanify(lavParseModelString()), uses the
+  lavaan parameter table, and accepts all arguments of lavaanify(), with
+  default arguments same as sem() and cfa()
+- measurement() uses add_paths() for consistency
+- [`graph_sem.lavaan()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
+  and
+  [`graph_sem.mplus.model()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
+  gain an argument `label = "est_sig"`, so users can easily select
+  custom labels.
+- New vignette about SEM plotting conventions.
+- [`graph_sem()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
+  adds empty labels for nodes without a mean; in version 0.1.1, such
+  nodes were displayed without any node label.
+
+# tidySEM 0.1.1
+
+- Addressed comment by CRAN maintainer Jelena Saf
+- Minor bug fixes
+
+# tidySEM 0.1.0
+
+- First CRAN release.

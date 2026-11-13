@@ -24,7 +24,7 @@ tests/test_local.txt
 !dev/lca_res.rdata
 !dev/res_gmm_nopca.RData
 !vignettes/*.RData
-docs
+!docs
 !tests/testthat/fit.RData
 
 !vignettes/cache_lca_confirmatory/
