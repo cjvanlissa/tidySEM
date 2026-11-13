@@ -5,12 +5,14 @@
 #' @param ... Additional parameters passed to the estimating function.
 #' @return An object of class \code{MxModel}.
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' df <- iris[1:4]
 #' names(df) <- paste0("x_", 1:4)
 #' model <- tidy_sem(df)
 #' model <- measurement(model)
 #' res <- estimate_mx(model)
 #' summary(res)
+#' }
 #' @rdname estimate_mx
 #' @export
 estimate_mx <- function(x, ...){
