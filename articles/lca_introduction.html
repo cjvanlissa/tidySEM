@@ -526,7 +526,7 @@ model fit.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="sec-eliminating">Eliminating Models from Consideration<a class="anchor" aria-label="anchor" href="#sec-eliminating"></a>
+<h3 id="eliminating-models-from-consideration">Eliminating Models from Consideration<a class="anchor" aria-label="anchor" href="#eliminating-models-from-consideration"></a>
 </h3>
 <p>As mentioned before, we will eliminate the 4-5 class models because
 they have a very low number of observations per parameter.</p>
@@ -542,7 +542,8 @@ the 4-5 class models:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lpa_fit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Entropy"</span>, <span class="st">"prob_min"</span>, <span class="st">"prob_max"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>The entropy statistic is an overall summary of class separation,
-where values approaching 1 indicate clear delineation of classes <span class="citation">[@celeuxEntropyCriterionAssessing1996]</span>.</p>
+where values approaching 1 indicate clear delineation of classes (Celeux
+&amp; Soromenho, 1996).</p>
 <p>The statistics <code>prob_min</code> and <code>prob_max</code> give
 us the minumum and maximum of the diagonal of the
 <code>mostlikely.class</code> classification table (see
@@ -845,9 +846,10 @@ statistics. Note that these numbers now have measurement error baked
 into them:</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cp</span><span class="op">$</span><span class="va">sum.mostlikely</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>In <span class="citation">@sec-eliminating</span>, we already
-encountered the average classification probabilities for the most likely
-class membership, whose range is represented in the fit table as
+<p>We already encountered the average classification probabilities for
+the most likely class membership when eliminating models from
+consideration. There, we examined the range of the diagonal of the
+classification matrix, which is reported in the fit table as
 <code>prob_min</code> and <code>prob_max</code>. We can see the full
 matrix by calling:</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
@@ -870,23 +872,23 @@ follows:</p>
 <blockquote>
 <p>We conducted exploratory latent profile analysis using
 <code>tidySEM</code> version <code>0.3.0</code> and <code>OpenMx</code>
-version <code>2.22.11</code>. We followed recommended practices by <span class="citation">@vanlissaRecommendedPracticesLatent2024</span>. The two
-continuous indicators were AM and CM. Model parameters were
-class-varying means and fixed variances across classes. We assumed
-conditional independence of these indicators within classes. Based on
-the available sample size, we considered a maximum of five classes. This
-model has 16 parameters, which allows for a maximum of about 20
-observations per parameter. We selected the best-fitting model based on
-the BIC and significant BLRT test. We eliminated solutions with classes
-where the number of observations to parameters was smaller than 10.
-Based on these criteria, a 3-class solution was retained. This model had
-reasonable classification accuracy: entropy was .82, and the probability
-that observations in each class were correctly classified ranged from
-[.87, .95]. The smallest class contained 9.7% of participants. The model
-parameters are show in Table 1, and are visually represented in Figure
-1. The retained classes were characterized as [label 1], [label 2], and
-[label 3] based on their estimated [means / category-response
-probabilities / endorsement probabilities].</p>
+version <code>2.22.11</code>. We followed recommended practices by Van
+Lissa and colleagues (2024). The two continuous indicators were AM and
+CM. Model parameters were class-varying means and fixed variances across
+classes. We assumed conditional independence of these indicators within
+classes. Based on the available sample size, we considered a maximum of
+five classes. This model has 16 parameters, which allows for a maximum
+of about 20 observations per parameter. We selected the best-fitting
+model based on the BIC and significant BLRT test. We eliminated
+solutions with classes where the number of observations to parameters
+was smaller than 10. Based on these criteria, a 3-class solution was
+retained. This model had reasonable classification accuracy: entropy was
+.82, and the probability that observations in each class were correctly
+classified ranged from [.87, .95]. The smallest class contained 9.7% of
+participants. The model parameters are show in Table 1, and are visually
+represented in Figure 1. The retained classes were characterized as
+[label 1], [label 2], and [label 3] based on their estimated [means /
+category-response probabilities / endorsement probabilities].</p>
 </blockquote>
 <p>Here is the code to produce Table 1; we extract the means and paste
 the SE behind it (note that you can also use <code>est_sig</code> or

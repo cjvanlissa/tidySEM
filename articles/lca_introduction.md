@@ -509,8 +509,8 @@ tab_lpa_fit[, c("Entropy", "prob_min", "prob_max")]
 ```
 
 The entropy statistic is an overall summary of class separation, where
-values approaching 1 indicate clear delineation of classes
-\[@celeuxEntropyCriterionAssessing1996\].
+values approaching 1 indicate clear delineation of classes (Celeux &
+Soromenho, 1996).
 
 The statistics `prob_min` and `prob_max` give us the minumum and maximum
 of the diagonal of the `mostlikely.class` classification table (see
@@ -906,10 +906,11 @@ into them:
 format_numeric(head(cp$sum.mostlikely))
 ```
 
-In @sec-eliminating, we already encountered the average classification
-probabilities for the most likely class membership, whose range is
-represented in the fit table as `prob_min` and `prob_max`. We can see
-the full matrix by calling:
+We already encountered the average classification probabilities for the
+most likely class membership when eliminating models from consideration.
+There, we examined the range of the diagonal of the classification
+matrix, which is reported in the fit table as `prob_min` and `prob_max`.
+We can see the full matrix by calling:
 
 ``` r
 
@@ -932,8 +933,8 @@ Going back to the LPA example, you might report the analysis as follows:
 
 > We conducted exploratory latent profile analysis using `tidySEM`
 > version `0.3.0` and `OpenMx` version `2.22.11`. We followed
-> recommended practices by @vanlissaRecommendedPracticesLatent2024. The
-> two continuous indicators were AM and CM. Model parameters were
+> recommended practices by Van Lissa and colleagues (2024). The two
+> continuous indicators were AM and CM. Model parameters were
 > class-varying means and fixed variances across classes. We assumed
 > conditional independence of these indicators within classes. Based on
 > the available sample size, we considered a maximum of five classes.
