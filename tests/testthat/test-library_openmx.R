@@ -1,7 +1,8 @@
 # Test that exported mx functions work without library(OpenMx)
-if(requireNamespace("callr", quietly = TRUE)){
+if(requireNamespace("callr", quietly = TRUE) & requireNamespace("OpenMx", quietly = TRUE)){
   test_openmx <- function(code, tolerance = 1e-6) {
     testthat::skip_on_cran()
+    testthat::skip_if_not_installed("OpenMx")
     code <- substitute(code)
 
     run <- function(attach_openmx) {

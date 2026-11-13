@@ -10,9 +10,11 @@
 #' @return Returns an \code{\link[OpenMx]{mxModel}} with free parameters updated
 #' to their final values.
 #' @examples
+#' if(requireNamespace("OpenMx", quietly = TRUE)){
 #' df <- iris[1:3]
 #' names(df) <- paste0("X_", 1:3)
 #' run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
+#' }
 #' @rdname run_mx
 #' @export
 run_mx <- function(x, ...){
