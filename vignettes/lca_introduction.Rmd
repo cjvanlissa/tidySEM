@@ -354,7 +354,7 @@ res_blrt
 We see that adding classes leads to a significant improvement in model fit.
 
 
-### Eliminating Models from Consideration {#sec-eliminating}
+### Eliminating Models from Consideration
 
 As mentioned before, we will eliminate the 4-5 class models because they have a very low number of observations per parameter.
 
@@ -371,7 +371,7 @@ Another consideration is that classification diagnostics are poor for the 4-5 cl
 tab_lpa_fit[, c("Entropy", "prob_min", "prob_max")]
 ```
 
-The entropy statistic is an overall summary of class separation, where values approaching 1 indicate clear delineation of classes [@celeuxEntropyCriterionAssessing1996].
+The entropy statistic is an overall summary of class separation, where values approaching 1 indicate clear delineation of classes (Celeux & Soromenho, 1996).
 
 The statistics `prob_min` and `prob_max` give us the minumum and maximum of the diagonal of the `mostlikely.class` classification table (see `?class_prob`).
 If C is the true class of an observation, and N is the most likely class based on the model, then this table shows the probability P(N==i|C==j).
@@ -791,7 +791,8 @@ If you make a forced choice, assigning every person to the class for which they 
 format_numeric(head(cp$sum.mostlikely))
 ```
 
-In @sec-eliminating, we already encountered the average classification probabilities for the most likely class membership, whose range is represented in the fit table as `prob_min` and `prob_max`.
+We already encountered the average classification probabilities for the most likely class membership when eliminating models from consideration.
+There, we examined the range of the diagonal of the classification matrix, which is reported in the fit table as `prob_min` and `prob_max`.
 We can see the full matrix by calling:
 
 ```{r eval = show_results}
@@ -809,7 +810,7 @@ For instance, you see that the people who are assigned to class 1 have an averag
 Going back to the LPA example, you might report the analysis as follows:
 
 > We conducted exploratory latent profile analysis using `tidySEM` version `0.3.0` and `OpenMx` version `2.22.11`.
-We followed recommended practices by @vanlissaRecommendedPracticesLatent2024.
+We followed recommended practices by Van Lissa and colleagues (2024).
 The two continuous indicators were AM and CM. Model parameters were class-varying means and fixed variances across classes. We assumed conditional independence of these indicators within classes. Based on the available sample size, we considered a maximum of five classes. This model has 16 parameters, which allows for a maximum of about 20 observations per parameter. We selected the best-fitting model based on the BIC and significant BLRT test. We eliminated solutions with classes where the number of observations to parameters was smaller than 10.
 Based on these criteria, a 3-class solution was retained.  This model had reasonable classification accuracy: entropy was .82, and the probability that observations in each class were correctly classified ranged from [.87, .95]. The smallest class contained 9.7% of participants. The model parameters are show in Table 1, and are visually represented in Figure 1. The retained classes were characterized as [label 1], [label 2], and [label 3] based on their estimated [means / category-response probabilities / endorsement probabilities].
 
