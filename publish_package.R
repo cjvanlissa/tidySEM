@@ -21,4 +21,7 @@ Sys.setenv(
 )
 devtools::check()
 devtools::run_examples(run_dontrun = TRUE, run_donttest = TRUE)
+devtools::check_win_devel()
+devtools::check_win_release()
+devtools::check_win_oldrelease()
 worcs::git_update("run everything in vignettes and update site")

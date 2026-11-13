@@ -1,4 +1,4 @@
-pandoc: 3.6.3
+pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
@@ -16,7 +16,7 @@ articles:
   sem_graph: sem_graph.html
   SMART_LCA_checklist: SMART_LCA_checklist.html
   Tabulating_results: Tabulating_results.html
-last_built: 2026-11-13T07:18Z
+last_built: 2026-11-13T14:17Z
 urls:
   reference: https://cjvanlissa.github.io/tidySEM/reference
   article: https://cjvanlissa.github.io/tidySEM/articles

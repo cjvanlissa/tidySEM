@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Confirmatory Latent Class Analysis • tidySEM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Confirmatory Latent Class Analysis">
@@ -50,7 +50,6 @@
     <li><a class="dropdown-item" href="../articles/Tabulating_results.html">Tabulating results from structural equation models</a></li>
   </ul>
 </li>
-<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -399,7 +398,7 @@ kurtosis. Since there are some missing values, we can conduct an MCAR
 test using <code>mice::mcar(df)</code>. According to Hawkins’ test,
 there is no evidence to reject the assumptions of multivariate normality
 and MCAR,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><msup><mi>χ</mi><mn>2</mn></msup><mo accent="true">̃</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mn>6</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>3.78</mn><mo>,</mo><mover><mi>p</mi><mo accent="true">̃</mo></mover><mo>=</mo><mn>0.71</mn></mrow><annotation encoding="application/x-tex">\tilde{\chi^2}(6) = 3.78, \tilde{p} = 0.71</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><msup><mi>χ</mi><mn>2</mn></msup><mo accent="true">̃</mo></mover><mo stretchy="false" form="prefix">(</mo><mn>6</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>3.78</mn><mo>,</mo><mover><mi>p</mi><mo accent="true">̃</mo></mover><mo>=</mo><mn>0.71</mn></mrow><annotation encoding="application/x-tex">\tilde{\chi^2}(6) = 3.78, \tilde{p} = 0.71</annotation></semantics></math>.
 Missing data will be accounted for using FIML.</p>
 <p>Additionally, we can plot the data. The <code>ggplot2</code> function
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density()</a></code> is useful for continuous data. Visual
@@ -784,7 +783,7 @@ comprised 16% of cases. However, the entropy was low,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mn>.75</mn></mrow><annotation encoding="application/x-tex">S = .75</annotation></semantics></math>,
 indicating poor class separability. Furthermore, the posterior
 classification probability ranged from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mn>.81</mn><mo>,</mo><mn>.92</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[.81, .92]</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>.81</mn><mo>,</mo><mn>.92</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[.81, .92]</annotation></semantics></math>,
 which means that at least some classes had a high classification error.
 We produce a table of the results below.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
