@@ -490,8 +490,6 @@ res_lca <- mx_lca(
 ```
 
 ```{r intro-fit-29, echo=FALSE, eval=run_everything || show_results}
-message("Starting ordinal LCA")
-
 res_lca <- tidySEM:::run_cached({
 mx_lca(
   df_lca,
@@ -499,7 +497,6 @@ mx_lca(
 )
 })
 
-message("Finished ordinal LCA")
 ```
 
 ```{r intro-result-30, eval=show_results}

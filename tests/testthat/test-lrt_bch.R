@@ -1,5 +1,5 @@
 if(requireNamespace("OpenMx", quietly = TRUE)){
-
+  tidySEM:::skip_if_not_local()
   df <- iris[, 1:2]
   names(df) <- c("x", "y")
   set.seed(1)

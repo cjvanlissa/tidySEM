@@ -30,10 +30,12 @@ register_tidySEM_method <- function(generic, type, fun) {
 
 dispatch_method <- function(x, generic, ...) {
 
-  type <- as.character(attr(x, "tidySEM"))[1]
+  type <- attr(x, "tidySEM")
 
-  if (is.null(type)) {
+  if (is.null(type) || !length(type) || is.na(type[1])) {
     type <- "MxModel"
+  } else {
+    type <- as.character(type[1])
   }
 
   # Check for registered external methods

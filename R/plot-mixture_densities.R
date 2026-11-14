@@ -140,11 +140,28 @@ plot_density.MxModel <- function(x,
                                  alpha = .2,
                                  facet_labels = NULL,
                                  ...) {
-  model_name <- x@name
+  dispatch_method(
+    x,
+    generic = "plot_density",
+    variables = variables,
+    bw = bw,
+    conditional = conditional,
+    alpha = alpha,
+    facet_labels = facet_labels,
+    ...
+  )
+}
 
+plot_density_MxModel <- function(x,
+                                 variables = NULL,
+                                 bw = FALSE,
+                                 conditional = FALSE,
+                                 alpha = .2,
+                                 facet_labels = NULL,
+                                 ...) {
   x <- structure(
     list(x),
-    names = model_name,
+    names = x@name,
     class = c("mixture_list", "list")
   )
 
@@ -250,8 +267,13 @@ plot_density.MxModel <- function(x,
 
 }
 
-
 .extract_density_data <- function (x, variables = NULL, longform = TRUE)
+{
+  dispatch_method(x, ".extract_density_data", ...)
+}
+
+
+.extract_density_data_mixture <- function (x, variables = NULL, longform = TRUE)
 {
     if (inherits(x, what = c("MxModel", "MxRAMModel"))) {
         x <- list(x)

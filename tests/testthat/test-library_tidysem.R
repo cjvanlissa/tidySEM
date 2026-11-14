@@ -56,7 +56,7 @@ test_tidysem <- function(code, tolerance = 1e-6) {
 }
 
 test_that("mx_growth_mixture works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
 
   test_tidysem({
     data("empathy", package = "tidySEM")
@@ -80,7 +80,7 @@ test_that("mx_growth_mixture works without tidySEM attached", {
 })
 
 test_that("plot_bivariate works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     iris_sample <- iris[c(1:5, 145:150), c("Sepal.Length", "Sepal.Width")]
     names(iris_sample) <- c("x", "y")
@@ -90,7 +90,7 @@ test_that("plot_bivariate works without tidySEM attached", {
 })
 
 test_that("plot_density works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     dat <-
       iris[, c("Petal.Length", "Petal.Width")]
@@ -101,7 +101,7 @@ test_that("plot_density works without tidySEM attached", {
 })
 
 test_that("edit_graph works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     dat <- iris
     names(dat) <- letters[1:5]
@@ -115,7 +115,7 @@ test_that("edit_graph works without tidySEM attached", {
 })
 
 test_that("plot_profiles works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     df_plot <- data.frame(Variable = "x1",
                           Class = "class1",
@@ -134,7 +134,7 @@ test_that("plot_profiles works without tidySEM attached", {
 })
 
 test_that("plot_prob works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     df_plot <- data.frame(Variable = rep(c("u1", "u2"), each = 3),
                           Category = rep(1:3, 2),
@@ -147,7 +147,7 @@ test_that("plot_prob works without tidySEM attached", {
 })
 
 test_that("plot_growth works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     df <- tidySEM::empathy[1:2]
     tidySEM::mx_growth_mixture(model = "i =~ 1*ec1 + 1*ec2
@@ -166,7 +166,7 @@ test_that("plot_growth works without tidySEM attached", {
 })
 
 test_that("table_results works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     HS.model <- '  visual =~ x1 + x2 + x3
                textual =~ x4 + x5 + x6
@@ -177,7 +177,7 @@ test_that("table_results works without tidySEM attached", {
 })
 
 test_that("get_nodes works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     HS.model <- '  visual =~ x1 + x2 + x3
                textual =~ x4 + x5 + x6
@@ -188,7 +188,7 @@ test_that("get_nodes works without tidySEM attached", {
 })
 
 test_that("get_nodes works without tidySEM attached", {
-  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("OpenMx"); tidySEM:::skip_if_not_local()
   test_tidysem({
     HS.model <- '  visual =~ x1 + x2 + x3
                textual =~ x4 + x5 + x6

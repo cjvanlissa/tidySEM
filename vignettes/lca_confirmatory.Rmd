@@ -130,12 +130,22 @@ or by e.g. setting a parameter constraint for the two classes.
 
 First, create the two-class profile model without estimating it and examine its parameters. For this, we will use the `OpenMx` function `omxGetParameters()`:
 
-```{r eval = run_everything || show_results}
+```{r eval = FALSE, echo = TRUE}
 res_theory <- mx_profiles(
   x,
   classes = 2,
   run = FALSE
 )
+library(OpenMx)
+omxGetParameters(res_theory)
+```
+
+```{r runrestheory, echo = FALSE, eval = run_everything || show_results}
+res_theory <- tidySEM:::run_cached(mx_profiles(
+  x,
+  classes = 2,
+  run = FALSE
+))
 library(OpenMx)
 omxGetParameters(res_theory)
 ```

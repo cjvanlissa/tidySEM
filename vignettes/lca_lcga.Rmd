@@ -102,7 +102,8 @@ invbc <- function(x, lambda){
   ((x*lambda)+1)^(1/lambda)
 }
 # Box-Cox transform
-b <- MASS::boxcox(lm(df_scores$scl ~ 1), plotit = FALSE)
+fit_bc <- lm(scl ~ 1, data = df_scores, y = TRUE)
+b <- MASS::boxcox(fit_bc, plotit = FALSE)
 lambda <- b$x[which.max(b$y)]
 df_scores$boxcox <- bc(df_scores$scl, lambda)
 # Store range of Box-Cox transformed data
@@ -129,36 +130,55 @@ ggplot(df_plot, aes(x = Value, colour = Transformation)) +
   xlab("scl (rescaled to 0-1)") +
   theme_bw()
 ```
-```{r lcga-transform-data, echo = FALSE, include = FALSE}
+```{r lcga-transform-data, echo=FALSE, include=FALSE}
 df_plot <- reshape(df, direction = "long", varying = names(df))
 df_scores <- df_plot
+
 # Store original range of SCL
 rng_scl <- range(df_scores$scl)
+
 # Log-transform
 df_scores$log <- scales::rescale(log(df_scores$scl), to = c(0, 1))
+
 # Square root transform
 df_scores$sqrt <- scales::rescale(sqrt(df_scores$scl), to = c(0, 1))
+
 # Cube root transform
 df_scores$qrt <- scales::rescale(df_scores$scl^.33, to = c(0, 1))
+
 # Reciprocal transform
-df_scores$reciprocal <- scales::rescale(1/df_scores$scl, to = c(0, 1))
-# Define function for Box-Cox transformation
-bc <- function(x, lambda){
+df_scores$reciprocal <- scales::rescale(1 / df_scores$scl, to = c(0, 1))
+
+# Define Box-Cox functions
+bc <- function(x, lambda) {
   (((x ^ lambda) - 1) / lambda)
 }
-# Inverse Box-Cox transformation
-invbc <- function(x, lambda){
-  ((x*lambda)+1)^(1/lambda)
+
+invbc <- function(x, lambda) {
+  ((x * lambda) + 1)^(1 / lambda)
 }
-# Box-Cox transform
-b <- MASS::boxcox(lm(df_scores$scl ~ 1), plotit = FALSE)
+
+# Box-Cox transformation
+fit_bc <- lm(scl ~ 1, data = df_scores, y = TRUE)
+b <- MASS::boxcox(fit_bc, plotit = FALSE)
+
 lambda <- b$x[which.max(b$y)]
+
 df_scores$boxcox <- bc(df_scores$scl, lambda)
-# Store range of Box-Cox transformed data
+
+# Store original Box-Cox range
 rng_bc <- range(df_scores$boxcox)
-df_scores$boxcox <- scales::rescale(df_scores$boxcox, to = c(0, 1))
+
+df_scores$boxcox <- scales::rescale(
+  df_scores$boxcox,
+  to = c(0, 1)
+)
+
 # Rescale SCL
-df_scores$scl <- scales::rescale(df_scores$scl, to = c(0, 1))
+df_scores$scl <- scales::rescale(
+  df_scores$scl,
+  to = c(0, 1)
+)
 ```
 ```{r lcga-plot-trans, echo = FALSE, eval = run_everything || show_results, out.width = "100%"}
 tidySEM:::run_cached({

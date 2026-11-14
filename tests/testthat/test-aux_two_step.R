@@ -1,7 +1,7 @@
 test_that("two_step estimates auxiliary models for RAM mixtures", {
 
   skip_if_not_installed("OpenMx")
-
+  tidySEM:::skip_if_not_local()
   set.seed(1234)
 
   # Simulate two latent classes
@@ -85,7 +85,7 @@ test_that("two_step estimates auxiliary models for RAM mixtures", {
 test_that("two_step handles continuous, ordinal, and multivariate outcomes", {
 
   skip_if_not_installed("OpenMx")
-
+  tidySEM:::skip_if_not_local()
   # Prepare data
   dat <- iris[, 1:4]
   names(dat) <- c("SL", "SW", "PL", "PW")

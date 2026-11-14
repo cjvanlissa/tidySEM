@@ -19,6 +19,17 @@ Sys.setenv(
   TIDYSEM_RUN_EVERYTHING = "false",
   TIDYSEM_SHOW_RESULTS = "false"
 )
+f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
+timez <- lapply(f, function(thisf){
+  strt <- Sys.time()
+  rmarkdown::render(thisf)
+  difftime(strt, Sys.time(), units = "secs")
+
+})
+
+Sys.setenv(
+  TIDYSEM_TEST_LOCAL = "true"
+)
 devtools::check()
 devtools::run_examples(run_dontrun = TRUE, run_donttest = TRUE)
 devtools::check_win_devel()
