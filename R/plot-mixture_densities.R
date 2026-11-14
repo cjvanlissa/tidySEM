@@ -122,12 +122,19 @@ plot_density.mixture_list <-
         if (!length(variables))
             stop("No valid variables provided.")
 
-        Args <- list(
-          x = x,
+        plot_df <- .extract_density_data_mixture(
+          x,
           variables = variables
         )
-        Args$x <- do.call(.extract_density_data, Args)
-        do.call(plot_density, Args)
+
+        plot_density.default(
+          x = plot_df,
+          variables = variables,
+          bw = bw,
+          conditional = conditional,
+          alpha = alpha,
+          facet_labels = facet_labels
+        )
 
     }
 
@@ -165,8 +172,8 @@ plot_density_mixture <- function(x,
     class = c("mixture_list", "list")
   )
 
-  plot_density(
-    x = x,
+  plot_density.mixture_list(
+    x,
     variables = variables,
     bw = bw,
     conditional = conditional,
@@ -174,6 +181,10 @@ plot_density_mixture <- function(x,
     facet_labels = facet_labels,
     ...
   )
+}
+
+plot_density_MxModel <- function(x, ...) {
+  plot_density_mixture(x, ...)
 }
 
 

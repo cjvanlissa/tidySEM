@@ -15,18 +15,53 @@ Sys.setenv(
 
 pkgdown::build_site()
 
-Sys.setenv(
-  TIDYSEM_RUN_EVERYTHING = "false",
-  TIDYSEM_SHOW_RESULTS = "false"
-)
-f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
-timez <- lapply(f, function(thisf){
-  strt <- Sys.time()
-  rmarkdown::render(thisf)
-  difftime(strt, Sys.time(), units = "secs")
 
-})
+if(FALSE){
+  Sys.setenv(
+    TIDYSEM_RUN_EVERYTHING = "false",
+    TIDYSEM_SHOW_RESULTS = "false"
+  )
+  f <- list.files("vignettes", pattern = ".Rmd$", full.names = TRUE)
+  timez <- lapply(f, function(thisf){
+    strt <- Sys.time()
+    rmarkdown::render(thisf)
+    difftime(strt, Sys.time(), units = "secs")
 
+  })
+  library(testthat)
+
+  files <- list.files(
+    "tests/testthat",
+    pattern = "^test-.*\\.R$",
+    full.names = TRUE
+  )
+
+  timings <- lapply(files, function(file) {
+    gc()
+
+    elapsed <- system.time(
+      tryCatch(
+        testthat::test_file(
+          file,
+          reporter = "silent"
+        ),
+        error = function(e) {
+          message("Error in ", basename(file), ": ", conditionMessage(e))
+        }
+      )
+    )[["elapsed"]]
+
+    data.frame(
+      file = basename(file),
+      seconds = elapsed
+    )
+  })
+
+  timings <- do.call(rbind, timings)
+  timings <- timings[order(-timings$seconds), ]
+
+  print(timings, row.names = FALSE)
+}
 Sys.setenv(
   TIDYSEM_TEST_LOCAL = "true"
 )
