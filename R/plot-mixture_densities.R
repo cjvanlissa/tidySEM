@@ -152,7 +152,7 @@ plot_density.MxModel <- function(x,
   )
 }
 
-plot_density_MxModel <- function(x,
+plot_density_mixture <- function(x,
                                  variables = NULL,
                                  bw = FALSE,
                                  conditional = FALSE,
