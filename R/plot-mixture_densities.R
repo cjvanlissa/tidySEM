@@ -41,7 +41,8 @@ plot_density <-
              bw = FALSE,
              conditional = FALSE,
              alpha = .2,
-             facet_labels = NULL) {
+             facet_labels = NULL,
+             ...) {
         UseMethod("plot_density", x)
     }
 
@@ -54,7 +55,8 @@ plot_density.default <-
              bw = FALSE,
              conditional = FALSE,
              alpha = .2,
-             facet_labels = NULL) {
+             facet_labels = NULL,
+             ...) {
         plot_df <- x
         if(!inherits(plot_df[["Title"]], "factor")){
             plot_df[["Title"]] <- factor(plot_df[["Title"]])
@@ -257,7 +259,7 @@ plot_density_MxModel <- function(x, ...) {
     if(length(titles) < 2 ){
         if(length(vars) < 2){
             densities <- lapply(unique(plot_df$Class), function(thisclass){
-                thedf <- plot_df[plot_df$Class == thisclass, ]
+                thedf <- plot_df[pworclot_df$Class == thisclass, ]
                 thep <- thedf$Probability
                 data.frame(Title = titles,
                            Variable = vars,
