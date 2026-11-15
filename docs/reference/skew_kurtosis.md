@@ -58,7 +58,7 @@ error.
 
 Joanes, D. N. & Gill, C. A. (1998). Comparing measures of sample
 skewness and kurtosis. *Journal Of The Royal Statistical Society: Series
-D (The Statistician)*, *47*(1), 183–189.
+D (The Statistician)*, *47*(1), 183-189.
 [doi:10.1111/1467-9884.00122](https://doi.org/10.1111/1467-9884.00122)
 
 ## Examples

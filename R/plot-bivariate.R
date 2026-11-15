@@ -165,6 +165,25 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
     variables <- unique(c(df_plot$xvar, df_plot$yvar))
   }
   if(length(variables) < 2) stop("Function plot_bivariate() requires at least two variables.")
+  raw_data <- x@data@observed
+
+  x_ranges <- lapply(variables, function(v) {
+    range(raw_data[[v]], na.rm = TRUE)
+  })
+  names(x_ranges) <- variables
+
+  x_breaks <- lapply(x_ranges, function(r) {
+    scales::breaks_pretty(n = 4)(r)
+  })
+  # Shared scales for each variable
+  var_ranges <- lapply(variables, function(v) {
+    range(x@data@observed[[v]], na.rm = TRUE)
+  })
+  names(var_ranges) <- variables
+
+  var_breaks <- lapply(var_ranges, function(r) {
+    scales::breaks_pretty(n = 4)(r)
+  })
   if (rawdata) {
     df_raw <- .extract_rawdata(x, select_vars = variables)
     df_raw$Class <- paste0("class", df_raw$Class)
@@ -182,8 +201,7 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   )
   n_vars <- length(Args$variables)
   model_mat <- matrix(1L:(n_vars*n_vars), nrow = n_vars)
-  df_density <- do.call(.extract_density_data, Args)
-
+  df_density <- do.call(.extract_density_data_mixture, Args)
   if("label_class" %in% names(dots)){
     levels(df_density$Class)[-1] <- classlabs[paste0("class", levels(df_density$Class)[-1])]
   } else {
@@ -193,10 +211,21 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   args_dens <- list(plot_df = df_density,
                     variables = NULL)
 
-  dens_plotlist <- lapply(Args$variables, function(thisvar){
-    names(args_dens$plot_df)[which(names(args_dens$plot_df) == thisvar)] <- "Value"
-    args_dens$variables <- thisvar
-    do.call(.plot_density_fun, args_dens) + theme_bw() + labs(x = thisvar, y = thisvar)
+  dens_plotlist <- lapply(variables, function(thisvar) {
+    args <- args_dens
+    names(args$plot_df)[names(args$plot_df) == thisvar] <- "Value"
+    args$variables <- thisvar
+
+    p <- do.call(.plot_density_fun, args)
+    suppressMessages({
+    p +
+      ggplot2::theme_bw() +
+      ggplot2::labs(x = thisvar, y = thisvar) +
+      ggplot2::scale_x_continuous(
+        limits = x_ranges[[thisvar]],
+        breaks = x_breaks[[thisvar]],
+        expand = c(0, 0)
+      )})
   })
   cor_plotlist <- vector("list", length = length(Args$variables) * (length(Args$variables) - 1) / 2)
   xvars <- unlist(mapply(function(x, t){rep(x, t)}, x = Args$variables[-length(Args$variables)], t = (length(Args$variables)-1):1))
@@ -252,9 +281,54 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
         ) +
         scale_alpha_continuous(range = alpha_range, guide = "none")
     }
+    suppressMessages({
+    thisp <- thisp +
+      ggplot2::scale_x_continuous(
+        limits = x_ranges[[xv]],
+        breaks = x_breaks[[xv]],
+        expand = c(0, 0)
+      ) +
+      ggplot2::scale_y_continuous(
+        limits = x_ranges[[yv]],
+        breaks = x_breaks[[yv]],
+        expand = c(0, 0)
+      )})
     cor_plotlist[[i]] <- thisp + labs(x = df_thiscor$xvar[1], y = df_thiscor$yvar[1])
     i <- i + 1
 
+  }
+  # Align density plot horizontal gridlines with scatterplots
+  for (i in seq_along(dens_plotlist)) {
+
+    # Variable range and breaks used by scatterplots in row i
+    yrange <- var_ranges[[variables[i]]]
+    ybreaks <- var_breaks[[variables[i]]]
+
+    # Keep breaks within the displayed range
+    ybreaks <- ybreaks[
+      ybreaks >= yrange[1] & ybreaks <= yrange[2]
+    ]
+
+    # Get the density plot's actual y-axis range
+    density_max <- suppressWarnings(max(
+      ggplot2::ggplot_build(dens_plotlist[[i]])$layout$panel_params[[1]]$y.range
+    ))
+
+    # Map scatterplot breaks to relative positions
+    relative_breaks <- (ybreaks - yrange[1]) / diff(yrange)
+
+    # Apply those positions to the density scale
+    density_breaks <- relative_breaks * density_max
+
+    dens_plotlist[[i]] <- suppressWarnings(suppressMessages(
+      dens_plotlist[[i]] +
+        ggplot2::scale_y_continuous(
+          limits = c(0, density_max),
+          breaks = density_breaks,
+          labels = NULL,
+          expand = c(0, 0)
+        )
+    ))
   }
   if(max(dens_plotlist[[1]]$data$y) < 1){
     dens_plotlist[[1]] <- suppressMessages({dens_plotlist[[1]] + scale_y_continuous(breaks= seq(0, max(dens_plotlist[[1]]$data$y), by = .2), labels = substring(sprintf("%4.1f", seq(0, max(dens_plotlist[[1]]$data$y), by = .2)), 3), expand = c(0, 0))})
@@ -265,7 +339,8 @@ plot_bivariate.MxModel <- function(x, variables = NULL, sd = TRUE, cors = TRUE, 
   plot_list[which(lower.tri(model_mat))] <- cor_plotlist
   class(plot_list) <- c("plot_list", class(plot_list))
   if (return_list) return(plot_list)
-  merge_corplots(plot_list)
+  out <- merge_corplots(plot_list)
+  out
 }
 
 #' @export
@@ -324,6 +399,10 @@ print.corplot <- function(x, ...) {
 #' @import grid gtable
 #' @importFrom stats na.omit
 merge_corplots <- function(plots, ...) {
+  compact_theme <- ggplot2::theme(
+    plot.margin = ggplot2::margin(0, 0, 0, 0),
+    panel.spacing = grid::unit(0, "pt")
+  )
   suppressWarnings({
     suppressMessages({
 
@@ -353,32 +432,38 @@ merge_corplots <- function(plots, ...) {
 
       plots[keep_y] <- lapply(plots[keep_y], function(this_plot) {
         if (inherits(this_plot, "ggplot")) {
-          ggplotGrob(
-            this_plot + theme(
-              axis.title.x = element_blank(),
-              axis.text.x = element_blank(),
-              axis.ticks.x = element_blank(),
-              legend.position = "none"
-            )
+          ggplot2::ggplotGrob(
+            this_plot +
+              compact_theme +
+              ggplot2::theme(
+                axis.title.x = ggplot2::element_blank(),
+                axis.text.x = ggplot2::element_blank(),
+                axis.ticks.x = ggplot2::element_blank(),
+                legend.position = "none"
+              )
           )
         }
       })
       plots[keep_x] <- lapply(plots[keep_x], function(this_plot) {
         if (inherits(this_plot, "ggplot")) {
-          ggplotGrob(
-            this_plot + theme(
-              axis.title.y = element_blank(),
-              axis.text.y = element_blank(),
-              axis.ticks.y = element_blank(),
-              legend.position = "none"
-            )
+          ggplot2::ggplotGrob(
+            this_plot +
+              compact_theme +
+              ggplot2::theme(
+                axis.title.y = ggplot2::element_blank(),
+                axis.text.y = ggplot2::element_blank(),
+                axis.ticks.y = ggplot2::element_blank(),
+                legend.position = "none"
+              )
           )
         }
       })
       plots[no_x_y] <- lapply(plots[no_x_y], function(this_plot) {
         if (inherits(this_plot, "ggplot")) {
           ggplotGrob(
-            this_plot + theme(
+            this_plot +
+              compact_theme +
+              theme(
               axis.title.x = element_blank(),
               axis.text.x = element_blank(),
               axis.ticks.x = element_blank(),
@@ -391,18 +476,11 @@ merge_corplots <- function(plots, ...) {
         }
       })
 
-      for(x in 1:length(plots)){
-        plots[[x]]$widths <- fixed_widths
-        if(x > n_vars){
-          plots[[x]]$widths[c(1,3)] <- unit(0, "cm")
-          plots[[x]]$widths[4] <- plots[[x]]$widths[4]+width_grob
+      for (i in seq_along(plots)) {
+        if (inherits(plots[[i]], "gtable")) {
+          plots[[i]]$widths <- fixed_widths
+          plots[[i]]$heights <- fixed_heights
         }
-        plots[[x]]$heights <- fixed_heights
-        #Hier gaat iets mis. Ik weet niet waarom dit er oorspronkelijk stond..
-        # if(!x %in% model_mat[nrow(model_mat), ]){
-        #  plots[[x]]$heights[c(1)] <- unit(0, "cm")
-        #  plots[[x]]$heights[8] <- plots[[x]]$heights[8]+width_grob
-        # }
       }
 
       plots[[((n_vars - 1) * n_vars) + 1]] <- grob_legend
@@ -414,15 +492,191 @@ merge_corplots <- function(plots, ...) {
         heights = unit(rep(1, n_vars), "null")
       )
 
-
-      #left <- textGrob(ylab, rot = 90, just = c(.5, .5))
-      #gt <- gtable_add_cols(gt, widths = grobWidth(axes[[1]])+ unit(0.5, "line"), 0)
-      #gt <- gtable_add_grob(gt, axes, t = 1, b = nrow(gt),
-      #                       l = 1, r = 1, z = Inf)
-      # gt <- gtable_add_cols(gt, widths = unit(0.5, "line"))
-
       class(gt) <- c("corplot", class(gt))
       gt
     })
   })
+}
+
+
+
+merge_corplots <- function(plots, ...) {
+  n_vars <- sqrt(length(plots))
+
+  if (n_vars != as.integer(n_vars)) {
+    stop("Number of plots must be a perfect square.")
+  }
+
+  n_vars <- as.integer(n_vars)
+  variables <- suppressWarnings({vapply(
+    diag(matrix(seq_along(plots), nrow = n_vars)),
+    function(i) {
+      ggplot2::get_labs(plots[[i]])$x
+    },
+    character(1)
+  )})
+  model_mat <- matrix(
+    seq_along(plots),
+    nrow = n_vars
+  )
+
+  grobs <- lapply(plots, function(p) {
+    if (inherits(p, "ggplot")) {
+      suppressMessages(suppressWarnings(
+        ggplot2::ggplotGrob(p)
+      ))
+    } else {
+      NULL
+    }
+  })
+
+  get_grob <- function(g, pattern) {
+    if (is.null(g)) {
+      return(grid::nullGrob())
+    }
+
+    idx <- grep(pattern, g$layout$name)
+
+    if (!length(idx)) {
+      return(grid::nullGrob())
+    }
+
+    g$grobs[[idx[1L]]]
+  }
+
+  # Extract legend from first available plot
+  legend <- grid::nullGrob()
+
+  for (g in grobs) {
+    if (is.null(g)) next
+
+    idx <- grep("^guide-box", g$layout$name)
+
+    for (j in idx) {
+      candidate <- g$grobs[[j]]
+
+      if (!inherits(candidate, "zeroGrob")) {
+        legend <- candidate
+        break
+      }
+    }
+
+    if (!inherits(legend, "null")) break
+  }
+
+  # Allocate layout dimensions upfront
+  axis_width <- grid::unit(1.8, "lines")
+  axis_height <- grid::unit(1.8, "lines")
+  title_width <- grid::unit(1.5, "lines")
+  title_height <- grid::unit(1.5, "lines")
+
+  gt <- gtable::gtable(
+    widths = grid::unit.c(
+      title_width,
+      axis_width,
+      grid::unit(rep(1, n_vars), "null")
+    ),
+    heights = grid::unit.c(
+      grid::unit(rep(1, n_vars), "null"),
+      axis_height,
+      title_height
+    )
+  )
+
+  # Add plotting panels
+  for (col in seq_len(n_vars)) {
+    for (row in seq_len(n_vars)) {
+
+      if (row < col) next
+
+      g <- grobs[[model_mat[row, col]]]
+      if (is.null(g)) next
+
+      gt <- gtable::gtable_add_grob(
+        gt,
+        get_grob(g, "^panel"),
+        t = row,
+        l = col + 2L,
+        clip = "on"
+      )
+    }
+  }
+
+  # Add x-axes immediately below the bottom row
+  for (col in seq_len(n_vars)) {
+
+    idx <- if (col < n_vars) {
+      model_mat[n_vars, col]
+    } else {
+      model_mat[col, col]
+    }
+
+    g <- grobs[[idx]]
+
+    gt <- gtable::gtable_add_grob(
+      gt,
+      get_grob(g, "^axis-b"),
+      t = n_vars + 1L,
+      l = col + 2L
+    )
+  }
+
+  # Add y-axes immediately left of each row
+  for (row in seq_len(n_vars)) {
+
+    idx <- model_mat[row, 1L]
+    g <- grobs[[idx]]
+
+    gt <- gtable::gtable_add_grob(
+      gt,
+      get_grob(g, "^axis-l"),
+      t = row,
+      l = 2L
+    )
+  }
+
+  # Column labels, taken from the diagonal density plots
+  for (col in seq_len(n_vars)) {
+    g <- grobs[[model_mat[col, col]]]
+
+    gt <- gtable::gtable_add_grob(
+      gt,
+      get_grob(g, "^xlab-b"),
+      t = n_vars + 2L,
+      l = col + 2L,
+      clip = "off"
+    )
+  }
+
+  # Row labels
+  for (row in seq_len(n_vars)) {
+    gt <- gtable::gtable_add_grob(
+      gt,
+      grid::textGrob(
+        variables[row],
+        rot = 90,
+        gp = grid::gpar(fontsize = 11)
+      ),
+      t = row,
+      l = 1L,
+      clip = "off"
+    )
+  }
+  # Place legend in the upper-right empty triangle
+  if (!inherits(legend, "zeroGrob") &&
+      !inherits(legend, "nullGrob")) {
+
+    gt <- gtable::gtable_add_grob(
+      gt,
+      legend,
+      t = 1L,
+      l = n_vars + 2L,
+      clip = "off",
+      name = "shared-legend"
+    )
+  }
+
+  class(gt) <- c("corplot", class(gt))
+
+  gt
 }

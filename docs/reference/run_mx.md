@@ -32,9 +32,11 @@ free parameters updated to their final values.
 ## Examples
 
 ``` r
+if(requireNamespace("OpenMx", quietly = TRUE)){
 df <- iris[1:3]
 names(df) <- paste0("X_", 1:3)
 run_mx(measurement(tidy_sem(df), meanstructure = TRUE))
+}
 #> MxModel 'model' 
 #> type : RAM 
 #> $matrices : 'A', 'S', 'F', and 'M' 

@@ -10,7 +10,8 @@ plot_density(
   bw = FALSE,
   conditional = FALSE,
   alpha = 0.2,
-  facet_labels = NULL
+  facet_labels = NULL,
+  ...
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ correspond to the facet labels one wishes to rename, and the values of which
 provide new names for these facets. For example, to rename variables, in the
 example with the 'iris' data below, one could specify:
 \code{facet_labels = c("Pet_leng" = "Petal length")}.}
+
+\item{...}{Arguments passed on to other functions.}
 }
 \value{
 An object of class 'ggplot'.

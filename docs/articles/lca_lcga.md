@@ -87,7 +87,8 @@ invbc <- function(x, lambda) {
     ((x * lambda) + 1)^(1/lambda)
 }
 # Box-Cox transform
-b <- MASS::boxcox(lm(df_scores$scl ~ 1), plotit = FALSE)
+fit_bc <- lm(scl ~ 1, data = df_scores, y = TRUE)
+b <- MASS::boxcox(fit_bc, plotit = FALSE)
 lambda <- b$x[which.max(b$y)]
 df_scores$boxcox <- bc(df_scores$scl, lambda)
 # Store range of Box-Cox transformed data

@@ -452,25 +452,25 @@ with running <em>some</em> analyses yourself, of course.</p>
 <span><span class="co">#&gt;                     Name Classes      LL      n Parameters     AIC     BIC</span></span>
 <span><span class="co">#&gt; 1            equal var 1    1.00 -951.56 291.00          4 1911.12 1925.81</span></span>
 <span><span class="co">#&gt; 2            equal var 2    2.00 -914.57 291.00          7 1843.14 1868.86</span></span>
-<span><span class="co">#&gt; 3            equal var 3    3.00 -893.38 291.00         10 1806.77 1843.50</span></span>
+<span><span class="co">#&gt; 3            equal var 3    3.00 -900.31 291.00         10 1820.62 1857.35</span></span>
 <span><span class="co">#&gt; 4            equal var 4    4.00 -887.52 291.00         13 1801.03 1848.79</span></span>
 <span><span class="co">#&gt; 5            equal var 5    5.00 -882.70 291.00         16 1797.41 1856.18</span></span>
 <span><span class="co">#&gt; 6  free var, equal cov 1    1.00 -920.19 291.00          5 1850.37 1868.74</span></span>
 <span><span class="co">#&gt; 7  free var, equal cov 2    2.00 -901.28 291.00         10 1822.56 1859.29</span></span>
 <span><span class="co">#&gt; 8  free var, equal cov 3    3.00 -888.53 291.00         15 1807.07 1862.17</span></span>
 <span><span class="co">#&gt; 9  free var, equal cov 4    4.00 -879.28 291.00         20 1798.56 1872.03</span></span>
-<span><span class="co">#&gt; 10 free var, equal cov 5    5.00 -858.08 291.00         25 1766.17 1858.00</span></span>
+<span><span class="co">#&gt; 10 free var, equal cov 5    5.00 -866.36 291.00         25 1782.71 1874.54</span></span>
 <span><span class="co">#&gt;      saBIC Entropy prob_min prob_max n_min n_max np_ratio np_local</span></span>
 <span><span class="co">#&gt; 1  1913.13    1.00     1.00     1.00  1.00  1.00    72.75    72.75</span></span>
 <span><span class="co">#&gt; 2  1846.66    0.79     0.77     0.98  0.16  0.84    41.57    15.33</span></span>
-<span><span class="co">#&gt; 3  1811.79    0.84     0.90     0.94  0.13  0.58    29.10    13.88</span></span>
+<span><span class="co">#&gt; 3  1825.64    0.68     0.82     0.87  0.12  0.44    29.10    13.12</span></span>
 <span><span class="co">#&gt; 4  1807.56    0.86     0.85     0.95  0.06  0.56    22.38     7.20</span></span>
 <span><span class="co">#&gt; 5  1805.44    0.73     0.76     0.96  0.07  0.32    18.19     7.92</span></span>
 <span><span class="co">#&gt; 6  1852.88    1.00     1.00     1.00  1.00  1.00    58.20    58.20</span></span>
 <span><span class="co">#&gt; 7  1827.58    0.58     0.87     0.88  0.48  0.52    29.10    31.33</span></span>
 <span><span class="co">#&gt; 8  1814.60    0.78     0.83     0.93  0.18  0.52    19.40    12.00</span></span>
 <span><span class="co">#&gt; 9  1808.60    0.78     0.79     0.92  0.13  0.37    14.55     8.71</span></span>
-<span><span class="co">#&gt; 10 1778.72    0.87     0.80     0.99  0.09  0.57    11.64     6.19</span></span></code></pre></div>
+<span><span class="co">#&gt; 10 1795.26    0.80     0.82     0.94  0.09  0.43    11.64     6.19</span></span></code></pre></div>
 <p>More complex models are not automatically better: extra parameters
 can create unstable solutions, tiny classes, or local maxima. Think
 about which models make sense to estimate, and how many classes your
@@ -516,13 +516,13 @@ variances, the number of parameters for our model is:</p>
 <span><span class="co">#&gt; 1 equal var 1       1 -951.5584 291          4 1911.117 1925.810 1913.125</span></span>
 <span><span class="co">#&gt; 2 equal var 2       2 -914.5721 291          7 1843.144 1868.857 1846.659</span></span>
 <span><span class="co">#&gt; 3 equal var 3       3 -893.3834 291         10 1806.767 1843.500 1811.788</span></span>
-<span><span class="co">#&gt; 4 equal var 4       4 -887.5162 291         13 1801.032 1848.786 1807.560</span></span>
+<span><span class="co">#&gt; 4 equal var 4       4 -894.5514 291         13 1815.103 1862.856 1821.630</span></span>
 <span><span class="co">#&gt; 5 equal var 5       5 -882.7029 291         16 1797.406 1856.179 1805.440</span></span>
 <span><span class="co">#&gt;     Entropy  prob_min  prob_max      n_min     n_max np_ratio  np_local</span></span>
 <span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.00000000 1.0000000 72.75000 72.750000</span></span>
 <span><span class="co">#&gt; 2 0.7857956 0.7652851 0.9799943 0.15807560 0.8419244 41.57143 15.333333</span></span>
-<span><span class="co">#&gt; 3 0.8365034 0.8968012 0.9439548 0.12714777 0.5807560 29.10000 13.875000</span></span>
-<span><span class="co">#&gt; 4 0.8627865 0.8530717 0.9538678 0.06185567 0.5601375 22.38462  7.200000</span></span>
+<span><span class="co">#&gt; 3 0.8365064 0.8968019 0.9439567 0.12714777 0.5807560 29.10000 13.875000</span></span>
+<span><span class="co">#&gt; 4 0.7317583 0.5928521 0.8994559 0.04467354 0.4432990 22.38462  5.200000</span></span>
 <span><span class="co">#&gt; 5 0.7291737 0.7585690 0.9551134 0.06529210 0.3230241 18.18750  7.916667</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="bic">BIC<a class="anchor" aria-label="anchor" href="#bic"></a>
@@ -568,7 +568,7 @@ model fit.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="sec-eliminating">Eliminating Models from Consideration<a class="anchor" aria-label="anchor" href="#sec-eliminating"></a>
+<h3 id="eliminating-models-from-consideration">Eliminating Models from Consideration<a class="anchor" aria-label="anchor" href="#eliminating-models-from-consideration"></a>
 </h3>
 <p>As mentioned before, we will eliminate the 4-5 class models because
 they have a very low number of observations per parameter.</p>
@@ -588,11 +588,12 @@ the 4-5 class models:</p>
 <span><span class="co">#&gt;     Entropy  prob_min  prob_max</span></span>
 <span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000</span></span>
 <span><span class="co">#&gt; 2 0.7857956 0.7652851 0.9799943</span></span>
-<span><span class="co">#&gt; 3 0.8365034 0.8968012 0.9439548</span></span>
-<span><span class="co">#&gt; 4 0.8627865 0.8530717 0.9538678</span></span>
+<span><span class="co">#&gt; 3 0.8365064 0.8968019 0.9439567</span></span>
+<span><span class="co">#&gt; 4 0.7317583 0.5928521 0.8994559</span></span>
 <span><span class="co">#&gt; 5 0.7291737 0.7585690 0.9551134</span></span></code></pre></div>
 <p>The entropy statistic is an overall summary of class separation,
-where values approaching 1 indicate clear delineation of classes <span class="citation">[@celeuxEntropyCriterionAssessing1996]</span>.</p>
+where values approaching 1 indicate clear delineation of classes (Celeux
+&amp; Soromenho, 1996).</p>
 <p>The statistics <code>prob_min</code> and <code>prob_max</code> give
 us the minumum and maximum of the diagonal of the
 <code>mostlikely.class</code> classification table (see
@@ -626,13 +627,13 @@ requires reporting to double digits. So let’s consider two options:</p>
 <span><span class="co">#&gt; 1 equal var 1       1 -952 291          4 1911 1926  1913    1.00     1.00</span></span>
 <span><span class="co">#&gt; 2 equal var 2       2 -915 291          7 1843 1869  1847    0.79     0.77</span></span>
 <span><span class="co">#&gt; 3 equal var 3       3 -893 291         10 1807 1843  1812    0.84     0.90</span></span>
-<span><span class="co">#&gt; 4 equal var 4       4 -888 291         13 1801 1849  1808    0.86     0.85</span></span>
+<span><span class="co">#&gt; 4 equal var 4       4 -895 291         13 1815 1863  1822    0.73     0.59</span></span>
 <span><span class="co">#&gt; 5 equal var 5       5 -883 291         16 1797 1856  1805    0.73     0.76</span></span>
 <span><span class="co">#&gt;   prob_max n_min n_max np_ratio np_local</span></span>
 <span><span class="co">#&gt; 1     1.00 1.000  1.00       73     72.8</span></span>
 <span><span class="co">#&gt; 2     0.98 0.158  0.84       42     15.3</span></span>
 <span><span class="co">#&gt; 3     0.94 0.127  0.58       29     13.9</span></span>
-<span><span class="co">#&gt; 4     0.95 0.062  0.56       22      7.2</span></span>
+<span><span class="co">#&gt; 4     0.90 0.045  0.44       22      5.2</span></span>
 <span><span class="co">#&gt; 5     0.96 0.065  0.32       18      7.9</span></span></code></pre>
 <p>Based on the BIC, the elimination of the 4-5 class models, and
 significant BLRT tests, we would retain a 3-class model.</p>
@@ -641,9 +642,9 @@ significant BLRT tests, we would retain a 3-class model.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/class_prob.html">class_prob</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="st">"sum.posterior"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $sum.posterior</span></span>
 <span><span class="co">#&gt;    class     count proportion</span></span>
-<span><span class="co">#&gt; 1 class1 167.04293  0.5740307</span></span>
-<span><span class="co">#&gt; 2 class2  85.72144  0.2945754</span></span>
-<span><span class="co">#&gt; 3 class3  38.23563  0.1313939</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 class1 167.04337  0.5740322</span></span>
+<span><span class="co">#&gt; 2 class2  85.72086  0.2945734</span></span>
+<span><span class="co">#&gt; 3 class3  38.23577  0.1313944</span></span></code></pre></div>
 <p>We can examine the parameters of this model as follows:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lpa_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_lpa</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -724,12 +725,12 @@ the 4-5 class models.</p>
 <span><span class="va">tab_lca_fit</span></span>
 <span><span class="co">#&gt;   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
 <span><span class="co">#&gt; 1    1       1 -1538.279 291         18 3112.558 3178.678 3121.596 1.0000000</span></span>
-<span><span class="co">#&gt; 2    2       2 -1375.753 291         37 2825.506 2961.419 2844.085 0.8881853</span></span>
-<span><span class="co">#&gt; 3    3       3 -1277.274 291         56 2666.548 2872.254 2694.667 0.9464120</span></span>
+<span><span class="co">#&gt; 2    2       2 -1375.753 291         37 2825.506 2961.419 2844.085 0.8881847</span></span>
+<span><span class="co">#&gt; 3    3       3 -1252.350 291         56 2616.700 2822.406 2644.818 0.9483166</span></span>
 <span><span class="co">#&gt;    prob_min  prob_max     n_min     n_max warning  np_ratio  np_local</span></span>
 <span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.0000000      NA 16.166667 16.166667</span></span>
-<span><span class="co">#&gt; 2 0.9526654 0.9864492 0.3951890 0.6048110    TRUE  7.864865  6.388889</span></span>
-<span><span class="co">#&gt; 3 0.9756129 0.9872913 0.1237113 0.5223368    TRUE  5.196429  2.000000</span></span></code></pre></div>
+<span><span class="co">#&gt; 2 0.9526658 0.9864487 0.3951890 0.6048110    TRUE  7.864865  6.388889</span></span>
+<span><span class="co">#&gt; 3 0.9502017 0.9888534 0.1546392 0.4948454    TRUE  5.196429  2.500000</span></span></code></pre></div>
 <p>The BIC indicates that adding classes improves model fit. However,
 even for the 2-class model, the number of cases/parameters in the
 smallest class (<code>np_local</code>) is smaller than 10. Thus, we
@@ -738,96 +739,51 @@ educational purposes, however, let’s examine the 2-class solution.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab_lca_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_lca</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">tab_lca_res</span></span>
-<span><span class="co">#&gt;                            label  est_sig      se pval               confint</span></span>
-<span><span class="co">#&gt; 1          Variances.AM_1.class1     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2          Variances.AM_2.class1     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 3          Variances.AM_3.class1     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 4  class1.Thresholds[1,1].class1 -0.96***    0.12 0.00        [-1.19, -0.73]</span></span>
-<span><span class="co">#&gt; 5  class1.Thresholds[1,2].class1 -1.28***    0.13 0.00        [-1.54, -1.02]</span></span>
-<span><span class="co">#&gt; 6  class1.Thresholds[1,3].class1 -1.22***    0.13 0.00        [-1.47, -0.97]</span></span>
-<span><span class="co">#&gt; 7  class1.Thresholds[2,1].class1 -0.71***    0.11 0.00        [-0.92, -0.50]</span></span>
-<span><span class="co">#&gt; 8  class1.Thresholds[2,2].class1 -0.89***    0.11 0.00        [-1.11, -0.67]</span></span>
-<span><span class="co">#&gt; 9  class1.Thresholds[2,3].class1 -0.89***    0.11 0.00        [-1.11, -0.67]</span></span>
-<span><span class="co">#&gt; 10 class1.Thresholds[3,1].class1   -0.26*    0.10 0.01        [-0.47, -0.06]</span></span>
-<span><span class="co">#&gt; 11 class1.Thresholds[3,2].class1 -0.56***    0.11 0.00        [-0.77, -0.36]</span></span>
-<span><span class="co">#&gt; 12 class1.Thresholds[3,3].class1 -0.48***    0.10 0.00        [-0.69, -0.28]</span></span>
-<span><span class="co">#&gt; 13 class1.Thresholds[4,1].class1  1.07***    0.15 0.00          [0.77, 1.37]</span></span>
-<span><span class="co">#&gt; 14 class1.Thresholds[4,2].class1  0.38***    0.11 0.00          [0.17, 0.59]</span></span>
-<span><span class="co">#&gt; 15 class1.Thresholds[4,3].class1  0.64***    0.11 0.00          [0.42, 0.86]</span></span>
-<span><span class="co">#&gt; 16 class1.Thresholds[5,1].class1     3.26    8.32 0.69       [-13.04, 19.57]</span></span>
-<span><span class="co">#&gt; 17 class1.Thresholds[5,2].class1  1.82***    0.19 0.00          [1.44, 2.20]</span></span>
-<span><span class="co">#&gt; 18 class1.Thresholds[5,3].class1  1.60***    0.19 0.00          [1.23, 1.97]</span></span>
-<span><span class="co">#&gt; 19 class1.Thresholds[6,1].class1     6.37 1238.07 1.00   [-2420.19, 2432.94]</span></span>
-<span><span class="co">#&gt; 20 class1.Thresholds[6,2].class1  1.82***    0.19 0.00          [1.44, 2.20]</span></span>
-<span><span class="co">#&gt; 21 class1.Thresholds[6,3].class1     7.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 22         Variances.AM_1.class2     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 23         Variances.AM_2.class2     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 24         Variances.AM_3.class2     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 25 class2.Thresholds[1,1].class2   -14.49    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 26 class2.Thresholds[1,2].class2   -10.03    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 27 class2.Thresholds[1,3].class2   -13.16    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 28 class2.Thresholds[2,1].class2   -13.09    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 29 class2.Thresholds[2,2].class2    -8.09 1264.57 0.99   [-2486.60, 2470.42]</span></span>
-<span><span class="co">#&gt; 30 class2.Thresholds[2,3].class2    -7.07 9743.25 1.00 [-19103.49, 19089.35]</span></span>
-<span><span class="co">#&gt; 31 class2.Thresholds[3,1].class2    -9.13    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 32 class2.Thresholds[3,2].class2    -6.77 3527.32 1.00   [-6920.20, 6906.65]</span></span>
-<span><span class="co">#&gt; 33 class2.Thresholds[3,3].class2    -2.12    4.61 0.65        [-11.14, 6.91]</span></span>
-<span><span class="co">#&gt; 34 class2.Thresholds[4,1].class2    -1.24    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 35 class2.Thresholds[4,2].class2    -1.46    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 36 class2.Thresholds[4,3].class2    -1.18    4.60 0.80        [-10.19, 7.84]</span></span>
-<span><span class="co">#&gt; 37 class2.Thresholds[5,1].class2    -0.46    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 38 class2.Thresholds[5,2].class2    -0.98    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 39 class2.Thresholds[5,3].class2    -0.45    4.60 0.92         [-9.46, 8.56]</span></span>
-<span><span class="co">#&gt; 40 class2.Thresholds[6,1].class2     0.86    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 41 class2.Thresholds[6,2].class2     0.68    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 42 class2.Thresholds[6,3].class2     0.51    4.60 0.91         [-8.50, 9.52]</span></span>
-<span><span class="co">#&gt; 43          mix2.weights[1,1].NA     1.00    &lt;NA&gt; &lt;NA&gt;                  &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 44          mix2.weights[1,2].NA  0.68***    0.10 0.00          [0.49, 0.88]</span></span>
-<span><span class="co">#&gt;     class</span></span>
-<span><span class="co">#&gt; 1  class1</span></span>
-<span><span class="co">#&gt; 2  class1</span></span>
-<span><span class="co">#&gt; 3  class1</span></span>
-<span><span class="co">#&gt; 4  class1</span></span>
-<span><span class="co">#&gt; 5  class1</span></span>
-<span><span class="co">#&gt; 6  class1</span></span>
-<span><span class="co">#&gt; 7  class1</span></span>
-<span><span class="co">#&gt; 8  class1</span></span>
-<span><span class="co">#&gt; 9  class1</span></span>
-<span><span class="co">#&gt; 10 class1</span></span>
-<span><span class="co">#&gt; 11 class1</span></span>
-<span><span class="co">#&gt; 12 class1</span></span>
-<span><span class="co">#&gt; 13 class1</span></span>
-<span><span class="co">#&gt; 14 class1</span></span>
-<span><span class="co">#&gt; 15 class1</span></span>
-<span><span class="co">#&gt; 16 class1</span></span>
-<span><span class="co">#&gt; 17 class1</span></span>
-<span><span class="co">#&gt; 18 class1</span></span>
-<span><span class="co">#&gt; 19 class1</span></span>
-<span><span class="co">#&gt; 20 class1</span></span>
-<span><span class="co">#&gt; 21 class1</span></span>
-<span><span class="co">#&gt; 22 class2</span></span>
-<span><span class="co">#&gt; 23 class2</span></span>
-<span><span class="co">#&gt; 24 class2</span></span>
-<span><span class="co">#&gt; 25 class2</span></span>
-<span><span class="co">#&gt; 26 class2</span></span>
-<span><span class="co">#&gt; 27 class2</span></span>
-<span><span class="co">#&gt; 28 class2</span></span>
-<span><span class="co">#&gt; 29 class2</span></span>
-<span><span class="co">#&gt; 30 class2</span></span>
-<span><span class="co">#&gt; 31 class2</span></span>
-<span><span class="co">#&gt; 32 class2</span></span>
-<span><span class="co">#&gt; 33 class2</span></span>
-<span><span class="co">#&gt; 34 class2</span></span>
-<span><span class="co">#&gt; 35 class2</span></span>
-<span><span class="co">#&gt; 36 class2</span></span>
-<span><span class="co">#&gt; 37 class2</span></span>
-<span><span class="co">#&gt; 38 class2</span></span>
-<span><span class="co">#&gt; 39 class2</span></span>
-<span><span class="co">#&gt; 40 class2</span></span>
-<span><span class="co">#&gt; 41 class2</span></span>
-<span><span class="co">#&gt; 42 class2</span></span>
-<span><span class="co">#&gt; 43   &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 44   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt;                            label est_sig     se pval           confint  class</span></span>
+<span><span class="co">#&gt; 1          Variances.AM_1.class1    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 2          Variances.AM_2.class1    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 3          Variances.AM_3.class1    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class1</span></span>
+<span><span class="co">#&gt; 4  class1.Thresholds[1,1].class1  -14.22  19.17 0.46   [-51.79, 23.35] class1</span></span>
+<span><span class="co">#&gt; 5  class1.Thresholds[1,2].class1  -23.78  17.97 0.19   [-59.01, 11.45] class1</span></span>
+<span><span class="co">#&gt; 6  class1.Thresholds[1,3].class1  -18.32  19.84 0.36   [-57.21, 20.56] class1</span></span>
+<span><span class="co">#&gt; 7  class1.Thresholds[2,1].class1  -13.52  38.34 0.72   [-88.66, 61.62] class1</span></span>
+<span><span class="co">#&gt; 8  class1.Thresholds[2,2].class1  -13.11  35.95 0.72   [-83.56, 57.35] class1</span></span>
+<span><span class="co">#&gt; 9  class1.Thresholds[2,3].class1   -9.50  39.68 0.81   [-87.28, 68.27] class1</span></span>
+<span><span class="co">#&gt; 10 class1.Thresholds[3,1].class1  -10.10  57.50 0.86 [-122.80, 102.61] class1</span></span>
+<span><span class="co">#&gt; 11 class1.Thresholds[3,2].class1   -9.55  53.92 0.86  [-115.24, 96.14] class1</span></span>
+<span><span class="co">#&gt; 12 class1.Thresholds[3,3].class1   -2.12  59.52 0.97 [-118.77, 114.54] class1</span></span>
+<span><span class="co">#&gt; 13 class1.Thresholds[4,1].class1   -1.24  76.67 0.99 [-151.51, 149.04] class1</span></span>
+<span><span class="co">#&gt; 14 class1.Thresholds[4,2].class1   -1.46  71.90 0.98 [-142.38, 139.45] class1</span></span>
+<span><span class="co">#&gt; 15 class1.Thresholds[4,3].class1   -1.18  78.67 0.99 [-155.38, 153.02] class1</span></span>
+<span><span class="co">#&gt; 16 class1.Thresholds[5,1].class1   -0.46  93.73 1.00 [-184.16, 183.25] class1</span></span>
+<span><span class="co">#&gt; 17 class1.Thresholds[5,2].class1   -0.98  88.30 0.99 [-174.04, 172.08] class1</span></span>
+<span><span class="co">#&gt; 18 class1.Thresholds[5,3].class1   -0.45  95.39 1.00 [-187.42, 186.52] class1</span></span>
+<span><span class="co">#&gt; 19 class1.Thresholds[6,1].class1    0.86 103.24 0.99 [-201.49, 203.21] class1</span></span>
+<span><span class="co">#&gt; 20 class1.Thresholds[6,2].class1    0.68 100.49 0.99 [-196.28, 197.64] class1</span></span>
+<span><span class="co">#&gt; 21 class1.Thresholds[6,3].class1    0.51 106.28 1.00 [-207.80, 208.83] class1</span></span>
+<span><span class="co">#&gt; 22         Variances.AM_1.class2    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 23         Variances.AM_2.class2    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 24         Variances.AM_3.class2    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt; class2</span></span>
+<span><span class="co">#&gt; 25 class2.Thresholds[1,1].class2   -0.96  23.65 0.97   [-47.31, 45.40] class2</span></span>
+<span><span class="co">#&gt; 26 class2.Thresholds[1,2].class2   -1.28  24.36 0.96   [-49.04, 46.47] class2</span></span>
+<span><span class="co">#&gt; 27 class2.Thresholds[1,3].class2   -1.22  24.07 0.96   [-48.40, 45.95] class2</span></span>
+<span><span class="co">#&gt; 28 class2.Thresholds[2,1].class2   -0.71  51.59 0.99 [-101.83, 100.41] class2</span></span>
+<span><span class="co">#&gt; 29 class2.Thresholds[2,2].class2   -0.89  49.95 0.99   [-98.78, 97.01] class2</span></span>
+<span><span class="co">#&gt; 30 class2.Thresholds[2,3].class2   -0.89  50.20 0.99   [-99.29, 97.51] class2</span></span>
+<span><span class="co">#&gt; 31 class2.Thresholds[3,1].class2   -0.26  70.95 1.00 [-139.32, 138.79] class2</span></span>
+<span><span class="co">#&gt; 32 class2.Thresholds[3,2].class2   -0.56  73.20 0.99 [-144.02, 142.90] class2</span></span>
+<span><span class="co">#&gt; 33 class2.Thresholds[3,3].class2   -0.48  71.82 0.99 [-141.24, 140.27] class2</span></span>
+<span><span class="co">#&gt; 34 class2.Thresholds[4,1].class2    1.07  79.01 0.99 [-153.78, 155.92] class2</span></span>
+<span><span class="co">#&gt; 35 class2.Thresholds[4,2].class2    0.38  87.64 1.00 [-171.40, 172.16] class2</span></span>
+<span><span class="co">#&gt; 36 class2.Thresholds[4,3].class2    0.64  83.95 0.99 [-163.91, 165.19] class2</span></span>
+<span><span class="co">#&gt; 37 class2.Thresholds[5,1].class2    3.26  78.92 0.97 [-151.42, 157.95] class2</span></span>
+<span><span class="co">#&gt; 38 class2.Thresholds[5,2].class2    1.82  90.91 0.98 [-176.36, 180.01] class2</span></span>
+<span><span class="co">#&gt; 39 class2.Thresholds[5,3].class2    1.60  87.05 0.99 [-169.02, 172.22] class2</span></span>
+<span><span class="co">#&gt; 40 class2.Thresholds[6,1].class2   31.86  78.92 0.69 [-122.82, 186.55] class2</span></span>
+<span><span class="co">#&gt; 41 class2.Thresholds[6,2].class2    1.82  60.18 0.98 [-116.12, 119.77] class2</span></span>
+<span><span class="co">#&gt; 42 class2.Thresholds[6,3].class2   12.61  87.05 0.88 [-158.01, 183.23] class2</span></span>
+<span><span class="co">#&gt; 43          mix2.weights[1,1].NA    1.00   &lt;NA&gt; &lt;NA&gt;              &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 44          mix2.weights[1,2].NA    1.46  10.94 0.89   [-19.98, 22.90]   &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Note: Standard errors are unavailable or non-finite.</span></span>
 <span><span class="co">#&gt; Note: Hessian is not positive definite.</span></span></code></pre></div>
@@ -859,7 +815,7 @@ AM_1 for the people who are assigned class 1:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">AM_1</span><span class="op">[</span><span class="va">individual_class</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  1  2  3  4  5  6  7 </span></span>
-<span><span class="co">#&gt; 29 12 27 81 26  0  0</span></span></code></pre></div>
+<span><span class="co">#&gt;  0  0  0 11 24 57 23</span></span></code></pre></div>
 <p>Another way to interpret the threshold parameters is to convert them
 to the estimated probability of choosing each response category:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
@@ -867,48 +823,48 @@ to the estimated probability of choosing each response category:</p>
 <span><span class="co"># Let's format it for easier visual interpretation:</span></span>
 <span><span class="fu"><a href="../reference/format_numeric.html">format_numeric</a></span><span class="op">(</span><span class="va">tab_lca_prob</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    Variable Category Probability  group</span></span>
-<span><span class="co">#&gt; 1      AM_1        1        0.17 class1</span></span>
-<span><span class="co">#&gt; 2      AM_1        2        0.07 class1</span></span>
-<span><span class="co">#&gt; 3      AM_1        3        0.16 class1</span></span>
-<span><span class="co">#&gt; 4      AM_1        4        0.46 class1</span></span>
-<span><span class="co">#&gt; 5      AM_1        5        0.14 class1</span></span>
-<span><span class="co">#&gt; 6      AM_1        6        0.00 class1</span></span>
-<span><span class="co">#&gt; 7      AM_1        7        0.00 class1</span></span>
-<span><span class="co">#&gt; 8      AM_2        1        0.10 class1</span></span>
-<span><span class="co">#&gt; 9      AM_2        2        0.09 class1</span></span>
-<span><span class="co">#&gt; 10     AM_2        3        0.10 class1</span></span>
-<span><span class="co">#&gt; 11     AM_2        4        0.36 class1</span></span>
-<span><span class="co">#&gt; 12     AM_2        5        0.32 class1</span></span>
-<span><span class="co">#&gt; 13     AM_2        6        0.00 class1</span></span>
-<span><span class="co">#&gt; 14     AM_2        7        0.03 class1</span></span>
-<span><span class="co">#&gt; 15     AM_3        1        0.11 class1</span></span>
-<span><span class="co">#&gt; 16     AM_3        2        0.08 class1</span></span>
-<span><span class="co">#&gt; 17     AM_3        3        0.13 class1</span></span>
-<span><span class="co">#&gt; 18     AM_3        4        0.42 class1</span></span>
+<span><span class="co">#&gt; 1      AM_1        1        0.00 class1</span></span>
+<span><span class="co">#&gt; 2      AM_1        2        0.00 class1</span></span>
+<span><span class="co">#&gt; 3      AM_1        3        0.00 class1</span></span>
+<span><span class="co">#&gt; 4      AM_1        4        0.11 class1</span></span>
+<span><span class="co">#&gt; 5      AM_1        5        0.22 class1</span></span>
+<span><span class="co">#&gt; 6      AM_1        6        0.48 class1</span></span>
+<span><span class="co">#&gt; 7      AM_1        7        0.19 class1</span></span>
+<span><span class="co">#&gt; 8      AM_2        1        0.00 class1</span></span>
+<span><span class="co">#&gt; 9      AM_2        2        0.00 class1</span></span>
+<span><span class="co">#&gt; 10     AM_2        3        0.00 class1</span></span>
+<span><span class="co">#&gt; 11     AM_2        4        0.07 class1</span></span>
+<span><span class="co">#&gt; 12     AM_2        5        0.09 class1</span></span>
+<span><span class="co">#&gt; 13     AM_2        6        0.59 class1</span></span>
+<span><span class="co">#&gt; 14     AM_2        7        0.25 class1</span></span>
+<span><span class="co">#&gt; 15     AM_3        1        0.00 class1</span></span>
+<span><span class="co">#&gt; 16     AM_3        2        0.00 class1</span></span>
+<span><span class="co">#&gt; 17     AM_3        3        0.02 class1</span></span>
+<span><span class="co">#&gt; 18     AM_3        4        0.10 class1</span></span>
 <span><span class="co">#&gt; 19     AM_3        5        0.21 class1</span></span>
-<span><span class="co">#&gt; 20     AM_3        6        0.05 class1</span></span>
-<span><span class="co">#&gt; 21     AM_3        7        0.00 class1</span></span>
-<span><span class="co">#&gt; 22     AM_1        1        0.00 class2</span></span>
-<span><span class="co">#&gt; 23     AM_1        2        0.00 class2</span></span>
-<span><span class="co">#&gt; 24     AM_1        3        0.00 class2</span></span>
-<span><span class="co">#&gt; 25     AM_1        4        0.11 class2</span></span>
-<span><span class="co">#&gt; 26     AM_1        5        0.22 class2</span></span>
-<span><span class="co">#&gt; 27     AM_1        6        0.48 class2</span></span>
-<span><span class="co">#&gt; 28     AM_1        7        0.19 class2</span></span>
-<span><span class="co">#&gt; 29     AM_2        1        0.00 class2</span></span>
-<span><span class="co">#&gt; 30     AM_2        2        0.00 class2</span></span>
-<span><span class="co">#&gt; 31     AM_2        3        0.00 class2</span></span>
-<span><span class="co">#&gt; 32     AM_2        4        0.07 class2</span></span>
-<span><span class="co">#&gt; 33     AM_2        5        0.09 class2</span></span>
-<span><span class="co">#&gt; 34     AM_2        6        0.59 class2</span></span>
-<span><span class="co">#&gt; 35     AM_2        7        0.25 class2</span></span>
-<span><span class="co">#&gt; 36     AM_3        1        0.00 class2</span></span>
-<span><span class="co">#&gt; 37     AM_3        2        0.00 class2</span></span>
-<span><span class="co">#&gt; 38     AM_3        3        0.02 class2</span></span>
-<span><span class="co">#&gt; 39     AM_3        4        0.10 class2</span></span>
+<span><span class="co">#&gt; 20     AM_3        6        0.37 class1</span></span>
+<span><span class="co">#&gt; 21     AM_3        7        0.30 class1</span></span>
+<span><span class="co">#&gt; 22     AM_1        1        0.17 class2</span></span>
+<span><span class="co">#&gt; 23     AM_1        2        0.07 class2</span></span>
+<span><span class="co">#&gt; 24     AM_1        3        0.16 class2</span></span>
+<span><span class="co">#&gt; 25     AM_1        4        0.46 class2</span></span>
+<span><span class="co">#&gt; 26     AM_1        5        0.14 class2</span></span>
+<span><span class="co">#&gt; 27     AM_1        6        0.00 class2</span></span>
+<span><span class="co">#&gt; 28     AM_1        7        0.00 class2</span></span>
+<span><span class="co">#&gt; 29     AM_2        1        0.10 class2</span></span>
+<span><span class="co">#&gt; 30     AM_2        2        0.09 class2</span></span>
+<span><span class="co">#&gt; 31     AM_2        3        0.10 class2</span></span>
+<span><span class="co">#&gt; 32     AM_2        4        0.36 class2</span></span>
+<span><span class="co">#&gt; 33     AM_2        5        0.32 class2</span></span>
+<span><span class="co">#&gt; 34     AM_2        6        0.00 class2</span></span>
+<span><span class="co">#&gt; 35     AM_2        7        0.03 class2</span></span>
+<span><span class="co">#&gt; 36     AM_3        1        0.11 class2</span></span>
+<span><span class="co">#&gt; 37     AM_3        2        0.08 class2</span></span>
+<span><span class="co">#&gt; 38     AM_3        3        0.13 class2</span></span>
+<span><span class="co">#&gt; 39     AM_3        4        0.42 class2</span></span>
 <span><span class="co">#&gt; 40     AM_3        5        0.21 class2</span></span>
-<span><span class="co">#&gt; 41     AM_3        6        0.37 class2</span></span>
-<span><span class="co">#&gt; 42     AM_3        7        0.30 class2</span></span></code></pre></div>
+<span><span class="co">#&gt; 41     AM_3        6        0.05 class2</span></span>
+<span><span class="co">#&gt; 42     AM_3        7        0.00 class2</span></span></code></pre></div>
 <p>We see that the majority of people in class 1 scored a 4 on all
 indicators, and the majority of people in class 2 scored a 5 or 6 on all
 indicators. Thus, we could call these classes the “moderate AM” class,
@@ -977,13 +933,13 @@ observations per parameter:</p>
 <span><span class="co">#&gt;   Name Classes        LL   n Parameters       AIC      BIC    saBIC   Entropy</span></span>
 <span><span class="co">#&gt; 1    1       1 -595.6245 291          3 1197.2491 1208.269 1198.755 1.0000000</span></span>
 <span><span class="co">#&gt; 2    2       2 -492.9672 291          7  999.9345 1025.648 1003.449 0.8081336</span></span>
-<span><span class="co">#&gt; 3    3       3 -492.9672 291         11 1007.9345 1048.341 1013.458 0.7315277</span></span>
-<span><span class="co">#&gt; 4    4       4 -492.9672 291         15 1015.9345 1071.034 1023.466 0.7068336</span></span>
-<span><span class="co">#&gt;    prob_min  prob_max     n_min     n_max warning np_ratio  np_local</span></span>
-<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.0000000      NA 97.00000 97.000000</span></span>
-<span><span class="co">#&gt; 2 0.9115408 0.9783353 0.4948454 0.5051546      NA 41.57143 48.000000</span></span>
-<span><span class="co">#&gt; 3 0.7677953 0.9693669 0.2474227 0.4158076    TRUE 26.45455 24.000000</span></span>
-<span><span class="co">#&gt; 4 0.1017434 0.9663078 0.0137457 0.4020619    TRUE 19.40000  1.333333</span></span></code></pre></div>
+<span><span class="co">#&gt; 3    3       3 -492.9672 291         11 1007.9345 1048.341 1013.458 0.7690065</span></span>
+<span><span class="co">#&gt; 4    4       4 -492.9672 291         15 1015.9345 1071.034 1023.466 0.8562420</span></span>
+<span><span class="co">#&gt;    prob_min  prob_max      n_min     n_max warning np_ratio  np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.00000000 1.0000000      NA 97.00000 97.000000</span></span>
+<span><span class="co">#&gt; 2 0.9115408 0.9783353 0.49484536 0.5051546      NA 41.57143 48.000000</span></span>
+<span><span class="co">#&gt; 3 0.8457868 0.9516499 0.24742268 0.4158076    TRUE 26.45455 24.000000</span></span>
+<span><span class="co">#&gt; 4 0.4068532 0.9998549 0.03780069 0.4776632    TRUE 19.40000  3.666667</span></span></code></pre></div>
 <p>Here, we see that the 2-class solution is best according to the BIC,
 and that <code>np_local</code> is near-zero for the 3- and 4-class
 solution. This is happens because (almost) no observations are allocated
@@ -1053,11 +1009,11 @@ classes:</p>
 <span><span class="co">#&gt;     Name Classes         LL   n Parameters      AIC      BIC    saBIC   Entropy</span></span>
 <span><span class="co">#&gt; 1  equal       1 -1028.0808 291          5 2066.162 2084.528 2068.672 1.0000000</span></span>
 <span><span class="co">#&gt; 2 equal1       2  -912.0007 291         10 1844.001 1880.735 1849.023 0.8044964</span></span>
-<span><span class="co">#&gt; 3 equal2       3  -908.5888 291         15 1847.178 1902.277 1854.709 0.7518876</span></span>
-<span><span class="co">#&gt;    prob_min  prob_max     n_min     n_max np_ratio  np_local</span></span>
-<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.0000000 1.0000000     58.2 58.200000</span></span>
-<span><span class="co">#&gt; 2 0.9349283 0.9646735 0.4914089 0.5085911     29.1 31.777778</span></span>
-<span><span class="co">#&gt; 3 0.6310106 0.9512158 0.1030928 0.5223368     19.4  6.923077</span></span></code></pre></div>
+<span><span class="co">#&gt; 3 equal2       3  -905.2547 291         15 1840.509 1895.609 1848.041 0.9166279</span></span>
+<span><span class="co">#&gt;    prob_min  prob_max      n_min     n_max warning np_ratio  np_local</span></span>
+<span><span class="co">#&gt; 1 1.0000000 1.0000000 1.00000000 1.0000000      NA     58.2 58.200000</span></span>
+<span><span class="co">#&gt; 2 0.9349282 0.9646735 0.49140893 0.5085911      NA     29.1 31.777778</span></span>
+<span><span class="co">#&gt; 3 0.9554235 0.9954597 0.09278351 0.4948454    TRUE     19.4  6.230769</span></span></code></pre></div>
 <p>Here, we see that the 2-class solution is best according to the BIC,
 and that <code>np_local</code> is low for the 3-class solution. We can
 examine the results for the 2-class solution. Note that these results
@@ -1067,23 +1023,23 @@ will now be a combination of means/variances and probabilities
 <code class="sourceCode R"><span><span class="va">tab_mixed_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/table_results.html">table_results</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">tab_mixed_res</span></span>
 <span><span class="co">#&gt;                            label  est_sig   se pval        confint  class</span></span>
-<span><span class="co">#&gt; 1                Means.CM.class1  3.50*** 0.09 0.00   [3.32, 3.67] class1</span></span>
+<span><span class="co">#&gt; 1                Means.CM.class1  2.81*** 0.09 0.00   [2.63, 2.99] class1</span></span>
 <span><span class="co">#&gt; 2            Variances.CM.class1  1.03*** 0.09 0.00   [0.86, 1.20] class1</span></span>
 <span><span class="co">#&gt; 3          Variances.AM_1.class1     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class1</span></span>
 <span><span class="co">#&gt; 4          Variances.AM_2.class1     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class1</span></span>
 <span><span class="co">#&gt; 5          Variances.AM_3.class1     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class1</span></span>
-<span><span class="co">#&gt; 6  class1.Thresholds[1,1].class1 -1.54*** 0.23 0.00 [-2.00, -1.09] class1</span></span>
-<span><span class="co">#&gt; 7  class1.Thresholds[1,2].class1 -0.71*** 0.15 0.00 [-0.99, -0.42] class1</span></span>
-<span><span class="co">#&gt; 8  class1.Thresholds[1,3].class1 -0.75*** 0.13 0.00 [-1.01, -0.49] class1</span></span>
-<span><span class="co">#&gt; 9                Means.CM.class2  2.81*** 0.09 0.00   [2.63, 2.99] class2</span></span>
+<span><span class="co">#&gt; 6  class1.Thresholds[1,1].class1  1.15*** 0.21 0.00   [0.74, 1.57] class1</span></span>
+<span><span class="co">#&gt; 7  class1.Thresholds[1,2].class1  1.85*** 0.31 0.00   [1.25, 2.46] class1</span></span>
+<span><span class="co">#&gt; 8  class1.Thresholds[1,3].class1  0.96*** 0.15 0.00   [0.66, 1.26] class1</span></span>
+<span><span class="co">#&gt; 9                Means.CM.class2  3.50*** 0.09 0.00   [3.32, 3.67] class2</span></span>
 <span><span class="co">#&gt; 10         Variances.AM_1.class2     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class2</span></span>
 <span><span class="co">#&gt; 11         Variances.AM_2.class2     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class2</span></span>
 <span><span class="co">#&gt; 12         Variances.AM_3.class2     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt; class2</span></span>
-<span><span class="co">#&gt; 13 class2.Thresholds[1,1].class2  1.15*** 0.21 0.00   [0.74, 1.57] class2</span></span>
-<span><span class="co">#&gt; 14 class2.Thresholds[1,2].class2  1.85*** 0.31 0.00   [1.25, 2.46] class2</span></span>
-<span><span class="co">#&gt; 15 class2.Thresholds[1,3].class2  0.96*** 0.15 0.00   [0.66, 1.26] class2</span></span>
+<span><span class="co">#&gt; 13 class2.Thresholds[1,1].class2 -1.54*** 0.23 0.00 [-2.00, -1.09] class2</span></span>
+<span><span class="co">#&gt; 14 class2.Thresholds[1,2].class2 -0.71*** 0.15 0.00 [-0.99, -0.42] class2</span></span>
+<span><span class="co">#&gt; 15 class2.Thresholds[1,3].class2 -0.75*** 0.13 0.00 [-1.01, -0.49] class2</span></span>
 <span><span class="co">#&gt; 16   equal var 2.weights[1,1].NA     1.00 &lt;NA&gt; &lt;NA&gt;           &lt;NA&gt;   &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 17   equal var 2.weights[1,2].NA  0.90*** 0.14 0.00   [0.63, 1.17]   &lt;NA&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; 17   equal var 2.weights[1,2].NA  1.11*** 0.17 0.00   [0.77, 1.45]   &lt;NA&gt;</span></span></code></pre></div>
 <p>We can plot the continuous indicators:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_density.html">plot_density</a></span><span class="op">(</span><span class="va">res_mixed</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, variables <span class="op">=</span> <span class="st">"CM"</span><span class="op">)</span></span></code></pre></div>
@@ -1136,9 +1092,10 @@ into them:</p>
 <span><span class="co">#&gt; 1 class1                1        169                     1            0.58</span></span>
 <span><span class="co">#&gt; 2 class2                2         85                     2            0.29</span></span>
 <span><span class="co">#&gt; 3 class3                3         37                     3            0.13</span></span></code></pre></div>
-<p>In <span class="citation">@sec-eliminating</span>, we already
-encountered the average classification probabilities for the most likely
-class membership, whose range is represented in the fit table as
+<p>We already encountered the average classification probabilities for
+the most likely class membership when eliminating models from
+consideration. There, we examined the range of the diagonal of the
+classification matrix, which is reported in the fit table as
 <code>prob_min</code> and <code>prob_max</code>. We can see the full
 matrix by calling:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
@@ -1165,23 +1122,23 @@ follows:</p>
 <blockquote>
 <p>We conducted exploratory latent profile analysis using
 <code>tidySEM</code> version <code>0.3.0</code> and <code>OpenMx</code>
-version <code>2.22.11</code>. We followed recommended practices by <span class="citation">@vanlissaRecommendedPracticesLatent2024</span>. The two
-continuous indicators were AM and CM. Model parameters were
-class-varying means and fixed variances across classes. We assumed
-conditional independence of these indicators within classes. Based on
-the available sample size, we considered a maximum of five classes. This
-model has 16 parameters, which allows for a maximum of about 20
-observations per parameter. We selected the best-fitting model based on
-the BIC and significant BLRT test. We eliminated solutions with classes
-where the number of observations to parameters was smaller than 10.
-Based on these criteria, a 3-class solution was retained. This model had
-reasonable classification accuracy: entropy was .82, and the probability
-that observations in each class were correctly classified ranged from
-[.87, .95]. The smallest class contained 9.7% of participants. The model
-parameters are show in Table 1, and are visually represented in Figure
-1. The retained classes were characterized as [label 1], [label 2], and
-[label 3] based on their estimated [means / category-response
-probabilities / endorsement probabilities].</p>
+version <code>2.22.11</code>. We followed recommended practices by Van
+Lissa and colleagues (2024). The two continuous indicators were AM and
+CM. Model parameters were class-varying means and fixed variances across
+classes. We assumed conditional independence of these indicators within
+classes. Based on the available sample size, we considered a maximum of
+five classes. This model has 16 parameters, which allows for a maximum
+of about 20 observations per parameter. We selected the best-fitting
+model based on the BIC and significant BLRT test. We eliminated
+solutions with classes where the number of observations to parameters
+was smaller than 10. Based on these criteria, a 3-class solution was
+retained. This model had reasonable classification accuracy: entropy was
+.82, and the probability that observations in each class were correctly
+classified ranged from [.87, .95]. The smallest class contained 9.7% of
+participants. The model parameters are show in Table 1, and are visually
+represented in Figure 1. The retained classes were characterized as
+[label 1], [label 2], and [label 3] based on their estimated [means /
+category-response probabilities / endorsement probabilities].</p>
 </blockquote>
 <p>Here is the code to produce Table 1; we extract the means and paste
 the SE behind it (note that you can also use <code>est_sig</code> or

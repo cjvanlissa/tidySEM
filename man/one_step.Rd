@@ -96,6 +96,6 @@ res_custom <- one_step(
 }
 \references{
 Bakk, Z., & Kuha, J. (2018). Two-step estimation of models
-between latent classes and external variables. \emph{Psychometrika, 83}, 871–892.
+between latent classes and external variables. \emph{Psychometrika, 83}, 871-892.
 \doi{10.1007/s11336-017-9592-7}
 }

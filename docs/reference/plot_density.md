@@ -14,7 +14,8 @@ plot_density(
   bw = FALSE,
   conditional = FALSE,
   alpha = 0.2,
-  facet_labels = NULL
+  facet_labels = NULL,
+  ...
 )
 ```
 

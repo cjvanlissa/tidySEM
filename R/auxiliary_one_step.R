@@ -83,7 +83,7 @@
 #'
 #' @references
 #' Bakk, Z., & Kuha, J. (2018). Two-step estimation of models
-#' between latent classes and external variables. *Psychometrika, 83*, 871–892.
+#' between latent classes and external variables. *Psychometrika, 83*, 871-892.
 #' \doi{10.1007/s11336-017-9592-7}
 #' @export
 one_step <- function(x, model = NULL, data, ...) {

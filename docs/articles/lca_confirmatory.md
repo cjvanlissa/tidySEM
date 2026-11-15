@@ -118,11 +118,12 @@ examine its parameters. For this, we will use the `OpenMx` function
 res_theory <- mx_profiles(x, classes = 2, run = FALSE)
 library(OpenMx)
 omxGetParameters(res_theory)
-#> equal var 2.weights[1,2]                       v1                      m11 
-#>                     0.26                     2.30                     0.73 
-#>                      m21 
-#>                     8.36
 ```
+
+    #> equal var 2.weights[1,2]                       v1                      m11 
+    #>                     0.26                     2.30                     0.73 
+    #>                      m21 
+    #>                     8.36
 
 The relevant mean parameters are `m11` and `m21`. We can either fix
 these means to the exact values of 0 and 10:

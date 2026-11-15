@@ -22,6 +22,7 @@
 #' provide new names for these facets. For example, to rename variables, in the
 #' example with the 'iris' data below, one could specify:
 #' \code{facet_labels = c("Pet_leng" = "Petal length")}.
+#' @param ... Arguments passed on to other functions.
 #' @return An object of class 'ggplot'.
 #' @author Caspar J. van Lissa
 #' @export
@@ -259,7 +260,7 @@ plot_density_MxModel <- function(x, ...) {
     if(length(titles) < 2 ){
         if(length(vars) < 2){
             densities <- lapply(unique(plot_df$Class), function(thisclass){
-                thedf <- plot_df[pworclot_df$Class == thisclass, ]
+                thedf <- plot_df[plot_df$Class == thisclass, ]
                 thep <- thedf$Probability
                 data.frame(Title = titles,
                            Variable = vars,
@@ -282,7 +283,7 @@ plot_density_MxModel <- function(x, ...) {
 
 .extract_density_data <- function (x, variables = NULL, longform = TRUE)
 {
-  dispatch_method(x, ".extract_density_data", ...)
+  dispatch_method(x, ".extract_density_data", variables = NULL, longform = TRUE)
 }
 
 
