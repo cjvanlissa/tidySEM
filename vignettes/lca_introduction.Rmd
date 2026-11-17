@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to Latent Class Analysis}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-_8}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
