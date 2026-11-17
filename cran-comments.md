@@ -13,7 +13,7 @@
 * Rhub [VM] linux R-* (any version) ubuntu-latest on GitHub
 * Rhub [VM] m1-san R-* (any version) macos-15 on GitHub, ASAN + UBSAN
 * Rhub [VM] macos R-* (any version) macos-15-intel on GitHub
-* Rhub [VM] windows R-* (any version) windows-latest on GitHub
+* Rhub [VM] macos-arm64 R-* (any version) macos-latest on GitHub
 
 ## R CMD check results
 
