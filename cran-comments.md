@@ -6,9 +6,10 @@
 * GitHub Actions (r-lib): macOS-latest (release)
 * GitHub Actions (r-lib): ubuntu-latest (release)
 * GitHub Actions (r-lib): ubuntu-latest (devel)
-* win-builder: R version 4.5.3 (2026-03-11 ucrt)
-* TIMEOUT: win-builder: R Under development (unstable) (2026-11-04 r90836 ucrt)
+* win-builder: R Under development (unstable) (2026-11-14 r90890 ucrt)
 * win-builder: R version 4.6.2 (2026-10-29 ucrt)
+* win-builder: R version 4.5.3 (2026-03-11 ucrt)
+  + 1 note (see below)
 * Rhub [VM] linux R-* (any version) ubuntu-latest on GitHub
 * Rhub [VM] m1-san R-* (any version) macos-15 on GitHub, ASAN + UBSAN
 * Rhub [VM] macos R-* (any version) macos-15-intel on GitHub
