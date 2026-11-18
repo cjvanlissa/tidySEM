@@ -693,6 +693,7 @@ importFrom(ggplot2,
   geom_text,
   geom_vline,
   ggplot,
+  ggplotGrob,
   labs,
   scale_linetype_manual,
   stat_function,
@@ -701,6 +702,17 @@ importFrom(ggplot2,
   unit
 )
 importFrom(graphics,plot)
+importFrom(grid,
+  gpar,
+  nullGrob,
+  textGrob,
+  unit,
+  unit.c
+)
+importFrom(gtable,
+  gtable,
+  gtable_add_grob
+)
 importFrom(lavaan,
   fitmeasures,
   lavInspect,
