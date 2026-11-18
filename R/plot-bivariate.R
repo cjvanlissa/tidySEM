@@ -499,7 +499,9 @@ merge_corplots <- function(plots, ...) {
 }
 
 
-
+#' @importFrom gtable gtable gtable_add_grob
+#' @importFrom ggplot2 ggplotGrob
+#' @importFrom grid unit unit.c nullGrob textGrob gpar
 merge_corplots <- function(plots, ...) {
   n_vars <- sqrt(length(plots))
 
@@ -570,7 +572,7 @@ merge_corplots <- function(plots, ...) {
   title_width <- grid::unit(1.5, "lines")
   title_height <- grid::unit(1.5, "lines")
 
-  gt <- gtable::gtable(
+  gt <- gtable(
     widths = grid::unit.c(
       title_width,
       axis_width,
@@ -592,7 +594,7 @@ merge_corplots <- function(plots, ...) {
       g <- grobs[[model_mat[row, col]]]
       if (is.null(g)) next
 
-      gt <- gtable::gtable_add_grob(
+      gt <- gtable_add_grob(
         gt,
         get_grob(g, "^panel"),
         t = row,
@@ -613,7 +615,7 @@ merge_corplots <- function(plots, ...) {
 
     g <- grobs[[idx]]
 
-    gt <- gtable::gtable_add_grob(
+    gt <- gtable_add_grob(
       gt,
       get_grob(g, "^axis-b"),
       t = n_vars + 1L,
@@ -627,7 +629,7 @@ merge_corplots <- function(plots, ...) {
     idx <- model_mat[row, 1L]
     g <- grobs[[idx]]
 
-    gt <- gtable::gtable_add_grob(
+    gt <- gtable_add_grob(
       gt,
       get_grob(g, "^axis-l"),
       t = row,
@@ -639,7 +641,7 @@ merge_corplots <- function(plots, ...) {
   for (col in seq_len(n_vars)) {
     g <- grobs[[model_mat[col, col]]]
 
-    gt <- gtable::gtable_add_grob(
+    gt <- gtable_add_grob(
       gt,
       get_grob(g, "^xlab-b"),
       t = n_vars + 2L,
@@ -650,7 +652,7 @@ merge_corplots <- function(plots, ...) {
 
   # Row labels
   for (row in seq_len(n_vars)) {
-    gt <- gtable::gtable_add_grob(
+    gt <- gtable_add_grob(
       gt,
       grid::textGrob(
         variables[row],
@@ -666,7 +668,7 @@ merge_corplots <- function(plots, ...) {
   if (!inherits(legend, "zeroGrob") &&
       !inherits(legend, "nullGrob")) {
 
-    gt <- gtable::gtable_add_grob(
+    gt <- gtable_add_grob(
       gt,
       legend,
       t = 1L,

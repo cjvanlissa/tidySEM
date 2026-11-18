@@ -53,3 +53,4 @@ tests/test_local.txt
 
 !vignettes/plotting_cache/
 !vignettes/plotting_cache/**
+/revdep/
