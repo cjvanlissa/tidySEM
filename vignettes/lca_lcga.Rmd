@@ -200,9 +200,10 @@ ggplot(df_plot, aes(x = Value, colour = Transformation)) +
 
 
 Evidently, the Box-Cox transformation reduced skew the most.
-Consequently, we proceeded with the Box-Cox transformed scores for analysis.
+Consequently, we proceeded with the Box-Cox transformed scores for analysis:
 
-```{r lcga-data-wide, echo = FALSE, include = FALSE}
+```{r lcga-data-wide, echo = TRUE, include = TRUE}
+# Store Box-Cox transformed scores to new object
 dat <- df_scores[, c("id", "time", "boxcox")]
 dat <- reshape(dat, direction = "wide", v.names = "boxcox", timevar = "time", idvar = "id")
 names(dat) <- gsub("boxcox.", "scl", names(dat))
