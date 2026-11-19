@@ -6,7 +6,7 @@
 \alias{get_layout.default}
 \title{Generate graph layout}
 \usage{
-\method{get_layout}{lavaan}(x, ..., layout_algorithm = "fr_grid")
+\method{get_layout}{lavaan}(x, ..., layout_algorithm = "sem")
 
 get_layout(x, ...)
 

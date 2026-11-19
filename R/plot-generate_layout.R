@@ -102,7 +102,7 @@ space_these <- function(these, n){
 #' layout algorithm to apply to position the nodes. Defaults to
 #' \code{"layout_as_tree"}; see details for more options.
 #' @export
-get_layout.lavaan <- function(x, ..., layout_algorithm = "fr_grid"){
+get_layout.lavaan <- function(x, ..., layout_algorithm = "sem"){
   Args <- as.list(match.call()[-1])
   Args$x <- table_results(x, columns = NULL)
   do.call(get_layout, Args)
@@ -128,44 +128,89 @@ get_layout.mplusObject <- get_layout.lavaan
 # @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
 # @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
 # @importFrom igraph layout_with_mds
-get_layout.tidy_results <- function(x, ..., layout_algorithm = "fr_grid"){
-  #cl <- match.call()
-  #cl[[1L]] <- str2lang("tidySEM:::get_edges.tidy_results")
-  #cl <- cl[c(1L, which(names(cl) == "x"))]
-  #df <- eval.parent(cl)[, c("from", "to")]
+get_layout.tidy_results <- function(x, ..., layout_algorithm = "sem"){
   df <- x[, c("lhs", "rhs")]
-  nds <- unique(unlist(df))
-  if(layout_algorithm == "fr_grid"){
-    lo <- fr_layout_integer_compact(nodes = nds, edges = as.matrix(df))
-  } else {
-    g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
-    lo <- do.call(
-      getExportedValue("igraph", layout_algorithm),
-      list(graph = g)
-    )
-    rownames(lo) <- igraph::vertex.attributes(g)$name
-  }
-  lo <- snap_layout_to_grid(lo)
-  return(lo)
+  nds <- unique(unlist(df, use.names = FALSE))
+  .get_layout_nodes_edges(x = x, df = df, nds = nds, layout_algorithm = layout_algorithm)
 }
 
 #' @method get_layout tidy_edges
 #' @export
-# @importFrom igraph graph_from_data_frame vertex.attributes
-# @importFrom igraph layout_as_star layout_as_tree layout_in_circle
-# @importFrom igraph layout_nicely layout_on_grid layout_randomly
-# @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
-# @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
-# @importFrom igraph layout_with_mds
-get_layout.tidy_edges <- function(x, ..., layout_algorithm = "fr_grid"){
-  if(!isTRUE(requireNamespace("igraph", quietly = TRUE))) {
-    message('Run `install.packages("igraph")` before using functions that require it.')
+get_layout.tidy_edges <- get_layout.tidy_results
+
+.get_layout_nodes_edges <- function(x, df, nds, ..., layout_algorithm){
+  # Handle Fruchterman-Reingold grid layout
+  if (identical(layout_algorithm, "fr_grid")) {
     df <- x[, c("lhs", "rhs")]
-    nds <- unique(unlist(df))
-    return(fr_layout_integer_compact(nodes = nds, edges = as.matrix(df)))
+    nds <- unique(unlist(df, use.names = FALSE))
+    return(fr_layout_integer_compact(
+      nodes = nds,
+      edges = as.matrix(df),
+      ...
+    ))
   }
-  g <- igraph::graph_from_data_frame(x[, c("lhs", "rhs")], directed = TRUE)
-  lo <- do.call(layout_algorithm, list(g))
+
+  # Handle SEM layout
+  if (identical(layout_algorithm, "sem")) {
+    df <- as.data.frame(x)
+    df <- df[!is.na(df$lhs) & !is.na(df$rhs), , drop = FALSE]
+    nds <- unique(c(
+      as.character(df$lhs),
+      as.character(df$rhs)
+    ))
+    return(sem_layout_integer(
+      nodes = nds,
+      edges = df,
+      ...
+    ))
+  }
+
+  # Handle igraph layouts
+  if (!requireNamespace("igraph", quietly = TRUE)) {
+    stop("Package `igraph` is required for layout algorithm `",
+         if (is.character(layout_algorithm)) {
+           layout_algorithm
+         } else {
+           "<function>"
+         },
+         "`.",
+         call. = FALSE
+    )
+  }
+
+  # Resolve the layout function from the igraph namespace,
+  # unless a function was supplied directly.
+  if (is.function(layout_algorithm)) {
+    layout_fun <- layout_algorithm
+  } else if (
+    is.character(layout_algorithm) &&
+    length(layout_algorithm) == 1L &&
+    !is.na(layout_algorithm) &&
+    exists(
+      layout_algorithm,
+      envir = asNamespace("igraph"),
+      mode = "function",
+      inherits = FALSE
+    )
+  ) {
+    layout_fun <- get(
+      layout_algorithm,
+      envir = asNamespace("igraph"),
+      mode = "function"
+    )
+  } else {
+    stop(
+      "Unknown layout algorithm: ",
+      paste(layout_algorithm, collapse = ", "),
+      call. = FALSE
+    )
+  }
+  # Construct graph and compute layout.
+  g <- igraph::graph_from_data_frame(
+    x[, c("lhs", "rhs")],
+    directed = TRUE
+  )
+  lo <- do.call(layout_fun, c(list(g), list(...)))
   rownames(lo) <- igraph::vertex.attributes(g)$name
   lo <- snap_layout_to_grid(lo)
   return(lo)

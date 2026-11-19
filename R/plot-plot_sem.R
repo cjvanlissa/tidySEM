@@ -356,7 +356,6 @@ prepare_graph.default <- function(edges = NULL,
   Args <- mget(names(formals(prepare_graph.default)),
                envir = environment(),
                inherits = FALSE)
-
   # Check if nodes exist in edges and layout --------------------------------
   if(!inherits(layout, "tidy_layout")){
     if(inherits(layout, c("matrix", "data.frame"))){
@@ -465,6 +464,17 @@ prepare_graph.default <- function(edges = NULL,
     }
   }
 
+  # Assign default values
+  df_nodes <- .fill_sem_aesthetic_defaults(
+    df_nodes,
+    kind = "node"
+  )
+
+  df_edges <- .fill_sem_aesthetic_defaults(
+    df_edges,
+    kind = "edge"
+  )
+
   # Compute x, y coordinates ------------------------------------------------
 
   df_nodes$x <- df_nodes$x * spacing_x
@@ -498,10 +508,8 @@ prepare_graph.default <- function(edges = NULL,
   df_edges$curvature <- as.numeric(connect_cols[, 3])
   has_curve <- which(!is.na(df_edges$curvature)) # Check if this is correct, or should be is.null / is.na
 
-  #df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0] <- -1 * df_edges$curvature[has_curve][df_edges$connect_to[has_curve] == df_edges$connect_from[has_curve] & df_edges$connect_from[has_curve] %in% c("top", "right") & df_edges$curvature[has_curve] < 0]
-
   # Reposition error variances to "empty" part of the node
-  df_edges <- reposition_variances(df_edges)
+  df_edges <- reposition_variances(df_edges = df_edges, df_nodes = df_nodes)
 
   out <- Args
 
@@ -1309,32 +1317,6 @@ match.call.defaults <- function(...) {
   .plot_label_internal(p = p, df = df, text_size = text_size)
 }
 
-.determine_connections <- function(df_nodes, df_edges, angle){
-  # Begin recursion
-  if("group" %in% names(df_nodes)){
-    x_list <- lapply(unique(df_nodes$group), function(i){
-      .determine_connections(df_nodes = df_nodes[df_nodes$group == i, -which(names(df_nodes) == "group")],
-                             df_edges = df_edges[df_edges$group == i, -which(names(df_edges) == "group")],
-                             angle = angle)
-    })
-    return(bind_list(x_list))
-  }
-  if("level" %in% names(df_nodes)){
-    x_list <- lapply(unique(df_nodes$level), function(i){
-      .determine_connections(df_nodes = df_nodes[df_nodes$level == i, -which(names(df_nodes) == "level")],
-                             df_edges = df_edges[df_edges$level == i, -which(names(df_edges) == "level")],
-                             angle = angle)
-    })
-    return(bind_list(x_list))
-  }
-  # End recursion
-  if(!is.null(angle)){
-    .connect_using_angle(df_nodes = df_nodes, df_edges = df_edges, angle = angle)
-  } else {
-    .connect_nearest_neighbor(df_nodes = df_nodes, df_edges = df_edges, angle = angle)
-  }
-}
-
 #' @importFrom RANN nn2
 .connect_nearest_neighbor <- function(df_nodes, df_edges, angle){
   is_variance <- df_edges$from == df_edges$to
@@ -1534,20 +1516,7 @@ match.call.defaults <- function(...) {
           rep(rownum, npoints)),
         nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
       )
-      # # Check if the curve should be flipped
-      # midpoint <- out[floor(npoints/2), 1:2]
-      # # replace this with node df
-      # df_tmp <- df[, c("text_x", "text_y")]
-      # names(df_tmp) <- c('x', 'y')
-      # # Find the reflection of the midpoint
-      # midpoint_reflect <- .reflect_points(points = matrix(midpoint, nrow = 1),
-      #                                     start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
-      #                                     end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
-      # if(.flip_curve(otherpoints = df_tmp, candidatepoints = list(midpoint, midpoint_reflect))){
-      #   out[, 1:2] <- .reflect_points(points = out[, 1:2],
-      #                                 start = unlist(this_row[c("edge_xmin", "edge_ymin")]),
-      #                                 end = unlist(this_row[c("edge_xmax", "edge_ymax")]))
-      # }
+
       out
     }
   })))
@@ -1649,24 +1618,24 @@ match.call.defaults <- function(...) {
   }
   p
 }
-
-reposition_variances <- function(df_edges){
-  variances <- df_edges$from == df_edges$to & df_edges$arrow == "both"
-  variance_vars <- df_edges$from[variances]
-  new_loc <- mapply(function(vv, vloc){
-    tb <- table(c("top", "bottom", "left", "right",
-                  df_edges$connect_from[df_edges$from == vv & !variances],
-                  df_edges$connect_to[df_edges$to == vv & !variances]))
-    if(tb[vloc] == 1){
-      return(vloc)
-    } else {
-      tb <- names(tb)[which.min(tb)]
-      return(tb[sample.int(length(tb), 1)])
-    }
-  }, vv = variance_vars, vloc = df_edges$connect_from[variances])
-  df_edges$connect_from[variances] <- df_edges$connect_to[variances] <- new_loc
-  return(df_edges)
-}
+#
+# reposition_variances <- function(df_edges){
+#   variances <- df_edges$from == df_edges$to & df_edges$arrow == "both"
+#   variance_vars <- df_edges$from[variances]
+#   new_loc <- mapply(function(vv, vloc){
+#     tb <- table(c("top", "bottom", "left", "right",
+#                   df_edges$connect_from[df_edges$from == vv & !variances],
+#                   df_edges$connect_to[df_edges$to == vv & !variances]))
+#     if(tb[vloc] == 1){
+#       return(vloc)
+#     } else {
+#       tb <- names(tb)[which.min(tb)]
+#       return(tb[sample.int(length(tb), 1)])
+#     }
+#   }, vv = variance_vars, vloc = df_edges$connect_from[variances])
+#   df_edges$connect_from[variances] <- df_edges$connect_to[variances] <- new_loc
+#   return(df_edges)
+# }
 
 
 bind_list <- function(L, ...){
@@ -1713,4 +1682,70 @@ bind_list <- function(L, ...){
   m4 <- rbind(t(points), 1)
   out <- m1 %*% m2 %*% m3 %*% m4
   t(out)[,1:2]
+}
+
+
+.default_sem_aesthetics <- function() {
+  list(
+    node = list(
+      linetype = 1,
+      size = 1,
+      linewidth = 0.5,
+      colour = "black",
+      color = "black",
+      fill = "white",
+      alpha = 1,
+
+      label_fill = NA_character_,
+      label_size = 4,
+      label_family = "",
+      label_fontface = "plain",
+      label_hjust = 0.5,
+      label_vjust = 0.5,
+      label_lineheight = 1.2,
+      label_colour = "black",
+      label_color = "black",
+      label_alpha = 1
+    ),
+    edge = list(
+      linetype = 1,
+      linewidth = 0.5,
+      colour = "black",
+      color = "black",
+      alpha = 1,
+
+      label_fill = NA_character_,
+      label_size = 4,
+      label_family = "",
+      label_fontface = "plain",
+      label_hjust = 0.5,
+      label_vjust = 0.5,
+      label_lineheight = 1.2,
+      label_colour = "black",
+      label_color = "black",
+      label_alpha = 1
+    )
+  )
+}
+
+.fill_sem_aesthetic_defaults <- function(df, kind) {
+
+  defaults <- .default_sem_aesthetics()[[kind]]
+
+  for (nm in intersect(names(df), names(defaults))) {
+
+    default <- defaults[[nm]]
+
+    if (length(default) != 1L || is.na(default)) {
+      next
+    }
+
+    missing <- is.na(df[[nm]])
+
+    if (any(missing)) {
+      df[[nm]][missing] <- default
+    }
+  }
+
+  df
 }

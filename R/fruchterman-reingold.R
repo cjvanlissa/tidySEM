@@ -430,6 +430,9 @@ fr_layout_integer <- function(nodes, edges, niter = 500,
 
 fr_layout_integer_compact <- function(nodes, edges, niter = 1000,
                                       seed = NULL) {
+  if(inherits(nodes, what = "data.frame")){
+    nodes <- nodes[["name"]]
+  }
   nodes <- as.character(nodes)
 
   if (anyDuplicated(nodes)) {
