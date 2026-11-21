@@ -1,4 +1,43 @@
-edit_sem_graph <- function(graph) {
+#' Interactively Edit a SEM Graph
+#'
+#' Launch a Shiny editor for an existing `sem_graph` object. Drag nodes,
+#' adjust node dimensions and labels, change edge connections and curvature,
+#' and edit supported plotting aesthetics. For multigroup or multilevel
+#' graphs, switch between panels. Optionally synchronize node positions
+#' across groups within the same level. Changes are shown in a ggplot
+#' preview and can be undone, redone, or reset.
+#'
+#' @param graph An object inheriting from class `sem_graph`, typically
+#'   created by [prepare_graph()].
+#'
+#' @details
+#' This function requires the optional packages `shiny` and `htmltools`.
+#' They are checked at runtime and do not need to be installed for other
+#' tidySEM functionality. The editor uses [update_graph()] to maintain
+#' node geometry without rerunning layout or edge-routing algorithms.
+#'
+#' Panel switching does not change the underlying graph. When enabled,
+#' **Apply layout to all groups** copies node positions (not aesthetics,
+#' dimensions, or edge properties) to same-named nodes in other groups
+#' at the same level. This setting is available only for multigroup models.
+#'
+#' Edits are saved automatically within the app. Clicking **Done** returns
+#' the edited graph; clicking **Cancel** returns `NULL`.
+#'
+#' @return An edited `sem_graph` object when **Done** is clicked, or `NULL`
+#'   when **Cancel** is clicked. The supplied object is not modified in place.
+#'
+#' @seealso [prepare_graph()], [update_graph()]
+#'
+#' @examples
+#' \dontrun{
+#'   # graph is an existing sem_graph object
+#'   edited <- graph_editor(graph)
+#'   if (!is.null(edited)) plot(edited)
+#' }
+#'
+#' @export
+graph_editor <- function(graph) {
 
   if (!inherits(graph, "sem_graph")) {
     stop("`graph` must inherit from 'sem_graph'.")
@@ -8,8 +47,8 @@ edit_sem_graph <- function(graph) {
     stop("Package `shiny` is required.")
   }
 
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("Package `ggplot2` is required.")
+  if (!requireNamespace("htmltools", quietly = TRUE)) {
+    stop("Package `htmltools` is required for `graph_editor()`.", call. = FALSE)
   }
 
   shiny::runApp(
@@ -18,43 +57,62 @@ edit_sem_graph <- function(graph) {
   )
 }
 
-refresh_sem_graph <- function(g) {
-
-  layout <- data.frame(
-    x = as.numeric(g$nodes$x),
-    y = as.numeric(g$nodes$y),
-    name = as.character(g$nodes$name),
-    stringsAsFactors = FALSE
-  )
-  if (anyNA(layout$name) || anyDuplicated(layout$name)) {
-    stop("Node names must be unique and non-missing.")
-  }
-  if (any(!is.finite(layout$x) | !is.finite(layout$y))) {
-    stop("Layout coordinates must be finite.")
-  }
-  class(layout) <- c("tidy_layout", "data.frame")
-
-  prepare_graph.default(
-    edges = g$edges,
-    layout = layout,
-    nodes = g$nodes,
-    rect_width = g$rect_width,
-    rect_height = g$rect_height,
-    ellipses_width = g$ellipses_width,
-    ellipses_height = g$ellipses_height,
-    variance_diameter = g$variance_diameter,
-    spacing_x = g$spacing_x,
-    spacing_y = g$spacing_y,
-    text_size = g$text_size,
-    curvature = g$curvature,
-    angle = g$angle,
-    fix_coord = g$fix_coord
-  )
-}
-
 sem_graph_editor_app <- function(graph) {
 
-  library(shiny)
+
+  # Panel identifiers are metadata, not globally unique node names.
+  # NA denotes a shared row only when a panel column is absent from a table.
+  panel_cols <- intersect(
+    c("group", "level"),
+    union(names(graph$nodes), names(graph$edges))
+  )
+  panel_values <- lapply(panel_cols, function(nm) {
+    vals <- c(
+      if (nm %in% names(graph$nodes)) as.character(graph$nodes[[nm]]),
+      if (nm %in% names(graph$edges)) as.character(graph$edges[[nm]])
+    )
+    vals <- unique(vals[!is.na(vals)])
+    if (!length(vals)) "" else vals
+  })
+  names(panel_values) <- panel_cols
+  has_multigroup <- "group" %in% panel_cols &&
+    length(panel_values[["group"]]) > 1L
+
+  # Restrict to the active facet. Missing panel columns are shared;
+  # explicit NA values are not silently interpreted as a specific group.
+  panel_rows <- function(df, panel) {
+    keep <- rep(TRUE, nrow(df))
+    for (nm in names(panel)) {
+      if (nm %in% names(df)) {
+        keep <- keep & !is.na(df[[nm]]) &
+          as.character(df[[nm]]) == panel[[nm]]
+      }
+    }
+    which(keep)
+  }
+
+  same_level <- function(df, i) {
+    if (!"level" %in% names(df)) return(rep(TRUE, nrow(df)))
+    !is.na(df$level) & !is.na(df$level[i]) &
+      as.character(df$level) == as.character(df$level[i])
+  }
+
+  # Copy only positions, never labels, styles, dimensions, or edge routing.
+  synchronize_group_positions <- function(g, i) {
+    if (!has_multigroup || !"group" %in% names(g$nodes)) return(g)
+    nd <- g$nodes
+    peers <- which(
+      !is.na(nd$group) &
+      nd$name == nd$name[i] &
+      same_level(nd, i)
+    )
+    if (length(peers)) {
+      nd$x[peers] <- nd$x[i]
+      nd$y[peers] <- nd$y[i]
+    }
+    g$nodes <- nd
+    g
+  }
 
   sides <- c("top", "bottom", "left", "right")
   label_aesthetics <- paste0(
@@ -78,8 +136,9 @@ sem_graph_editor_app <- function(graph) {
   )
 
   # -------------------------------------------------------
-  # Geometry helpers
+  # Helpers
   # -------------------------------------------------------
+
 
   move_node <- function(nodes, i, x, y) {
 
@@ -158,13 +217,14 @@ sem_graph_editor_app <- function(graph) {
       x1, y1, cx, cy, x2, y2
     )
   }
-  make_svg <- function(g) {
+  make_svg <- function(g, node_ids = seq_len(nrow(g$nodes)),
+                       edge_ids = seq_len(nrow(g$edges))) {
 
-    nd <- g$nodes
-    ed <- g$edges
+    nd <- g$nodes[node_ids, , drop = FALSE]
+    ed <- g$edges[edge_ids, , drop = FALSE]
 
     if (!nrow(nd)) {
-      return(tags$div("No nodes to display."))
+      return(htmltools::tags$div("No nodes to display."))
     }
 
     xmin <- min(nd$node_xmin) - 2
@@ -273,7 +333,7 @@ sem_graph_editor_app <- function(graph) {
 
       if (is.na(colour)) colour <- "#64748b"
 
-      tags$g(
+      htmltools::tags$g(
         class = "sem-edge-group",
 
         htmltools::tags$path(
@@ -294,7 +354,7 @@ sem_graph_editor_app <- function(graph) {
           `stroke-width` = 12,
           `vector-effect` = "non-scaling-stroke",
           `pointer-events` = "stroke",
-          `data-edge` = i,
+          `data-edge` = edge_ids[i],
           class = "sem-edge-hit"
         )
       )
@@ -323,7 +383,7 @@ sem_graph_editor_app <- function(graph) {
       if (is.na(colour)) colour <- "#e8eff8"
 
       shape <- if (n$shape %in% c("oval", "ellipse")) {
-        tags$ellipse(
+        htmltools::tags$ellipse(
           cx = cx,
           cy = cy,
           rx = w / 2,
@@ -333,7 +393,7 @@ sem_graph_editor_app <- function(graph) {
           `stroke-width` = 1.3
         )
       } else {
-        tags$rect(
+        htmltools::tags$rect(
           x = cx - w / 2,
           y = cy - h / 2,
           width = w,
@@ -345,11 +405,11 @@ sem_graph_editor_app <- function(graph) {
         )
       }
 
-      tags$g(
+      htmltools::tags$g(
         class = "sem-node",
-        `data-node` = i,
+        `data-node` = node_ids[i],
         shape,
-        tags$text(
+        htmltools::tags$text(
           x = cx,
           y = cy,
           `text-anchor` = "middle",
@@ -361,7 +421,7 @@ sem_graph_editor_app <- function(graph) {
       )
     })
 
-    tags$svg(
+    htmltools::tags$svg(
       id = "sem-editor-svg",
       viewBox = sprintf(
         "%f %f %f %f",
@@ -372,8 +432,8 @@ sem_graph_editor_app <- function(graph) {
         "touch-action:none;",
         "user-select:none;"
       ),
-      tags$g(edge_elements),
-      tags$g(node_elements)
+      htmltools::tags$g(edge_elements),
+      htmltools::tags$g(node_elements)
     )
   }
 
@@ -381,10 +441,10 @@ sem_graph_editor_app <- function(graph) {
   # UI
   # -------------------------------------------------------
 
-  ui <- fluidPage(
+  ui <- shiny::fluidPage(
 
-    tags$head(
-      tags$style(HTML("
+    htmltools::tags$head(
+      htmltools::tags$style(htmltools::HTML("
         .sem-editor {
           height: 620px;
           border: 1px solid #d1d5db;
@@ -455,7 +515,7 @@ sem_graph_editor_app <- function(graph) {
         }
       ")),
 
-      tags$script(HTML("
+      htmltools::tags$script(htmltools::HTML("
         (function() {
 
           let drag = null;
@@ -612,37 +672,45 @@ sem_graph_editor_app <- function(graph) {
       "))
     ),
 
-    titlePanel("SEM graph editor"),
+    shiny::titlePanel("SEM graph editor"),
 
-    fluidRow(
+    shiny::fluidRow(
 
-      column(
+      shiny::column(
         7,
-        h4("Interactive editor"),
-        div(
+        htmltools::tags$h4("Interactive editor"),
+        shiny::uiOutput("panel_controls"),
+        htmltools::tags$div(
           class = "sem-editor",
-          uiOutput("editor")
+          shiny::uiOutput("editor")
         ),
-        p(
+        htmltools::tags$p(
           "Drag nodes to reposition them. ",
-          "Click nodes or edges to edit their properties."
+          "Click nodes or edges to edit their properties.",
+          "Changes are saved automatically.",
+          "Click Done (below) to finalize the plot."
         )
       ),
 
-      column(
+      shiny::column(
         5,
-        h4("Properties"),
-        div(
+        htmltools::tags$h4("Properties"),
+        htmltools::tags$div(
           class = "sem-properties",
-          uiOutput("properties"),
-          div(
+          shiny::uiOutput("properties"),
+          htmltools::tags$div(
             style = "display:flex; gap:6px; flex-wrap:wrap; margin-top:12px;",
-            actionButton("undo", "Undo"),
-            actionButton("redo", "Redo"),
-            actionButton("reset", "Reset changes"),
-            checkboxInput(
+            shiny::actionButton("undo", "Undo"),
+            shiny::actionButton("redo", "Redo"),
+            shiny::actionButton("reset", "Reset changes"),
+            shiny::checkboxInput(
               "snap_to_grid",
               "Snap nodes to grid",
+              value = TRUE
+            ),
+            if (has_multigroup) shiny::checkboxInput(
+              "apply_all_groups",
+              "Apply layout to all groups",
               value = TRUE
             )
           )
@@ -650,32 +718,32 @@ sem_graph_editor_app <- function(graph) {
       )
     ),
 
-    hr(),
+    htmltools::tags$hr(),
 
-    h4("ggplot preview"),
+    htmltools::tags$h4("ggplot preview"),
 
-    plotOutput(
+    shiny::plotOutput(
       "preview",
       height = "450px"
     ),
 
-    hr(),
+    htmltools::tags$hr(),
 
-    fluidRow(
-      column(
+    shiny::fluidRow(
+      shiny::column(
         6,
-        span("Changes are saved automatically")
+        htmltools::tags$span("")
       ),
-      column(
+      shiny::column(
         6,
-        div(
+        htmltools::tags$div(
           style = "text-align:right",
-          actionButton(
+          shiny::actionButton(
             "done",
             "Done",
             class = "btn-primary"
           ),
-          actionButton("cancel", "Cancel")
+          shiny::actionButton("cancel", "Cancel")
         )
       )
     )
@@ -687,38 +755,84 @@ sem_graph_editor_app <- function(graph) {
 
   server <- function(input, output, session) {
 
-    current <- reactiveVal(graph)
-    selection <- reactiveVal(NULL)
-    undo_stack <- reactiveVal(list())
-    redo_stack <- reactiveVal(list())
-    panel_revision <- reactiveVal(0L)
+    current <- shiny::reactiveVal(update_graph(graph))
+    selection <- shiny::reactiveVal(NULL)
+    undo_stack <- shiny::reactiveVal(list())
+    redo_stack <- shiny::reactiveVal(list())
+    panel_revision <- shiny::reactiveVal(0L)
+
+    active_panel <- shiny::reactive({
+      result <- list()
+      for (nm in panel_cols) {
+        val <- input[[paste0("sem_panel_", nm)]]
+        if (is.null(val) || !nzchar(val)) val <- panel_values[[nm]][1L]
+        result[[nm]] <- val
+      }
+      result
+    })
+
+    output$panel_controls <- shiny::renderUI({
+      if (!length(panel_cols)) return(NULL)
+      htmltools::tagList(lapply(panel_cols, function(nm) {
+        shiny::selectInput(
+          paste0("sem_panel_", nm),
+          paste0(toupper(substring(nm, 1, 1)), substring(nm, 2)),
+          choices = panel_values[[nm]],
+          selected = panel_values[[nm]][1L],
+          selectize = FALSE
+        )
+      }))
+    })
+
+    shiny::observeEvent(active_panel(), {
+      selection(NULL)
+      refresh_panel()
+    }, ignoreInit = TRUE)
+
+    panel_indices <- shiny::reactive({
+      g <- current()
+      panel <- active_panel()
+      ni <- panel_rows(g$nodes, panel)
+      ei <- panel_rows(g$edges, panel)
+      # Edges must have both endpoints in this panel's nodes.
+      if (length(ei)) {
+        e <- g$edges[ei, , drop = FALSE]
+        ei <- ei[e$from %in% g$nodes$name[ni] &
+                   e$to %in% g$nodes$name[ni]]
+      }
+      list(nodes = ni, edges = ei)
+    })
 
     # The property panel is rebuilt only on selection changes,
     # undo/redo, reset, and completed node drags. It is NOT rebuilt
     # after every text edit (which would steal keyboard focus).
     refresh_panel <- function() {
-      panel_revision(isolate(panel_revision()) + 1L)
+      panel_revision(shiny::isolate(panel_revision()) + 1L)
     }
 
-    commit_change <- function(g) {
-      old <- isolate(current())
+    commit_change <- function(g, moved_node = NULL) {
+      old <- shiny::isolate(current())
+      if (!is.null(moved_node) &&
+          isTRUE(shiny::isolate(input$apply_all_groups))) {
+        g <- synchronize_group_positions(g, moved_node)
+      }
+      g <- update_graph(g)
       if (identical(old, g)) return(invisible(FALSE))
-      undo_stack(append(isolate(undo_stack()), list(old)))
+      undo_stack(append(shiny::isolate(undo_stack()), list(old)))
       redo_stack(list())
       current(g)
       invisible(TRUE)
     }
 
-    update_node_geometry <- function(g, i) {
-      oval <- g$nodes$shape[i] %in% c("oval", "ellipse")
-      w <- if (oval) g$ellipses_width else g$rect_width
-      h <- if (oval) g$ellipses_height else g$rect_height
-      g$nodes$node_xmin[i] <- g$nodes$x[i] - w / 2
-      g$nodes$node_xmax[i] <- g$nodes$x[i] + w / 2
-      g$nodes$node_ymin[i] <- g$nodes$y[i] - h / 2
-      g$nodes$node_ymax[i] <- g$nodes$y[i] + h / 2
-      g
-    }
+    # Checking the option also applies the currently displayed layout once.
+    # Subsequent node moves synchronize automatically in commit_change().
+    shiny::observeEvent(input$apply_all_groups, {
+      if (!has_multigroup || !isTRUE(input$apply_all_groups)) return()
+      ids <- shiny::isolate(panel_indices())$nodes
+      g <- shiny::isolate(current())
+      for (i in ids) g <- synchronize_group_positions(g, i)
+      if (commit_change(g)) refresh_panel()
+    }, ignoreInit = TRUE)
 
     parse_property <- function(value, existing = NULL) {
       if (!is.null(existing)) {
@@ -784,10 +898,10 @@ sem_graph_editor_app <- function(graph) {
 
     # Edits are sent by the browser with their original element ID.
     # This avoids stale input values when renderUI changes selection.
-    observeEvent(input$property_name, {
+    shiny::observeEvent(input$property_name, {
 
       s <- selection()
-      req(s, input$property_name)
+      shiny::req(s, input$property_name)
 
       g <- current()
 
@@ -805,20 +919,20 @@ sem_graph_editor_app <- function(graph) {
         ""
       }
 
-      updateTextInput(
+      shiny::updateTextInput(
         session,
         "property_value",
         value = value
       )
     })
 
-    observeEvent(input$property_edit, {
+    shiny::observeEvent(input$property_edit, {
       edit <- input$property_edit
       kind <- as.character(edit$kind)
       i <- as.integer(edit$index)
       field <- as.character(edit$field)
       value <- as.character(edit$value)
-      g <- isolate(current())
+      g <- shiny::isolate(current())
       # The browser attaches the owning element's identity to each edit.
       # Do not reject edits just because selection changed before this
       # event reached the server (e.g., clicking a different node).
@@ -836,7 +950,7 @@ sem_graph_editor_app <- function(graph) {
             if (!value %in% c("rect", "oval")) return()
             if (!identical(g$nodes$shape[i], value)) {
               g$nodes$shape[i] <- value
-              g <- update_node_geometry(g, i)
+              # update_graph() recalculates bounds when committed.
             }
           } else if (field %in% c("x", "y")) {
             v <- suppressWarnings(as.numeric(value))
@@ -853,6 +967,12 @@ sem_graph_editor_app <- function(graph) {
             y <- if (field == "y") v else g$nodes$y[i]
 
             g$nodes <- move_node(g$nodes, i, x, y)
+          } else if (field %in% c("width", "height")) {
+            v <- suppressWarnings(as.numeric(value))
+            if (length(v) != 1L || !is.finite(v) || v <= 0) {
+              stop("Node dimensions must be finite positive numbers.")
+            }
+            g$nodes[[field]][i] <- v
           } else if (field == "aesthetic") {
             name <- as.character(edit$name)
             if (length(name) != 1L || is.na(name)) return()
@@ -865,8 +985,29 @@ sem_graph_editor_app <- function(graph) {
             if (!value %in% c("none", "first", "last", "both")) return()
             g$edges$arrow[i] <- value
           } else if (field == "curvature") {
-            if (!value %in% c("straight", "curved")) return()
-            g$edges$curvature[i] <- if (value == "straight") NA_real_ else 60
+
+            value <- trimws(value)
+
+            if (!nzchar(value) ||
+                toupper(value) == "NA") {
+
+              g$edges$curvature[i] <- NA_real_
+
+            } else {
+
+              angle <- suppressWarnings(as.numeric(value))
+
+              if (!is.finite(angle) ||
+                  abs(angle) >= 180 ||
+                  angle == 0) {
+                stop(
+                  "Curvature must be between -180 and 180 ",
+                  "(excluding 0). Leave blank for a straight edge."
+                )
+              }
+
+              g$edges$curvature[i] <- angle
+            }
           } else if (field %in% c("connect_from", "connect_to", "variance_side")) {
             if (!value %in% sides) return()
             if (field == "variance_side" ||
@@ -889,29 +1030,33 @@ sem_graph_editor_app <- function(graph) {
             g$edges$connect_to[i] <- g$edges$connect_from[i]
           }
         } else return()
-        changed <- commit_change(g)
+        changed <- commit_change(
+          g,
+          moved_node = if (kind == "node" && field %in% c("x", "y")) i else NULL
+        )
         if (isTRUE(changed) && kind == "edge" &&
             field %in% c("from", "to", "arrow")) refresh_panel()
       }, error = function(e) {
-        showNotification(conditionMessage(e), type = "error")
+        shiny::showNotification(conditionMessage(e), type = "error")
       })
     }, priority = 100)
 
-    output$editor <- renderUI({
-      make_svg(current())
+    output$editor <- shiny::renderUI({
+      ids <- panel_indices()
+      make_svg(current(), node_ids = ids$nodes, edge_ids = ids$edges)
     })
 
-    observeEvent(input$selected_node, {
+    shiny::observeEvent(input$selected_node, {
       new <- list(type = "node", index = as.integer(input$selected_node))
-      if (!identical(isolate(selection()), new)) selection(new)
+      if (!identical(shiny::isolate(selection()), new)) selection(new)
     })
-    observeEvent(input$selected_edge, {
+    shiny::observeEvent(input$selected_edge, {
       new <- list(type = "edge", index = as.integer(input$selected_edge))
-      if (!identical(isolate(selection()), new)) selection(new)
+      if (!identical(shiny::isolate(selection()), new)) selection(new)
     })
 
-    observeEvent(input$node_drag, {
-      g <- isolate(current())
+    shiny::observeEvent(input$node_drag, {
+      g <- shiny::isolate(current())
       i <- as.integer(input$node_drag$index)
       if (length(i) != 1L || is.na(i) || i < 1L || i > nrow(g$nodes)) return()
       dx <- as.numeric(input$node_drag$dx)
@@ -933,7 +1078,7 @@ sem_graph_editor_app <- function(graph) {
         new_x,
         new_y
       )
-      if (commit_change(g)) refresh_panel()
+      if (commit_change(g, moved_node = i)) refresh_panel()
     })
 
     # Inputs carry data attributes so the browser sends both the
@@ -942,64 +1087,77 @@ sem_graph_editor_app <- function(graph) {
       # A stable wrapper, independent of Shiny's control internals.
       # Shiny input tags contain the actual input id in a descendant.
       if (is.null(input_id)) input_id <- switch(field,
-        label = "node_label",
-        shape = "node_shape", x = "node_x", y = "node_y",
-        variance_side = "variance_side", connect_from = "edge_from",
-        connect_to = "edge_to", arrow = "edge_arrow",
-        curvature = "edge_curvature", aesthetic = "property_value"
+                                                label = "node_label",
+                                                shape = "node_shape", x = "node_x", y = "node_y",
+                                                width = "node_width", height = "node_height",
+                                                variance_side = "variance_side", connect_from = "edge_from",
+                                                connect_to = "edge_to", arrow = "edge_arrow",
+                                                curvature = "edge_curvature", aesthetic = "property_value"
       )
-      tags$div(`data-sem-field` = field,
-               `data-sem-input` = input_id, control)
+      htmltools::tags$div(`data-sem-field` = field,
+                          `data-sem-input` = input_id, control)
     }
 
-    output$properties <- renderUI({
+    output$properties <- shiny::renderUI({
       panel_revision()
       s <- selection()
-      g <- isolate(current())
-      if (is.null(s)) return(p("Select a node or edge to edit its properties."))
+      g <- shiny::isolate(current())
+      if (is.null(s)) return(htmltools::tags$p("Select a node or edge to edit its properties."))
       i <- s$index
       if (s$type == "node") {
         if (i < 1L || i > nrow(g$nodes)) return(NULL)
         n <- g$nodes[i, , drop = FALSE]
-        controls <- tagList(
-          h4(paste("Node:", n$name)),
-          tagged(textInput("node_label", "Label", value = n$label), "label", "node_label"),
-          tagged(selectInput("node_shape", "Shape", c("rect", "oval"),
-                             selected = n$shape, selectize = FALSE), "shape"),
-          tagged(numericInput("node_x", "X", value = n$x), "x"),
-          tagged(numericInput("node_y", "Y", value = n$y), "y")
+        controls <- htmltools::tagList(
+          htmltools::tags$h4(paste("Node:", n$name)),
+          tagged(shiny::textInput("node_label", "Label", value = n$label), "label", "node_label"),
+          tagged(shiny::selectInput("node_shape", "Shape", c("rect", "oval"),
+                                    selected = n$shape, selectize = FALSE), "shape"),
+          tagged(shiny::numericInput("node_x", "X", value = n$x), "x"),
+          tagged(shiny::numericInput("node_y", "Y", value = n$y), "y"),
+          tagged(shiny::numericInput("node_width", "Width", value = n$width, min = 0.01), "width"),
+          tagged(shiny::numericInput("node_height", "Height", value = n$height, min = 0.01), "height")
         )
       } else {
         if (i < 1L || i > nrow(g$edges)) return(NULL)
         e <- g$edges[i, , drop = FALSE]
         is_variance <- e$from == e$to && e$arrow == "both"
-        controls <- tagList(
-          h4(paste("Edge:", e$from, "→", e$to)),
-          tagged(textInput("edge_label", "Label", value = e$label), "label", "edge_label"),
+        controls <- htmltools::tagList(
+          htmltools::tags$h4(paste("Edge:", e$from, "->", e$to)),
+          tagged(shiny::textInput("edge_label", "Label", value = e$label), "label", "edge_label"),
           if (is_variance) {
-            tagged(selectInput("variance_side", "Variance position", sides,
-                               selected = e$connect_from, selectize = FALSE), "variance_side")
-          } else tagList(
-            tagged(selectInput("edge_from", "Connect from", sides,
-                               selected = e$connect_from, selectize = FALSE), "connect_from"),
-            tagged(selectInput("edge_to", "Connect to", sides,
-                               selected = e$connect_to, selectize = FALSE), "connect_to")
+            tagged(shiny::selectInput("variance_side", "Variance position", sides,
+                                      selected = e$connect_from, selectize = FALSE), "variance_side")
+          } else htmltools::tagList(
+            tagged(shiny::selectInput("edge_from", "Connect from", sides,
+                                      selected = e$connect_from, selectize = FALSE), "connect_from"),
+            tagged(shiny::selectInput("edge_to", "Connect to", sides,
+                                      selected = e$connect_to, selectize = FALSE), "connect_to")
           ),
-          tagged(selectInput("edge_arrow", "Arrow",
-                             c("none", "first", "last", "both"),
-                             selected = e$arrow, selectize = FALSE), "arrow"),
-          tagged(selectInput("edge_curvature", "Edge geometry",
-                             c("Straight" = "straight", "Curved" = "curved"),
-                             selected = if (is.na(e$curvature)) "straight" else "curved",
-                              selectize = FALSE),
-                 "curvature")
+          tagged(shiny::selectInput("edge_arrow", "Arrow",
+                                    c("none", "first", "last", "both"),
+                                    selected = e$arrow, selectize = FALSE), "arrow"),
+          if (!is_variance) {
+            tagged(
+              shiny::textInput(
+                "edge_curvature",
+                "Curvature (degrees)",
+                value = if (is.na(e$curvature)) {
+                  ""
+                } else {
+                  as.character(e$curvature)
+                },
+                placeholder = "Blank = straight"
+              ),
+              "curvature"
+            )
+          }
         )
       }
-      div(
+      htmltools::tags$div(
         `data-sem-kind` = s$type,
         `data-sem-index` = i,
         controls,
-        selectInput(
+        shiny::selectInput(
           "property_name",
           "Aesthetic / property",
           choices = c(
@@ -1012,41 +1170,41 @@ sem_graph_editor_app <- function(graph) {
           selected = "",
           selectize = FALSE
         ),
-        tagged(textInput("property_value", "Value",
-                         placeholder = "e.g. steelblue"), "aesthetic")
+        tagged(shiny::textInput("property_value", "Value",
+                                placeholder = "e.g. steelblue"), "aesthetic")
       )
     })
 
-    output$preview <- renderPlot({
+    output$preview <- shiny::renderPlot({
       plot(current())
     })
 
-    observeEvent(input$undo, {
-      history <- isolate(undo_stack())
+    shiny::observeEvent(input$undo, {
+      history <- shiny::isolate(undo_stack())
       if (!length(history)) return()
-      redo_stack(append(isolate(redo_stack()), list(isolate(current()))))
+      redo_stack(append(shiny::isolate(redo_stack()), list(shiny::isolate(current()))))
       undo_stack(history[-length(history)])
       current(history[[length(history)]])
       refresh_panel()
     })
-    observeEvent(input$redo, {
-      history <- isolate(redo_stack())
+    shiny::observeEvent(input$redo, {
+      history <- shiny::isolate(redo_stack())
       if (!length(history)) return()
-      undo_stack(append(isolate(undo_stack()), list(isolate(current()))))
+      undo_stack(append(shiny::isolate(undo_stack()), list(shiny::isolate(current()))))
       redo_stack(history[-length(history)])
       current(history[[length(history)]])
       refresh_panel()
     })
-    observeEvent(input$reset, {
-      if (commit_change(graph)) refresh_panel()
+    shiny::observeEvent(input$reset, {
+      if (commit_change(update_graph(graph))) refresh_panel()
     })
-    observeEvent(input$done, {
-      stopApp(refresh_sem_graph(isolate(current())))
+    shiny::observeEvent(input$done, {
+      shiny::stopApp(update_graph(shiny::isolate(current())))
     })
-    observeEvent(input$cancel, {
-      stopApp(NULL)
+    shiny::observeEvent(input$cancel, {
+      shiny::stopApp(NULL)
     })
   }
 
-  shinyApp(ui, server)
+  shiny::shinyApp(ui, server)
 }

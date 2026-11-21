@@ -10,11 +10,11 @@ textual ~~ speed
 
 fit <- sem(model, HolzingerSwineford1939)
 
-layout <- data.frame(
-  IV = c("x1", "grade", "", "ageyr", ""),
-  M = c("x2", "", "visual", "", ""),
-  DV = c("x3", "textual", "", "speed", "x9"),
-  DV.items = c(paste0("x", 4:8)))
+layout <- get_layout(
+  "x1", "grade", "", "ageyr", "",
+  "x2", "", "visual", "", "",
+  "x3", "textual", "", "speed", "x9",
+  paste0("x", 4:8), rows = 4)
 
 tmp = prepare_graph(fit, layout = layout)
 # wrn <- getOption("warn")

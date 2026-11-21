@@ -1,62 +1,3 @@
-if(FALSE){
-  tab_res <- table_results(fit, columns = NULL)
-  mm <- tab_res[tab_res$op == "=~", ]
-  sem <- tab_res[tab_res$op == "~" | (tab_res$op == "~~" & !(tab_res$lhs == tab_res$rhs)), ]
-
-  selected = list("")
-  if(!any(sem$op == "~")){
-    selected[[1]] <- unique(c(sem$lhs, sem$rhs))
-  } else {
-    # Drop correlations
-    reg_only <- sem[!sem$op == "~~", ]
-    remaining <- unique(c(reg_only$lhs, reg_only$rhs))
-    maxit <- 0
-    while(length(selected[[length(selected)]]) > 0 & maxit < 100){
-      reg_only <- reg_only[!reg_only$lhs %in% unlist(selected), ]
-      selected <- c(selected, list(
-        unique(reg_only$lhs[!(reg_only$lhs %in% reg_only$rhs)])
-      ))
-      maxit <- maxit + 1
-    }
-    if(maxit == 100){
-      stop("Maximum number of iterations exceeded in recursive layout algorithm.")
-    }
-    selected[[1]] <- NULL
-    selected[[length(selected)]] <- unique(remaining[!remaining %in% unlist(selected)])
-    selected <- selected[length(selected):1]
-  }
-
-  if(nrow(mm) > 0){ # If there is a measurement model
-    items_per_col <- lapply(selected, function(thisvar){unique(mm$rhs[mm$lhs == thisvar])})
-    lvs_per_col <- lapply(selected, function(thiscol){
-      unique(mm$lhs[mm$lhs %in% thiscol])
-    })
-    max_cells <- max(max(sapply(selected, length)), max(sapply(items_per_col, length)))
-    if(length(selected) == 1){
-      mm_col <- unlist(items_per_col)
-      lv_col <- space_these(selected[[1]], max_cells)
-      out <- rbind(mm_col, lv_col)
-    } else { # If there are multiple cols in the layout
-
-      for(this_col in 1:length(selected)){
-        if(this_col == 1){
-
-        }
-        if(this_col == length(selected)){
-
-        }
-      }
-      lapply(selected, function(this_col){
-
-      })
-    }
-
-  }
-  # Remove rownames
-  rownames(out) <- NULL
-  return(out)
-}
-
 space_these <- function(these, n){
   #these <- letters[1:3]
   #n = 9
@@ -128,92 +69,173 @@ get_layout.mplusObject <- get_layout.lavaan
 # @importFrom igraph layout_with_dh layout_with_fr layout_with_gem
 # @importFrom igraph layout_with_graphopt layout_with_kk layout_with_lgl
 # @importFrom igraph layout_with_mds
-get_layout.tidy_results <- function(x, ..., layout_algorithm = "sem"){
-  df <- x[, c("lhs", "rhs")]
-  nds <- unique(unlist(df, use.names = FALSE))
-  .get_layout_nodes_edges(x = x, df = df, nds = nds, layout_algorithm = layout_algorithm)
+get_layout.tidy_results <- function(x, ..., layout_algorithm = "sem") {
+  nds <- unique(c(as.character(x$lhs), as.character(x$rhs)))
+  nds <- nds[!is.na(nds) & nzchar(nds)]
+  .get_layout_nodes_edges(
+    x = x,
+    nds = nds,
+    layout_algorithm = layout_algorithm, ...
+  )
 }
 
 #' @method get_layout tidy_edges
 #' @export
 get_layout.tidy_edges <- get_layout.tidy_results
 
-.get_layout_nodes_edges <- function(x, df, nds, ..., layout_algorithm){
-  # Handle Fruchterman-Reingold grid layout
-  if (identical(layout_algorithm, "fr_grid")) {
-    df <- x[, c("lhs", "rhs")]
-    nds <- unique(unlist(df, use.names = FALSE))
-    return(fr_layout_integer_compact(
-      nodes = nds,
-      edges = as.matrix(df),
-      ...
-    ))
-  }
+.get_layout_nodes_edges <- function(x, nds, ...,
+                                    layout_algorithm = "sem") {
+  x <- as.data.frame(x)
+  panel_cols <- intersect(c("group", "level"), names(x))
 
-  # Handle SEM layout
-  if (identical(layout_algorithm, "sem")) {
-    df <- as.data.frame(x)
-    df <- df[!is.na(df$lhs) & !is.na(df$rhs), , drop = FALSE]
-    nds <- unique(c(
-      as.character(df$lhs),
-      as.character(df$rhs)
-    ))
-    return(sem_layout_integer(
-      nodes = nds,
-      edges = df,
-      ...
-    ))
-  }
+  if (!all(c("lhs", "rhs") %in% names(x)))
+    stop("`x` must contain `lhs` and `rhs`.")
 
-  # Handle igraph layouts
-  if (!requireNamespace("igraph", quietly = TRUE)) {
-    stop("Package `igraph` is required for layout algorithm `",
-         if (is.character(layout_algorithm)) {
-           layout_algorithm
-         } else {
-           "<function>"
-         },
-         "`.",
-         call. = FALSE
-    )
+  # Exclude mean/intercept pseudo-nodes and invalid endpoints.
+  x$lhs <- as.character(x$lhs)
+  x$rhs <- as.character(x$rhs)
+  valid <- !is.na(x$lhs) & !is.na(x$rhs) &
+    nzchar(x$lhs) & nzchar(x$rhs)
+  if ("op" %in% names(x)) {
+    intercept <- !is.na(x$op) & x$op == "~1" & x$rhs == "1"
+    valid <- valid & !intercept
   }
+  x <- x[valid, , drop = FALSE]
 
-  # Resolve the layout function from the igraph namespace,
-  # unless a function was supplied directly.
-  if (is.function(layout_algorithm)) {
-    layout_fun <- layout_algorithm
-  } else if (
-    is.character(layout_algorithm) &&
+  # Resolve igraph layout function once; igraph is never needed for
+  # the two built-in algorithms.
+  built_in <- is.character(layout_algorithm) &&
     length(layout_algorithm) == 1L &&
     !is.na(layout_algorithm) &&
-    exists(
-      layout_algorithm,
-      envir = asNamespace("igraph"),
-      mode = "function",
-      inherits = FALSE
-    )
-  ) {
-    layout_fun <- get(
-      layout_algorithm,
-      envir = asNamespace("igraph"),
-      mode = "function"
-    )
-  } else {
-    stop(
-      "Unknown layout algorithm: ",
-      paste(layout_algorithm, collapse = ", "),
-      call. = FALSE
-    )
+    layout_algorithm %in% c("sem", "fr_grid")
+
+  if (!built_in) {
+    if (!requireNamespace("igraph", quietly = TRUE)) {
+      stop("Package `igraph` is required for this layout algorithm.",
+           call. = FALSE)
+    }
+    if (is.function(layout_algorithm)) {
+      layout_fun <- layout_algorithm
+    } else if (is.character(layout_algorithm) &&
+               length(layout_algorithm) == 1L &&
+               !is.na(layout_algorithm) &&
+               exists(layout_algorithm, envir = asNamespace("igraph"),
+                      mode = "function", inherits = FALSE)) {
+      layout_fun <- get(layout_algorithm, envir = asNamespace("igraph"),
+                        inherits = FALSE)
+    } else {
+      stop("Unknown layout algorithm.", call. = FALSE)
+    }
   }
-  # Construct graph and compute layout.
-  g <- igraph::graph_from_data_frame(
-    x[, c("lhs", "rhs")],
-    directed = TRUE
+
+  # Execute an algorithm on exactly one panel. All results are
+  # normalized to x, y, name, independently of the algorithm.
+  layout_one <- function(part) {
+    node_names <- unique(c(part$lhs, part$rhs))
+    node_names <- node_names[!is.na(node_names) & nzchar(node_names)]
+    dots <- list(...)
+
+    if (!length(node_names)) {
+      return(data.frame(x = numeric(), y = numeric(),
+                        name = character(), stringsAsFactors = FALSE))
+    }
+
+    if (identical(layout_algorithm, "fr_grid")) {
+      Args <- c(list(nodes = node_names,
+                     edges = as.matrix(part[, c("lhs", "rhs"), drop = FALSE])), dots[which(names(dots) %in% names(formals(fr_layout_integer_compact)))])
+      lo <- do.call(fr_layout_integer_compact, Args)
+    } else if (identical(layout_algorithm, "sem")) {
+      if (!"op" %in% names(part))
+        stop("SEM layout requires an `op` column.")
+      # The single-panel algorithm must not receive panel columns.
+      sem_edges <- part[, c("lhs", "rhs", "op"), drop = FALSE]
+      Args <- c(list(nodes = node_names, edges = sem_edges),
+                dots[which(names(dots) %in% names(formals(sem_layout_integer)))])
+      lo <- do.call(sem_layout_integer, Args)
+    } else {
+      graph <- igraph::graph_from_data_frame(
+        part[, c("lhs", "rhs"), drop = FALSE],
+        directed = TRUE,
+        vertices = data.frame(name = node_names)
+      )
+      Args <- c(list(graph),
+                dots[which(names(dots) %in% names(formals(layout_fun)))])
+      lo <- do.call(layout_fun, Args)
+      # layout_with_sugiyama() returns a list with $layout.
+      if (is.list(lo) && !is.data.frame(lo) && !is.null(lo$layout))
+        lo <- lo$layout
+      if (!is.matrix(lo) || nrow(lo) != length(igraph::V(graph)))
+        stop("igraph layout must return a coordinate matrix with one row per vertex.")
+      if (ncol(lo) < 2L)
+        stop("igraph layout must have at least two coordinate columns.")
+      lo <- lo[, 1:2, drop = FALSE]
+      rownames(lo) <- igraph::V(graph)$name
+      lo <- long_layout(snap_layout_to_grid(lo))
+    }
+    if (is.data.frame(lo)) {
+      if (!all(c("x", "y", "name") %in% names(lo)))
+        stop("Layout data frame must contain `x`, `y`, and `name`.")
+      ans <- as.data.frame(lo[, c("x", "y", "name"), drop = FALSE])
+    } else {
+      lo <- as.matrix(lo)
+      if (ncol(lo) < 2L || nrow(lo) != length(node_names))
+        stop("Layout matrix has incorrect dimensions.")
+      names_from_rows <- rownames(lo)
+      if (is.null(names_from_rows)) names_from_rows <- node_names
+      ans <- data.frame(x = lo[, 1], y = lo[, 2],
+                        name = names_from_rows, stringsAsFactors = FALSE)
+    }
+    ans$name <- as.character(ans$name)
+    if (anyDuplicated(ans$name) ||
+        !setequal(ans$name, node_names))
+      stop("Layout must contain each panel node exactly once.")
+    ans <- ans[match(node_names, ans$name), , drop = FALSE]
+    ans$x <- as.numeric(ans$x)
+    ans$y <- as.numeric(ans$y)
+    if (any(!is.finite(ans$x)) || any(!is.finite(ans$y)))
+      stop("Layout contains non-finite coordinates.")
+    # Panel-local coordinates; ggplot faceting provides offsets.
+    ans$x <- ans$x - min(ans$x)
+    ans$y <- ans$y - min(ans$y)
+    rownames(ans) <- NULL
+    ans
+  }
+
+  if (!length(panel_cols)) {
+    result <- layout_one(x)
+  } else {
+    # An absent panel dimension means one dimension only.
+    # Actual NA identifiers are rejected, not treated as wildcards.
+    for (col in panel_cols) {
+      if (anyNA(x[[col]]))
+        stop("Missing values in panel column `", col, "` are ambiguous.")
+      x[[col]] <- as.character(x[[col]])
+    }
+    panels <- unique(x[, panel_cols, drop = FALSE])
+    pieces <- vector("list", nrow(panels))
+    for (i in seq_len(nrow(panels))) {
+      take <- rep(TRUE, nrow(x))
+      for (col in panel_cols)
+        take <- take & (x[[col]] == panels[[col]][i])
+      piece <- layout_one(x[take, , drop = FALSE])
+      for (col in panel_cols)
+        piece[[col]] <- rep(panels[[col]][i], nrow(piece))
+      pieces[[i]] <- piece
+    }
+    result <- if (length(pieces)) do.call(rbind, pieces) else {
+      out <- data.frame(x = numeric(), y = numeric(), name = character())
+      for (col in panel_cols) out[[col]] <- character()
+      out
+    }
+  }
+
+  rownames(result) <- NULL
+  attr(result, "grid_size") <- c(
+    width = if (nrow(result)) max(result$x) + 1 else 0,
+    height = if (nrow(result)) max(result$y) + 1 else 0
   )
-  lo <- do.call(layout_fun, c(list(g), list(...)))
-  rownames(lo) <- igraph::vertex.attributes(g)$name
-  lo <- snap_layout_to_grid(lo)
-  return(lo)
+  class(result) <- c("tidy_layout", "data.frame")
+  result
 }
 
 snap_layout_to_grid <- function(lo){
@@ -394,22 +416,7 @@ get_layout.default <- function(x, ..., rows = NULL) {
 }
 
 
-# @title Convert object to layout
-# @description Convert an object to a tidy_layout for a SEM graph.
-# @param x Object to convert to a tidy_layout. The default argument reads a
-# selected matrix from the clipboard.
-# To use this functionality, specify your layout in a spreadsheet program,
-# select the block of cells, and copy it to the clipboard.
-# @return Object of class 'tidy_layout'
-# @examples
-# \dontrun{
-# if(interactive()){
-#  #EXAMPLE1
-#  }
-# }
-# @rdname long_layout
-# @keywords tidy_graph
-# @export
+
 long_layout <- function(x){
   UseMethod("long_layout")
 }

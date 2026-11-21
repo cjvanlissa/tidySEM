@@ -351,192 +351,423 @@ prepare_graph.default <- function(edges = NULL,
                                   curvature = 60,
                                   angle = NULL,
                                   fix_coord = FALSE,
-                                  ...
-){
-  Args <- mget(names(formals(prepare_graph.default)),
-               envir = environment(),
-               inherits = FALSE)
-  # Check if nodes exist in edges and layout --------------------------------
-  if(!inherits(layout, "tidy_layout")){
-    if(inherits(layout, c("matrix", "data.frame"))){
-      layout <- long_layout(layout)
-      if(any(duplicated(layout$name))){
-        stop("Some nodes are duplicated in the layout. The offending node names are: ", paste0(unique(layout$name[duplicated(layout$name)]), collapse = ", "))
-      }
-    } else {
-      stop("Argument 'layout' must be a matrix or data.frame.")
-    }
+                                  ...,
+                                  optimize_curvature = TRUE) {
+  # Preserve historical public object fields, including the `...` symbol.
+  settings <- list(rect_width = rect_width, rect_height = rect_height,
+                   ellipses_width = ellipses_width,
+                   ellipses_height = ellipses_height,
+                   variance_diameter = variance_diameter,
+                   spacing_x = spacing_x, spacing_y = spacing_y,
+                   text_size = text_size, curvature = curvature,
+                   angle = angle, fix_coord = fix_coord)
+  extra <- list(...)
+  as_df <- function(x) {
+    if (is.null(x)) return(NULL)
+    out <- as.data.frame(x, stringsAsFactors = FALSE)
+    factors <- vapply(out, is.factor, logical(1))
+    out[factors] <- lapply(out[factors], as.character)
+    out
+  }
+  if (is.null(layout) || !(inherits(layout, "tidy_layout") ||
+                           is.matrix(layout) || is.data.frame(layout))) {
+    stop("Argument 'layout' must be a matrix or data.frame.")
+  }
+  if(inherits(layout, what = "data.frame")){
+    if (!all(c("name", "x", "y") %in% names(layout)))
+      stop("`layout` needs name, x, and y columns.")
+  }
+  if (inherits(layout, "matrix")){
+    layout <- long_layout(layout)
+  }
+  layout <- as_df(layout)
+  layout$name <- as.character(layout$name)
+  if (anyNA(layout$name) || any(!nzchar(layout$name)))
+    stop("Layout node names must be nonmissing and nonempty.")
+  if (!is.numeric(layout$x) || !is.numeric(layout$y) ||
+      any(!is.finite(layout$x)) || any(!is.finite(layout$y)))
+    stop("Layout coordinates must be finite numeric values.")
+
+  ed <- as_df(edges)
+  if (is.null(ed)) ed <- data.frame(from = character(), to = character())
+  if (!all(c("from", "to") %in% names(ed)))
+    stop("`edges` needs `from` and `to` columns.")
+  ed$from <- as.character(ed$from)
+  ed$to <- as.character(ed$to)
+  nd <- as_df(nodes)
+  if (is.null(nd)) {
+    nd <- data.frame(name = layout$name, stringsAsFactors = FALSE)
+    for (key in intersect(c("group", "level"), names(layout)))
+      nd[[key]] <- layout[[key]]
+  }
+  if (!"name" %in% names(nd)) stop("`nodes` needs a name column.")
+  nd$name <- as.character(nd$name)
+  if (anyNA(nd$name) || any(!nzchar(nd$name)))
+    stop("Node names must be nonmissing and nonempty.")
+
+  dimensions <- c("group", "level")
+  panel_cols <- dimensions[vapply(dimensions, function(z)
+    z %in% names(nd) || z %in% names(ed) || z %in% names(layout),
+    logical(1))]
+  if (!length(panel_cols)) {
+    if (anyDuplicated(layout$name)) stop("Duplicate layout node names.")
+    return(do.call(.prepare_graph_single,
+                   c(list(edges = ed, layout = layout, nodes = nd,
+                          optimize_curvature = optimize_curvature),
+                     settings, extra)))
   }
 
-  Args$layout <- layout
+  # Missing dimension COLUMN means the rows are shared across that dimension.
+  # An NA VALUE in a present dimension is invalid (not a wildcard).
+  for (key in panel_cols) {
+    for (tab in list(nd, ed, layout)) {
+      if (key %in% names(tab) && anyNA(tab[[key]]))
+        stop("Missing values in panel column `", key, "` are not supported.")
+    }
+  }
+  values <- lapply(panel_cols, function(key) {
+    all_values <- unlist(lapply(list(nd, ed, layout), function(tab)
+      if (key %in% names(tab)) as.character(tab[[key]]) else character()),
+      use.names = FALSE)
+    unique(all_values)
+  })
+  names(values) <- panel_cols
+  if (any(lengths(values) == 0L))
+    stop("A panel dimension has no values.")
 
-  if(!is.null(edges)){
-    df_edges <- edges
+  # Only observed panel combinations: do not manufacture missing
+  # group-level combinations from an incomplete design.
+  panel_sources <- lapply(list(nd, ed, layout), function(tab) {
+    if (!nrow(tab)) return(NULL)
+    known <- intersect(panel_cols, names(tab))
+    if (!length(known)) return(NULL)
+    unique(tab[, known, drop = FALSE])
+  })
+  complete_sources <- Filter(function(z) !is.null(z) &&
+                               all(panel_cols %in% names(z)), panel_sources)
+  if (length(complete_sources)) {
+    panels <- unique(do.call(rbind, complete_sources))
   } else {
-    df_edges <- data.frame(from = character(),
-                           to = character())
+    panels <- expand.grid(values, KEEP.OUT.ATTRS = FALSE,
+                          stringsAsFactors = FALSE)
   }
+  # Complete sources may omit panels represented by partial sources.
+  # Expand partial source combinations only when no complete source exists.
+  panels <- panels[, panel_cols, drop = FALSE]
+  if (!nrow(panels)) stop("No nonempty panels found.")
 
-  fac_vars <- sapply(df_edges, inherits, what = "factor")
-  if(any(fac_vars)){
-    df_edges[which(fac_vars)] <- lapply(df_edges[which(fac_vars)], as.character)
+  subset_panel <- function(tab, panel) {
+    if (is.null(tab)) return(NULL)
+    keep <- rep(TRUE, nrow(tab))
+    for (key in intersect(panel_cols, names(tab)))
+      keep <- keep & as.character(tab[[key]]) == as.character(panel[[key]])
+    tab[keep, , drop = FALSE]
   }
-  fac_vars <- sapply(layout, inherits, what = "factor")
-  if(any(fac_vars)){
-    layout[which(fac_vars)] <- lapply(layout[which(fac_vars)], as.character)
+  identity_key <- function(tab) {
+    keys <- c(intersect(panel_cols, names(tab)), "name")
+    do.call(paste, c(tab[keys], sep = "\\r"))
   }
-  if(!("from" %in% names(df_edges) & "to" %in% names(df_edges))){
-    stop("Argument 'edges' must have columns 'from' and 'to'.")
-  }
+  # Duplicate identities are allowed across panels, never within a panel.
+  prepared <- list()
+  for (j in seq_len(nrow(panels))) {
+    panel <- panels[j, , drop = FALSE]
+    this_nd <- subset_panel(nd, panel)
+    this_ed <- subset_panel(ed, panel)
+    this_layout <- subset_panel(layout, panel)
+    if (!nrow(this_nd) && !nrow(this_ed)) next
 
-  if(!all((df_edges$from %in% layout$name) & (df_edges$to %in% layout$name))){
-    message("Some edges involve nodes not in layout. These were dropped.")
-    df_edges <- df_edges[(df_edges$from %in% layout$name) & (df_edges$to %in% layout$name), ]
-  }
+    # Layouts without group/level are reused for each matching panel.
+    # Prefer panel-specific coordinates where available.
+    if (!nrow(this_layout))
+      stop("No layout rows available for panel ", j, ".")
+    if (anyDuplicated(this_layout$name))
+      stop("Duplicate layout names within panel ", j, ".")
+    if (anyDuplicated(this_nd$name))
+      stop("Duplicate node names within panel ", j, ".")
+    if (!all(this_nd$name %in% this_layout$name))
+      stop("Nodes missing from layout in panel ", j, ".")
 
-  # Infer nodes if argument is null -----------------------------------------
-
-  if(is.null(nodes)){
-    nodes <- data.frame(name = unique(c("", NA, unlist(layout), df_edges$from, df_edges$to))[-c(1:2)])
-    nodes$shape <- "rect"
-    nodes$label <- nodes$name
-  }
-  fac_vars <- sapply(nodes, inherits, what = "factor")
-  if(any(fac_vars)){
-    nodes[which(fac_vars)] <- lapply(nodes[which(fac_vars)], as.character)
-  }
-
-  # Check edges df ----------------------------------------------------------
-
-  if(nrow(df_edges)){
-    if(!"arrow" %in% names(df_edges)){
-      df_edges$arrow <- "last"
+    # The single-panel worker sees no panel columns, so names are unique.
+    strip <- function(tab) tab[, setdiff(names(tab), panel_cols), drop = FALSE]
+    part <- do.call(.prepare_graph_single,
+                    c(list(edges = strip(this_ed), layout = strip(this_layout),
+                           nodes = strip(this_nd),
+                           optimize_curvature = optimize_curvature),
+                      settings, extra))
+    for (key in panel_cols) {
+      part$nodes[[key]] <- rep(as.character(panel[[key]]), nrow(part$nodes))
+      part$edges[[key]] <- rep(as.character(panel[[key]]), nrow(part$edges))
     }
-    if(!"label" %in% names(df_edges)){
-      df_edges$label <- ""
-    }
-    if(!"connect_from" %in% names(df_edges)){
-      df_edges$connect_from <- "left"
-    }
-    if(!"connect_to" %in% names(df_edges)){
-      df_edges$connect_to <- "right"
-    }
-    if(!"curvature" %in% names(df_edges)){
-      df_edges$curvature <- NA
-    }
+    prepared[[length(prepared) + 1L]] <- part
   }
-
-  # Defaults for missing columns --------------------------------------------
-
-  if(!("name" %in% names(nodes) & "name" %in% names(layout))){
-    stop("Arguments 'nodes' and 'layout' must both have a 'name' column.")
-  }
-  df_nodes <- nodes
-  if(!all(c("x", "y") %in% names(df_nodes))){
-    df_nodes <- merge(df_nodes, layout[, c("name", setdiff(names(layout), names(df_nodes))), drop = FALSE], by = "name")
-  }
-
-  if(!"label" %in% names(df_nodes)){
-    df_nodes$label <- df_nodes$name
-  }
-  if(!"shape" %in% names(df_nodes)){
-    df_nodes$shape <- "rect"
-  }
-  if("group" %in% names(df_edges) & !"group" %in% names(df_nodes)){
-    df_nodes <- do.call(rbind, lapply(unique(df_edges$group), function(this_group){
-      df_nodes$group <- this_group
-      df_nodes
-    }))
-  }
-  if("group" %in% names(df_nodes) & !"group" %in% names(df_edges)){
-    df_edges <- do.call(rbind, lapply(unique(df_nodes$group), function(this_group){
-      df_edges$group <- this_group
-      df_edges
-    }))
-  }
-
-  # Order nodes and edges ---------------------------------------------------
-  if("group" %in% names(df_edges)){
-    if("level" %in% names(df_edges)){
-      df_edges <- df_edges[with(df_edges, order(group, level)), ]
-    } else {
-      df_edges <- df_edges[with(df_edges, order(group)), ]
-    }
-  }
-
-  # Assign default values
-  df_nodes <- .fill_sem_aesthetic_defaults(
-    df_nodes,
-    kind = "node"
-  )
-
-  df_edges <- .fill_sem_aesthetic_defaults(
-    df_edges,
-    kind = "edge"
-  )
-
-  # Compute x, y coordinates ------------------------------------------------
-
-  df_nodes$x <- df_nodes$x * spacing_x
-  df_nodes$y <- df_nodes$y * spacing_y
-
-  df_nodes$node_xmin <- NA
-  df_nodes$node_xmax <- NA
-  df_nodes$node_ymin <- NA
-  df_nodes$node_ymax <- NA
-  thesenodes <- df_nodes$shape %in% c("rect", "none")
-  if(any(thesenodes)){
-    df_nodes[thesenodes, c("node_xmin", "node_xmax")] <- cbind(df_nodes[thesenodes, ]$x-.5*rect_width,
-                                                                             df_nodes[thesenodes, ]$x+.5*rect_width)
-    df_nodes[thesenodes, c("node_ymin", "node_ymax")] <- cbind(df_nodes[thesenodes, ]$y-.5*rect_height,
-                                                                             df_nodes[thesenodes, ]$y+.5*rect_height)
-  }
-
-  if(any(df_nodes$shape == "oval")){
-    df_nodes[df_nodes$shape == "oval", c("node_xmin", "node_xmax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$x-.5*ellipses_width,
-                                                                             df_nodes[df_nodes$shape == "oval", ]$x+.5*ellipses_width)
-    df_nodes[df_nodes$shape == "oval", c("node_ymin", "node_ymax")] <- cbind(df_nodes[df_nodes$shape == "oval", ]$y-.5*ellipses_height,
-                                                                             df_nodes[df_nodes$shape == "oval", ]$y+.5*ellipses_height)
-  }
-
-  # Determine where best to connect nodes -----------------------------------
-  connect_cols <- .determine_connections(df_nodes, df_edges, angle)
-  # assign by groups to prevent arrows from ending up in the wrong place
-  # Sort by group first, then by level
-  df_edges$connect_from <- connect_cols[, 1]
-  df_edges$connect_to <- connect_cols[, 2]
-  df_edges$curvature <- as.numeric(connect_cols[, 3])
-  has_curve <- which(!is.na(df_edges$curvature)) # Check if this is correct, or should be is.null / is.na
-
-  # Reposition error variances to "empty" part of the node
-  df_edges <- reposition_variances(df_edges = df_edges, df_nodes = df_nodes)
-
-  out <- Args
-
-  if(is.null(df_nodes[["label"]])) df_nodes$label <- df_nodes$name
-  order_nodes <- c("name", "shape", "label", "group", "level","x", "y", "node_xmin", "node_xmax", "node_ymin", "node_ymax")
-  order_nodes <- order_nodes[which(order_nodes %in% names(df_nodes))]
-  order_nodes <- c(order_nodes, names(df_nodes)[!names(df_nodes) %in% order_nodes])
-  # Order and add 'show' column
-  if(nrow(df_nodes) > 0){
-    if(!"show" %in% names(df_nodes)){
-      df_nodes <- cbind(df_nodes[, order_nodes], show = TRUE)
-    }
-  }
-  out$nodes <- df_nodes
-  order_edges <- c("from", "to", "label", "group", "level","arrow", "curvature", "connect_from", "connect_to")
-  order_edges <- order_edges[which(order_edges %in% names(df_edges))]
-  order_edges <- c(order_edges, names(df_edges)[!names(df_edges) %in% order_edges])
-  # Order and add 'show' column
-  if(nrow(df_edges) > 0){
-    if(!"show" %in% names(df_edges)){
-      df_edges <- cbind(df_edges[, order_edges], show = TRUE)
-    }
-  }
-  out$edges <- df_edges
+  if (!length(prepared)) stop("No nodes or edges to prepare.")
+  # Each panel uses local coordinates; ggplot facets handle placement.
+  out <- prepared[[1L]]
+  out$nodes <- do.call(rbind, lapply(prepared, `[[`, "nodes"))
+  out$edges <- do.call(rbind, lapply(prepared, `[[`, "edges"))
+  rownames(out$nodes) <- NULL
+  rownames(out$edges) <- NULL
+  if (anyDuplicated(identity_key(out$nodes)))
+    stop("Duplicate node identity after panel preparation.")
   out$layout <- NULL
   class(out) <- "sem_graph"
   out
+}
+
+
+.prepare_graph_single <- function(edges = NULL,
+                                  layout = NULL,
+                                  nodes = NULL,
+                                  rect_width = 1.2,
+                                  rect_height = .8,
+                                  ellipses_width = 1,
+                                  ellipses_height = 1,
+                                  variance_diameter = .8,
+                                  spacing_x = 2,
+                                  spacing_y = 2,
+                                  text_size = 4,
+                                  curvature = 60,
+                                  angle = NULL,
+                                  fix_coord = FALSE,
+                                  optimize_curvature = TRUE,
+                                  ...) {
+  # Preserve the public object structure and original formal arguments.
+  Args <- list(
+    edges = edges, layout = layout, nodes = nodes,
+    rect_width = rect_width, rect_height = rect_height,
+    ellipses_width = ellipses_width, ellipses_height = ellipses_height,
+    variance_diameter = variance_diameter,
+    spacing_x = spacing_x, spacing_y = spacing_y,
+    text_size = text_size, curvature = curvature,
+    angle = angle, fix_coord = fix_coord
+  )
+  Args[["..."]] <- as.name("...")
+  Args$optimize_curvature <- NULL
+
+  scalar_positive <- function(value, name) {
+    if (!is.numeric(value) || length(value) != 1L ||
+        !is.finite(value) || value <= 0) {
+      stop("`", name, "` must be a finite positive number.", call. = FALSE)
+    }
+  }
+  for (nm in c("rect_width", "rect_height", "ellipses_width",
+               "ellipses_height", "spacing_x", "spacing_y")) {
+    scalar_positive(get(nm, inherits = FALSE), nm)
+  }
+
+  convert_factors <- function(df) {
+    is_factor <- vapply(df, is.factor, logical(1))
+    df[is_factor] <- lapply(df[is_factor], as.character)
+    df
+  }
+  fill_missing <- function(df, column, value) {
+    if (!column %in% names(df)) df[[column]] <- rep(value, nrow(df))
+    df
+  }
+  validate_names <- function(df, what) {
+    if (!"name" %in% names(df)) stop("`", what, "` needs a `name` column.")
+    df$name <- as.character(df$name)
+    if (anyNA(df$name) || any(!nzchar(df$name)))
+      stop("`", what, "` contains missing or empty names.")
+    if (anyDuplicated(df$name))
+      stop("Duplicate names in `", what, "`: ",
+           paste(unique(df$name[duplicated(df$name)]), collapse = ", "))
+    df
+  }
+
+  # Convert matrix/wide layout once, and validate tidy_layout as well.
+  if (is.matrix(layout)) {
+    layout <- long_layout(layout)
+  } else if (is.data.frame(layout)) {
+    if (!all(c("x", "y", "name") %in% names(layout))) stop("Layout must contain columns 'x', 'y', and 'name'.", call. = FALSE)
+  } else {
+    stop("Argument 'layout' must be a matrix or data.frame.", call. = FALSE)
+  }
+  layout <- convert_factors(as.data.frame(layout))
+  layout <- validate_names(layout, "layout")
+  class(layout) <- unique(c("tidy_layout", class(layout)))
+  if (!all(c("x", "y") %in% names(layout)))
+    stop("`layout` must contain `x` and `y`.")
+  for (nm in c("x", "y")) {
+    if (!is.numeric(layout[[nm]]) || any(!is.finite(layout[[nm]])))
+      stop("`layout$", nm, "` must contain finite numeric coordinates.")
+  }
+
+  df_edges <- if (is.null(edges)) {
+    data.frame(from = character(), to = character(), stringsAsFactors = FALSE)
+  } else convert_factors(as.data.frame(edges))
+  if (!all(c("from", "to") %in% names(df_edges)))
+    stop("Argument 'edges' must have columns 'from' and 'to'.")
+  df_edges$from <- as.character(df_edges$from)
+  df_edges$to <- as.character(df_edges$to)
+  valid_edge <- !is.na(df_edges$from) & !is.na(df_edges$to) &
+    df_edges$from %in% layout$name & df_edges$to %in% layout$name
+  if (any(!valid_edge)) {
+    message("Some edges involve nodes not in layout. These were dropped.")
+    df_edges <- df_edges[valid_edge, , drop = FALSE]
+  }
+
+  # Infer from *names*, never from unlist(layout), which includes coordinates.
+  if (is.null(nodes)) {
+    df_nodes <- data.frame(name = layout$name, shape = "rect",
+                           label = layout$name, stringsAsFactors = FALSE)
+  } else {
+    df_nodes <- convert_factors(as.data.frame(nodes))
+    df_nodes <- validate_names(df_nodes, "nodes")
+  }
+  if (!"name" %in% names(df_nodes)) stop("`nodes` needs a `name` column.")
+  # Keep user-specified node order; fill missing x/y individually.
+  # Retain only nodes present in the layout
+  idx <- match(df_nodes$name, layout$name)
+
+  keep <- !is.na(idx)
+
+  df_nodes <- df_nodes[keep, , drop = FALSE]
+  idx <- idx[keep]
+
+  # Fill missing coordinates from layout
+  for (nm in c("x", "y")) {
+    if (!nm %in% names(df_nodes)) {
+      df_nodes[[nm]] <- layout[[nm]][idx]
+    } else {
+      missing <- is.na(df_nodes[[nm]])
+      df_nodes[[nm]][missing] <- layout[[nm]][idx[missing]]
+    }
+  }
+
+  # Drop edges involving excluded nodes
+  df_edges <- df_edges[
+    df_edges$from %in% df_nodes$name &
+      df_edges$to %in% df_nodes$name,
+    ,
+    drop = FALSE
+  ]
+  for (nm in c("x", "y")) {
+    if (!nm %in% names(df_nodes)) {
+      df_nodes[[nm]] <- layout[[nm]][idx]
+    } else {
+      if (!is.numeric(df_nodes[[nm]]))
+        stop("`nodes$", nm, "` must be numeric.")
+      missing <- is.na(df_nodes[[nm]])
+      df_nodes[[nm]][missing] <- layout[[nm]][idx[missing]]
+    }
+    if (any(!is.finite(df_nodes[[nm]])))
+      stop("Non-finite node coordinates in `", nm, "`.")
+  }
+  df_nodes <- fill_missing(df_nodes, "label", "")
+  missing_label <- is.na(df_nodes$label) | !nzchar(as.character(df_nodes$label))
+  df_nodes$label[missing_label] <- df_nodes$name[missing_label]
+  df_nodes <- fill_missing(df_nodes, "shape", "rect")
+  df_nodes$shape[is.na(df_nodes$shape)] <- "rect"
+  if (!all(df_nodes$shape %in% c("rect", "none", "oval", "ellipse")))
+    stop("Unsupported node shape: ",
+         paste(unique(df_nodes$shape[!df_nodes$shape %in%
+                                       c("rect", "none", "oval", "ellipse")]),
+               collapse = ", "))
+
+  # Apply defaults only for aesthetic columns that exist, as in prior code.
+  if (exists(".fill_sem_aesthetic_defaults", mode = "function")) {
+    df_nodes <- .fill_sem_aesthetic_defaults(df_nodes, kind = "node")
+    df_edges <- .fill_sem_aesthetic_defaults(df_edges, kind = "edge")
+  }
+
+  # One-time layout scaling: node widths/heights are already plot units.
+  df_nodes$x <- df_nodes$x * spacing_x
+  df_nodes$y <- df_nodes$y * spacing_y
+
+  # Per-node width/height override global shape-specific dimensions.
+  oval <- df_nodes$shape %in% c("oval", "ellipse")
+  default_width <- ifelse(oval, ellipses_width, rect_width)
+  default_height <- ifelse(oval, ellipses_height, rect_height)
+  if (!"width" %in% names(df_nodes)) df_nodes$width <- default_width
+  if (!"height" %in% names(df_nodes)) df_nodes$height <- default_height
+  for (nm in c("width", "height")) {
+    if (!is.numeric(df_nodes[[nm]]))
+      stop("`nodes$", nm, "` must be numeric.")
+    missing <- is.na(df_nodes[[nm]])
+    df_nodes[[nm]][missing] <- if (nm == "width")
+      default_width[missing] else default_height[missing]
+    if (any(!is.finite(df_nodes[[nm]]) | df_nodes[[nm]] <= 0))
+      stop("All node `", nm, "` values must be finite and positive.")
+  }
+  df_nodes$node_xmin <- df_nodes$x - df_nodes$width / 2
+  df_nodes$node_xmax <- df_nodes$x + df_nodes$width / 2
+  df_nodes$node_ymin <- df_nodes$y - df_nodes$height / 2
+  df_nodes$node_ymax <- df_nodes$y + df_nodes$height / 2
+
+  # Track explicitly supplied sides before filling missing values.
+  supplied_from <- if ("connect_from" %in% names(df_edges))
+    !is.na(df_edges$connect_from) else rep(FALSE, nrow(df_edges))
+  supplied_to <- if ("connect_to" %in% names(df_edges))
+    !is.na(df_edges$connect_to) else rep(FALSE, nrow(df_edges))
+
+  # Only compute absent connection sides. Do not overwrite user choices.
+  df_edges <- fill_missing(df_edges, "arrow", "last")
+  df_edges <- fill_missing(df_edges, "label", "")
+  df_edges <- fill_missing(df_edges, "curvature", NA_real_)
+  df_edges <- fill_missing(df_edges, "connect_from", NA_character_)
+  df_edges <- fill_missing(df_edges, "connect_to", NA_character_)
+  if (nrow(df_edges)) {
+    if (!all(df_edges$arrow %in% c("first", "last", "both", "none")))
+      stop("Invalid edge arrow value.")
+    missing_connection <- is.na(df_edges$connect_from) |
+      is.na(df_edges$connect_to)
+    if (any(missing_connection)) {
+      connect_cols <- .determine_connections(df_nodes, df_edges, angle)
+      if (nrow(connect_cols) != nrow(df_edges) || ncol(connect_cols) < 2L)
+        stop("`.determine_connections()` returned an incompatible result.")
+      df_edges$connect_from[is.na(df_edges$connect_from)] <-
+        connect_cols[is.na(df_edges$connect_from), 1L]
+      df_edges$connect_to[is.na(df_edges$connect_to)] <-
+        connect_cols[is.na(df_edges$connect_to), 2L]
+    }
+    # Variances use the same side at both endpoints.
+    self_variance <- df_edges$from == df_edges$to & df_edges$arrow == "both"
+    df_edges$connect_to[self_variance] <- df_edges$connect_from[self_variance]
+
+    # Optimize all curved, non-self edges at initial preparation.
+    # Set optimize_curvature = FALSE to preserve explicit angles.
+    if (isTRUE(optimize_curvature)) {
+      curved <- which(!is.na(df_edges$curvature) &
+                        df_edges$from != df_edges$to)
+      for (i in curved) {
+        df_edges$curvature[i] <- .optimize_edge_curvature(
+          edge = df_edges[i, , drop = FALSE],
+          df_nodes = df_nodes,
+          df_edges = df_edges[-i, , drop = FALSE]
+        )
+      }
+    }
+    # Automatic variance positioning only for loops without supplied sides.
+    # Keep user-supplied variance sides unchanged.
+    if (any(self_variance & !supplied_from & !supplied_to) &&
+        exists("reposition_variances", mode = "function")) {
+      original_from <- df_edges$connect_from
+      original_to <- df_edges$connect_to
+      placed <- reposition_variances(df_edges = df_edges, df_nodes = df_nodes)
+      auto_variance <- self_variance & !supplied_from & !supplied_to
+      df_edges$connect_from[auto_variance] <- placed$connect_from[auto_variance]
+      df_edges$connect_to[auto_variance] <- placed$connect_to[auto_variance]
+    }
+
+  }
+
+  df_nodes <- fill_missing(df_nodes, "show", TRUE)
+  df_edges <- fill_missing(df_edges, "show", TRUE)
+  order_nodes <- c("name", "shape", "label", "group", "level", "x", "y",
+                   "node_xmin", "node_xmax", "node_ymin", "node_ymax")
+  order_edges <- c("from", "to", "label", "group", "level", "arrow",
+                   "curvature", "connect_from", "connect_to")
+  df_nodes <- df_nodes[, c(intersect(order_nodes, names(df_nodes)),
+                           setdiff(names(df_nodes), order_nodes)), drop = FALSE]
+  df_edges <- df_edges[, c(intersect(order_edges, names(df_edges)),
+                           setdiff(names(df_edges), order_edges)), drop = FALSE]
+
+  Args$nodes <- df_nodes
+  Args$edges <- df_edges
+  Args$layout <- NULL
+  class(Args) <- "sem_graph"
+  Args
 }
 
 #' @method prepare_graph lavaan
@@ -549,66 +780,89 @@ prepare_graph.default <- function(edges = NULL,
 # asterisks.
 #' @rdname prepare_graph
 #' @export
-prepare_graph.lavaan <- function(model,
-                                 edges = NULL,
-                                 layout = NULL,
-                                 nodes = NULL,
-                                 ...){
+prepare_graph.lavaan <- function(
+    model,
+    edges = NULL,
+    layout = NULL,
+    nodes = NULL,
+    ...
+) {
 
+  # Capture unevaluated arguments.
   dots <- match.call(expand.dots = FALSE)[["..."]]
+
+  if (is.null(dots)) {
+    dots <- pairlist()
+  }
+
+  dots <- as.list(dots)
 
   pass_args <- c("label", "digits", "columns")
 
-  if(is.null(edges)){
-    edges <- do.call(call, args = c(list(
-      name = "get_edges",
-      x = model
-    ), dots[names(dots) %in% pass_args]), quote = TRUE)
-  }
-  if(is.null(nodes)){
-    nodes <- do.call(call, args = c(list(
-      name = "get_nodes",
-      x = model
-    ), dots[names(dots) %in% pass_args]), quote = TRUE)
-  }
-  if(is.null(layout)){
-    layout <- do.call(call, args = c(list(
-      name = "get_layout",
-      x = model
-    ), dots[names(dots) %in% pass_args]), quote = TRUE)
+  # Environment containing the evaluated model,
+  # with access to the original caller's variables.
+  eval_env <- new.env(parent = parent.frame())
+  eval_env$model <- model
+
+  # Construct getter calls without evaluating label.
+  call_getter <- function(fun, args) {
+
+    cl <- as.call(c(
+      list(as.name(fun), x = quote(model)),
+      args
+    ))
+
+    eval(cl, envir = eval_env)
   }
 
-  # if(any(pass_args %in% names(dots))){
-  #   for(this_arg in pass_args[pass_args %in% names(dots)]){
-  #     if(do.call(hasArg, list(this_arg))){
-  #       if(is.null(edges[[this_arg]])) edges[this_arg] <- dots[this_arg]
-  #       if(is.null(nodes[[this_arg]])) nodes[this_arg] <- dots[this_arg]
-  #       dots[[this_arg]] <- NULL
-  #     }
-  #   }
-  # }
-  # if(is.null(layout)) layout <- quote(get_layout(model))
-  # if(is.null(nodes)) nodes <- quote(get_nodes(model))
+  # Generate edges, nodes, and layout.
+  if (is.null(edges)) {
+    edges <- call_getter(
+      "get_edges",
+      dots[names(dots) %in% pass_args]
+    )
+  }
 
-  Args <- as.list(match.call(expand.dots = FALSE)[-1])
-  model <- model
-  Args[["..."]] <- NULL
-  Args[["model"]] <- model # To prevent issue with pipe
-  # Problem: the object `model` is available in this environment,
-  # but objects passed to get_edges() etc are not available in this environment.
-  # They are available in the parent environment, but `model` is not.
-  # Maybe make new environment and add model to it?
-  # It's a hack, but seems to pass all tests.
-  # use_env <- parent.frame()
-  # assign("model", model, envir = use_env)
-  Args[["edges"]] <-  eval(edges)#, envir = use_env)
-  Args[["nodes"]] <-  eval(nodes)#, envir = use_env)
-  Args[["layout"]] <- eval(layout)#, envir = use_env)
-  Args <- c(Args, dots)
+  if (is.null(nodes)) {
+    nodes <- call_getter(
+      "get_nodes",
+      dots[names(dots) %in% pass_args]
+    )
+  }
 
-  do.call(prepare_graph_model, Args)
+  if (is.null(layout)) {
+    layout <- call_getter(
+      "get_layout",
+      dots[!names(dots) %in% pass_args]
+    )
+  }
+
+  # Forward ordinary evaluated arguments.
+  remaining <- dots[
+    !names(dots) %in% pass_args
+  ]
+
+  remaining <- lapply(
+    remaining,
+    eval,
+    envir = eval_env
+  )
+
+  args <- c(
+    list(
+      model = model,
+      edges = edges,
+      nodes = nodes,
+      layout = layout
+    ),
+    remaining
+  )
+
+  do.call(
+    prepare_graph_model,
+    args
+  )
 }
-
 #' @method prepare_graph MxModel
 #' @rdname prepare_graph
 #' @export
@@ -1190,9 +1444,11 @@ get_edges.tidy_results <- function(x, label = "est_sig", ...) {
   tmp <- x #data.frame(as.list(x)[ c("from", "to", "arrow", keep_cols) ], check.names=FALSE)
   tmp$curvature <- tmp$connect_to <- tmp$connect_from <- NA
   tmp$curvature[x$op == "~~" & !x$lhs == x$rhs] <- 60
+  tmp$curvature_auto <- FALSE
+  tmp$curvature_auto[x$op == "~~" & !x$lhs == x$rhs] <- TRUE
   tmp$linetype <- 1
   tmp$linetype[x$op == "~~" & !x$lhs == x$rhs] <- 2
-  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", "linetype", keep_cols))
+  keep_cols <- unique(c("from", "to", "arrow", "label", "connect_from", "connect_to", "curvature", "curvature_auto", "linetype", keep_cols))
   keep_cols <- keep_cols[keep_cols %in% names(tmp)]
   tmp <- tmp[, keep_cols, drop = FALSE]
   class(tmp) <- c("tidy_edges", class(tmp))
@@ -1483,67 +1739,173 @@ match.call.defaults <- function(...) {
 #' @importFrom stats dist
 #' @importFrom ggplot2 scale_linetype_manual
 #' @importFrom ggplot2 arrow
-.plot_edges <- function(p, df, text_size = 5, npoints = 101, ...) {
-  df_edges <- data.frame(do.call(rbind, lapply(1:nrow(df), function(rownum){
-    this_row <- df[rownum, ]
-    if(is.na(this_row[["curvature"]])){
-      label_loc <- ifelse(is.null(this_row[["label_location"]]), .5, this_row[["label_location"]])
-      matrix(
-        c(this_row[["edge_xmin"]], this_row[["edge_ymin"]], rownum,
-          (1-label_loc) * matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), ncol = 2)+ label_loc*(matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), ncol = 2)), rownum,
-          this_row[["edge_xmax"]], this_row[["edge_ymax"]], rownum),
-        nrow = 3, byrow = TRUE, dimnames = list(NULL, c("x", "y", "id"))
-      )
+.plot_edges <- function(
+    p,
+    df,
+    text_size = 5,
+    npoints = 101,
+    ...
+) {
+
+  if (nrow(df) == 0L) {
+    return(p)
+  }
+
+  if (npoints < 3L) {
+    stop("`npoints` must be at least 3.")
+  }
+
+  # -------------------------------------------------------
+  # 1. Prepare edge and label coordinates
+  # -------------------------------------------------------
+
+  if (!"label_location" %in% names(df)) {
+    df$label_location <- 0.5
+  }
+
+  df$label_location[
+    is.na(df$label_location)
+  ] <- 0.5
+
+  df$label_location <- pmin(
+    1,
+    pmax(0, df$label_location)
+  )
+
+  edge_paths <- vector("list", nrow(df))
+  label_rows <- vector("list", nrow(df))
+
+  for (i in seq_len(nrow(df))) {
+
+    edge <- df[i, , drop = FALSE]
+
+    A <- c(
+      edge$edge_xmin,
+      edge$edge_ymin
+    )
+
+    B <- c(
+      edge$edge_xmax,
+      edge$edge_ymax
+    )
+
+    # Points used to draw the edge
+    t <- if (is.na(edge$curvature)) {
+      c(0, 0.5, 1)
     } else {
-      A = matrix(c(this_row[["edge_xmin"]], this_row[["edge_ymin"]]), nrow = 1)
-      B = matrix(c(this_row[["edge_xmax"]], this_row[["edge_ymax"]]), nrow = 1)
-      M <- matrix(c(mean(c(this_row[["edge_xmin"]], this_row[["edge_xmax"]])),
-                    mean(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]))), nrow = 1)
-      radius <- dist(rbind(A, B))
-      AB <- B-A
-      N <- matrix(c(AB[2], -AB[1]), nrow=1)
-      C <- M + .5*(N * tan((this_row[["curvature"]]/180)*pi))
-      radius <- dist(rbind(C, A))
-      angles <- list(
-        atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]),
-        atan2(c(this_row[["edge_ymin"]], this_row[["edge_ymax"]]) - C[2], c(this_row[["edge_xmin"]], this_row[["edge_xmax"]]) - C[1]) %% (2*pi)
-      )
-      angles <- angles[[which.min(sapply(angles, dist))]]
-      point_seq <- seq(angles[1], angles[2],length.out = npoints)
-      out <- matrix(
-        c(C[1] + radius * cos(point_seq),
-          C[2] + radius * sin(point_seq),
-          rep(rownum, npoints)),
-        nrow = npoints, ncol = 3, dimnames = list(NULL, c("x", "y", "id"))
-      )
-
-      out
+      seq(0, 1, length.out = npoints)
     }
-  })))
-  df$id <- 1:nrow(df)
-  df_edges <- merge(df_edges, df, by = "id")
-  # Prepare label df --------------------------------------------------------
-  if(is.null(df[["label_location"]])){
-    df$label_location <- .5
-  }
-  select_these <- middle_point <- table(df_edges$id)
-  straightline <- middle_point == 3
-  select_these[straightline] <- 2
-  select_these[!straightline] <- ceiling(df$label_location[!straightline]*middle_point[!straightline])
 
-  middle_point <- select_these+cumsum(c(0, middle_point[-length(middle_point)]))
-  df_label <- df_edges[middle_point, ]
-  df_label$label <- df$label
-  df_label <- df_label[!(is.na(df_label$label) | df_label$label == ""), ]
-  # # Prepare aesthetics ------------------------------------------------------
-  if(!"linetype" %in% names(df_edges)){
-    df_edges$linetype <- 1#2
-    #df_edges$linetype[is.na(df_edges$curvature)] <- 1
+    coords <- .circular_arc(
+      x0 = A[1],
+      y0 = A[2],
+      x1 = B[1],
+      y1 = B[2],
+      angle = edge$curvature,
+      t = t
+    )
+
+    # Exact label position along the edge
+    label_point <- .circular_arc(
+      x0 = A[1],
+      y0 = A[2],
+      x1 = B[1],
+      y1 = B[2],
+      angle = edge$curvature,
+      t = edge$label_location
+    )
+
+    coords$id <- i
+
+    edge_paths[[i]] <- coords
+
+    label_rows[[i]] <- data.frame(
+      id = i,
+      x = label_point$x,
+      y = label_point$y
+    )
   }
-  if(!all(df_edges$arrow %in% c("first", "last", "both", "none"))) stop("Illicit 'arrow' value; acceptable values are c('first', 'last', 'both', 'none').")
-  p <- .plot_edges_internal(p, df_edges)
-  # Add label and return ----------------------------------------------------
-  .plot_label_internal(p, df_label, text_size)
+
+  # -------------------------------------------------------
+  # 2. Combine coordinates with edge aesthetics
+  # -------------------------------------------------------
+
+  df$id <- seq_len(nrow(df))
+
+  df_edges <- do.call(
+    rbind,
+    edge_paths
+  )
+
+  df_edges <- cbind(
+    df_edges,
+    df[
+      df_edges$id,
+      setdiff(names(df), "id"),
+      drop = FALSE
+    ]
+  )
+
+  rownames(df_edges) <- NULL
+
+  # -------------------------------------------------------
+  # 3. Prepare label data
+  # -------------------------------------------------------
+
+  label_coords <- do.call(
+    rbind,
+    label_rows
+  )
+
+  df_label <- cbind(
+    label_coords,
+    df[
+      label_coords$id,
+      setdiff(names(df), "id"),
+      drop = FALSE
+    ]
+  )
+
+  df_label <- df_label[
+    !is.na(df_label$label) &
+      df_label$label != "",
+    ,
+    drop = FALSE
+  ]
+
+  # -------------------------------------------------------
+  # 4. Default aesthetics
+  # -------------------------------------------------------
+
+  if (!"linetype" %in% names(df_edges)) {
+    df_edges$linetype <- 1
+  }
+
+  valid_arrows <- c(
+    "first", "last", "both", "none"
+  )
+
+  if (!all(df_edges$arrow %in% valid_arrows)) {
+    stop(
+      "Invalid arrow value. Valid values are: ",
+      paste(valid_arrows, collapse = ", ")
+    )
+  }
+
+  # -------------------------------------------------------
+  # 5. Plot edges and labels
+  # -------------------------------------------------------
+
+  p <- .plot_edges_internal(
+    p,
+    df_edges
+  )
+
+  .plot_label_internal(
+    p,
+    df_label,
+    text_size
+  )
 }
 
 #' @importFrom ggplot2 arrow
@@ -1748,4 +2110,17 @@ bind_list <- function(L, ...){
   }
 
   df
+}
+
+
+.edge_anchor <- function(node, side) {
+
+  switch(
+    side,
+    left = c(node$node_xmin, node$y),
+    right = c(node$node_xmax, node$y),
+    top = c(node$x, node$node_ymax),
+    bottom = c(node$x, node$node_ymin),
+    stop("Unknown connection side: ", side)
+  )
 }

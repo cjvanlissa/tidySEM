@@ -30,7 +30,8 @@ prepare_graph(...)
   curvature = 60,
   angle = NULL,
   fix_coord = FALSE,
-  ...
+  ...,
+  optimize_curvature = TRUE
 )
 
 \method{prepare_graph}{lavaan}(model, edges = NULL, layout = NULL, nodes = NULL, ...)

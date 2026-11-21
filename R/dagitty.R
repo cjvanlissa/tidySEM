@@ -57,6 +57,8 @@ get_edges.dagitty <- function(x, label = "est", ...){
     if(any(edg$e == "<->")){
       edg$curvature <- NA
       edg$curvature[edg$e == "<->"] <- 60
+      edg$curvature_auto <- FALSE
+      edg$curvature_auto[edg$e == "<->"] <- TRUE
     }
     edg <- edg[, !names(edg) %in% c("x", "y"), drop = FALSE]
     # if("label" %in% names(edg)){

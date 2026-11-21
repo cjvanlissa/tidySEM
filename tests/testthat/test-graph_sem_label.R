@@ -2,21 +2,6 @@ library(lavaan)
 res <- sem("dist ~ speed", cars, meanstructure =T)
 
 
-# graph_sem(res)
-# lay <- get_layout("dist", "speed", rows = 1)
-# graph_sem(res,
-#           layout = lay,           # layout
-#           label = "est_std",  # get standardized results (not rounded)
-#           angle = 170            # adjust the arrows
-# )
-#
-# graph_sem(res,
-#           layout = lay,           # layout
-#           nodes = get_nodes(res, label = "name"),
-#           edges = get_edges(res, label = "est_std"),
-#           angle = 170            # adjust the arrows
-# )
-
 test_that("prepare_graph handles label argument", {
   tmp <- prepare_graph(res, label = "est_std")
   expect_true(all(!is.na(as.numeric(tmp$edges$label))))

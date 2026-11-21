@@ -71,7 +71,9 @@ Suggests:
     igraph (>= 2.0.0),
     broom,
     nnet,
-    callr
+    callr,
+    shiny,
+    htmltools
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

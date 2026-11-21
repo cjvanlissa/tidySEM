@@ -49,12 +49,24 @@ sem_layout_integer <- function(
   )
 
   if (n == 0L) {
-    attr(empty, "grid_size") <- c(
+
+    out <- data.frame(
+      x = integer(),
+      y = integer(),
+      name = character()
+    )
+
+    attr(out, "grid_size") <- c(
       width = 0L,
       height = 0L
     )
-    return(empty)
+
+    class(out) <- c("tidy_layout", "data.frame")
+
+    return(out)
   }
+
+  original_nodes <- nodes
 
   if (order == "alphabetical") {
     nodes <- sort(nodes)
@@ -402,8 +414,6 @@ sem_layout_integer <- function(
 
   storage.mode(pos) <- "integer"
 
-  # Preserve the original node order.
-  original_nodes <- as.character(nodes)
   pos <- pos[original_nodes, , drop = FALSE]
 
   # Check the integer lattice invariant.
@@ -417,8 +427,12 @@ sem_layout_integer <- function(
     width = as.integer(max(pos[, 1]) + 1L),
     height = as.integer(max(pos[, 2]) + 1L)
   )
-  out <- data.frame(pos, nodes)
-  names(out) <- c("x", "y", "name")
+  out <- data.frame(
+    x = pos[, 1],
+    y = pos[, 2],
+    name = original_nodes,
+    row.names = NULL
+  )
   rownames(out) <- NULL
   class(out) <- c("tidy_layout", class(out))
   out
