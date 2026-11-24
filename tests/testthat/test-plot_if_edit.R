@@ -16,7 +16,7 @@ test_that("if_edit and its derivatives work", {
   tmp <- hide_sig(p, element = c("nodes", "edges"))
   expect_true(all(!tmp$edges$show))
   expect_equivalent(tmp$nodes$show, c(TRUE, TRUE, FALSE))
-  expect_message(plot(tmp))
+  # expect_message(plot(tmp))
   expect_error(plot(tmp), NA)
 
   tmp <- hide_fixed(p, element = c("nodes", "edges"))

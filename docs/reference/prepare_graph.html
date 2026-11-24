@@ -91,7 +91,7 @@ a model object.</p>
 <span>  text_size <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  curvature <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  angle <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  fix_coord <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  fix_coord <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -170,11 +170,11 @@ Default: .8</p></dd>
 
 
 <dt id="arg-spacing-x">spacing_x<a class="anchor" aria-label="anchor" href="#arg-spacing-x"></a></dt>
-<dd><p>Spacing between columns of the graph, Default: 1</p></dd>
+<dd><p>Spacing between columns of the graph, Default: 2</p></dd>
 
 
 <dt id="arg-spacing-y">spacing_y<a class="anchor" aria-label="anchor" href="#arg-spacing-y"></a></dt>
-<dd><p>Spacing between rows of the graph, Default: 1</p></dd>
+<dd><p>Spacing between rows of the graph, Default: 2</p></dd>
 
 
 <dt id="arg-text-size">text_size<a class="anchor" aria-label="anchor" href="#arg-text-size"></a></dt>
@@ -182,24 +182,18 @@ Default: .8</p></dd>
 
 
 <dt id="arg-curvature">curvature<a class="anchor" aria-label="anchor" href="#arg-curvature"></a></dt>
-<dd><p>Curvature of curved edges. The curve is a circle segment
-originating in a point that forms a triangle with the two connected points,
-with angles at the two connected points equal to <code>curvature</code>.
-To flip a curved edge, use a negative value for curvature. Default: 60</p></dd>
+<dd><p>Deprecated. Was used to determine curvature of curved
+edges, which is now being optimized.</p></dd>
 
 
 <dt id="arg-angle">angle<a class="anchor" aria-label="anchor" href="#arg-angle"></a></dt>
-<dd><p>Angle used to connect nodes by the top and bottom. Defaults to
-NULL, which means Euclidean distance is used to determine the shortest
-distance between node sides. A numeric value between 0-180 can be provided,
-where 0 means that only nodes with the same x-coordinates are connected
-top-to-bottom, and 180 means that all nodes are connected top-to-bottom.</p></dd>
+<dd><p>Deprecated. Was used to determine node connection points.</p></dd>
 
 
 <dt id="arg-fix-coord">fix_coord<a class="anchor" aria-label="anchor" href="#arg-fix-coord"></a></dt>
 <dd><p>Whether or not to fix the aspect ratio of the graph.
 Does not work with multi-group or multilevel models.
-Default: FALSE.</p></dd>
+Default: TRUE.</p></dd>
 
 </dl></div>
     <div class="section level2">

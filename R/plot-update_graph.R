@@ -24,7 +24,7 @@
 #' @param ... Additional graph-level plotting settings to update,
 #'   such as `rect_width`, `rect_height`, `ellipses_width`,
 #'   `ellipses_height`, `variance_diameter`, `text_size`,
-#'   `spacing_x`, `spacing_y`, `curvature`, `angle`, or
+#'   `spacing_x`, `spacing_y`, or
 #'   `fix_coord`.
 #'
 #' @details
@@ -55,17 +55,16 @@
 #' existing node coordinates.
 #'
 #' @return An updated object of class `sem_graph`.
-#'
-#' @seealso [prepare_graph()], [update_graph_node()]
-#'
 #' @examples
 #' \dontrun{
+#' if(requireNamespace("lavaan", quietly = TRUE)){
+#' library(lavaan)
+#' HS.model <- ' visual  =~ x1 + x2 + x3
+#' textual =~ x4 + x5 + x6
+#' speed   =~ x7 + x8 + x9 '
+#' fit <- cfa(HS.model, data=HolzingerSwineford1939)
 #' # Construct a graph
-#' g <- prepare_graph(
-#'   edges = edges,
-#'   nodes = nodes,
-#'   layout = layout
-#' )
+#' g <- prepare_graph(fit)
 #'
 #' # Change node positions
 #' nd <- g$nodes
@@ -83,11 +82,12 @@
 #' # Change global plotting settings
 #' g <- update_graph(
 #'   g,
-#'   text_size = 5,
+#'   text_size = 2,
 #'   variance_diameter = 1
 #' )
 #'
 #' plot(g)
+#' }
 #' }
 #'
 #' @export
@@ -103,14 +103,10 @@ update_graph.default <- function(x, ...) {
 #' @rdname update_graph
 #' @export
 update_graph.sem_graph <- function(x, nodes = NULL, edges = NULL, ...) {
-  if (!inherits(x, "sem_graph")) {
-    stop("`x` must inherit from `sem_graph`.", call. = FALSE)
-  }
-
   settings <- list(...)
   allowed <- c("rect_width", "rect_height", "ellipses_width",
                "ellipses_height", "variance_diameter", "spacing_x",
-               "spacing_y", "text_size", "curvature", "angle", "fix_coord")
+               "spacing_y", "text_size", "fix_coord")
   if (length(settings) &&
       (is.null(names(settings)) || anyNA(names(settings)) ||
        any(!nzchar(names(settings))) || anyDuplicated(names(settings)))) {
@@ -133,15 +129,6 @@ update_graph.sem_graph <- function(x, nodes = NULL, edges = NULL, ...) {
     if (!is.numeric(v) || length(v) != 1L || !is.finite(v) || v <= 0) {
       stop("`", nm, "` must be a finite positive number.", call. = FALSE)
     }
-  }
-  if (!is.null(out$angle) &&
-      (!is.numeric(out$angle) || length(out$angle) != 1L ||
-       !is.finite(out$angle))) {
-    stop("`angle` must be NULL or a finite number.", call. = FALSE)
-  }
-  if (!is.numeric(out$curvature) || length(out$curvature) != 1L ||
-      !is.finite(out$curvature)) {
-    stop("`curvature` must be a finite numeric scalar.", call. = FALSE)
   }
   if (!is.logical(out$fix_coord) || length(out$fix_coord) != 1L ||
       is.na(out$fix_coord)) {
@@ -171,6 +158,8 @@ update_graph.sem_graph <- function(x, nodes = NULL, edges = NULL, ...) {
   nd$name <- as.character(nd$name)
   ed$from <- as.character(ed$from)
   ed$to <- as.character(ed$to)
+  nd <- .normalize_sem_aesthetics(nd)
+  ed <- .normalize_sem_aesthetics(ed)
 
   if (anyNA(nd$name) || any(!nzchar(nd$name))) {
     stop("Node names must be nonmissing and nonempty.", call. = FALSE)
@@ -252,117 +241,4 @@ update_graph.sem_graph <- function(x, nodes = NULL, edges = NULL, ...) {
   # A prepared graph has no unscaled layout; keep the original convention.
   out$layout <- NULL
   out
-}
-
-
-#' Update an Individual SEM Graph Node
-#'
-#' Modify the position, dimensions, label, shape, or aesthetics
-#' of an individual node in an existing SEM graph.
-#'
-#' @description
-#' `update_graph_node()` provides a convenient way to modify a
-#' single node without manually editing the graph's node data
-#' frame.
-#'
-#' The function updates the selected node and recalculates its
-#' bounding box while preserving the remaining graph structure.
-#'
-#' @param x An object of class `sem_graph`.
-#' @param name Character string identifying the node to update.
-#' @param group Optional group identifier, used to distinguish
-#'   nodes with the same name in grouped graphs.
-#' @param level Optional level identifier, used to distinguish
-#'   nodes with the same name across levels.
-#' @param ... Named node properties to modify. These may include
-#'   `x`, `y`, `width`, `height`, `shape`, `label`, or supported
-#'   plotting aesthetics such as `colour`, `fill`, `alpha`,
-#'   `linetype`, and `linewidth`.
-#'
-#' @details
-#' Node positions are specified in the graph's existing coordinate
-#' system and are not rescaled.
-#'
-#' Individual `width` and `height` values override the global
-#' dimensions specified when the graph was constructed.
-#'
-#' When node dimensions or shape are modified, the node's
-#' bounding box is updated automatically.
-#'
-#' If multiple nodes share the same name, `group` or `level`
-#' can be used to identify the intended node.
-#'
-#' Edge endpoints, connection sides, curvature, and variance
-#' positions are not automatically recalculated.
-#'
-#' @return An updated object of class `sem_graph`.
-#'
-#' @seealso [update_graph()], [prepare_graph()]
-#'
-#' @examples
-#' \dontrun{
-#' g <- prepare_graph(
-#'   edges = edges,
-#'   nodes = nodes,
-#'   layout = layout
-#' )
-#'
-#' # Move a node
-#' g <- update_graph_node(
-#'   g,
-#'   name = "visual",
-#'   x = 5,
-#'   y = 4
-#' )
-#'
-#' # Change its dimensions and appearance
-#' g <- update_graph_node(
-#'   g,
-#'   name = "visual",
-#'   width = 1.8,
-#'   height = 1.2,
-#'   fill = "lightblue",
-#'   colour = "black"
-#' )
-#'
-#' plot(g)
-#' }
-#'
-#' @export
-update_graph_node <- function(x, name, ..., group = NULL, level = NULL) {
-  if (!inherits(x, "sem_graph")) stop("`x` must be a `sem_graph`.")
-  nd <- x$nodes
-  idx <- which(as.character(nd$name) == name)
-  if (!is.null(group)) {
-    if (!"group" %in% names(nd)) stop("Nodes have no `group` column.")
-    idx <- idx[as.character(nd$group[idx]) %in% as.character(group)]
-  }
-  if (!is.null(level)) {
-    if (!"level" %in% names(nd)) stop("Nodes have no `level` column.")
-    idx <- idx[as.character(nd$level[idx]) %in% as.character(level)]
-  }
-  if (length(idx) != 1L) {
-    stop("Node selection must match exactly one row.", call. = FALSE)
-  }
-  values <- list(...)
-  if (!length(values)) return(x)
-  if (is.null(names(values)) || anyNA(names(values)) ||
-      any(!nzchar(names(values))) || anyDuplicated(names(values))) {
-    stop("All updated properties must have unique, nonempty names.")
-  }
-  protected <- c("name", "group", "level", "node_xmin", "node_xmax",
-                 "node_ymin", "node_ymax")
-  if (any(names(values) %in% protected)) {
-    stop("Identifiers and bounding boxes cannot be changed directly.")
-  }
-  for (nm in names(values)) {
-    v <- values[[nm]]
-    if (length(v) != 1L) stop("Each updated property must have length one.")
-    if (!nm %in% names(nd)) {
-      prototype <- if (is.numeric(v)) NA_real_ else if (is.logical(v)) NA else NA_character_
-      nd[[nm]] <- rep(prototype, nrow(nd))
-    }
-    nd[[nm]][idx] <- v
-  }
-  update_graph(x, nodes = nd)
 }

@@ -65,8 +65,8 @@ summary(res)
 #> AIC:      -356.5774               843.4226                 845.7000
 #> BIC:     -2126.8309               879.5503                 841.5725
 #> To get additional fit indices, see help(mxRefModels)
-#> timestamp: 2026-11-15 11:00:58 
-#> Wall clock time: 0.02080297 secs 
+#> timestamp: 2026-11-22 20:14:10 
+#> Wall clock time: 0.01045012 secs 
 #> optimizer:  SLSQP 
 #> OpenMx version number: 2.22.11 
 #> Need help?  See help(mxSummary) 

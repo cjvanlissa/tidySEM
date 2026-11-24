@@ -101,6 +101,9 @@
 - [`get_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/get_nodes.md)
   : Extract nodes from a SEM model object
 
+- [`graph_editor()`](https://cjvanlissa.github.io/tidySEM/reference/graph_editor.md)
+  : Interactively Edit a SEM Graph
+
 - [`graph_sem()`](https://cjvanlissa.github.io/tidySEM/reference/graph_sem.md)
   : Render a graph
 
@@ -637,6 +640,12 @@
 
 - [`two_step()`](https://cjvanlissa.github.io/tidySEM/reference/two_step.md)
   : Estimate an Auxiliary Model Using Two-Step Maximum Likelihood
+
+- [`update_graph()`](https://cjvanlissa.github.io/tidySEM/reference/update_graph.md)
+  : Update an Existing SEM Graph
+
+- [`update_graph_node()`](https://cjvanlissa.github.io/tidySEM/reference/update_graph_node.md)
+  : Update an Individual SEM Graph Node
 
 - [`wald_test()`](https://cjvanlissa.github.io/tidySEM/reference/wald_test.md)
   : Wald Test for Linear Hypotheses

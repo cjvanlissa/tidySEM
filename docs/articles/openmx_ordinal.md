@@ -36,6 +36,7 @@ parameter expression expected by
 We begin by simulating a small data set with three ordinal variables.
 
 ``` r
+
 library(tidySEM)
 set.seed(1)
 df <- data.frame(rbind(
@@ -66,6 +67,7 @@ and two for `X3`.
 The threshold model is specified with the `|` operator.
 
 ``` r
+
 mod <- as_ram("
 X1 | t1
 X2 | t1
@@ -85,6 +87,7 @@ threshold of `X1` and the first threshold of `X2` are distinct model
 parameters unless an equality constraint is imposed explicitly, as in:
 
 ``` r
+
 mod_constrain <- as_ram("
 X1 | c*t1
 X2 | c*t1
@@ -101,6 +104,7 @@ The model is estimated with
 [`run_mx()`](https://cjvanlissa.github.io/tidySEM/reference/run_mx.md).
 
 ``` r
+
 res <- run_mx(mod)
 ```
 
@@ -111,6 +115,7 @@ and returns the fitted model object. A tidy summary can be obtained
 with:
 
 ``` r
+
 table_results(res)
 #>                   label  est_sig   se pval        confint
 #> 1          Variances.X1     1.00 <NA> <NA>           <NA>
@@ -136,6 +141,7 @@ refer directly to entries of `model.Thresholds`.
 The first Wald test is:
 
 ``` r
+
 wald_test(res, "model.Thresholds[1,1] = 0")
 #> Wald tests for linear hypotheses:
 #>                 Hypothesis df    chisq         p
@@ -157,6 +163,7 @@ approximation.
 The second test is:
 
 ``` r
+
 wald_test(res, "model.Thresholds[2,3] = 1")
 #> Wald tests for linear hypotheses:
 #>                 Hypothesis df      chisq         p
@@ -175,6 +182,7 @@ The same substantive model can be constructed with a different threshold
 parameterization:
 
 ``` r
+
 mod2 <- as_ram("
 X1 | t1
 X2 | t1
@@ -196,6 +204,7 @@ multiple model parameters**, rather than single free parameters.
 Fit and summarize this model in the same way:
 
 ``` r
+
 res2 <- run_mx(mod2)
 table_results(res2)
 #>             label  est_sig   se pval        confint
@@ -224,6 +233,7 @@ Because the first threshold is equal to the first deviation, the
 corresponding test for deviances is:
 
 ``` r
+
 wald_test(res2, "model.mat_dev[1,1] = 0")
 #> Wald tests for linear hypotheses:
 #>              Hypothesis df     chisq         p
@@ -233,6 +243,7 @@ wald_test(res2, "model.mat_dev[1,1] = 0")
 Verify that the test result is identical to:
 
 ``` r
+
 wald_test(res, "model.Thresholds[1,1] = 0")
 #> Wald tests for linear hypotheses:
 #>                 Hypothesis df    chisq         p
@@ -246,6 +257,7 @@ threshold of `X3`. It must be written as a constraint on the **sum** of
 the first two deviations:
 
 ``` r
+
 wald_test(res2, "model.mat_dev[1,3]+model.mat_dev[2,3] = 1")
 #> Wald tests for linear hypotheses:
 #>                                 Hypothesis df       chisq         p
@@ -255,6 +267,7 @@ wald_test(res2, "model.mat_dev[1,3]+model.mat_dev[2,3] = 1")
 This is the deviation-parameter counterpart of:
 
 ``` r
+
 wald_test(res, "model.Thresholds[2,3] = 1")
 #> Wald tests for linear hypotheses:
 #>                 Hypothesis df      chisq         p
@@ -299,6 +312,7 @@ thresholds. The model is automatically re-run.
 Use this functionality as follows:
 
 ``` r
+
 coef(res2)
 #> model.mat_dev[1,1] model.mat_dev[1,2] model.mat_dev[1,3] model.mat_dev[2,3] 
 #>         0.05852141         0.10883497        -0.52440054         1.53265286

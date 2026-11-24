@@ -29,7 +29,7 @@ prepare_graph(
   text_size = 4,
   curvature = 60,
   angle = NULL,
-  fix_coord = FALSE,
+  fix_coord = TRUE,
   ...
 )
 
@@ -103,11 +103,11 @@ prepare_graph(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
 - spacing_x:
 
-  Spacing between columns of the graph, Default: 1
+  Spacing between columns of the graph, Default: 2
 
 - spacing_y:
 
-  Spacing between rows of the graph, Default: 1
+  Spacing between rows of the graph, Default: 2
 
 - text_size:
 
@@ -115,24 +115,17 @@ prepare_graph(model, edges = NULL, layout = NULL, nodes = NULL, ...)
 
 - curvature:
 
-  Curvature of curved edges. The curve is a circle segment originating
-  in a point that forms a triangle with the two connected points, with
-  angles at the two connected points equal to `curvature`. To flip a
-  curved edge, use a negative value for curvature. Default: 60
+  Deprecated. Was used to determine curvature of curved edges, which is
+  now being optimized.
 
 - angle:
 
-  Angle used to connect nodes by the top and bottom. Defaults to NULL,
-  which means Euclidean distance is used to determine the shortest
-  distance between node sides. A numeric value between 0-180 can be
-  provided, where 0 means that only nodes with the same x-coordinates
-  are connected top-to-bottom, and 180 means that all nodes are
-  connected top-to-bottom.
+  Deprecated. Was used to determine node connection points.
 
 - fix_coord:
 
   Whether or not to fix the aspect ratio of the graph. Does not work
-  with multi-group or multilevel models. Default: FALSE.
+  with multi-group or multilevel models. Default: TRUE.
 
 ## Value
 

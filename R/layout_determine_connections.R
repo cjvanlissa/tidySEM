@@ -1,7 +1,6 @@
 .determine_connections <- function(
     df_nodes,
-    df_edges,
-    angle = NULL
+    df_edges
 ) {
   # Preserve group / level recursion.
   for (column in c("group", "level")) {
@@ -28,8 +27,7 @@
           edge_idx,
           setdiff(names(df_edges), column),
           drop = FALSE
-        ],
-        angle = angle
+        ]
       )
     })
 
@@ -38,8 +36,7 @@
 
   .connect_sem_optimized(
     df_nodes = df_nodes,
-    df_edges = df_edges,
-    angle = angle
+    df_edges = df_edges
   )
 }
 
@@ -47,7 +44,6 @@
 .connect_sem_optimized <- function(
     df_nodes,
     df_edges,
-    angle = NULL,
     weights = c(
       distance = 1,
       alignment = 2,

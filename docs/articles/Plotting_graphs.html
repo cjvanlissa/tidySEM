@@ -161,9 +161,10 @@ tutorial example for CFA. First, we conduct the SEM analysis:</p>
 <div class="section level3">
 <h3 id="step-2-plot-the-graph">Step 2: Plot the graph<a class="anchor" aria-label="anchor" href="#step-2-plot-the-graph"></a>
 </h3>
-<p>At this point, we could simply plot the graph:</p>
+<p>At this point, we could simply plot the graph (smaller text size to
+avoid labels overplotting):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span>, text_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cache_Plotting_graphs/plotting-cache-1.png" class="r-plt" alt="" width="100%"></p>
 <p>This uses a default layout. However, the node placement is not very
 aesthetically pleasing. One of the areas where <code>tidySEM</code>
@@ -192,31 +193,47 @@ that the default argument is
 <code>layout = get_layout(x = model)</code>, where model refers to the
 <code>model</code> argument of the same function.</p>
 <p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function automatically generates a
-layout for a fit model object. To get this layout as a matrix, you can
-run:</p>
+layout for a fit model object. To get this layout, you can run:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      [,1] [,2]    [,3]      [,4]</span></span>
-<span><span class="co">#&gt; [1,] "x9" "x5"    "textual" "x6"</span></span>
-<span><span class="co">#&gt; [2,] "x7" "speed" "visual"  "x4"</span></span>
-<span><span class="co">#&gt; [3,] "x8" "x1"    "x2"      "x3"</span></span>
-<span><span class="co">#&gt; attr(,"class")</span></span>
-<span><span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></span></code></pre></div>
-<p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function relies on the Fruchterman
-Reingold algorithm to place the nodes. If the <code>igraph</code>
-package is installed, its layout algorithms can be used by specifying
-the <code>layout_algorithm = ...</code> argument:</p>
+<span><span class="co">#&gt;     x y    name</span></span>
+<span><span class="co">#&gt; 1   2 2  visual</span></span>
+<span><span class="co">#&gt; 2  10 2 textual</span></span>
+<span><span class="co">#&gt; 3  18 2   speed</span></span>
+<span><span class="co">#&gt; 4   0 0      x1</span></span>
+<span><span class="co">#&gt; 5   2 0      x2</span></span>
+<span><span class="co">#&gt; 6   4 0      x3</span></span>
+<span><span class="co">#&gt; 7   8 0      x4</span></span>
+<span><span class="co">#&gt; 8  10 0      x5</span></span>
+<span><span class="co">#&gt; 9  12 0      x6</span></span>
+<span><span class="co">#&gt; 10 16 0      x7</span></span>
+<span><span class="co">#&gt; 11 18 0      x8</span></span>
+<span><span class="co">#&gt; 12 20 0      x9</span></span></code></pre></div>
+<p>The <code><a href="../reference/get_layout.html">get_layout()</a></code> function by default uses an algorithm
+optimized for SEM diagrams to place the nodes. Alternatively, the
+<code>layout_algorithm</code> argument can be set to
+<code>fr_grid</code> to use the Fruchterman-Reingold force-directed
+graph layout algorithm. Finally, if the <code>igraph</code> package is
+installed, any of its layout algorithms can be used by specifying the
+<code>layout_algorithm = ...</code> argument:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"igraph"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_in_circle"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="va">fit</span>, layout_algorithm <span class="op">=</span> <span class="st">"layout_on_grid"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt;      [,1]     [,2]      [,3]    [,4]</span></span>
-<span><span class="co">#&gt; [1,] "x6"     "x7"      "x8"    "x9"</span></span>
-<span><span class="co">#&gt; [2,] "x2"     "x3"      "x4"    "x5"</span></span>
-<span><span class="co">#&gt; [3,] "visual" "textual" "speed" "x1"</span></span>
-<span><span class="co">#&gt; attr(,"class")</span></span>
-<span><span class="co">#&gt; [1] "layout_matrix" "matrix"        "array"</span></span></code></pre></div>
+<span><span class="co">#&gt;    x y    name</span></span>
+<span><span class="co">#&gt; 1  0 0  visual</span></span>
+<span><span class="co">#&gt; 2  1 0 textual</span></span>
+<span><span class="co">#&gt; 3  2 0   speed</span></span>
+<span><span class="co">#&gt; 4  3 0      x1</span></span>
+<span><span class="co">#&gt; 5  0 1      x2</span></span>
+<span><span class="co">#&gt; 6  1 1      x3</span></span>
+<span><span class="co">#&gt; 7  2 1      x4</span></span>
+<span><span class="co">#&gt; 8  3 1      x5</span></span>
+<span><span class="co">#&gt; 9  0 2      x6</span></span>
+<span><span class="co">#&gt; 10 1 2      x7</span></span>
+<span><span class="co">#&gt; 11 2 2      x8</span></span>
+<span><span class="co">#&gt; 12 3 2      x9</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="specifying-layout-manually-in-r">Specifying layout manually in R<a class="anchor" aria-label="anchor" href="#specifying-layout-manually-in-r"></a>
@@ -322,30 +339,30 @@ available by running <code><a href="../reference/get_nodes.html">get_nodes()</a>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       from      to arrow   label connect_from connect_to curvature linetype</span></span>
-<span><span class="co">#&gt; 1   visual      x1  last    1.00           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 2   visual      x2  last 0.55***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 3   visual      x3  last 0.73***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 4  textual      x4  last    1.00           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 5  textual      x5  last 1.11***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 6  textual      x6  last 0.93***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 7    speed      x7  last    1.00           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 8    speed      x8  last 1.18***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 9    speed      x9  last 1.08***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 10      x1      x1  both 0.55***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 11      x2      x2  both 1.13***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 12      x3      x3  both 0.84***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 13      x4      x4  both 0.37***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 14      x5      x5  both 0.45***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 15      x6      x6  both 0.36***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 16      x7      x7  both 0.80***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 17      x8      x8  both 0.49***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 18      x9      x9  both 0.57***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 19  visual  visual  both 0.81***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 20 textual textual  both 0.98***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 21   speed   speed  both 0.38***           NA         NA        NA        1</span></span>
-<span><span class="co">#&gt; 22  visual textual  none 0.41***           NA         NA        60        2</span></span>
-<span><span class="co">#&gt; 23  visual   speed  none 0.26***           NA         NA        60        2</span></span>
-<span><span class="co">#&gt; 24 textual   speed  none 0.17***           NA         NA        60        2</span></span>
+<span><span class="co">#&gt; 1   visual      x1  last    1.00           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 2   visual      x2  last 0.55***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 3   visual      x3  last 0.73***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 4  textual      x4  last    1.00           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 5  textual      x5  last 1.11***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 6  textual      x6  last 0.93***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 7    speed      x7  last    1.00           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 8    speed      x8  last 1.18***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 9    speed      x9  last 1.08***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 10      x1      x1  both 0.55***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 11      x2      x2  both 1.13***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 12      x3      x3  both 0.84***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 13      x4      x4  both 0.37***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 14      x5      x5  both 0.45***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 15      x6      x6  both 0.36***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 16      x7      x7  both 0.80***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 17      x8      x8  both 0.49***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 18      x9      x9  both 0.57***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 19  visual  visual  both 0.81***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 20 textual textual  both 0.98***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 21   speed   speed  both 0.38***           NA         NA         0        1</span></span>
+<span><span class="co">#&gt; 22  visual textual  none 0.41***           NA         NA        NA        2</span></span>
+<span><span class="co">#&gt; 23  visual   speed  none 0.26***           NA         NA        NA        2</span></span>
+<span><span class="co">#&gt; 24 textual   speed  none 0.17***           NA         NA        NA        2</span></span>
 <span><span class="co">#&gt;        lhs op     rhs  est   se pval      confint est_sig est_std se_std</span></span>
 <span><span class="co">#&gt; 1   visual =~      x1 1.00 0.00 &lt;NA&gt; [1.00, 1.00]    1.00    0.77   0.05</span></span>
 <span><span class="co">#&gt; 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06</span></span>
@@ -418,30 +435,30 @@ into an edge label:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_edges.html">get_edges</a></span><span class="op">(</span><span class="va">fit</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">est</span>, <span class="va">confint</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       from      to arrow             label connect_from connect_to curvature</span></span>
-<span><span class="co">#&gt; 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 2   visual      x2  last 0.55 [0.36, 0.75]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 3   visual      x3  last 0.73 [0.52, 0.94]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 4  textual      x4  last 1.00 [1.00, 1.00]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 5  textual      x5  last 1.11 [0.98, 1.24]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 6  textual      x6  last 0.93 [0.82, 1.03]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 7    speed      x7  last 1.00 [1.00, 1.00]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 8    speed      x8  last 1.18 [0.86, 1.50]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 9    speed      x9  last 1.08 [0.79, 1.38]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 10      x1      x1  both 0.55 [0.33, 0.77]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 11      x2      x2  both 1.13 [0.93, 1.33]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 12      x3      x3  both 0.84 [0.67, 1.02]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 13      x4      x4  both 0.37 [0.28, 0.46]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 14      x5      x5  both 0.45 [0.33, 0.56]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 15      x6      x6  both 0.36 [0.27, 0.44]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 16      x7      x7  both 0.80 [0.64, 0.96]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 17      x8      x8  both 0.49 [0.34, 0.63]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 18      x9      x9  both 0.57 [0.43, 0.70]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 19  visual  visual  both 0.81 [0.52, 1.09]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 20 textual textual  both 0.98 [0.76, 1.20]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 21   speed   speed  both 0.38 [0.21, 0.55]           NA         NA        NA</span></span>
-<span><span class="co">#&gt; 22  visual textual  none 0.41 [0.26, 0.55]           NA         NA        60</span></span>
-<span><span class="co">#&gt; 23  visual   speed  none 0.26 [0.15, 0.37]           NA         NA        60</span></span>
-<span><span class="co">#&gt; 24 textual   speed  none 0.17 [0.08, 0.27]           NA         NA        60</span></span>
+<span><span class="co">#&gt; 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 2   visual      x2  last 0.55 [0.36, 0.75]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 3   visual      x3  last 0.73 [0.52, 0.94]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 4  textual      x4  last 1.00 [1.00, 1.00]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 5  textual      x5  last 1.11 [0.98, 1.24]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 6  textual      x6  last 0.93 [0.82, 1.03]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 7    speed      x7  last 1.00 [1.00, 1.00]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 8    speed      x8  last 1.18 [0.86, 1.50]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 9    speed      x9  last 1.08 [0.79, 1.38]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 10      x1      x1  both 0.55 [0.33, 0.77]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 11      x2      x2  both 1.13 [0.93, 1.33]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 12      x3      x3  both 0.84 [0.67, 1.02]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 13      x4      x4  both 0.37 [0.28, 0.46]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 14      x5      x5  both 0.45 [0.33, 0.56]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 15      x6      x6  both 0.36 [0.27, 0.44]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 16      x7      x7  both 0.80 [0.64, 0.96]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 17      x8      x8  both 0.49 [0.34, 0.63]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 18      x9      x9  both 0.57 [0.43, 0.70]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 19  visual  visual  both 0.81 [0.52, 1.09]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 20 textual textual  both 0.98 [0.76, 1.20]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 21   speed   speed  both 0.38 [0.21, 0.55]           NA         NA         0</span></span>
+<span><span class="co">#&gt; 22  visual textual  none 0.41 [0.26, 0.55]           NA         NA        NA</span></span>
+<span><span class="co">#&gt; 23  visual   speed  none 0.26 [0.15, 0.37]           NA         NA        NA</span></span>
+<span><span class="co">#&gt; 24 textual   speed  none 0.17 [0.08, 0.27]           NA         NA        NA</span></span>
 <span><span class="co">#&gt;    linetype     lhs op     rhs  est   se pval      confint est_sig est_std</span></span>
 <span><span class="co">#&gt; 1         1  visual =~      x1 1.00 0.00 &lt;NA&gt; [1.00, 1.00]    1.00    0.77</span></span>
 <span><span class="co">#&gt; 2         1  visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42</span></span>
@@ -593,31 +610,31 @@ let’s generate a <code>sem_graph</code> object and examine the
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       from      to arrow   label connect_from connect_to curvature linetype</span></span>
-<span><span class="co">#&gt; 1   visual      x1  last    1.00        right       left        NA        1</span></span>
-<span><span class="co">#&gt; 2   visual      x2  last 0.55***        right       left        NA        1</span></span>
-<span><span class="co">#&gt; 3   visual      x3  last 0.73***        right       left        NA        1</span></span>
-<span><span class="co">#&gt; 4  textual      x4  last    1.00         left      right        NA        1</span></span>
-<span><span class="co">#&gt; 5  textual      x5  last 1.11***        right       left        NA        1</span></span>
-<span><span class="co">#&gt; 6  textual      x6  last 0.93***        right       left        NA        1</span></span>
-<span><span class="co">#&gt; 7    speed      x7  last    1.00         left      right        NA        1</span></span>
-<span><span class="co">#&gt; 8    speed      x8  last 1.18***         left      right        NA        1</span></span>
-<span><span class="co">#&gt; 9    speed      x9  last 1.08***         left      right        NA        1</span></span>
-<span><span class="co">#&gt; 10      x1      x1  both 0.55***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 11      x2      x2  both 1.13***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 12      x3      x3  both 0.84***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 13      x4      x4  both 0.37***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 14      x5      x5  both 0.45***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 15      x6      x6  both 0.36***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 16      x7      x7  both 0.80***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 17      x8      x8  both 0.49***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 18      x9      x9  both 0.57***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 19  visual  visual  both 0.81***       bottom     bottom        NA        1</span></span>
-<span><span class="co">#&gt; 20 textual textual  both 0.98***       bottom     bottom        NA        1</span></span>
-<span><span class="co">#&gt; 21   speed   speed  both 0.38***       bottom     bottom        NA        1</span></span>
-<span><span class="co">#&gt; 22  visual textual  none 0.41***         left      right        60        2</span></span>
-<span><span class="co">#&gt; 23  visual   speed  none 0.26***         left      right        60        2</span></span>
-<span><span class="co">#&gt; 24 textual   speed  none 0.17***         left      right        60        2</span></span>
+<span><span class="co">#&gt;       from      to   label arrow curvature connect_from connect_to linetype</span></span>
+<span><span class="co">#&gt; 1   visual      x1    1.00  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 2   visual      x2 0.55***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 3   visual      x3 0.73***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 4  textual      x4    1.00  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 5  textual      x5 1.11***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 6  textual      x6 0.93***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 7    speed      x7    1.00  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 8    speed      x8 1.18***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 9    speed      x9 1.08***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 10      x1      x1 0.55***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 11      x2      x2 1.13***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 12      x3      x3 0.84***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 13      x4      x4 0.37***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 14      x5      x5 0.45***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 15      x6      x6 0.36***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 16      x7      x7 0.80***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 17      x8      x8 0.49***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 18      x9      x9 0.57***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 19  visual  visual 0.81***  both         0         left       left        1</span></span>
+<span><span class="co">#&gt; 20 textual textual 0.98***  both         0          top        top        1</span></span>
+<span><span class="co">#&gt; 21   speed   speed 0.38***  both         0        right      right        1</span></span>
+<span><span class="co">#&gt; 22  visual textual 0.41***  none       -30        right       left        2</span></span>
+<span><span class="co">#&gt; 23  visual   speed 0.26***  none       -20          top        top        2</span></span>
+<span><span class="co">#&gt; 24 textual   speed 0.17***  none       -30        right       left        2</span></span>
 <span><span class="co">#&gt;        lhs op     rhs  est   se pval      confint est_sig est_std se_std</span></span>
 <span><span class="co">#&gt; 1   visual =~      x1 1.00 0.00 &lt;NA&gt; [1.00, 1.00]    1.00    0.77   0.05</span></span>
 <span><span class="co">#&gt; 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06</span></span>
@@ -714,19 +731,19 @@ plot data to an object.</p>
 <code>nodes(graph_data)</code> and <code>edges(graph_data)</code>:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       name shape         label  x y node_xmin node_xmax node_ymin node_ymax</span></span>
-<span><span class="co">#&gt; 1    speed  oval   speed\n0.00 14 4      13.5      14.5       3.5       4.5</span></span>
-<span><span class="co">#&gt; 2  textual  oval textual\n0.00 10 4       9.5      10.5       3.5       4.5</span></span>
-<span><span class="co">#&gt; 3   visual  oval  visual\n0.00  6 4       5.5       6.5       3.5       4.5</span></span>
-<span><span class="co">#&gt; 4       x1  rect   x1\n4.94***  2 2       1.4       2.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 5       x2  rect   x2\n6.09***  4 2       3.4       4.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 6       x3  rect   x3\n2.25***  6 2       5.4       6.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 7       x4  rect   x4\n3.06***  8 2       7.4       8.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 8       x5  rect   x5\n4.34*** 10 2       9.4      10.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 9       x6  rect   x6\n2.19*** 12 2      11.4      12.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 10      x7  rect   x7\n4.19*** 14 2      13.4      14.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 11      x8  rect   x8\n5.53*** 16 2      15.4      16.6       1.6       2.4</span></span>
-<span><span class="co">#&gt; 12      x9  rect   x9\n5.37*** 18 2      17.4      18.6       1.6       2.4</span></span>
+<span><span class="co">#&gt;       name shape         label x y node_xmin node_xmax node_ymin node_ymax</span></span>
+<span><span class="co">#&gt; 1    speed  oval   speed\n0.00 7 2       6.5       7.5       1.5       2.5</span></span>
+<span><span class="co">#&gt; 2  textual  oval textual\n0.00 5 2       4.5       5.5       1.5       2.5</span></span>
+<span><span class="co">#&gt; 3   visual  oval  visual\n0.00 3 2       2.5       3.5       1.5       2.5</span></span>
+<span><span class="co">#&gt; 4       x1  rect   x1\n4.94*** 1 1       0.4       1.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 5       x2  rect   x2\n6.09*** 2 1       1.4       2.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 6       x3  rect   x3\n2.25*** 3 1       2.4       3.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 7       x4  rect   x4\n3.06*** 4 1       3.4       4.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 8       x5  rect   x5\n4.34*** 5 1       4.4       5.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 9       x6  rect   x6\n2.19*** 6 1       5.4       6.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 10      x7  rect   x7\n4.19*** 7 1       6.4       7.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 11      x8  rect   x8\n5.53*** 8 1       7.4       8.6       0.6       1.4</span></span>
+<span><span class="co">#&gt; 12      x9  rect   x9\n5.37*** 9 1       8.4       9.6       0.6       1.4</span></span>
 <span><span class="co">#&gt;        lhs op rhs  est   se pval      confint est_sig est_std se_std pval_std</span></span>
 <span><span class="co">#&gt; 1    speed ~1     0.00 0.00 &lt;NA&gt; [0.00, 0.00]    0.00    0.00   0.00     &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 2  textual ~1     0.00 0.00 &lt;NA&gt; [0.00, 0.00]    0.00    0.00   0.00     &lt;NA&gt;</span></span>
@@ -740,45 +757,45 @@ plot data to an object.</p>
 <span><span class="co">#&gt; 10      x7 ~1     4.19 0.06 0.00 [4.06, 4.31] 4.19***    3.85   0.17     0.00</span></span>
 <span><span class="co">#&gt; 11      x8 ~1     5.53 0.06 0.00 [5.41, 5.64] 5.53***    5.47   0.23     0.00</span></span>
 <span><span class="co">#&gt; 12      x9 ~1     5.37 0.06 0.00 [5.26, 5.49] 5.37***    5.33   0.22     0.00</span></span>
-<span><span class="co">#&gt;     confint_std est_sig_std label_results show</span></span>
-<span><span class="co">#&gt; 1  [0.00, 0.00]        0.00   Means.speed TRUE</span></span>
-<span><span class="co">#&gt; 2  [0.00, 0.00]        0.00 Means.textual TRUE</span></span>
-<span><span class="co">#&gt; 3  [0.00, 0.00]        0.00  Means.visual TRUE</span></span>
-<span><span class="co">#&gt; 4  [3.88, 4.59]     4.23***      Means.x1 TRUE</span></span>
-<span><span class="co">#&gt; 5  [4.75, 5.61]     5.18***      Means.x2 TRUE</span></span>
-<span><span class="co">#&gt; 6  [1.80, 2.19]     1.99***      Means.x3 TRUE</span></span>
-<span><span class="co">#&gt; 7  [2.39, 2.87]     2.63***      Means.x4 TRUE</span></span>
-<span><span class="co">#&gt; 8  [3.08, 3.66]     3.37***      Means.x5 TRUE</span></span>
-<span><span class="co">#&gt; 9  [1.80, 2.19]     2.00***      Means.x6 TRUE</span></span>
-<span><span class="co">#&gt; 10 [3.52, 4.18]     3.85***      Means.x7 TRUE</span></span>
-<span><span class="co">#&gt; 11 [5.02, 5.92]     5.47***      Means.x8 TRUE</span></span>
-<span><span class="co">#&gt; 12 [4.89, 5.78]     5.33***      Means.x9 TRUE</span></span>
+<span><span class="co">#&gt;     confint_std est_sig_std label_results width height show</span></span>
+<span><span class="co">#&gt; 1  [0.00, 0.00]        0.00   Means.speed   1.0    1.0 TRUE</span></span>
+<span><span class="co">#&gt; 2  [0.00, 0.00]        0.00 Means.textual   1.0    1.0 TRUE</span></span>
+<span><span class="co">#&gt; 3  [0.00, 0.00]        0.00  Means.visual   1.0    1.0 TRUE</span></span>
+<span><span class="co">#&gt; 4  [3.88, 4.59]     4.23***      Means.x1   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 5  [4.75, 5.61]     5.18***      Means.x2   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 6  [1.80, 2.19]     1.99***      Means.x3   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 7  [2.39, 2.87]     2.63***      Means.x4   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 8  [3.08, 3.66]     3.37***      Means.x5   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 9  [1.80, 2.19]     2.00***      Means.x6   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 10 [3.52, 4.18]     3.85***      Means.x7   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 11 [5.02, 5.92]     5.47***      Means.x8   1.2    0.8 TRUE</span></span>
+<span><span class="co">#&gt; 12 [4.89, 5.78]     5.33***      Means.x9   1.2    0.8 TRUE</span></span>
 <span><span class="fu"><a href="../reference/edges.html">edges</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       from      to arrow   label connect_from connect_to curvature linetype</span></span>
-<span><span class="co">#&gt; 1   visual      x1  last    1.00         left      right        NA        1</span></span>
-<span><span class="co">#&gt; 2   visual      x2  last 0.55***       bottom      right        NA        1</span></span>
-<span><span class="co">#&gt; 3   visual      x3  last 0.73***       bottom        top        NA        1</span></span>
-<span><span class="co">#&gt; 4  textual      x4  last    1.00       bottom      right        NA        1</span></span>
-<span><span class="co">#&gt; 5  textual      x5  last 1.11***       bottom        top        NA        1</span></span>
-<span><span class="co">#&gt; 6  textual      x6  last 0.93***       bottom       left        NA        1</span></span>
-<span><span class="co">#&gt; 7    speed      x7  last    1.00       bottom        top        NA        1</span></span>
-<span><span class="co">#&gt; 8    speed      x8  last 1.18***       bottom       left        NA        1</span></span>
-<span><span class="co">#&gt; 9    speed      x9  last 1.08***        right       left        NA        1</span></span>
-<span><span class="co">#&gt; 10      x1      x1  both 0.55***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 11      x2      x2  both 1.13***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 12      x3      x3  both 0.84***       bottom     bottom        NA        1</span></span>
-<span><span class="co">#&gt; 13      x4      x4  both 0.37***         left       left        NA        1</span></span>
-<span><span class="co">#&gt; 14      x5      x5  both 0.45***       bottom     bottom        NA        1</span></span>
-<span><span class="co">#&gt; 15      x6      x6  both 0.36***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 16      x7      x7  both 0.80***       bottom     bottom        NA        1</span></span>
-<span><span class="co">#&gt; 17      x8      x8  both 0.49***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 18      x9      x9  both 0.57***        right      right        NA        1</span></span>
-<span><span class="co">#&gt; 19  visual  visual  both 0.81***          top        top        NA        1</span></span>
-<span><span class="co">#&gt; 20 textual textual  both 0.98***          top        top        NA        1</span></span>
-<span><span class="co">#&gt; 21   speed   speed  both 0.38***          top        top        NA        1</span></span>
-<span><span class="co">#&gt; 22  visual textual  none 0.41***        right       left        60        2</span></span>
-<span><span class="co">#&gt; 23  visual   speed  none 0.26***        right       left        60        2</span></span>
-<span><span class="co">#&gt; 24 textual   speed  none 0.17***        right       left        60        2</span></span>
+<span><span class="co">#&gt;       from      to   label arrow curvature connect_from connect_to linetype</span></span>
+<span><span class="co">#&gt; 1   visual      x1    1.00  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 2   visual      x2 0.55***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 3   visual      x3 0.73***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 4  textual      x4    1.00  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 5  textual      x5 1.11***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 6  textual      x6 0.93***  last         0        right        top        1</span></span>
+<span><span class="co">#&gt; 7    speed      x7    1.00  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 8    speed      x8 1.18***  last         0       bottom        top        1</span></span>
+<span><span class="co">#&gt; 9    speed      x9 1.08***  last         0        right        top        1</span></span>
+<span><span class="co">#&gt; 10      x1      x1 0.55***  both         0         left       left        1</span></span>
+<span><span class="co">#&gt; 11      x2      x2 1.13***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 12      x3      x3 0.84***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 13      x4      x4 0.37***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 14      x5      x5 0.45***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 15      x6      x6 0.36***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 16      x7      x7 0.80***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 17      x8      x8 0.49***  both         0       bottom     bottom        1</span></span>
+<span><span class="co">#&gt; 18      x9      x9 0.57***  both         0        right      right        1</span></span>
+<span><span class="co">#&gt; 19  visual  visual 0.81***  both         0         left       left        1</span></span>
+<span><span class="co">#&gt; 20 textual textual 0.98***  both         0          top        top        1</span></span>
+<span><span class="co">#&gt; 21   speed   speed 0.38***  both         0          top        top        1</span></span>
+<span><span class="co">#&gt; 22  visual textual 0.41***  none       -75        right       left        2</span></span>
+<span><span class="co">#&gt; 23  visual   speed 0.26***  none       -60          top        top        2</span></span>
+<span><span class="co">#&gt; 24 textual   speed 0.17***  none       -75        right       left        2</span></span>
 <span><span class="co">#&gt;        lhs op     rhs  est   se pval      confint est_sig est_std se_std</span></span>
 <span><span class="co">#&gt; 1   visual =~      x1 1.00 0.00 &lt;NA&gt; [1.00, 1.00]    1.00    0.77   0.05</span></span>
 <span><span class="co">#&gt; 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06</span></span>
@@ -843,7 +860,6 @@ names:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'stringr' was built under R version 4.6.1</span></span>
 <span><span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nodes.html">nodes</a></span><span class="op">(</span><span class="va">graph_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html" class="external-link">str_to_title</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now, for the edges, we see that the default edging algorithm has
@@ -874,14 +890,9 @@ generic plot method for <code>sem_graph</code> objects:</p>
 <code><a href="../reference/prepare_graph.html">prepare_graph()</a></code> will always try to connect nodes in an
 aesthetically pleasing way. To do this, they connect nodes by one of the
 four sides (top, bottom, left and right), based on the shortest distance
-between two nodes. Alternatively, users can specify a value to the
-<code>angle</code> parameter. This parameter connects nodes
-top-to-bottom when they are within <code>angle</code> degrees above and
-below each other. Remaining nodes are connected side-to-side. Thus, by
-increasing <code>angle</code> to a larger number (up to 180 degrees), we
-can also ensure that all nodes are connected top to bottom:</p>
+between two nodes and least amount of overlap between plot elements:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span>, layout <span class="op">=</span> <span class="va">lay</span>, angle <span class="op">=</span> <span class="fl">170</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_sem.html">graph_sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span>, layout <span class="op">=</span> <span class="va">lay</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cache_Plotting_graphs/plotting-cache-4.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level2">
@@ -1054,12 +1065,12 @@ and edges from SEM models. All of the columns returned by
 visual aspects of the graph. Let’s estimate a model and look at all of
 the columns extracted by <code><a href="../reference/get_edges.html">get_edges()</a></code>:</p>
 <pre><code><span><span class="co">#&gt;   from  to arrow    label connect_from connect_to curvature linetype lhs op rhs</span></span>
-<span><span class="co">#&gt; 1  cyl mpg  last -2.50***           NA         NA        NA        1 mpg  ~ cyl</span></span>
-<span><span class="co">#&gt; 2   am mpg  last    2.57*           NA         NA        NA        1 mpg  ~  am</span></span>
-<span><span class="co">#&gt; 3  mpg mpg  both  8.48***           NA         NA        NA        1 mpg ~~ mpg</span></span>
-<span><span class="co">#&gt; 4  cyl cyl  both     3.09           NA         NA        NA        1 cyl ~~ cyl</span></span>
-<span><span class="co">#&gt; 5  cyl  am  none    -0.45           NA         NA        60        2 cyl ~~  am</span></span>
-<span><span class="co">#&gt; 6   am  am  both     0.24           NA         NA        NA        1  am ~~  am</span></span>
+<span><span class="co">#&gt; 1  cyl mpg  last -2.50***           NA         NA         0        1 mpg  ~ cyl</span></span>
+<span><span class="co">#&gt; 2   am mpg  last    2.57*           NA         NA         0        1 mpg  ~  am</span></span>
+<span><span class="co">#&gt; 3  mpg mpg  both  8.48***           NA         NA         0        1 mpg ~~ mpg</span></span>
+<span><span class="co">#&gt; 4  cyl cyl  both     3.09           NA         NA         0        1 cyl ~~ cyl</span></span>
+<span><span class="co">#&gt; 5  cyl  am  none    -0.45           NA         NA        NA        2 cyl ~~  am</span></span>
+<span><span class="co">#&gt; 6   am  am  both     0.24           NA         NA         0        1  am ~~  am</span></span>
 <span><span class="co">#&gt;     est   se pval        confint  est_sig est_std se_std pval_std</span></span>
 <span><span class="co">#&gt; 1 -2.50 0.34 0.00 [-3.17, -1.83] -2.50***   -0.74   0.08     0.00</span></span>
 <span><span class="co">#&gt; 2  2.57 1.23 0.04   [0.16, 4.98]    2.57*    0.21   0.10     0.03</span></span>
@@ -1132,10 +1143,10 @@ this; this is just one example.</p>
 <span><span class="co"># fit model</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
 <span><span class="co"># specify layout for consistency</span></span>
-<span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"Sepal.Width"</span>, <span class="st">""</span>,</span>
-<span>                     <span class="st">"Petal.Length"</span>, <span class="st">""</span>, <span class="st">"Sepal.Length"</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">""</span>, <span class="st">"Sepal.Width"</span>, <span class="st">""</span>, <span class="st">""</span>,</span>
+<span>                     <span class="st">"Petal.Length"</span>,<span class="st">""</span>, <span class="st">""</span>, <span class="st">""</span>, <span class="st">"Sepal.Length"</span>, rows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># get data from prepare_graph</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span>, layout <span class="op">=</span> <span class="va">layout</span>, angle <span class="op">=</span> <span class="fl">180</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span>, layout <span class="op">=</span> <span class="va">layout</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># standard graph</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
@@ -1151,41 +1162,15 @@ this; this is just one example.</p>
 <span><span class="co"># Plot, treat as ggplot object and add parsed node labels</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df_nodes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>, y<span class="op">=</span><span class="va">y</span>, label<span class="op">=</span><span class="va">label</span><span class="op">)</span>, parse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cache_Plotting_graphs/plotting-cache-12%2C.png" class="r-plt" alt="" width="100%"></p>
-<!--As explained before, the functions `get_edges()` and `get_nodes()`,
-which are used in the default arguments of `prepare_graph()` and `graph_sem()`,
-have an argument `columns` which adds auxiliary columns to the resulting data.frames.
-This can be used to customize visual aspects of the edges and nodes based on, for example, the value of the estimates:
-
-```r, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
-fit <- sem("mpg ~ cyl
-           mpg ~ am", data = mtcars)
-
-p <- prepare_graph(fit,
-                   edges = get_edges(fit, columns = "est"),
-                   fix_coord = TRUE)
-edges(p) %>%
-  mutate(color = "black",
-         color = replace(color, arrow == "last" & as.numeric(est) < 0, "red"),
-         color = replace(color, arrow == "last" & as.numeric(est) > 0, "green")) -> edges(p)
-
-plot(p)
-```
-```r, eval = FALSE, echo = FALSE, warning = FALSE, message = FALSE, out.width='30%'}
-fit <- sem("mpg ~ cyl
-           mpg ~ am", data = mtcars)
-set.seed(15)
-p <- prepare_graph(fit,
-                   edges = get_edges(fit, columns = "est"),
-                   fix_coord = TRUE)
-edges(p) %>%
-  mutate(color = "black",
-         color = replace(color, arrow == "last" & as.numeric(est) < 0, "red"),
-         color = replace(color, arrow == "last" & as.numeric(est) > 0, "green")) -> edges(p)
-
-p <- plot(p)
-
-```
--->
+</div>
+<div class="section level2">
+<h2 id="interactively-editing-a-plot">Interactively Editing a Plot<a class="anchor" aria-label="anchor" href="#interactively-editing-a-plot"></a>
+</h2>
+<p>You can interactively edit a plot in the browser via a Shiny app:</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_graph.html">prepare_graph</a></span><span class="op">(</span><span class="va">fit</span>, layout <span class="op">=</span> <span class="va">layout</span><span class="op">)</span></span>
+<span><span class="va">p_edited</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_editor.html">graph_editor</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p_edited</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

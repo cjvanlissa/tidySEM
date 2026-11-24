@@ -35,6 +35,7 @@ mind, and interface with the existing suite of packages in the
 You can install the public release of `tidySEM` from CRAN with:
 
 ``` r
+
 install.packages("tidySEM")
 ```
 
@@ -42,6 +43,7 @@ You can install the development version of metamixture from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("cjvanlissa/tidySEM")
 ```

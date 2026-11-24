@@ -9,13 +9,11 @@
 \alias{hide_sig}
 \alias{show_sig}
 \alias{colour_sig}
-\alias{color_sig}
+\alias{linewidth_sig}
 \alias{linetype_sig}
-\alias{size_sig}
 \alias{alpha_sig}
 \alias{fill_sig}
 \alias{label_colour_sig}
-\alias{label_color_sig}
 \alias{label_fill_sig}
 \alias{label_size_sig}
 \alias{label_alpha_sig}
@@ -29,13 +27,11 @@
 \alias{hide_nonsig}
 \alias{show_nonsig}
 \alias{colour_nonsig}
-\alias{color_nonsig}
+\alias{linewidth_nonsig}
 \alias{linetype_nonsig}
-\alias{size_nonsig}
 \alias{alpha_nonsig}
 \alias{fill_nonsig}
 \alias{label_colour_nonsig}
-\alias{label_color_nonsig}
 \alias{label_fill_nonsig}
 \alias{label_size_nonsig}
 \alias{label_alpha_nonsig}
@@ -49,13 +45,11 @@
 \alias{hide_fixed}
 \alias{show_fixed}
 \alias{colour_fixed}
-\alias{color_fixed}
+\alias{linewidth_fixed}
 \alias{linetype_fixed}
-\alias{size_fixed}
 \alias{alpha_fixed}
 \alias{fill_fixed}
 \alias{label_colour_fixed}
-\alias{label_color_fixed}
 \alias{label_fill_fixed}
 \alias{label_size_fixed}
 \alias{label_alpha_fixed}
@@ -69,13 +63,11 @@
 \alias{hide_pos}
 \alias{show_pos}
 \alias{colour_pos}
-\alias{color_pos}
+\alias{linewidth_pos}
 \alias{linetype_pos}
-\alias{size_pos}
 \alias{alpha_pos}
 \alias{fill_pos}
 \alias{label_colour_pos}
-\alias{label_color_pos}
 \alias{label_fill_pos}
 \alias{label_size_pos}
 \alias{label_alpha_pos}
@@ -89,13 +81,11 @@
 \alias{hide_neg}
 \alias{show_neg}
 \alias{colour_neg}
-\alias{color_neg}
+\alias{linewidth_neg}
 \alias{linetype_neg}
-\alias{size_neg}
 \alias{alpha_neg}
 \alias{fill_neg}
 \alias{label_colour_neg}
-\alias{label_color_neg}
 \alias{label_fill_neg}
 \alias{label_size_neg}
 \alias{label_alpha_neg}
@@ -109,12 +99,11 @@
 \alias{hide_var}
 \alias{show_var}
 \alias{colour_var}
-\alias{color_var}
+\alias{linewidth_var}
 \alias{linetype_var}
-\alias{size_var}
 \alias{alpha_var}
+\alias{fill_var}
 \alias{label_colour_var}
-\alias{label_color_var}
 \alias{label_fill_var}
 \alias{label_size_var}
 \alias{label_alpha_var}
@@ -127,12 +116,11 @@
 \alias{hide_cov}
 \alias{show_cov}
 \alias{colour_cov}
-\alias{color_cov}
+\alias{linewidth_cov}
 \alias{linetype_cov}
-\alias{size_cov}
 \alias{alpha_cov}
+\alias{fill_cov}
 \alias{label_colour_cov}
-\alias{label_color_cov}
 \alias{label_fill_cov}
 \alias{label_size_cov}
 \alias{label_alpha_cov}
@@ -146,12 +134,11 @@
 \alias{hide_reg}
 \alias{show_reg}
 \alias{colour_reg}
-\alias{color_reg}
+\alias{linewidth_reg}
 \alias{linetype_reg}
-\alias{size_reg}
 \alias{alpha_reg}
+\alias{fill_reg}
 \alias{label_colour_reg}
-\alias{label_color_reg}
 \alias{label_fill_reg}
 \alias{label_size_reg}
 \alias{label_alpha_reg}
@@ -165,12 +152,11 @@
 \alias{hide_load}
 \alias{show_load}
 \alias{colour_load}
-\alias{color_load}
+\alias{linewidth_load}
 \alias{linetype_load}
-\alias{size_load}
 \alias{alpha_load}
+\alias{fill_load}
 \alias{label_colour_load}
-\alias{label_color_load}
 \alias{label_fill_load}
 \alias{label_size_load}
 \alias{label_alpha_load}
@@ -184,13 +170,11 @@
 \alias{hide_obs}
 \alias{show_obs}
 \alias{colour_obs}
-\alias{color_obs}
+\alias{linewidth_obs}
 \alias{linetype_obs}
-\alias{size_obs}
 \alias{alpha_obs}
 \alias{fill_obs}
 \alias{label_colour_obs}
-\alias{label_color_obs}
 \alias{label_fill_obs}
 \alias{label_size_obs}
 \alias{label_alpha_obs}
@@ -203,13 +187,11 @@
 \alias{hide_latent}
 \alias{show_latent}
 \alias{colour_latent}
-\alias{color_latent}
+\alias{linewidth_latent}
 \alias{linetype_latent}
-\alias{size_latent}
 \alias{alpha_latent}
 \alias{fill_latent}
 \alias{label_colour_latent}
-\alias{label_color_latent}
 \alias{label_fill_latent}
 \alias{label_size_latent}
 \alias{label_alpha_latent}
@@ -222,12 +204,11 @@
 \alias{hide_sig_nodes}
 \alias{show_sig_nodes}
 \alias{colour_sig_nodes}
-\alias{color_sig_nodes}
+\alias{linewidth_sig_nodes}
 \alias{linetype_sig_nodes}
-\alias{size_sig_nodes}
 \alias{alpha_sig_nodes}
+\alias{fill_sig_nodes}
 \alias{label_colour_sig_nodes}
-\alias{label_color_sig_nodes}
 \alias{label_fill_sig_nodes}
 \alias{label_size_sig_nodes}
 \alias{label_alpha_sig_nodes}
@@ -240,12 +221,11 @@
 \alias{hide_nonsig_nodes}
 \alias{show_nonsig_nodes}
 \alias{colour_nonsig_nodes}
-\alias{color_nonsig_nodes}
+\alias{linewidth_nonsig_nodes}
 \alias{linetype_nonsig_nodes}
-\alias{size_nonsig_nodes}
 \alias{alpha_nonsig_nodes}
+\alias{fill_nonsig_nodes}
 \alias{label_colour_nonsig_nodes}
-\alias{label_color_nonsig_nodes}
 \alias{label_fill_nonsig_nodes}
 \alias{label_size_nonsig_nodes}
 \alias{label_alpha_nonsig_nodes}
@@ -258,12 +238,11 @@
 \alias{hide_fixed_nodes}
 \alias{show_fixed_nodes}
 \alias{colour_fixed_nodes}
-\alias{color_fixed_nodes}
+\alias{linewidth_fixed_nodes}
 \alias{linetype_fixed_nodes}
-\alias{size_fixed_nodes}
 \alias{alpha_fixed_nodes}
+\alias{fill_fixed_nodes}
 \alias{label_colour_fixed_nodes}
-\alias{label_color_fixed_nodes}
 \alias{label_fill_fixed_nodes}
 \alias{label_size_fixed_nodes}
 \alias{label_alpha_fixed_nodes}
@@ -276,12 +255,11 @@
 \alias{hide_pos_nodes}
 \alias{show_pos_nodes}
 \alias{colour_pos_nodes}
-\alias{color_pos_nodes}
+\alias{linewidth_pos_nodes}
 \alias{linetype_pos_nodes}
-\alias{size_pos_nodes}
 \alias{alpha_pos_nodes}
+\alias{fill_pos_nodes}
 \alias{label_colour_pos_nodes}
-\alias{label_color_pos_nodes}
 \alias{label_fill_pos_nodes}
 \alias{label_size_pos_nodes}
 \alias{label_alpha_pos_nodes}
@@ -294,12 +272,11 @@
 \alias{hide_neg_nodes}
 \alias{show_neg_nodes}
 \alias{colour_neg_nodes}
-\alias{color_neg_nodes}
+\alias{linewidth_neg_nodes}
 \alias{linetype_neg_nodes}
-\alias{size_neg_nodes}
 \alias{alpha_neg_nodes}
+\alias{fill_neg_nodes}
 \alias{label_colour_neg_nodes}
-\alias{label_color_neg_nodes}
 \alias{label_fill_neg_nodes}
 \alias{label_size_neg_nodes}
 \alias{label_alpha_neg_nodes}
@@ -308,16 +285,48 @@
 \alias{label_hjust_neg_nodes}
 \alias{label_vjust_neg_nodes}
 \alias{label_lineheight_neg_nodes}
+\alias{all_obs_nodes}
+\alias{hide_obs_nodes}
+\alias{show_obs_nodes}
+\alias{colour_obs_nodes}
+\alias{linewidth_obs_nodes}
+\alias{linetype_obs_nodes}
+\alias{alpha_obs_nodes}
+\alias{fill_obs_nodes}
+\alias{label_colour_obs_nodes}
+\alias{label_fill_obs_nodes}
+\alias{label_size_obs_nodes}
+\alias{label_alpha_obs_nodes}
+\alias{label_family_obs_nodes}
+\alias{label_fontface_obs_nodes}
+\alias{label_hjust_obs_nodes}
+\alias{label_vjust_obs_nodes}
+\alias{label_lineheight_obs_nodes}
+\alias{all_latent_nodes}
+\alias{hide_latent_nodes}
+\alias{show_latent_nodes}
+\alias{colour_latent_nodes}
+\alias{linewidth_latent_nodes}
+\alias{linetype_latent_nodes}
+\alias{alpha_latent_nodes}
+\alias{fill_latent_nodes}
+\alias{label_colour_latent_nodes}
+\alias{label_fill_latent_nodes}
+\alias{label_size_latent_nodes}
+\alias{label_alpha_latent_nodes}
+\alias{label_family_latent_nodes}
+\alias{label_fontface_latent_nodes}
+\alias{label_hjust_latent_nodes}
+\alias{label_vjust_latent_nodes}
+\alias{label_lineheight_latent_nodes}
 \alias{all_sig_edges}
 \alias{hide_sig_edges}
 \alias{show_sig_edges}
 \alias{colour_sig_edges}
-\alias{color_sig_edges}
+\alias{linewidth_sig_edges}
 \alias{linetype_sig_edges}
-\alias{size_sig_edges}
 \alias{alpha_sig_edges}
 \alias{label_colour_sig_edges}
-\alias{label_color_sig_edges}
 \alias{label_fill_sig_edges}
 \alias{label_size_sig_edges}
 \alias{label_alpha_sig_edges}
@@ -326,16 +335,15 @@
 \alias{label_hjust_sig_edges}
 \alias{label_vjust_sig_edges}
 \alias{label_lineheight_sig_edges}
+\alias{label_location_sig_edges}
 \alias{all_nonsig_edges}
 \alias{hide_nonsig_edges}
 \alias{show_nonsig_edges}
 \alias{colour_nonsig_edges}
-\alias{color_nonsig_edges}
+\alias{linewidth_nonsig_edges}
 \alias{linetype_nonsig_edges}
-\alias{size_nonsig_edges}
 \alias{alpha_nonsig_edges}
 \alias{label_colour_nonsig_edges}
-\alias{label_color_nonsig_edges}
 \alias{label_fill_nonsig_edges}
 \alias{label_size_nonsig_edges}
 \alias{label_alpha_nonsig_edges}
@@ -344,16 +352,15 @@
 \alias{label_hjust_nonsig_edges}
 \alias{label_vjust_nonsig_edges}
 \alias{label_lineheight_nonsig_edges}
+\alias{label_location_nonsig_edges}
 \alias{all_fixed_edges}
 \alias{hide_fixed_edges}
 \alias{show_fixed_edges}
 \alias{colour_fixed_edges}
-\alias{color_fixed_edges}
+\alias{linewidth_fixed_edges}
 \alias{linetype_fixed_edges}
-\alias{size_fixed_edges}
 \alias{alpha_fixed_edges}
 \alias{label_colour_fixed_edges}
-\alias{label_color_fixed_edges}
 \alias{label_fill_fixed_edges}
 \alias{label_size_fixed_edges}
 \alias{label_alpha_fixed_edges}
@@ -362,16 +369,15 @@
 \alias{label_hjust_fixed_edges}
 \alias{label_vjust_fixed_edges}
 \alias{label_lineheight_fixed_edges}
+\alias{label_location_fixed_edges}
 \alias{all_pos_edges}
 \alias{hide_pos_edges}
 \alias{show_pos_edges}
 \alias{colour_pos_edges}
-\alias{color_pos_edges}
+\alias{linewidth_pos_edges}
 \alias{linetype_pos_edges}
-\alias{size_pos_edges}
 \alias{alpha_pos_edges}
 \alias{label_colour_pos_edges}
-\alias{label_color_pos_edges}
 \alias{label_fill_pos_edges}
 \alias{label_size_pos_edges}
 \alias{label_alpha_pos_edges}
@@ -380,16 +386,15 @@
 \alias{label_hjust_pos_edges}
 \alias{label_vjust_pos_edges}
 \alias{label_lineheight_pos_edges}
+\alias{label_location_pos_edges}
 \alias{all_neg_edges}
 \alias{hide_neg_edges}
 \alias{show_neg_edges}
 \alias{colour_neg_edges}
-\alias{color_neg_edges}
+\alias{linewidth_neg_edges}
 \alias{linetype_neg_edges}
-\alias{size_neg_edges}
 \alias{alpha_neg_edges}
 \alias{label_colour_neg_edges}
-\alias{label_color_neg_edges}
 \alias{label_fill_neg_edges}
 \alias{label_size_neg_edges}
 \alias{label_alpha_neg_edges}
@@ -398,6 +403,155 @@
 \alias{label_hjust_neg_edges}
 \alias{label_vjust_neg_edges}
 \alias{label_lineheight_neg_edges}
+\alias{label_location_neg_edges}
+\alias{all_var_edges}
+\alias{hide_var_edges}
+\alias{show_var_edges}
+\alias{colour_var_edges}
+\alias{linewidth_var_edges}
+\alias{linetype_var_edges}
+\alias{alpha_var_edges}
+\alias{label_colour_var_edges}
+\alias{label_fill_var_edges}
+\alias{label_size_var_edges}
+\alias{label_alpha_var_edges}
+\alias{label_family_var_edges}
+\alias{label_fontface_var_edges}
+\alias{label_hjust_var_edges}
+\alias{label_vjust_var_edges}
+\alias{label_lineheight_var_edges}
+\alias{all_cov_edges}
+\alias{hide_cov_edges}
+\alias{show_cov_edges}
+\alias{colour_cov_edges}
+\alias{linewidth_cov_edges}
+\alias{linetype_cov_edges}
+\alias{alpha_cov_edges}
+\alias{label_colour_cov_edges}
+\alias{label_fill_cov_edges}
+\alias{label_size_cov_edges}
+\alias{label_alpha_cov_edges}
+\alias{label_family_cov_edges}
+\alias{label_fontface_cov_edges}
+\alias{label_hjust_cov_edges}
+\alias{label_vjust_cov_edges}
+\alias{label_lineheight_cov_edges}
+\alias{label_location_cov_edges}
+\alias{all_reg_edges}
+\alias{hide_reg_edges}
+\alias{show_reg_edges}
+\alias{colour_reg_edges}
+\alias{linewidth_reg_edges}
+\alias{linetype_reg_edges}
+\alias{alpha_reg_edges}
+\alias{label_colour_reg_edges}
+\alias{label_fill_reg_edges}
+\alias{label_size_reg_edges}
+\alias{label_alpha_reg_edges}
+\alias{label_family_reg_edges}
+\alias{label_fontface_reg_edges}
+\alias{label_hjust_reg_edges}
+\alias{label_vjust_reg_edges}
+\alias{label_lineheight_reg_edges}
+\alias{label_location_reg_edges}
+\alias{all_load_edges}
+\alias{hide_load_edges}
+\alias{show_load_edges}
+\alias{colour_load_edges}
+\alias{linewidth_load_edges}
+\alias{linetype_load_edges}
+\alias{alpha_load_edges}
+\alias{label_colour_load_edges}
+\alias{label_fill_load_edges}
+\alias{label_size_load_edges}
+\alias{label_alpha_load_edges}
+\alias{label_family_load_edges}
+\alias{label_fontface_load_edges}
+\alias{label_hjust_load_edges}
+\alias{label_vjust_load_edges}
+\alias{label_lineheight_load_edges}
+\alias{label_location_load_edges}
+\alias{color_sig}
+\alias{color_nonsig}
+\alias{color_fixed}
+\alias{color_pos}
+\alias{color_neg}
+\alias{color_var}
+\alias{color_cov}
+\alias{color_reg}
+\alias{color_load}
+\alias{color_obs}
+\alias{color_latent}
+\alias{color_sig_nodes}
+\alias{color_nonsig_nodes}
+\alias{color_fixed_nodes}
+\alias{color_pos_nodes}
+\alias{color_neg_nodes}
+\alias{color_obs_nodes}
+\alias{color_latent_nodes}
+\alias{color_sig_edges}
+\alias{color_nonsig_edges}
+\alias{color_fixed_edges}
+\alias{color_pos_edges}
+\alias{color_neg_edges}
+\alias{color_var_edges}
+\alias{color_cov_edges}
+\alias{color_reg_edges}
+\alias{color_load_edges}
+\alias{label_color_sig}
+\alias{label_color_nonsig}
+\alias{label_color_fixed}
+\alias{label_color_pos}
+\alias{label_color_neg}
+\alias{label_color_var}
+\alias{label_color_cov}
+\alias{label_color_reg}
+\alias{label_color_load}
+\alias{label_color_obs}
+\alias{label_color_latent}
+\alias{label_color_sig_nodes}
+\alias{label_color_nonsig_nodes}
+\alias{label_color_fixed_nodes}
+\alias{label_color_pos_nodes}
+\alias{label_color_neg_nodes}
+\alias{label_color_obs_nodes}
+\alias{label_color_latent_nodes}
+\alias{label_color_sig_edges}
+\alias{label_color_nonsig_edges}
+\alias{label_color_fixed_edges}
+\alias{label_color_pos_edges}
+\alias{label_color_neg_edges}
+\alias{label_color_var_edges}
+\alias{label_color_cov_edges}
+\alias{label_color_reg_edges}
+\alias{label_color_load_edges}
+\alias{size_sig}
+\alias{size_nonsig}
+\alias{size_fixed}
+\alias{size_pos}
+\alias{size_neg}
+\alias{size_var}
+\alias{size_cov}
+\alias{size_reg}
+\alias{size_load}
+\alias{size_obs}
+\alias{size_latent}
+\alias{size_sig_nodes}
+\alias{size_nonsig_nodes}
+\alias{size_fixed_nodes}
+\alias{size_pos_nodes}
+\alias{size_neg_nodes}
+\alias{size_obs_nodes}
+\alias{size_latent_nodes}
+\alias{size_sig_edges}
+\alias{size_nonsig_edges}
+\alias{size_fixed_edges}
+\alias{size_pos_edges}
+\alias{size_neg_edges}
+\alias{size_var_edges}
+\alias{size_cov_edges}
+\alias{size_reg_edges}
+\alias{size_load_edges}
 \title{Conditionally edit a sem_graph object}
 \usage{
 if_edit(data, condition, expr, ...)
@@ -416,19 +570,15 @@ show_sig(data, ...)
 
 colour_sig(data, colour = "black", ...)
 
-color_sig(data, color = "black", ...)
+linewidth_sig(data, linewidth = 1, ...)
 
 linetype_sig(data, linetype = 1, ...)
-
-size_sig(data, size = 1, ...)
 
 alpha_sig(data, alpha = 1, ...)
 
 fill_sig(data, fill = "white", ...)
 
 label_colour_sig(data, label_colour = "black", ...)
-
-label_color_sig(data, label_color = "black", ...)
 
 label_fill_sig(data, label_fill = "white", ...)
 
@@ -456,19 +606,15 @@ show_nonsig(data, ...)
 
 colour_nonsig(data, colour = "black", ...)
 
-color_nonsig(data, color = "black", ...)
+linewidth_nonsig(data, linewidth = 1, ...)
 
 linetype_nonsig(data, linetype = 1, ...)
-
-size_nonsig(data, size = 1, ...)
 
 alpha_nonsig(data, alpha = 1, ...)
 
 fill_nonsig(data, fill = "white", ...)
 
 label_colour_nonsig(data, label_colour = "black", ...)
-
-label_color_nonsig(data, label_color = "black", ...)
 
 label_fill_nonsig(data, label_fill = "white", ...)
 
@@ -496,19 +642,15 @@ show_fixed(data, ...)
 
 colour_fixed(data, colour = "black", ...)
 
-color_fixed(data, color = "black", ...)
+linewidth_fixed(data, linewidth = 1, ...)
 
 linetype_fixed(data, linetype = 1, ...)
-
-size_fixed(data, size = 1, ...)
 
 alpha_fixed(data, alpha = 1, ...)
 
 fill_fixed(data, fill = "white", ...)
 
 label_colour_fixed(data, label_colour = "black", ...)
-
-label_color_fixed(data, label_color = "black", ...)
 
 label_fill_fixed(data, label_fill = "white", ...)
 
@@ -536,19 +678,15 @@ show_pos(data, ...)
 
 colour_pos(data, colour = "black", ...)
 
-color_pos(data, color = "black", ...)
+linewidth_pos(data, linewidth = 1, ...)
 
 linetype_pos(data, linetype = 1, ...)
-
-size_pos(data, size = 1, ...)
 
 alpha_pos(data, alpha = 1, ...)
 
 fill_pos(data, fill = "white", ...)
 
 label_colour_pos(data, label_colour = "black", ...)
-
-label_color_pos(data, label_color = "black", ...)
 
 label_fill_pos(data, label_fill = "white", ...)
 
@@ -576,19 +714,15 @@ show_neg(data, ...)
 
 colour_neg(data, colour = "black", ...)
 
-color_neg(data, color = "black", ...)
+linewidth_neg(data, linewidth = 1, ...)
 
 linetype_neg(data, linetype = 1, ...)
-
-size_neg(data, size = 1, ...)
 
 alpha_neg(data, alpha = 1, ...)
 
 fill_neg(data, fill = "white", ...)
 
 label_colour_neg(data, label_colour = "black", ...)
-
-label_color_neg(data, label_color = "black", ...)
 
 label_fill_neg(data, label_fill = "white", ...)
 
@@ -616,17 +750,15 @@ show_var(data, ...)
 
 colour_var(data, colour = "black", ...)
 
-color_var(data, color = "black", ...)
+linewidth_var(data, linewidth = 1, ...)
 
 linetype_var(data, linetype = 1, ...)
 
-size_var(data, size = 1, ...)
-
 alpha_var(data, alpha = 1, ...)
 
-label_colour_var(data, label_colour = "black", ...)
+fill_var(data, fill = "white", ...)
 
-label_color_var(data, label_color = "black", ...)
+label_colour_var(data, label_colour = "black", ...)
 
 label_fill_var(data, label_fill = "white", ...)
 
@@ -652,17 +784,15 @@ show_cov(data, ...)
 
 colour_cov(data, colour = "black", ...)
 
-color_cov(data, color = "black", ...)
+linewidth_cov(data, linewidth = 1, ...)
 
 linetype_cov(data, linetype = 1, ...)
 
-size_cov(data, size = 1, ...)
-
 alpha_cov(data, alpha = 1, ...)
 
-label_colour_cov(data, label_colour = "black", ...)
+fill_cov(data, fill = "white", ...)
 
-label_color_cov(data, label_color = "black", ...)
+label_colour_cov(data, label_colour = "black", ...)
 
 label_fill_cov(data, label_fill = "white", ...)
 
@@ -690,17 +820,15 @@ show_reg(data, ...)
 
 colour_reg(data, colour = "black", ...)
 
-color_reg(data, color = "black", ...)
+linewidth_reg(data, linewidth = 1, ...)
 
 linetype_reg(data, linetype = 1, ...)
 
-size_reg(data, size = 1, ...)
-
 alpha_reg(data, alpha = 1, ...)
 
-label_colour_reg(data, label_colour = "black", ...)
+fill_reg(data, fill = "white", ...)
 
-label_color_reg(data, label_color = "black", ...)
+label_colour_reg(data, label_colour = "black", ...)
 
 label_fill_reg(data, label_fill = "white", ...)
 
@@ -728,17 +856,15 @@ show_load(data, ...)
 
 colour_load(data, colour = "black", ...)
 
-color_load(data, color = "black", ...)
+linewidth_load(data, linewidth = 1, ...)
 
 linetype_load(data, linetype = 1, ...)
 
-size_load(data, size = 1, ...)
-
 alpha_load(data, alpha = 1, ...)
 
-label_colour_load(data, label_colour = "black", ...)
+fill_load(data, fill = "white", ...)
 
-label_color_load(data, label_color = "black", ...)
+label_colour_load(data, label_colour = "black", ...)
 
 label_fill_load(data, label_fill = "white", ...)
 
@@ -766,19 +892,15 @@ show_obs(data, ...)
 
 colour_obs(data, colour = "black", ...)
 
-color_obs(data, color = "black", ...)
+linewidth_obs(data, linewidth = 1, ...)
 
 linetype_obs(data, linetype = 1, ...)
-
-size_obs(data, size = 1, ...)
 
 alpha_obs(data, alpha = 1, ...)
 
 fill_obs(data, fill = "white", ...)
 
 label_colour_obs(data, label_colour = "black", ...)
-
-label_color_obs(data, label_color = "black", ...)
 
 label_fill_obs(data, label_fill = "white", ...)
 
@@ -804,19 +926,15 @@ show_latent(data, ...)
 
 colour_latent(data, colour = "black", ...)
 
-color_latent(data, color = "black", ...)
+linewidth_latent(data, linewidth = 1, ...)
 
 linetype_latent(data, linetype = 1, ...)
-
-size_latent(data, size = 1, ...)
 
 alpha_latent(data, alpha = 1, ...)
 
 fill_latent(data, fill = "white", ...)
 
 label_colour_latent(data, label_colour = "black", ...)
-
-label_color_latent(data, label_color = "black", ...)
 
 label_fill_latent(data, label_fill = "white", ...)
 
@@ -842,17 +960,15 @@ show_sig_nodes(data, ...)
 
 colour_sig_nodes(data, colour = "black", ...)
 
-color_sig_nodes(data, color = "black", ...)
+linewidth_sig_nodes(data, linewidth = 1, ...)
 
 linetype_sig_nodes(data, linetype = 1, ...)
 
-size_sig_nodes(data, size = 1, ...)
-
 alpha_sig_nodes(data, alpha = 1, ...)
 
-label_colour_sig_nodes(data, label_colour = "black", ...)
+fill_sig_nodes(data, fill = "white", ...)
 
-label_color_sig_nodes(data, label_color = "black", ...)
+label_colour_sig_nodes(data, label_colour = "black", ...)
 
 label_fill_sig_nodes(data, label_fill = "white", ...)
 
@@ -878,17 +994,15 @@ show_nonsig_nodes(data, ...)
 
 colour_nonsig_nodes(data, colour = "black", ...)
 
-color_nonsig_nodes(data, color = "black", ...)
+linewidth_nonsig_nodes(data, linewidth = 1, ...)
 
 linetype_nonsig_nodes(data, linetype = 1, ...)
 
-size_nonsig_nodes(data, size = 1, ...)
-
 alpha_nonsig_nodes(data, alpha = 1, ...)
 
-label_colour_nonsig_nodes(data, label_colour = "black", ...)
+fill_nonsig_nodes(data, fill = "white", ...)
 
-label_color_nonsig_nodes(data, label_color = "black", ...)
+label_colour_nonsig_nodes(data, label_colour = "black", ...)
 
 label_fill_nonsig_nodes(data, label_fill = "white", ...)
 
@@ -914,17 +1028,15 @@ show_fixed_nodes(data, ...)
 
 colour_fixed_nodes(data, colour = "black", ...)
 
-color_fixed_nodes(data, color = "black", ...)
+linewidth_fixed_nodes(data, linewidth = 1, ...)
 
 linetype_fixed_nodes(data, linetype = 1, ...)
 
-size_fixed_nodes(data, size = 1, ...)
-
 alpha_fixed_nodes(data, alpha = 1, ...)
 
-label_colour_fixed_nodes(data, label_colour = "black", ...)
+fill_fixed_nodes(data, fill = "white", ...)
 
-label_color_fixed_nodes(data, label_color = "black", ...)
+label_colour_fixed_nodes(data, label_colour = "black", ...)
 
 label_fill_fixed_nodes(data, label_fill = "white", ...)
 
@@ -950,17 +1062,15 @@ show_pos_nodes(data, ...)
 
 colour_pos_nodes(data, colour = "black", ...)
 
-color_pos_nodes(data, color = "black", ...)
+linewidth_pos_nodes(data, linewidth = 1, ...)
 
 linetype_pos_nodes(data, linetype = 1, ...)
 
-size_pos_nodes(data, size = 1, ...)
-
 alpha_pos_nodes(data, alpha = 1, ...)
 
-label_colour_pos_nodes(data, label_colour = "black", ...)
+fill_pos_nodes(data, fill = "white", ...)
 
-label_color_pos_nodes(data, label_color = "black", ...)
+label_colour_pos_nodes(data, label_colour = "black", ...)
 
 label_fill_pos_nodes(data, label_fill = "white", ...)
 
@@ -986,17 +1096,15 @@ show_neg_nodes(data, ...)
 
 colour_neg_nodes(data, colour = "black", ...)
 
-color_neg_nodes(data, color = "black", ...)
+linewidth_neg_nodes(data, linewidth = 1, ...)
 
 linetype_neg_nodes(data, linetype = 1, ...)
 
-size_neg_nodes(data, size = 1, ...)
-
 alpha_neg_nodes(data, alpha = 1, ...)
 
-label_colour_neg_nodes(data, label_colour = "black", ...)
+fill_neg_nodes(data, fill = "white", ...)
 
-label_color_neg_nodes(data, label_color = "black", ...)
+label_colour_neg_nodes(data, label_colour = "black", ...)
 
 label_fill_neg_nodes(data, label_fill = "white", ...)
 
@@ -1014,6 +1122,74 @@ label_vjust_neg_nodes(data, label_vjust = "middle", ...)
 
 label_lineheight_neg_nodes(data, label_lineheight = 1, ...)
 
+all_obs_nodes(data, expr, ...)
+
+hide_obs_nodes(data, ...)
+
+show_obs_nodes(data, ...)
+
+colour_obs_nodes(data, colour = "black", ...)
+
+linewidth_obs_nodes(data, linewidth = 1, ...)
+
+linetype_obs_nodes(data, linetype = 1, ...)
+
+alpha_obs_nodes(data, alpha = 1, ...)
+
+fill_obs_nodes(data, fill = "white", ...)
+
+label_colour_obs_nodes(data, label_colour = "black", ...)
+
+label_fill_obs_nodes(data, label_fill = "white", ...)
+
+label_size_obs_nodes(data, label_size = 4, ...)
+
+label_alpha_obs_nodes(data, label_alpha = 1, ...)
+
+label_family_obs_nodes(data, label_family = "sans", ...)
+
+label_fontface_obs_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_obs_nodes(data, label_hjust = "center", ...)
+
+label_vjust_obs_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_obs_nodes(data, label_lineheight = 1, ...)
+
+all_latent_nodes(data, expr, ...)
+
+hide_latent_nodes(data, ...)
+
+show_latent_nodes(data, ...)
+
+colour_latent_nodes(data, colour = "black", ...)
+
+linewidth_latent_nodes(data, linewidth = 1, ...)
+
+linetype_latent_nodes(data, linetype = 1, ...)
+
+alpha_latent_nodes(data, alpha = 1, ...)
+
+fill_latent_nodes(data, fill = "white", ...)
+
+label_colour_latent_nodes(data, label_colour = "black", ...)
+
+label_fill_latent_nodes(data, label_fill = "white", ...)
+
+label_size_latent_nodes(data, label_size = 4, ...)
+
+label_alpha_latent_nodes(data, label_alpha = 1, ...)
+
+label_family_latent_nodes(data, label_family = "sans", ...)
+
+label_fontface_latent_nodes(data, label_fontface = "plain", ...)
+
+label_hjust_latent_nodes(data, label_hjust = "center", ...)
+
+label_vjust_latent_nodes(data, label_vjust = "middle", ...)
+
+label_lineheight_latent_nodes(data, label_lineheight = 1, ...)
+
 all_sig_edges(data, expr, ...)
 
 hide_sig_edges(data, ...)
@@ -1022,17 +1198,13 @@ show_sig_edges(data, ...)
 
 colour_sig_edges(data, colour = "black", ...)
 
-color_sig_edges(data, color = "black", ...)
+linewidth_sig_edges(data, linewidth = 1, ...)
 
 linetype_sig_edges(data, linetype = 1, ...)
-
-size_sig_edges(data, size = 1, ...)
 
 alpha_sig_edges(data, alpha = 1, ...)
 
 label_colour_sig_edges(data, label_colour = "black", ...)
-
-label_color_sig_edges(data, label_color = "black", ...)
 
 label_fill_sig_edges(data, label_fill = "white", ...)
 
@@ -1050,6 +1222,8 @@ label_vjust_sig_edges(data, label_vjust = "middle", ...)
 
 label_lineheight_sig_edges(data, label_lineheight = 1, ...)
 
+label_location_sig_edges(data, label_location = 0.5, ...)
+
 all_nonsig_edges(data, expr, ...)
 
 hide_nonsig_edges(data, ...)
@@ -1058,17 +1232,13 @@ show_nonsig_edges(data, ...)
 
 colour_nonsig_edges(data, colour = "black", ...)
 
-color_nonsig_edges(data, color = "black", ...)
+linewidth_nonsig_edges(data, linewidth = 1, ...)
 
 linetype_nonsig_edges(data, linetype = 1, ...)
-
-size_nonsig_edges(data, size = 1, ...)
 
 alpha_nonsig_edges(data, alpha = 1, ...)
 
 label_colour_nonsig_edges(data, label_colour = "black", ...)
-
-label_color_nonsig_edges(data, label_color = "black", ...)
 
 label_fill_nonsig_edges(data, label_fill = "white", ...)
 
@@ -1086,6 +1256,8 @@ label_vjust_nonsig_edges(data, label_vjust = "middle", ...)
 
 label_lineheight_nonsig_edges(data, label_lineheight = 1, ...)
 
+label_location_nonsig_edges(data, label_location = 0.5, ...)
+
 all_fixed_edges(data, expr, ...)
 
 hide_fixed_edges(data, ...)
@@ -1094,17 +1266,13 @@ show_fixed_edges(data, ...)
 
 colour_fixed_edges(data, colour = "black", ...)
 
-color_fixed_edges(data, color = "black", ...)
+linewidth_fixed_edges(data, linewidth = 1, ...)
 
 linetype_fixed_edges(data, linetype = 1, ...)
-
-size_fixed_edges(data, size = 1, ...)
 
 alpha_fixed_edges(data, alpha = 1, ...)
 
 label_colour_fixed_edges(data, label_colour = "black", ...)
-
-label_color_fixed_edges(data, label_color = "black", ...)
 
 label_fill_fixed_edges(data, label_fill = "white", ...)
 
@@ -1122,6 +1290,8 @@ label_vjust_fixed_edges(data, label_vjust = "middle", ...)
 
 label_lineheight_fixed_edges(data, label_lineheight = 1, ...)
 
+label_location_fixed_edges(data, label_location = 0.5, ...)
+
 all_pos_edges(data, expr, ...)
 
 hide_pos_edges(data, ...)
@@ -1130,17 +1300,13 @@ show_pos_edges(data, ...)
 
 colour_pos_edges(data, colour = "black", ...)
 
-color_pos_edges(data, color = "black", ...)
+linewidth_pos_edges(data, linewidth = 1, ...)
 
 linetype_pos_edges(data, linetype = 1, ...)
-
-size_pos_edges(data, size = 1, ...)
 
 alpha_pos_edges(data, alpha = 1, ...)
 
 label_colour_pos_edges(data, label_colour = "black", ...)
-
-label_color_pos_edges(data, label_color = "black", ...)
 
 label_fill_pos_edges(data, label_fill = "white", ...)
 
@@ -1158,6 +1324,8 @@ label_vjust_pos_edges(data, label_vjust = "middle", ...)
 
 label_lineheight_pos_edges(data, label_lineheight = 1, ...)
 
+label_location_pos_edges(data, label_location = 0.5, ...)
+
 all_neg_edges(data, expr, ...)
 
 hide_neg_edges(data, ...)
@@ -1166,17 +1334,13 @@ show_neg_edges(data, ...)
 
 colour_neg_edges(data, colour = "black", ...)
 
-color_neg_edges(data, color = "black", ...)
+linewidth_neg_edges(data, linewidth = 1, ...)
 
 linetype_neg_edges(data, linetype = 1, ...)
-
-size_neg_edges(data, size = 1, ...)
 
 alpha_neg_edges(data, alpha = 1, ...)
 
 label_colour_neg_edges(data, label_colour = "black", ...)
-
-label_color_neg_edges(data, label_color = "black", ...)
 
 label_fill_neg_edges(data, label_fill = "white", ...)
 
@@ -1193,6 +1357,304 @@ label_hjust_neg_edges(data, label_hjust = "center", ...)
 label_vjust_neg_edges(data, label_vjust = "middle", ...)
 
 label_lineheight_neg_edges(data, label_lineheight = 1, ...)
+
+label_location_neg_edges(data, label_location = 0.5, ...)
+
+all_var_edges(data, expr, ...)
+
+hide_var_edges(data, ...)
+
+show_var_edges(data, ...)
+
+colour_var_edges(data, colour = "black", ...)
+
+linewidth_var_edges(data, linewidth = 1, ...)
+
+linetype_var_edges(data, linetype = 1, ...)
+
+alpha_var_edges(data, alpha = 1, ...)
+
+label_colour_var_edges(data, label_colour = "black", ...)
+
+label_fill_var_edges(data, label_fill = "white", ...)
+
+label_size_var_edges(data, label_size = 4, ...)
+
+label_alpha_var_edges(data, label_alpha = 1, ...)
+
+label_family_var_edges(data, label_family = "sans", ...)
+
+label_fontface_var_edges(data, label_fontface = "plain", ...)
+
+label_hjust_var_edges(data, label_hjust = "center", ...)
+
+label_vjust_var_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_var_edges(data, label_lineheight = 1, ...)
+
+all_cov_edges(data, expr, ...)
+
+hide_cov_edges(data, ...)
+
+show_cov_edges(data, ...)
+
+colour_cov_edges(data, colour = "black", ...)
+
+linewidth_cov_edges(data, linewidth = 1, ...)
+
+linetype_cov_edges(data, linetype = 1, ...)
+
+alpha_cov_edges(data, alpha = 1, ...)
+
+label_colour_cov_edges(data, label_colour = "black", ...)
+
+label_fill_cov_edges(data, label_fill = "white", ...)
+
+label_size_cov_edges(data, label_size = 4, ...)
+
+label_alpha_cov_edges(data, label_alpha = 1, ...)
+
+label_family_cov_edges(data, label_family = "sans", ...)
+
+label_fontface_cov_edges(data, label_fontface = "plain", ...)
+
+label_hjust_cov_edges(data, label_hjust = "center", ...)
+
+label_vjust_cov_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_cov_edges(data, label_lineheight = 1, ...)
+
+label_location_cov_edges(data, label_location = 0.5, ...)
+
+all_reg_edges(data, expr, ...)
+
+hide_reg_edges(data, ...)
+
+show_reg_edges(data, ...)
+
+colour_reg_edges(data, colour = "black", ...)
+
+linewidth_reg_edges(data, linewidth = 1, ...)
+
+linetype_reg_edges(data, linetype = 1, ...)
+
+alpha_reg_edges(data, alpha = 1, ...)
+
+label_colour_reg_edges(data, label_colour = "black", ...)
+
+label_fill_reg_edges(data, label_fill = "white", ...)
+
+label_size_reg_edges(data, label_size = 4, ...)
+
+label_alpha_reg_edges(data, label_alpha = 1, ...)
+
+label_family_reg_edges(data, label_family = "sans", ...)
+
+label_fontface_reg_edges(data, label_fontface = "plain", ...)
+
+label_hjust_reg_edges(data, label_hjust = "center", ...)
+
+label_vjust_reg_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_reg_edges(data, label_lineheight = 1, ...)
+
+label_location_reg_edges(data, label_location = 0.5, ...)
+
+all_load_edges(data, expr, ...)
+
+hide_load_edges(data, ...)
+
+show_load_edges(data, ...)
+
+colour_load_edges(data, colour = "black", ...)
+
+linewidth_load_edges(data, linewidth = 1, ...)
+
+linetype_load_edges(data, linetype = 1, ...)
+
+alpha_load_edges(data, alpha = 1, ...)
+
+label_colour_load_edges(data, label_colour = "black", ...)
+
+label_fill_load_edges(data, label_fill = "white", ...)
+
+label_size_load_edges(data, label_size = 4, ...)
+
+label_alpha_load_edges(data, label_alpha = 1, ...)
+
+label_family_load_edges(data, label_family = "sans", ...)
+
+label_fontface_load_edges(data, label_fontface = "plain", ...)
+
+label_hjust_load_edges(data, label_hjust = "center", ...)
+
+label_vjust_load_edges(data, label_vjust = "middle", ...)
+
+label_lineheight_load_edges(data, label_lineheight = 1, ...)
+
+label_location_load_edges(data, label_location = 0.5, ...)
+
+color_sig(data, color = "black", ...)
+
+color_nonsig(data, color = "black", ...)
+
+color_fixed(data, color = "black", ...)
+
+color_pos(data, color = "black", ...)
+
+color_neg(data, color = "black", ...)
+
+color_var(data, color = "black", ...)
+
+color_cov(data, color = "black", ...)
+
+color_reg(data, color = "black", ...)
+
+color_load(data, color = "black", ...)
+
+color_obs(data, color = "black", ...)
+
+color_latent(data, color = "black", ...)
+
+color_sig_nodes(data, color = "black", ...)
+
+color_nonsig_nodes(data, color = "black", ...)
+
+color_fixed_nodes(data, color = "black", ...)
+
+color_pos_nodes(data, color = "black", ...)
+
+color_neg_nodes(data, color = "black", ...)
+
+color_obs_nodes(data, color = "black", ...)
+
+color_latent_nodes(data, color = "black", ...)
+
+color_sig_edges(data, color = "black", ...)
+
+color_nonsig_edges(data, color = "black", ...)
+
+color_fixed_edges(data, color = "black", ...)
+
+color_pos_edges(data, color = "black", ...)
+
+color_neg_edges(data, color = "black", ...)
+
+color_var_edges(data, color = "black", ...)
+
+color_cov_edges(data, color = "black", ...)
+
+color_reg_edges(data, color = "black", ...)
+
+color_load_edges(data, color = "black", ...)
+
+label_color_sig(data, label_color = "black", ...)
+
+label_color_nonsig(data, label_color = "black", ...)
+
+label_color_fixed(data, label_color = "black", ...)
+
+label_color_pos(data, label_color = "black", ...)
+
+label_color_neg(data, label_color = "black", ...)
+
+label_color_var(data, label_color = "black", ...)
+
+label_color_cov(data, label_color = "black", ...)
+
+label_color_reg(data, label_color = "black", ...)
+
+label_color_load(data, label_color = "black", ...)
+
+label_color_obs(data, label_color = "black", ...)
+
+label_color_latent(data, label_color = "black", ...)
+
+label_color_sig_nodes(data, label_color = "black", ...)
+
+label_color_nonsig_nodes(data, label_color = "black", ...)
+
+label_color_fixed_nodes(data, label_color = "black", ...)
+
+label_color_pos_nodes(data, label_color = "black", ...)
+
+label_color_neg_nodes(data, label_color = "black", ...)
+
+label_color_obs_nodes(data, label_color = "black", ...)
+
+label_color_latent_nodes(data, label_color = "black", ...)
+
+label_color_sig_edges(data, label_color = "black", ...)
+
+label_color_nonsig_edges(data, label_color = "black", ...)
+
+label_color_fixed_edges(data, label_color = "black", ...)
+
+label_color_pos_edges(data, label_color = "black", ...)
+
+label_color_neg_edges(data, label_color = "black", ...)
+
+label_color_var_edges(data, label_color = "black", ...)
+
+label_color_cov_edges(data, label_color = "black", ...)
+
+label_color_reg_edges(data, label_color = "black", ...)
+
+label_color_load_edges(data, label_color = "black", ...)
+
+size_sig(data, size = 1, ...)
+
+size_nonsig(data, size = 1, ...)
+
+size_fixed(data, size = 1, ...)
+
+size_pos(data, size = 1, ...)
+
+size_neg(data, size = 1, ...)
+
+size_var(data, size = 1, ...)
+
+size_cov(data, size = 1, ...)
+
+size_reg(data, size = 1, ...)
+
+size_load(data, size = 1, ...)
+
+size_obs(data, size = 1, ...)
+
+size_latent(data, size = 1, ...)
+
+size_sig_nodes(data, size = 1, ...)
+
+size_nonsig_nodes(data, size = 1, ...)
+
+size_fixed_nodes(data, size = 1, ...)
+
+size_pos_nodes(data, size = 1, ...)
+
+size_neg_nodes(data, size = 1, ...)
+
+size_obs_nodes(data, size = 1, ...)
+
+size_latent_nodes(data, size = 1, ...)
+
+size_sig_edges(data, size = 1, ...)
+
+size_nonsig_edges(data, size = 1, ...)
+
+size_fixed_edges(data, size = 1, ...)
+
+size_pos_edges(data, size = 1, ...)
+
+size_neg_edges(data, size = 1, ...)
+
+size_var_edges(data, size = 1, ...)
+
+size_cov_edges(data, size = 1, ...)
+
+size_reg_edges(data, size = 1, ...)
+
+size_load_edges(data, size = 1, ...)
 }
 \arguments{
 \item{data}{Object to manipulate.}
@@ -1212,16 +1674,12 @@ edit, defaults to \code{c("edges", "nodes")}.}
 indicating which colour to assign to
 the selected elements.}
 
-\item{color}{Atomic character vector,
-indicating which color to assign to
+\item{linewidth}{Atomic character vector,
+indicating which linewidth to assign to
 the selected elements.}
 
 \item{linetype}{Atomic character vector,
 indicating which linetype to assign to
-the selected elements.}
-
-\item{size}{Atomic character vector,
-indicating which size to assign to
 the selected elements.}
 
 \item{alpha}{Atomic character vector,
@@ -1234,10 +1692,6 @@ the selected elements.}
 
 \item{label_colour}{Atomic character vector,
 indicating which label_colour to assign to
-the selected elements.}
-
-\item{label_color}{Atomic character vector,
-indicating which label_color to assign to
 the selected elements.}
 
 \item{label_fill}{Atomic character vector,
@@ -1275,6 +1729,15 @@ the selected elements.}
 \item{label_location}{Atomic character vector,
 indicating which label_location to assign to
 the selected elements.}
+
+\item{color}{Synonym of \code{colour}, which is the preferred spelling for
+\code{ggplot}.}
+
+\item{label_color}{Synonym of \code{label_colour}, which is the preferred spelling
+for \code{ggplot}.}
+
+\item{size}{Synonym for \code{linewidth}, which is preferred because it removes
+ambiguity.}
 }
 \value{
 Object of the same class as \code{data}.
@@ -1303,13 +1766,11 @@ out <- all_sig(p, expr = {label = "sig"})
 out <- hide_sig(p)
 out <- show_sig(p)
 out <- colour_sig(p, { colour = "black" })
-out <- color_sig(p, { color = "black" })
+out <- linewidth_sig(p, { linewidth = 1 })
 out <- linetype_sig(p, { linetype = 1 })
-out <- size_sig(p, { size = 1 })
 out <- alpha_sig(p, { alpha = 1 })
 out <- fill_sig(p, { fill = "white" })
 out <- label_colour_sig(p, { label_colour = "black" })
-out <- label_color_sig(p, { label_color = "black" })
 out <- label_fill_sig(p, { label_fill = "white" })
 out <- label_size_sig(p, { label_size = 4 })
 out <- label_alpha_sig(p, { label_alpha = 1 })
@@ -1323,13 +1784,11 @@ out <- all_nonsig(p, expr = {label = "sig"})
 out <- hide_nonsig(p)
 out <- show_nonsig(p)
 out <- colour_nonsig(p, { colour = "black" })
-out <- color_nonsig(p, { color = "black" })
+out <- linewidth_nonsig(p, { linewidth = 1 })
 out <- linetype_nonsig(p, { linetype = 1 })
-out <- size_nonsig(p, { size = 1 })
 out <- alpha_nonsig(p, { alpha = 1 })
 out <- fill_nonsig(p, { fill = "white" })
 out <- label_colour_nonsig(p, { label_colour = "black" })
-out <- label_color_nonsig(p, { label_color = "black" })
 out <- label_fill_nonsig(p, { label_fill = "white" })
 out <- label_size_nonsig(p, { label_size = 4 })
 out <- label_alpha_nonsig(p, { label_alpha = 1 })
@@ -1343,13 +1802,11 @@ out <- all_fixed(p, expr = {label = "sig"})
 out <- hide_fixed(p)
 out <- show_fixed(p)
 out <- colour_fixed(p, { colour = "black" })
-out <- color_fixed(p, { color = "black" })
+out <- linewidth_fixed(p, { linewidth = 1 })
 out <- linetype_fixed(p, { linetype = 1 })
-out <- size_fixed(p, { size = 1 })
 out <- alpha_fixed(p, { alpha = 1 })
 out <- fill_fixed(p, { fill = "white" })
 out <- label_colour_fixed(p, { label_colour = "black" })
-out <- label_color_fixed(p, { label_color = "black" })
 out <- label_fill_fixed(p, { label_fill = "white" })
 out <- label_size_fixed(p, { label_size = 4 })
 out <- label_alpha_fixed(p, { label_alpha = 1 })
@@ -1363,13 +1820,11 @@ out <- all_pos(p, expr = {label = "sig"})
 out <- hide_pos(p)
 out <- show_pos(p)
 out <- colour_pos(p, { colour = "black" })
-out <- color_pos(p, { color = "black" })
+out <- linewidth_pos(p, { linewidth = 1 })
 out <- linetype_pos(p, { linetype = 1 })
-out <- size_pos(p, { size = 1 })
 out <- alpha_pos(p, { alpha = 1 })
 out <- fill_pos(p, { fill = "white" })
 out <- label_colour_pos(p, { label_colour = "black" })
-out <- label_color_pos(p, { label_color = "black" })
 out <- label_fill_pos(p, { label_fill = "white" })
 out <- label_size_pos(p, { label_size = 4 })
 out <- label_alpha_pos(p, { label_alpha = 1 })
@@ -1383,13 +1838,11 @@ out <- all_neg(p, expr = {label = "sig"})
 out <- hide_neg(p)
 out <- show_neg(p)
 out <- colour_neg(p, { colour = "black" })
-out <- color_neg(p, { color = "black" })
+out <- linewidth_neg(p, { linewidth = 1 })
 out <- linetype_neg(p, { linetype = 1 })
-out <- size_neg(p, { size = 1 })
 out <- alpha_neg(p, { alpha = 1 })
 out <- fill_neg(p, { fill = "white" })
 out <- label_colour_neg(p, { label_colour = "black" })
-out <- label_color_neg(p, { label_color = "black" })
 out <- label_fill_neg(p, { label_fill = "white" })
 out <- label_size_neg(p, { label_size = 4 })
 out <- label_alpha_neg(p, { label_alpha = 1 })
@@ -1403,12 +1856,11 @@ out <- all_var(p, expr = {label = "sig"})
 out <- hide_var(p)
 out <- show_var(p)
 out <- colour_var(p, { colour = "black" })
-out <- color_var(p, { color = "black" })
+out <- linewidth_var(p, { linewidth = 1 })
 out <- linetype_var(p, { linetype = 1 })
-out <- size_var(p, { size = 1 })
 out <- alpha_var(p, { alpha = 1 })
+out <- fill_var(p, { fill = "white" })
 out <- label_colour_var(p, { label_colour = "black" })
-out <- label_color_var(p, { label_color = "black" })
 out <- label_fill_var(p, { label_fill = "white" })
 out <- label_size_var(p, { label_size = 4 })
 out <- label_alpha_var(p, { label_alpha = 1 })
@@ -1421,12 +1873,11 @@ out <- all_cov(p, expr = {label = "sig"})
 out <- hide_cov(p)
 out <- show_cov(p)
 out <- colour_cov(p, { colour = "black" })
-out <- color_cov(p, { color = "black" })
+out <- linewidth_cov(p, { linewidth = 1 })
 out <- linetype_cov(p, { linetype = 1 })
-out <- size_cov(p, { size = 1 })
 out <- alpha_cov(p, { alpha = 1 })
+out <- fill_cov(p, { fill = "white" })
 out <- label_colour_cov(p, { label_colour = "black" })
-out <- label_color_cov(p, { label_color = "black" })
 out <- label_fill_cov(p, { label_fill = "white" })
 out <- label_size_cov(p, { label_size = 4 })
 out <- label_alpha_cov(p, { label_alpha = 1 })
@@ -1440,12 +1891,11 @@ out <- all_reg(p, expr = {label = "sig"})
 out <- hide_reg(p)
 out <- show_reg(p)
 out <- colour_reg(p, { colour = "black" })
-out <- color_reg(p, { color = "black" })
+out <- linewidth_reg(p, { linewidth = 1 })
 out <- linetype_reg(p, { linetype = 1 })
-out <- size_reg(p, { size = 1 })
 out <- alpha_reg(p, { alpha = 1 })
+out <- fill_reg(p, { fill = "white" })
 out <- label_colour_reg(p, { label_colour = "black" })
-out <- label_color_reg(p, { label_color = "black" })
 out <- label_fill_reg(p, { label_fill = "white" })
 out <- label_size_reg(p, { label_size = 4 })
 out <- label_alpha_reg(p, { label_alpha = 1 })
@@ -1459,12 +1909,11 @@ out <- all_load(p, expr = {label = "sig"})
 out <- hide_load(p)
 out <- show_load(p)
 out <- colour_load(p, { colour = "black" })
-out <- color_load(p, { color = "black" })
+out <- linewidth_load(p, { linewidth = 1 })
 out <- linetype_load(p, { linetype = 1 })
-out <- size_load(p, { size = 1 })
 out <- alpha_load(p, { alpha = 1 })
+out <- fill_load(p, { fill = "white" })
 out <- label_colour_load(p, { label_colour = "black" })
-out <- label_color_load(p, { label_color = "black" })
 out <- label_fill_load(p, { label_fill = "white" })
 out <- label_size_load(p, { label_size = 4 })
 out <- label_alpha_load(p, { label_alpha = 1 })
@@ -1478,13 +1927,11 @@ out <- all_obs(p, expr = {label = "sig"})
 out <- hide_obs(p)
 out <- show_obs(p)
 out <- colour_obs(p, { colour = "black" })
-out <- color_obs(p, { color = "black" })
+out <- linewidth_obs(p, { linewidth = 1 })
 out <- linetype_obs(p, { linetype = 1 })
-out <- size_obs(p, { size = 1 })
 out <- alpha_obs(p, { alpha = 1 })
 out <- fill_obs(p, { fill = "white" })
 out <- label_colour_obs(p, { label_colour = "black" })
-out <- label_color_obs(p, { label_color = "black" })
 out <- label_fill_obs(p, { label_fill = "white" })
 out <- label_size_obs(p, { label_size = 4 })
 out <- label_alpha_obs(p, { label_alpha = 1 })
@@ -1497,13 +1944,11 @@ out <- all_latent(p, expr = {label = "sig"})
 out <- hide_latent(p)
 out <- show_latent(p)
 out <- colour_latent(p, { colour = "black" })
-out <- color_latent(p, { color = "black" })
+out <- linewidth_latent(p, { linewidth = 1 })
 out <- linetype_latent(p, { linetype = 1 })
-out <- size_latent(p, { size = 1 })
 out <- alpha_latent(p, { alpha = 1 })
 out <- fill_latent(p, { fill = "white" })
 out <- label_colour_latent(p, { label_colour = "black" })
-out <- label_color_latent(p, { label_color = "black" })
 out <- label_fill_latent(p, { label_fill = "white" })
 out <- label_size_latent(p, { label_size = 4 })
 out <- label_alpha_latent(p, { label_alpha = 1 })
@@ -1516,12 +1961,11 @@ out <- all_sig(p, expr = {label = "sig"})
 out <- hide_sig(p)
 out <- show_sig(p)
 out <- colour_sig(p, { colour = "black" })
-out <- color_sig(p, { color = "black" })
+out <- linewidth_sig(p, { linewidth = 1 })
 out <- linetype_sig(p, { linetype = 1 })
-out <- size_sig(p, { size = 1 })
 out <- alpha_sig(p, { alpha = 1 })
+out <- fill_sig(p, { fill = "white" })
 out <- label_colour_sig(p, { label_colour = "black" })
-out <- label_color_sig(p, { label_color = "black" })
 out <- label_fill_sig(p, { label_fill = "white" })
 out <- label_size_sig(p, { label_size = 4 })
 out <- label_alpha_sig(p, { label_alpha = 1 })
@@ -1534,12 +1978,11 @@ out <- all_nonsig(p, expr = {label = "sig"})
 out <- hide_nonsig(p)
 out <- show_nonsig(p)
 out <- colour_nonsig(p, { colour = "black" })
-out <- color_nonsig(p, { color = "black" })
+out <- linewidth_nonsig(p, { linewidth = 1 })
 out <- linetype_nonsig(p, { linetype = 1 })
-out <- size_nonsig(p, { size = 1 })
 out <- alpha_nonsig(p, { alpha = 1 })
+out <- fill_nonsig(p, { fill = "white" })
 out <- label_colour_nonsig(p, { label_colour = "black" })
-out <- label_color_nonsig(p, { label_color = "black" })
 out <- label_fill_nonsig(p, { label_fill = "white" })
 out <- label_size_nonsig(p, { label_size = 4 })
 out <- label_alpha_nonsig(p, { label_alpha = 1 })
@@ -1552,12 +1995,11 @@ out <- all_fixed(p, expr = {label = "sig"})
 out <- hide_fixed(p)
 out <- show_fixed(p)
 out <- colour_fixed(p, { colour = "black" })
-out <- color_fixed(p, { color = "black" })
+out <- linewidth_fixed(p, { linewidth = 1 })
 out <- linetype_fixed(p, { linetype = 1 })
-out <- size_fixed(p, { size = 1 })
 out <- alpha_fixed(p, { alpha = 1 })
+out <- fill_fixed(p, { fill = "white" })
 out <- label_colour_fixed(p, { label_colour = "black" })
-out <- label_color_fixed(p, { label_color = "black" })
 out <- label_fill_fixed(p, { label_fill = "white" })
 out <- label_size_fixed(p, { label_size = 4 })
 out <- label_alpha_fixed(p, { label_alpha = 1 })
@@ -1570,12 +2012,11 @@ out <- all_pos(p, expr = {label = "sig"})
 out <- hide_pos(p)
 out <- show_pos(p)
 out <- colour_pos(p, { colour = "black" })
-out <- color_pos(p, { color = "black" })
+out <- linewidth_pos(p, { linewidth = 1 })
 out <- linetype_pos(p, { linetype = 1 })
-out <- size_pos(p, { size = 1 })
 out <- alpha_pos(p, { alpha = 1 })
+out <- fill_pos(p, { fill = "white" })
 out <- label_colour_pos(p, { label_colour = "black" })
-out <- label_color_pos(p, { label_color = "black" })
 out <- label_fill_pos(p, { label_fill = "white" })
 out <- label_size_pos(p, { label_size = 4 })
 out <- label_alpha_pos(p, { label_alpha = 1 })
@@ -1588,12 +2029,11 @@ out <- all_neg(p, expr = {label = "sig"})
 out <- hide_neg(p)
 out <- show_neg(p)
 out <- colour_neg(p, { colour = "black" })
-out <- color_neg(p, { color = "black" })
+out <- linewidth_neg(p, { linewidth = 1 })
 out <- linetype_neg(p, { linetype = 1 })
-out <- size_neg(p, { size = 1 })
 out <- alpha_neg(p, { alpha = 1 })
+out <- fill_neg(p, { fill = "white" })
 out <- label_colour_neg(p, { label_colour = "black" })
-out <- label_color_neg(p, { label_color = "black" })
 out <- label_fill_neg(p, { label_fill = "white" })
 out <- label_size_neg(p, { label_size = 4 })
 out <- label_alpha_neg(p, { label_alpha = 1 })
@@ -1602,16 +2042,48 @@ out <- label_fontface_neg(p, { label_fontface = "plain" })
 out <- label_hjust_neg(p, { label_hjust = "center" })
 out <- label_vjust_neg(p, { label_vjust = "middle" })
 out <- label_lineheight_neg(p, { label_lineheight = 1 })
+out <- all_obs(p, expr = {label = "sig"})
+out <- hide_obs(p)
+out <- show_obs(p)
+out <- colour_obs(p, { colour = "black" })
+out <- linewidth_obs(p, { linewidth = 1 })
+out <- linetype_obs(p, { linetype = 1 })
+out <- alpha_obs(p, { alpha = 1 })
+out <- fill_obs(p, { fill = "white" })
+out <- label_colour_obs(p, { label_colour = "black" })
+out <- label_fill_obs(p, { label_fill = "white" })
+out <- label_size_obs(p, { label_size = 4 })
+out <- label_alpha_obs(p, { label_alpha = 1 })
+out <- label_family_obs(p, { label_family = "sans" })
+out <- label_fontface_obs(p, { label_fontface = "plain" })
+out <- label_hjust_obs(p, { label_hjust = "center" })
+out <- label_vjust_obs(p, { label_vjust = "middle" })
+out <- label_lineheight_obs(p, { label_lineheight = 1 })
+out <- all_latent(p, expr = {label = "sig"})
+out <- hide_latent(p)
+out <- show_latent(p)
+out <- colour_latent(p, { colour = "black" })
+out <- linewidth_latent(p, { linewidth = 1 })
+out <- linetype_latent(p, { linetype = 1 })
+out <- alpha_latent(p, { alpha = 1 })
+out <- fill_latent(p, { fill = "white" })
+out <- label_colour_latent(p, { label_colour = "black" })
+out <- label_fill_latent(p, { label_fill = "white" })
+out <- label_size_latent(p, { label_size = 4 })
+out <- label_alpha_latent(p, { label_alpha = 1 })
+out <- label_family_latent(p, { label_family = "sans" })
+out <- label_fontface_latent(p, { label_fontface = "plain" })
+out <- label_hjust_latent(p, { label_hjust = "center" })
+out <- label_vjust_latent(p, { label_vjust = "middle" })
+out <- label_lineheight_latent(p, { label_lineheight = 1 })
 out <- all_sig(p, expr = {label = "sig"})
 out <- hide_sig(p)
 out <- show_sig(p)
 out <- colour_sig(p, { colour = "black" })
-out <- color_sig(p, { color = "black" })
+out <- linewidth_sig(p, { linewidth = 1 })
 out <- linetype_sig(p, { linetype = 1 })
-out <- size_sig(p, { size = 1 })
 out <- alpha_sig(p, { alpha = 1 })
 out <- label_colour_sig(p, { label_colour = "black" })
-out <- label_color_sig(p, { label_color = "black" })
 out <- label_fill_sig(p, { label_fill = "white" })
 out <- label_size_sig(p, { label_size = 4 })
 out <- label_alpha_sig(p, { label_alpha = 1 })
@@ -1620,16 +2092,15 @@ out <- label_fontface_sig(p, { label_fontface = "plain" })
 out <- label_hjust_sig(p, { label_hjust = "center" })
 out <- label_vjust_sig(p, { label_vjust = "middle" })
 out <- label_lineheight_sig(p, { label_lineheight = 1 })
+out <- label_location_sig(p, { label_location = .5 })
 out <- all_nonsig(p, expr = {label = "sig"})
 out <- hide_nonsig(p)
 out <- show_nonsig(p)
 out <- colour_nonsig(p, { colour = "black" })
-out <- color_nonsig(p, { color = "black" })
+out <- linewidth_nonsig(p, { linewidth = 1 })
 out <- linetype_nonsig(p, { linetype = 1 })
-out <- size_nonsig(p, { size = 1 })
 out <- alpha_nonsig(p, { alpha = 1 })
 out <- label_colour_nonsig(p, { label_colour = "black" })
-out <- label_color_nonsig(p, { label_color = "black" })
 out <- label_fill_nonsig(p, { label_fill = "white" })
 out <- label_size_nonsig(p, { label_size = 4 })
 out <- label_alpha_nonsig(p, { label_alpha = 1 })
@@ -1638,16 +2109,15 @@ out <- label_fontface_nonsig(p, { label_fontface = "plain" })
 out <- label_hjust_nonsig(p, { label_hjust = "center" })
 out <- label_vjust_nonsig(p, { label_vjust = "middle" })
 out <- label_lineheight_nonsig(p, { label_lineheight = 1 })
+out <- label_location_nonsig(p, { label_location = .5 })
 out <- all_fixed(p, expr = {label = "sig"})
 out <- hide_fixed(p)
 out <- show_fixed(p)
 out <- colour_fixed(p, { colour = "black" })
-out <- color_fixed(p, { color = "black" })
+out <- linewidth_fixed(p, { linewidth = 1 })
 out <- linetype_fixed(p, { linetype = 1 })
-out <- size_fixed(p, { size = 1 })
 out <- alpha_fixed(p, { alpha = 1 })
 out <- label_colour_fixed(p, { label_colour = "black" })
-out <- label_color_fixed(p, { label_color = "black" })
 out <- label_fill_fixed(p, { label_fill = "white" })
 out <- label_size_fixed(p, { label_size = 4 })
 out <- label_alpha_fixed(p, { label_alpha = 1 })
@@ -1656,16 +2126,15 @@ out <- label_fontface_fixed(p, { label_fontface = "plain" })
 out <- label_hjust_fixed(p, { label_hjust = "center" })
 out <- label_vjust_fixed(p, { label_vjust = "middle" })
 out <- label_lineheight_fixed(p, { label_lineheight = 1 })
+out <- label_location_fixed(p, { label_location = .5 })
 out <- all_pos(p, expr = {label = "sig"})
 out <- hide_pos(p)
 out <- show_pos(p)
 out <- colour_pos(p, { colour = "black" })
-out <- color_pos(p, { color = "black" })
+out <- linewidth_pos(p, { linewidth = 1 })
 out <- linetype_pos(p, { linetype = 1 })
-out <- size_pos(p, { size = 1 })
 out <- alpha_pos(p, { alpha = 1 })
 out <- label_colour_pos(p, { label_colour = "black" })
-out <- label_color_pos(p, { label_color = "black" })
 out <- label_fill_pos(p, { label_fill = "white" })
 out <- label_size_pos(p, { label_size = 4 })
 out <- label_alpha_pos(p, { label_alpha = 1 })
@@ -1674,16 +2143,15 @@ out <- label_fontface_pos(p, { label_fontface = "plain" })
 out <- label_hjust_pos(p, { label_hjust = "center" })
 out <- label_vjust_pos(p, { label_vjust = "middle" })
 out <- label_lineheight_pos(p, { label_lineheight = 1 })
+out <- label_location_pos(p, { label_location = .5 })
 out <- all_neg(p, expr = {label = "sig"})
 out <- hide_neg(p)
 out <- show_neg(p)
 out <- colour_neg(p, { colour = "black" })
-out <- color_neg(p, { color = "black" })
+out <- linewidth_neg(p, { linewidth = 1 })
 out <- linetype_neg(p, { linetype = 1 })
-out <- size_neg(p, { size = 1 })
 out <- alpha_neg(p, { alpha = 1 })
 out <- label_colour_neg(p, { label_colour = "black" })
-out <- label_color_neg(p, { label_color = "black" })
 out <- label_fill_neg(p, { label_fill = "white" })
 out <- label_size_neg(p, { label_size = 4 })
 out <- label_alpha_neg(p, { label_alpha = 1 })
@@ -1692,4 +2160,72 @@ out <- label_fontface_neg(p, { label_fontface = "plain" })
 out <- label_hjust_neg(p, { label_hjust = "center" })
 out <- label_vjust_neg(p, { label_vjust = "middle" })
 out <- label_lineheight_neg(p, { label_lineheight = 1 })
+out <- label_location_neg(p, { label_location = .5 })
+out <- all_var(p, expr = {label = "sig"})
+out <- hide_var(p)
+out <- show_var(p)
+out <- colour_var(p, { colour = "black" })
+out <- linewidth_var(p, { linewidth = 1 })
+out <- linetype_var(p, { linetype = 1 })
+out <- alpha_var(p, { alpha = 1 })
+out <- label_colour_var(p, { label_colour = "black" })
+out <- label_fill_var(p, { label_fill = "white" })
+out <- label_size_var(p, { label_size = 4 })
+out <- label_alpha_var(p, { label_alpha = 1 })
+out <- label_family_var(p, { label_family = "sans" })
+out <- label_fontface_var(p, { label_fontface = "plain" })
+out <- label_hjust_var(p, { label_hjust = "center" })
+out <- label_vjust_var(p, { label_vjust = "middle" })
+out <- label_lineheight_var(p, { label_lineheight = 1 })
+out <- all_cov(p, expr = {label = "sig"})
+out <- hide_cov(p)
+out <- show_cov(p)
+out <- colour_cov(p, { colour = "black" })
+out <- linewidth_cov(p, { linewidth = 1 })
+out <- linetype_cov(p, { linetype = 1 })
+out <- alpha_cov(p, { alpha = 1 })
+out <- label_colour_cov(p, { label_colour = "black" })
+out <- label_fill_cov(p, { label_fill = "white" })
+out <- label_size_cov(p, { label_size = 4 })
+out <- label_alpha_cov(p, { label_alpha = 1 })
+out <- label_family_cov(p, { label_family = "sans" })
+out <- label_fontface_cov(p, { label_fontface = "plain" })
+out <- label_hjust_cov(p, { label_hjust = "center" })
+out <- label_vjust_cov(p, { label_vjust = "middle" })
+out <- label_lineheight_cov(p, { label_lineheight = 1 })
+out <- label_location_cov(p, { label_location = .5 })
+out <- all_reg(p, expr = {label = "sig"})
+out <- hide_reg(p)
+out <- show_reg(p)
+out <- colour_reg(p, { colour = "black" })
+out <- linewidth_reg(p, { linewidth = 1 })
+out <- linetype_reg(p, { linetype = 1 })
+out <- alpha_reg(p, { alpha = 1 })
+out <- label_colour_reg(p, { label_colour = "black" })
+out <- label_fill_reg(p, { label_fill = "white" })
+out <- label_size_reg(p, { label_size = 4 })
+out <- label_alpha_reg(p, { label_alpha = 1 })
+out <- label_family_reg(p, { label_family = "sans" })
+out <- label_fontface_reg(p, { label_fontface = "plain" })
+out <- label_hjust_reg(p, { label_hjust = "center" })
+out <- label_vjust_reg(p, { label_vjust = "middle" })
+out <- label_lineheight_reg(p, { label_lineheight = 1 })
+out <- label_location_reg(p, { label_location = .5 })
+out <- all_load(p, expr = {label = "sig"})
+out <- hide_load(p)
+out <- show_load(p)
+out <- colour_load(p, { colour = "black" })
+out <- linewidth_load(p, { linewidth = 1 })
+out <- linetype_load(p, { linetype = 1 })
+out <- alpha_load(p, { alpha = 1 })
+out <- label_colour_load(p, { label_colour = "black" })
+out <- label_fill_load(p, { label_fill = "white" })
+out <- label_size_load(p, { label_size = 4 })
+out <- label_alpha_load(p, { label_alpha = 1 })
+out <- label_family_load(p, { label_family = "sans" })
+out <- label_fontface_load(p, { label_fontface = "plain" })
+out <- label_hjust_load(p, { label_hjust = "center" })
+out <- label_vjust_load(p, { label_vjust = "middle" })
+out <- label_lineheight_load(p, { label_lineheight = 1 })
+out <- label_location_load(p, { label_location = .5 })
 }

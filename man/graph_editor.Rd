@@ -17,7 +17,8 @@ when \strong{Cancel} is clicked. The supplied object is not modified in place.
 \description{
 Launch a Shiny editor for an existing \code{sem_graph} object. Drag nodes,
 adjust node dimensions and labels, change edge connections and curvature,
-and edit supported plotting aesthetics. For multigroup or multilevel
+edit supported plotting aesthetics, and change graph-level plotting settings.
+For multigroup or multilevel
 graphs, switch between panels. Optionally synchronize node positions
 across groups within the same level. Changes are shown in a ggplot
 preview and can be undone, redone, or reset.
@@ -39,8 +40,12 @@ the edited graph; clicking \strong{Cancel} returns \code{NULL}.
 \examples{
 \dontrun{
   # graph is an existing sem_graph object
-  edited <- graph_editor(graph)
-  if (!is.null(edited)) plot(edited)
+  graph <- prepare_graph(
+  edges = data.frame(from = "x", to = "y"),
+  layout = matrix(c("x", "y")))
+  # Uncomment this to run the code:
+  # edited <- graph_editor(graph)
+  # if (!is.null(edited)) plot(edited)
 }
 
 }

@@ -15,7 +15,7 @@ update_graph(x, ...)
 \item{...}{Additional graph-level plotting settings to update,
 such as \code{rect_width}, \code{rect_height}, \code{ellipses_width},
 \code{ellipses_height}, \code{variance_diameter}, \code{text_size},
-\code{spacing_x}, \code{spacing_y}, \code{curvature}, \code{angle}, or
+\code{spacing_x}, \code{spacing_y}, or
 \code{fix_coord}.}
 
 \item{nodes}{Optional data frame containing replacement node
@@ -73,12 +73,14 @@ existing node coordinates.
 }
 \examples{
 \dontrun{
+if(requireNamespace("lavaan", quietly = TRUE)){
+library(lavaan)
+HS.model <- ' visual  =~ x1 + x2 + x3
+textual =~ x4 + x5 + x6
+speed   =~ x7 + x8 + x9 '
+fit <- cfa(HS.model, data=HolzingerSwineford1939)
 # Construct a graph
-g <- prepare_graph(
-  edges = edges,
-  nodes = nodes,
-  layout = layout
-)
+g <- prepare_graph(fit)
 
 # Change node positions
 nd <- g$nodes
@@ -96,14 +98,12 @@ g <- update_graph(g, edges = ed)
 # Change global plotting settings
 g <- update_graph(
   g,
-  text_size = 5,
+  text_size = 2,
   variance_diameter = 1
 )
 
 plot(g)
 }
-
 }
-\seealso{
-\code{\link[=prepare_graph]{prepare_graph()}}, \code{\link[=update_graph_node]{update_graph_node()}}
+
 }

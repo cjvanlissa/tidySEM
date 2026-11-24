@@ -31,7 +31,10 @@ data.frame
 edg <- data.frame(from = "x", to = "y")
 p <- prepare_graph(edges = edg, layout = get_layout("x", "y", rows = 1))
 nodes(p)
-#>   name shape label x y node_xmin node_xmax node_ymin node_ymax show
-#> 1    x  rect     x 2 2       1.4       2.6       1.6       2.4 TRUE
-#> 2    y  rect     y 4 2       3.4       4.6       1.6       2.4 TRUE
+#>   name shape label x y node_xmin node_xmax node_ymin node_ymax width height
+#> 1    x  rect     x 1 1       0.4       1.6       0.6       1.4   1.2    0.8
+#> 2    y  rect     y 2 1       1.4       2.6       0.6       1.4   1.2    0.8
+#>   show
+#> 1 TRUE
+#> 2 TRUE
 ```

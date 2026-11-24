@@ -2,7 +2,8 @@
 #'
 #' Launch a Shiny editor for an existing `sem_graph` object. Drag nodes,
 #' adjust node dimensions and labels, change edge connections and curvature,
-#' and edit supported plotting aesthetics. For multigroup or multilevel
+#' edit supported plotting aesthetics, and change graph-level plotting settings.
+#' For multigroup or multilevel
 #' graphs, switch between panels. Optionally synchronize node positions
 #' across groups within the same level. Changes are shown in a ggplot
 #' preview and can be undone, redone, or reset.
@@ -31,9 +32,12 @@
 #'
 #' @examples
 #' \dontrun{
-#'   # graph is an existing sem_graph object
-#'   edited <- graph_editor(graph)
-#'   if (!is.null(edited)) plot(edited)
+#'   graph <- prepare_graph(
+#'   edges = data.frame(from = "x", to = "y"),
+#'   layout = matrix(c("x", "y")))
+#'   # Uncomment this to run the code:
+#'   # edited <- graph_editor(graph)
+#'   # if (!is.null(edited)) plot(edited)
 #' }
 #'
 #' @export
@@ -103,8 +107,8 @@ sem_graph_editor_app <- function(graph) {
     nd <- g$nodes
     peers <- which(
       !is.na(nd$group) &
-      nd$name == nd$name[i] &
-      same_level(nd, i)
+        nd$name == nd$name[i] &
+        same_level(nd, i)
     )
     if (length(peers)) {
       nd$x[peers] <- nd$x[i]
@@ -118,20 +122,20 @@ sem_graph_editor_app <- function(graph) {
   label_aesthetics <- paste0(
     "label_",
     c(
-      "fill", "size", "family", "fontface",
+      "fill", "size", "family", "fontface", "angle",
       "hjust", "vjust", "lineheight",
-      "colour", "color", "alpha"
+      "colour", "alpha"
     )
   )
 
   aesthetic_choices <- list(
     node = c(
-      "linetype", "size", "colour", "color",
-      "fill", "alpha", "linewidth"
+      "linetype", "linewidth", "colour",
+      "fill", "alpha"
     ),
     edge = c(
-      "linetype", "size", "colour", "color",
-      "alpha", "linewidth"
+      "linetype", "linewidth", "colour",
+      "alpha"
     )
   )
 
@@ -159,283 +163,8 @@ sem_graph_editor_app <- function(graph) {
     nodes
   }
 
-  anchor <- function(node, side) {
-
-    switch(
-      side,
-      top = c(node$x, node$node_ymax),
-      bottom = c(node$x, node$node_ymin),
-      left = c(node$node_xmin, node$y),
-      right = c(node$node_xmax, node$y),
-      c(node$x, node$y)
-    )
-  }
-
-  esc <- function(x) {
-    htmltools::htmlEscape(as.character(x))
-  }
-
-  # -------------------------------------------------------
-  # SVG editor
-  #
-  # The SVG uses graph coordinates with the y axis
-  # inverted by a top-level transform.
-  # -------------------------------------------------------
-  curved_edge_path <- function(p, q, curvature, svg_x, svg_y) {
-
-    # Convert endpoints to SVG coordinates
-    x1 <- svg_x(p[1])
-    y1 <- svg_y(p[2])
-    x2 <- svg_x(q[1])
-    y2 <- svg_y(q[2])
-
-    dx <- x2 - x1
-    dy <- y2 - y1
-
-    distance <- sqrt(dx^2 + dy^2)
-
-    if (distance < 1e-10) {
-      return(sprintf("M %f %f L %f %f", x1, y1, x2, y2))
-    }
-
-    # Interpret curvature as an angle in degrees.
-    # Positive curvature bends to one side;
-    # negative curvature bends to the other.
-    angle <- curvature * pi / 180
-
-    # Perpendicular displacement of the control point.
-    offset <- distance / 2 * tan(angle / 2)
-
-    mx <- (x1 + x2) / 2
-    my <- (y1 + y2) / 2
-
-    cx <- mx - dy / distance * offset
-    cy <- my + dx / distance * offset
-
-    sprintf(
-      "M %f %f Q %f %f %f %f",
-      x1, y1, cx, cy, x2, y2
-    )
-  }
-  make_svg <- function(g, node_ids = seq_len(nrow(g$nodes)),
-                       edge_ids = seq_len(nrow(g$edges))) {
-
-    nd <- g$nodes[node_ids, , drop = FALSE]
-    ed <- g$edges[edge_ids, , drop = FALSE]
-
-    if (!nrow(nd)) {
-      return(htmltools::tags$div("No nodes to display."))
-    }
-
-    xmin <- min(nd$node_xmin) - 2
-    xmax <- max(nd$node_xmax) + 2
-    ymin <- min(nd$node_ymin) - 2
-    ymax <- max(nd$node_ymax) + 2
-
-    width <- xmax - xmin
-    height <- ymax - ymin
-
-    # Stable coordinate transform for the editor.
-    # SVG y increases downward; graph y increases upward.
-
-    svg_x <- function(x) x - xmin
-    svg_y <- function(y) ymax - y
-
-    # -----------------------------------------------------
-    # Render edges
-    # -----------------------------------------------------
-
-    edge_elements <- lapply(seq_len(nrow(ed)), function(i) {
-
-      e <- ed[i, , drop = FALSE]
-
-      fi <- match(e$from, nd$name)
-      ti <- match(e$to, nd$name)
-
-      if (is.na(fi) || is.na(ti)) return(NULL)
-
-      from <- nd[fi, , drop = FALSE]
-      to <- nd[ti, , drop = FALSE]
-
-      sf <- e$connect_from
-      st <- e$connect_to
-
-      if (is.na(sf) || !sf %in% sides) sf <- "bottom"
-      if (is.na(st) || !st %in% sides) st <- "top"
-
-      p <- anchor(from, sf)
-      q <- anchor(to, st)
-
-      is_loop <- identical(
-        as.character(e$from),
-        as.character(e$to)
-      )
-
-      if (is_loop) {
-
-        r <- g$variance_diameter / 2
-
-        if (sf %in% c("top", "bottom")) {
-
-          sign <- if (sf == "top") 1 else -1
-
-          p <- c(from$x - r / 2, p[2])
-          q <- c(from$x + r / 2, q[2])
-
-          c1 <- p + c(-r, sign * r * 2)
-          c2 <- q + c(r, sign * r * 2)
-
-        } else {
-
-          sign <- if (sf == "right") 1 else -1
-
-          p <- c(p[1], from$y - r / 2)
-          q <- c(q[1], from$y + r / 2)
-
-          c1 <- p + c(sign * r * 2, -r)
-          c2 <- q + c(sign * r * 2, r)
-        }
-
-        d <- sprintf(
-          "M %f %f C %f %f %f %f %f %f",
-          svg_x(p[1]), svg_y(p[2]),
-          svg_x(c1[1]), svg_y(c1[2]),
-          svg_x(c2[1]), svg_y(c2[2]),
-          svg_x(q[1]), svg_y(q[2])
-        )
-
-      } else if (!is.na(e$curvature) && e$curvature != 0) {
-
-        d <- curved_edge_path(
-          p = p,
-          q = q,
-          curvature = e$curvature,
-          svg_x = svg_x,
-          svg_y = svg_y
-        )
-
-      } else {
-
-        d <- sprintf(
-          "M %f %f L %f %f",
-          svg_x(p[1]), svg_y(p[2]),
-          svg_x(q[1]), svg_y(q[2])
-        )
-      }
-
-      colour <- if ("colour" %in% names(ed)) {
-        ed$colour[i]
-      } else if ("color" %in% names(ed)) {
-        ed$color[i]
-      } else {
-        "#64748b"
-      }
-
-      if (is.na(colour)) colour <- "#64748b"
-
-      htmltools::tags$g(
-        class = "sem-edge-group",
-
-        htmltools::tags$path(
-          d = d,
-          fill = "none",
-          stroke = colour,
-          `stroke-width` = 1.5,
-          `vector-effect` = "non-scaling-stroke",
-          class = "sem-edge-visible",
-          `pointer-events` = "none"
-        ),
-
-        htmltools::tags$path(
-          d = d,
-          fill = "none",
-          stroke = "transparent",
-          `stroke-opacity` = 0,
-          `stroke-width` = 12,
-          `vector-effect` = "non-scaling-stroke",
-          `pointer-events` = "stroke",
-          `data-edge` = edge_ids[i],
-          class = "sem-edge-hit"
-        )
-      )
-    })
-
-    # -----------------------------------------------------
-    # Render nodes
-    # -----------------------------------------------------
-
-    node_elements <- lapply(seq_len(nrow(nd)), function(i) {
-
-      n <- nd[i, , drop = FALSE]
-
-      cx <- svg_x(n$x)
-      cy <- svg_y(n$y)
-
-      w <- n$node_xmax - n$node_xmin
-      h <- n$node_ymax - n$node_ymin
-
-      colour <- if ("fill" %in% names(nd)) {
-        nd$fill[i]
-      } else {
-        "#e8eff8"
-      }
-
-      if (is.na(colour)) colour <- "#e8eff8"
-
-      shape <- if (n$shape %in% c("oval", "ellipse")) {
-        htmltools::tags$ellipse(
-          cx = cx,
-          cy = cy,
-          rx = w / 2,
-          ry = h / 2,
-          fill = colour,
-          stroke = "#45658b",
-          `stroke-width` = 1.3
-        )
-      } else {
-        htmltools::tags$rect(
-          x = cx - w / 2,
-          y = cy - h / 2,
-          width = w,
-          height = h,
-          rx = 0.04,
-          fill = colour,
-          stroke = "#45658b",
-          `stroke-width` = 1.3
-        )
-      }
-
-      htmltools::tags$g(
-        class = "sem-node",
-        `data-node` = node_ids[i],
-        shape,
-        htmltools::tags$text(
-          x = cx,
-          y = cy,
-          `text-anchor` = "middle",
-          `dominant-baseline` = "middle",
-          `font-size` = 0.22,
-          fill = "#243e5d",
-          esc(strsplit(n$label, "\n")[[1]][1])
-        )
-      )
-    })
-
-    htmltools::tags$svg(
-      id = "sem-editor-svg",
-      viewBox = sprintf(
-        "%f %f %f %f",
-        0, 0, width, height
-      ),
-      style = paste(
-        "width:100%; height:100%;",
-        "touch-action:none;",
-        "user-select:none;"
-      ),
-      htmltools::tags$g(edge_elements),
-      htmltools::tags$g(node_elements)
-    )
-  }
+  # The SVG geometry and labels are rendered by sem_graph_svg().
+  # Keep this editor responsible only for interaction and graph updates.
 
   # -------------------------------------------------------
   # UI
@@ -447,10 +176,26 @@ sem_graph_editor_app <- function(graph) {
       htmltools::tags$style(htmltools::HTML("
         .sem-editor {
           height: 620px;
+          min-height: 400px;
           border: 1px solid #d1d5db;
           border-radius: 8px;
           overflow: hidden;
           background: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .sem-editor > .shiny-html-output {
+          width: 100%;
+          height: 100%;
+          min-height: 0;
+        }
+
+        #sem-editor-svg {
+          display: block;
+          width: 100%;
+          height: 100%;
         }
 
         .sem-node {
@@ -464,29 +209,25 @@ sem_graph_editor_app <- function(graph) {
         /* Normal appearance */
         .sem-node > rect,
         .sem-node > ellipse {
-          fill: white !important;
-          stroke: #333333 !important;
-          stroke-width: 1.5px !important;
           vector-effect: non-scaling-stroke;
+          transition: stroke 0.15s, stroke-width 0.15s;
         }
 
-        /* Hover appearance */
         .sem-node:hover > rect,
         .sem-node:hover > ellipse {
           stroke: #2563eb !important;
           stroke-width: 2.5px !important;
         }
 
-        /* Labels */
         .sem-node > text {
-          fill: #222222 !important;
           pointer-events: none;
         }
+
+
 
         /* Visible edge */
         .sem-edge-visible {
           fill: none !important;
-          stroke-width: 1.5px;
           pointer-events: none;
           transition: stroke 0.15s, stroke-width 0.15s;
         }
@@ -506,6 +247,17 @@ sem_graph_editor_app <- function(graph) {
         .sem-edge-group:hover .sem-edge-visible {
           stroke: #2563eb !important;
           stroke-width: 2.5px !important;
+        }
+
+        /* Persistent selection, independent of hover. */
+        .sem-node.sem-selected > rect,
+        .sem-node.sem-selected > ellipse {
+          stroke: #2563eb !important;
+          stroke-width: 3px !important;
+        }
+        .sem-edge-group.sem-selected .sem-edge-visible {
+          stroke: #2563eb !important;
+          stroke-width: 3px !important;
         }
 
         .sem-properties {
@@ -565,8 +317,28 @@ sem_graph_editor_app <- function(graph) {
             }
           }
 
+          // Graph-level controls have no selected node/edge identity.
+          function sendGraphEdit(target) {
+            if (!target || !target.closest) return;
+            const wrapper = target.closest('[data-sem-graph-field]');
+            if (!wrapper) return;
+            const control = wrapper.querySelector('input, select');
+            if (!control) return;
+            const value = control.type === 'checkbox'
+              ? String(control.checked) : String(control.value);
+            if (window.Shiny && typeof Shiny.setInputValue === 'function') {
+              Shiny.setInputValue('graph_setting_edit', {
+                field: wrapper.dataset.semGraphField,
+                value: value,
+                nonce: Math.random()
+              }, {priority: 'event'});
+            }
+          }
+
           document.addEventListener('change', function(e) {
-            if (e.target.closest && e.target.closest('[data-sem-field]')) {
+            if (e.target.closest && e.target.closest('[data-sem-graph-field]')) {
+              sendGraphEdit(e.target);
+            } else if (e.target.closest && e.target.closest('[data-sem-field]')) {
               sendSemEdit(e.target);
             }
           }, true);
@@ -585,12 +357,26 @@ sem_graph_editor_app <- function(graph) {
             }
           }
 
-          document.addEventListener('pointerdown', function(e) {
+          function highlightSemElement(element) {
+            const svg = element && element.ownerSVGElement;
+            if (!svg) return;
+            svg.querySelectorAll('.sem-selected').forEach(function(el) {
+              el.classList.remove('sem-selected');
+            });
+            const group = element.closest('.sem-node, .sem-edge-group');
+            if (group) group.classList.add('sem-selected');
+          }
 
+          document.addEventListener('pointerdown', function(e) {
+            if (!e.target.closest) return;
+            const svg = e.target.closest('#sem-editor-svg');
+            if (!svg) return;
             const node = e.target.closest('.sem-node');
             const edge = e.target.closest('.sem-edge-hit');
+            if (node || edge) e.stopPropagation();
 
             if (node) {
+              highlightSemElement(node);
               flushFocusedSemField();
 
               const svg = node.ownerSVGElement;
@@ -603,6 +389,7 @@ sem_graph_editor_app <- function(graph) {
                 svg: svg,
                 element: node,
                 start: p,
+                scale: Number(svg.dataset.semScale) || 1,
                 moved: false
               };
 
@@ -615,6 +402,7 @@ sem_graph_editor_app <- function(graph) {
               e.preventDefault();
 
             } else if (edge) {
+              highlightSemElement(edge);
               flushFocusedSemField();
 
               Shiny.setInputValue(
@@ -623,7 +411,7 @@ sem_graph_editor_app <- function(graph) {
                 {priority: 'event'}
               );
             }
-          });
+          }, true);
 
           document.addEventListener('pointermove', function(e) {
 
@@ -657,8 +445,8 @@ sem_graph_editor_app <- function(graph) {
                 'node_drag',
                 {
                   index: drag.node,
-                  dx: p.x - drag.start.x,
-                  dy: -(p.y - drag.start.y),
+                  dx: (p.x - drag.start.x) / drag.scale,
+                  dy: -(p.y - drag.start.y) / drag.scale,
                   nonce: Math.random()
                 },
                 {priority: 'event'}
@@ -694,25 +482,75 @@ sem_graph_editor_app <- function(graph) {
 
       shiny::column(
         5,
+
         htmltools::tags$h4("Properties"),
+
         htmltools::tags$div(
           class = "sem-properties",
-          shiny::uiOutput("properties"),
+
+          shiny::tabsetPanel(
+            id = "property_tabs",
+            type = "tabs",
+
+            # -----------------------------------------------
+            # Node / edge properties
+            # -----------------------------------------------
+            shiny::tabPanel(
+              title = "Element",
+              value = "element",
+
+              htmltools::tags$div(
+                style = "padding-top: 12px;",
+                shiny::uiOutput("properties")
+              )
+            ),
+
+            # -----------------------------------------------
+            # Graph-level properties
+            # -----------------------------------------------
+            shiny::tabPanel(
+              title = "Graph",
+              value = "graph",
+
+              htmltools::tags$div(
+                style = "padding-top: 12px;",
+                shiny::uiOutput("graph_settings")
+              )
+            )
+          ),
+
+          # -----------------------------------------------
+          # Global editor controls
+          # -----------------------------------------------
           htmltools::tags$div(
-            style = "display:flex; gap:6px; flex-wrap:wrap; margin-top:12px;",
+            style = paste(
+              "display:flex;",
+              "gap:6px;",
+              "flex-wrap:wrap;",
+              "margin-top:12px;"
+            ),
+
             shiny::actionButton("undo", "Undo"),
             shiny::actionButton("redo", "Redo"),
-            shiny::actionButton("reset", "Reset changes"),
+            shiny::actionButton("reset", "Reset changes")
+          ),
+
+          htmltools::tags$div(
+            style = "margin-top:12px;",
+
             shiny::checkboxInput(
               "snap_to_grid",
               "Snap nodes to grid",
               value = TRUE
             ),
-            if (has_multigroup) shiny::checkboxInput(
-              "apply_all_groups",
-              "Apply layout to all groups",
-              value = TRUE
-            )
+
+            if (has_multigroup) {
+              shiny::checkboxInput(
+                "apply_all_groups",
+                "Apply layout to all groups",
+                value = TRUE
+              )
+            }
           )
         )
       )
@@ -834,6 +672,133 @@ sem_graph_editor_app <- function(graph) {
       if (commit_change(g)) refresh_panel()
     }, ignoreInit = TRUE)
 
+    # Graph settings are stored on the sem_graph object, not nodes/edges.
+    # Edge curvature is edited per edge; angle is no longer a graph setting.
+    graph_defaults <- c(
+      rect_width = 1.2,
+      rect_height = 0.8,
+      ellipses_width = 1,
+      ellipses_height = 1,
+      variance_diameter = 0.8,
+      text_size = 4,
+      spacing_x = 2,
+      spacing_y = 2
+    )
+    graph_numeric <- names(graph_defaults)
+
+    graph_value <- function(g, nm) {
+      value <- g[[nm]]
+      if (is.null(value) || length(value) != 1L ||
+          !is.numeric(value) || !is.finite(value) || value <= 0) {
+        return(unname(graph_defaults[[nm]]))
+      }
+      as.numeric(value)
+    }
+
+    # Rebuild only on undo/redo/reset (not on every edit, to retain focus).
+    output$graph_settings <- shiny::renderUI({
+      panel_revision()
+      g <- shiny::isolate(current())
+
+      controls <- lapply(graph_numeric, function(nm) {
+        control <- shiny::numericInput(
+          inputId = paste0("sem_graph_", nm),
+          label = gsub("_", " ", nm),
+          value = graph_value(g, nm),
+          min = 0.001,
+          step = 0.1
+        )
+        htmltools::tags$div(`data-sem-graph-field` = nm, control)
+      })
+
+      htmltools::tagList(
+        htmltools::tags$p(
+          style = "font-size:12px; color:#666; margin-top:8px;",
+          "Global dimensions override individual node dimensions. ",
+          "Spacing rescales existing coordinates within each panel."
+        ),
+        controls,
+        htmltools::tags$div(
+          `data-sem-graph-field` = "fix_coord",
+          shiny::checkboxInput(
+            "sem_graph_fix_coord", "Fix coordinate aspect ratio",
+            value = isTRUE(g$fix_coord)
+          )
+        )
+      )
+    })
+
+    # Global settings are explicit overrides of existing node geometry.
+    apply_graph_setting <- function(g, nm, value) {
+      old <- graph_value(g, nm)
+      nd <- g$nodes
+      if (nm %in% c("rect_width", "rect_height",
+                    "ellipses_width", "ellipses_height")) {
+        if (!"width" %in% names(nd))
+          nd$width <- nd$node_xmax - nd$node_xmin
+        if (!"height" %in% names(nd))
+          nd$height <- nd$node_ymax - nd$node_ymin
+        rect <- !is.na(nd$shape) & nd$shape %in% c("rect", "none")
+        oval <- !is.na(nd$shape) & nd$shape %in% c("oval", "ellipse")
+        if (nm == "rect_width") nd$width[rect] <- value
+        if (nm == "rect_height") nd$height[rect] <- value
+        if (nm == "ellipses_width") nd$width[oval] <- value
+        if (nm == "ellipses_height") nd$height[oval] <- value
+      }
+      if (nm %in% c("spacing_x", "spacing_y") && nrow(nd)) {
+        coord <- if (nm == "spacing_x") "x" else "y"
+        # Scale around each panel's minimum, not the entire faceted graph.
+        panels <- intersect(c("group", "level"), names(nd))
+        panel_id <- if (length(panels)) {
+          do.call(paste, c(lapply(nd[panels], as.character), sep = "\r"))
+        } else rep("single", nrow(nd))
+        for (ids in split(seq_len(nrow(nd)), panel_id)) {
+          origin <- min(nd[[coord]][ids], na.rm = TRUE)
+          nd[[coord]][ids] <- origin + (nd[[coord]][ids] - origin) * value / old
+        }
+      }
+      g$nodes <- nd
+      if (nm == "text_size") {
+        # The global setting overrides per-element label sizes in both renderers.
+        for (part in c("nodes", "edges")) {
+          if ("label_size" %in% names(g[[part]])) {
+            g[[part]]$label_size[] <- value
+          }
+        }
+      }
+      g[[nm]] <- value
+      g
+    }
+
+    shiny::observeEvent(input$graph_setting_edit, {
+      edit <- input$graph_setting_edit
+      nm <- as.character(edit$field)
+      value <- as.character(edit$value)
+      if (length(nm) != 1L || is.na(nm) ||
+          length(value) != 1L || is.na(value) ||
+          !nm %in% c(graph_numeric, "fix_coord")) return()
+
+      tryCatch({
+        if (nm == "fix_coord") {
+          if (!tolower(value) %in% c("true", "false")) {
+            stop("Invalid fix_coord value.")
+          }
+          parsed <- tolower(value) == "true"
+        } else {
+          parsed <- suppressWarnings(as.numeric(value))
+          if (length(parsed) != 1L || !is.finite(parsed) || parsed <= 0) {
+            stop(nm, " must be a finite number greater than zero.")
+          }
+        }
+
+        g <- shiny::isolate(current())
+        g <- apply_graph_setting(g, nm, parsed)
+        if (commit_change(g)) refresh_panel()
+      }, error = function(e) {
+        shiny::showNotification(conditionMessage(e), type = "error")
+      })
+    }, priority = 100)
+
     parse_property <- function(value, existing = NULL) {
       if (!is.null(existing)) {
         if (is.numeric(existing)) {
@@ -857,6 +822,9 @@ sem_graph_editor_app <- function(graph) {
 
     set_aesthetic <- function(df, i, name, value, kind) {
       if (!nzchar(name)) return(df)
+      if (name %in% c("color", "label_color")) {
+        name <- sub("color$", "colour", name)
+      }
       protected <- if (kind == "node") {
         c("name", "x", "y", "node_xmin", "node_xmax",
           "node_ymin", "node_ymax", "shape", "label")
@@ -876,6 +844,15 @@ sem_graph_editor_app <- function(graph) {
           "Unsupported %s aesthetic: '%s'.",
           kind, name
         ))
+      }
+      if (name %in% c("colour", "label_colour")) {
+        alias <- sub("colour$", "color", name)
+        if (!name %in% names(df) && alias %in% names(df)) {
+          names(df)[names(df) == alias] <- name
+        }
+        if (alias %in% names(df) && name %in% names(df)) {
+          df[[alias]] <- NULL
+        }
       }
       existing <- if (name %in% names(df)) df[[name]] else NULL
       parsed <- parse_property(value, existing)
@@ -915,6 +892,9 @@ sem_graph_editor_app <- function(graph) {
 
       value <- if (name %in% names(df)) {
         as.character(df[[name]][s$index])
+      } else if (name %in% c("colour", "label_colour") &&
+                 sub("colour$", "color", name) %in% names(df)) {
+        as.character(df[[sub("colour$", "color", name)]][s$index])
       } else {
         ""
       }
@@ -1001,8 +981,7 @@ sem_graph_editor_app <- function(graph) {
                   abs(angle) >= 180 ||
                   angle == 0) {
                 stop(
-                  "Curvature must be between -180 and 180 ",
-                  "(excluding 0). Leave blank for a straight edge."
+                  "Curvature must be between -180 and 180 degrees."
                 )
               }
 
@@ -1042,17 +1021,53 @@ sem_graph_editor_app <- function(graph) {
     }, priority = 100)
 
     output$editor <- shiny::renderUI({
-      ids <- panel_indices()
-      make_svg(current(), node_ids = ids$nodes, edge_ids = ids$edges)
+      panel <- active_panel()
+
+      if (!length(panel)) {
+        panel <- NULL
+      }
+
+      .sem_graph_svg_panel(
+        current(),
+        panel = panel,
+        selected = shiny::isolate(selection())
+      )
     })
 
     shiny::observeEvent(input$selected_node, {
-      new <- list(type = "node", index = as.integer(input$selected_node))
-      if (!identical(shiny::isolate(selection()), new)) selection(new)
+
+      new <- list(
+        type = "node",
+        index = as.integer(input$selected_node)
+      )
+
+      if (!identical(shiny::isolate(selection()), new)) {
+        selection(new)
+      }
+
+      shiny::updateTabsetPanel(
+        session,
+        inputId = "property_tabs",
+        selected = "element"
+      )
     })
+
     shiny::observeEvent(input$selected_edge, {
-      new <- list(type = "edge", index = as.integer(input$selected_edge))
-      if (!identical(shiny::isolate(selection()), new)) selection(new)
+
+      new <- list(
+        type = "edge",
+        index = as.integer(input$selected_edge)
+      )
+
+      if (!identical(shiny::isolate(selection()), new)) {
+        selection(new)
+      }
+
+      shiny::updateTabsetPanel(
+        session,
+        inputId = "property_tabs",
+        selected = "element"
+      )
     })
 
     shiny::observeEvent(input$node_drag, {
@@ -1146,7 +1161,7 @@ sem_graph_editor_app <- function(graph) {
                 } else {
                   as.character(e$curvature)
                 },
-                placeholder = "Blank = straight"
+                placeholder = "0 = straight; blank = automatic"
               ),
               "curvature"
             )

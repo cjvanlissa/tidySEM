@@ -38,6 +38,7 @@ We first create a simple dataset containing a single continuous
 depression score.
 
 ``` r
+
 library(tidySEM)
 
 set.seed(123)
@@ -60,10 +61,12 @@ results from that file directly without having to wait for the code to
 run.
 
 ``` r
+
 res <- tidySEM:::run_cached(mx_profiles(x, classes = 1:3))
 ```
 
 ``` r
+
 table_fit(res)
 #>          Name Classes   LL   n Parameters AIC BIC saBIC Entropy prob_min
 #> 1 equal var 1       1 -398 150          2 801 807   800    1.00     1.00
@@ -82,10 +85,12 @@ If we want to test the theory, we can compare adjacent class solutions
 using the bootstrapped likelihood ratio test (BLRT).
 
 ``` r
+
 res_blrt <- BLRT(res)
 ```
 
 ``` r
+
 res_blrt
 #> Bootstrapped Likelihood Ratio Test:
 #> 
@@ -115,6 +120,7 @@ examine its parameters. For this, we will use the `OpenMx` function
 [`omxGetParameters()`](https://rdrr.io/pkg/OpenMx/man/omxGetParameters.html):
 
 ``` r
+
 res_theory <- mx_profiles(x, classes = 2, run = FALSE)
 library(OpenMx)
 omxGetParameters(res_theory)
@@ -129,6 +135,7 @@ The relevant mean parameters are `m11` and `m21`. We can either fix
 these means to the exact values of 0 and 10:
 
 ``` r
+
 res_theory <- omxSetParameters(res_theory, labels = c("m11",
     "m21"), values = c(0, 10), free = FALSE)
 ```
@@ -137,6 +144,7 @@ Or alternatively, we could set a lower and upper bound for these
 parameters, thus allowing bounded free estimation:
 
 ``` r
+
 res_theory_bounds <- omxSetParameters(res_theory, labels = c("m11",
     "m21"), values = c(0, 10), free = TRUE, lbound = c(NA, 10),
     ubound = c(1, NA))
@@ -145,6 +153,7 @@ res_theory_bounds <- omxSetParameters(res_theory, labels = c("m11",
 Now, run your chosen model:
 
 ``` r
+
 res_theory <- run_mx(res_theory)
 res_theory_bounds <- run_mx(res_theory_bounds)
 ```
@@ -153,6 +162,7 @@ Next, compare the unconstrained two-class solution with the
 theory-constrained model.
 
 ``` r
+
 compare_these <- list(baseline = res[[2]], theory = res_theory,
     theory_bounds = res_theory_bounds)
 
@@ -170,10 +180,12 @@ table_fit(compare_these)
 We can also compare the models using the BLRT:
 
 ``` r
+
 blrt_theory <- BLRT(list(res[[2]], res_theory))
 ```
 
 ``` r
+
 blrt_theory
 #> Bootstrapped Likelihood Ratio Test:
 #> 
@@ -188,12 +200,14 @@ can also manually specify **start values**, and then test if the
 estimated **parameter values** deviate significantly from these:
 
 ``` r
+
 res_theory_starts <- omxSetParameters(res_theory, labels = c("m11",
     "m21"), values = c(0, 10), free = TRUE)
 res_theory_starts <- run_mx(res_theory_starts)
 ```
 
 ``` r
+
 omxGetParameters(res_theory_starts)
 #> equal var 2.weights[1,2]                       v1                      m11 
 #>                     0.22                     2.49                     0.87 
@@ -249,6 +263,7 @@ first only use the four scales:
 `c("burdened", "trapped", "negaffect", "loneliness")`.
 
 ``` r
+
 # Load required packages
 library(tidySEM)
 library(ggplot2)
@@ -265,6 +280,7 @@ to describe the data numerically. Because all scales are continuous, we
 select only columns for continuous data to de-clutter the table:
 
 ``` r
+
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "n", "missing", "unique", "mean", "median",
     "sd", "min", "max", "skew_2se", "kurt_2se")]
@@ -278,7 +294,7 @@ desc
 | negaffect  | 506 |    0.01 |    506 |  2.5 |    2.5 | 0.69 |  0.71 | 5.0 |     0.08 |    -0.38 |
 | loneliness | 510 |    0.01 |    510 |  2.7 |    2.7 | 0.62 |  0.98 | 4.2 |    -0.33 |    -0.62 |
 
-Descriptive statistics
+Descriptive statistics {.table}
 
 The table indicates two potential causes for concern: there is a small
 percentage of missingness, and all variables have relatively high
@@ -296,6 +312,7 @@ conclusions from the
 table: the data are kurtotic (peaked).
 
 ``` r
+
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
@@ -323,11 +340,13 @@ theoretically expected number. We set a seed to ensure replicable
 results.
 
 ``` r
+
 set.seed(123)
 res <- mx_profiles(data = df, classes = 1:5)
 ```
 
 ``` r
+
 fit <- table_fit(res)
 ```
 
@@ -363,6 +382,7 @@ However, in this confirmatory use case, we address this when
 interpreting the results.
 
 ``` r
+
 fit <- table_fit(res)  # model fit table
 fit[, c("Name", "LL", "Parameters", "n", "BIC", "Entropy", "prob_min",
     "prob_max", "n_min", "n_max", "np_ratio", "np_local")]
@@ -376,7 +396,7 @@ fit[, c("Name", "LL", "Parameters", "n", "BIC", "Entropy", "prob_min",
 | equal var 4 | -1916 |  23 | 513 | 3976 |    0.75 |  0.81 |  0.92 |  0.16 |  0.34 |
 | equal var 5 | -1910 |  28 | 513 | 3995 |    0.76 |  0.64 |  0.92 |  0.08 |  0.34 |
 
-Model fit table
+Model fit table {.table}
 
 #### Using ICs
 
@@ -395,6 +415,7 @@ If we conduct LMR tests, we find that the tests are significant for all
 pairwise model comparisons, except for the 5-class model:
 
 ``` r
+
 lr_lmr(res)
 ```
 
@@ -405,7 +426,7 @@ lr_lmr(res)
 | mix3 | mix4 |  4.1 |   5 | 0.00 | 0.14 | 0.00 |
 | mix4 | mix5 |  1.6 |   5 | 0.05 | 0.03 | 0.04 |
 
-LMR test table
+LMR test table {.table}
 
 #### Using BLRT tests
 
@@ -424,6 +445,7 @@ progress, we use the `progressr` ecosystem, which allows users to choose
 how they want to be informed. The example below uses a progress bar:
 
 ``` r
+
 library(future)
 library(progressr)
 plan(multisession)  # Parallel processing for Windows
@@ -440,7 +462,7 @@ res_blrt
 | equal var 3 | mix3 | mix4 |  70 |   5 |   0.00 |     100 |
 | equal var 4 | mix4 | mix5 |  12 |   5 |   0.19 |     100 |
 
-BLRT test table
+BLRT test table {.table}
 
 In sum, across all class enumeration criteria, there is strong support
 for a 4-class solution.
@@ -456,6 +478,7 @@ compare our theoretical model against their competing model as follows.
 Note that we can put two models into a list to compare them.
 
 ``` r
+
 res_alt <- mx_profiles(df, classes = 4, variances = "varying")
 compare <- list(res[[4]], res_alt)
 table_fit(compare)
@@ -466,7 +489,7 @@ table_fit(compare)
 | mix4       | -1916 |         23 | 3976 |    0.75 |     0.81 |     0.92 |  0.16 |  0.34 |
 | free var 4 | -1909 |         35 | 4037 |    0.78 |     0.84 |     0.92 |  0.16 |  0.32 |
 
-Comparing competing theoretical models
+Comparing competing theoretical models {.table}
 
 The alternative model incurs 12 additional parameters for the free
 variances. Yet, it has a higher BIC, which indicates that this
@@ -478,6 +501,7 @@ To interpret the final class solution, we first reorder the 4-class
 model by class size. This helps prevent label switching.
 
 ``` r
+
 res_final <- mx_switch_labels(res[[4]])
 ```
 
@@ -490,6 +514,7 @@ classes had a high classification error. We produce a table of the
 results below.
 
 ``` r
+
 table_results(res_final, columns = c("label", "est", "se", "confint",
     "class"))
 ```
@@ -521,7 +546,7 @@ table_results(res_final, columns = c("label", "est", "se", "confint",
 | mix4.weights\[1,3\].NA      | 0.66 | 0.11 | \[0.44, 0.88\] | NA     |
 | mix4.weights\[1,4\].NA      | 0.47 | 0.08 | \[0.32, 0.63\] | NA     |
 
-Four-class model results
+Four-class model results {.table}
 
 The results are best interpreted by examining a plot of the model and
 data, however. Relevant plot functions are
@@ -534,6 +559,7 @@ However, we omit the density plots, because
 also includes them.
 
 ``` r
+
 plot_bivariate(res_final)
 ```
 
@@ -574,6 +600,7 @@ however that the observed classes do not match the hypothesized pattern
 of class parameters exactly.
 
 ``` r
+
 plot_profiles(res_final)
 ```
 
@@ -596,6 +623,7 @@ function (in previous versions, we overloaded the
 class, as well as posterior probabilities for all classes.
 
 ``` r
+
 df_new <- data.frame(burdened = 2, trapped = 0.5, negaffect = 1.5,
     loneliness = 4)
 predict_class(res_final, newdata = df_new)

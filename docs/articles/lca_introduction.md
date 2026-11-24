@@ -34,6 +34,7 @@ These data are available in the object `zhao_2025`, and we can load them
 as follows:
 
 ``` r
+
 library(tidySEM)
 library(ggplot2)
 df <- zhao_2025
@@ -47,6 +48,7 @@ If you are using your own data, you might be able to load them by using
 or modifying one of the following functions:
 
 ``` r
+
 # For CSV data:
 df <- read.csv("your_file.csv")
 # For Excel spreadsheets:
@@ -66,6 +68,7 @@ variable ranges, means, standard deviations, missing values, and the
 number of unique observed values.
 
 ``` r
+
 table_desc <- descriptives(df)
 table_desc
 #>      name    type   n     missing unique       mean median mode mode_value
@@ -177,6 +180,7 @@ If a variable is incorrectly coded, you may be able to restore its
 correct type. Here are a few examples of type conversions:
 
 ``` r
+
 # This is a character variable, because someone misstyped a t:
 v1 <- c("5.1", "4.9", "4.7", "4.6t", "5", "5.4")
 class(v1)
@@ -226,6 +230,7 @@ the dataset, while ‘labels’ specifies the corresponding category names
 that R should display instead.
 
 ``` r
+
 df$Gender <- factor(df$Gender,
                     levels = c(1,2),
                     labels = c("M", "F"))
@@ -249,6 +254,7 @@ psychometric analyses for every scale automatically (which is out of
 scope for the current tutorial).
 
 ``` r
+
 # First, insert a separator character between scale names and item numbers:
 names(df)
 #>  [1] "ID"     "Grade"  "Age"    "Gender" "TS1"    "TS2"    "TS3"    "TS4"   
@@ -266,6 +272,7 @@ names(df)
 To compute mean scale scores, we can use:
 
 ``` r
+
 # Make a tidy_sem object
 df_tidysem <- tidy_sem(df)
 # Construct mean scale scores, removing missing values
@@ -280,6 +287,7 @@ with a number), or we can take all items in the `scales_list` using
 [`unlist()`](https://rdrr.io/r/base/unlist.html):
 
 ``` r
+
 ord_vars <- grep("\\d$", names(df), value = TRUE)
 ord_vars
 #>  [1] "TS_1"  "TS_2"  "TS_3"  "TS_4"  "SOS_1" "SOS_2" "SOS_3" "SOS_4" "PS_1" 
@@ -290,6 +298,7 @@ ord_vars
 Then, we can recode these variables as ordered:
 
 ``` r
+
 df[ord_vars] <- lapply(df[ord_vars], ordered)
 ```
 
@@ -308,6 +317,7 @@ this - do it immediately after loading the data and removing the empty
 rows, with code like this:
 
 ``` r
+
 library(mice)
 df <- ampute(df)$amp
 ```
@@ -337,6 +347,7 @@ For example, `c("TS", "SOS", "PS")`, which represent three sources of
 stress/pressure: teacher stress, social stress, and parent stress.
 
 ``` r
+
 df_lpa <- df[, c("AM", "CM")]
 ```
 
@@ -369,6 +380,7 @@ having to wait for the code to run. We do recommend that you experiment
 with running *some* analyses yourself, of course.
 
 ``` r
+
 res_lpa <- mx_profiles(
   df_lpa,
   classes = 1:5,
@@ -378,6 +390,7 @@ res_lpa <- mx_profiles(
 ```
 
 ``` r
+
 format_numeric(table_fit(res_lpa_different))
 #>                     Name Classes      LL      n Parameters     AIC     BIC
 #> 1            equal var 1    1.00 -951.56 291.00          4 1911.12 1925.81
@@ -423,6 +436,7 @@ variances, the number of parameters for our model is:
 Which would give this many cases per parameter:
 
 ``` r
+
 k <- 1:10
 nrow(df) / (1+3*k)
 #>  [1] 72.750000 41.571429 29.100000 22.384615 18.187500 15.315789 13.227273
@@ -433,6 +447,7 @@ So we could estimate at least 4 classes. Let’s round up and estimate 1:5
 class solutions:
 
 ``` r
+
 res_lpa <- mx_profiles(
   df_lpa,
   classes = 1:5,
@@ -446,6 +461,7 @@ res_lpa <- mx_profiles(
 First, extract a model fit table:
 
 ``` r
+
 tab_lpa_fit <- table_fit(res_lpa)
 tab_lpa_fit
 #>          Name Classes        LL   n Parameters      AIC      BIC    saBIC
@@ -471,6 +487,7 @@ values of models fitted to the same data, and lower values are
 preferred. We can see that the three-class model has the lowest BIC:
 
 ``` r
+
 which.min(tab_lpa_fit$BIC)
 #> [1] 3
 ```
@@ -488,12 +505,14 @@ models with 4-5 classes. You want a healthy number of cases per
 parameter, so we can exclude these two models, then perform our BLRT:
 
 ``` r
+
 res_lpa_blrt <- res_lpa
 res_lpa_blrt[c(4, 5)] <- NULL
 res_blrt <- BLRT(res_lpa_blrt)
 ```
 
 ``` r
+
 res_blrt
 #> Bootstrapped Likelihood Ratio Test:
 #> 
@@ -517,6 +536,7 @@ fails, you can examine a detailed report by running
 number of the failing model:
 
 ``` r
+
 sapply(res_lpa, function(i) mx_diagnostics(i)$checks_pass)
 #> equal var 1 equal var 2 equal var 3 equal var 4 equal var 5 
 #>        TRUE        TRUE        TRUE        TRUE        TRUE
@@ -526,6 +546,7 @@ Another consideration is that classification diagnostics are poor for
 the 4-5 class models:
 
 ``` r
+
 tab_lpa_fit[, c("Entropy", "prob_min", "prob_max")]
 #>     Entropy  prob_min  prob_max
 #> 1 1.0000000 1.0000000 1.0000000
@@ -560,6 +581,7 @@ the principle of “significant figures”. However, APA style simply
 requires reporting to double digits. So let’s consider two options:
 
 ``` r
+
 # Standard R formatting, some columns get 3 digits, some get 1, but they remain
 # numeric type:
 tab_lpa_fit_formatted <- format(tab_lpa_fit, digits = 2)
@@ -589,6 +611,7 @@ significant BLRT tests, we would retain a 3-class model.
 The class proportions of this model are:
 
 ``` r
+
 class_prob(res_lpa[[3]], "sum.posterior")
 #> $sum.posterior
 #>    class     count proportion
@@ -600,6 +623,7 @@ class_prob(res_lpa[[3]], "sum.posterior")
 We can examine the parameters of this model as follows:
 
 ``` r
+
 tab_lpa_res <- table_results(res_lpa[[3]])
 tab_lpa_res
 #>                   label est_sig   se pval      confint  class
@@ -623,6 +647,7 @@ means across classes.
 The pattern of results is easier to see when plotting it:
 
 ``` r
+
 plot_profiles(res_lpa[[3]])
 plot_density(res_lpa[[3]])
 ```
@@ -650,6 +675,7 @@ We can conduct ordinal LCA by using some of the raw items underlying the
 scale scores, for example:
 
 ``` r
+
 df_lca <- df[, c("AM_1", "AM_2", "AM_3")]
 ```
 
@@ -668,6 +694,7 @@ levels of our ordinal indicators, and M is the number of indicators:
 Since our indicators have 7 categories, this gives:
 
 ``` r
+
 k <- 1:10
 L <- length(unique(df_lca$AM_1))
 M <- ncol(df_lca)
@@ -683,6 +710,7 @@ proceed, but to save time estimating overly complex models, we omit the
 4-5 class models.
 
 ``` r
+
 res_lca <- mx_lca(
   df_lca,
   classes = 1:3
@@ -690,6 +718,7 @@ res_lca <- mx_lca(
 ```
 
 ``` r
+
 tab_lca_fit <- table_fit(res_lca)
 tab_lca_fit
 #>   Name Classes        LL   n Parameters      AIC      BIC    saBIC   Entropy
@@ -709,6 +738,7 @@ selecting more than 1 class for these data. For educational purposes,
 however, let’s examine the 2-class solution.
 
 ``` r
+
 tab_lca_res <- table_results(res_lca[[2]])
 tab_lca_res
 #>                            label est_sig     se pval           confint  class
@@ -771,6 +801,7 @@ intuitive understanding, for example, for the thresholds for variable
 AM1 in class 1:
 
 ``` r
+
 library(ggplot2)
 thresholds <- res_lca[[2]]$class1$Thresholds$result[, "AM_1"]
 ggplot(data.frame(x = c(-4, 4)), aes(x = x)) + 
@@ -790,6 +821,7 @@ classification uncertainty), and then tabulating the observed scores of
 AM_1 for the people who are assigned class 1:
 
 ``` r
+
 individual_class <- predict_class(res_lca[[2]])
 table(df$AM_1[individual_class == 1])
 #> 
@@ -801,6 +833,7 @@ Another way to interpret the threshold parameters is to convert them to
 the estimated probability of choosing each response category:
 
 ``` r
+
 tab_lca_prob <- table_prob(res_lca[[2]])
 # Let's format it for easier visual interpretation:
 format_numeric(tab_lca_prob, digits = 2)
@@ -857,6 +890,7 @@ and the “high AM” class, respectively.
 We can also plot this information, leading to the same conclusion:
 
 ``` r
+
 plot_prob(res_lca[[2]])
 ```
 
@@ -875,6 +909,7 @@ example was between people scoring mostly 4 (class 1) versus 5 and 6
 (class 2), it makes sense to cut the variables at this value:
 
 ``` r
+
 df_bin <- df_lca
 df_bin[] <- lapply(df_bin, function(x) ordered(as.integer(x <= 4)))
 ```
@@ -888,6 +923,7 @@ estimate up to 4 classes while still having, on average, about 20
 observations per parameter:
 
 ``` r
+
 k <- 1:10
 L <- 2
 M <- ncol(df_lca)
@@ -899,6 +935,7 @@ nrow(df) / ((k-1)+k*((L-1)*M))
 We can fit the model:
 
 ``` r
+
 res_bin <- mx_lca(
   df_bin,
   classes = 1:4
@@ -906,6 +943,7 @@ res_bin <- mx_lca(
 ```
 
 ``` r
+
 tab_bin_fit <- table_fit(res_bin)
 tab_bin_fit
 #>   Name Classes        LL   n Parameters       AIC      BIC    saBIC   Entropy
@@ -932,6 +970,7 @@ minus the other half of the rows. The table now only shows what
 percentage of participants scored 1 on each indicator:
 
 ``` r
+
 tab_bin_prob <- table_prob(res_bin[[2]])
 tab_bin_prob <- tab_bin_prob[!tab_bin_prob$Category == 1, -2]
 # Let's format it for easier visual interpretation:
@@ -953,6 +992,7 @@ AM_2 is less discriminating.
 We can also plot this information:
 
 ``` r
+
 plot_prob(res_bin[[2]])
 ```
 
@@ -967,6 +1007,7 @@ is designed for this setting. As an example, we can combine `df_bin`
 with the scale score of `CM`:
 
 ``` r
+
 df_mixed <- data.frame(df[, "CM", drop = FALSE], df_bin)
 ```
 
@@ -979,6 +1020,7 @@ The parameters are now given as:
 - No covariances
 
 ``` r
+
 k <- 1:10
 L <- 2
 M <- ncol(df_lca)
@@ -991,6 +1033,7 @@ So following our rule of thumb, we could safely estimate up to 3
 classes:
 
 ``` r
+
 res_mixed <- mx_mixed_lca(
   df_mixed,
   classes = 1:3
@@ -998,6 +1041,7 @@ res_mixed <- mx_mixed_lca(
 ```
 
 ``` r
+
 tab_mixed_fit <- table_fit(res_mixed)
 tab_mixed_fit
 #>     Name Classes         LL   n Parameters      AIC      BIC    saBIC   Entropy
@@ -1016,6 +1060,7 @@ results for the 2-class solution. Note that these results will now be a
 combination of means/variances and probabilities (thresholds):
 
 ``` r
+
 tab_mixed_res <- table_results(res_mixed[[2]])
 tab_mixed_res
 #>                            label  est_sig   se pval        confint  class
@@ -1041,6 +1086,7 @@ tab_mixed_res
 We can plot the continuous indicators:
 
 ``` r
+
 plot_density(res_mixed[[2]], variables = "CM")
 ```
 
@@ -1049,6 +1095,7 @@ plot_density(res_mixed[[2]], variables = "CM")
 And the response probabilities for the binary indicators:
 
 ``` r
+
 plot_prob(res_mixed[[2]])
 ```
 
@@ -1068,6 +1115,7 @@ they belong to each class). The function
 gives you this matrix, and several other diagnostic tables based on it:
 
 ``` r
+
 cp <- class_prob(res_lpa[[3]])
 format_numeric(head(cp$individual))
 #>      class1 class2 class3 predicted
@@ -1088,6 +1136,7 @@ sample contributes to each class (and allows people to contribute
 fractionally to multiple classes):
 
 ``` r
+
 format_numeric(head(cp$sum.posterior))
 #>    class  count proportion
 #> 1 class1 167.04       0.57
@@ -1101,6 +1150,7 @@ statistics. Note that these numbers now have measurement error baked
 into them:
 
 ``` r
+
 format_numeric(head(cp$sum.mostlikely))
 #>    class count.mostlikely count.Freq proportion.mostlikely proportion.Freq
 #> 1 class1                1        169                     1            0.58
@@ -1115,6 +1165,7 @@ matrix, which is reported in the fit table as `prob_min` and `prob_max`.
 We can see the full matrix by calling:
 
 ``` r
+
 format_numeric(cp$mostlikely.class)
 #>           assigned.1 assigned.2 assigned.3
 #> avgprob.1 "0.94"     "0.05"     "0.01"    
@@ -1164,6 +1215,7 @@ fixed across classes. We also write it to a spreadsheet, so we can
 easily import it into other desktop publishing software:
 
 ``` r
+
 tab <- table_results(res_lpa[[2]], columns = NULL)
 tab <- tab[tab$Category == "Means", c("lhs", "class", "est", "se")]
 tab$Mean <- paste0(tab$est, "(", tab$se, ")")
@@ -1184,6 +1236,7 @@ reproduced in print or digital publication. The dimensions of the
 figure, in millimeter, correspond to A6 paper format:
 
 ``` r
+
 p <- plot_density(res_lpa[[2]])
 ggsave(filename = "figure1.svg", plot = p, width = 148, height = 105, units = "mm", dpi = 300)
 p

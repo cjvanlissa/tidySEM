@@ -89,9 +89,12 @@ nodes element."></head><body>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">edg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"x"</span>, to <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="prepare_graph.html">prepare_graph</a></span><span class="op">(</span>edges <span class="op">=</span> <span class="va">edg</span>, layout <span class="op">=</span> <span class="fu"><a href="get_layout.html">get_layout</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, rows <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">nodes</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   name shape label x y node_xmin node_xmax node_ymin node_ymax show</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    x  rect     x 2 2       1.4       2.6       1.6       2.4 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    y  rect     y 4 2       3.4       4.6       1.6       2.4 TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name shape label x y node_xmin node_xmax node_ymin node_ymax width height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    x  rect     x 1 1       0.4       1.6       0.6       1.4   1.2    0.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    y  rect     y 2 1       1.4       2.6       0.6       1.4   1.2    0.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   show</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

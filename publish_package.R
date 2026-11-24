@@ -63,6 +63,8 @@ if(FALSE){
   print(timings, row.names = FALSE)
 }
 Sys.setenv(
+  TIDYSEM_RUN_EVERYTHING = "false",
+  TIDYSEM_SHOW_RESULTS = "false",
   TIDYSEM_TEST_LOCAL = "true"
 )
 devtools::check()

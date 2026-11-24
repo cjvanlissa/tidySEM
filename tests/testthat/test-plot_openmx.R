@@ -37,7 +37,7 @@ edges$label <- edges$est_sig
 edges$est_sig <- NULL
 
 
-prep <- prepare_graph(edges, lay, nodes, angle = 0, fix_coord = FALSE)
+prep <- prepare_graph(edges, lay, nodes, fix_coord = FALSE)
 edges(prep)[edges(prep)$from == "M" & edges(prep)$to == "F", c("arrow", "curvature")] <- rep(c("none", -60), each = 3)
 p <- plot(prep)
 

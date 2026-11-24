@@ -102,10 +102,10 @@ variable in auxiliary analyses?</p>
 <p>The reason is that latent class membership is uncertain, and based on
 posterior class probabilities. A participant with posterior class
 probabilities
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>.05</mn><mo>,</mo><mn>.93</mn><mo>,</mo><mn>.02</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.05,.93,.02)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>.05</mn><mo>,</mo><mn>.93</mn><mo>,</mo><mn>.02</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.05,.93,.02)</annotation></semantics></math>
 is most likely to belong to class 2, with high certainty. However, a
 participant with posterior class probabilities
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>.45</mn><mo>,</mo><mn>.35</mn><mo>,</mo><mn>.20</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.45,.35,.20)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>.45</mn><mo>,</mo><mn>.35</mn><mo>,</mo><mn>.20</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.45,.35,.20)</annotation></semantics></math>
 is most likely to belong to class 1, but there is a lot of uncertainty
 with this assignment.</p>
 <p>If we treat class assignments as an observed variable, this
@@ -449,11 +449,11 @@ outcomes and regressions:</p>
 <p>The pseudo-class approach accounts for classification uncertainty by
 repeatedly drawing one class for each observation according to its
 posterior probabilities. Thus, a person with posterior probabilities
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>.05</mn><mo>,</mo><mn>.93</mn><mo>,</mo><mn>.02</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.05,.93,.02)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>.05</mn><mo>,</mo><mn>.93</mn><mo>,</mo><mn>.02</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.05,.93,.02)</annotation></semantics></math>
 will be assigned to class 2 in <em>most</em> replications, but
 occasionally to class 1 or 3. Conversely, a participant with posterior
 class probabilities
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>.45</mn><mo>,</mo><mn>.35</mn><mo>,</mo><mn>.20</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.45,.35,.20)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>.45</mn><mo>,</mo><mn>.35</mn><mo>,</mo><mn>.20</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(.45,.35,.20)</annotation></semantics></math>
 will be assigned to each of the three classes in many replications.</p>
 <p>The auxiliary model is fitted in each completed dataset, and the
 results are pooled. This propagates classification uncertainty through

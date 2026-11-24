@@ -658,8 +658,7 @@ fr_layout_integer_compact <- function(nodes, edges, niter = 1000,
   }
 
   storage.mode(pos) <- "integer"
-  sem_layout_integer
-  pos <- data.frame(pos, name =)
+  pos <- data.frame(pos, name = nodes)
   attr(pos, "grid_size") <- c(
     width = nx,
     height = ny

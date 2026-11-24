@@ -20,7 +20,7 @@ print.sem_graph <- function(x, ...){
   cat("A tidy_sem object with", nrow(x$edges), "edges and", nrow(x$nodes), "nodes, and the following elements:\n")
   elms_tab(x, c("edges", "nodes", "rect_width", "rect_height", "ellipses_width",
              "ellipses_height", "variance_diameter", "spacing_x", "spacing_y",
-             "text_size", "curvature", "angle", "fix_coord"))
+             "text_size", "fix_coord"))
 }
 
 colmsg <- function(..., col = 30) {
@@ -37,7 +37,7 @@ colmsg <- function(..., col = 30) {
 elms_tab <- function(x, elms = NULL, cols = 2){
   elms <- c("edges", "nodes", "rect_width", "rect_height", "ellipses_width",
             "ellipses_height", "variance_diameter", "spacing_x", "spacing_y",
-            "text_size", "curvature", "angle", "fix_coord")
+            "text_size", "fix_coord")
   has_element <- sapply(seq_along(elms), function(i){
     paste0(c("\033[0;37mo  \033[0m", "\033[0;32mv  \033[0m")[(!is.null(x[[elms[i]]]))+1], elms[i])
   })

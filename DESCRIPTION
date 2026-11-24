@@ -39,7 +39,6 @@ Imports:
     methods,
     gtable,
     dbscan,
-    RANN,
     Matrix,
     car,
     future.apply,

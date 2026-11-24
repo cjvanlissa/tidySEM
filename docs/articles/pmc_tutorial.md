@@ -4,6 +4,7 @@ This tutorial requires `tidySEM` version `0.2.11` or higher and
 `OpenMx`. Make sure both packages are installed and loaded.
 
 ``` r
+
 library(tidySEM)
 library(OpenMx)
 ```
@@ -14,6 +15,7 @@ We simulate a dataset with two continuous indicators, and two latent
 classes.
 
 ``` r
+
 set.seed(10)
 n <- 200
 # Set class-specific means
@@ -28,6 +30,7 @@ names(df) <- paste0("X", 1:2)
 Next, we estimate 1-3 class solutions:
 
 ``` r
+
 res <- mx_profiles(data = df, classes = 1:3)
 ```
 
@@ -39,6 +42,7 @@ can use the `future` package for parallel computing (see
 the appropriate back-end for your system).
 
 ``` r
+
 library(future)
 plan(multisession)
 res_blrt <- BLRT(res, replications = 100)
@@ -63,6 +67,7 @@ function to compare the standardized root mean squared (SRMR) difference
 between the correlation matrices of the real and model-implied data:
 
 ``` r
+
 set.seed(1)
 res_pmc <- pmc(res)
 ```
@@ -90,6 +95,7 @@ of type `data.frame`, and we supply it as an argument to
 [`pmc()`](https://cjvanlissa.github.io/tidySEM/reference/pmc.md):
 
 ``` r
+
 # Convert the indicators to ordinal
 df[] <- lapply(df, cut, breaks = 3, labels = FALSE)
 df[] <- lapply(df, mxFactor, levels = 1:3)

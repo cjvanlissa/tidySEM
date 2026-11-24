@@ -27,11 +27,10 @@ prepare_graph(...)
   spacing_x = 2,
   spacing_y = 2,
   text_size = 4,
-  curvature = 60,
+  curvature = NULL,
   angle = NULL,
-  fix_coord = FALSE,
-  ...,
-  optimize_curvature = TRUE
+  fix_coord = TRUE,
+  ...
 )
 
 \method{prepare_graph}{lavaan}(model, edges = NULL, layout = NULL, nodes = NULL, ...)
@@ -79,26 +78,20 @@ Default: 1}
 \item{variance_diameter}{Diameter of variance circles,
 Default: .8}
 
-\item{spacing_x}{Spacing between columns of the graph, Default: 1}
+\item{spacing_x}{Spacing between columns of the graph, Default: 2}
 
-\item{spacing_y}{Spacing between rows of the graph, Default: 1}
+\item{spacing_y}{Spacing between rows of the graph, Default: 2}
 
 \item{text_size}{Point size of text, Default: 4}
 
-\item{curvature}{Curvature of curved edges. The curve is a circle segment
-originating in a point that forms a triangle with the two connected points,
-with angles at the two connected points equal to \code{curvature}.
-To flip a curved edge, use a negative value for curvature. Default: 60}
+\item{curvature}{Deprecated. Was used to determine curvature of curved
+edges, which is now being optimized.}
 
-\item{angle}{Angle used to connect nodes by the top and bottom. Defaults to
-NULL, which means Euclidean distance is used to determine the shortest
-distance between node sides. A numeric value between 0-180 can be provided,
-where 0 means that only nodes with the same x-coordinates are connected
-top-to-bottom, and 180 means that all nodes are connected top-to-bottom.}
+\item{angle}{Deprecated. Was used to determine node connection points.}
 
 \item{fix_coord}{Whether or not to fix the aspect ratio of the graph.
 Does not work with multi-group or multilevel models.
-Default: FALSE.}
+Default: TRUE.}
 }
 \value{
 Object of class 'sem_graph'

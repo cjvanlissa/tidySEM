@@ -45,6 +45,7 @@ that the auxiliary data must have the same number of rows in **exactly
 the same order** as the measurement data.
 
 ``` r
+
 library(tidySEM)
 df <- zegwaard_carecompass
 indicators <- c("burdened", "trapped", "negaffect", "loneliness")
@@ -55,11 +56,13 @@ For the examples in this vignette, we will just fit a simple two-class
 model:
 
 ``` r
+
 set.seed(297)
 lpa_model <- mx_profiles(measurement_data, classes = 2)
 ```
 
 ``` r
+
 table_fit(lpa_model)
 #>   Minus2LogLikelihood   n Parameters observedStatistics  df RMSEASquared
 #> 1                4063 513         13               2030 500            0
@@ -72,6 +75,7 @@ table_fit(lpa_model)
 ### Classification uncertainty
 
 ``` r
+
 cp <- class_prob(lpa_model)
 head(cp$individual)
 cp$mostlikely.class
@@ -115,6 +119,7 @@ numeric-outcome specification estimates class-specific means and
 variances.
 
 ``` r
+
 bch_mean <- BCH(lpa_model, data = df$distance)
 table_results(bch_mean, columns = NULL)
 ```
@@ -142,6 +147,7 @@ comparison, use
 compare the means (`M`) rather than the entire auxiliary model.
 
 ``` r
+
 lr_test(bch_mean, compare = "M")
 ```
 
@@ -168,6 +174,7 @@ estimates class-specific thresholds. The function
 represents these in the more interpretable response probability scale:
 
 ``` r
+
 sex <- ordered(df$sexpatient, levels = c("male", "female"))
 bch_sex <- BCH(lpa_model, data = sex)
 table_prob(bch_sex)
@@ -190,6 +197,7 @@ test of the `"A"` matrix thus investigates whether the regression
 coefficient differs significantly between the two classes:
 
 ``` r
+
 df_aux <- df[, c("freqvisit", "distance"), drop = FALSE]
 df_aux$freqvisit <- as.numeric(df_aux$freqvisit)
 bch_reg <- BCH(lpa_model,
@@ -268,6 +276,7 @@ The interface of this function is similar to
 [`BCH()`](https://cjvanlissa.github.io/tidySEM/reference/BCH.md):
 
 ``` r
+
 two_mean <- two_step(lpa_model, data = df$distance)
 table_results(two_mean, columns = NULL)
 ```
@@ -374,6 +383,7 @@ are available in the attribute `attr(model, "se_robust")`, and
 shows them by default.
 
 ``` r
+
 attr(two_mean, "se_robust")
 ```
 
@@ -387,6 +397,7 @@ For a custom auxiliary RAM model, the syntax can include multiple
 outcomes and regressions:
 
 ``` r
+
 two_reg <- two_step(
   lpa_model,
   model = "freqvisit ~ distance",
@@ -417,6 +428,7 @@ per class. The `model` expression is evaluated in each pseudo-class
 dataset.
 
 ``` r
+
 set.seed(2027)
 pseudo_mean <- pseudo_class(
   x = lpa_model,
@@ -440,6 +452,7 @@ If the model does not explicitly reference `class`, the function treats
 class as a grouping variable.
 
 ``` r
+
 set.seed(2028)
 pseudo_ram <- pseudo_class(
   x = lpa_model,
@@ -468,6 +481,7 @@ For example, a multinomial model can be fitted across pseudo-class draws
 using [`nnet::multinom()`](https://rdrr.io/pkg/nnet/man/multinom.html):
 
 ``` r
+
 set.seed(2030)
 pseudo_pred <- pseudo_class(
   x = lpa_model,

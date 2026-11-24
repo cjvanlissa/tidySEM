@@ -18,30 +18,13 @@ space_these <- function(these, n){
   out
 }
 
-# @title Generate a rudimentary layout from a model object
-# @description This is a wrapper function to the
-# \code{\link[igraph]{layout_as_tree}} function, or other layout
-# functions from the \code{\link[igraph]{igraph-package}}. It returns a layout
-# in matrix format.
-# @param x A model for which a method exists.
-# @param layout_algorithm Which algorithm to use, from the
-# \code{\link[igraph]{igraph-package}}. The default Reingold-Tilford algorithm
-# is most suitable for SEM graphs.
-# @return Matrix
-# @examples
-# \dontrun{
-# library(lavaan)
-# fit <- sem("Sepal.Length ~ Petal.Width", data = iris)
-# generate_layout(fit)
-# }
-# @rdname generate_layout
 
 #' @method get_layout lavaan
 #' @rdname get_layout
 #' @param layout_algorithm Optional argument for fit model objects. Character
 #' string, indicating which \code{igraph}
 #' layout algorithm to apply to position the nodes. Defaults to
-#' \code{"layout_as_tree"}; see details for more options.
+#' \code{"sem"}; see details for more options.
 #' @export
 get_layout.lavaan <- function(x, ..., layout_algorithm = "sem"){
   Args <- as.list(match.call()[-1])
@@ -289,24 +272,16 @@ resolve_dups <- function(lo){
 #'   rows to create a layout matrix. Empty strings (\code{""})
 #'   or \code{NA} can be used for empty cells. See Example 1.
 #'   \item Call \code{get_layout()} on a model object or \code{tidy_results}
-#'   object. It will use the function
-#'   \code{\link[igraph]{layout_as_tree}}, or any other layout function
-#'   from the \code{igraph} package, to generate a rudimentary layout. See
-#'   Example 2.
+#'   object. You can either use the argument `"sem"`, to generate a SEM-specific
+#'   layout, or `"fr_grid"` to apply the Fruchterman-Reingold force-directed
+#'   graph algorithm, or any layout function from the package `igraph` if it is
+#'   installed. See Example 2.
 #'   \item Instead of using \code{get_layout()}, just use a \code{matrix} or
 #'   \code{data.frame} with your layout. For example, specify the layout in a
 #'   spreadsheet program, and load it into R (see Example 3). Or, copy the
 #'   layout to the clipboard from your spreadsheet program, and load it from the
 #'   clipboard (see Example 4)
 #' }
-#' The layout algorithms imported from \code{igraph} are:
-#' \code{c("layout_as_star",
-#' "layout_as_tree", "layout_in_circle", "layout_nicely",
-#' "layout_on_grid", "layout_randomly", "layout_with_dh", "layout_with_fr",
-#' "layout_with_gem",
-#' "layout_with_graphopt", "layout_with_kk", "layout_with_lgl",
-#' "layout_with_mds")}. These can be used by specifying the optional argument
-#' \code{layout_algorithm = ""}.
 #' @return Object of class 'tidy_layout'
 #' @examples
 #' # Example 1
@@ -318,6 +293,10 @@ resolve_dups <- function(lo){
 #' fit <- cfa(' visual  =~ x1 + x2 + x3 ',
 #'            data = HolzingerSwineford1939[1:50, ])
 #' get_layout(fit)
+#' get_layout(fit, layout_algorithm = "fr_grid")
+#' if(requireNamespace("igraph", quietly = TRUE)){
+#' get_layout(fit, layout_algorithm = "layout_as_star")
+#' }
 #'
 #' \dontrun{
 #' # Example 3

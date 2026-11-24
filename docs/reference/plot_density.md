@@ -57,6 +57,10 @@ plot_density(
   example with the 'iris' data below, one could specify:
   `facet_labels = c("Pet_leng" = "Petal length")`.
 
+- ...:
+
+  Arguments passed on to other functions.
+
 ## Value
 
 An object of class 'ggplot'.

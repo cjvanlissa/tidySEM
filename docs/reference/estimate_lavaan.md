@@ -43,10 +43,10 @@ res <- estimate_lavaan(model)
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
 #> Warning: lavaan->lav_object_post_check():  
-#>    covariance matrix of latent variables is not positive definite ; use 
+#>    covariance matrix of latent variables is not positive definite; use 
 #>    lavInspect(fit, "cov.lv") to investigate.
 summary(res)
-#> lavaan 0.7-2 ended normally after 47 iterations
+#> lavaan 0.7-3 ended normally after 47 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -59,6 +59,11 @@ summary(res)
 #>   Test statistic                                 2.322
 #>   Degrees of freedom                                 1
 #>   P-value (Chi-square)                           0.128
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                                 2.304
+#>   Degrees of freedom                                 1
+#>   P-value (Chi-square)                           0.129
 #> 
 #> Parameter Estimates:
 #> 

@@ -32,6 +32,7 @@ function [`mxFactor()`](https://rdrr.io/pkg/OpenMx/man/mxFactor.html).
 Make sure both `tidySEM` and `OpenMx` are installed and loaded.
 
 ``` r
+
 library(tidySEM)
 library(OpenMx)
 ```
@@ -45,6 +46,7 @@ We simulate a dataset with:
 - Two latent classes
 
 ``` r
+
 set.seed(10)
 n <- 200
 
@@ -72,6 +74,7 @@ To estimate a 2-class mixed-data latent class model, use the following
 code:
 
 ``` r
+
 res_2 <- mx_mixed_lca(
 data = df,
 classes = 2
@@ -83,6 +86,7 @@ The returned object is an
 can be modified using the functions in that package:
 
 ``` r
+
 class(res_2)
 #> [1] "MxModel"
 #> attr(,"package")
@@ -95,6 +99,7 @@ A common workflow is to estimate several class solutions and compare
 model fit. This can be done by passing a vector of class numbers.
 
 ``` r
+
 res_1_3 <- mx_mixed_lca(
   data = df,
   classes = 1:3
@@ -112,6 +117,7 @@ model with the lowest BIC. This is obtained by inspecting model fit, by
 printing the object, or calling `table_fit(res_1_3)`:
 
 ``` r
+
 table_fit(res_1_3)
 ```
 
@@ -138,6 +144,7 @@ progress, we use the `progressr` ecosystem, which allows users to choose
 how they want to be informed. The example below uses a progress bar:
 
 ``` r
+
 library(future)
 library(progressr)
 plan(multisession) # Parallel processing for Windows
@@ -177,6 +184,7 @@ conceptually similar to Bayesian posterior predictive checks.
     #>  -0.35111805   *
 
 ``` r
+
 set.seed(1)
 res_pmc <- pmc(res_1_3)
 res_pmc
@@ -202,6 +210,7 @@ calling:
     #> 2 class1                2         59                     2           0.295
 
 ``` r
+
 class_prob(res_1_3[[2]], c("sum.posterior", "sum.mostlikely"))
 ```
 
@@ -218,6 +227,7 @@ split. Thus, we should have good class discrimination.
 This is confirmed by checking:
 
 ``` r
+
 table_fit(res_1_3[[2]])
 ```
 
@@ -236,6 +246,7 @@ Finally, we can examine the parameter values using
 on the second element of the model list, or the 2-class model:
 
 ``` r
+
 table_results(res_1_3[[2]])
 ```
 
@@ -284,6 +295,7 @@ category corresponds to `pnorm(-2.38, lower.tail = TRUE)`, or about 1%.
 To convert these thresholds to the probability scale, we can run:
 
 ``` r
+
 table_prob(res_1_3[[2]])
 ```
 
@@ -304,6 +316,7 @@ variance constraints for the continuous indicators by passing the
 [`mx_profiles()`](https://cjvanlissa.github.io/tidySEM/reference/mx_profiles.md):
 
 ``` r
+
 res_2_free <- mx_mixed_lca(
   data = df,
   classes = 2,
@@ -315,6 +328,7 @@ We can compare the BICs of these models to determine whether the added
 complexity improves the model fit:
 
 ``` r
+
 compare <- list(
   fixed_covs = res_1_3[[2]],
   free_covs = res_2_free)
@@ -342,6 +356,7 @@ Thus, for example, we can use a profile plot for the continuous
 indicators:
 
 ``` r
+
 plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
 
@@ -350,6 +365,7 @@ plot_profiles(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 Alternatively, we can use a bivariate plot with densities:
 
 ``` r
+
 plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 ```
 
@@ -358,6 +374,7 @@ plot_bivariate(res_1_3[[2]], variables = c("X1", "X2", "X3"))
 We can plot the categorical variables as follows:
 
 ``` r
+
 plot_prob(res_1_3[[2]])
 ```
 

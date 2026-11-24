@@ -20,6 +20,7 @@ first.
 Let’s load the required packages:
 
 ``` r
+
 library(tidySEM)
 library(lavaan)
 library(ggplot2)
@@ -61,6 +62,7 @@ As an example, let’s make a graph for a classic `lavaan` tutorial
 example for CFA. First, we conduct the SEM analysis:
 
 ``` r
+
 library(lavaan)
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
@@ -70,10 +72,12 @@ fit <- cfa(HS.model, data=HolzingerSwineford1939)
 
 ### Step 2: Plot the graph
 
-At this point, we could simply plot the graph:
+At this point, we could simply plot the graph (smaller text size to
+avoid labels overplotting):
 
 ``` r
-graph_sem(model = fit)
+
+graph_sem(model = fit, text_size = 2)
 ```
 
 ![](cache_Plotting_graphs/plotting-cache-1.png)
@@ -107,35 +111,54 @@ argument of the same function.
 The
 [`get_layout()`](https://cjvanlissa.github.io/tidySEM/reference/get_layout.md)
 function automatically generates a layout for a fit model object. To get
-this layout as a matrix, you can run:
+this layout, you can run:
 
 ``` r
+
 get_layout(fit)
-#>      [,1] [,2]    [,3]      [,4]
-#> [1,] "x9" "x5"    "textual" "x6"
-#> [2,] "x7" "speed" "visual"  "x4"
-#> [3,] "x8" "x1"    "x2"      "x3"
-#> attr(,"class")
-#> [1] "layout_matrix" "matrix"        "array"
+#>     x y    name
+#> 1   2 2  visual
+#> 2  10 2 textual
+#> 3  18 2   speed
+#> 4   0 0      x1
+#> 5   2 0      x2
+#> 6   4 0      x3
+#> 7   8 0      x4
+#> 8  10 0      x5
+#> 9  12 0      x6
+#> 10 16 0      x7
+#> 11 18 0      x8
+#> 12 20 0      x9
 ```
 
 The
 [`get_layout()`](https://cjvanlissa.github.io/tidySEM/reference/get_layout.md)
-function relies on the Fruchterman Reingold algorithm to place the
-nodes. If the `igraph` package is installed, its layout algorithms can
-be used by specifying the `layout_algorithm = ...` argument:
+function by default uses an algorithm optimized for SEM diagrams to
+place the nodes. Alternatively, the `layout_algorithm` argument can be
+set to `fr_grid` to use the Fruchterman-Reingold force-directed graph
+layout algorithm. Finally, if the `igraph` package is installed, any of
+its layout algorithms can be used by specifying the
+`layout_algorithm = ...` argument:
 
 ``` r
+
 if(requireNamespace("igraph", quietly = TRUE)){
   get_layout(fit, layout_algorithm = "layout_in_circle")
   get_layout(fit, layout_algorithm = "layout_on_grid")
 }
-#>      [,1]     [,2]      [,3]    [,4]
-#> [1,] "x6"     "x7"      "x8"    "x9"
-#> [2,] "x2"     "x3"      "x4"    "x5"
-#> [3,] "visual" "textual" "speed" "x1"
-#> attr(,"class")
-#> [1] "layout_matrix" "matrix"        "array"
+#>    x y    name
+#> 1  0 0  visual
+#> 2  1 0 textual
+#> 3  2 0   speed
+#> 4  3 0      x1
+#> 5  0 1      x2
+#> 6  1 1      x3
+#> 7  2 1      x4
+#> 8  3 1      x5
+#> 9  0 2      x6
+#> 10 1 2      x7
+#> 11 2 2      x8
+#> 12 3 2      x9
 ```
 
 #### Specifying layout manually in R
@@ -145,6 +168,7 @@ empty spaces (`NA` or `""`), and the number of rows of the desired
 layout matrix. For example:
 
 ``` r
+
 get_layout("c", NA,  "d",
            NA,  "e", NA, rows = 2)
 #>      [,1] [,2] [,3]
@@ -168,6 +192,7 @@ To obtain the layout matrix, one can save the spreadsheet as `.csv` file
 and load it in R like this:
 
 ``` r
+
 read.csv("example.csv")
 ```
 
@@ -178,12 +203,14 @@ differently on Windows and Mac.
 On Windows, run:
 
 ``` r
+
 read.table("clipboard", sep = "\t")
 ```
 
 On Mac, run:
 
 ``` r
+
 read.table(pipe("pbpaste"), sep="\t")
 ```
 
@@ -193,6 +220,7 @@ We can specify a simple layout for two hypothetical nodes `x` and `y` is
 generated as follows:
 
 ``` r
+
 get_layout("x", "y", rows = 1)
 #>      [,1] [,2]
 #> [1,] "x"  "y" 
@@ -203,6 +231,7 @@ get_layout("x", "y", rows = 1)
 For a mediation model, one might specify a layout like this:
 
 ``` r
+
 get_layout("", "m", "",
            "x", "", "y", rows = 2)
 #>      [,1] [,2] [,3]
@@ -215,6 +244,7 @@ get_layout("", "m", "",
 For a three-item CFA model, one might specify:
 
 ``` r
+
 get_layout("", "F", "",
            "y1", "y2", "y3", rows = 2)
 #>      [,1] [,2] [,3]
@@ -227,6 +257,7 @@ get_layout("", "F", "",
 And for the CFA model we estimated above:
 
 ``` r
+
 lay <- get_layout("", "", "visual","","textual","","speed","", "",
                   "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", rows = 2)
 ```
@@ -234,6 +265,7 @@ lay <- get_layout("", "", "visual","","textual","","speed","", "",
 We could plot the CFA model with this custom layout as follows:
 
 ``` r
+
 graph_sem(fit, layout = lay)
 ```
 
@@ -250,6 +282,7 @@ available by running
 [`get_nodes()`](https://cjvanlissa.github.io/tidySEM/reference/get_nodes.md):
 
 ``` r
+
 get_nodes(fit)
 #>       name shape   label
 #> 1   visual  oval  visual
@@ -269,32 +302,33 @@ get_nodes(fit)
 And for the edges:
 
 ``` r
+
 get_edges(fit)
 #>       from      to arrow   label connect_from connect_to curvature linetype
-#> 1   visual      x1  last    1.00           NA         NA        NA        1
-#> 2   visual      x2  last 0.55***           NA         NA        NA        1
-#> 3   visual      x3  last 0.73***           NA         NA        NA        1
-#> 4  textual      x4  last    1.00           NA         NA        NA        1
-#> 5  textual      x5  last 1.11***           NA         NA        NA        1
-#> 6  textual      x6  last 0.93***           NA         NA        NA        1
-#> 7    speed      x7  last    1.00           NA         NA        NA        1
-#> 8    speed      x8  last 1.18***           NA         NA        NA        1
-#> 9    speed      x9  last 1.08***           NA         NA        NA        1
-#> 10      x1      x1  both 0.55***           NA         NA        NA        1
-#> 11      x2      x2  both 1.13***           NA         NA        NA        1
-#> 12      x3      x3  both 0.84***           NA         NA        NA        1
-#> 13      x4      x4  both 0.37***           NA         NA        NA        1
-#> 14      x5      x5  both 0.45***           NA         NA        NA        1
-#> 15      x6      x6  both 0.36***           NA         NA        NA        1
-#> 16      x7      x7  both 0.80***           NA         NA        NA        1
-#> 17      x8      x8  both 0.49***           NA         NA        NA        1
-#> 18      x9      x9  both 0.57***           NA         NA        NA        1
-#> 19  visual  visual  both 0.81***           NA         NA        NA        1
-#> 20 textual textual  both 0.98***           NA         NA        NA        1
-#> 21   speed   speed  both 0.38***           NA         NA        NA        1
-#> 22  visual textual  none 0.41***           NA         NA        60        2
-#> 23  visual   speed  none 0.26***           NA         NA        60        2
-#> 24 textual   speed  none 0.17***           NA         NA        60        2
+#> 1   visual      x1  last    1.00           NA         NA         0        1
+#> 2   visual      x2  last 0.55***           NA         NA         0        1
+#> 3   visual      x3  last 0.73***           NA         NA         0        1
+#> 4  textual      x4  last    1.00           NA         NA         0        1
+#> 5  textual      x5  last 1.11***           NA         NA         0        1
+#> 6  textual      x6  last 0.93***           NA         NA         0        1
+#> 7    speed      x7  last    1.00           NA         NA         0        1
+#> 8    speed      x8  last 1.18***           NA         NA         0        1
+#> 9    speed      x9  last 1.08***           NA         NA         0        1
+#> 10      x1      x1  both 0.55***           NA         NA         0        1
+#> 11      x2      x2  both 1.13***           NA         NA         0        1
+#> 12      x3      x3  both 0.84***           NA         NA         0        1
+#> 13      x4      x4  both 0.37***           NA         NA         0        1
+#> 14      x5      x5  both 0.45***           NA         NA         0        1
+#> 15      x6      x6  both 0.36***           NA         NA         0        1
+#> 16      x7      x7  both 0.80***           NA         NA         0        1
+#> 17      x8      x8  both 0.49***           NA         NA         0        1
+#> 18      x9      x9  both 0.57***           NA         NA         0        1
+#> 19  visual  visual  both 0.81***           NA         NA         0        1
+#> 20 textual textual  both 0.98***           NA         NA         0        1
+#> 21   speed   speed  both 0.38***           NA         NA         0        1
+#> 22  visual textual  none 0.41***           NA         NA        NA        2
+#> 23  visual   speed  none 0.26***           NA         NA        NA        2
+#> 24 textual   speed  none 0.17***           NA         NA        NA        2
 #>        lhs op     rhs  est   se pval      confint est_sig est_std se_std
 #> 1   visual =~      x1 1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77   0.05
 #> 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06
@@ -373,32 +407,33 @@ you want to combine the parameter estimate and its confidence interval
 into an edge label:
 
 ``` r
+
 get_edges(fit, label = paste(est, confint))
 #>       from      to arrow             label connect_from connect_to curvature
-#> 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA        NA
-#> 2   visual      x2  last 0.55 [0.36, 0.75]           NA         NA        NA
-#> 3   visual      x3  last 0.73 [0.52, 0.94]           NA         NA        NA
-#> 4  textual      x4  last 1.00 [1.00, 1.00]           NA         NA        NA
-#> 5  textual      x5  last 1.11 [0.98, 1.24]           NA         NA        NA
-#> 6  textual      x6  last 0.93 [0.82, 1.03]           NA         NA        NA
-#> 7    speed      x7  last 1.00 [1.00, 1.00]           NA         NA        NA
-#> 8    speed      x8  last 1.18 [0.86, 1.50]           NA         NA        NA
-#> 9    speed      x9  last 1.08 [0.79, 1.38]           NA         NA        NA
-#> 10      x1      x1  both 0.55 [0.33, 0.77]           NA         NA        NA
-#> 11      x2      x2  both 1.13 [0.93, 1.33]           NA         NA        NA
-#> 12      x3      x3  both 0.84 [0.67, 1.02]           NA         NA        NA
-#> 13      x4      x4  both 0.37 [0.28, 0.46]           NA         NA        NA
-#> 14      x5      x5  both 0.45 [0.33, 0.56]           NA         NA        NA
-#> 15      x6      x6  both 0.36 [0.27, 0.44]           NA         NA        NA
-#> 16      x7      x7  both 0.80 [0.64, 0.96]           NA         NA        NA
-#> 17      x8      x8  both 0.49 [0.34, 0.63]           NA         NA        NA
-#> 18      x9      x9  both 0.57 [0.43, 0.70]           NA         NA        NA
-#> 19  visual  visual  both 0.81 [0.52, 1.09]           NA         NA        NA
-#> 20 textual textual  both 0.98 [0.76, 1.20]           NA         NA        NA
-#> 21   speed   speed  both 0.38 [0.21, 0.55]           NA         NA        NA
-#> 22  visual textual  none 0.41 [0.26, 0.55]           NA         NA        60
-#> 23  visual   speed  none 0.26 [0.15, 0.37]           NA         NA        60
-#> 24 textual   speed  none 0.17 [0.08, 0.27]           NA         NA        60
+#> 1   visual      x1  last 1.00 [1.00, 1.00]           NA         NA         0
+#> 2   visual      x2  last 0.55 [0.36, 0.75]           NA         NA         0
+#> 3   visual      x3  last 0.73 [0.52, 0.94]           NA         NA         0
+#> 4  textual      x4  last 1.00 [1.00, 1.00]           NA         NA         0
+#> 5  textual      x5  last 1.11 [0.98, 1.24]           NA         NA         0
+#> 6  textual      x6  last 0.93 [0.82, 1.03]           NA         NA         0
+#> 7    speed      x7  last 1.00 [1.00, 1.00]           NA         NA         0
+#> 8    speed      x8  last 1.18 [0.86, 1.50]           NA         NA         0
+#> 9    speed      x9  last 1.08 [0.79, 1.38]           NA         NA         0
+#> 10      x1      x1  both 0.55 [0.33, 0.77]           NA         NA         0
+#> 11      x2      x2  both 1.13 [0.93, 1.33]           NA         NA         0
+#> 12      x3      x3  both 0.84 [0.67, 1.02]           NA         NA         0
+#> 13      x4      x4  both 0.37 [0.28, 0.46]           NA         NA         0
+#> 14      x5      x5  both 0.45 [0.33, 0.56]           NA         NA         0
+#> 15      x6      x6  both 0.36 [0.27, 0.44]           NA         NA         0
+#> 16      x7      x7  both 0.80 [0.64, 0.96]           NA         NA         0
+#> 17      x8      x8  both 0.49 [0.34, 0.63]           NA         NA         0
+#> 18      x9      x9  both 0.57 [0.43, 0.70]           NA         NA         0
+#> 19  visual  visual  both 0.81 [0.52, 1.09]           NA         NA         0
+#> 20 textual textual  both 0.98 [0.76, 1.20]           NA         NA         0
+#> 21   speed   speed  both 0.38 [0.21, 0.55]           NA         NA         0
+#> 22  visual textual  none 0.41 [0.26, 0.55]           NA         NA        NA
+#> 23  visual   speed  none 0.26 [0.15, 0.37]           NA         NA        NA
+#> 24 textual   speed  none 0.17 [0.08, 0.27]           NA         NA        NA
 #>    linetype     lhs op     rhs  est   se pval      confint est_sig est_std
 #> 1         1  visual =~      x1 1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77
 #> 2         1  visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42
@@ -466,6 +501,7 @@ We can re-run the model with a mean structure to get more information
 about the nodes:
 
 ``` r
+
 fit <- cfa(HS.model, data=HolzingerSwineford1939, meanstructure = TRUE)
 ```
 
@@ -474,6 +510,7 @@ Running
 now uses the estimated means in the label:
 
 ``` r
+
 get_nodes(fit)
 #>       name shape         label     lhs op rhs  est   se pval      confint
 #> 1    speed  oval   speed\n0.00   speed ~1     0.00 0.00 <NA> [0.00, 0.00]
@@ -506,6 +543,7 @@ get_nodes(fit)
 These labels can be further customized as shown below:
 
 ``` r
+
 get_nodes(fit, label = paste0(name, "\n", est, " ", confint))
 #>       name shape                      label     lhs op rhs  est   se pval
 #> 1    speed  oval   speed\n0.00 [0.00, 0.00]   speed ~1     0.00 0.00 <NA>
@@ -560,33 +598,34 @@ other properties of the plot) later. First, let’s generate a `sem_graph`
 object and examine the `edges` element:
 
 ``` r
+
 p <- prepare_graph(fit)
 edges(p)
-#>       from      to arrow   label connect_from connect_to curvature linetype
-#> 1   visual      x1  last    1.00        right       left        NA        1
-#> 2   visual      x2  last 0.55***        right       left        NA        1
-#> 3   visual      x3  last 0.73***        right       left        NA        1
-#> 4  textual      x4  last    1.00         left      right        NA        1
-#> 5  textual      x5  last 1.11***        right       left        NA        1
-#> 6  textual      x6  last 0.93***        right       left        NA        1
-#> 7    speed      x7  last    1.00         left      right        NA        1
-#> 8    speed      x8  last 1.18***         left      right        NA        1
-#> 9    speed      x9  last 1.08***         left      right        NA        1
-#> 10      x1      x1  both 0.55***        right      right        NA        1
-#> 11      x2      x2  both 1.13***        right      right        NA        1
-#> 12      x3      x3  both 0.84***        right      right        NA        1
-#> 13      x4      x4  both 0.37***         left       left        NA        1
-#> 14      x5      x5  both 0.45***        right      right        NA        1
-#> 15      x6      x6  both 0.36***        right      right        NA        1
-#> 16      x7      x7  both 0.80***         left       left        NA        1
-#> 17      x8      x8  both 0.49***         left       left        NA        1
-#> 18      x9      x9  both 0.57***         left       left        NA        1
-#> 19  visual  visual  both 0.81***       bottom     bottom        NA        1
-#> 20 textual textual  both 0.98***       bottom     bottom        NA        1
-#> 21   speed   speed  both 0.38***       bottom     bottom        NA        1
-#> 22  visual textual  none 0.41***         left      right        60        2
-#> 23  visual   speed  none 0.26***         left      right        60        2
-#> 24 textual   speed  none 0.17***         left      right        60        2
+#>       from      to   label arrow curvature connect_from connect_to linetype
+#> 1   visual      x1    1.00  last         0       bottom        top        1
+#> 2   visual      x2 0.55***  last         0       bottom        top        1
+#> 3   visual      x3 0.73***  last         0       bottom        top        1
+#> 4  textual      x4    1.00  last         0       bottom        top        1
+#> 5  textual      x5 1.11***  last         0       bottom        top        1
+#> 6  textual      x6 0.93***  last         0       bottom        top        1
+#> 7    speed      x7    1.00  last         0       bottom        top        1
+#> 8    speed      x8 1.18***  last         0       bottom        top        1
+#> 9    speed      x9 1.08***  last         0       bottom        top        1
+#> 10      x1      x1 0.55***  both         0       bottom     bottom        1
+#> 11      x2      x2 1.13***  both         0       bottom     bottom        1
+#> 12      x3      x3 0.84***  both         0       bottom     bottom        1
+#> 13      x4      x4 0.37***  both         0       bottom     bottom        1
+#> 14      x5      x5 0.45***  both         0       bottom     bottom        1
+#> 15      x6      x6 0.36***  both         0       bottom     bottom        1
+#> 16      x7      x7 0.80***  both         0       bottom     bottom        1
+#> 17      x8      x8 0.49***  both         0       bottom     bottom        1
+#> 18      x9      x9 0.57***  both         0       bottom     bottom        1
+#> 19  visual  visual 0.81***  both         0         left       left        1
+#> 20 textual textual 0.98***  both         0          top        top        1
+#> 21   speed   speed 0.38***  both         0        right      right        1
+#> 22  visual textual 0.41***  none       -30        right       left        2
+#> 23  visual   speed 0.26***  none       -20          top        top        2
+#> 24 textual   speed 0.17***  none       -30        right       left        2
 #>        lhs op     rhs  est   se pval      confint est_sig est_std se_std
 #> 1   visual =~      x1 1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77   0.05
 #> 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06
@@ -645,6 +684,7 @@ construct labels, using the
 function:
 
 ``` r
+
 prepare_graph(fit) %>%
   edit_graph({ label = paste(est_sig_std, "\n", confint_std) }) %>%
   plot()
@@ -655,6 +695,7 @@ prepare_graph(fit) %>%
 The same can be done for the node labels:
 
 ``` r
+
 prepare_graph(fit) %>%
   edit_graph({ label = paste(est_sig_std, "\n", confint_std) }) %>%
   edit_graph({ label = paste(name, "\n", est_sig_std, "\n", confint_std) }, element = "nodes") %>%
@@ -670,6 +711,7 @@ shown). For example, we can change the label color for both nodes and
 edges:
 
 ``` r
+
 prepare_graph(fit) %>%
   edit_graph({ label_color = "blue" }) %>%
   plot()
@@ -689,6 +731,7 @@ plotting. First, use
 to assign the plot data to an object.
 
 ``` r
+
 graph_data <- prepare_graph(model = fit, layout = lay)
 ```
 
@@ -698,20 +741,21 @@ The nodes and edges can be examined using `nodes(graph_data)` and
 `edges(graph_data)`:
 
 ``` r
+
 nodes(graph_data)
-#>       name shape         label  x y node_xmin node_xmax node_ymin node_ymax
-#> 1    speed  oval   speed\n0.00 14 4      13.5      14.5       3.5       4.5
-#> 2  textual  oval textual\n0.00 10 4       9.5      10.5       3.5       4.5
-#> 3   visual  oval  visual\n0.00  6 4       5.5       6.5       3.5       4.5
-#> 4       x1  rect   x1\n4.94***  2 2       1.4       2.6       1.6       2.4
-#> 5       x2  rect   x2\n6.09***  4 2       3.4       4.6       1.6       2.4
-#> 6       x3  rect   x3\n2.25***  6 2       5.4       6.6       1.6       2.4
-#> 7       x4  rect   x4\n3.06***  8 2       7.4       8.6       1.6       2.4
-#> 8       x5  rect   x5\n4.34*** 10 2       9.4      10.6       1.6       2.4
-#> 9       x6  rect   x6\n2.19*** 12 2      11.4      12.6       1.6       2.4
-#> 10      x7  rect   x7\n4.19*** 14 2      13.4      14.6       1.6       2.4
-#> 11      x8  rect   x8\n5.53*** 16 2      15.4      16.6       1.6       2.4
-#> 12      x9  rect   x9\n5.37*** 18 2      17.4      18.6       1.6       2.4
+#>       name shape         label x y node_xmin node_xmax node_ymin node_ymax
+#> 1    speed  oval   speed\n0.00 7 2       6.5       7.5       1.5       2.5
+#> 2  textual  oval textual\n0.00 5 2       4.5       5.5       1.5       2.5
+#> 3   visual  oval  visual\n0.00 3 2       2.5       3.5       1.5       2.5
+#> 4       x1  rect   x1\n4.94*** 1 1       0.4       1.6       0.6       1.4
+#> 5       x2  rect   x2\n6.09*** 2 1       1.4       2.6       0.6       1.4
+#> 6       x3  rect   x3\n2.25*** 3 1       2.4       3.6       0.6       1.4
+#> 7       x4  rect   x4\n3.06*** 4 1       3.4       4.6       0.6       1.4
+#> 8       x5  rect   x5\n4.34*** 5 1       4.4       5.6       0.6       1.4
+#> 9       x6  rect   x6\n2.19*** 6 1       5.4       6.6       0.6       1.4
+#> 10      x7  rect   x7\n4.19*** 7 1       6.4       7.6       0.6       1.4
+#> 11      x8  rect   x8\n5.53*** 8 1       7.4       8.6       0.6       1.4
+#> 12      x9  rect   x9\n5.37*** 9 1       8.4       9.6       0.6       1.4
 #>        lhs op rhs  est   se pval      confint est_sig est_std se_std pval_std
 #> 1    speed ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
 #> 2  textual ~1     0.00 0.00 <NA> [0.00, 0.00]    0.00    0.00   0.00     <NA>
@@ -725,45 +769,45 @@ nodes(graph_data)
 #> 10      x7 ~1     4.19 0.06 0.00 [4.06, 4.31] 4.19***    3.85   0.17     0.00
 #> 11      x8 ~1     5.53 0.06 0.00 [5.41, 5.64] 5.53***    5.47   0.23     0.00
 #> 12      x9 ~1     5.37 0.06 0.00 [5.26, 5.49] 5.37***    5.33   0.22     0.00
-#>     confint_std est_sig_std label_results show
-#> 1  [0.00, 0.00]        0.00   Means.speed TRUE
-#> 2  [0.00, 0.00]        0.00 Means.textual TRUE
-#> 3  [0.00, 0.00]        0.00  Means.visual TRUE
-#> 4  [3.88, 4.59]     4.23***      Means.x1 TRUE
-#> 5  [4.75, 5.61]     5.18***      Means.x2 TRUE
-#> 6  [1.80, 2.19]     1.99***      Means.x3 TRUE
-#> 7  [2.39, 2.87]     2.63***      Means.x4 TRUE
-#> 8  [3.08, 3.66]     3.37***      Means.x5 TRUE
-#> 9  [1.80, 2.19]     2.00***      Means.x6 TRUE
-#> 10 [3.52, 4.18]     3.85***      Means.x7 TRUE
-#> 11 [5.02, 5.92]     5.47***      Means.x8 TRUE
-#> 12 [4.89, 5.78]     5.33***      Means.x9 TRUE
+#>     confint_std est_sig_std label_results width height show
+#> 1  [0.00, 0.00]        0.00   Means.speed   1.0    1.0 TRUE
+#> 2  [0.00, 0.00]        0.00 Means.textual   1.0    1.0 TRUE
+#> 3  [0.00, 0.00]        0.00  Means.visual   1.0    1.0 TRUE
+#> 4  [3.88, 4.59]     4.23***      Means.x1   1.2    0.8 TRUE
+#> 5  [4.75, 5.61]     5.18***      Means.x2   1.2    0.8 TRUE
+#> 6  [1.80, 2.19]     1.99***      Means.x3   1.2    0.8 TRUE
+#> 7  [2.39, 2.87]     2.63***      Means.x4   1.2    0.8 TRUE
+#> 8  [3.08, 3.66]     3.37***      Means.x5   1.2    0.8 TRUE
+#> 9  [1.80, 2.19]     2.00***      Means.x6   1.2    0.8 TRUE
+#> 10 [3.52, 4.18]     3.85***      Means.x7   1.2    0.8 TRUE
+#> 11 [5.02, 5.92]     5.47***      Means.x8   1.2    0.8 TRUE
+#> 12 [4.89, 5.78]     5.33***      Means.x9   1.2    0.8 TRUE
 edges(graph_data)
-#>       from      to arrow   label connect_from connect_to curvature linetype
-#> 1   visual      x1  last    1.00         left      right        NA        1
-#> 2   visual      x2  last 0.55***       bottom      right        NA        1
-#> 3   visual      x3  last 0.73***       bottom        top        NA        1
-#> 4  textual      x4  last    1.00       bottom      right        NA        1
-#> 5  textual      x5  last 1.11***       bottom        top        NA        1
-#> 6  textual      x6  last 0.93***       bottom       left        NA        1
-#> 7    speed      x7  last    1.00       bottom        top        NA        1
-#> 8    speed      x8  last 1.18***       bottom       left        NA        1
-#> 9    speed      x9  last 1.08***        right       left        NA        1
-#> 10      x1      x1  both 0.55***         left       left        NA        1
-#> 11      x2      x2  both 1.13***         left       left        NA        1
-#> 12      x3      x3  both 0.84***       bottom     bottom        NA        1
-#> 13      x4      x4  both 0.37***         left       left        NA        1
-#> 14      x5      x5  both 0.45***       bottom     bottom        NA        1
-#> 15      x6      x6  both 0.36***        right      right        NA        1
-#> 16      x7      x7  both 0.80***       bottom     bottom        NA        1
-#> 17      x8      x8  both 0.49***        right      right        NA        1
-#> 18      x9      x9  both 0.57***        right      right        NA        1
-#> 19  visual  visual  both 0.81***          top        top        NA        1
-#> 20 textual textual  both 0.98***          top        top        NA        1
-#> 21   speed   speed  both 0.38***          top        top        NA        1
-#> 22  visual textual  none 0.41***        right       left        60        2
-#> 23  visual   speed  none 0.26***        right       left        60        2
-#> 24 textual   speed  none 0.17***        right       left        60        2
+#>       from      to   label arrow curvature connect_from connect_to linetype
+#> 1   visual      x1    1.00  last         0       bottom        top        1
+#> 2   visual      x2 0.55***  last         0       bottom        top        1
+#> 3   visual      x3 0.73***  last         0       bottom        top        1
+#> 4  textual      x4    1.00  last         0       bottom        top        1
+#> 5  textual      x5 1.11***  last         0       bottom        top        1
+#> 6  textual      x6 0.93***  last         0        right        top        1
+#> 7    speed      x7    1.00  last         0       bottom        top        1
+#> 8    speed      x8 1.18***  last         0       bottom        top        1
+#> 9    speed      x9 1.08***  last         0        right        top        1
+#> 10      x1      x1 0.55***  both         0         left       left        1
+#> 11      x2      x2 1.13***  both         0       bottom     bottom        1
+#> 12      x3      x3 0.84***  both         0       bottom     bottom        1
+#> 13      x4      x4 0.37***  both         0       bottom     bottom        1
+#> 14      x5      x5 0.45***  both         0       bottom     bottom        1
+#> 15      x6      x6 0.36***  both         0       bottom     bottom        1
+#> 16      x7      x7 0.80***  both         0       bottom     bottom        1
+#> 17      x8      x8 0.49***  both         0       bottom     bottom        1
+#> 18      x9      x9 0.57***  both         0        right      right        1
+#> 19  visual  visual 0.81***  both         0         left       left        1
+#> 20 textual textual 0.98***  both         0          top        top        1
+#> 21   speed   speed 0.38***  both         0          top        top        1
+#> 22  visual textual 0.41***  none       -75        right       left        2
+#> 23  visual   speed 0.26***  none       -60          top        top        2
+#> 24 textual   speed 0.17***  none       -75        right       left        2
 #>        lhs op     rhs  est   se pval      confint est_sig est_std se_std
 #> 1   visual =~      x1 1.00 0.00 <NA> [1.00, 1.00]    1.00    0.77   0.05
 #> 2   visual =~      x2 0.55 0.10 0.00 [0.36, 0.75] 0.55***    0.42   0.06
@@ -826,9 +870,9 @@ node labels for latent variables in *Title Case* instead of just using
 the variable names:
 
 ``` r
+
 library(dplyr)
 library(stringr)
-#> Warning: package 'stringr' was built under R version 4.6.1
 nodes(graph_data) <- nodes(graph_data) %>%
   mutate(label = str_to_title(label))
 ```
@@ -840,6 +884,7 @@ to connect all nodes top-to-bottom - except for the latent variable
 covariances. We can use the same conditional replacement for the edges:
 
 ``` r
+
 edges(graph_data) %>%
   mutate(connect_from = replace(connect_from, is.na(curvature), "bottom")) %>%
   mutate(connect_to = replace(connect_to, is.na(curvature), "top")) -> edges(graph_data)
@@ -851,6 +896,7 @@ We can plot a customized graph using `plot(graph_data)`; a generic plot
 method for `sem_graph` objects:
 
 ``` r
+
 plot(graph_data)
 ```
 
@@ -864,15 +910,12 @@ and
 [`prepare_graph()`](https://cjvanlissa.github.io/tidySEM/reference/prepare_graph.md)
 will always try to connect nodes in an aesthetically pleasing way. To do
 this, they connect nodes by one of the four sides (top, bottom, left and
-right), based on the shortest distance between two nodes. Alternatively,
-users can specify a value to the `angle` parameter. This parameter
-connects nodes top-to-bottom when they are within `angle` degrees above
-and below each other. Remaining nodes are connected side-to-side. Thus,
-by increasing `angle` to a larger number (up to 180 degrees), we can
-also ensure that all nodes are connected top to bottom:
+right), based on the shortest distance between two nodes and least
+amount of overlap between plot elements:
 
 ``` r
-graph_sem(model = fit, layout = lay, angle = 170)
+
+graph_sem(model = fit, layout = lay)
 ```
 
 ![](cache_Plotting_graphs/plotting-cache-4.png)
@@ -904,6 +947,7 @@ These aesthetics can be customized by adding columns to the edges
 data.frame, whose names correspond to the aesthetics. For example:
 
 ``` r
+
 edg <- data.frame(from = "x",
                   to = "y",
                   linetype = 2,
@@ -933,6 +977,7 @@ Nodes have the following aesthetics (see `?geom_polygon()`):
 These, too, can be appended as extra columns to the nodes data.frame:
 
 ``` r
+
 edg <- data.frame(from = "x",
                   to = "y")
 nod <- data.frame(name = c("x", "y"),
@@ -953,6 +998,7 @@ element, such as the low factor loading for x2 on visual in the CFA
 example from before:
 
 ``` r
+
 edges(graph_data) %>%
   mutate(colour = "black") %>%
   mutate(colour = replace(colour, from == "visual" & to == "x2", "red")) %>%
@@ -997,6 +1043,7 @@ aesthetics are prefaced by `"label_"`:
   between 0 (beginning) and 1 (end)
 
 ``` r
+
 edg <- data.frame(from = "x",
                   to = "y",
                   label = "text",
@@ -1033,12 +1080,12 @@ Let’s estimate a model and look at all of the columns extracted by
 [`get_edges()`](https://cjvanlissa.github.io/tidySEM/reference/get_edges.md):
 
     #>   from  to arrow    label connect_from connect_to curvature linetype lhs op rhs
-    #> 1  cyl mpg  last -2.50***           NA         NA        NA        1 mpg  ~ cyl
-    #> 2   am mpg  last    2.57*           NA         NA        NA        1 mpg  ~  am
-    #> 3  mpg mpg  both  8.48***           NA         NA        NA        1 mpg ~~ mpg
-    #> 4  cyl cyl  both     3.09           NA         NA        NA        1 cyl ~~ cyl
-    #> 5  cyl  am  none    -0.45           NA         NA        60        2 cyl ~~  am
-    #> 6   am  am  both     0.24           NA         NA        NA        1  am ~~  am
+    #> 1  cyl mpg  last -2.50***           NA         NA         0        1 mpg  ~ cyl
+    #> 2   am mpg  last    2.57*           NA         NA         0        1 mpg  ~  am
+    #> 3  mpg mpg  both  8.48***           NA         NA         0        1 mpg ~~ mpg
+    #> 4  cyl cyl  both     3.09           NA         NA         0        1 cyl ~~ cyl
+    #> 5  cyl  am  none    -0.45           NA         NA        NA        2 cyl ~~  am
+    #> 6   am  am  both     0.24           NA         NA         0        1  am ~~  am
     #>     est   se pval        confint  est_sig est_std se_std pval_std
     #> 1 -2.50 0.34 0.00 [-3.17, -1.83] -2.50***   -0.74   0.08     0.00
     #> 2  2.57 1.23 0.04   [0.16, 4.98]    2.57*    0.21   0.10     0.03
@@ -1059,6 +1106,7 @@ example, note that one of the regression paths is positive and the other
 negative. We might want to color positive edges green:
 
 ``` r
+
 set.seed(6)
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
@@ -1074,6 +1122,7 @@ color the variance black - and make the variance transparent as well, to
 reduce its visual importance:
 
 ``` r
+
 prepare_graph(fit) %>%
   color_pos_edges("green") %>%
   color_neg_edges("red") %>%
@@ -1098,6 +1147,7 @@ color every graph element with the number “4” in the column `est` blue,
 you could use:
 
 ``` r
+
 prepare_graph(fit) %>%
   # Add color column to the graph elements
   edit_graph({ color = "black" }) %>% 
@@ -1121,6 +1171,7 @@ user `dumaskvn`, showcases how `plotmath` labels can be displayed (see
 several ways to do this; this is just one example.
 
 ``` r
+
 model <- "
   Sepal.Length ~ Sepal.Width + Petal.Length
   Sepal.Width ~ Petal.Length
@@ -1128,10 +1179,10 @@ model <- "
 # fit model
 fit <- sem(model, data = iris)
 # specify layout for consistency
-layout <- get_layout("", "Sepal.Width", "",
-                     "Petal.Length", "", "Sepal.Length", rows = 2)
+layout <- get_layout("", "", "Sepal.Width", "", "",
+                     "Petal.Length","", "", "", "Sepal.Length", rows = 2)
 # get data from prepare_graph
-p <- prepare_graph(fit, layout = layout, angle = 180)
+p <- prepare_graph(fit, layout = layout)
 
 # standard graph
 plot(p)
@@ -1149,3 +1200,14 @@ plot(p) + geom_text(data = df_nodes, aes(x=x, y=y, label=label), parse = TRUE)
 ```
 
 ![](cache_Plotting_graphs/plotting-cache-12%2C.png)
+
+## Interactively Editing a Plot
+
+You can interactively edit a plot in the browser via a Shiny app:
+
+``` r
+
+p <- prepare_graph(fit, layout = layout)
+p_edited <- graph_editor(p)
+plot(p_edited)
+```

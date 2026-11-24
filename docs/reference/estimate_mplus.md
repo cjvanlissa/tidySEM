@@ -42,7 +42,6 @@ are not specified, the model will be run in
 
 ``` r
 library(MplusAutomation)
-#> Warning: package 'MplusAutomation' was built under R version 4.6.1
 #> Version:  1.3
 #> We work hard to write this free software. Please help us get credit by citing: 
 #> 

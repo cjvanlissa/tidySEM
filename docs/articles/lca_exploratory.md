@@ -30,6 +30,7 @@ fragments. The indicators are fragments’ length and width in
 millimeters. The sample size was not planned.
 
 ``` r
+
 # Load required packages
 library(tidySEM)
 library(ggplot2)
@@ -48,6 +49,7 @@ to describe the data numerically. Because all items are continuous, we
 remove columns for categorical data to de-clutter the table:
 
 ``` r
+
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "unique", "mean", "median",
     "sd", "min", "max", "skew_2se", "kurt_2se")]
@@ -59,7 +61,7 @@ knitr::kable(desc, caption = "Descriptive statistics")
 | length | numeric | 5605 |   2086 |  2.9 |    2.4 | 1.9 | 1.0 | 69.2 |      137 |     2095 |
 | width  | numeric | 5605 |   2079 |  2.0 |    1.6 | 1.1 | 0.2 |  6.8 |       22 |       14 |
 
-Descriptive statistics
+Descriptive statistics {.table style="width:100%;"}
 
 The data are correctly coded as `numeric` and the distributional
 characteristics match the intended measurement level. The variable
@@ -73,6 +75,7 @@ can plot the data. The `ggplot2` function
 is useful to visualize continuous data:
 
 ``` r
+
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long",
@@ -88,6 +91,7 @@ extremely right-skewed and kurtotic. With this in mind, it can be useful
 to transform and rescale the data. We will use a log transformation.
 
 ``` r
+
 df_plot$Value <- log(df_plot$Value)
 ggplot(df_plot, aes(x = Value)) + geom_density() + facet_wrap(~Variable) +
     theme_bw()
@@ -100,6 +104,7 @@ skew and kurtosis. To confirm this, reshape the data to wide format and
 examine a scatterplot:
 
 ``` r
+
 df <- reshape(df_plot, direction = "wide", v.names = "Value")[,
     -1]
 names(df) <- gsub("Value.", "", names(df), fixed = TRUE)
@@ -135,6 +140,7 @@ later use `res <- readRDS("res_gmm.RData")` to load the analysis from
 the file.
 
 ``` r
+
 set.seed(123)
 res <- mx_profiles(data = df, classes = 1:3, variances = c("equal",
     "varying"), covariances = c("equal", "varying"), expand_grid = TRUE)
@@ -148,6 +154,7 @@ using
 We will use the BIC for class enumeration.
 
 ``` r
+
 fit <- table_fit(res)
 ```
 
@@ -160,6 +167,7 @@ size to class-specific parameters is 18 (see `np_local`), which is no
 cause for concern.
 
 ``` r
+
 tbl <- fit[, c("Name", "LL", "Parameters", "BIC", "Entropy",
     "prob_min", "n_min", "np_ratio", "np_local")]
 names(tbl) <- c("Name", "LL", "p", "BIC", "Ent.", "p_min", "n_min",
@@ -182,7 +190,7 @@ knitr::kable(tbl, caption = "Model fit table.")
 | free var, free cov 2   | -2575 |  11 | 5245 | 0.56 |  0.81 |  0.40 |      510 |      448 |
 | free var, free cov 3   | -2111 |  17 | 4370 | 0.65 |  0.51 |  0.04 |      330 |       41 |
 
-Model fit table.
+Model fit table. {.table}
 
 However, note that we have a very large sample, and for many models, the
 smallest class comprises only a very small percentage of the total
@@ -209,6 +217,7 @@ As mentioned before, we drop models with \< 10% of cases in the smallest
 class:
 
 ``` r
+
 fit <- fit[!fit$n_min < 0.1, ]
 ```
 
@@ -217,6 +226,7 @@ or plot a scree plot for the BIC by calling `plot(fit)`. Note that, due
 to the large sample size, all ICs give identical conclusions.
 
 ``` r
+
 plot(fit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5,
     hjust = 1))
 ```
@@ -243,6 +253,7 @@ relatively uninformative: With a sample size of 5606, every parameter is
 significantly different from zero.
 
 ``` r
+
 res_bic <- res[["free var, free cov 2"]]
 cp <- class_prob(res_bic)
 results <- table_results(res_bic, columns = c("label", "est",
@@ -265,7 +276,7 @@ results
 | mix2.weights\[1,1\].NA               | 1.00 |
 | mix2.weights\[1,2\].NA               | 0.75 |
 
-Results of a 2-class model with free (co)variances
+Results of a 2-class model with free (co)variances {.table}
 
 Interpreting the results is facilitated by examining a plot of the model
 and data. Relevant plot functions are
@@ -278,6 +289,7 @@ However, we omit the density plots, because
 also includes them.
 
 ``` r
+
 plot_bivariate(res_bic)
 ```
 

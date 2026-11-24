@@ -16,6 +16,7 @@ deployment in more than 1,000 Dutch military personnel from 2005-2019.
 First, we load all required packages:
 
 ``` r
+
 library(tidySEM)
 library(ggplot2)
 library(MASS)
@@ -26,6 +27,7 @@ library(MASS)
 We first examined the descriptive statistics for the sum score scales:
 
 ``` r
+
 # Get descriptives
 df <- plas_depression
 desc <- descriptives(df)
@@ -43,7 +45,7 @@ knitr::kable(desc, caption = "Item descriptives")
 | scl.5 |   21 |     20 | 4.1 |  16 |  64 |       25 |       84 |
 | scl.6 |   21 |     20 | 4.1 |  16 |  58 |       20 |       56 |
 
-Item descriptives
+Item descriptives {.table}
 
 Note that all variables were extremely right-skewed due to censoring at
 the lower end of the scale.
@@ -51,6 +53,7 @@ the lower end of the scale.
 We can examine these distributions visually as well:
 
 ``` r
+
 df_plot <- reshape(df, direction = "long", varying = names(df))
 ggplot(df_plot, aes(x = scl)) + geom_density() + facet_wrap(~time) +
     theme_bw()
@@ -63,6 +66,7 @@ compared several transformations to reduce skew: The square and cube
 root, log, inverse, and Box-Cox transformations.
 
 ``` r
+
 df_scores <- df_plot
 # Store original range of SCL
 rng_scl <- range(df_scores$scl)
@@ -102,6 +106,7 @@ df_scores$scl <- scales::rescale(df_scores$scl, to = c(0, 1))
 We can plot these transformations:
 
 ``` r
+
 # Make plot data
 df_plot <- do.call(rbind, lapply(c("scl", "log", "sqrt", "qrt",
     "boxcox"), function(n) {
@@ -144,6 +149,7 @@ assumes that all measurements are equidistant. Feel free to experiment
 with adjusting this.**
 
 ``` r
+
 set.seed(27796)
 dat[["id"]] <- NULL
 res_step <- mx_growth_mixture(model = "
@@ -194,6 +200,7 @@ criteria:
     interpretability of the results
 
 ``` r
+
 # Get fit table fit
 tab_fit <- table_fit(res_step)
 # Select columns
@@ -208,7 +215,7 @@ tab_fit[, c("Name", "Classes", "LL", "Parameters", "BIC", "Entropy",
 | 3    |       3 | 4174 |         17 | -8230 |    0.93 |     0.93 |  0.06 |
 | 4    |       4 | 4278 |         21 | -8412 |    0.89 |     0.85 |  0.04 |
 
-Fit of LCGA models
+Fit of LCGA models {.table}
 
 According to the Table, increasing the number of classes keeps
 increasing model fit according to all ICs except the BIC, which
@@ -230,6 +237,7 @@ the BIC increased after 3 classes. A three-class solution thus appears
 to be the most parsimonious solution with good fit.
 
 ``` r
+
 plot(tab_fit, statistics = c("AIC", "BIC", "saBIC"))
 ```
 
@@ -241,6 +249,7 @@ classes by the value of the intercept `i`. Then, we report the estimated
 parameters.
 
 ``` r
+
 res_final <- mx_switch_labels(res_step[[3]], param = "M[1,7]",
     decreasing = FALSE)
 tab_res <- table_results(res_final, columns = NULL)
@@ -280,7 +289,7 @@ tab_res
 | 71  | Variances | scl5 | 0.01  | 0.00 | 0.00 | \[0.01, 0.01\]   | class3.S\[5,5\] |
 | 72  | Variances | scl6 | 0.01  | 0.00 | 0.00 | \[0.01, 0.02\]   | class3.S\[6,6\] |
 
-Results from 3-class LCGA model
+Results from 3-class LCGA model {.table}
 
 As evident from these results, Class 1 started at a relatively lower
 level of depressive symptoms, experienced a decrease after deployment,
@@ -302,6 +311,7 @@ column of the results table above. Alternatively, to see all parameters
 in the model, run:
 
 ``` r
+
 names(coef(res_final))
 ```
 
@@ -323,6 +333,7 @@ time. When conducting many significance tests, consider correcting for
 multiple comparisons however.
 
 ``` r
+
 wald_tests <- wald_test(res_final, "
                    class1.M[1,7] = class2.M[1,7]&
                    class1.M[1,7] = class3.M[1,7];
@@ -341,7 +352,7 @@ knitr::kable(wald_tests, digits = 2, caption = "Wald tests")
 | Mean step  |   2 |    69 |   0 |
 | Mean slope |   2 |    13 |   0 |
 
-Wald tests
+Wald tests {.table}
 
 All Wald tests are significant, indicating that there are significant
 differences between the intercepts, step function, and slopes of the
@@ -354,6 +365,7 @@ the results better, as well as the residual heterogeneity around class
 trajectories.
 
 ``` r
+
 p <- plot_growth(res_step[[3]], rawdata = TRUE, alpha_range = c(0,
     0.05))
 # Add Y-axis breaks in original scale

@@ -41,6 +41,7 @@ substantive analyses: collapsing categories discards information and
 changes the estimated latent classes.
 
 ``` r
+
 # Load required packages
 library(tidySEM)
 library(ggplot2)
@@ -72,6 +73,7 @@ to describe the data numerically. Because all items are categorical, we
 remove columns for continuous data to de-clutter the table:
 
 ``` r
+
 desc <- tidySEM::descriptives(df)
 desc <- desc[, c("name", "type", "n", "missing", "unique", "mode",
     "mode_value", "v")]
@@ -84,13 +86,14 @@ desc
 | Belgian  | ordered, factor | 439 |       0 |      3 |  191 | 2          | 0.63 |
 | Flemish  | ordered, factor | 439 |       0 |      3 |  203 | 2          | 0.64 |
 
-Descriptive statistics for recoded ordinal items
+Descriptive statistics for recoded ordinal items {.table}
 
 Additionally, we can plot the data. The `ggplot2` function
 [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html) is
 useful for ordinal data:
 
 ``` r
+
 df_plot <- df
 names(df_plot) <- paste0("Value.", names(df_plot))
 df_plot <- reshape(df_plot, varying = names(df_plot), direction = "long")
@@ -146,6 +149,7 @@ substantive analysis should investigate a broader range of plausible
 models and use the original measurement scale where feasible.
 
 ``` r
+
 set.seed(123)
 res <- mx_lca(data = df, classes = 1:3)
 ```
@@ -167,6 +171,7 @@ and retain relevant columns. We also determine whether any models can be
 disqualified.
 
 ``` r
+
 fit <- table_fit(res)
 fit[, c("Name", "LL", "n", "Parameters", "BIC", "Entropy", "prob_min",
     "n_min", "np_ratio", "np_local")]
@@ -178,7 +183,7 @@ fit[, c("Name", "LL", "n", "Parameters", "BIC", "Entropy", "prob_min",
 | 2    | -1012 | 439 |         13 | 2103 |    0.77 |     0.85 |  0.30 |       34 |       22 |
 | 3    |  -997 | 439 |         20 | 2115 |    0.89 |     0.88 |  0.23 |       22 |       17 |
 
-Model fit table
+Model fit table {.table}
 
 Inspect the ratio of cases to parameters (`np_ratio` and `np_local`)
 alongside classification diagnostics such as entropy and minimum
@@ -200,6 +205,7 @@ analysis, class selection should consider theoretical interpretability,
 convergence, and class sizes alongside information criteria.
 
 ``` r
+
 res_final <- res[[3]]
 ```
 
@@ -215,6 +221,7 @@ difficult to interpret. Therefore, we ask for the results in probability
 scale:
 
 ``` r
+
 tab <- table_prob(res_final)
 reshape(tab, direction = "wide", v.names = "Probability", timevar = "group",
     idvar = c("Variable", "Category"))
@@ -232,12 +239,13 @@ reshape(tab, direction = "wide", v.names = "Probability", timevar = "group",
 | Flemish  |        2 |               1.00 |               0.00 |               0.10 |
 | Flemish  |        3 |               0.00 |               0.90 |               0.00 |
 
-Three-class model results in probability scale
+Three-class model results in probability scale {.table}
 
 The results can also be interpreted by plotting the response
 probabilities:
 
 ``` r
+
 plot_prob(res_final, bw = TRUE)
 ```
 
@@ -263,6 +271,7 @@ auxiliary variable depression to the `data` argument, omitting the
 depressive symptoms across classes:
 
 ``` r
+
 aux_dep <- BCH(res_final, data = aux_data$depression)
 ```
 
@@ -279,6 +288,7 @@ regression coefficient of discrimination on depressive symptoms across
 classes.
 
 ``` r
+
 df_aux <- aux_data[, c("vict_teacher", "depression")]
 # Dummy-code vict_teacher
 df_aux$vict_teacher <- (as.integer(df_aux$vict_teacher) - 1)
@@ -292,6 +302,7 @@ regression coefficients are represented by paths in the class-specific
 `A` matrices.
 
 ``` r
+
 table_results(aux_model, columns = c("label", "est_sig", "se",
     "pval", "confint", "group", "matrix"))
 ```
@@ -336,6 +347,7 @@ First, we can use a likelihood-ratio test to compare the regression
 coefficients in the class-specific `A` matrices:
 
 ``` r
+
 lr_test(aux_model, compare = "A")
 ```
 
@@ -355,6 +367,7 @@ Alternatively, we can use a Wald test to evaluate the equality
 constraints directly:
 
 ``` r
+
 wald_test(aux_model, "aux1.A[1,2]=aux2.A[1,2]&aux1.A[1,2]=aux3.A[1,2]")
 ```
 

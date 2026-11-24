@@ -22,7 +22,7 @@ names, empty strings (""), or NA values.}
 \item{layout_algorithm}{Optional argument for fit model objects. Character
 string, indicating which \code{igraph}
 layout algorithm to apply to position the nodes. Defaults to
-\code{"layout_as_tree"}; see details for more options.}
+\code{"sem"}; see details for more options.}
 
 \item{rows}{Numeric, indicating the number of rows of the graph.}
 }
@@ -40,24 +40,16 @@ node names and the number of
 rows to create a layout matrix. Empty strings (\code{""})
 or \code{NA} can be used for empty cells. See Example 1.
 \item Call \code{get_layout()} on a model object or \code{tidy_results}
-object. It will use the function
-\code{\link[igraph]{layout_as_tree}}, or any other layout function
-from the \code{igraph} package, to generate a rudimentary layout. See
-Example 2.
+object. You can either use the argument \code{"sem"}, to generate a SEM-specific
+layout, or \code{"fr_grid"} to apply the Fruchterman-Reingold force-directed
+graph algorithm, or any layout function from the package \code{igraph} if it is
+installed. See Example 2.
 \item Instead of using \code{get_layout()}, just use a \code{matrix} or
 \code{data.frame} with your layout. For example, specify the layout in a
 spreadsheet program, and load it into R (see Example 3). Or, copy the
 layout to the clipboard from your spreadsheet program, and load it from the
 clipboard (see Example 4)
 }
-The layout algorithms imported from \code{igraph} are:
-\code{c("layout_as_star",
-"layout_as_tree", "layout_in_circle", "layout_nicely",
-"layout_on_grid", "layout_randomly", "layout_with_dh", "layout_with_fr",
-"layout_with_gem",
-"layout_with_graphopt", "layout_with_kk", "layout_with_lgl",
-"layout_with_mds")}. These can be used by specifying the optional argument
-\code{layout_algorithm = ""}.
 }
 \examples{
 # Example 1
@@ -69,6 +61,10 @@ library(lavaan)
 fit <- cfa(' visual  =~ x1 + x2 + x3 ',
            data = HolzingerSwineford1939[1:50, ])
 get_layout(fit)
+get_layout(fit, layout_algorithm = "fr_grid")
+if(requireNamespace("igraph", quietly = TRUE)){
+get_layout(fit, layout_algorithm = "layout_as_star")
+}
 
 \dontrun{
 # Example 3

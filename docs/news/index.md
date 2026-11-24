@@ -2,6 +2,8 @@
 
 ## tidySEM 0.3.0
 
+CRAN release: 2026-11-18
+
 - tidySEM now supports mixture models estimated with the metamixture
   package
 - Bugfixes and improvements to pmc(), mixture_starts(), BCH(), and

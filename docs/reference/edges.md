@@ -32,5 +32,5 @@ edg <- data.frame(from = "x", to = "y")
 p <- prepare_graph(edges = edg, layout = get_layout("x", "y", rows = 1))
 edges(p)
 #>   from to label arrow curvature connect_from connect_to show
-#> 1    x  y        last        NA        right       left TRUE
+#> 1    x  y        last         0       bottom     bottom TRUE
 ```

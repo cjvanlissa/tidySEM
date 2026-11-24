@@ -33,31 +33,76 @@
 }
 
 #' @importFrom ggplot2 geom_path geom_polygon
-.oval_node <- function(p, df, oval_width, oval_height, npoints = 80){
-  x <- df$x
-  y <- df$y
-  point_seq <- seq(0, 2*pi,length.out = npoints)
+.oval_node <- function(p, df, npoints = 80) {
 
-  df_ellipse <- matrix(
-    c((.5*oval_width) * cos(point_seq), (.5*oval_height) * sin(point_seq)),
-    nrow = npoints, ncol = 2)
+  if (nrow(df) == 0L) return(p)
 
-  df_ellipse <- mapply(function(x, y){
-    t(t(df_ellipse) + c(x, y))
-  }, x = x, y = y, SIMPLIFY = FALSE)
-  df_ellipse <- data.frame(do.call(rbind, df_ellipse))
-  df_ellipse$grp <- rep(paste0("g", 1:length(x)), each = npoints)
-  df$grp <- paste0("g", 1:length(x))
-  df_ellipse <- merge(df_ellipse, df, by = "grp", all.y = TRUE)
-  Args <- c("linetype", "size", "colour", "fill", "alpha", "linewidth")
-  Args <- as.list(df_ellipse[which(names(df_ellipse) %in% Args)])
+  if (npoints < 3L) {
+    stop("`npoints` must be at least 3.")
+  }
+  if (!"colour" %in% names(df)) {
+    df$colour <- "black"
+  }
 
-  Args <- c(list(
-    data = df_ellipse,
-    mapping = aes(x= .data[["X1"]], y= .data[["X2"]], group = .data[["grp"]])), Args)
+  if (!"fill" %in% names(df)) {
+    df$fill <- "white"
+  }
 
-  p + do.call(geom_polygon, Args)
+  cx <- (df$node_xmin + df$node_xmax) / 2
+  cy <- (df$node_ymin + df$node_ymax) / 2
+
+  rx <- (df$node_xmax - df$node_xmin) / 2
+  ry <- (df$node_ymax - df$node_ymin) / 2
+
+  theta <- seq(0, 2 * pi, length.out = npoints)
+
+  df_ellipse <- do.call(
+    rbind,
+    lapply(seq_len(nrow(df)), function(i) {
+
+      data.frame(
+        x = cx[i] + rx[i] * cos(theta),
+        y = cy[i] + ry[i] * sin(theta),
+        .sem_id = i,
+        .sem_point = seq_along(theta)
+      )
+    })
+  )
+  metadata <- df[
+    df_ellipse$.sem_id,
+    setdiff(names(df), c("x", "y", ".sem_id")),
+    drop = FALSE
+  ]
+
+  df_ellipse <- cbind(
+    df_ellipse,
+    metadata
+  )
+
+  rownames(df_ellipse) <- NULL
+
+  aesthetics <- c(
+    "linetype", "linewidth",
+    "colour", "fill", "alpha"
+  )
+
+  args <- c(
+    list(
+      data = df_ellipse,
+      mapping = ggplot2::aes(
+        x = .data[["x"]],
+        y = .data[["y"]],
+        group = .data[[".sem_id"]]
+      )
+    ),
+    as.list(
+      df_ellipse[
+        ,
+        intersect(aesthetics, names(df_ellipse)),
+        drop = FALSE
+      ]
+    )
+  )
+
+  p + do.call(ggplot2::geom_polygon, args)
 }
-
-#p <- ggplot(data = NULL)
-#oval_node(p, x = c(0, 0), y = c(0, 3), oval_width = 2, oval_height = 1)

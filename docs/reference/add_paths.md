@@ -48,8 +48,7 @@ in a similar way to
 
 ``` r
 library(lavaan)
-#> Warning: package 'lavaan' was built under R version 4.6.1
-#> This is lavaan 0.7-2
+#> This is lavaan 0.7-3
 #> lavaan is FREE software! Please report any bugs.
 df <- iris[, 1:4]
 names(df) <- paste0("x_", 1:4)
@@ -60,7 +59,7 @@ res <- estimate_lavaan(model)
 #> Warning: lavaan->lav_object_post_check():  
 #>    some estimated ov variances are negative
 summary(res)
-#> lavaan 0.7-2 ended normally after 31 iterations
+#> lavaan 0.7-3 ended normally after 31 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -71,6 +70,11 @@ summary(res)
 #> Model Test User Model:
 #>                                                       
 #>   Test statistic                               359.420
+#>   Degrees of freedom                                 3
+#>   P-value (Chi-square)                           0.000
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                               139.252
 #>   Degrees of freedom                                 3
 #>   P-value (Chi-square)                           0.000
 #> 
